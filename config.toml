@@ -100,7 +100,7 @@ github_project_repo = "https://github.com/kairos-io/kairos"
 
 # Specify a value here if your content directory is not in your repo's root directory
 github_subdir = "docs"
-github_branch = "master"
+github_branch = "main"
 # Google Custom Search Engine ID. Remove or comment out to disable search.
 #gcs_engine_id = "011737558837375720776:fsdu1nryfng"
 
