@@ -63,7 +63,7 @@ $ curl http://192.168.122.177:8080/v1/models
 With the name of the model, we can now give it a go with:
 
 ```shell
-$ curl http://localhost:8080/v1/completions -H "Content-Type: application/json" -d '{
+$ curl http://192.168.122.177:8080/v1/completions -H "Content-Type: application/json" -d '{
      "model": "ggml-gpt4all-j.bin",
      "prompt": "Is there anybody out there?",                                                                                                                                                                                
      "temperature": 0.7
