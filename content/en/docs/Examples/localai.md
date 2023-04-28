@@ -59,7 +59,7 @@ $ curl http://192.168.122.177:8080/v1/models
 {"object":"list","data":[{"id":"ggml-gpt4all-j.bin","object":"model"}]}
 ```
 
-Witht the name of the model, we can now give it a go
+With the name of the model, we can now give it a go with:
 
 ```shell
 $ curl http://localhost:8080/v1/completions -H "Content-Type: application/json" -d '{
