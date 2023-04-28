@@ -34,7 +34,7 @@ metadata:
     k3s-upgrade: server
 spec:
   concurrency: 1
-  # This is the version (tag) of the image.
+  # This is the version (tag) of the image to upgrade to.
   # The version is refered to the kairos version plus the k3s version.
   version: "v1.0.0-k3sv1.24.3-k3s1"
   nodeSelector:
@@ -47,7 +47,7 @@ spec:
     disableEviction: true
   upgrade:
     # Here goes the image which is tied to the flavor being used.
-    # Currently can pick between opensuse and alpine
+    # You can also specify your custom image stored in a public registry.
     image: quay.io/kairos/kairos-opensuse-leap
     command:
     - "/usr/sbin/suc-upgrade"
