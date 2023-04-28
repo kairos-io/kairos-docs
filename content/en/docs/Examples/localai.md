@@ -7,7 +7,9 @@ description: >
 ---
 
 {{% alert title="Warning" %}}
-This tutorial will download an AI model which is around 4Gib
+This tutorial will download an AI model which is around 4Gib.
+
+Keep in mind that AI models are performance hungry. Performance on a VM can be poor depending on your host CPU. To get the best performance, use a bare-metal machine.
 {{% /alert %}}
 
 Welcome to the guide on using LocalAI with Kairos and K3s on your nodes!
@@ -15,8 +17,7 @@ Welcome to the guide on using LocalAI with Kairos and K3s on your nodes!
 But first, what is [LocalAI](https://github.com/go-skynet/LocalAI)?
 
 LocalAI is a self-hosted, community-driven simple local OpenAI-compatible API written in go. Can be used as a drop-in replacement for OpenAI, running on CPU with consumer-grade hardware. Supports ggml compatible models, for instance: LLaMA, alpaca, gpt4all, vicuna, koala, gpt4all-j, cerebras.
-
-This means that you can have the power of an AI model in your Edge-Kubernetes cluster, and it can all be easily done thanks to Kairos!
+This means that you can have the power of an AI model in your Edge-Kubernetes cluster, and it can all be easily done thanks to GPT4ALL models, LocalAI and Kairos!
 
 To get started, you'll need to use the [provider-kairos](https://github.com/kairos-io/provider-kairos) artifacts, which include k3s. Follow the [Installation](/docs/installation) documentation, and use the following configuration:
 
