@@ -14,8 +14,8 @@ The following software is needed to preview the documentation changes locally.
 After cloning the repo (with submodules), just run `make serve` to test the website locally.
 
 ```
-$> git clone --recurse-submodule https://github.com/kairos-io/kairos
-$> cd kairos/docs
+$> git clone --recurse-submodule https://github.com/kairos-io/kairos-docs
+$> cd kairos-docs
 $> npm run prepare
 $> make serve
 ```
