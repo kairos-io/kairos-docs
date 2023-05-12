@@ -244,7 +244,7 @@ chmod +x /usr/local/bin/kairos
 
 ```
 
-The CLI allows to register a node with a screenshot, an image, or a token. During pairing, the configuration is sent over, and the node will continue the installation process.
+The CLI allows to register a node with a QR Code screenshot, an QR Code image, or an EdgeVPN token. During pairing, the configuration is sent over, and the node will continue the installation process.
 
 In a terminal window from your desktop/workstation, run:
 
@@ -254,7 +254,7 @@ kairos register --reboot --device /dev/sda --config config.yaml
 
 **Note**:
 
-- By default, the CLI will automatically take a screenshot to get the QR code. Make sure it fits into the screen. Alternatively, an image path or a token can be supplied via arguments (e.g. `kairos register /img/path` or `kairos register <token>`).
+- By default, the CLI will automatically take a screenshot to get the QR code. Make sure it fits into the screen. Alternatively, an image path or an EdgeVPN token can be supplied via arguments (e.g. `kairos register /img/path` or `kairos register <EdgeVPN token>`).
 - The `--reboot` flag will make the node reboot automatically after the installation is completed.
 - The `--device` flag determines the specific drive where Kairos will be installed. Replace `/dev/sda` with your drive. Any existing data will be overwritten, so please be cautious.
 - The `--config` flag is used to specify the config file used by the installation process.
