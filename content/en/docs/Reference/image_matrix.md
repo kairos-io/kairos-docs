@@ -20,6 +20,7 @@ Below is a list of the available images and their locations on the quay.io regis
 
 - The **Core** images do not include any Kubernetes engine and can be used as a base for customizations.
 - The **Standard** images include `k3s` and the [kairos provider](https://github.com/kairos-io/provider-kairos), which enables Kubernetes deployments and optionally enables [p2p](/docs/installation/p2p).
+- The **-img** repositories contain an img file which can be directly written to an SD card or USB drive for use with ARM devices.
 
 Base images are tagged with specific upstream versions (e.g. Ubuntu 20 LTS is pinned to Ubuntu 20:04, openSUSE to openSUSE leap 15.4, etc.).
 
