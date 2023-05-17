@@ -150,8 +150,7 @@ spec:
                 name: "Deploy cos-system"
                 commands:
                   - |
-                      # Use `elemental reset --system.uri docker:<img-ref>` to deploy a custom image
-                      elemental reset && \
+                      kairos-agent reset && \
                       touch /usr/local/.deployed && \
                       reboot
 ```

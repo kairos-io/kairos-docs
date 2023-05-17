@@ -23,7 +23,7 @@ users:
   - github:mudler
 EOF
 export CONFIG_FILE=config.yaml
-docker run --privileged -v $PWD:/data -v /dev:/dev -ti $IMAGE elemental install --cloud-init /data/$CONFIG_FILE --system.uri $IMAGE $DEVICE
+docker run --privileged -v $PWD:/data -v /dev:/dev -ti $IMAGE kairos-agent install --device $DEVICE /data/$CONFIG_FILE
 ```
 
 - Switch back to *booting* from HD and reboot.
