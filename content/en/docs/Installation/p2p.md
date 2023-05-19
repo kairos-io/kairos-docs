@@ -48,6 +48,9 @@ p2p:
 
 ```
 
+The token `p2p.network_token` is a base64 encoded string which
+contains an [`edgevpn` token](https://github.com/mudler/edgevpn/blob/master/docs/content/en/docs/Concepts/Token/_index.md).
+
 To enable the automatic cluster deployment with peer-to-peer technology, specify a `p2p.network_token`. To enable HA, set `p2p.auto.ha.master_nodes` to the number of wanted HA/master nodes. Additionally, the p2p block can be used to configure the VPN and other settings as needed.
 
 With these settings used to deploy all the nodes, those will automatically communicate and coordinate with each other to deploy and manage the Kubernetes cluster without the need for a control management interface and user intervention.
