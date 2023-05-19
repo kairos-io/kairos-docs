@@ -111,8 +111,8 @@ algolia_docsearch = false
 offlineSearch = true
 
 [params.softwareVersions]
-k3s = "k3sv1.26.3+k3s1"
-kairos = "v2.0.0"
+k3s = "k3sv1.26.4+k3s1"
+kairos = "v2.1.0"
 flavor = "debian"
 armFlavor = "alpine"
 registryURL = "quay.io/kairos"
