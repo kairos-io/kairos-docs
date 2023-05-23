@@ -1,4 +1,6 @@
 VERSION 0.6
+# renovate: datasource=docker depName=renovate/renovate versioning=docker
+ARG RENOVATE_VERSION=35
 
 docs:
     FROM node:19-bullseye
@@ -21,3 +23,10 @@ docs:
 
     RUN HUGO_ENV="production" /usr/bin/hugo --gc -b "/local/" -d "public/"
     SAVE ARTIFACT public /public AS LOCAL docs/
+
+renovate-validate:
+    ARG RENOVATE_VERSION
+    FROM renovate/renovate:$RENOVATE_VERSION
+    WORKDIR /usr/src/app
+    COPY renovate.json .
+    RUN renovate-config-validator

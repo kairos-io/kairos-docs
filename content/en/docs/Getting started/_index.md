@@ -29,8 +29,8 @@ Once the installation is complete, you can begin using your Kubernetes cluster.
 
 1. Visit the Kairos [release page on GitHub](https://github.com/kairos-io/provider-kairos/releases)
 1. Select the latest release and download the assets of your flavor. For example,
-   pick the [kairos-opensuse-{{<kairosVersion>}}-{{<k3sVersion>}}.iso](https://github.com/kairos-io/provider-kairos/releases/download/v/kairos-opensuse-{{<kairosVersion>}}-{{<k3sVersion>}}.iso)
-   ISO file for the openSUSE based version, where `{{< k3sVersion >}}` in the name is the `k3s` version and `{{< kairosVersion >}}` is the Kairos one to deploy on a VM.
+   pick the [kairos-opensuse-v{{<providerVersion>}}-{{<k3sVersion>}}.iso](https://github.com/kairos-io/provider-kairos/releases/download/v{{<providerVersion>}}/kairos-opensuse-{{<providerVersion>}}-{{<k3sVersion>}}.iso)
+   ISO file for the openSUSE based version, where `{{< k3sVersion >}}` in the name is the `k3s` version and `{{< providerVersion >}}` is the Kairos one to deploy on a VM.
 1. You can also use [netboot](/docs/installation/netboot) to boot Kairos over the network
 
 {{% alert title="Note" %}}
@@ -146,7 +146,7 @@ Here are some additional helpful tips depending on the physical/virtual machine 
       virt-install --name my-first-kairos-vm \
                   --vcpus 1 \
                   --memory 1024 \
-                  --cdrom /path/to/kairos-opensuse-{{< kairosVersion >}}-{{< k3sVersion >}}.iso \
+                  --cdrom /path/to/kairos-opensuse-{{< providerVersion >}}-{{< k3sVersion >}}.iso \
                   --disk size=30 \
                   --os-variant opensuse-factory \
                   --virt-type kvm
