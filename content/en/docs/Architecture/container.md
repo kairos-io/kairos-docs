@@ -45,21 +45,21 @@ The Image support matrix in [here](/docs/reference/image_matrix) lists all the c
 To inspect an image and run it locally, you can use a container engine like Docker or Podman:
 
 ```
-$ docker pull {{< registryURL >}}/core-{{< flavor >}}:v{{< kairosVersion >}}
+$ docker pull {{< registryURL >}}/core-{{< flavor >}}:{{< kairosVersion >}}
 ```
 
 We can run it locally with docker as a container to inspect it, as it is runnable:
 
 ```
-$ docker run -ti --rm {{< registryURL >}}/core-{{< flavor >}}:v{{< kairosVersion >}}
+$ docker run -ti --rm {{< registryURL >}}/core-{{< flavor >}}:{{< kairosVersion >}}
 / # cat /etc/os-release
 ...
 KAIROS_NAME="kairos-core-{{< flavor >}}"
-KAIROS_VERSION="v{{< kairosVersion >}}"
+KAIROS_VERSION="{{< kairosVersion >}}"
 KAIROS_ID="kairos"
 KAIROS_ID_LIKE="kairos-core-{{< flavor >}}"
-KAIROS_VERSION_ID="v{{< kairosVersion >}}"
-KAIROS_PRETTY_NAME="kairos-core-{{< flavor >}} v{{< kairosVersion >}}"
+KAIROS_VERSION_ID="{{< kairosVersion >}}"
+KAIROS_PRETTY_NAME="kairos-core-{{< flavor >}} {{< kairosVersion >}}"
 KAIROS_BUG_REPORT_URL="https://github.com/kairos-io/kairos/issues"
 KAIROS_HOME_URL="https://github.com/kairos-io/kairos"
 KAIROS_IMAGE_REPO="{{< registryURL >}}/core-{{< flavor >}}"
@@ -92,7 +92,7 @@ total 102M
 The CI process generates bootable medium by the container images, and similarly, we can modify this image to introduce our changes and remaster an ISO as described in [Automated installation](/docs/installation/automated), but that can be resumed in the following steps:
 
 ```bash
-$ docker run -ti --name custom-container {{< registryURL >}}/core-{{< flavor >}}:v{{< kairosVersion >}}
+$ docker run -ti --name custom-container {{< registryURL >}}/core-{{< flavor >}}:{{< kairosVersion >}}
 # # Do your changes inside the container..
 # echo "foo" > /foo
 # ...

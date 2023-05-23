@@ -94,7 +94,7 @@ Base images are tagged with specific upstream versions (e.g. Ubuntu 20 LTS is pi
 The pipelines do not publish `img` artifacts for the arm architecture because the files are too large for GitHub Actions (they exceed the artifact size limit). These artifacts can be extracted from the published docker images using the following command:
 
 ```bash
-export IMAGE={{< registryURL >}}/core-{{< armFlavor >}}-arm-rpi-img:v{{< kairosVersion >}}
+export IMAGE={{< registryURL >}}/core-{{< armFlavor >}}-arm-rpi-img:{{< kairosVersion >}}
 docker run -ti --rm -v $PWD:/image quay.io/luet/base util unpack "$IMAGE" /image
 ```
 
