@@ -78,6 +78,7 @@ RUN dnf install -y \
     kernel-modules \
     kernel-modules-extra \
     livecd-tools \
+    lvm2 \
     nano \
     NetworkManager \
     openssh-server \
