@@ -116,7 +116,7 @@ provider_version = "2.0.3"
 # renovate: datasource=github-releases depName=k3s-io/k3s
 k3s_version = "k3sv1.21.4+k3s1"
 # renovate: datasource=github-releases depName=kairos-io/kairos
-kairos_version = "2.0.3"
+kairos_version = "v2.1.0"
 flavor = "debian"
 armFlavor = "alpine"
 registryURL = "quay.io/kairos"
