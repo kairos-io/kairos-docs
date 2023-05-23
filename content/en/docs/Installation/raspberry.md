@@ -55,6 +55,11 @@ You can push additional `cloud config` files. For a full reference check out the
 
 The following shell script shows how to locally rebuild and customize the image with docker
 
+
+{{% alert title="Warning" %}}
+If you're using osbuilder between versions 0.6.0 and 0.6.5, you need to pass the flag `--use-lvm` to the `build-arm-image.sh` script, the same way you pass `--local`.
+{{% /alert %}}
+
 ```
 IMAGE={{< registryURL >}}/kairos-opensuse-leap-arm-rpi:{{<providerVersion>}}-{{<k3sVersionOCI>}}
 # Pull the image locally
@@ -64,7 +69,6 @@ docker run -v $PWD:/HERE \
  -v /var/run/docker.sock:/var/run/docker.sock \
  --privileged -i --rm \
  --entrypoint=/build-arm-image.sh {{< registryURL >}}/osbuilder-tools:{{< osbuilderVersion >}} \
- --use-lvm \
  --model rpi64 \
  --state-partition-size 6200 \
  --recovery-partition-size 4200 \
