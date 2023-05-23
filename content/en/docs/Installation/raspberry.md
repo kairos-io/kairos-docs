@@ -60,7 +60,7 @@ IMAGE=quay.io/kairos/kairos-alpine-arm-rpi:v1.1.6-k3sv1.25.3-k3s1
 # Pull the image locally
 docker pull $IMAGE
 mkdir -p build
-docker run -v $PWD:/HERE -v /var/run/docker.sock:/var/run/docker.sock --privileged -i --rm --entrypoint=/build-arm-image.sh quay.io/kairos/osbuilder-tools:v0.4.0 \
+docker run -v $PWD:/HERE -v /var/run/docker.sock:/var/run/docker.sock --privileged -i --rm --entrypoint=/build-arm-image.sh {{< registryURL >}}/osbuilder-tools:{{< osbuilderVersion >}} \
  --model rpi64 \
  --state-partition-size 6200 \
  --recovery-partition-size 4200 \
