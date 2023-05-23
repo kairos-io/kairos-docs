@@ -57,7 +57,7 @@ The following shell script shows how to locally rebuild and customize the image 
 
 
 {{% alert title="Warning" %}}
-If you're using osbuilder between versions 0.6.0 and 0.6.5, you need to pass the flag `--use-lvm` to the `build-arm-image.sh` script, the same way you pass `--local`.
+Starting from osbuilder version 0.6.6, the generation of the image will use LVM by default and therefore the `--use-lvm` flag is deprecated (passing it won't make the script to fail).
 {{% /alert %}}
 
 ```
@@ -69,6 +69,7 @@ docker run -v $PWD:/HERE \
  -v /var/run/docker.sock:/var/run/docker.sock \
  --privileged -i --rm \
  --entrypoint=/build-arm-image.sh {{< registryURL >}}/osbuilder-tools:{{< osbuilderVersion >}} \
+ --use-lvm \
  --model rpi64 \
  --state-partition-size 6200 \
  --recovery-partition-size 4200 \
