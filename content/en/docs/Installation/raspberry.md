@@ -65,6 +65,7 @@ docker run -v $PWD:/HERE \
  --privileged -i --rm \
  --entrypoint=/build-arm-image.sh {{< registryURL >}}/osbuilder-tools:{{< osbuilderVersion >}} \
  --model rpi64 \
+ --use-lvm \
  --state-partition-size 6200 \
  --recovery-partition-size 4200 \
  --size 15200 \
