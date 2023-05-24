@@ -57,7 +57,7 @@ The following shell script shows how to locally rebuild and customize the image 
 
 
 {{% alert title="Warning" %}}
-Starting from osbuilder version 0.6.6, the generation of the image will use LVM by default and therefore the `--use-lvm` flag is deprecated (passing it won't make the script to fail).
+If you're using osbuilder between versions 0.6.0 and 0.6.5, you need to pass the flag `--use-lvm` to the `build-arm-image.sh` script, the same way you pass `--local`. Starting form osbuilder 0.6.6 this will be the default behaviour.
 {{% /alert %}}
 
 ```
