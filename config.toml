@@ -111,8 +111,14 @@ algolia_docsearch = false
 offlineSearch = true
 
 [params.softwareVersions]
-k3s = "k3sv1.26.3+k3s1"
-kairos = "v2.0.0"
+# renovate: datasource=github-releases depName=kairos-io/provider-kairos
+provider_version = "v2.1.0"
+# renovate: datasource=github-releases depName=k3s-io/k3s
+k3s_version = "v1.26.4+k3s1"
+# renovate: datasource=github-releases depName=kairos-io/kairos
+kairos_version = "v2.1.0"
+# renovate: datasource=github-releases depName=kairos-io/osbuilder
+osbuilder_version = "v0.6.6"
 flavor = "debian"
 armFlavor = "alpine"
 registryURL = "quay.io/kairos"

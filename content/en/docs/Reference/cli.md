@@ -39,7 +39,7 @@ COMMANDS:
 
 ## `create-config`
 
-Generates a new Kairos configuration file which can be used as `cloud-init`, with a new unique network token:
+Generates a new Kairos configuration file which can be used as `cloud-init`, with a new unique EdgeVPN network token:
 
 ```
 $ ./kairos create-config
@@ -71,7 +71,7 @@ stages:
 
 ## `generate-token`
 
-Generates a new network token which can be used in a configuration file:
+Generates a new EdgeVPN network token which can be used in a configuration file:
 
 ```
 $ ./kairos generate-token
