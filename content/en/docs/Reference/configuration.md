@@ -541,7 +541,7 @@ Define a custom ID for the Kubernetes cluster. This can be used to create multip
 
 ### `p2p.dns`
 
-When the `p2p.dns` is set to `true` the embedded DNS is configured on the node. This allows to propagate custom records to the nodes by using the blockchain DNS server. For example, this is assuming `kairos bridge` is running in a separate terminal:
+When the `p2p.dns` is set to `true` the embedded DNS is configured on the node. This allows to propagate custom records to the nodes by using the blockchain DNS server. For example, this is assuming `kairosctl bridge` is running in a separate terminal:
 
 ```bash
 curl -X POST http://localhost:8080/api/dns --header "Content-Type: application/json" -d '{ "Regex": "foo.bar", "Records": { "A": "2.2.2.2" } }'

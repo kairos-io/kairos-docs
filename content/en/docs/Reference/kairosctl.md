@@ -1,43 +1,47 @@
 ---
-title: "CLI"
-linkTitle: "CLI"
+title: "kairosctl"
+linkTitle: "kairosctl"
 weight: 3
 date: 2022-11-13
 description: >
 ---
 
-A CLI is provided as part of releases associated to each Kairos version.
-
-The CLI can be used from an external machine to generate network tokens and pair nodes on first-boot.
+The `kairosctl` binary is provided as part of releases associated to each Kairos version. It can be used from an external machine to generate network tokens and pair nodes on first-boot.
 
 ```
-./kairos --help
+./kairosctl --help
 NAME:
-   kairos - kairos (register|install)
+   kairosctl - A new cli application
 
 USAGE:
-    [global options] command [command options] [arguments...]
+   kairosctl [global options] command [command options] [arguments...]
 
 VERSION:
-   0.1
-
-DESCRIPTION:
-   kairos registers and installs kairos boxes
+   0.0.0
 
 AUTHOR:
    Ettore Di Giacinto
 
 COMMANDS:
-   register
-   create-config, c
-   generate-token, g
-   setup, s
-   get-kubeconfig
-   install, i
-   help, h            Shows a list of commands or help for one command
+   register        Registers and bootstraps a node
+   bridge          Connect to a kairos VPN network
+   get-kubeconfig  Return a deployment kubeconfig
+   role            Set or list node roles
+   help, h         Shows a list of commands or help for one command
+
+GLOBAL OPTIONS:
+   --help, -h     show help
+   --version, -v  print the version
+
+COPYRIGHT:
+   Ettore Di Giacinto
 ```
 
 ## `create-config`
+
+{{% alert title="Warning" %}}
+This command has not yet been migrated to kairosctl. Use the kairos-agent in the meantime.
+{{% /alert %}}
 
 Generates a new Kairos configuration file which can be used as `cloud-init`, with a new unique EdgeVPN network token:
 
@@ -70,6 +74,10 @@ stages:
 ```
 
 ## `generate-token`
+
+{{% alert title="Warning" %}}
+This command has not yet been migrated to kairosctl. Use the kairos-agent in the meantime.
+{{% /alert %}}
 
 Generates a new EdgeVPN network token which can be used in a configuration file:
 
@@ -114,14 +122,14 @@ OPTIONS:
    --poweroff
 ```
 
-When booting Kairos via ISO, the boot process ends up in displaying a QR code which can be parsed by `kairos register` from another machine.
+When booting Kairos via ISO, the boot process ends up in displaying a QR code which can be parsed by `kairosctl register` from another machine.
 
 ### Taking a screenshot
 
 `register` by default takes a screenshot and tries to find a QR code in it:
 
 ```
-kairos register
+kairosctl register
 ```
 
 ### Providing a QR code image/screenshot manually
@@ -129,7 +137,7 @@ kairos register
 It can be also be specified an image:
 
 ```
-kairos register <file.png>
+kairosctl register <file.png>
 ```
 
 After the pairing is done, the node will start installation with the provided options.
@@ -141,11 +149,3 @@ A `--device` and a `--config` file are required in order to have a functional in
 Connect to the nodes in the VPN P2P network by creating a tun device on the host.
 
 It needs a `--network-token`(`$NETWORK_TOKEN`) argument and exposes an API endpoint available at [localhost:8080](http://localhost:8080) to monitor the network status.
-
-## `install`
-
-Is called by Kairos nodes on boot and not meant to be used manually. It kicks in the installation and the QR pairing process.
-
-## `setup`
-
-Is called by Kairos nodes on boot and not meant to be used manually. It prepares `edgevpn` and K3s bootstrapping the node and the VPN.

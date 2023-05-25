@@ -255,10 +255,10 @@ To add new nodes to the network, follow the same process as before and use the s
 
 ## Connect to the nodes
 
-To connect to the nodes, you can use the kairos-cli and provide the network_token to establish a tunnel to the nodes network.
+To connect to the nodes, you can use `kairosctl` and provide the network_token to establish a tunnel to the nodes network.
 
 ```bash
-sudo kairos bridge --network-token <TOKEN>
+sudo kairosctl bridge --network-token <TOKEN>
 ```
 
 This command creates a TUN device on your machine and allows you to communicate with each node in the cluster.
@@ -274,7 +274,7 @@ An API will be also available at [localhost:8080](http://localhost:8080) for ins
 To get the cluster `kubeconfig`, you can log in to the master node and retrieve it from the engine (e.g., it is located at `/etc/rancher/k3s/k3s.yaml` for K3s) or use the Kairos CLI. If using the CLI, you must be connected to the bridge or logged in from one of the nodes and run the following command in the console:
 
 ```bash
-kairos get-kubeconfig > kubeconfig
+kairosctl get-kubeconfig > kubeconfig
 ```
 
 {{% alert title="Note" color="info" %}}
