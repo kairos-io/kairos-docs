@@ -36,7 +36,7 @@ At this stage, take a screenshot or a photo and save the image with the QR code.
 In the another machine that you are using to connect to your server, (your workstation, a jumpbox, or other) use the Kairos CLI to connect over the remote machine:
 
 ```
-$ ./kairos bridge --qr-code-image /path/to/image.png
+$ ./kairosctl bridge --qr-code-image /path/to/image.png
  INFO   Connecting to service kAIsuqiwKR
  INFO   SSH access password is yTXlkak
  INFO   SSH server reachable at 127.0.0.1:2200

@@ -57,7 +57,7 @@ The CLI allows to register a node with a screenshot, an image, or a token. Durin
 In a terminal window from your desktop/workstation, run:
 
 ```
-kairos register --reboot --device /dev/sda --config config.yaml
+kairosctl register --reboot --device /dev/sda --config config.yaml
 ```
 
 - The `--reboot` flag will make the node reboot automatically after the installation is completed.
@@ -65,7 +65,7 @@ kairos register --reboot --device /dev/sda --config config.yaml
 - The `--config` flag is used to specify the config file used by the installation process.
 
 {{% alert title="Note" %}}
-By default, the CLI will automatically take a screenshot to get the QR code. Make sure it fits into the screen. Alternatively, an image path or a token can be supplied via arguments (e.g. `kairos register /img/path` or `kairos register <token>`).
+By default, the CLI will automatically take a screenshot to get the QR code. Make sure it fits into the screen. Alternatively, an image path or a token can be supplied via arguments (e.g. `kairosctl register /img/path` or `kairosctl register <token>`).
 {{% /alert %}}
 
 After a few minutes, the configuration is distributed to the node and the installation starts. At the end of the installation, the system is automatically rebooted.
