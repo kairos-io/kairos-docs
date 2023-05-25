@@ -48,8 +48,8 @@ c58930881bc4: Pushed
 You can use your custom image when [upgrading nodes manually](/docs/upgrade/manual), [with Kubernetes](/docs/upgrade/kubernetes) or [specifying it in the cloud-config during installation](/docs/examples/core). Here's how to do it manually with the `kairos-agent` command:
 
 ```
-node:/home/kairos # kairos-agent  upgrade --image docker.io/<your-org>/myos:0.1
-INFO[2022-12-01T13:49:41Z] Starting elemental version v0.0.1
+node:/home/kairos # kairos-agent upgrade --image docker.io/<your-org>/myos:0.1
+INFO[2022-12-01T13:49:41Z] kairos-agent version v0.0.1
 INFO[2022-12-01T13:49:42Z] Upgrade called
 INFO[2022-12-01T13:49:42Z] Applying 'before-upgrade' hook
 INFO[2022-12-01T13:49:42Z] Running before-upgrade hook
