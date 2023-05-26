@@ -241,7 +241,6 @@ curl -L https://github.com/kairos-io/provider-kairos/releases/download/{{<provid
 # optionally, install the CLI locally
 mv kairosctl /usr/local/bin/kairosctl
 chmod +x /usr/local/bin/kairosctl
-
 ```
 
 The CLI allows to register a node with a QR Code screenshot, an QR Code image, or an EdgeVPN token. During pairing, the configuration is sent over, and the node will continue the installation process.
