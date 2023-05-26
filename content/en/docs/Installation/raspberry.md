@@ -60,10 +60,17 @@ The following shell script shows how to locally rebuild and customize the image 
 If you're using osbuilder between versions 0.6.0 and 0.6.5, you need to pass the flag `--use-lvm` to the `build-arm-image.sh` script, the same way you pass `--local`. Starting form osbuilder 0.6.6 this will be the default behaviour.
 {{% /alert %}}
 
+{{% alert title="Notes" %}}
+Validating the config is not required in the following process, but it can save you some time. Use [kairosctl](/docs/reference/kairosctl/) to perform the schema validations.
+{{% /alert %}}
+
 ```
+# Download the Kairos image locally
 IMAGE={{< registryURL >}}/kairos-opensuse-leap-arm-rpi:{{<providerVersion>}}-{{<k3sVersionOCI>}}
-# Pull the image locally
 docker pull $IMAGE
+# Validate the configuration file
+kairosctl validate cloud-config.yaml
+# Customize it
 mkdir -p build
 docker run -v $PWD:/HERE \
  -v /var/run/docker.sock:/var/run/docker.sock \
