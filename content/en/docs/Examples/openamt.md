@@ -8,7 +8,7 @@ description: >
 ---
 
 If Kairos is installed on a device with an Intel AMT device, the device can be automatically registered with an MPS server.
-The registration will only run during installation.  Devices with Kairos already installed will not be affected.
+The registration will only run during installation. Devices with Kairos already installed will not be affected.
 
 ## Configuration
 
