@@ -28,7 +28,7 @@ The partitions are:
 - COS_STATE for storing the active/passive images to boot the system
 - EFI for storing the efi shell and grub to boot the system
 - RECOVERY - to store the recovery system
-- PERSISTENT - this is an optional partition to store the persistent data of the system. you can either write this in the eMMC or, for instance, to an external storage. It is enough to create a partition and label it as `COS_PERSISTENT`. There can be only one partition with such label. first match wins.
+- PERSISTENT - this is an optional partition to store the persistent data of the system. you can either write this in the eMMC or, for instance, to an external storage. It is enough to create a partition and label it as `COS_PERSISTENT`. There can be only one partition with such label, the first that matches wins.
 
 ### Prepare the SDK
 
