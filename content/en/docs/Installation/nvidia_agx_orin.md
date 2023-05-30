@@ -17,7 +17,7 @@ This page describes how to install Kairos on [Nvidia AGX Orin](https://www.nvidi
 - A Linux host used to flash the Nvidia AGX Orin board
 - Jetson linux SDK [download](https://developer.nvidia.com/embedded/jetson-linux)
 
-You can find debugging informations here: https://developer.ridgerun.com/wiki/index.php/NVIDIA_Jetson_Orin/In_Board/Getting_in_Board/Serial_Console
+You can find debugging information here: https://developer.ridgerun.com/wiki/index.php/NVIDIA_Jetson_Orin/In_Board/Getting_in_Board/Serial_Console
 
 ## Flashing
 
