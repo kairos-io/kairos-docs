@@ -115,7 +115,7 @@ truncate -s $((2048*1024*1024)) bootloader/persistent.img
 mkfs.ext2 -L "COS_PERSISTENT" bootloader/persistent.img
 ```
 
-Note that the size of the partitions you modify should be dutely reported in the partition layout (see below).
+Note that the size of the partitions you modify should be duly reported in the partition layout (see below).
 {{% /alert %}}
 
 ### Edit the parition layout
