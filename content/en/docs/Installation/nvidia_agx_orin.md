@@ -60,7 +60,7 @@ echo "" > rootfs/boot/extlinux/extlinux.conf
 
 ### Prepare the images
 
-You can either download pre-built Kairos images, or build your own from a container image. You can find Kairos core ubuntu images based on Ubuntu `20.04` are here: https://quay.io/repository/kairos/core-ubuntu-20-lts-arm-nvidia-jetson-agx-orin.
+You can either download pre-built Kairos images, or build your own from a container image. You can find Kairos core ubuntu images based on Ubuntu `20.04` here: https://quay.io/repository/kairos/core-ubuntu-20-lts-arm-nvidia-jetson-agx-orin.
 
 {{< tabpane text=true  >}}
 {{% tab header="Download pre-built partition images from a container image" %}}
