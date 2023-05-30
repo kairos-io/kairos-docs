@@ -53,7 +53,7 @@ IMAGE=quay.io/kairos/core-ubuntu-20-lts-arm-nvidia-jetson-agx-orin:latest
 docker run -ti --rm -v $PWD/rootfs:/rootfs quay.io/luet/base util unpack "$IMAGE" /rootfs
 # workaround needed (SDK writes to the symlink)
 rm rootfs/boot/initrd
-## Extlinux is required by the SDK - so we fake it in our root (it will not be there eventually)
+# Extlinux is required by the SDK - so we fake it in our root (it will not be there eventually)
 mkdir -p rootfs/boot/extlinux/
 echo "" > rootfs/boot/extlinux/extlinux.conf
 ```
