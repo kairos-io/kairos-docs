@@ -21,7 +21,7 @@ You can find debugging information here: https://developer.ridgerun.com/wiki/ind
 
 ## Flashing
 
-We are going to write the partitions in the eMMC. In order to do this we will use the Nvidia SDK configured with a custom partitioning layout and the partitions we are going to write in the eMMC.
+We are going to write the partitions in the eMMC. In order to do this we will use the Nvidia SDK configured with a custom partitioning layout.
 
 The partitions are:
 - OEM for storing cloud config files (`/oem`)
