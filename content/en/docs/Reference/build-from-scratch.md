@@ -140,7 +140,7 @@ We can use [AuroraBoot](/docs/reference/auroraboot) to handle the the ISO build 
 ```bash
 docker run -v "$PWD"/build:/tmp/auroraboot \
              -v /var/run/docker.sock:/var/run/docker.sock \
-             --rm -ti quay.io/kairos/auroraboot:v0.2.2 \
+             --rm -ti quay.io/kairos/auroraboot:{{< auroraBootVersion >}} \
              --set container_image=docker://test-byoi \
              --set "disable_http_server=true" \
              --set "disable_netboot=true" \
@@ -170,7 +170,7 @@ To netboot, we can also use [AuroraBoot](/docs/reference/auroraboot) to handle t
 ```bash
 docker run -v --net host \
              -v /var/run/docker.sock:/var/run/docker.sock \
-             --rm -ti quay.io/kairos/auroraboot:v0.2.2 \
+             --rm -ti quay.io/kairos/auroraboot:{{< auroraBootVersion >}} \
              --set container_image=docker://test-byoi \
              --set "disable_http_server=true" \
              --set "netboot.cmdline=rd.neednet=1 ip=dhcp rd.cos.disable netboot nodepair.enable console=tty0 selinux=0"
