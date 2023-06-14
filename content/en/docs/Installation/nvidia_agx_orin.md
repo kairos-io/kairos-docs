@@ -233,7 +233,7 @@ To customize the default cloud config of the board, generate the images mounting
 IMAGE=quay.io/kairos/core-ubuntu-20-lts-arm-nvidia-jetson-agx-orin:latest
 CLOUD_CONFIG=/cloud/config.yaml
 docker run -v $CLOUD_CONFIG:/defaults.yaml --privileged \
-        -e container=$IMAGE \
+        -e container_image=$IMAGE \
         -e STATE_SIZE="6200" \
         -e RECOVERY_SIZE="4200" \
         -e DEFAULT_ACTIVE_SIZE="2000" \
