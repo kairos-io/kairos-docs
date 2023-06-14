@@ -33,13 +33,12 @@ The ipxe ISOs from the Kairos release artifacts, were built with a ipxe script t
 
 E.g.:
 
-<!-- TODO: change this to include leap in the name once we release 1.5.0-->
 ```bash
 #!ipxe
-set url https://github.com/kairos-io/kairos/releases/download/v1.3.0
-set kernel kairos-alpine-opensuse-leap-v1.3.0-kernel
-set initrd kairos-alpine-opensuse-leap-v1.3.0-initrd
-set rootfs kairos-alpine-opensuse-leap-v1.3.0.squashfs
+set url https://github.com/kairos-io/kairos/releases/download/{{< kairosVersion >}}
+set kernel kairos-alpine-opensuse-leap-{{< kairosVersion >}}-kernel
+set initrd kairos-alpine-opensuse-leap-{{< kairosVersion >}}-initrd
+set rootfs kairos-alpine-opensuse-leap-{{< kairosVersion >}}.squashfs
 
 # Configure interface
 ifconf
@@ -72,12 +71,12 @@ qemu-system-x86_64 \
 
 ```bash
 docker run --rm -ti --net host quay.io/kairos/auroraboot \
-                    --set "container_image=quay.io/kairos/kairos-opensuse-leap:v1.5.1-k3sv1.21.14-k3s1"
+                    --set "container_image=quay.io/kairos/kairos-opensuse-leap:{{<providerVersion>}}-{{<k3sVersion>}}"
                     # Optionally:
                     # --cloud-config ....
 ```
 
-Will netboot the `quay.io/kairos/kairos-opensuse-leap:v1.5.1-k3sv1.21.14-k3s1` image. You can find more details in the [AuroraBoot documentation section](/docs/reference/auroraboot).
+Will netboot the `quay.io/kairos/kairos-opensuse-leap:{{<providerVersion>}}-{{<k3sVersion>}}` image. You can find more details in the [AuroraBoot documentation section](/docs/reference/auroraboot).
 
 ## Notes on booting from network
 
@@ -88,15 +87,13 @@ Another way to boot with the release artifacts is using [pixiecore](https://gith
 Assuming the current directory has the `kernel`, `initrd` and `squashfs` artifacts,
 `pixiecore` server can be started with `docker` like this:
 
-<!-- TODO: change this to include leap in the name once we release 1.5.0-->
-
 ```bash
 #!/bin/bash
 
-VERSION="v1.3.0"
-wget "https://github.com/kairos-io/kairos/releases/download/${VERSION}/kairos-opensuse-${VERSION}-kernel"
-wget "https://github.com/kairos-io/kairos/releases/download/${VERSION}/kairos-opensuse-${VERSION}-initrd"
-wget "https://github.com/kairos-io/kairos/releases/download/${VERSION}/kairos-opensuse-${VERSION}.squashfs"
+VERSION="{{< kairosVersion >}}"
+wget "https://github.com/kairos-io/kairos/releases/download/${VERSION}/kairos-opensuse-leap-${VERSION}-kernel"
+wget "https://github.com/kairos-io/kairos/releases/download/${VERSION}/kairos-opensuse-leap-${VERSION}-initrd"
+wget "https://github.com/kairos-io/kairos/releases/download/${VERSION}/kairos-opensuse-leap-${VERSION}.squashfs"
 
 cat << EOF > config.yaml
 #cloud-config
@@ -111,7 +108,7 @@ EOF
 # Any machine that depends on DHCP to netboot will be send the specified files and the cmd boot line.
 docker run \
   -d --name pixiecore --net=host -v $PWD:/files quay.io/pixiecore/pixiecore \
-    boot /files/kairos-opensuse-${VERSION}-kernel /files/kairos-opensuse-${VERSION}-initrd --cmdline="rd.neednet=1 ip=dhcp rd.cos.disable root=live:{{ ID \"/files/kairos-opensuse-${VERSION}.squashfs\" }} netboot nodepair.enable config_url={{ ID \"/files/config.yaml\" }} console=tty1 console=ttyS0 console=tty0"
+    boot /files/kairos-opensuse-${VERSION}-kernel /files/kairos-opensuse-${VERSION}-initrd --cmdline="rd.neednet=1 ip=dhcp rd.cos.disable root=live:{{ ID \"/files/kairos-opensuse-leap-${VERSION}.squashfs\" }} netboot nodepair.enable config_url={{ ID \"/files/config.yaml\" }} console=tty1 console=ttyS0 console=tty0"
 ```
 
 If your machine doesn't support netbooting, you can use our [generic image](https://github.com/kairos-io/ipxe-dhcp/releases), which is built using an ipxe script [from the pixiecore project](https://github.com/danderson/netboot/blob/master/pixiecore/boot.ipxe). The ISO will wait for a DHCP proxy response from pixiecore.
