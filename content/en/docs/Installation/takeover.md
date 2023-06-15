@@ -13,7 +13,7 @@ Kairos supports takeover installations. Here are a few summarized steps:
 
 ```
 export DEVICE=/dev/sda
-export IMAGE=quay.io/kairos/core-opensuse-leap:v1.1.4
+export IMAGE=quay.io/kairos/core-opensuse-leap:{{< kairosVersion >}}
 cat <<'EOF' > config.yaml
 #cloud-config
 users:
@@ -23,7 +23,7 @@ users:
   - github:mudler
 EOF
 export CONFIG_FILE=config.yaml
-docker run --privileged -v $PWD:/data -v /dev:/dev -ti $IMAGE elemental install --cloud-init /data/$CONFIG_FILE --system.uri $IMAGE $DEVICE
+docker run --privileged -v $PWD:/data -v /dev:/dev -ti $IMAGE kairos-agent manual-install --device $DEVICE /data/$CONFIG_FILE
 ```
-
+kkgT
 - Switch back to *booting* from HD and reboot.

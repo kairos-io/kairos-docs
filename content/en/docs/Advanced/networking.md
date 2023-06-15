@@ -27,8 +27,9 @@ stages:
           content: |
             [service_eth0]
             Type = ethernet
-            IPv4 = 10.1.1.1/16/10.1.0.1
-            Nameservers = 10.1.0.1
+            IPv4 = 192.168.122.170/255.255.255.0/192.168.122.1
+            IPv6 = off
+            Nameservers = 1.1.1.1
 ```
 {{% /tab %}}
 {{% tab header="systemd-networkd" %}}

@@ -111,18 +111,6 @@ spec:
 
 It is possible to trigger the reset manually by logging into the recovery from the boot menu and running `kairos reset` from the console.
 
-To optionally change the behavior of the reset process (such as cleaning up also configurations), run `elemental reset` instead which supports options via arg:
-
-| Option              | Description                 |
-| ------------------- | --------------------------- |
-| --reset-persistent  | Clear persistent partitions |
-| --reset-oem         | Clear OEM partitions        |
-| --system.uri string | Reset with the given image  |
-
-- **Note**: `--reset-oem` resets the system pruning all the configurations.
-- `system.uri` allows to reset using another image or a directory.
-  `string` can be among the following: `dir:/path/to/dir`, `oci:<image>`, `docker:<image>`, `channel:<luet package>` or `file:/path/to/file`.
-
 ### Cleaning up state directories
 
 An alternative way and manual of resetting your system is possible by deleting the state paths. You can achieve this by deleting the contents of the `/usr/local` directory. It's recommended that you do this while in recovery mode with all services turned off.

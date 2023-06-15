@@ -48,6 +48,9 @@ kairos:
 # extra configuration
 ```
 
+The token `p2p.network_token` is a base64 encoded string which
+contains an [`edgevpn` token](https://github.com/mudler/edgevpn/blob/master/docs/content/en/docs/Concepts/Token/_index.md). For more information, [check out the architecture section](/docs/architecture/network).
+
 Save this file as `cloud_init.yaml`, then create an ISO with the following steps:
 
 1. Create a new directory and navigate to it:
@@ -55,12 +58,12 @@ Save this file as `cloud_init.yaml`, then create an ISO with the following steps
 $ mkdir -p build
 $ cd build
 ```
-2. Create empty `meta-data` and copy your config as `user-data`:
+1. Create empty `meta-data` and copy your config as `user-data`:
 ```bash
 $ touch meta-data
 $ cp -rfv cloud_init.yaml user-data
 ```
-3. Use `mkisofs` to create the ISO file:
+1. Use `mkisofs` to create the ISO file:
 ```bash
 $ mkisofs -output ci.iso -volid cidata -joliet -rock user-data meta-data
 ```

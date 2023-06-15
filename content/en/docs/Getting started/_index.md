@@ -29,8 +29,8 @@ Once the installation is complete, you can begin using your Kubernetes cluster.
 
 1. Visit the Kairos [release page on GitHub](https://github.com/kairos-io/provider-kairos/releases)
 1. Select the latest release and download the assets of your flavor. For example,
-   pick the [kairos-opensuse-{{<kairosVersion>}}-{{<k3sVersion>}}.iso](https://github.com/kairos-io/provider-kairos/releases/download/v/kairos-opensuse-{{<kairosVersion>}}-{{<k3sVersion>}}.iso)
-   ISO file for the openSUSE based version, where `{{< k3sVersion >}}` in the name is the `k3s` version and `{{< kairosVersion >}}` is the Kairos one to deploy on a VM.
+   pick the [kairos-opensuse-leap-{{<providerVersion>}}-{{<k3sVersion>}}.iso](https://github.com/kairos-io/provider-kairos/releases/download/{{<providerVersion>}}/kairos-opensuse-leap-{{<providerVersion>}}-{{<k3sVersion>}}.iso)
+   ISO file for the openSUSE based version, where `{{< k3sVersion >}}` in the name is the `k3s` version and `{{< providerVersion >}}` is the Kairos one to deploy on a VM.
 1. You can also use [netboot](/docs/installation/netboot) to boot Kairos over the network
 
 {{% alert title="Note" %}}
@@ -146,7 +146,7 @@ Here are some additional helpful tips depending on the physical/virtual machine 
       virt-install --name my-first-kairos-vm \
                   --vcpus 1 \
                   --memory 1024 \
-                  --cdrom /path/to/kairos-opensuse-{{< kairosVersion >}}-{{< k3sVersion >}}.iso \
+                  --cdrom /path/to/kairos-opensuse-{{< providerVersion >}}-{{< k3sVersion >}}.iso \
                   --disk size=30 \
                   --os-variant opensuse-factory \
                   --virt-type kvm
@@ -234,27 +234,26 @@ You can find instructions showing how to use the Kairos CLI below. In case you p
 To trigger the installation process via QR code, you need to use the Kairos CLI. The CLI is currently available only for Linux and Windows. It can be downloaded from the release artifact:
 
 ```bash
-curl -L https://github.com/kairos-io/provider-kairos/releases/download/v1.0.0/kairos-cli-v1.0.0-Linux-x86_64.tar.gz -o - | tar -xvzf - -C .
+curl -L https://github.com/kairos-io/provider-kairos/releases/download/{{<providerVersion>}}/kairosctl-.{{<providerVersion>}}-.linux-.amd64.tar.gz -o - | tar -xvzf - -C .
 ```
 
 ```bash
 # optionally, install the CLI locally
-mv kairos-cli /usr/local/bin/kairos
-chmod +x /usr/local/bin/kairos
-
+mv kairosctl /usr/local/bin/kairosctl
+chmod +x /usr/local/bin/kairosctl
 ```
 
-The CLI allows to register a node with a screenshot, an image, or a token. During pairing, the configuration is sent over, and the node will continue the installation process.
+The CLI allows to register a node with a QR Code screenshot, an QR Code image, or an EdgeVPN token. During pairing, the configuration is sent over, and the node will continue the installation process.
 
 In a terminal window from your desktop/workstation, run:
 
 ```
-kairos register --reboot --device /dev/sda --config config.yaml
+kairosctl register --reboot --device /dev/sda --config config.yaml
 ```
 
 **Note**:
 
-- By default, the CLI will automatically take a screenshot to get the QR code. Make sure it fits into the screen. Alternatively, an image path or a token can be supplied via arguments (e.g. `kairos register /img/path` or `kairos register <token>`).
+- By default, the CLI will automatically take a screenshot to get the QR code. Make sure it fits into the screen. Alternatively, an image path or an EdgeVPN token can be supplied via arguments (e.g. `kairosctl register /img/path` or `kairosctl register <EdgeVPN token>`).
 - The `--reboot` flag will make the node reboot automatically after the installation is completed.
 - The `--device` flag determines the specific drive where Kairos will be installed. Replace `/dev/sda` with your drive. Any existing data will be overwritten, so please be cautious.
 - The `--config` flag is used to specify the config file used by the installation process.

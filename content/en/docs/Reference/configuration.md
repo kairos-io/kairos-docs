@@ -221,63 +221,43 @@ The extended syntax can also be used to pass commands through Kernel boot parame
 
 Writing YAML files can be a tedious process, and it's easy to make syntax or indentation errors. To make sure your configuration is correct, you can use the cloud-init commands to test your YAML files locally in a container.
 
-Here's an example of how to test your configuration using a Docker container:
+Here's an example of how to test your configurations on the `initramfs` stage using a Docker container:
 
 ```bash
 # List the YAML files in your current directory
 $ ls -liah
-total 32K
-38548066 drwxr-xr-x 2 mudler mudler 4.0K Nov 12 19:21 .
-38548063 drwxr-xr-x 3 mudler mudler 4.0K Nov 12 19:21 ..
-38548158 -rw-r--r-- 1 mudler mudler 1.4K Nov 12 19:21 00_rootfs.yaml
-38548159 -rw-r--r-- 1 mudler mudler 1.1K Nov 12 19:21 06_recovery.yaml
-38552350 -rw-r--r-- 1 mudler mudler  608 Nov 12 19:21 07_live.yaml
-38552420 -rw-r--r-- 1 mudler mudler 5.3K Nov 12 19:21 08_boot_assessment.yaml
-38553235 -rw-r--r-- 1 mudler mudler  380 Nov 12 19:21 09_services.yaml
+total 4,0K
+9935 drwxr-xr-x.  2 itxaka itxaka  60 may 17 11:21 .
+   1 drwxrwxrwt. 31 root   root   900 may 17 11:28 ..
+9939 -rw-r--r--.  1 itxaka itxaka  59 may 17 11:21 00_test.yaml
+
+$ cat 00_test.yaml
+stages:
+  initramfs:
+    - commands:
+      - echo "hello!"
+
 
 # Run the cloud-init command on your YAML files in a Docker container
-$ docker run -ti -v $PWD:/test --entrypoint /usr/bin/elemental --rm {{< registryURL >}}/core-{{< flavor >}} cloud-init /test
+$ docker run -ti -v $PWD:/test --entrypoint /usr/bin/kairos-agent --rm {{< registryURL >}}/core-{{< flavor >}} run-stage --cloud-init-paths /test initramfs
 
-# Output from the cloud-init command
-INFO[2022-11-18T08:51:33Z] Starting elemental version ...
-INFO[2022-11-18T08:51:33Z] Running stage: default
-INFO[2022-11-18T08:51:33Z] Executing /test/00_rootfs.yaml
-INFO[2022-11-18T08:51:33Z] Executing /test/06_recovery.yaml
-INFO[2022-11-18T08:51:33Z] Executing /test/07_live.yaml
-INFO[2022-11-18T08:51:33Z] Executing /test/08_boot_assessment.yaml
-INFO[2022-11-18T08:51:33Z] Executing /test/09_services.yaml
-INFO[2022-11-18T08:51:33Z] Done executing stage 'default'
-```
+# Output from the run-stage command
+INFO[2023-05-17T11:32:09+02:00] kairos-agent version 0.0.0                   
+INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs.before              
+INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.before'      
+INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs                     
+INFO[2023-05-17T11:32:09+02:00] Processing stage step ''. ( commands: 1, files: 0, ... ) 
+INFO[2023-05-17T11:32:09+02:00] Command output: hello!                       
+INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs'             
+INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs.after               
+INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.after'       
+INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs.before              
+INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.before'      
+INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs                     
+INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs'             
+INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs.after               
+INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.after'          
 
-By default, the cloud-init command runs the `default` stage, which doesn't actually map to any specific stage in your YAML files. To test a different stage, you can use the `--stage` (`-s`) option, like this:
-
-```bash
-# Run the cloud-init command on your YAML files in a Docker container, and specify the "initramfs" stage
-$ docker run -ti -v $PWD:/test --entrypoint /usr/bin/elemental --rm {{< registryURL >}}/core-{{< flavor >}} cloud-init -s initramfs /test
-```
-
-You can also test individual YAML files by piping them to the cloud-init command, like this:
-```bash
-cat <<EOF | docker run -i --rm --entrypoint /usr/bin/elemental {{< registryURL >}}/core-{{< flavor >}} cloud-init -s test -
-#cloud-config
-
-stages:
- test:
- - commands:
-   - echo "test"
-EOF
-
-# INFO[2022-11-18T08:53:45Z] Starting elemental version v0.0.1
-# INFO[2022-11-18T08:53:45Z] Running stage: test
-# INFO[2022-11-18T08:53:45Z] Executing stages:
-# test:
-# - commands:
-#   - echo "test"
-# INFO[2022-11-18T08:53:45Z] Applying '' for stage 'test'. Total stages: 1
-# INFO[2022-11-18T08:53:45Z] Processing stage step ''. ( commands: 1, files: 0, ... )
-# INFO[2022-11-18T08:53:45Z] Command output: test
-# INFO[2022-11-18T08:53:45Z] Stage 'test'. Defined stages: 1. Errors: false
-# INFO[2022-11-18T08:53:45Z] Done executing stage 'test'
 ```
 
 ### Validate Your Cloud Config
@@ -541,7 +521,7 @@ Define a custom ID for the Kubernetes cluster. This can be used to create multip
 
 ### `p2p.dns`
 
-When the `p2p.dns` is set to `true` the embedded DNS is configured on the node. This allows to propagate custom records to the nodes by using the blockchain DNS server. For example, this is assuming `kairos bridge` is running in a separate terminal:
+When the `p2p.dns` is set to `true` the embedded DNS is configured on the node. This allows to propagate custom records to the nodes by using the blockchain DNS server. For example, this is assuming `kairosctl bridge` is running in a separate terminal:
 
 ```bash
 curl -X POST http://localhost:8080/api/dns --header "Content-Type: application/json" -d '{ "Regex": "foo.bar", "Records": { "A": "2.2.2.2" } }'

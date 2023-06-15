@@ -34,6 +34,9 @@ p2p:
 # extra configuration
 ```
 
+The token `p2p.network_token` is a base64 encoded string which
+contains an [`edgevpn` token](https://github.com/mudler/edgevpn/blob/master/docs/content/en/docs/Concepts/Token/_index.md). For more information, [check out the architecture section](/docs/architecture/network).
+
 **Note**: 
 - The command is disruptive and will erase any content on the drive.
 - The parameter **"auto"** selects the biggest drive available in the machine.

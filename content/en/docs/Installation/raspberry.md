@@ -26,7 +26,7 @@ Extract the `img` file from a container image as described [in this page](/docs/
 Plug the SD card to your system. To flash the image, you can either use Etcher or `dd`. Note it's compressed with "XZ", so we need to decompress it first:
 
 ```bash
-xzcat kairos-opensuse-leap-arm-rpi-v1.0.0-rc2-k3sv1.21.14+k3s1.img.xz | sudo dd of=<device> oflag=sync status=progress bs=10MB
+xzcat kairos-opensuse-leap-arm-rpi-{{<providerVersion>}}-{{<k3sVersion>}}.img.xz | sudo dd of=<device> oflag=sync status=progress bs=10MB
 ```
 
 Once the image is flashed, there is no need to carry any other installation steps. We can boot the image, or apply our config.
@@ -53,14 +53,30 @@ You can push additional `cloud config` files. For a full reference check out the
 
 ## Customizing the disk image
 
-The following shell script shows how to localy rebuild and customize the image with docker
+The following shell script shows how to locally rebuild and customize the image with docker
+
+
+{{% alert title="Warning" %}}
+If you're using osbuilder between versions 0.6.0 and 0.6.5, you need to pass the flag `--use-lvm` to the `build-arm-image.sh` script, the same way you pass `--local`. Starting form osbuilder 0.6.6 this will be the default behaviour.
+{{% /alert %}}
+
+{{% alert title="Notes" %}}
+Validating the config is not required in the following process, but it can save you some time. Use [kairosctl](/docs/reference/kairosctl/) to perform the schema validations.
+{{% /alert %}}
 
 ```
-IMAGE=quay.io/kairos/kairos-alpine-arm-rpi:v1.1.6-k3sv1.25.3-k3s1
-# Pull the image locally
+# Download the Kairos image locally
+IMAGE={{< registryURL >}}/kairos-opensuse-leap-arm-rpi:{{<providerVersion>}}-{{<k3sVersionOCI>}}
 docker pull $IMAGE
+# Validate the configuration file
+kairosctl validate cloud-config.yaml
+# Customize it
 mkdir -p build
-docker run -v $PWD:/HERE -v /var/run/docker.sock:/var/run/docker.sock --privileged -i --rm --entrypoint=/build-arm-image.sh quay.io/kairos/osbuilder-tools:v0.4.0 \
+docker run -v $PWD:/HERE \
+ -v /var/run/docker.sock:/var/run/docker.sock \
+ --privileged -i --rm \
+ --entrypoint=/build-arm-image.sh {{< registryURL >}}/osbuilder-tools:{{< osbuilderVersion >}} \
+ --use-lvm \
  --model rpi64 \
  --state-partition-size 6200 \
  --recovery-partition-size 4200 \
@@ -69,5 +85,4 @@ docker run -v $PWD:/HERE -v /var/run/docker.sock:/var/run/docker.sock --privileg
  --local \
  --config /HERE/cloud-config.yaml \
  --docker-image $IMAGE /HERE/build/out.img
-
 ```
