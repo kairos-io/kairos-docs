@@ -55,8 +55,24 @@ serve the artifact files after they are built. See below for more.
 To build an ISO, consider the following spec, which provides a hybrid bootable ISO (UEFI/MBR), with the `core` kairos image, adding `helm`:
 
 ```yaml
+kind: Secret
+apiVersion: v1
+metadata:
+  name: cloud-config
+stringData:
+  userdata: |
+    #cloud-config
+    users:
+    - name: "kairos"
+      passwd: "kairos"
+    install:
+      device: "auto"
+      reboot: true
+      poweroff: false
+      auto: true # Required, for automated installations
+---
 kind: OSArtifact
-apiVersion: build.kairos.io/v1alpha1
+apiVersion: build.kairos.io/v1alpha2
 metadata:
   name: hello-kairos
 spec:
@@ -65,16 +81,28 @@ spec:
   bundles:
   # Bundles available at: https://packages.kairos.io/Kairos/
   - quay.io/kairos/packages:helm-utils-3.10.1
-  cloudConfig: |
-            #cloud-config
-            users:
-            - name: "kairos"
-              passwd: "kairos"
-            install:
-              device: "auto"
-              reboot: true
-              poweroff: false
-              auto: true # Required, for automated installations
+  cloudConfigRef: |
+    name: cloud-config
+    key: userdata
+  exporters:
+    - template:
+      spec:
+        restartPolicy: Never
+        containers:
+          - name: upload
+            image: docker.spectro.jbpe.io/kairos/osbuilder-tools:v0.7.0
+            command:
+              - bash
+            args:
+              - -c
+              - |
+                for f in $(ls /artifacts)
+                do
+                  curl -T /artifacts/$f http://osartifactbuilder-operator-osbuilder-nginx/upload/$f
+                done
+            volumeMounts:
+              - name: artifacts
+                mountPath: /artifacts
 ```
 
 Apply the manifest with `kubectl apply`.
@@ -105,6 +133,7 @@ spec:
   netbootURL: ...
   bundles: ...
   cloudConfig: ...
+  exporters: ...
 ```
 
 ## Build a Cloud Image
@@ -115,6 +144,44 @@ Custom user-data from the Cloud provider is automatically retrieved, additionall
 A Cloud Image boots in QEMU and also in AWS, consider:
 
 ```yaml
+kind: Secret
+apiVersion: v1
+metadata:
+  name: cloud-config
+stringData:
+  userdata: |
+    #cloud-config
+    users:
+    - name: "kairos"
+      passwd: "kairos"
+    name: "Default deployment"
+    stages:
+      boot:
+      - name: "Repart image"
+        layout:
+          device:
+            label: COS_RECOVERY
+          add_partitions:
+            - fsLabel: COS_STATE
+              size: 16240 # At least 16gb
+              pLabel: state
+      - name: "Repart image"
+        layout:
+          device:
+            label: COS_RECOVERY
+          add_partitions:
+            - fsLabel: COS_PERSISTENT
+              pLabel: persistent
+              size: 0 # all space
+      - if: '[ -f "/run/cos/recovery_mode" ] && [ ! -e /usr/local/.deployed ]'
+        name: "Deploy cos-system"
+        commands:
+          - |
+              # Use `elemental reset --system.uri docker:<img-ref>` to deploy a custom image
+              elemental reset && \
+              touch /usr/local/.deployed && \
+              reboot
+---
 apiVersion: build.kairos.io/v1alpha1
 kind: OSArtifact
 metadata:
@@ -122,44 +189,16 @@ metadata:
 spec:
   imageName: "quay.io/kairos/core-opensuse-leap:latest"
   cloudImage: true
-  cloudConfig: |
-            #cloud-config
-            users:
-            - name: "kairos"
-              passwd: "kairos"
-            name: "Default deployment"
-            stages:
-              boot:
-              - name: "Repart image"
-                layout:
-                  device:
-                    label: COS_RECOVERY
-                  add_partitions:
-                    - fsLabel: COS_STATE
-                      size: 16240 # At least 16gb
-                      pLabel: state
-              - name: "Repart image"
-                layout:
-                  device:
-                    label: COS_RECOVERY
-                  add_partitions:
-                    - fsLabel: COS_PERSISTENT
-                      pLabel: persistent
-                      size: 0 # all space
-              - if: '[ -f "/run/cos/recovery_mode" ] && [ ! -e /usr/local/.deployed ]'
-                name: "Deploy cos-system"
-                commands:
-                  - |
-                      kairos-agent reset && \
-                      touch /usr/local/.deployed && \
-                      reboot
+  cloudConfigRef:
+    name: cloud-config
+    key: userdata
 ```
 
 Note: Since the image come with only the `recovery` system populated, we need to apply a cloud-config similar to this one which tells which container image we want to deploy.
 The first steps when the machine boots into is to actually create the partitions needed to boot the active and the passive images, and its populated during the first boot.
 
 After applying the spec, the controller will create a Kubernetes Job which runs the build process and
-then copy the produced `hello-kairos.raw` file to the nginx server (see above). This file is an EFI bootable raw disk, bootable in QEMU and compatible with AWS which automatically provisions the node:
+then copy the produced `hello-kairos.raw` file to the nginx server (see above). Alternatively you may configure your own job to copy the content elsewhere. This file is an EFI bootable raw disk, bootable in QEMU and compatible with AWS which automatically provisions the node:
 
 ```bash
 $ PORT=$(kubectl get svc osartifactbuilder-operator-osbuilder-nginx -o json | jq '.spec.ports[0].nodePort')
