@@ -28,7 +28,7 @@ Kairos 2.2.0 has just been released, and we are thrilled to share the latest upd
 
 This release brings updates to the Kairos core components, including a substantial refactor of internal components and several bugfixes.
 
-In order to enhance the user experience and reduce maintenance efforts the `elemental` cli and the `kairos-agent` functionalities were merged together. The `kairos-agent` now is responsible for the lifecycle of Kairos. This includes upgrades, setup, and delegating configuration to the specific providers that implement the specific configuration (k3s, for instance).
+In order to enhance the user experience and reduce maintenance efforts the `elemental` cli and the `kairos-agent` functionalities were merged together. The `kairos-agent` now is responsible for the lifecycle of Kairos. This includes upgrades, setup, and delegating configuration to the specific providers that implement the specific configuration (k3s, for instance). The cloud-init stages can be run directly with the `kairos-agent`, and there is a `--debug` flag now to ease out troubleshooting. We also have renamed and moved user-facing commands of the Kairos CLI to `kairosctl`.
 
 Besides, the Kairos agent now is capable to support multi-arch images, as such is now possible to specify container images during upgrades for different platforms within the same tag.
 
@@ -36,7 +36,7 @@ We consolidated our support for the ARM architecture, most notably:
 
 - Generic iso ARM images, that can be used for development or in VMs
 - Support for [Nvidia AGX Orin](https://kairos.io/docs/installation/nvidia_agx_orin/)!
-- RPI images now are shipping with LVM, and as such the oem partition is available as in the `x86_64` flavors
+- RPI images now are shipping with LVM, and as such the oem partition is available as in the `x86_64` flavors. Note: Reset is not working, we are addressing this into a patch release.
 - Add ubuntu to the available RPI images
 
 We are working also on a pure, Alpine flavor, which is now independent from systemd. Stay tuned!
