@@ -36,6 +36,7 @@ Base images are tagged with specific upstream versions (e.g. Ubuntu 20 LTS is pi
 | **Ubuntu based (22 LTS)** **             | [core][c-ubuntu-22-lts], [standard][k-ubuntu-22-lts]               | [core][c-ubuntu-22-lts-arm-rpi], [core-img][c-ubuntu-22-lts-arm-rpi-img], [standard][k-ubuntu-22-lts-arm-rpi], [standard-img][k-ubuntu-22-lts-arm-rpi-img] |
 | **Ubuntu based (20 LTS)** **             | [core][c-ubuntu-20-lts], [standard][k-ubuntu-20-lts]               | [core][c-ubuntu-20-lts-arm-rpi], [core-img][c-ubuntu-20-lts-arm-rpi-img], [standard][k-ubuntu-20-lts-arm-rpi], [standard-img][k-ubuntu-20-lts-arm-rpi-img] |
 | **Rocky Linux based**                    | [core][c-rockylinux], [standard][k-rockylinux]                     |                                                                                                                                                            |
+| **Alma Linux based**                     | [core][c-almalinux]                                                |                                                                                                                                                            |
 
 
 [c-alpine-opensuse-leap]: https://quay.io/repository/kairos/core-alpine-opensuse-leap
@@ -60,6 +61,7 @@ Base images are tagged with specific upstream versions (e.g. Ubuntu 20 LTS is pi
 [c-ubuntu-20-lts-arm-rpi]: https://quay.io/repository/kairos/core-ubuntu-20-lts-arm-rpi
 [c-ubuntu-20-lts-arm-rpi-img]: https://quay.io/repository/kairos/core-ubuntu-20-lts-arm-rpi-img
 [c-rockylinux]: https://quay.io/repository/kairos/core-rockylinux
+[c-almalinux]: https://quay.io/repository/kairos/core-almalinux
 
 [k-alpine-opensuse-leap]: https://quay.io/repository/kairos/kairos-alpine-opensuse-leap
 [k-alpine-ubuntu]: https://quay.io/repository/kairos/kairos-alpine-ubuntu
