@@ -181,7 +181,7 @@ docker run -v --net host \
 
 This example is available in the `examples/byoi/fedora` directory of the [Kairos repository](https://github.com/kairos-io/kairos/tree/master/examples/byoi/fedora), where you can run `build.sh` to reproduce it.
 
-## FIPSs compliant flavors
+## FIPS compliant flavors
 
 To build a [FIPS](https://www.techtarget.com/whatis/definition/FIPS-Federal-Information-Processing-Standards) compliant version of Kairos, there are 2 requirements:
 
@@ -198,7 +198,7 @@ Different distributions provide different ways to get a FIPS compliant version o
 
 Your pipeline that builds the base image should take these instructions into account and ensure the base OS is running FIPS compliant binaries.
 
-### FIPS comliant kairos binaries
+### FIPS compliant kairos binaries
 
 As described in the Dockerfile example above, while building a Kairos image from scratch, you need to copy binaries from a framework image. For FIPS compliant binaries, you should use the appropriate framework image.
 [The kairos pipelines already build one](https://github.com/kairos-io/kairos/blob/7d4b7162e08356ee348fafdf3bf7d74c44190930/framework-profile.yaml#L50-L54) Ubuntu 20 tls:
@@ -206,3 +206,6 @@ As described in the Dockerfile example above, while building a Kairos image from
 ```
 quay.io/kairos/framework:master_ubuntu-20-lts-fips
 ```
+
+The binaries in this framework image are built [with golang 1.19.10](https://github.com/kairos-io/packages/blob/082ef206ce523bb3e1d1d9f0bd9953b2550ab2b3/packages/toolchain-go/collection.yaml#L36)
+which uses [boringcrypto commit `ae223d61`](https://boringssl.googlesource.com/boringssl/+/ae223d6138807a13006342edfeef32e813246b39) (Defined [here](https://github.com/golang/go/blob/7fe60b5df764f5a16a2c40e4412b5ed60f709192/src/crypto/internal/boring/Dockerfile#L38)).
