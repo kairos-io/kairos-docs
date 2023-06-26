@@ -52,7 +52,7 @@ FROM fedora:36
 # Note we need to install _at least_ the minimum required packages for Kairos to work:
 # - An init system (systemd)
 # - Grub
-# - kernel/initramfs 
+# - kernel/initramfs
 RUN echo "install_weak_deps=False" >> /etc/dnf/dnf.conf
 
 RUN dnf install -y \
@@ -86,7 +86,7 @@ RUN dnf install -y \
     polkit \
     rsync \
     shim-x64 \
-    squashfs-tools \ 
+    squashfs-tools \
     sudo \
     systemd \
     systemd-networkd \
@@ -147,7 +147,7 @@ docker run -v "$PWD"/build:/tmp/auroraboot \
              --set "state_dir=/tmp/auroraboot"
 # 2:45PM INF Pulling container image 'test-byoi' to '/tmp/auroraboot/temp-rootfs' (local: true)
 # 2:45PM INF Generating iso 'kairos' from '/tmp/auroraboot/temp-rootfs' to '/tmp/auroraboot/iso'
-# $ sudo ls -liah build/iso 
+# $ sudo ls -liah build/iso
 # total 449M
 # 35142520 drwx------ 2 root root 4.0K Mar  7 15:46 .
 # 35142517 drwxr-xr-x 5 root root 4.0K Mar  7 15:42 ..
@@ -180,3 +180,29 @@ docker run -v --net host \
 {{< /tabpane >}}
 
 This example is available in the `examples/byoi/fedora` directory of the [Kairos repository](https://github.com/kairos-io/kairos/tree/master/examples/byoi/fedora), where you can run `build.sh` to reproduce it.
+
+## FIPSs compliant flavors
+
+To build a [FIPS](https://www.techtarget.com/whatis/definition/FIPS-Federal-Information-Processing-Standards) compliant version of Kairos, there are 2 requirements:
+
+- Your base image should be FIPS compliant
+- The kairos package from the fips category should be used (search for "fips" here: https://packages.kairos.io/)
+
+### FIPS compliant base image
+
+Different distributions provide different ways to get a FIPS compliant version of the Operating System. For example:
+
+- [Ubuntu docs](https://ubuntu.com/security/certifications/docs/fips)
+- [RedHat docs](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/security_guide/sect-security_guide-federal_standards_and_regulations-federal_information_processing_standard)
+- [SLE micro](https://documentation.suse.com/zh-cn/sle-micro/5.4/html/SLE-Micro-all/cha-security-fips.html)
+
+Your pipeline that builds the base image should take these instructions into account and ensure the base OS is running FIPS compliant binaries.
+
+### FIPS comliant kairos binaries
+
+As described in the Dockerfile example above, while building a Kairos image from scratch, you need to copy binaries from a framework image. For FIPS compliant binaries, you should use the appropriate framework image.
+[The kairos pipelines already build one](https://github.com/kairos-io/kairos/blob/7d4b7162e08356ee348fafdf3bf7d74c44190930/framework-profile.yaml#L50-L54) Ubuntu 20 tls:
+
+```
+quay.io/kairos/framework:master_ubuntu-20-lts-fips
+```
