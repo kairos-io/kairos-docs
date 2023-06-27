@@ -94,10 +94,11 @@ If you have instead the rootfs as a directory, you can create the required parti
 ```bash
 PATH=/rootfs/path
 docker run --privileged \
-        -e directory=$PATH \
+        -e directory=/rootfs \
         -e STATE_SIZE="6200" \
         -e RECOVERY_SIZE="4200" \
         -e DEFAULT_ACTIVE_SIZE="2000" \
+	-v $PATH:/rootfs \
         -v $PWD/bootloader:/bootloader --entrypoint /prepare_arm_images.sh -ti --rm quay.io/kairos/osbuilder-tools
 ```
 
