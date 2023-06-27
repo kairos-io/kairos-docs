@@ -1034,6 +1034,56 @@ stages:
              filesystem: "ext4"
 ```
 
+You can also set custom partitions within the `kairos-install.pre.before` stage. In the following example we will do a
+custom partition in disk `/dev/vda`.
+
+
+{{% alert title="Warning" %}}
+You're responsible to make sure the sizes of the partitions fit properly within the disk. Issues of space will be highlighted by
+the agent, but they will not fail the installation process unless you pass the `--strict` flag.
+{{% /alert %}}
+
+{{% alert title="Warning" %}}
+In the case of multiple devices, make sure you don't choose `auto` to determine on which device to install but instead to point
+the installation to the device where you are creating the custom partitions.
+{{% /alert %}}
+
+```shell
+#cloud-config
+
+install:
+  # Make sure the installer won't delete our custom partitions
+  no-format: true
+
+stages:
+  kairos-install.pre.before:
+  - if:  '[ -e /dev/vda ]'
+    name: "Create partitions"
+    commands:
+      - |
+        parted --script --machine -- /dev/vda mklabel msdos
+    layout:
+      device:
+        path: /dev/vda
+      expand_partition:
+        size: 0 # All available space
+      add_partitions:
+        # all sizes bellow are in MB
+        - fsLabel: COS_OEM
+          size: 64
+          pLabel: oem
+        - fsLabel: COS_RECOVERY
+          size: 8500
+          pLabel: recovery
+        - fsLabel: COS_STATE
+          size: 18000
+          pLabel: state
+        - fsLabel: COS_PERSISTENT
+          pLabel: persistent
+          size: 25000
+          filesystem: "ext4"
+```
+
 ### `git`
 
 Pull git repositories, using golang native git (no need of git in the host).
