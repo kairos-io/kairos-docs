@@ -80,7 +80,7 @@ If you are customizing the image, or either modifying the default partition size
 ```bash
 IMAGE=quay.io/kairos/core-ubuntu-20-lts-arm-nvidia-jetson-agx-orin:latest
 docker run --privileged \
-        -e container=$IMAGE \
+        -e container_image=$IMAGE \
         -e STATE_SIZE="6200" \
         -e RECOVERY_SIZE="4200" \
         -e DEFAULT_ACTIVE_SIZE="2000" \
