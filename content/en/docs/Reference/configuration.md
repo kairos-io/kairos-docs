@@ -1043,6 +1043,11 @@ You're responsible to make sure the sizes of the partitions fit properly within 
 the agent, but they will not fail the installation process unless you pass the `--strict` flag.
 {{% /alert %}}
 
+{{% alert title="Warning" %}}
+In the case of multiple devices, make sure you don't choose `auto` to determine on which device to install but instead to point
+the installation to the device where you are creating the custom partitions.
+{{% /alert %}}
+
 ```shell
 #cloud-config
 
@@ -1052,8 +1057,7 @@ install:
 
 stages:
   kairos-install.pre.before:
-  # TODO: check which device exists
-  - if:  '[ -e /dev/vda ] && (kairos-agent state get boot | grep -q livecd_boot)'
+  - if:  '[ -e /dev/vda ]'
     name: "Create partitions"
     commands:
       - |
