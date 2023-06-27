@@ -1047,6 +1047,7 @@ the agent, but they will not fail the installation process unless you pass the `
 #cloud-config
 
 install:
+  # Make sure the installer won't delete our custom partitions
   no-format: true
 
 stages:
