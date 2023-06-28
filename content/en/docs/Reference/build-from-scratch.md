@@ -46,7 +46,7 @@ To build the container image, follow these steps:
 1. Create a new directory for the image and write a Dockerfile inside it. The Dockerfile will contain the instructions for building the image:
 
 ```Dockerfile
-FROM fedora:36
+FROM fedora:38 as base
 
 # Install any package wanted here
 # Note we need to install _at least_ the minimum required packages for Kairos to work:
@@ -100,6 +100,28 @@ RUN touch /usr/libexec/.keep
 
 # Copy the Kairos framework files. We use master builds here for fedora. See https://quay.io/repository/kairos/framework?tab=tags for a list
 COPY --from=quay.io/kairos/framework:master_fedora / /
+
+# Set the Kairos arguments in os-release file to identify your Kairos image
+FROM quay.io/kairos/osbuilder-tools:latest as osbuilder
+RUN zypper install -y gettext
+RUN mkdir /workspace
+COPY --from=base /etc/os-release /workspace/os-release
+# You should change the following values according to your own versioning and other details
+RUN OS_NAME=kairos-core-fedora \
+  OS_VERSION=v9.9.9 \
+  OS_ID="kairos" \
+  OS_NAME=kairos-core-fedora \
+  BUG_REPORT_URL="https://github.com/YOUR_ORG/YOUR_PROJECT/issues" \
+  HOME_URL="https://github.com/YOUR_ORG/YOUR_PROJECT" \
+  OS_REPO="quay.io/YOUR_ORG/core-fedora" \
+  OS_LABEL="latest" \
+  GITHUB_REPO="YOUR_ORG/YOUR_PROJECT" \
+  VARIANT="core" \
+  FLAVOR="fedora" \
+  /update-os-release.sh
+
+FROM base
+COPY --from=osbuilder /workspace/os-release /etc/os-release
 
 # Activate Kairos services
 RUN systemctl enable cos-setup-reconcile.timer && \
