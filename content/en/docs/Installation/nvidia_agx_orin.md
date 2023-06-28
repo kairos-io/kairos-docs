@@ -81,9 +81,9 @@ If you are customizing the image, or either modifying the default partition size
 IMAGE=quay.io/kairos/core-ubuntu-20-lts-arm-nvidia-jetson-agx-orin:latest
 docker run --privileged \
         -e container_image=$IMAGE \
-        -e STATE_SIZE="6200" \
-        -e RECOVERY_SIZE="4200" \
-        -e DEFAULT_ACTIVE_SIZE="2000" \
+        -e STATE_SIZE="14000" \
+        -e RECOVERY_SIZE="10000" \
+        -e DEFAULT_ACTIVE_SIZE="4500" \
         -v $PWD/bootloader:/bootloader --entrypoint /prepare_arm_images.sh -ti --rm quay.io/kairos/osbuilder-tools
 ```
 
@@ -144,7 +144,7 @@ If you are editing the partition sizes and generating the images manually, use t
        <partition name="COS_RECOVERY" type="data">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
-            <size> 2298478592 </size>
+            <size> 10485760000 </size>
             <allocation_attribute>  0x8 </allocation_attribute>
             <filename> recovery_partition.img </filename>
             <description>  </description>
@@ -152,7 +152,7 @@ If you are editing the partition sizes and generating the images manually, use t
         <partition name="COS_STATE" type="data">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
-            <size> 5234491392 </size>
+            <size> 14680064000 </size>
             <allocation_attribute>  0x8 </allocation_attribute>
             <filename> state_partition.img </filename>
             <description>  </description>
@@ -235,9 +235,9 @@ IMAGE=quay.io/kairos/core-ubuntu-20-lts-arm-nvidia-jetson-agx-orin:latest
 CLOUD_CONFIG=/cloud/config.yaml
 docker run -v $CLOUD_CONFIG:/defaults.yaml --privileged \
         -e container_image=$IMAGE \
-        -e STATE_SIZE="6200" \
-        -e RECOVERY_SIZE="4200" \
-        -e DEFAULT_ACTIVE_SIZE="2000" \
+        -e STATE_SIZE="14000" \
+        -e RECOVERY_SIZE="10000" \
+        -e DEFAULT_ACTIVE_SIZE="4500" \
         -v $PWD/bootloader:/bootloader --entrypoint /prepare_arm_images.sh -ti --rm quay.io/kairos/osbuilder-tools
 ```
 
