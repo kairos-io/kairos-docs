@@ -734,7 +734,7 @@
        <partition name="COS_RECOVERY" type="data">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
-            <size> 4823449600 </size>
+            <size> 10485760000 </size>
             <allocation_attribute>  0x8 </allocation_attribute>
             <filename> recovery_partition.img </filename>
             <description>  </description>
@@ -742,7 +742,7 @@
         <partition name="COS_STATE" type="data">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
-            <size> 7235174400 </size>
+            <size> 14680064000 </size>
             <allocation_attribute>  0x8 </allocation_attribute>
             <filename> state_partition.img </filename>
             <description>  </description>
