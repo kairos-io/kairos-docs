@@ -231,3 +231,10 @@ quay.io/kairos/framework:master_ubuntu-20-lts-fips
 
 The binaries in this framework image are built [with golang 1.19.10](https://github.com/kairos-io/packages/blob/082ef206ce523bb3e1d1d9f0bd9953b2550ab2b3/packages/toolchain-go/collection.yaml#L36)
 which uses [boringcrypto commit `ae223d61`](https://boringssl.googlesource.com/boringssl/+/ae223d6138807a13006342edfeef32e813246b39) (Defined [here](https://github.com/golang/go/blob/7fe60b5df764f5a16a2c40e4412b5ed60f709192/src/crypto/internal/boring/Dockerfile#L38)).
+
+
+### Example
+
+A full e2e example to build an Ubuntu Focal FIPS flavor is available here: https://github.com/kairos-io/kairos/tree/master/examples/byoi/ubuntu-fips.
+
+Note: it requires a subscription key.
