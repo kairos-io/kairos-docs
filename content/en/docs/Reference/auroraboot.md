@@ -90,7 +90,7 @@ By default AuroraBoot will automatically attempt to bootstrap other machines, wh
 
 There are only 3 steps involved in the process:
 
-1. Select the release of Kairos that you want to deploy and optionally a cloud config (see also our [examples](/docs/examples))
+1. Select the release of Kairos that you want to deploy and optionally a cloud config (see also our [examples]({{< ref "../examples" >}}))
 1. Run AuroraBoot in your workstation with the appropriate CLI args
 1. Boot up other nodes, already configured to boot from network
 
@@ -99,9 +99,9 @@ There are only 3 steps involved in the process:
 AuroraBoot can bootstrap container images or released assets from our GitHub release process. 
 
 To use GitHub releases set a release version with `--set release_version` (the GitHub release), an artifact version with `--set artifact_version` (the artifact version) a flavor with `--set flavor` and a repository with `--set repository`.
-Kairos has releases with and without k3s. The [release page at kairos](https://github.com/kairos-io/kairos/releases) are ["core" images that can be used as installer](/docs/examples/core/) while the [provider-kairos](https://github.com/kairos-io/provider-kairos/releases) images contains also `k3s`.
+Kairos has releases with and without k3s. The [release page at kairos](https://github.com/kairos-io/kairos/releases) are ["core" images that can be used as installer]({{< ref "../examples/core" >}}) while the [provider-kairos](https://github.com/kairos-io/provider-kairos/releases) images contains also `k3s`.
 
-To use a container image, you can use [the Kairos released images](/docs/reference/image_matrix/) or [customized](/docs/advanced/customizing) by specifying `--set container_image` instead with the container image of choice.
+To use a container image, you can use [the Kairos released images]({{< ref "../reference/image_matrix" >}}) or [customized]({{< ref "../advanced/customizing" >}}) by specifying `--set container_image` instead with the container image of choice.
 
 #### 2. Run AuroraBoot
 
@@ -114,7 +114,7 @@ In the example below we selected `v1.5.1-k3sv1.21.14-k3s1`, `opensuse-leap` flav
 
 By indicating a `container_image`, AuroraBoot will pull the image locally and start to serve it for network booting.
 
-You can use [the Kairos released images](/docs/reference/image_matrix/) or [your own](/docs/advanced/customizing).
+You can use [the Kairos released images]({{< ref "../reference/image_matrix" >}}) or [your own]({{< ref "../advanced/customizing" >}}).
 
 ```bash
 docker run --rm -ti --net host quay.io/kairos/auroraboot \
@@ -185,7 +185,7 @@ To disable netboot and provide only offline artifacts, run `auroraboot` with `--
 
 #### 1. Node configuration
 
-Create a cloud config file, see [our documentation](/docs/examples) for ready-to use examples, but a minimal configuration that automatically installs, and allows us to login afterward can be the following:
+Create a cloud config file, see [our documentation]({{< ref "../examples" >}}) for ready-to use examples, but a minimal configuration that automatically installs, and allows us to login afterward can be the following:
 
 ```yaml
 #cloud-config
@@ -365,21 +365,21 @@ listen_addr: ":8080"
 cloud_config: |
 ```
 
-| Option | Description |
-| ------ | ----------- |
-| `artifact_version` | Corresponding artifact versions from the Kairos release page (e.g. Kubernetes version included). |
-| `release_version` | Version of the release in GitHub. |
-| `flavor` | The Kairos flavor to use. See [the Kairos support matrix](/docs/reference/image_matrix/) for a list. |
-| `repository` | Github repository to use. This can either be `kairos-io/kairos` or `kairos-io/provider-kairos` for images with `k3s`. |
-| `container_image` | Container image. If prefixed with `docker://` it will try to pull from the local docker daemon. If a `container_image` is specified, `artifact_version`, `flavor` and `release_version` are ignored. |
-| `disable_netboot` | Disable netboot. |
-| `disable_http_server` | Disable http server for serving offline generated ISOs. |
-| `netboot_http_port` | Specify a netboot HTTP port (defaults to `8090`). |
-| `state_dir` | Specify a directory that will be used by auroraboot to download artifacts and reuse the same to cache artifacts. |
-| `listen_addr` | Default http binding port for offline ISO generation. |
-| `cloud_config` | Cloud config path to use for the machines. A URL can be specified, use `-` to pass-by the cloud-config from _STDIN_ |
-| `iso.data` | Defines a path to be embedded into the resulting iso. When booting, the files will be accessible at `/run/initramfs/live` |
-| `netboot.cmdlin` | Override the automatically generated cmdline with a custom one to use during netboot. `config_url` and `rootfs`  are automatically constructed. A reasonable value can be `netboot.cmdline=rd.neednet=1 ip=dhcp rd.cos.disable netboot nodepair.enable console=tty0` |
+| Option                | Description                                                                                                                                                                                                                                                          |
+|-----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `artifact_version`    | Corresponding artifact versions from the Kairos release page (e.g. Kubernetes version included).                                                                                                                                                                     |
+| `release_version`     | Version of the release in GitHub.                                                                                                                                                                                                                                    |
+| `flavor`              | The Kairos flavor to use. See [the Kairos support matrix]({{< ref "../reference/image_matrix" >}}) for a list.                                                                                                                                                       |
+| `repository`          | Github repository to use. This can either be `kairos-io/kairos` or `kairos-io/provider-kairos` for images with `k3s`.                                                                                                                                                |
+| `container_image`     | Container image. If prefixed with `docker://` it will try to pull from the local docker daemon. If a `container_image` is specified, `artifact_version`, `flavor` and `release_version` are ignored.                                                                 |
+| `disable_netboot`     | Disable netboot.                                                                                                                                                                                                                                                     |
+| `disable_http_server` | Disable http server for serving offline generated ISOs.                                                                                                                                                                                                              |
+| `netboot_http_port`   | Specify a netboot HTTP port (defaults to `8090`).                                                                                                                                                                                                                    |
+| `state_dir`           | Specify a directory that will be used by auroraboot to download artifacts and reuse the same to cache artifacts.                                                                                                                                                     |
+| `listen_addr`         | Default http binding port for offline ISO generation.                                                                                                                                                                                                                |
+| `cloud_config`        | Cloud config path to use for the machines. A URL can be specified, use `-` to pass-by the cloud-config from _STDIN_                                                                                                                                                  |
+| `iso.data`            | Defines a path to be embedded into the resulting iso. When booting, the files will be accessible at `/run/initramfs/live`                                                                                                                                            |
+| `netboot.cmdlin`      | Override the automatically generated cmdline with a custom one to use during netboot. `config_url` and `rootfs`  are automatically constructed. A reasonable value can be `netboot.cmdline=rd.neednet=1 ip=dhcp rd.cos.disable netboot nodepair.enable console=tty0` |
 
 To use the configuration file with AuroraBoot, run AuroraBoot specifying the file or URL of the config as first argument:
 
@@ -553,7 +553,7 @@ docker run -v "$PWD"/config.yaml:/config.yaml \
 
 ### Prepare ISO for Airgap installations
 
-See the [Airgap example](/docs/examples/airgap) in the [examples section](/docs/examples).
+See the [Airgap example]({{< ref "../examples/airgap" >}}) in the [examples section]({{< ref "../examples" >}}).
 
 ### Netboot with core images from Github releases
 

@@ -6,7 +6,7 @@ description: >
     This section describe examples on how to use AuroraBoot and Kairos bundles to create ISOs for airgapped installs
 ---
 
-If you want to create an [airgap K3s installation](https://docs.k3s.io/installation/airgap), Kairos provides a convenient way to do so using AuroraBoot. In this guide, we will go through the process of creating a custom ISO of Kairos that contains a configuration file and a [bundle](/docs/advanced/bundles/) that executes preparatory steps after installation. The bundle will overlay new files in the system and prepare the node for having an airgapped K3s installation.
+If you want to create an [airgap K3s installation](https://docs.k3s.io/installation/airgap), Kairos provides a convenient way to do so using AuroraBoot. In this guide, we will go through the process of creating a custom ISO of Kairos that contains a configuration file and a [bundle]({{< ref "../advanced/bundles" >}}) that executes preparatory steps after installation. The bundle will overlay new files in the system and prepare the node for having an airgapped K3s installation.
 
 {{% alert title="Note" %}}
 If you already have a Kubernetes cluster, you can use the osbuilder controller to generate container images with your additional files already inside.
@@ -18,7 +18,7 @@ Docker running in the host
 
 ## Creating the Bundle
 
-First, we need to create a bundle that contains the K3s images used for the airgap installation. The bundle will place the images in the `/var/lib/rancher/k3s/agent/images` directory. The `/var/lib/rancher` is already configured as persistent by Kairos defaults and every change to that directory persist reboots. You can add additional persistent paths in the system with [the cloud config](/docs/advanced/customizing/#bind-mounts)
+First, we need to create a bundle that contains the K3s images used for the airgap installation. The bundle will place the images in the `/var/lib/rancher/k3s/agent/images` directory. The `/var/lib/rancher` is already configured as persistent by Kairos defaults and every change to that directory persist reboots. You can add additional persistent paths in the system with [the cloud config]({{< ref "../advanced/customizing#bind-mounts" >}})
 
 1. Create a new directory named `images-bundle`, and create a new file inside it called `Dockerfile`.
 2. Paste the following code into the `Dockerfile`:
@@ -89,7 +89,7 @@ k3s:
   enabled: true
 ```
 
-2. Build the ISO with [AuroraBoot](/docs/reference/auroraboot) by running the following command:
+2. Build the ISO with [AuroraBoot]({{< ref "../reference/auroraboot" >}}) by running the following command:
 
 
 ```bash
@@ -116,7 +116,7 @@ This example is also available in the [AuroraBoot repository](https://github.com
 
 ## See also
 
-- [Customize the OS image](/docs/advanced/customizing/)
-- [Live layer bundles](/docs/advanced/livelayering/)
-- [Create ISOs with Kubernetes](/docs/installation/automated/#kubernetes)
-- [Bundles reference](https://kairos.io/docs/advanced/bundles/)
+- [Customize the OS image]({{< ref "../advanced/customizing" >}})
+- [Live layer bundles]({{< ref "../advanced/livelayering" >}})
+- [Create ISOs with Kubernetes]({{< ref "../installation/automated#kubernetes" >}})
+- [Bundles reference]({{< ref "../advanced/bundles" >}})

@@ -14,11 +14,11 @@ But first, let's talk a little bit about what [MetalLB](https://metallb.universe
 
 Now that you have an understanding of what we'll be working with, let's dive into the installation process.
 
-Check out the [bundle](/docs/examples/bundles) example to configure `MetalLB` with bundles. Bundles provides a streamlined way to publish and re-use configuration between nodes.
+Check out the [bundle]({{< ref "../examples/bundles" >}}) example to configure `MetalLB` with bundles. Bundles provides a streamlined way to publish and re-use configuration between nodes.
 
-To get started, you'll need to use the [provider-kairos](https://github.com/kairos-io/provider-kairos) artifacts, which include k3s. We'll be using the [k3s manifest method](/docs/reference/configuration#kubernetes-manifests) to deploy MetalLB.
+To get started, you'll need to use the [provider-kairos](https://github.com/kairos-io/provider-kairos) artifacts, which include k3s. We'll be using the [k3s manifest method]({{< ref "../reference/configuration#kubernetes-manifests" >}}) to deploy MetalLB.
 
-Follow the [Installation](/docs/installation) documentation, and use the following cloud config file with Kairos:
+Follow the [Installation]({{< ref "../installation" >}}) documentation, and use the following cloud config file with Kairos:
 
 ```yaml
 #cloud-config
@@ -79,7 +79,7 @@ write_files:
 There are a few things to note in this configuration file:
 
 - In the `k3s` block, we use the `--disable` flag to disable `traefik` and `servicelb`, which are the default load balancers for k3s.
-- In the `write_files` block, we write manifests (in `/var/lib/rancher/k3s/server/manifests/` see [docs](/docs/reference/configuration#kubernetes-manifests)) to deploy MetalLB and configure it to use the `192.168.1.10-192.168.1.20` IP range. Make sure to choose an IP range that doesn't interfere with your local DHCP network.
+- In the `write_files` block, we write manifests (in `/var/lib/rancher/k3s/server/manifests/` see [docs]({{< ref "../reference/configuration#kubernetes-manifests" >}})) to deploy MetalLB and configure it to use the `192.168.1.10-192.168.1.20` IP range. Make sure to choose an IP range that doesn't interfere with your local DHCP network.
 
 And that's it! You should now have MetalLB and K3s set up on your Kairos node.
 

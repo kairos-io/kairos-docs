@@ -14,21 +14,21 @@ Kairos is the open-source project that simplifies Edge, cloud, and bare metal OS
 
 Our key features include:
 
-- [Immutability](/docs/architecture/immutable): ensure your infrastructure stays consistent with atomic upgrades
+- [Immutability]({{< ref "architecture/immutable" >}}): ensure your infrastructure stays consistent with atomic upgrades
 - Security: protect your cluster from vulnerabilities and attacks with a read-only system
-- [Container-based](/docs/architecture/container): manage your nodes as apps in containers for maximum flexibility and portability
-- [P2P Mesh](/docs/architecture/network): self-coordinated, automated, no interaction Kubernetes deployments with P2P
-- [Meta-Distribution](/docs/architecture/meta), distro agnostic
+- [Container-based]({{< ref "architecture/container" >}}): manage your nodes as apps in containers for maximum flexibility and portability
+- [P2P Mesh]({{< ref "architecture/network" >}}): self-coordinated, automated, no interaction Kubernetes deployments with P2P
+- [Meta-Distribution]({{< ref "architecture/meta" >}}), distro agnostic
 
 
 In this documentation, you will find everything you need to know about Kairos, from installation and configuration, to examples and advanced features.
 
-To get started with Kairos, follow the instructions in the [quickstart](/docs/getting-started) guide. Then, check out the [examples](/docs/examples) to see how Kairos can be used in real-world scenarios.
+To get started with Kairos, follow the instructions in the [quickstart]({{< ref "Getting started" >}}) guide. Then, check out the [examples]({{< ref "examples" >}}) to see how Kairos can be used in real-world scenarios.
 
 For more information, please refer to this documentation. If you have any questions or feedback, feel free to [open an issue](https://github.com/kairos-io/kairos/issues/new) or [join our community forum](https://github.com/kairos-io/kairos/discussions).
 
 {{% alert title="Note" %}}
-You can also find some good resources on the [Media Section]({{< ref "docs/media" >}} "Media")
+You can also find some good resources on the [Media Section]({{< ref "media" >}} "Media")
 {{% /alert %}}
 
 ## What is Kairos ?
@@ -140,4 +140,4 @@ Run `./earthly.sh +all --FLAVOR=opensuse`, should produce a Docker image along w
 
 ## What's next?
 
-See the [quickstart](/docs/getting-started) to install Kairos on a VM and create a Kubernetes cluster!
+See the [quickstart]({{< ref "Getting started" >}}) to install Kairos on a VM and create a Kubernetes cluster!

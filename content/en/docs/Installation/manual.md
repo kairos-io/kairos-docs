@@ -7,7 +7,7 @@ description: >
   Install Kairos manually
 ---
 
-To install manually, follow the [quickstart](/docs/getting-started). When the QR code is prompted at the screen, you will be able to log in via SSH to the box with the password `kairos` as `kairos` user.
+To install manually, follow the [quickstart]({{< ref "../Getting started" >}}). When the QR code is prompted at the screen, you will be able to log in via SSH to the box with the password `kairos` as `kairos` user.
 
 {{% alert title="Note" %}}
 
@@ -35,7 +35,7 @@ p2p:
 ```
 
 The token `p2p.network_token` is a base64 encoded string which
-contains an [`edgevpn` token](https://github.com/mudler/edgevpn/blob/master/docs/content/en/docs/Concepts/Token/_index.md). For more information, [check out the architecture section](/docs/architecture/network).
+contains an [`edgevpn` token](https://github.com/mudler/edgevpn/blob/master/docs/content/en/docs/Concepts/Token/_index.md). For more information, [check out the architecture section]({{< ref "../architecture/network" >}}).
 
 **Note**: 
 - The command is disruptive and will erase any content on the drive.

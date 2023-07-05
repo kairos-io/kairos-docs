@@ -75,7 +75,7 @@ They both need to agree on a secret, which is the `network_token` to be able to 
 
 ### Generating a network token
 
-Generating a network token is described in [the p2p section](/docs/installation/p2p)
+Generating a network token is described in [the p2p section]({{< ref "../installation/p2p" >}})
 
 ### Managed cluster
 

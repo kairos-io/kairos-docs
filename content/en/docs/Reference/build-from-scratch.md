@@ -23,7 +23,7 @@ The Kairos contract is straightforward: the OS container image must include ever
 The contract has several advantages:
 
 - Delegation of package maintenance, CVE, and security fixes to the OS layer
-- Easy issuance of upgrades to container images by chaining Dockerfiles or manually committing changes to the image. See also [Customizing](/docs/advanced/customizing).
+- Easy issuance of upgrades to container images by chaining Dockerfiles or manually committing changes to the image. See also [Customizing]({{< ref "../advanced/customizing" >}}).
 - Clear separation of concerns: the OS provides the booting bits and packages necessary for the OS to function, while Kairos provides the operational framework for handling the node's lifecycle and immutability interface.
 - Support for long-term maintenance: each framework image allows conversion of any OS to the given Kairos framework version, potentially enabling maintenance for as long as the base OS support model allows.
 
@@ -152,12 +152,12 @@ docker build -t test-byoi .
 
 ## Build bootable assets
 
-Once the container image is built, we can proceed directly to creating an ISO or netboot it using [AuroraBoot](/docs/reference/auroraboot). We can use AuroraBoot to handle the ISO build process and even attach a default cloud config if desired. Here's an example for both scenarios:
+Once the container image is built, we can proceed directly to creating an ISO or netboot it using [AuroraBoot]({{< ref "../reference/auroraboot" >}}). We can use AuroraBoot to handle the ISO build process and even attach a default cloud config if desired. Here's an example for both scenarios:
 
 {{< tabpane text=true  >}}
 {{% tab header="ISO" %}}
 
-We can use [AuroraBoot](/docs/reference/auroraboot) to handle the the ISO build process and optionally attach it a default cloud config, for example:
+We can use [AuroraBoot]({{< ref "../reference/auroraboot" >}}) to handle the ISO build process and optionally attach it a default cloud config, for example:
 
 ```bash
 docker run -v "$PWD"/build:/tmp/auroraboot \
@@ -187,7 +187,7 @@ qemu-system-x86_64 -m 2048 -drive if=virtio,media=disk,file=build/iso/kairos.iso
 
 {{% tab header="Netboot" %}}
 
-To netboot, we can also use [AuroraBoot](/docs/reference/auroraboot) to handle the process, or refer to [Netboot](/docs/installation/netboot). Here's an example:
+To netboot, we can also use [AuroraBoot]({{< ref "../reference/auroraboot" >}}) to handle the process, or refer to [Netboot]({{< ref "../installation/netboot" >}}). Here's an example:
 
 ```bash
 docker run -v --net host \
