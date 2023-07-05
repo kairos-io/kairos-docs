@@ -9,7 +9,7 @@ description: >
 
 Kairos supports Raspberry Pi model 3 and 4 with 64bit architecture.
 
-If you are not familiar with the process, it is suggested to follow the [quickstart]({{< ref "../Getting started" >}}) first to see how Kairos works.
+If you are not familiar with the process, it is suggested to follow the [quickstart]({{< relref "../Getting started" >}}) first to see how Kairos works.
 
 ## Prerequisites
 
@@ -19,7 +19,7 @@ If you are not familiar with the process, it is suggested to follow the [quickst
 
 ## Download
 
-Extract the `img` file from a container image as described [in this page]({{< ref "../reference/image_matrix" >}})
+Extract the `img` file from a container image as described [in this page]({{< relref "../reference/image_matrix" >}})
 
 ## Flash the image
 
@@ -49,7 +49,7 @@ $ sudo cp cloud-config.yaml /tmp/persistent/cloud-config
 $ sudo umount /tmp/persistent
 ```
 
-You can push additional `cloud config` files. For a full reference check out the [docs]({{< ref "../reference/configuration" >}}) and also [configuration after-installation]({{< ref "../advanced/after-install" >}})
+You can push additional `cloud config` files. For a full reference check out the [docs]({{< relref "../reference/configuration" >}}) and also [configuration after-installation]({{< relref "../advanced/after-install" >}})
 
 ## Customizing the disk image
 
@@ -61,7 +61,7 @@ If you're using osbuilder between versions 0.6.0 and 0.6.5, you need to pass the
 {{% /alert %}}
 
 {{% alert title="Notes" %}}
-Validating the config is not required in the following process, but it can save you some time. Use [kairosctl]({{< ref "../reference/kairosctl" >}}) to perform the schema validations.
+Validating the config is not required in the following process, but it can save you some time. Use [kairosctl]({{< relref "../reference/kairosctl" >}}) to perform the schema validations.
 {{% /alert %}}
 
 ```

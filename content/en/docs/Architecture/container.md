@@ -40,7 +40,7 @@ If you are familiar with Dockerfiles, then you are good to go to roll your own c
 
 ## Container Image based OS
 
-The Image support matrix in [here]({{< ref "../reference/image_matrix" >}}) lists all the container images built from our CI on every release of Kairos.
+The Image support matrix in [here]({{< relref "../reference/image_matrix" >}}) lists all the container images built from our CI on every release of Kairos.
 
 To inspect an image and run it locally, you can use a container engine like Docker or Podman:
 
@@ -89,7 +89,7 @@ total 102M
 6692029 -rw-r--r-- 1 root root  11M Apr 16  2020 vmlinuz-5.14.21-150400.24.21-default
 ```
 
-The CI process generates bootable medium by the container images, and similarly, we can modify this image to introduce our changes and remaster an ISO as described in [Automated installation]({{< ref "../installation/automated" >}}), but that can be resumed in the following steps:
+The CI process generates bootable medium by the container images, and similarly, we can modify this image to introduce our changes and remaster an ISO as described in [Automated installation]({{< relref "../installation/automated" >}}), but that can be resumed in the following steps:
 
 ```bash
 $ docker run -ti --name custom-container {{< registryURL >}}/core-{{< flavor >}}:{{< kairosVersion >}}
@@ -113,8 +113,8 @@ custom-iso.iso custom-iso.iso.sha256
 
 In order to go further and upgrade nodes using this image, now the only requirement is to push it in a container registry and upgrade the nodes using that container image.
 
-For upgrading to a container image see [manual upgrades]({{< ref "../upgrade/manual" >}}) and [kubernetes upgrades]({{< ref "../upgrade/kubernetes" >}}).
+For upgrading to a container image see [manual upgrades]({{< relref "../upgrade/manual" >}}) and [kubernetes upgrades]({{< relref "../upgrade/kubernetes" >}}).
 
 ## See also
 
-- [ISO remastering]({{< ref "../installation/automated#iso-remastering" >}})
+- [ISO remastering]({{< relref "../installation/automated#iso-remastering" >}})

@@ -12,7 +12,7 @@ In the example below we will use a bare metal host to provision a Kairos node in
 
 Use the [provider-kairos](https://github.com/kairos-io/provider-kairos) artifacts which contains `k3s`.
 
-Follow the [Installation]({{< ref "../installation/" >}}) documentation, and use the following cloud config file with Kairos:
+Follow the [Installation]({{< relref "../installation/" >}}) documentation, and use the following cloud config file with Kairos:
 
 ```yaml
 #cloud-config
@@ -46,4 +46,4 @@ Notably:
   {{% alert title="Note" %}}
   `replace_args` replaces all arguments otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the arguments you need.
   {{% /alert %}}
-- We use `write_files` to write manifests to the default `k3s` manifest directory (`/var/lib/rancher/k3s/server/manifests/`) see [docs]({{< ref "../reference/configuration#kubernetes-manifests" >}}) to deploy `MetalLB` and configure it with the `192.168.1.10-192.168.1.20` IP range. Make sure to pick up a range which doesn't interfere with your local DHCP network.
+- We use `write_files` to write manifests to the default `k3s` manifest directory (`/var/lib/rancher/k3s/server/manifests/`) see [docs]({{< relref "../reference/configuration#kubernetes-manifests" >}}) to deploy `MetalLB` and configure it with the `192.168.1.10-192.168.1.20` IP range. Make sure to pick up a range which doesn't interfere with your local DHCP network.

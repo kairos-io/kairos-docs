@@ -19,7 +19,7 @@ But first, what is [LocalAI](https://github.com/go-skynet/LocalAI)?
 LocalAI is a self-hosted, community-driven simple local OpenAI-compatible API written in go. Can be used as a drop-in replacement for OpenAI, running on CPU with consumer-grade hardware. Supports ggml compatible models, for instance: LLaMA, alpaca, gpt4all, vicuna, koala, gpt4all-j, cerebras.
 This means that you can have the power of an AI model in your Edge-Kubernetes cluster, and it can all be easily done thanks to GPT4ALL models, LocalAI and Kairos!
 
-To get started, you'll need to use the [provider-kairos](https://github.com/kairos-io/provider-kairos) artifacts, which include k3s. Follow the [Installation]({{< ref "../installation" >}}) documentation, and use the following configuration:
+To get started, you'll need to use the [provider-kairos](https://github.com/kairos-io/provider-kairos) artifacts, which include k3s. Follow the [Installation]({{< relref "../installation" >}}) documentation, and use the following configuration:
 
 ```yaml
 #cloud-config

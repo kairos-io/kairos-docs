@@ -10,7 +10,7 @@ Kairos offers several pre-built images for user convenience based on popular Lin
 
 In addition, tighter integration with systemd allows for several features that are only available with it, such as live layering.
 
-These images are pushed to quay.io and are available for installation and upgrading. The installable mediums included in the releases are generated using the methods described in the [automated installation reference]({{< ref "../installation/automated#iso-remastering" >}}), and the images can be used for upgrades as well.
+These images are pushed to quay.io and are available for installation and upgrading. The installable mediums included in the releases are generated using the methods described in the [automated installation reference]({{< relref "../installation/automated#iso-remastering" >}}), and the images can be used for upgrades as well.
 
 ## Image flavors
 
@@ -19,7 +19,7 @@ Kairos release processes generates images based on official container images fro
 Below is a list of the available images and their locations on the quay.io registry:
 
 - The **Core** images do not include any Kubernetes engine and can be used as a base for customizations.
-- The **Standard** images include `k3s` and the [kairos provider](https://github.com/kairos-io/provider-kairos), which enables Kubernetes deployments and optionally enables [p2p]({{< ref "../installation/p2p" >}}).
+- The **Standard** images include `k3s` and the [kairos provider](https://github.com/kairos-io/provider-kairos), which enables Kubernetes deployments and optionally enables [p2p]({{< relref "../installation/p2p" >}}).
 - The **-img** repositories contain an img file which can be directly written to an SD card or USB drive for use with ARM devices.
 
 Base images are tagged with specific upstream versions (e.g. Ubuntu 20 LTS is pinned to Ubuntu 20:04, openSUSE to openSUSE leap 15.4, etc.).
@@ -108,7 +108,7 @@ The artifacts can be found in the `build` directory.
 
 ### Framework images
 
-Kairos releases contains also the __framework__ assets that can be used to [build Kairos images from Scratch]({{< ref "../reference/build-from-scratch" >}}).
+Kairos releases contains also the __framework__ assets that can be used to [build Kairos images from Scratch]({{< relref "../reference/build-from-scratch" >}}).
 
 Framework images can be found in quay at: https://quay.io/repository/kairos/framework.
 
@@ -127,7 +127,7 @@ Here are some key points to note:
 {{% alert title="Note" color="info" %}}
 In order to give users more control over the chosen base image (e.g. `openSUSE`, `Ubuntu`, etc.) and reduce reliance on our CI infrastructure, we are actively working on streamlining the creation of Kairos-based distributions directly from upstream base images. You can track the development progress [here](https://github.com/kairos-io/kairos/issues/116).
 
-If you need to further customize images, including changes to the base image, package updates, and CVE hotfixes, check out the [customization docs]({{< ref "../advanced/customizing" >}}).
+If you need to further customize images, including changes to the base image, package updates, and CVE hotfixes, check out the [customization docs]({{< relref "../advanced/customizing" >}}).
 {{% /alert %}}
 
 

@@ -298,4 +298,4 @@ echo '{ "data": "{ \"label\": \"LABEL\" }"}' | sudo -E WSS_SERVER="http://localh
 
 ## Notes
 
-If encryption is enabled and `COS_PERSISTENT` is set to be encrypted, every cloud config file in `/usr/local/cloud-config` will be protected and can be used to store sensitive data. However, it's important to keep in mind that although the contents of /usr/local are retained between reboots and upgrades, they will not be preserved during a [resets]({{< ref "../reference/reset" >}}).
+If encryption is enabled and `COS_PERSISTENT` is set to be encrypted, every cloud config file in `/usr/local/cloud-config` will be protected and can be used to store sensitive data. However, it's important to keep in mind that although the contents of /usr/local are retained between reboots and upgrades, they will not be preserved during a [resets]({{< relref "../reference/reset" >}}).

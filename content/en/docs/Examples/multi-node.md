@@ -12,7 +12,7 @@ In the example below we will use a bare metal host to provision a Kairos cluster
 
 Use the [provider-kairos](https://github.com/kairos-io/provider-kairos) artifacts which contains `k3s`.
 
-Follow the [Installation]({{< ref "../installation" >}}) documentation, and use the following cloud config file with Kairos for the master and worker:
+Follow the [Installation]({{< relref "../installation" >}}) documentation, and use the following cloud config file with Kairos for the master and worker:
 
 {{< tabpane text=true right=true  >}}
 {{% tab header="server" %}}
