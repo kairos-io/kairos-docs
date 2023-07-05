@@ -18,16 +18,16 @@ Deploying Kubernetes at the Edge can be a complex and time-consuming process, es
 
 With this feature, users don't need to specify any network settings. They can just set the desired number of master nodes (in the case of an HA cluster) and the necessary configuration details, and Kairos will take care of the rest. The peer-to-peer technology allows the nodes in the cluster to communicate and coordinate with each other, ensuring that the clusters are set up correctly and efficiently with K3s.
 
-This makes it easier to deploy and manage Kubernetes clusters at the Edge, saving user's time and effort, allowing them to focus on running and scaling their applications. For more information about how does it work behind the scenes, [check out the architecture section](/docs/architecture/network).
+This makes it easier to deploy and manage Kubernetes clusters at the Edge, saving user's time and effort, allowing them to focus on running and scaling their applications. For more information about how does it work behind the scenes, [check out the architecture section]({{< relref "../architecture/network" >}}).
 
-You can find full examples in our [examples section](/docs/examples):
-- [Full end to end example to bootstrap a self-coordinated cluster with Kairos and AuroraBoot](/docs/examples/p2p_e2e/)
-- [Self-coordinated K3s HA cluster with KubeVIP](/docs/examples/multi-node-p2p-ha-kubevip/)
-- [Multi-node, single master setup](/docs/examples/multi-node-p2p/)
-- [Multi-node, HA setup](/docs/examples/multi-node-p2p-ha/)
-- [Single-node setup](/docs/examples/single-node-p2p/)
+You can find full examples in our [examples section]({{< relref "../examples" >}}):
+- [Full end to end example to bootstrap a self-coordinated cluster with Kairos and AuroraBoot]({{< relref "../examples/p2p_e2e" >}})
+- [Self-coordinated K3s HA cluster with KubeVIP]({{< relref "../examples/multi-node-p2p-ha-kubevip" >}})
+- [Multi-node, single master setup]({{< relref "../examples/multi-node-p2p" >}})
+- [Multi-node, HA setup]({{< relref "../examples/multi-node-p2p-ha" >}})
+- [Single-node setup]({{< relref "../examples/single-node-p2p" >}})
 
-This feature is currently experimental and can be optionally enabled by adding the following configuration to the node deployment file. If you are not familiar with the installation process, it is suggested to follow the [quickstart](/docs/getting-started):
+This feature is currently experimental and can be optionally enabled by adding the following configuration to the node deployment file. If you are not familiar with the installation process, it is suggested to follow the [quickstart]({{< relref "../Getting started" >}}):
 
 ```yaml
 p2p:
@@ -80,7 +80,7 @@ The `k3s` block can still be used to override other `k3s` settings, e.g. `args`.
 
 {{% /alert %}}
 
-The network token is a shared secret available to all the nodes of the cluster. It allows the node to co-ordinate and automatically assign roles. To generate a network token, see [documentation](/docs/installation/p2p/#network_token).
+The network token is a shared secret available to all the nodes of the cluster. It allows the node to co-ordinate and automatically assign roles. To generate a network token, see [documentation]({{< relref "../installation/p2p#network_token" >}}).
 
 Simply applying the same configuration file to all the nodes should eventually bring one master and all the other nodes as workers. Adding nodes can be done also in a later step, which will automatically setup the node without any further configuration.
 

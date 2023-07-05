@@ -7,7 +7,7 @@ description: >
   Debugging station
 ---
 
-When developing or troubleshooting Kairos, it can be useful to share a local cluster with another peer. This section illustrates how to use [Entangle](/docs/reference/entangle) to achieve that. We call this setup _debugging-station_.
+When developing or troubleshooting Kairos, it can be useful to share a local cluster with another peer. This section illustrates how to use [Entangle]({{< relref "../reference/entangle" >}}) to achieve that. We call this setup _debugging-station_.
 
 ## Configuration
 
@@ -18,7 +18,7 @@ This section describes the configuration step by step. If you are in a hurry, yo
 
 {{% /alert %}}
 
-When deploying a new cluster, we can use [Bundles](/docs/advanced/bundles) to install the `entangle` and `cert-manager` chart automatically. We specify the bundles in the cloud config file as shown below:
+When deploying a new cluster, we can use [Bundles]({{< relref "../advanced/bundles" >}}) to install the `entangle` and `cert-manager` chart automatically. We specify the bundles in the cloud config file as shown below:
 
 ```yaml
 bundles:
@@ -62,11 +62,11 @@ spec:
 
 {{% alert title="Note" color="warning" %}}
 
-If you have already a kubernetes cluster, you can install the [Entangle](/docs/reference/entangle) chart and just apply the manifest.
+If you have already a kubernetes cluster, you can install the [Entangle]({{< relref "../reference/entangle" >}}) chart and just apply the manifest.
 
 {{% /alert %}}
 
-This entanglement will expose the port `22` in the node over the mesh network with the `ssh` service UUID so we can later connect to it. Replace `___GENERATED TOKEN HERE___` with the token you previously generated with the `docker` command (check out the [documentation](/docs/reference/entangle) for advanced usage).
+This entanglement will expose the port `22` in the node over the mesh network with the `ssh` service UUID so we can later connect to it. Replace `___GENERATED TOKEN HERE___` with the token you previously generated with the `docker` command (check out the [documentation]({{< relref "../reference/entangle" >}}) for advanced usage).
 
 In order to deploy the `Entanglement` automatically, we can add it to the `k3s` manifests folder in the cloud config file:
 
@@ -161,7 +161,7 @@ In this file, you can specify various settings for your debugging station. For e
 
 ## Deploy with AuroraBoot
 
-To automatically boot and install the debugging station, we can use [Auroraboot](/docs/reference/auroraboot). The following example shows how to use the cloud config above with it:
+To automatically boot and install the debugging station, we can use [Auroraboot]({{< relref "../reference/auroraboot" >}}). The following example shows how to use the cloud config above with it:
 
 ```bash
 cat <<EOF | docker run --rm -i --net host quay.io/kairos/auroraboot \

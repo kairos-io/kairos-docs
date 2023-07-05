@@ -69,7 +69,7 @@ metallb:
 
 ## Bundle types
 
-Bundles can carry also binaries that can be overlayed in the rootfs, either while [building images](/docs/advanced/build) or with [Live layering](https://kairos.io/docs/advanced/livelayering/).
+Bundles can carry also binaries that can be overlayed in the rootfs, either while [building images]({{< relref "build" >}}) or with [Live layering]({{< relref "livelayering" >}}).
 
 Kairos supports three types of bundles:
 

@@ -192,7 +192,7 @@ Kairos supports a portion of the standard [cloud-init](https://cloud-init.io/) s
 
 Examples using the extended notation for running K3s as agent or server can be found in the [examples](https://github.com/kairos-io/kairos/tree/master/examples)  directory of the Kairos repository.
 
-Here's an example that shows how to set up DNS at the [boot stage](/docs/architecture/cloud-init) using the extended syntax:
+Here's an example that shows how to set up DNS at the [boot stage]({{< relref "../architecture/cloud-init" >}}) using the extended syntax:
 
 ```yaml
 #cloud-config
@@ -363,7 +363,7 @@ k3s-agent:
 {{% /tab %}}
 {{< /tabpane >}}
 
-For more examples of how to configure K3s manually, see the [examples](/docs/examples) section or [HA](/docs/advanced/ha).
+For more examples of how to configure K3s manually, see the [examples]({{< relref "../examples" >}}) section or [HA]({{< relref "../examples/ha" >}}).
 
 ### Grub options
 
@@ -382,7 +382,7 @@ install:
 The table below lists all the available options for the `install.grub_options` field:
 
 | Variable               | Description                                             |
-| ---------------------- | ------------------------------------------------------- |
+|------------------------|---------------------------------------------------------|
 | next_entry             | Set the next reboot entry                               |
 | saved_entry            | Set the default boot entry                              |
 | default_menu_entry     | Set the name entries on the GRUB menu                   |
@@ -486,7 +486,7 @@ stages:
           homedir: "/home/testuser"
 ```
 
-This configuration can be either manually copied over, or can be propagated also via Kubernetes using the system upgrade controller. See [the after-install](/docs/advanced/after-install) section for an example.
+This configuration can be either manually copied over, or can be propagated also via Kubernetes using the system upgrade controller. See [the after-install]({{< relref "../advanced/after-install" >}}) section for an example.
 
 ```bash
 ❯ ssh testuser@192.168.1.238
@@ -509,7 +509,7 @@ P2P functionalities are experimental Kairos features and disabled by default. In
 
 ### `p2p.network_token`
 
-This defines the network token used by peers to join the p2p virtual private network. You can generate it with the Kairos CLI with `kairos generate-token`. Check out [the P2P section](/docs/installation/p2p) for more instructions.
+This defines the network token used by peers to join the p2p virtual private network. You can generate it with the Kairos CLI with `kairos generate-token`. Check out [the P2P section]({{< relref "../installation/p2p" >}}) for more instructions.
 
 ### `p2p.role`
 
@@ -553,7 +553,7 @@ p2p:
 
 ## Stages
 
-The `stages` key is a map that allows to execute blocks of cloud-init directives during the lifecycle of the node [stages](/docs/architecture/cloud-init).
+The `stages` key is a map that allows to execute blocks of cloud-init directives during the lifecycle of the node [stages]({{< relref "../architecture/cloud-init" >}}).
 
 A full example of a stage is the following:
 

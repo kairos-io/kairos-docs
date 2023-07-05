@@ -21,7 +21,7 @@ Note the same can be achieved by using advanced configuration and actually modif
 
 To achieve that, Kairos provides a set of Kubernetes Native Extensions that allow to programmatically generate Installable mediums, Cloud Images and Netboot artifacts. These provide on-demand customization and exploit Kubernetes patterns to automatically provision nodes using control-plane management clusters - however, the same toolset can be used to build appliances for local development and debugging.
 
-The [automated](/docs/installation/automated) section already shows some examples of how to leverage the Kubernetes Native Extensions and use the Kairos images to build appliances, in this section we will cover and describe in detail how to leverage the CRDs and the Kairos factory to build custom appliances.
+The [automated]({{< relref "../installation/automated" >}}) section already shows some examples of how to leverage the Kubernetes Native Extensions and use the Kairos images to build appliances, in this section we will cover and describe in detail how to leverage the CRDs and the Kairos factory to build custom appliances.
 
 ## Prerequisites
 
@@ -107,7 +107,7 @@ spec:
 
 Apply the manifest with `kubectl apply`.
 
-Note, the CRD allows to specify a custom Cloud config file, [check out the full configuration reference](/docs/reference/configuration).
+Note, the CRD allows to specify a custom Cloud config file, [check out the full configuration reference]({{< relref "../reference/configuration" >}}).
 
 As mentioned above, there is an nginx server that will serve the built artifacts as soon as they are ready.
 By default, it is exposed with a `NodePort` type of service. Use the following commands

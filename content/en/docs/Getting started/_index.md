@@ -7,12 +7,12 @@ description: >
 ---
 
 {{% alert title="Note" %}}
-If you prefer video format, you can also watch our [Introduction to Kairos video]({{< ref "docs/media/#introduction-to-kairos" >}} "Media") on the [Media Section]({{< ref "docs/media" >}} "Media")
+If you prefer video format, you can also watch our [Introduction to Kairos video]({{< relref "docs/media/#introduction-to-kairos" >}} "Media") on the [Media Section]({{< relref "docs/media" >}} "Media")
 {{% /alert %}}
 
 Ready to launch your Kubernetes cluster with ease? With Kairos, deployment is a breeze! Simply download the pre-packaged artifacts, boot up on a VM or bare metal, and let Kairos handle the rest. Whether you're a Linux or Windows user, our quickstart guide will have you up and running in no time. Kairos can build a Kubernetes cluster for you with just a few simple steps!
 
-The goal of this quickstart is to help you quickly and easily deploy a Kubernetes cluster using Kairos releases. With Kairos, you can easily build a k3s cluster in a VM, or a baremetal using our pre-packaged artifacts, even if you don't already have a cluster. This process can also be used on bare metal hosts with some configuration adjustments. Check out our documentation further for more detailed instructions and [examples](/docs/examples).
+The goal of this quickstart is to help you quickly and easily deploy a Kubernetes cluster using Kairos releases. With Kairos, you can easily build a k3s cluster in a VM, or a baremetal using our pre-packaged artifacts, even if you don't already have a cluster. This process can also be used on bare metal hosts with some configuration adjustments. Check out our documentation further for more detailed instructions and [examples]({{< relref "../examples" >}}).
 
 To create a Kubernetes cluster with Kairos, the only thing needed is one or more machines that will become the Kubernetes nodes. No previously existing clusters is needed.
 
@@ -31,18 +31,18 @@ Once the installation is complete, you can begin using your Kubernetes cluster.
 1. Select the latest release and download the assets of your flavor. For example,
    pick the [kairos-opensuse-leap-{{<providerVersion>}}-{{<k3sVersion>}}.iso](https://github.com/kairos-io/provider-kairos/releases/download/{{<providerVersion>}}/kairos-opensuse-leap-{{<providerVersion>}}-{{<k3sVersion>}}.iso)
    ISO file for the openSUSE based version, where `{{< k3sVersion >}}` in the name is the `k3s` version and `{{< providerVersion >}}` is the Kairos one to deploy on a VM.
-1. You can also use [netboot](/docs/installation/netboot) to boot Kairos over the network
+1. You can also use [netboot]({{< relref "../installation/netboot" >}}) to boot Kairos over the network
 
 {{% alert title="Note" %}}
 The releases in the [kairos-io/kairos](https://github.com/kairos-io/kairos/releases) repository are the Kairos
 core images that ship **without** K3s and P2P full-mesh functionalities; Core images can be used as a
-generic installer to [deploy container images](/docs/examples/core).
+generic installer to [deploy container images]({{< relref "../examples/core" >}}).
 
 The releases in [kairos-io/provider-kairos](https://github.com/kairos-io/provider-kairos/releases)
 **contains** already k3s and P2P full-mesh instead. These options need to be explicitly enabled.
 In follow-up releases, _k3s-only_ artifacts will also be available.
 
-See [Image Matrix Support](/docs/reference/image_matrix) for additional supported images and kernels.
+See [Image Matrix Support]({{< relref "../reference/image_matrix" >}}) for additional supported images and kernels.
 
 {{% /alert %}}
 
@@ -163,11 +163,11 @@ Here are some additional helpful tips depending on the physical/virtual machine 
 After booting you'll be greeted with a GRUB boot menu with multiple options.
 The option you choose will depend on how you plan to install Kairos:
 
-- The first entry will boot into installation with a QR code or [WebUI](/docs/installation/webui),
+- The first entry will boot into installation with a QR code or [WebUI]({{< relref "../installation/webui" >}}),
   which we'll cover in the next step.
-- The second entry will boot into [Manual installation mode](/docs/installation/manual),
+- The second entry will boot into [Manual installation mode]({{< relref "../installation/manual" >}}),
   where you can install Kairos manually using the console.
-- The third boot option boots into [Interactive installation mode](/docs/installation/interactive),
+- The third boot option boots into [Interactive installation mode]({{< relref "../installation/interactive" >}}),
   where you can use the terminal host to drive the installation and skip the Configuration and Provisioning step.
 
 To begin the installation process, select the first entry and let the machine boot. Eventually, a QR code will be printed on the screen. Follow the next step in the documentation to complete the installation.
@@ -178,10 +178,10 @@ To begin the installation process, select the first entry and let the machine bo
 
 After booting up the ISO, the machine will wait for you to provide configuration details before continuing with the installation process. There are different ways to provide these details:
 
-- Use the [WebUI](/docs/installation/webui) to continue the installation.
+- Use the [WebUI]({{< relref "../installation/webui" >}}) to continue the installation.
 - Serve the configuration via QR code.
-- Connect to the machine via [SSH](/docs/installation/manual) and start the installation process with a configuration file ( with `kairos-agent manual-install <config>`).
-- [Use a datasource iso, or a generating a custom one](/docs/installation/automated)
+- Connect to the machine via [SSH]({{< relref "../installation/manual" >}}) and start the installation process with a configuration file ( with `kairos-agent manual-install <config>`).
+- [Use a datasource iso, or a generating a custom one]({{< relref "../installation/automated" >}})
 
 The configuration file is a YAML file with `cloud-init` syntax and additional Kairos configuration details. In this example, we'll configure the node as a single-node Kubernetes cluster using K3s. We'll also set a default password for the Kairos user and define SSH keys.
 
@@ -209,17 +209,17 @@ k3s:
 
 Save this file as config.yaml and use it to start the installation process with kairos-agent manual-install config.yaml. This will configure the node as a single-node Kubernetes cluster and set the default password and SSH keys as specified in the configuration file.
 
-[Check out the full configuration reference](/docs/reference/configuration).
+[Check out the full configuration reference]({{< relref "../reference/configuration" >}}).
 
 **Note**:
 
 - `users`: This block defines the user accounts on the node. In this example, it creates a user named `kairos` with the password `kairos` and adds two SSH keys to the user's authorized keys.
 - `k3s`: This block enables K3s on the node.
-- If you want to enable experimental P2P support, check out [P2P installation](/docs/installation/p2p)
+- If you want to enable experimental P2P support, check out [P2P installation]({{< relref "../installation/p2p" >}})
 
 {{% alert title="Note" %}}
 
-Several configurations can be added at this stage. [See the configuration reference](/docs/reference/configuration) for further reading.
+Several configurations can be added at this stage. [See the configuration reference]({{< relref "../reference/configuration" >}}) for further reading.
 
 {{% /alert %}}
 
@@ -227,7 +227,7 @@ Several configurations can be added at this stage. [See the configuration refere
 
 {{% alert title="Note" %}}
 
-You can find instructions showing how to use the Kairos CLI below. In case you prefer to install via SSH and log in to the box, see the [Manual installation](/docs/installation/manual) section or the [Interactive installation](/docs/installation/interactive) section to perform the installation manually from the console.
+You can find instructions showing how to use the Kairos CLI below. In case you prefer to install via SSH and log in to the box, see the [Manual installation]({{< relref "../installation/manual" >}}) section or the [Interactive installation]({{< relref "../installation/interactive" >}}) section to perform the installation manually from the console.
 
 {{% /alert %}}
 
@@ -303,17 +303,17 @@ The K3s `kubeconfig` file is available at `/etc/rancher/k3s/k3s.yaml`. Please re
 
 There are other ways to install Kairos:
 
-- [Automated installation](/docs/installation/automated)
-- [Manual login and installation](/docs/installation/manual)
-- [Create decentralized clusters](/docs/installation/p2p)
-- [Take over installation](/docs/installation/takeover)
-- [Installation via network](/docs/installation/netboot)
-- [Raspberry Pi](/docs/installation/raspberry)
+- [Automated installation]({{< relref "../installation/automated" >}})
+- [Manual login and installation]({{< relref "../installation/manual" >}})
+- [Create decentralized clusters]({{< relref "../installation/p2p" >}})
+- [Take over installation]({{< relref "../installation/takeover" >}})
+- [Installation via network]({{< relref "../installation/netboot" >}})
+- [Raspberry Pi]({{< relref "../installation/raspberry" >}})
 - [CAPI Lifecycle Management (TODO)]()
 
 ## What's Next?
 
-- [Upgrade nodes with Kubernetes](/docs/upgrade/kubernetes)
-- [Upgrade nodes manually](/docs/upgrade/manual)
-- [Encrypt partitions](/docs/advanced/partition_encryption)
-- [Immutable architecture](/docs/architecture/immutable)
+- [Upgrade nodes with Kubernetes]({{< relref "../upgrade/kubernetes" >}})
+- [Upgrade nodes manually]({{< relref "../upgrade/manual" >}})
+- [Encrypt partitions]({{< relref "../advanced/partition_encryption" >}})
+- [Immutable architecture]({{< relref "../architecture/immutable" >}})

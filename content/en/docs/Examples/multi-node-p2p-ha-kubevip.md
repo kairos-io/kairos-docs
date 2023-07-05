@@ -68,7 +68,7 @@ p2p:
      master_nodes: 2
 ```
 
-When configuring the `p2p` section, start by adding your desired `network_token` under the p2p configuration in the cloud-config file. To generate a network token, see [documentation](/docs/installation/p2p/#network_token).
+When configuring the `p2p` section, start by adding your desired `network_token` under the p2p configuration in the cloud-config file. To generate a network token, see [documentation]({{< relref "../installation/p2p#network_token" >}}).
 
 Next, set up an Elastic IP (`kubevip.eip`) with a free IP in your network. KubeVIP will advertise this IP, so make sure to select an IP that is available for use on your network.
 

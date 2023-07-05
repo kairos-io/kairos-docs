@@ -10,8 +10,8 @@ Welcome to the examples section of the Kairos documentation! Here, you will find
 
 ## Getting Started
 
-- [Quick Start Guide](/docs/getting-started): This guide will walk you through the process of installing Kairos and creating your first Kubernetes cluster on bare metal.
+- [Quick Start Guide]({{< relref "../Getting started" >}}): This guide will walk you through the process of installing Kairos and creating your first Kubernetes cluster on bare metal.
 
 ## Troubleshooting
 
-- [Troubleshooting common issues](/docs/reference/troubleshooting): This page provides solutions to some common issues that you may encounter while using Kairos.
+- [Troubleshooting common issues]({{< relref "../reference/troubleshooting" >}}): This page provides solutions to some common issues that you may encounter while using Kairos.

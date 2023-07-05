@@ -40,7 +40,7 @@ p2p:
 
 ```
 
-To set up a multi-node P2P scenario with non-HA in Kairos, start by adding your desired `network_token` under the p2p configuration in the cloud-config file. To generate a network token, see [documentation](/docs/installation/p2p/#network_token).
+To set up a multi-node P2P scenario with non-HA in Kairos, start by adding your desired `network_token` under the p2p configuration in the cloud-config file. To generate a network token, see [documentation]({{< relref "../installation/p2p#network_token" >}}).
 
 Be sure to set `disable_dht` to true. This will ensure that coordination to discover nodes only happens on the local network.
 
