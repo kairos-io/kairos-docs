@@ -76,6 +76,7 @@ The following are some of the most popular Immutable OS solutions:
 - Flatcar Container Linux: A Linux-based operating system that is based on CoreOS and is designed for use in containerized environments. Like CoreOS, Flatcar Container Linux uses an immutable file system to provide stability and security.
 - Fedora Silverblue: A Fedora-based Linux distribution, that uses an immutable file system and a transactional update model, to provide a stable and secure environment. Fedora Silverblue is designed for use in desktop and containerized environments. A nice overview can be found [here](ttps://www.lifeintech.com/2021/11/19/immutable-os/) or [here](https://www.redhat.com/sysadmin/immutability-silverblue)
 - Photon OS: A Linux-based operating system developed by VMware, which is designed to run containerized workloads. Photon OS uses a minimal package set and an immutable file system for enhanced security and manageability.
+- openSUSE MicroOS: An openSUSE-based Linux distributions with transaction-update and is designed to host container workloads with automated administration and patching. Install MicroOS to get a quick, small environment for deploying Containers, or any other workload that benefits from Transactional Updates. As rolling release distribution the software is always up-to-date. Server and Desktop have different naming like openSUSE MicroOS Desktop GNOME is Aeon and openSUSE MicroOS Desktop Plasma is Kalpa.
 
 To simplify the comparison between the different Immutable OS solutions, the following table highlights their key differences and the environments they are targeted for:
 
@@ -89,6 +90,8 @@ To simplify the comparison between the different Immutable OS solutions, the fol
 | RancherOS | Linux | Docker for System Processes | Containers |
 | Flatcar Container Linux | CoreOS | Transactional Updates | Cloud |
 | Red Hat Atomic Host | Red Hat | Transactional Updates | Cloud, optimized for running containers |
+| SLE Micro | SUSE | Transactional Updates | Containers, Cloud, Edge, General purpose |
+| MicroOS | openSUSE | Transactional Updates | Desktop, Containers, Cloud, Edge, General purpose |
 | Fedora Silverblue | Fedora | Transactional Updates | Desktop, Containers |
 | Photon OS | Linux | Immutable File System | Cloud |
 | Kairos | Any Linux distribution | Immutable File System | Cloud, Edge, General purpose |
