@@ -116,7 +116,7 @@ provider_version = "v2.1.0"
 # renovate: datasource=github-releases depName=k3s-io/k3s
 k3s_version = "v1.26.4+k3s1"
 # renovate: datasource=github-releases depName=kairos-io/kairos
-kairos_version = "v2.1.0"
+kairos_version = "v2.3.0"
 # renovate: datasource=github-releases depName=kairos-io/osbuilder
 osbuilder_version = "v0.6.6"
 # renovate: datasource=github-releases depName=kairos-io/AuroraBoot
