@@ -18,7 +18,7 @@ FIPS, a set of standards governing document processing, encryption algorithms, a
 
 This release also heralds a series of updates to the diverse Kairos flavors. The Ubuntu core images now stand at version 23.04, AlmaLinux has joined our flavor offerings, and openSUSE Leap has been upgraded to version 15.5.
 
-In our relentless pursuit of perfection, several bugs have been squashed to ensure a seamless experience for our users. The issue of /tmp being remounted under alpine has been addressed, the problem with restoring machine-id on reboot has been rectified, and qemu-guest-agent has been added to images where it was previously absent.
+Several bugs have been squashed to ensure a seamless experience for our users. The issue of /tmp being remounted under alpine has been addressed, the problem with restoring machine-id on reboot has been rectified, and qemu-guest-agent has been added to images where it was previously absent.
 
 Kairos v2.3 is a testament to our commitment to delivering a more secure, stable, and versatile experience for all users. We eagerly await your feedback and suggestions. Your insights are invaluable in our quest to make Kairos the best it can be. So, dive into Kairos v2.3 and share your thoughts!
 
