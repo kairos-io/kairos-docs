@@ -14,7 +14,7 @@ author: Mauro Morales ([Twitter](https://twitter.com/mauromrls)) ([GitHub](https
 
 We're excited to roll out Kairos v2.3, the latest iteration of our project, packed with new features and enhancements. The most notable change in this version is the support for Federal Information Processing Standards (FIPS).
 
-FIPS, a set of standards governing document processing, encryption algorithms, and other IT standards for non-military government agencies and contractors, is now an integral part of Kairos. The addition of a FIPS generic and Ubuntu-specific framework image marks a significant milestone in our journey to offer a secure and reliable Linux distribution. On top of the support, we've included examples to facilitate building from scratch on Ubuntu, Fedora, and RockyLinux.
+FIPS, a set of standards governing document processing, encryption algorithms, and other IT standards for non-military government agencies and contractors, is now an integral part of Kairos. The addition of a FIPS generic and Ubuntu-specific framework image marks a significant milestone in our journey to offer a secure and reliable Linux distribution. We made sure to included examples to facilitate building FIPS from scratch on Ubuntu, Fedora, and RockyLinux.
 
 This release also includes a series of updates to the diverse Kairos flavors. The Ubuntu core images now stand at version 23.04, AlmaLinux has joined our flavor offerings, and openSUSE Leap has been upgraded to version 15.5.
 
