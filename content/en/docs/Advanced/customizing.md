@@ -157,3 +157,51 @@ install:
 ```
 Note, that these paths should exist in the container file-system used to create the ISO.
 See [ISO customization]({{< relref "../Advanced/customizing" >}}) above.
+
+
+## Customizing the file system hierarchy using cloud-config.
+
+For cases in which there is specific disk or mount needs, 
+we can leverage cloud-config to do very specific things that may not be covered by the custom mount facility that we mention above.
+
+For example, if we wanted to mount an extra disk into a specific path in the root that doesn't exists we could do it with a config like this:
+
+```
+#cloud-config
+
+install:
+  auto: true
+  reboot: true
+  device: /dev/vda
+
+stages:
+  after-install-chroot: # Creates the data dir after install inside the final system chroot
+    - &createdatadir
+      name: "Create data dir"
+      commands:
+        - mkdir -p /data
+    # Formats the disk ONLY after-install and just once. Extra checks can be added here, so we don't reformat it
+    # This can also go in the after-install stage, but its just important to do it just once
+    - name: "Format /dev/vdb"
+      commands:
+        - mkfs.ext4 -F /dev/vdb
+  # Creates the data dir after reset inside the final system chroot, just in case it's not there
+  after-reset-chroot:
+    - <<: *createdatadir
+  # Creates the data dir after upgrade inside the final system chroot, just in case it's not there
+  after-upgrade-chroot:
+    - <<: *createdatadir
+  initramfs:
+    # Mounts the disk under the /data dir during initramfs on each boot, with RW. Extra options can be added to the mount here
+    - name: "Mount /dev/vdb under /data"
+      commands:
+        - mount -o rw /dev/vdb /data
+```
+
+This would leverage the `kairos-agent` stages `after-install-chroot`, `after-upgrade-chroot` and `after-reset-chroot` to
+create a new folder in the rootfs, format the given disk and mount it during the `initramfs` stage.
+
+This works because during the `after-install-chroot`, `after-upgrade-chroot` and `after-reset-chroot` stages we run any commands
+inside the final system with a chroot AND we have RW access during that time. We could use those same stages to install extra packages for example,
+but in this case we use it to create an extra path. Remember that once we have installed, the system is inmmutable, so we won't be able to create
+any new paths in the root filesystem during runtime, even when using cloud-config. Only ephemeral and persistent paths are RW during runtime.
