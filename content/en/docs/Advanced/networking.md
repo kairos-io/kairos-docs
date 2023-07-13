@@ -23,7 +23,7 @@ stages:
   initramfs:
     - files:
         - path: /var/lib/connman/default.config
-          permission: 0644
+          permissions: 0644
           content: |
             [service_eth0]
             Type = ethernet
