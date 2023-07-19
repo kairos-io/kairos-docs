@@ -60,5 +60,5 @@ domain/kairos/framework:<version>_<flavor>
 
 ## Examples
 
-- quay.io/kairos/frameworks:v1.0.0_ubuntu
-- quay.io/kairos/frameworks:master_alpine
+- quay.io/kairos/framework:v1.0.0_ubuntu
+- quay.io/kairos/framework:master_alpine
