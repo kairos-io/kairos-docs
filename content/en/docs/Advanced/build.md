@@ -174,11 +174,10 @@ stringData:
               pLabel: persistent
               size: 0 # all space
       - if: '[ -f "/run/cos/recovery_mode" ] && [ ! -e /usr/local/.deployed ]'
-        name: "Deploy cos-system"
+        name: "Deploy kairos"
         commands:
           - |
-              # Use `elemental reset --system.uri docker:<img-ref>` to deploy a custom image
-              elemental reset && \
+              kairos-agent reset && \
               touch /usr/local/.deployed && \
               reboot
 ---
