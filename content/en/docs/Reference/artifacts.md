@@ -15,7 +15,9 @@ Architecture names are based on the [Go architecture names](https://go.dev/doc/i
 
 # Images
 
-Images are named using the following convention:
+OS images are stored in GitHub Releases, so the name of the artifact includes all the information about the image. The only exception is when the image is too big to be stored in GitHub Releases, in that case the image is stored in Quay.io.
+
+The format of the name is the following:
 
 ```
 kairos-<support>-<type>-<flavor>-<arch>-<device>-<version>.<extension>
@@ -38,7 +40,7 @@ Where:
 
 # Reports
 
-Reports follow a similar convention to images, but they include the name of the report:
+Reports are also stored in GitHub Releases and follow a similar convention to images, but they include the name of the report:
 
 ```
 kairos-<support>-<type>-<flavor>-<arch>-<device>-<version>-<report>.<extension>
@@ -59,30 +61,39 @@ Where:
 The repositories are not yet available, they will be published soon.
 {{% /alert %}}
 
+Container images are stored in Quay.io and follow the following convention:
+
 ```
 domain/kairos/<support>-<type>-<flavor>-<device>:<version>
 ```
 
-This nomenclature for repositories lacks some information that is included in the artifacts for the following reasons:
+This nomenclature for container images lacks some information for the following reasons:
 
 1. Docker repositories can be multi-arch, so the same image can be used in different architectures and therefore the name does not include the architecture.
-2. The version is not included in the repository name, but in the tag of the image.
+2. The version is not included in the image name, but in the tag.
 3. The name Kairos is already part of the repository name, so it is not included in the image name.
 
 ## Examples
 
 - quay.io/kairos/official-core-ubuntu-generic:v1.0.0
 
-# Image artifacts that are too big to be delivered via GitHub Releases
+# Images that are too big to be delivered via GitHub Releases
+
+As mentioned before, some images are too big to be delivered via GitHub Releases, so they are stored in Quay.io. At the moment this is only for arm `.img` images.
+
+The convention is the following:
 
 ```
 domain/kairos/<support>-<type>-<flavor>-<device>-<extension>:<version>
 ```
+
+## Examples
+
 - quay.io/kairos/official-core-ubuntu-generic-img:v1.0.0
 
 # Framework images
 
-All different framework images are stored in the same repository, so the details of the image are included in the tag and don't require all the information in the name:
+All different framework flavors are stored in the same image, so the details are included in the tag. The name is simplified since not all attributes apply for framework images.
 
 ```
 domain/kairos/framework:<version>_<flavor>
