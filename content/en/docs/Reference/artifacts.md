@@ -9,9 +9,9 @@ description: >
 
 There are many different artifacts that Kairos produces. In this page we try to summarize them all and have a clear naming convention for them.
 
-<alert type="info">
+{{% alert title="Info" %}}
     Architecture names are based on the [Go architecture names](https://go.dev/doc/install/source#environment), so `amd64` is used instead of `x86_64`, `386` instead of `i386` and `arm64` instead of `aarch64`.
-</alert>
+{{% /alert %}}
 
 # Images
 
@@ -55,9 +55,9 @@ Where:
 
 # Container Images
 
-<alert type="warning">
+{{% alert title="Warning" %}}
   The repositories are not yet available, they will be published soon.
-</alert>
+{{% /alert %}}
 
 ```
 domain/kairos/<support>-<type>-<flavor>-<device>:<version>
