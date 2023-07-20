@@ -20,13 +20,13 @@ OS images are stored in GitHub Releases, so the name of the artifact includes al
 The format of the name is the following:
 
 ```
-kairos-<support>-<type>-<flavor>-<arch>-<device>-<version>.<extension>
+kairos-<support>-<variant>-<flavor>-<arch>-<device>-<version>.<extension>
 ```
 
 Where:
 
 - `<support>`: `official` or `community`
-- `<type>`: `core` or `standard`
+- `<variant>`: `core` or `standard`
 - `<flavor>`: Underlying Linux distribution e.g. `ubuntu`, `debian`, `fedora`, `alpine`, etc
 - `<arch>`: `amd64` or `arm64`
 - `<device>`: either the specific device name, e.g. `rpi64` or `generic` for generic images
@@ -43,7 +43,7 @@ Where:
 Reports are also stored in GitHub Releases and follow a similar convention to images, but they include the name of the report:
 
 ```
-kairos-<support>-<type>-<flavor>-<arch>-<device>-<version>-<report>.<extension>
+kairos-<support>-<variant>-<flavor>-<arch>-<device>-<version>-<report>.<extension>
 ```
 
 Where:
@@ -64,7 +64,7 @@ The repositories are not yet available, they will be published soon.
 Container images are stored in Quay.io and follow the following convention:
 
 ```
-domain/kairos/<support>-<type>-<flavor>-<device>:<version>
+domain/kairos/<support>-<variant>-<flavor>-<device>:<version>
 ```
 
 This nomenclature for container images lacks some information for the following reasons:
@@ -84,7 +84,7 @@ As mentioned before, some images are too big to be delivered via GitHub Releases
 The convention is the following:
 
 ```
-domain/kairos/<support>-<type>-<flavor>-<device>-<extension>:<version>
+domain/kairos/<support>-<variant>-<flavor>-<device>-<extension>:<version>
 ```
 
 ### Examples
