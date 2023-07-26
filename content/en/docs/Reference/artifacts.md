@@ -35,8 +35,25 @@ Where:
 
 ### Examples
 
-- `kairos-official-core-ubuntu-amd64-generic-1.0.0.iso`
-- `kairos-official-standard-ubuntu-arm64-rpi64-1.0.0-k3s1.img`
+- `kairos-official-core-ubuntu-amd64-generic-v1.0.0.iso`
+- `kairos-official-standard-ubuntu-arm64-rpi64-v1.0.0-k3s1.img`
+
+## Kernel and RAM Disk Images
+
+Kernel and RAM Disk images are stored in GitHub Releases and follow a similar convention to images, but they have no extension:
+
+```
+kairos-<support>-<variant>-<flavor>-<arch>-<device>-<version>-<type>
+```
+
+Where:
+
+- `<type>`: `kernel` or `initrd`
+
+### Examples
+
+- `kairos-official-core-ubuntu-amd64-generic-v1.0.0-kernel`
+- `kairos-official-standard-ubuntu-arm64-rpi64-v1.0.0-k3s1-initrd`
 
 ## Reports
 
