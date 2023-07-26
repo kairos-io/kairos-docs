@@ -55,6 +55,16 @@ Where:
 - `kairos-official-core-ubuntu-amd64-generic-v1.0.0-kernel`
 - `kairos-official-standard-ubuntu-arm64-rpi64-v1.0.0-k3s1-initrd`
 
+## iPXE Images
+
+For iPXE we deliver three types of artifacts. The first one is the iPXE script, with the ipxe extension, and the other two are iPXE bootable images, with the iso and img extensions.
+
+### Examples
+
+- `kairos-official-core-ubuntu-amd64-generic-v1.0.0.ipxe`
+- `kairos-official-core-ubuntu-amd64-generic-v1.0.0-ipxe.iso`
+- `kairos-official-core-ubuntu-amd64-generic-v1.0.0-ipxe-usb.img`
+
 ## Reports
 
 Reports are also stored in GitHub Releases and follow a similar convention to images, but they include the name of the report:
