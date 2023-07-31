@@ -293,8 +293,10 @@ users:
 - Invoking `/system/discovery/kcrypt-discovery-challenger` without arguments returns the TPM pubhash.
 - Invoking `kcrypt-discovery-challenger` with 'discovery.password' triggers the logic to retrieve the passphrase, for instance can be used as such:
 ```bash
-echo '{ "data": "{ \"label\": \"LABEL\" }"}' | sudo -E WSS_SERVER="http://localhost:30000" /system/discovery/kcrypt-discovery-challenger "discovery.password"
+echo '{ "data": "{ \"label\": \"LABEL\" }"}' | sudo /system/discovery/kcrypt-discovery-challenger "discovery.password"
 ```
+
+The url of the KMS server is looked up in the kairos config (In directories`/oem` and `/sysroot/oem`).
 
 ## Notes
 
