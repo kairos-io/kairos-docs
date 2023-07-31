@@ -20,12 +20,11 @@ OS images are stored in GitHub Releases, so the name of the artifact includes al
 The format of the name is the following:
 
 ```
-kairos-<support>-<variant>-<flavor>-<arch>-<device>-<version>.<extension>
+kairos-<variant>-<flavor>-<arch>-<device>-<version>.<extension>
 ```
 
 Where:
 
-- `<support>`: `official` or `community`
 - `<variant>`: `core` or `standard`
 - `<flavor>`: Underlying Linux distribution e.g. `ubuntu`, `debian`, `fedora`, `alpine`, etc
 - `<arch>`: `amd64` or `arm64`
@@ -35,15 +34,15 @@ Where:
 
 ### Examples
 
-- `kairos-official-core-ubuntu-amd64-generic-v1.0.0.iso`
-- `kairos-official-standard-ubuntu-arm64-rpi64-v1.0.0-k3s1.img`
+- `kairos-core-ubuntu-amd64-generic-v1.0.0.iso`
+- `kairos-standard-ubuntu-arm64-rpi64-v1.0.0-k3s1.img`
 
 ## Kernel and RAM Disk Images
 
 Kernel and RAM Disk images are stored in GitHub Releases and follow a similar convention to images, but they have no extension:
 
 ```
-kairos-<support>-<variant>-<flavor>-<arch>-<device>-<version>-<type>
+kairos-<variant>-<flavor>-<arch>-<device>-<version>-<type>
 ```
 
 Where:
@@ -52,8 +51,8 @@ Where:
 
 ### Examples
 
-- `kairos-official-core-ubuntu-amd64-generic-v1.0.0-kernel`
-- `kairos-official-standard-ubuntu-arm64-rpi64-v1.0.0-k3s1-initrd`
+- `kairos-core-ubuntu-amd64-generic-v1.0.0-kernel`
+- `kairos-standard-ubuntu-arm64-rpi64-v1.0.0-k3s1-initrd`
 
 ## iPXE Images
 
@@ -61,16 +60,16 @@ For iPXE we deliver three types of artifacts. The first one is the iPXE script, 
 
 ### Examples
 
-- `kairos-official-core-ubuntu-amd64-generic-v1.0.0.ipxe`
-- `kairos-official-core-ubuntu-amd64-generic-v1.0.0-ipxe.iso`
-- `kairos-official-core-ubuntu-amd64-generic-v1.0.0-ipxe-usb.img`
+- `kairos-core-ubuntu-amd64-generic-v1.0.0.ipxe`
+- `kairos-core-ubuntu-amd64-generic-v1.0.0-ipxe.iso`
+- `kairos-core-ubuntu-amd64-generic-v1.0.0-ipxe-usb.img`
 
 ## Reports
 
 Reports are also stored in GitHub Releases and follow a similar convention to images, but they include the name of the report:
 
 ```
-kairos-<support>-<variant>-<flavor>-<arch>-<device>-<version>-<report>.<extension>
+kairos-<variant>-<flavor>-<arch>-<device>-<version>-<report>.<extension>
 ```
 
 Where:
@@ -79,8 +78,8 @@ Where:
 
 ### Examples
 
-- `kairos-community-core-alpine-arm64-generic-v1.0.0-trivy.sarif`
-- `kairos-community-core-alpine-arm64-generic-v1.0.0-grype.json`
+- `kairos-core-alpine-arm64-generic-v1.0.0-trivy.sarif`
+- `kairos-core-alpine-arm64-generic-v1.0.0-grype.json`
 
 ## Container Images
 
@@ -91,7 +90,7 @@ The repositories are not yet available, they will be published soon.
 Container images are stored in Quay.io and follow the following convention:
 
 ```
-domain/kairos/<support>-<variant>-<flavor>-<device>:<version>
+domain/kairos/<variant>-<flavor>-<device>:<version>
 ```
 
 This nomenclature for container images lacks some information for the following reasons:
@@ -102,7 +101,7 @@ This nomenclature for container images lacks some information for the following 
 
 ### Examples
 
-- quay.io/kairos/official-core-ubuntu-generic:v1.0.0
+- quay.io/kairos/core-ubuntu-generic:v1.0.0
 
 ## IMG Images
 
@@ -111,12 +110,12 @@ As mentioned before, some images are too big to be delivered via GitHub Releases
 The convention is the following:
 
 ```
-domain/kairos/<support>-<variant>-<flavor>-<device>-<extension>:<version>
+domain/kairos/<variant>-<flavor>-<device>-<extension>:<version>
 ```
 
 ### Examples
 
-- quay.io/kairos/official-core-ubuntu-generic-img:v1.0.0
+- quay.io/kairos/core-ubuntu-generic-img:v1.0.0
 
 ## Framework images
 
