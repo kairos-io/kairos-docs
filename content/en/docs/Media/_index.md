@@ -31,3 +31,11 @@ description: >
 ### How Kairos uses libp2p
 
 {{< youtube id="7Vym18wz9Uw" title="Kairos and libp2p" >}}
+
+### Conferences
+
+{{< youtube id="dwS-dBAAuOk" title="" >}}
+{{< youtube id="UmBxh5q_AF0" title="Devconf.cz" >}}
+{{< youtube id="46qcE5MC6-8" title="" >}}
+{{< youtube id="GuxIiludGgA" title="SCaLE" >}}
+
