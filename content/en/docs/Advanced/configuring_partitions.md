@@ -55,9 +55,9 @@ install:
       label: PARTITION_TWO
 ```
 
-In the case of wanting an extra partition to take over the rest of the disk space (by setting the size to 0), we need to also mark persistent with a fixed size.
-Currently, the default value for the persistent partition is set to 0 which means "take over the rest of the disk space free".
-In order to mark a different partition with that value, we need to set it to a fixed size, as there cannot be 2 partitions that want to take over the rest of the space.
+Only one partition can expand to the rest of the disk. 
+Either persistent or one of the extra-partitions. 
+In case you want the latter, you need to specify the size of persistent to a fixed value.
 
 An example of this would be as follows:
 
@@ -78,8 +78,8 @@ install:
 
 
 Note that there are some caveats in the `extra partitions` setup:
- - only `size`, `fs`, `name` and `label` are used for the partition creation, the name is currently used for the partition label.
- - if a partition has no fs set, the partition will be created, but it will not be formatted
+ - Only `size`, `fs`, `name` and `label` are used for the partition creation, the name is currently used for the partition label.
+ - If a partition has no fs set, the partition will be created, but it will not be formatted.
  - No mounting of any type is done during installation to the extra partitions. That part should be done on the stages of the cloud-config manually, with something like the following step:
 
 ```yaml
