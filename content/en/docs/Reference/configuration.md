@@ -22,6 +22,14 @@ users:
   ssh_authorized_keys:
   # - github:mudler
 
+# enable debug logging
+debug: true
+# Additional paths for look for cloud-init files
+cloud-init-paths:
+  - "/some/path"
+# fail on cloud-init errors, defaults to false
+strict: false
+
 # The install block is to drive automatic installations without user interaction.
 install:
   # Device for automated installs
@@ -32,6 +40,84 @@ install:
   poweroff: true
   # Set to true when installing without Pairing
   auto: true
+
+  # firmware to use ('efi|bios')
+  # This is autodetected so only use this to force the installation to use a different one if needed.
+  # NOTE: This can break your system boot if forced to the wrong value
+  firmware: efi
+  # Disk format ('gpt|msdos')
+  # Defaults to gpt. We recommend not changing it to msdos unless it's needed for legacy hardware
+  part-table: gpt
+
+  # Override the grub entry name
+  grub-entry-name: Kairos
+  
+  # partitions setup
+  # setting a partition size key to 0 means that the partition will take over the rest of the free space on the disk
+  # after creating the rest of the partitions
+  # by default the persistent partition has a value of 0
+  # if you want any of the extra partitions to fill the rest of the space, you will need to set the persistent partition
+  # size to a different value, for example
+  # partitions:
+  #   persistent:
+  #     size: 300
+
+  # default partitions
+  # only 'oem', 'recovery', 'state' and 'persistent' objects allowed
+  # Only size and fs should be changed here
+  # size in MiB
+  partitions:
+    oem:
+      size: 60
+      fs: ext4
+    recovery:
+      size: 4096
+      fs: ext4
+  # note: This can also be set with dot notation like the following examples for a more condensed view:
+  # partitions.oem.size: 60
+  # partitions.oem.fs: ext4
+  # partitions.recovery.size: 4096
+  # partitions.recovery.fs: ext4
+
+  # extra partitions to create during install
+  # only size, label and fs are used
+  # name is used for the partition label, but it's not really used during the kairos lifecycle. No spaces allowed.
+  # if no fs is given the partition will be created but not formatted
+  # These partitions are not automounted only created and formatted
+  extra-partitions:
+    - Name: myPartition
+      size: 100
+      fs: ext4
+      label: ONE_PARTITION
+    - Name: myOtherPartition
+      size: 200
+      fs: ext4
+      label: TWO_PARTITION
+  
+  # no-format: true skips any disk partitioning and formatting
+  # If set to true installation procedure will error out if expected
+  # partitions are not already present within the disk.
+  no-format: false
+
+  # if no-format is used and elemental is running over an existing deployment
+  # force can be used to force installation.
+  force: false
+  
+  # Override image sizes for active/passive/recovery
+  # Note that the active+passive images are stored in the state partition and
+  # the recovery in the recovery partition, so they should be big enough to accommodate te images sizes set below
+  # size in MiB
+  system:
+    size: 4096
+  passive:
+    size: 4096
+  recovery-system:
+    size: 5000
+  # note: This can also be set with dot notation like the following examples for a more condensed view:
+  # system.size: 4096
+  # passive.size: 4096
+  # recovery-system.size: 5000
+  
   # Use a different container image for the installation
   image: "docker:.."
   # Add bundles in runtime
@@ -57,6 +143,47 @@ install:
   - /mnt/bind2
   # ephemeral mounts, can be read and modified, changed are discarded at reboot
   ephemeral_mounts:
+
+# The reset block configures what happens when reset is called
+reset:
+  # Reboot after reset
+  reboot: true
+  # Power off after reset
+  poweroff: true
+
+  # Override the grub entry name
+  grub-entry-name: Kairos
+
+  # if set to true it will format persistent partitions ('oem 'and 'persistent')
+  reset-persistent: true
+  reset-oem: false
+  
+  
+# The upgrade block configures what happens when upgrade is called
+upgrade:
+  # Reboot after upgrade
+  reboot: true
+  # Power off after upgrade
+  poweroff: true
+
+  # Override the grub entry name
+  grub-entry-name: Kairos
+
+  # if set to true upgrade command will upgrade recovery system instead
+  # of main active system
+  recovery: false
+
+  # Override image sizes for active/recovery
+  # Note that the active+passive images are stored in the state partition and
+  # the recovery in the recovery partition, so they should be big enough to accommodate te images sizes set below
+  # size in MiB
+  # During upgrade only the active or recovery image cna be resized as those are the ones that contain the upgrade
+  # passive image is the current system, and that its untouched during the upgrade
+  system:
+    size: 4096
+  recovery-system:
+    size: 5000
+  
 
 k3s:
   # Additional env/args for k3s server instances
@@ -146,16 +273,6 @@ stages:
       authorized_keys:
         kairos:
           - github:mudler
-
-# Various options.
-# Those could apply to install, or other phases as well
-options:
-  # Specify an alternative image to use during installation
-  system.uri: ""
-  # Specify an alternative recovery image to use during installation
-  recovery-system.uri: ""
-  # Just set it to eject the cd after install
-  eject-cd: ""
 
 # Standard cloud-init syntax, see: https://github.com/mudler/yip/tree/e688612df3b6f24dba8102f63a76e48db49606b2#compatibility-with-cloud-init-format
 growpart:
