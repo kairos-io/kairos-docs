@@ -21,6 +21,7 @@ A running Linux-based OS system will have the following paths:
 ```
 
 `/usr/local` will contain all the persistent data which will be carried over in-between upgrades, unlike the changes made to `/etc` which will be discarded.
+NOTE: The persistent data live in directories that are bind mounted to `/usr/local` (check the [bind_mounts configuration option]({{< relref "../reference/configuration" >}})). Creating a directory in `/usr/local` manually (e.g. using a command in some `stage`) won't work.
 
 ## Benefits of using an Immutable System
 
