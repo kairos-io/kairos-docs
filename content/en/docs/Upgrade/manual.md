@@ -39,11 +39,12 @@ sudo kairos-agent upgrade <version>
 
 Use `--force` to force upgrading to avoid checking versions.
 
-To specify a specific image, use the `--image` flag:
+To specify a specific image, use the `--source` flag:
 
 ```bash
-sudo kairos-agent upgrade --image <image>
+sudo kairos-agent upgrade --source <type>:<address>
 ```
+Where type can be `dir` or `oci` and address is the path to the dir in the `dir` case or the <repo/image:tag> combination in the <oci> case.
 
 
 To upgrade with a container image behind a registry with authentication, the upgrade command reads the following files in order to find about registry auth:
