@@ -102,6 +102,15 @@ install:
   # if no-format is used and elemental is running over an existing deployment
   # force can be used to force installation.
   force: false
+
+  # Creates these dirs in the rootfs during installation. As the rootfs is RO from boot, sometimes we find that we
+  # some applications want to write to non-standard paths like /data
+  # If that dir is not already in the rootfs it makes it difficult to create that path on an RO system
+  # This allows to create some extra paths in the rootfs that then we count use for mounting or binding via
+  # the cloud-config stages
+  extra-dirs-rootfs:
+    - /data
+    - /src
   
   # Override image sizes for active/passive/recovery
   # Note that the active+passive images are stored in the state partition and
@@ -157,8 +166,17 @@ reset:
   # if set to true it will format persistent partitions ('oem 'and 'persistent')
   reset-persistent: true
   reset-oem: false
-  
-  
+
+  # Creates these dirs in the rootfs during reset. As the rootfs is RO from boot, sometimes we find that we
+  # some applications want to write to non-standard paths like /data
+  # If that dir is not already in the rootfs it makes it difficult to create that path on an RO system
+  # This allows to create some extra paths in the rootfs that then we count use for mounting or binding via
+  # the cloud-config stages
+  extra-dirs-rootfs:
+    - /data
+    - /src
+
+
 # The upgrade block configures what happens when upgrade is called
 upgrade:
   # Reboot after upgrade
@@ -183,7 +201,16 @@ upgrade:
     size: 4096
   recovery-system:
     size: 5000
-  
+
+  # Creates these dirs in the rootfs during upgrade. As the rootfs is RO from boot, sometimes we find that we
+  # some applications want to write to non-standard paths like /data
+  # If that dir is not already in the rootfs it makes it difficult to create that path on an RO system
+  # This allows to create some extra paths in the rootfs that then we count use for mounting or binding via
+  # the cloud-config stages
+  extra-dirs-rootfs:
+    - /data
+    - /src
+
 
 k3s:
   # Additional env/args for k3s server instances
