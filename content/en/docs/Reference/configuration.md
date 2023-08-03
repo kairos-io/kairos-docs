@@ -167,7 +167,7 @@ reset:
   reset-persistent: true
   reset-oem: false
 
-  # Creates these dirs in the rootfs during installation. As the rootfs is RO from boot, sometimes we find that we
+  # Creates these dirs in the rootfs during reset. As the rootfs is RO from boot, sometimes we find that we
   # some applications want to write to non-standard paths like /data
   # If that dir is not already in the rootfs it makes it difficult to create that path on an RO system
   # This allows to create some extra paths in the rootfs that then we count use for mounting or binding via
@@ -202,7 +202,7 @@ upgrade:
   recovery-system:
     size: 5000
 
-  # Creates these dirs in the rootfs during installation. As the rootfs is RO from boot, sometimes we find that we
+  # Creates these dirs in the rootfs during upgrade. As the rootfs is RO from boot, sometimes we find that we
   # some applications want to write to non-standard paths like /data
   # If that dir is not already in the rootfs it makes it difficult to create that path on an RO system
   # This allows to create some extra paths in the rootfs that then we count use for mounting or binding via
