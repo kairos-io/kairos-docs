@@ -176,10 +176,9 @@ stringData:
       - if: '[ -f "/run/cos/recovery_mode" ] && [ ! -e /usr/local/.deployed ]'
         name: "Deploy kairos"
         commands:
-          - |
-              kairos-agent reset && \
-              touch /usr/local/.deployed && \
-              reboot
+          - kairos-agent --debug reset --unattended
+          - touch /usr/local/.deployed
+          - reboot
 ---
 apiVersion: build.kairos.io/v1alpha1
 kind: OSArtifact
