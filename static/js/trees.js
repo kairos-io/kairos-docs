@@ -1,26 +1,4 @@
-const DOWNLOAD_CARDS_TREE = [
-    {
-        integration:"ubuntu",
-        links: {
-            "X86": "https://github.com/kairos-io/provider-kairos/releases/download/v2.3.1/kairos-ubuntu-v2.3.1-k3sv1.25.11+k3s1.iso",
-            "ARM": "docker pull quay.io/kairos/core-ubuntu-arm-rpi-img:v2.3.2"
-        }
-    },
-    {
-        integration:"fedora",
-        links: {
-            "X86":"https://github.com/kairos-io/provider-kairos/releases/download/v2.3.1/kairos-fedora-v2.3.1-k3sv1.25.11+k3s1.iso",
-            "ARM": "// Temporarily there is no Fedora ARM support, please visit the link below for more information."
-        }
-    },
-    {
-        integration:"alpine",
-        links: {
-            "X86":"https://github.com/kairos-io/provider-kairos/releases/download/v2.3.1/kairos-alpine-ubuntu-v2.3.1-k3sv1.25.11+k3s1.iso",
-            "ARM": "docker pull quay.io/kairos/core-alpine-arm-rpi:v2.3.2"
-        }
-    },
-      ].map(({integration, links}) => ({
+const DOWNLOAD_CARDS_TREE = ["ubuntu", "fedora", "alpine"].map(imgSrc => ({
     div: {
         children: [
             {
@@ -28,8 +6,8 @@ const DOWNLOAD_CARDS_TREE = [
                     children: [
                         {
                             img: {
-                                src: `/index/downloads/${integration}.png`,
-                                alt: `${integration}.png`
+                                src: `/index/downloads/${imgSrc}.png`,
+                                alt: `${imgSrc}.png`
                             }
                         }
                     ]
@@ -38,91 +16,30 @@ const DOWNLOAD_CARDS_TREE = [
             },
             {
                 div: {
-                    children: [
-                        ...Object.keys(links).map(type => ({
-                            a: {
-                                href: type === "X86" ? links[type] : "",
-                                class: type === "ARM" ? `open-dialog-${integration}` : "unclickable",
-                                children:[
-                                    {
-                                        span:{
-                                            content: type
-                                        }
-                                    },
-                                    {
-                                        span:{
-                                            content: " version"
-                                        }
-                                    },
-                                    {
-                                        img: {
-                                            src: `/index/downloads/download.svg`,
-                                            alt: "download icon"
-                                        }
-                                    }
-                                ]
-                            },
-                        })),
-                    {
-                        dialog: {
-                            id: `${integration}-modal`,
-                            children: [
-                                {
-                                    div:{
-                                        class: `copied-${integration}`,
-                                        content: "Copied"
-                                    }
-                                },
-                                {
-                                    p:{
-                                        content: "Please use the following docker command: ",
-                                        children: [
-                                            {
-                                                pre:{
-                                                    class: `code-${integration}`,
-                                                    content: links["ARM"]
-                                                }
-                                            }
-                                        ]
-                                    }
-                                },
-                                {
-                                    p:{
-                                        content: "You can find more information: ",
-                                        children: [
-                                            {
-                                                a: {
-                                                    content: "here",
-                                                    href: "https://kairos.io/docs/reference/image_matrix/#image-flavors",
-                                                    target: "_blank"
-                                                }
-                                            }
-                                        ]
-                                    }
-                                },
-                                {
-                                    div:{
-                                        class: "modal-buttons",
-                                        children: [
-                                            {
-                                                button: {
-                                                    class: `copy-to-clipboard-${integration}`,
-                                                    content: "Copy Command",
-                                                }
-                                            },
-                                            {
-                                                button: {
-                                                    class: `close-dialog-${integration}`,
-                                                    content: "Close",
-                                                }
-                                            }
-                                        ]
-                                    }
+                    children: ["X86", "ARM"].map(type => ({
+                        a: {
+                            href: "https://github.com/",
+                            children:[
+                            {
+                                span:{
+                                    content: type
                                 }
+                            },
+                            {
+                                span:{
+                                    content: " version"
+                                }
+                            },
+                            {
+                                img: {
+                                    src: `/index/downloads/download.svg`,
+                                    alt: "download icon"
+                                }
+                            }
+
                             ]
                         }
-                    }
-                    ]
+                    }))
                 }
             }
         ]
@@ -146,8 +63,7 @@ export const DOWNLOAD_BLADE_TREE = {
             },
             {
                 a: {
-                    href: "https://kairos.io/docs/reference/image_matrix/#image-flavors",
-                    target: "_blank",
+                    href: "https://github.com/",
                     class: "download-others-link",
                     content: "See other download alternatives",
                     children: [
@@ -185,7 +101,7 @@ export const WELCOME_BLADE_TREE = {
                     children: [
                         {
                             h2:{
-                                content: "Welcome to &nbsp",
+                                content: "Welcome to",
                                 children: [
                                     {
                                         img: {
@@ -262,7 +178,6 @@ const HOT_OFF_PRESS_CARDS = [
             {
                 a: {
                     href: link,
-                    target: "_blank",
                     content: "Read more",
                     children: [
                         {
@@ -387,22 +302,21 @@ const JOIN_US_CARDS = [
     {
         className: "fa-solid fa-envelope",
         content: "Sign up to <br/> our newsletter",
-        href: "https://kairoslinux.substack.com/p/karios-chronicles-were-part-of-the?sd=pf"
+        href: ""
     },
     {
         className: "fa-brands fa-twitter",
         content: "Follow us <br/> on Twitter",
-        href: "https://twitter.com/Kairos_OSS"
+        href: ""
     },
     {
         className: "fa-brands fa-slack",
         content: "Join our <br/> Slack channel",
-        href: "https://spectrocloudcommunity.slack.com/join/shared_invite/zt-g8gfzrhf-cKavsGD_myOh30K24pImLA#/shared-invite/email"
+        href: ""
     },
 ].map(({className, content, href})=>({
     a: {
         href,
-        target: "_blank",
         children: [
             {
                 i:{
@@ -474,7 +388,6 @@ export const BASICS_BLADE = {
         ].map(({title, imgSrc, text, href})=>({
             a:{
                 href,
-                target: "_blank",
                 children: [
                     {
                         img: {
@@ -562,7 +475,6 @@ export const FOOTER_TREE = {
                             ].map(({href, className})=>({
                                 a: {
                                     href,
-                                    target: "_blank",
                                     children: [
                                         {
                                             i:{
