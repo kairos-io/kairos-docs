@@ -384,17 +384,17 @@ const JOIN_US_CARDS = [
     {
         className: "fa-solid fa-envelope",
         content: "Sign up to <br/> our newsletter",
-        href: ""
+        href: "https://kairoslinux.substack.com/p/karios-chronicles-were-part-of-the?sd=pf"
     },
     {
         className: "fa-brands fa-twitter",
         content: "Follow us <br/> on Twitter",
-        href: ""
+        href: "https://twitter.com/Kairos_OSS"
     },
     {
         className: "fa-brands fa-slack",
         content: "Join our <br/> Slack channel",
-        href: ""
+        href: "https://spectrocloudcommunity.slack.com/join/shared_invite/zt-g8gfzrhf-cKavsGD_myOh30K24pImLA#/shared-invite/email"
     },
 ].map(({className, content, href})=>({
     a: {
