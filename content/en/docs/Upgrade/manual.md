@@ -46,28 +46,6 @@ sudo kairos-agent upgrade --source <type>:<address>
 ```
 Where type can be `dir` or `oci` and address is the path to the dir in the `dir` case or the <repo/image:tag> combination in the <oci> case.
 
-
-To upgrade with a container image behind a registry with authentication, the upgrade command reads the following files in order to find about registry auth:
-
-  - ${XDG_CONFIG_HOME}/.docker/config.json
-  - If set, DOCKER_CONFIG environment variable which points to a file.
-  - ${XDG_RUNTIME_DIR}/containers/auth.json for podman
-
-
-See the [login docs for docker](https://docs.docker.com/engine/reference/commandline/login/) or the [login docs for podman](https://docs.podman.io/en/latest/markdown/podman-login.1.html) for more information.
-
-You can also just generate that file yourself with the proper auth parameters like so:
-
-```json
-{
-	"auths": {
-		"registry.example.com": {
-			"auth": "a2Fpcm9zOmh1bnRlcjIK"
-		}
-	}
-}
-```
-
-The auths map has an entry per registry, and the auth field contains your username and password encoded as HTTP 'Basic' Auth.
-
-NOTE: This means that your credentials are stored in plaintext. Have a look at the docker docs for the [credentials-store](https://docs.docker.com/engine/reference/commandline/login/#credentials-store)
+{{% alert title="Note" %}}
+Looking to upgrade from a private registry OCI image? Check the [Private registry auth]({{< relref "../Advanced/private_registry_auth" >}}) page.
+{{% /alert %}}

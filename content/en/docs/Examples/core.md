@@ -23,6 +23,11 @@ install:
  image: "docker:quay.io/kairos/kairos-opensuse-leap:v1.4.0-k3sv1.26.0-k3s1"
 ```
 
+{{% alert title="Note" %}}
+Looking to install from a private registry OCI image? Check the [Private registry auth]({{< relref "../Advanced/private_registry_auth" >}}) page.
+{{% /alert %}}
+
+
 Once you've chosen your image, you can move on to the installation process by following the steps outlined in our [Installation]({{< relref "../installation/" >}}) documentation.
 
 For example, a full cloud-config might look like this:
