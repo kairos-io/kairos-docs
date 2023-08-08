@@ -1,4 +1,18 @@
-const HTML_TAGS = ["h1", "h2", "h3", "h4" ,"div", "p" ,"span", "a", "img" ,"i"]
+const HTML_TAGS = [
+    "h1",
+    "h2",
+    "h3",
+    "h4" ,
+    "div",
+    "p" ,
+    "span",
+    "a",
+    "img" ,
+    "i",
+    "dialog",
+    "pre",
+    "button",
+]
 
 export function renderHTMLTree(dataTree = {}, rootElem){
     Object.keys(dataTree).forEach(treeKey => {
@@ -18,6 +32,10 @@ export function renderHTMLTree(dataTree = {}, rootElem){
             }
 
             rootElem.appendChild(elem)
+        }
+
+        if (Object.hasOwn(dataTree[treeKey], "id")){
+            elem.setAttribute("id", dataTree[treeKey].id)
         }
 
         if (Object.hasOwn(dataTree[treeKey], "class")){
