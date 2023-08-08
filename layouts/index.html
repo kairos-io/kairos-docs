@@ -68,8 +68,8 @@
     </header>
 
 
-    {{ partialCached "content.html" . }}
-    {{ partialCached "footer.html" . }}
+    {{ partial "content.html" . }}
+    {{ partial "footer.html" . }}
     <script type="module" src="/js/index.js"></script>
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     {{ partialCached "scripts.html" . }}
