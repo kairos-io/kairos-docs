@@ -236,7 +236,7 @@ const HOT_OFF_PRESS_CARDS = [
     {
         content: "Learn how to use the famous OSS project, LocalAI, with Kairos and K3s on your nodes",
         imgSrc: "/index/press-blade/k8s-superpowers.png",
-        link: "https://kairos.io/docs/examples/localai/",
+        link: "https://thenewstack.io/looking-for-a-k3os-alternative-choosing-a-container-os-for-edge-k8s/",
     },
 ].map(({content, imgSrc, link}) => ({
     div: {
