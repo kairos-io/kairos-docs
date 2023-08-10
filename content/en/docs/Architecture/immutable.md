@@ -22,6 +22,10 @@ A running Linux-based OS system will have the following paths:
 
 `/usr/local` will contain all the persistent data which will be carried over in-between upgrades, unlike the changes made to `/etc` which will be discarded.
 
+{{% alert color="info" %}}
+The persistent data live in directories that are bind mounted to `/usr/local/.state` (check the [bind_mounts configuration option]({{< relref "../reference/configuration" >}})).  `/usr/local` is mounted during boot with the first partition found labeled `COS_PERSISTENT`. 
+{{% /alert %}}
+
 ## Benefits of using an Immutable System
 
 There are many reasons why you would like to use an immutable system, in this article we'll present two of them.

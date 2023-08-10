@@ -1,6 +1,7 @@
 ---
 title: "Examples"
 linkTitle: "Examples"
+icon: fa-regular fa-file
 weight: 5
 description: > 
     This section contains various examples, how-to and tutorial to use Kairos
