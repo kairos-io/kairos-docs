@@ -93,7 +93,8 @@ const DOWNLOAD_CARDS_TREE = [
                                             {
                                                 a: {
                                                     content: "here",
-                                                    href: "https://kairos.io/docs/reference/image_matrix/#image-flavors"
+                                                    href: "https://kairos.io/docs/reference/image_matrix/#image-flavors",
+                                                    target: "_blank"
                                                 }
                                             }
                                         ]
@@ -145,7 +146,8 @@ export const DOWNLOAD_BLADE_TREE = {
             },
             {
                 a: {
-                    href: "https://github.com/kairos-io/kairos",
+                    href: "https://kairos.io/docs/reference/image_matrix/#image-flavors",
+                    target: "_blank",
                     class: "download-others-link",
                     content: "See other download alternatives",
                     children: [
@@ -183,7 +185,7 @@ export const WELCOME_BLADE_TREE = {
                     children: [
                         {
                             h2:{
-                                content: "Welcome to",
+                                content: "Welcome to &nbsp",
                                 children: [
                                     {
                                         img: {
@@ -260,6 +262,7 @@ const HOT_OFF_PRESS_CARDS = [
             {
                 a: {
                     href: link,
+                    target: "_blank",
                     content: "Read more",
                     children: [
                         {
@@ -399,6 +402,7 @@ const JOIN_US_CARDS = [
 ].map(({className, content, href})=>({
     a: {
         href,
+        target: "_blank",
         children: [
             {
                 i:{
@@ -470,6 +474,7 @@ export const BASICS_BLADE = {
         ].map(({title, imgSrc, text, href})=>({
             a:{
                 href,
+                target: "_blank",
                 children: [
                     {
                         img: {
@@ -557,6 +562,7 @@ export const FOOTER_TREE = {
                             ].map(({href, className})=>({
                                 a: {
                                     href,
+                                    target: "_blank",
                                     children: [
                                         {
                                             i:{
