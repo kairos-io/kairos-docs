@@ -6,6 +6,8 @@ docs:
     FROM node:19-bullseye
     ARG TARGETARCH
 
+    RUN apt update && apt install -y golang
+
     # Install dependencies
     RUN apt install git
     # renovate: datasource=github-releases depName=gohugoio/hugo
@@ -19,7 +21,6 @@ docs:
     WORKDIR ./docs
 
     RUN npm install postcss-cli
-    RUN npm run prepare
 
     RUN HUGO_ENV="production" /usr/bin/hugo --gc -b "/local/" -d "public/"
     SAVE ARTIFACT public /public AS LOCAL docs/
