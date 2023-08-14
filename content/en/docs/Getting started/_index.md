@@ -8,7 +8,7 @@ description: >
 ---
 
 {{% alert title="Note" %}}
-If you prefer video format, you can also watch our [Introduction to Kairos video]({{< relref "docs/media/#introduction-to-kairos" >}} "Media") on the [Media Section]({{< relref "docs/media" >}} "Media")
+If you prefer video format, you can also watch our [Introduction to Kairos video]({{< relref "Media#introduction-to-kairos" >}} "Media") on the [Media Section]({{< relref "Media" >}} "Media")
 {{% /alert %}}
 
 Ready to launch your Kubernetes cluster with ease? With Kairos, deployment is a breeze! Simply download the pre-packaged artifacts, boot up on a VM or bare metal, and let Kairos handle the rest. Whether you're a Linux or Windows user, our quickstart guide will have you up and running in no time. Kairos can build a Kubernetes cluster for you with just a few simple steps!
