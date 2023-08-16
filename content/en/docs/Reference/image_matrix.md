@@ -153,7 +153,7 @@ Images signatures are pushed regularly for tagged releases. To verify images wit
 ```bash
 cosign verify-attestation \
         --type spdx quay.io/kairos/core-alpine-opensuse-leap:{{< kairosVersion >}} \
-        --certificate-identity "https://github.com/kairos-io/kairos/.github/workflows/release.yaml@refs/tags/v2.3.3-rc2" \
+        --certificate-identity "https://github.com/kairos-io/kairos/.github/workflows/release.yaml@refs/tags/{{< kairosVersion >}}" \
         --certificate-oidc-issuer "https://token.actions.githubusercontent.com"
 ```
 
