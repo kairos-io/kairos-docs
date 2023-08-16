@@ -43,7 +43,7 @@ The base OS used as an example in this document is Fedora 38. However, the steps
 
 - Use `systemd` (`openRC` is currently not supported, but in the roadmap)
 - Use `grub` as bootloader
-- If the system supposedly is meant to be used with EFI, the kernel needs to have enabled the `CONFIG_EFI_STUB` option ( see: https://docs.kernel.org/admin-guide/efi-stub.html)
+- If the system will use EFI, the kernel needs to have enabled the `CONFIG_EFI_STUB` option ( see: https://docs.kernel.org/admin-guide/efi-stub.html)
 
 
 If you encounter any issues, please feel free to open up issues and help us improve the Documentation!
