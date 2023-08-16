@@ -144,7 +144,7 @@ Release changelogs are available for Kairos core and for each component. Below i
 
 ## Service Billing Of Materials (SBOM)
 
-SBOM lists are regularly pushed via the CI as part of the Github releases assets. For instance, `https://github.com/kairos-io/kairos/releases/download/v2.3.2/core-rockylinux-v2.3.2-sbom.spdx.json` is the SBOM for the `core-rockylinux` image.
+  SBOM lists are regularly pushed via the CI as part of the Github releases assets. For instance, `https://github.com/kairos-io/kairos/releases/download/{{< kairosVersion >}}/core-rockylinux-{{< kairosVersion >}}-sbom.spdx.json` is the SBOM for the `core-rockylinux` image.
 
 ## Image verification
 
