@@ -10,7 +10,7 @@ We like to define Kairos as a meta-Linux Distribution, as its goal is to convert
 
 ## Kairos
 
-The Kairos is a software stack is composed of the following:
+Kairos is a software stack is composed of the following:
 
 - A core OS image release for each flavor in ISO, qcow2, and other similar formats (see [the list of supported distributions]({{< relref "../reference/image_matrix" >}})) provided for user convenience
 - A release with K3s embedded (optional).
