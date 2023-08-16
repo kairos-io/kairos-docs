@@ -141,3 +141,20 @@ Release changelogs are available for Kairos core and for each component. Below i
 |-----------------------------------------------------	|---------------------------------------------------------	|
 | **Kairos core**                                  	|    https://github.com/kairos-io/kairos/releases      	|
 | **Kairos provider (k3s support)**                 |    https://github.com/kairos-io/provider-kairos/releases |
+
+## Service Billing Of Materials (SBOM)
+
+  SBOM lists are regularly pushed via the CI as part of the Github releases assets. For instance, `https://github.com/kairos-io/kairos/releases/download/{{< kairosVersion >}}/core-rockylinux-{{< kairosVersion >}}-sbom.spdx.json` is the SBOM for the `core-rockylinux` image.
+
+## Image verification
+
+Images signatures are pushed regularly for tagged releases. To verify images with `cosign` ([install guide](https://docs.sigstore.dev/cosign/installation/)) for example, you can use the following command:
+
+```bash
+cosign verify-attestation \
+        --type spdx quay.io/kairos/core-alpine-opensuse-leap:{{< kairosVersion >}} \
+        --certificate-identity "https://github.com/kairos-io/kairos/.github/workflows/release.yaml@refs/tags/{{< kairosVersion >}}" \
+        --certificate-oidc-issuer "https://token.actions.githubusercontent.com"
+```
+
+To see how to verify image attestation during upgrades with `kyverno`, see the [documentation page](https://kairos.io/docs/upgrade/kubernetes/#verify-images-attestation-during-upgrades).

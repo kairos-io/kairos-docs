@@ -37,7 +37,16 @@ This document outlines the steps for making any base image fully bootable with t
 
 ## Prerequisites
 
-To follow the steps below, you'll need to have Docker or a container engine installed on your local machine. Additionally, note that the steps have been tested on Linux but should also work in other environments. If you encounter any issues, please feel free to open up issues and help us improve the Documentation!
+To follow the steps below, you'll need to have Docker or a container engine installed on your local machine. Additionally, note that the steps have been tested on Linux but should also work in other environments. 
+
+The base OS used as an example in this document is Fedora 38. However, the steps should work with any other OS as well. The OS should meet the following requirements:
+
+- Use `systemd` (`openRC` is currently not supported, [but in the roadmap](https://github.com/kairos-io/kairos/issues/653))
+- Use `grub` as bootloader
+- If the system will use EFI, the kernel needs to have enabled the `CONFIG_EFI_STUB` option ( see: https://docs.kernel.org/admin-guide/efi-stub.html)
+
+
+If you encounter any issues, please feel free to open up issues and help us improve the Documentation!
 
 ## Build a container image
 
