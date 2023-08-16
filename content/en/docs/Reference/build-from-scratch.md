@@ -41,7 +41,7 @@ To follow the steps below, you'll need to have Docker or a container engine inst
 
 The base OS used as an example in this document is Fedora 38. However, the steps should work with any other OS as well. The OS should meet the following requirements:
 
-- Use `systemd` (`openRC` is currently not supported, but in the roadmap)
+- Use `systemd` (`openRC` is currently not supported, [but in the roadmap](https://github.com/kairos-io/kairos/issues/653))
 - Use `grub` as bootloader
 - If the system will use EFI, the kernel needs to have enabled the `CONFIG_EFI_STUB` option ( see: https://docs.kernel.org/admin-guide/efi-stub.html)
 
