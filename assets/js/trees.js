@@ -1,23 +1,24 @@
+import * as params from '@params'
 const DOWNLOAD_CARDS_TREE = [
     {
         integration:"ubuntu",
         links: {
-            "X86": "https://github.com/kairos-io/provider-kairos/releases/download/v2.3.1/kairos-ubuntu-v2.3.1-k3sv1.25.11+k3s1.iso",
-            "ARM": "docker pull quay.io/kairos/core-ubuntu-arm-rpi-img:v2.3.2"
+            "X86":`https://github.com/kairos-io/provider-kairos/releases/download/${params.kairosVersion}/kairos-ubuntu-${params.kairosVersion}-k3s${params.k3sVersion}.iso`,
+            "ARM":`docker pull quay.io/kairos/kairos-ubuntu-arm-rpi-img:${params.kairosVersion}-k3s${params.k3sVersion.replace("+", "-")}`
         }
     },
     {
         integration:"fedora",
         links: {
-            "X86":"https://github.com/kairos-io/provider-kairos/releases/download/v2.3.1/kairos-fedora-v2.3.1-k3sv1.25.11+k3s1.iso",
-            "ARM": "// Temporarily there is no Fedora ARM support, please visit the link below for more information."
+            "X86":`https://github.com/kairos-io/provider-kairos/releases/download/${params.kairosVersion}/kairos-fedora-${params.kairosVersion}-k3s${params.k3sVersion}.iso`,
+            "ARM":"// Temporarily there is no Fedora ARM support, please visit the link below for more information."
         }
     },
     {
         integration:"alpine",
         links: {
-            "X86":"https://github.com/kairos-io/provider-kairos/releases/download/v2.3.1/kairos-alpine-ubuntu-v2.3.1-k3sv1.25.11+k3s1.iso",
-            "ARM": "docker pull quay.io/kairos/core-alpine-arm-rpi:v2.3.2"
+            "X86":`https://github.com/kairos-io/provider-kairos/releases/download/${params.kairosVersion}/kairos-alpine-ubuntu-${params.kairosVersion}-k3s${params.k3sVersion}.iso`,
+            "ARM":`docker pull quay.io/kairos/core-alpine-arm-rpi:${params.kairosVersion}-k3s${params.k3sVersion.replace("+", "-")}`
         }
     },
       ].map(({integration, links}) => ({
