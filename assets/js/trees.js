@@ -18,7 +18,7 @@ const DOWNLOAD_CARDS_TREE = [
         integration:"alpine",
         links: {
             "X86":`https://github.com/kairos-io/provider-kairos/releases/download/${params.providerVersion}/kairos-alpine-ubuntu-${params.providerVersion}-k3s${params.k3sVersion}.iso`,
-            "ARM":`docker pull quay.io/kairos/core-alpine-arm-rpi:${params.providerVersion}-k3s${params.k3sVersion.replace("+", "-")}`
+            "ARM":`docker pull quay.io/kairos/kairos-alpine-arm-rpi:${params.providerVersion}-k3s${params.k3sVersion.replace("+", "-")}`
         }
     },
       ].map(({integration, links}) => ({
