@@ -60,6 +60,9 @@ languageName ="English"
 # Weight used for sorting.
 weight = 1
 
+[social]
+  twitter = "Kairos_OSS"
+
 [[menu.main]]
     name = "Contribute"
     weight = 50
