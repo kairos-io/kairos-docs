@@ -13,4 +13,6 @@ then
     chmod +x "$binpath"/hugo
 fi
 
+hugo mod get
+hugo mod graph
 hugo --baseURL="$BASE_URL" -s "$ROOT_DIR" serve
