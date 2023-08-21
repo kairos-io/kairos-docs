@@ -52,9 +52,13 @@ id = "UA-00000000-0"
 [languages.en]
 title = "Kairos - The immutable Linux meta-distribution for edge Kubernetes"
 description = "The immutable edge Kubernetes"
+images = [ "images/kairos-800x419.png" ]
 languageName ="English"
 # Weight used for sorting.
 weight = 1
+
+[social]
+twitter = "Kairos_OSS"
 
 [[menu.main]]
     name = "Contribute"
