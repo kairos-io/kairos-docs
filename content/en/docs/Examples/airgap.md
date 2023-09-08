@@ -24,7 +24,7 @@ First, we need to create a bundle that contains the K3s images used for the airg
 2. Paste the following code into the `Dockerfile`:
 
 ```Dockerfile
-FROM alpine
+FROM alpine AS alpine
 WORKDIR /build
 RUN wget https://github.com/k3s-io/k3s/releases/download/v1.23.16%2Bk3s1/k3s-airgap-images-amd64.tar.gz
 
