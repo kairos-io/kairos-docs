@@ -64,6 +64,10 @@ If you're using osbuilder between versions 0.6.0 and 0.6.5, you need to pass the
 Validating the config is not required in the following process, but it can save you some time. Use [kairosctl]({{< relref "../reference/kairosctl" >}}) to perform the schema validations.
 {{% /alert %}}
 
+{{% alert title="Warning" %}}
+From Kairos v2.4.0 onward, Raspberry Pi models 3 and 4 have different images. The images for those models are built differently. 
+Make sure to set the proper `--model=` in your command (rpi3,rpi4) to build the image for your model.
+{{% /alert %}}
 ```
 # Download the Kairos image locally
 IMAGE={{< registryURL >}}/kairos-opensuse-leap-arm-rpi:{{<providerVersion>}}-{{<k3sVersionOCI>}}
@@ -77,7 +81,7 @@ docker run -v $PWD:/HERE \
  --privileged -i --rm \
  --entrypoint=/build-arm-image.sh {{< registryURL >}}/osbuilder-tools:{{< osbuilderVersion >}} \
  --use-lvm \
- --model rpi64 \
+ --model rpi4 \
  --state-partition-size 6200 \
  --recovery-partition-size 4200 \
  --size 15200 \
