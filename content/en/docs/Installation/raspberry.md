@@ -65,10 +65,9 @@ Validating the config is not required in the following process, but it can save 
 {{% /alert %}}
 
 {{% alert title="Warning" %}}
-Since Kairos v2.4.0 rpi images are now built differently, before v2.4.0 only a single model was used that was shared between rpi3 and rpi4. Now there is separated models as the buidls are different. 
-Make sure to set the proper `--model=` in your command(rpi3,rpi4) to build the image for your model.
+From Kairos v2.4.0 onward, Raspberry Pi models 3 and 4 have different images. The images for those models are built differently. 
+Make sure to set the proper `--model=` in your command (rpi3,rpi4) to build the image for your model.
 {{% /alert %}}
-
 ```
 # Download the Kairos image locally
 IMAGE={{< registryURL >}}/kairos-opensuse-leap-arm-rpi:{{<providerVersion>}}-{{<k3sVersionOCI>}}
