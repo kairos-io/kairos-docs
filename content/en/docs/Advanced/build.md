@@ -261,7 +261,7 @@ spec:
   ...
 ```
 
-Will generate a compressed disk `hello-kairos-azure.vhd` ready to be used in GCE.
+Will generate a compressed disk `hello-kairos-azure.vhd` ready to be used in Azure.
 
 ```bash
 $ PORT=$(kubectl get svc osartifactbuilder-operator-osbuilder-nginx -o json | jq '.spec.ports[0].nodePort')
