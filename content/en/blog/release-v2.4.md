@@ -12,14 +12,14 @@ author: Dimitris Karakasilis ([LinkedIn](https://www.linkedin.com/in/jimmykarily
 <br>
 </h1>
 
-After quite some bumps, v2.4.0 is finally out and it comes with a ton of improvements and bug fixes.
+After some bumps, v2.4.0 is finally out and it comes with a ton of improvements and bug fixes.
 
 Among other changes:
-    - our release artifacts are now named in a way that is more consistent and makes it easier to identify them
-    - fixed various issues on raspberry pi, including serial console, auto expansion of last partition and more
-    - consolidated all configuration to the kairos-config (`/etc/elemental/config.yaml` is no longer used)
-    - merged the `kairos-io/kairos` and `kairos-io/provider-kairos` release pipelines. From now on, `kairos-io/kairos`
-      will be the canonical location for all artifacts, "standard" and "core".
+
+- our release artifacts are now named in a way that is more consistent and makes it easier to identify them
+- fixed various issues on raspberry pi, including serial console, auto expansion of last partition and more
+- consolidated all configuration to the kairos-config (`/etc/elemental/config.yaml` is no longer used)
+- merged the `kairos-io/kairos` and `kairos-io/provider-kairos` release pipelines. From now on, `kairos-io/kairos` will be the canonical location for all artifacts, "standard" and "core".
 
 If you find these changes interesting, check out [the full changelog](https://github.com/kairos-io/kairos/releases/tag/v2.4.0).
 
