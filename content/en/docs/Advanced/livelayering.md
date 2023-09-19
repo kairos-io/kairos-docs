@@ -13,18 +13,18 @@ Kairos supports live layering with `systemd-sysext`. Currently it is supported o
 
 For general reference on how `systemd-sysext` works, please read the [official](https://www.freedesktop.org/software/systemd/man/systemd-sysext.html) documentation.
 
-Systemd system extensions can be located in the directories `/etc/extensions/`, `/run/extensions/`, `/var/lib/extensions/`, `/usr/lib/extensions/` and `/usr/local/lib/extensions/`.
+Systemd system extensions are searched for in the directories `/etc/extensions/`, `/run/extensions/` and `/var/lib/extensions/`.
 
-In order to install extensions in runtime, they need to be placed into `/usr/local/lib/extensions` which is mounted over the `COS_PERSISTENT` partition. The other paths are reserved for the system image, which could ship extension directly from the container image used for upgrade or deployment.
+In order to install extensions in runtime, they need to be placed into `/var/lib/extensions` which is mounted over the `COS_PERSISTENT` partition. The other paths are reserved for the system image, which could ship extension directly from the container image used for upgrade or deployment.
 
 ## Installing extensions
 
-In order to install extensions, you can just place them into `/usr/local/lib/extensions`.
+In order to install extensions, you can just place them into `/var/lib/extensions`.
 
 For example, on a running Kairos node to install an extension from a container image:
 
 ```bash
-luet util unpack <image> /usr/local/lib/extensions/<extension_name>
+luet util unpack <image> /var/lib/extensions/<extension_name>
 ```
 
 To load an extension during installation of a Kairos node, it can be supplied as a bundle in the `install` block in the node configuration:
@@ -47,7 +47,7 @@ install:
   device: auto
   # Bundles to install
   bundles:
-  - rootfs_path: /usr/local/lib/extensions/<name>
+  - rootfs_path: /var/lib/extensions/<name>
     targets:
     - container://<image>
 ```
