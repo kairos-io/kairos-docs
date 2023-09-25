@@ -596,7 +596,7 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock --net host \
   -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot \
   --debug \
   --set "disable_http_server=true" \
-  --set "container_image=quay.io/kairos/kairos-opensuse-leap:v2.4.0-alpha6-k3sv1.27.3-k3s1" \
+  --set "container_image=quay.io/kairos/kairos-opensuse-leap:{{< providerVersion >}}-{{< k3sVersion >}}" \
   --set "disable_netboot=true" \
   --cloud-config /aurora/config.yaml \
   --set "disk.raw=true" \
