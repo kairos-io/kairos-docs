@@ -592,7 +592,6 @@ AuroraBoot can generate raw disk images (EFI) that can be used as cloud images (
 Consider the following example:
 
 ```bash
-
 docker run -v /var/run/docker.sock:/var/run/docker.sock --net host \
   -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot \
   --debug \
@@ -603,6 +602,8 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock --net host \
   --set "disk.raw=true" \
   --set "state_dir=/aurora"
 ```
+
+The raw disk image will be available in `iso/disk.raw`
 
 The cloud config file (`config.yaml`) should look like the following:
 
@@ -648,6 +649,40 @@ stages:
       - touch /usr/local/.deployed
       - reboot
 ```
+
+
+{{% alert title="Note" %}}
+To generate GCE and VHD images set `disk.gce=true` or `disk.vhd=true` respectively in the AuroraBoot command. For example:
+
+```bash
+# Build a GCE-compatible image
+docker run -v /var/run/docker.sock:/var/run/docker.sock --net host \
+  -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot \
+  --debug \
+  --set "disable_http_server=true" \
+  --set "container_image=quay.io/kairos/kairos-opensuse-leap:v2.4.0-alpha6-k3sv1.27.3-k3s1" \
+  --set "disable_netboot=true" \
+  --cloud-config /aurora/config.yaml \
+  --set "disk.gce=true" \
+  --set "state_dir=/aurora"
+```
+
+or for VHD images:
+
+```bash
+# Build a VHD image compatible with Azure
+docker run -v /var/run/docker.sock:/var/run/docker.sock --net host \
+  -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot \
+  --debug \
+  --set "disable_http_server=true" \
+  --set "container_image=quay.io/kairos/kairos-opensuse-leap:v2.4.0-alpha6-k3sv1.27.3-k3s1" \
+  --set "disable_netboot=true" \
+  --cloud-config /aurora/config.yaml \
+  --set "disk.vhd=true" \
+  --set "state_dir=/aurora"
+```
+
+{{% /alert %}}
 
 ### Use the config file
 
