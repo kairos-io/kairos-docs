@@ -77,7 +77,7 @@
                 <p>our latest release</p>
                 <div class="hero-latest-release-version">
                   <div>Latest release</div>
-                  <div>{{$.Page.Site.Params.softwareVersions.provider_version}}</div>
+                  <div>{{$.Page.Site.Params.softwareVersions.kairos_version}}</div>
                 </div>
               </div>
             </div>
@@ -90,7 +90,7 @@
 
     {{ partial "content.html" . }}
     {{ partial "footer.html" . }}
-    {{ $built := resources.Get "js/index.js" | js.Build (dict "minify" "true" "params" (dict "providerVersion" $.Page.Site.Params.softwareVersions.provider_version "k3sVersion" $.Page.Site.Params.softwareVersions.k3s_version)) | resources.Fingerprint "sha512" }}
+    {{ $built := resources.Get "js/index.js" | js.Build (dict "minify" "true" "params" (dict "kairosVersion" $.Page.Site.Params.softwareVersions.kairos_version "k3sVersion" $.Page.Site.Params.softwareVersions.k3s_version)) | resources.Fingerprint "sha512" }}
     <script type="module" src="{{ $built.RelPermalink }}" integrity="{{ $built.Data.Integrity }}" defer></script>
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     {{ partialCached "scripts.html" . }}

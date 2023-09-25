@@ -137,10 +137,13 @@ Our changelog is published as part of the release process and contains all the c
 
 Release changelogs are available for Kairos core and for each component. Below is a list of the components that are part of a Kairos release and their respective release pages with changelogs.
 
-| **Project**                                  	| **Release page**                                       	|
-|-----------------------------------------------------	|---------------------------------------------------------	|
-| **Kairos core**                                  	|    https://github.com/kairos-io/kairos/releases      	|
-| **Kairos provider (k3s support)**                 |    https://github.com/kairos-io/provider-kairos/releases |
+| **Project**                                  	                                | **Release page**                                       	 |
+|-------------------------------------------------------------------------------|----------------------------------------------------------|
+| **Kairos core and standard (k3s support)**                                  	 | https://github.com/kairos-io/kairos/releases      	      |
+| **Kairos' provider**                                                          | https://github.com/kairos-io/provider-kairos/releases    |
+| **Immucore**                                                                  | https://github.com/kairos-io/Immucore/releases           |
+| **AuroraBoot**                                                                | https://github.com/kairos-io/AuroraBoot/releases         |
+| **OSBuilder**                                                                 | https://github.com/kairos-io/osbuilder/releases          |
 
 ## Service Billing Of Materials (SBOM)
 

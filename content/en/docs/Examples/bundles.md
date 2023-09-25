@@ -15,7 +15,7 @@ For those unfamiliar with [MetalLB](https://metallb.universe.tf/), it is an open
 
 Before we begin, you will need to have the following:
 
-1. Kairos [provider-kairos](https://github.com/kairos-io/provider-kairos) artifacts which includes K3s
+1. A Kairos standard image which includes K3s
 1. A baremetal node to run the installation
 
 ## Installation

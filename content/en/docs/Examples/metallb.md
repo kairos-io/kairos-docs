@@ -16,7 +16,7 @@ Now that you have an understanding of what we'll be working with, let's dive int
 
 Check out the [bundle]({{< relref "../examples/bundles" >}}) example to configure `MetalLB` with bundles. Bundles provides a streamlined way to publish and re-use configuration between nodes.
 
-To get started, you'll need to use the [provider-kairos](https://github.com/kairos-io/provider-kairos) artifacts, which include k3s. We'll be using the [k3s manifest method]({{< relref "../reference/configuration#kubernetes-manifests" >}}) to deploy MetalLB.
+To get started, you'll need to use the standard images, which include k3s. We'll be using the [k3s manifest method]({{< relref "../reference/configuration#kubernetes-manifests" >}}) to deploy MetalLB.
 
 Follow the [Installation]({{< relref "../installation" >}}) documentation, and use the following cloud config file with Kairos:
 

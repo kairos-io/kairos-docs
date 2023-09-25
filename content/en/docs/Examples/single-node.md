@@ -10,7 +10,7 @@ In the example below we will use a bare metal host to provision a Kairos node in
 
 ## Installation
 
-Use the [provider-kairos](https://github.com/kairos-io/provider-kairos) artifacts which contains `k3s`.
+Use the standard images which contain `k3s`.
 
 Follow the [Installation]({{< relref "../installation/" >}}) documentation, and use the following cloud config file with Kairos:
 
