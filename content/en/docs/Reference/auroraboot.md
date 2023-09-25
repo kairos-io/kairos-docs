@@ -585,6 +585,105 @@ docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos
         --cloud-config /config.yaml
 ```
 
+### Generate RAW disk image (EFI)
+
+AuroraBoot can generate raw disk images (EFI) that can be used as cloud images (for example as AWS AMI images) or QEMU.
+
+Consider the following example:
+
+```bash
+docker run -v /var/run/docker.sock:/var/run/docker.sock --net host \
+  -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot \
+  --debug \
+  --set "disable_http_server=true" \
+  --set "container_image=quay.io/kairos/kairos-opensuse-leap:{{< providerVersion >}}-{{< k3sVersion >}}" \
+  --set "disable_netboot=true" \
+  --cloud-config /aurora/config.yaml \
+  --set "disk.raw=true" \
+  --set "state_dir=/aurora"
+```
+
+The raw disk image will be available in `iso/disk.raw`
+
+The cloud config file (`config.yaml`) should look like the following:
+
+```yaml
+#cloud-config
+
+hostname: kairos
+
+## Login
+users:
+- name: "kairos"
+  lock_passwd: true
+  ssh_authorized_keys:
+  # here add github username or ssh keys
+  # - github:mudler
+
+## First Setup
+## This block is needed as the image will boot to rescue mode and configure the drive of the
+## VM.
+name: "Default deployment"
+stages:
+  boot:
+  - name: "Repart image"
+    layout:
+      device:
+        path: /dev/sdb
+      add_partitions:
+        - fsLabel: COS_STATE
+          size: 150240
+          pLabel: state
+  - name: "Repart image"
+    layout:
+      device:
+        path: /dev/sda
+      add_partitions:
+        - fsLabel: COS_PERSISTENT
+          pLabel: persistent
+          size: 0 # all space
+  - if: '[ -f "/run/cos/recovery_mode" ] && [ ! -e /usr/local/.deployed ]'
+    name: "Deploy kairos"
+    commands:
+      - kairos-agent --debug reset --unattended
+      - touch /usr/local/.deployed
+      - reboot
+```
+
+
+{{% alert title="Note" %}}
+To generate GCE and VHD images set `disk.gce=true` or `disk.vhd=true` respectively in the AuroraBoot command. For example:
+
+```bash
+# Build a GCE-compatible image
+docker run -v /var/run/docker.sock:/var/run/docker.sock --net host \
+  -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot \
+  --debug \
+  --set "disable_http_server=true" \
+  --set "container_image=quay.io/kairos/kairos-opensuse-leap:{{< providerVersion >}}-{{< k3sVersion >}}" \
+  --set "disable_netboot=true" \
+  --cloud-config /aurora/config.yaml \
+  --set "disk.gce=true" \
+  --set "state_dir=/aurora"
+```
+
+or for VHD images:
+
+```bash
+# Build a VHD image compatible with Azure
+docker run -v /var/run/docker.sock:/var/run/docker.sock --net host \
+  -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot \
+  --debug \
+  --set "disable_http_server=true" \
+  --set "container_image=quay.io/kairos/kairos-opensuse-leap:{{< providerVersion >}}-{{< k3sVersion >}}" \
+  --set "disable_netboot=true" \
+  --cloud-config /aurora/config.yaml \
+  --set "disk.vhd=true" \
+  --set "state_dir=/aurora"
+```
+
+{{% /alert %}}
+
 ### Use the config file
 
 Write down an aurora config file as `aurora.yaml`:
