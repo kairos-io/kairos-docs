@@ -52,9 +52,9 @@ in any of these areas to contribute, we are here to help you learn and grow. Hav
 
 Plus you can also learn about unique Kairos related projects like:
 
-- Luet package manager
-- Immucore
-- EdgeVPN
+- [Luet package manager](https://github.com/mudler/luet)
+- [Immucore](https://github.com/kairos-io/immucore/)
+- [EdgeVPN](https://mudler.github.io/edgevpn/)
 
 ## How can you contribute?
 
