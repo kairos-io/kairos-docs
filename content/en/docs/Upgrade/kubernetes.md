@@ -36,7 +36,7 @@ spec:
   concurrency: 1
   # This is the version (tag) of the image to upgrade to.
   # The version is refered to the kairos version plus the k3s version.
-  version: "{{<providerVersion>}}-{{<k3sVersion>}}"
+  version: "{{<kairosVersion>}}-{{<k3sVersion>}}"
   nodeSelector:
     matchExpressions:
       - {key: kubernetes.io/hostname, operator: Exists}
@@ -80,7 +80,7 @@ To ensure that the images used during upgrades match the expected signatures, [K
 
 To learn more about this specific Kyverno feature, you can refer to the [documentation](https://kyverno.io/docs/writing-policies/verify-images/). This allows for the verification of image authenticity directly at the node level prior to upgrading.
 
-A Kyverno policy for `provider-kairos` images might look like the following:
+A Kyverno policy for standard images might look like the following:
 
 ```yaml
 apiVersion: kyverno.io/v1
@@ -218,7 +218,7 @@ spec:
   concurrency: 1
   # This is the version (tag) of the image.
   # The version is refered to the kairos version plus the k3s version.
-  version: "{{<providerVersion>}}-{{<k3sVersion>}}"
+  version: "{{<kairosVersion>}}-{{<k3sVersion>}}"
   nodeSelector:
     matchExpressions:
       - { key: kubernetes.io/hostname, operator: Exists }

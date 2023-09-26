@@ -26,7 +26,7 @@ Extract the `img` file from a container image as described [in this page]({{< re
 Plug the SD card to your system. To flash the image, you can either use Etcher or `dd`. Note it's compressed with "XZ", so we need to decompress it first:
 
 ```bash
-xzcat kairos-opensuse-leap-arm-rpi-{{<providerVersion>}}-{{<k3sVersion>}}.img.xz | sudo dd of=<device> oflag=sync status=progress bs=10MB
+xzcat kairos-opensuse-leap-arm-rpi-{{<kairosVersion>}}-{{<k3sVersion>}}.img.xz | sudo dd of=<device> oflag=sync status=progress bs=10MB
 ```
 
 Once the image is flashed, there is no need to carry any other installation steps. We can boot the image, or apply our config.
@@ -70,7 +70,7 @@ Make sure to set the proper `--model=` in your command (rpi3,rpi4) to build the 
 {{% /alert %}}
 ```
 # Download the Kairos image locally
-IMAGE={{< registryURL >}}/kairos-opensuse-leap-arm-rpi:{{<providerVersion>}}-{{<k3sVersionOCI>}}
+IMAGE={{< registryURL >}}/kairos-opensuse-leap-arm-rpi:{{<kairosVersion>}}-{{<k3sVersionOCI>}}
 docker pull $IMAGE
 # Validate the configuration file
 kairosctl validate cloud-config.yaml

@@ -71,12 +71,12 @@ qemu-system-x86_64 \
 
 ```bash
 docker run --rm -ti --net host quay.io/kairos/auroraboot \
-                    --set "container_image=quay.io/kairos/kairos-opensuse-leap:{{<providerVersion>}}-{{<k3sVersion>}}"
+                    --set "container_image=quay.io/kairos/kairos-opensuse-leap:{{<kairosVersion>}}-{{<k3sVersion>}}"
                     # Optionally:
                     # --cloud-config ....
 ```
 
-Will netboot the `quay.io/kairos/kairos-opensuse-leap:{{<providerVersion>}}-{{<k3sVersion>}}` image. You can find more details in the [AuroraBoot documentation section]({{< relref "../reference/auroraboot" >}}).
+Will netboot the `quay.io/kairos/kairos-opensuse-leap:{{<kairosVersion>}}-{{<k3sVersion>}}` image. You can find more details in the [AuroraBoot documentation section]({{< relref "../reference/auroraboot" >}}).
 
 ## Notes on booting from network
 
@@ -91,9 +91,9 @@ Assuming the current directory has the `kernel`, `initrd` and `squashfs` artifac
 #!/bin/bash
 
 VERSION="{{< kairosVersion >}}"
-wget "https://github.com/kairos-io/kairos/releases/download/${VERSION}/kairos-opensuse-leap-${VERSION}-kernel"
-wget "https://github.com/kairos-io/kairos/releases/download/${VERSION}/kairos-opensuse-leap-${VERSION}-initrd"
-wget "https://github.com/kairos-io/kairos/releases/download/${VERSION}/kairos-opensuse-leap-${VERSION}.squashfs"
+wget "https://github.com/kairos-io/kairos/releases/download/${VERSION}/kairos-core-opensuse-leap-amd64-generic-${VERSION}-kernel"
+wget "https://github.com/kairos-io/kairos/releases/download/${VERSION}/kairos-core-opensuse-leap-amd64-generic-${VERSION}-initrd"
+wget "https://github.com/kairos-io/kairos/releases/download/${VERSION}/kairos-core-opensuse-leap-amd64-generic-${VERSION}.squashfs"
 
 cat << EOF > config.yaml
 #cloud-config

@@ -21,7 +21,7 @@
     },
     {
       "fileMatch": [
-        "^config.toml$"
+        "^hugo.toml$"
       ],
       "matchStrings": [
         "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.+_version\\s*=\\s*\"?(?<currentValue>.*?)\"?\\s"

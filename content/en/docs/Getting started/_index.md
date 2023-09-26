@@ -28,19 +28,17 @@ Once the installation is complete, you can begin using your Kubernetes cluster.
 
 ## Download
 
-1. Visit the Kairos [release page on GitHub](https://github.com/kairos-io/provider-kairos/releases)
+1. Visit the Kairos [release page on GitHub](https://github.com/kairos-io/kairos/releases)
 1. Select the latest release and download the assets of your flavor. For example,
-   pick the [kairos-opensuse-leap-{{<providerVersion>}}-{{<k3sVersion>}}.iso](https://github.com/kairos-io/provider-kairos/releases/download/{{<providerVersion>}}/kairos-opensuse-leap-{{<providerVersion>}}-{{<k3sVersion>}}.iso)
-   ISO file for the openSUSE based version, where `{{< k3sVersion >}}` in the name is the `k3s` version and `{{< providerVersion >}}` is the Kairos one to deploy on a VM.
+   pick the [kairos-opensuse-leap-{{<kairosVersion>}}-{{<k3sVersion>}}.iso](https://github.com/kairos-io/kairos/releases/download/{{<kairosVersion>}}/kairos-standard-opensuse-leap-amd64-generic-{{<kairosVersion>}}-{{<k3sVersion>}}.iso)
+   ISO file for the openSUSE based version, where `{{< k3sVersion >}}` in the name is the `k3s` version and `{{< kairosVersion >}}` is the Kairos one to deploy on a VM.
 1. You can also use [netboot]({{< relref "../installation/netboot" >}}) to boot Kairos over the network
 
 {{% alert title="Note" %}}
-The releases in the [kairos-io/kairos](https://github.com/kairos-io/kairos/releases) repository are the Kairos
-core images that ship **without** K3s and P2P full-mesh functionalities; Core images can be used as a
+Core images in the ship **without** K3s and P2P full-mesh functionalities; they can be used as a
 generic installer to [deploy container images]({{< relref "../examples/core" >}}).
 
-The releases in [kairos-io/provider-kairos](https://github.com/kairos-io/provider-kairos/releases)
-**contains** already k3s and P2P full-mesh instead. These options need to be explicitly enabled.
+Standard images ship **with** k3s and P2P full-mesh instead. But beware that these options need to be explicitly enabled.
 In follow-up releases, _k3s-only_ artifacts will also be available.
 
 See [Image Matrix Support]({{< relref "../reference/image_matrix" >}}) for additional supported images and kernels.
@@ -147,7 +145,7 @@ Here are some additional helpful tips depending on the physical/virtual machine 
       virt-install --name my-first-kairos-vm \
                   --vcpus 1 \
                   --memory 1024 \
-                  --cdrom /path/to/kairos-opensuse-{{< providerVersion >}}-{{< k3sVersion >}}.iso \
+                  --cdrom /path/to/kairos-opensuse-{{< kairosVersion >}}-{{< k3sVersion >}}.iso \
                   --disk size=30 \
                   --os-variant opensuse-factory \
                   --virt-type kvm

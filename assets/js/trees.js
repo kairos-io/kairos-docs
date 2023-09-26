@@ -3,22 +3,22 @@ const DOWNLOAD_CARDS_TREE = [
     {
         integration:"ubuntu",
         links: {
-            "X86":`https://github.com/kairos-io/provider-kairos/releases/download/${params.providerVersion}/kairos-ubuntu-${params.providerVersion}-k3s${params.k3sVersion}.iso`,
-            "ARM":`docker pull quay.io/kairos/kairos-ubuntu-arm-rpi-img:${params.providerVersion}-k3s${params.k3sVersion.replace("+", "-")}`
+            "X86":`https://github.com/kairos-io/kairos/releases/download/${params.kairosVersion}/kairos-standard-ubuntu-amd64-generic-${params.kairosVersion}-k3s${params.k3sVersion}.iso`,
+            "ARM":`docker pull quay.io/kairos/kairos-ubuntu-arm-rpi-img:${params.kairosVersion}-k3s${params.k3sVersion.replace("+", "-")}`
         }
     },
     {
         integration:"fedora",
         links: {
-            "X86":`https://github.com/kairos-io/provider-kairos/releases/download/${params.providerVersion}/kairos-fedora-${params.providerVersion}-k3s${params.k3sVersion}.iso`,
+            "X86":`https://github.com/kairos-io/kairos/releases/download/${params.kairosVersion}/kairos-standard-fedora-amd64-generic-${params.kairosVersion}-k3s${params.k3sVersion}.iso`,
             "ARM":"// Temporarily there is no Fedora ARM support, please visit the link below for more information."
         }
     },
     {
         integration:"alpine",
         links: {
-            "X86":`https://github.com/kairos-io/provider-kairos/releases/download/${params.providerVersion}/kairos-alpine-ubuntu-${params.providerVersion}-k3s${params.k3sVersion}.iso`,
-            "ARM":`docker pull quay.io/kairos/kairos-alpine-arm-rpi:${params.providerVersion}-k3s${params.k3sVersion.replace("+", "-")}`
+            "X86":`https://github.com/kairos-io/kairos/releases/download/${params.kairosVersion}/kairos-standard-alpine-ubuntu-amd64-generic-${params.kairosVersion}-k3s${params.k3sVersion}.iso`,
+            "ARM":`docker pull quay.io/kairos/kairos-alpine-arm-rpi:${params.kairosVersion}-k3s${params.k3sVersion.replace("+", "-")}`
         }
     },
       ].map(({integration, links}) => ({

@@ -14,7 +14,7 @@ One key feature of Kairos is the use of its core images, which are released as p
 
 To begin using Kairos core images as an installer, you'll need to start by using the artifacts from the [Kairos core](https://github.com/kairos-io/kairos/releases) repository. These images do not include the Kubernetes engine, so you'll need to configure the container image you want to deploy in the `install.image` field of your cloud config file. A list of available images can be found in [our support matrix]({{< relref "../reference/image_matrix/" >}}).
 
-For example, let's say you want to use an image from the provider-kairos repository. Your cloud config file might look something like this:
+For example, let's say you want to use a standard image. Your cloud config file might look something like this:
 
 ```yaml
 #cloud-config
