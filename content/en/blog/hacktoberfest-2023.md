@@ -75,5 +75,7 @@ your preference. We will also have some food and drinks to keep us going.
 The event will take place in the [Ring Twice](https://ringtwice.be/) office in Brussels, Belgium. The address is
 Cantersteen 10, 1000 Bruxelles. We will start at 18:00 and will end at 22:00.
 
-If you want to attend or have any questions, please email mauro@kairos.io. Keep in mind that we only have limited seats
+Sign up at the event page https://events.mlh.io/events/10408-hacktoberfest-2023-in-brussels Keep in mind that we only have limited seats
 so don't leave it to the last minute!
+
+If you have any questions, please email mauro@kairos.io. 
