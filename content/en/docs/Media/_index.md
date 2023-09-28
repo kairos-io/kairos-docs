@@ -33,6 +33,12 @@ description: >
 
 {{< youtube id="7Vym18wz9Uw" title="Kairos and libp2p" >}}
 
+### CNCF TAG-Runtime Meeting 09-14-2023 (Kairos) 
+
+Starts at `9:23`:
+
+{{< youtube id="kTG8FuKzGYE" title="Introduction to Kairos" >}}
+
 ### Conferences
 
 {{< youtube id="dwS-dBAAuOk" title="" >}}
