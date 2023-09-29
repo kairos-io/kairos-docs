@@ -121,7 +121,7 @@ kairos_version = "v2.4.0"
 # renovate: datasource=github-releases depName=kairos-io/osbuilder
 osbuilder_version = "v0.8.6"
 # renovate: datasource=github-releases depName=kairos-io/AuroraBoot
-auroraboot_version = "v0.2.5"
+auroraboot_version = "v0.2.6"
 flavor = "debian"
 armFlavor = "alpine"
 registryURL = "quay.io/kairos"
