@@ -43,7 +43,7 @@ Unfortunately for macOS systems we cannot run the netboot through docker as it's
 Building ISOs still works as long as you mount the container `/tmp` disk to a local dir so its exported there like so:
 
 ```bash
-docker run --rm -ti -v ${PWD}:/tmp quay.io/kairos/auroraboot \ 
+docker run --rm -ti -v "$PWD"/config.yaml:/config.yaml -v ${PWD}:/tmp quay.io/kairos/auroraboot \ 
                     --set "artifact_version={{< kairosVersion >}}" \
                     --set "release_version={{< kairosVersion >}}" \
                     --set "flavor=opensuse-leap" \
