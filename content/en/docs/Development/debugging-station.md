@@ -166,7 +166,7 @@ To automatically boot and install the debugging station, we can use [Auroraboot]
 ```bash
 cat <<EOF | docker run --rm -i --net host quay.io/kairos/auroraboot \
                     --cloud-config - \
-                    --set "container_image=quay.io/kairos/kairos-opensuse-leap:v1.6.1-k3sv1.26.1-k3s1"
+                    --set "container_image=quay.io/kairos/kairos-opensuse-leap:{{< kairosVersion >}}-{{< k3sVersion >}}"
 #cloud-config
 
 install:

@@ -44,8 +44,8 @@ Building ISOs still works as long as you mount the container `/tmp` disk to a lo
 
 ```bash
 docker run --rm -ti -v ${PWD}:/tmp quay.io/kairos/auroraboot \ 
-                    --set "artifact_version=v1.5.1" \
-                    --set "release_version=v1.5.1" \
+                    --set "artifact_version={{< kairosVersion >}}" \
+                    --set "release_version={{< kairosVersion >}}" \
                     --set "flavor=opensuse-leap" \
                     --set "repository=kairos-io/kairos" \
                     --set "disable_http_server=true" \
@@ -75,8 +75,8 @@ For example, to netboot a machine with the latest version of Kairos and Rocky Li
 
 ```bash
 docker run --rm -ti --net host quay.io/kairos/auroraboot \
-                    --set "artifact_version=v1.5.0" \
-                    --set "release_version=v1.5.0" \
+                    --set "artifact_version={{< kairosVersion >}}" \
+                    --set "release_version={{< kairosVersion >}}" \
                     --set "flavor=rockylinux" \
                     --set repository="kairos-io/kairos" \
                     --cloud-config https://...
@@ -107,7 +107,7 @@ To use a container image, you can use [the Kairos released images]({{< relref ".
 
 Now we can run AuroraBoot with the version we selected, either from GitHub releases or directly from a container image.
 
-In the example below we selected `v1.5.1-k3sv1.21.14-k3s1`, `opensuse-leap` flavor, so we would run either one of the following:
+In the example below we selected `{{< kairosVersion >}}-{{< k3sVersion >}}`, `opensuse-leap` flavor, so we would run either one of the following:
 
 {{< tabpane text=true  >}}
 {{% tab header="Container image" %}}
@@ -118,7 +118,7 @@ You can use [the Kairos released images]({{< relref "../reference/image_matrix" 
 
 ```bash
 docker run --rm -ti --net host quay.io/kairos/auroraboot \
-                    --set "container_image=quay.io/kairos/kairos-opensuse-leap:v1.5.1-k3sv1.21.14-k3s1"
+                    --set "container_image=quay.io/kairos/kairos-opensuse-leap:{{< kairosVersion >}}-{{< k3sVersion >}}"
 ```
 
 {{% /tab %}}
@@ -129,10 +129,10 @@ By indicating a `container_image` prefixed with `docker://`, AuroraBoot will pul
 This implies that the host has a docker daemon, and we have to give access to its socket with `-v /var/run/docker.sock:/var/run/docker.sock`.
 
 ```bash
-docker pull quay.io/kairos/kairos-opensuse-leap:v1.5.1-k3sv1.21.14-k3s1
+docker pull quay.io/kairos/kairos-opensuse-leap:{{< kairosVersion >}}-{{< k3sVersion >}}
 # This will use the container image from the host's docker daemon
 docker run --rm -ti -v /var/run/docker.sock:/var/run/docker.sock --net host quay.io/kairos/auroraboot \
-                    --set "container_image=docker://quay.io/kairos/kairos-opensuse-leap:v1.5.1-k3sv1.21.14-k3s1"
+                    --set "container_image=docker://quay.io/kairos/kairos-opensuse-leap:{{< kairosVersion >}}-{{< k3sVersion >}}"
 ```
 {{% /tab %}}
 {{% tab header="Github releases" %}}
@@ -141,8 +141,8 @@ By indicating a `artifact_version`, a `release_version`, a `flavor` and a `repos
 
 ```bash
 docker run --rm -ti --net host quay.io/kairos/auroraboot \
-                    --set "artifact_version=v1.5.1-k3sv1.21.14+k3s1" \
-                    --set "release_version=v1.5.1" \
+                    --set "artifact_version={{< kairosVersion >}}-{{< k3sVersion >}}" \
+                    --set "release_version={{< kairosVersion >}}" \
                     --set "flavor=opensuse-leap" \
                     --set "repository=kairos-io/provider-kairos"
 ```
@@ -224,7 +224,7 @@ Build the ISO:
 docker run -v "$PWD"/config.yaml:/config.yaml \
                     -v "$PWD"/build:/tmp/auroraboot \
                     --rm -ti quay.io/kairos/auroraboot \
-                    --set container_image=quay.io/kairos/core-rockylinux:v1.5.0 \
+                    --set container_image=quay.io/kairos/core-rockylinux:{{< kairosVersion >}} \
                     --set "disable_http_server=true" \
                     --set "disable_netboot=true" \
                     --cloud-config /config.yaml \
@@ -255,8 +255,8 @@ ls
 Build the ISO:
 ```bash
 docker run -v "$PWD"/build:/tmp/auroraboot -v /var/run/docker.sock:/var/run/docker.sock --rm -ti quay.io/kairos/auroraboot \
-                    --set "artifact_version=v1.5.1-k3sv1.21.14+k3s1" \
-                    --set "release_version=v1.5.1" \
+                    --set "artifact_version={{< kairosVersion >}}-{{< k3sVersion >}}" \
+                    --set "release_version={{< kairosVersion >}}" \
                     --set "flavor=opensuse-leap" \
                     --set "repository=kairos-io/provider-kairos" \
                     --set "disable_http_server=true" \
@@ -337,7 +337,7 @@ The AuroraBoot configuration file reference is the following:
 # Corresponding artifact versions from the kairos release page (e.g. kubernetes version included)
 artifact_version: "v..."
 # Version of the release in github
-release_version: "v1.5.0"
+release_version: "{{< kairosVersion >}}"
 
 # Flavor
 flavor: "rockylinux"
@@ -450,7 +450,7 @@ To pass-by a cloud-config via pipes, set `--cloud-config -`, for example:
 ```yaml
 cat <<EOF | docker run --rm -i --net host quay.io/kairos/auroraboot \
                     --cloud-config - \
-                    --set "container_image=quay.io/kairos/kairos-opensuse-leap:v1.5.1-k3sv1.21.14-k3s1"
+                    --set "container_image=quay.io/kairos/kairos-opensuse-leap:{{< kairosVersion >}}-{{< k3sVersion >}}"
 #cloud-config
 
 install:
@@ -543,7 +543,7 @@ docker run -v "$PWD"/config.yaml:/config.yaml \
              -v "$PWD"/data:/tmp/data \
              -v "$PWD"/build:/tmp/auroraboot \
              --rm -ti quay.io/kairos/auroraboot \
-             --set container_image=quay.io/kairos/core-rockylinux:v1.5.0 \
+             --set container_image=quay.io/kairos/core-rockylinux:{{< kairosVersion >}} \
              --set "disable_http_server=true" \
              --set "disable_netboot=true" \
              --cloud-config /config.yaml \
@@ -559,8 +559,8 @@ See the [Airgap example]({{< relref "../examples/airgap" >}}) in the [examples s
 
 ```bash
 docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos/auroraboot \
-        --set "artifact_version=v1.5.0" \
-        --set "release_version=v1.5.0" \
+        --set "artifact_version={{< kairosVersion >}}" \
+        --set "release_version={{< kairosVersion >}}" \
         --set "flavor=rockylinux" \
         --set repository="kairos-io/kairos" \
         --cloud-config /config.yaml
@@ -570,8 +570,8 @@ docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos
 
 ```bash
 docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos/auroraboot \
-        --set "artifact_version=v1.5.1-k3sv1.21.14+k3s1" \
-        --set "release_version=v1.5.1" \
+        --set "artifact_version={{< kairosVersion >}}-k3sv1.21.14+k3s1" \
+        --set "release_version={{< kairosVersion >}}" \
         --set "flavor=opensuse-leap" \
         --set "repository=kairos-io/provider-kairos" \
         --cloud-config /config.yaml
@@ -581,7 +581,7 @@ docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos
 
 ```bash
 docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos/auroraboot \
-        --set container_image=quay.io/kairos/core-rockylinux:v1.5.0
+        --set container_image=quay.io/kairos/core-rockylinux:{{< kairosVersion >}}
         --cloud-config /config.yaml
 ```
 
@@ -688,7 +688,7 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock --net host \
 
 Write down an aurora config file as `aurora.yaml`:
 ```yaml
-container_image: "quay.io/kairos/core-rockylinux:v1.5.0"
+container_image: "quay.io/kairos/core-rockylinux:{{< kairosVersion >}}"
 
 cloud_config: |
     #cloud-config
