@@ -54,7 +54,7 @@ Kairos after installation will create the following partitions:
 
 ![Kairos-installation-partitioning](https://user-images.githubusercontent.com/2420543/195111190-3bdfb917-312a-40f4-b0bc-4a65a701c06b.png)
 
-The persistent partition is mounted during boot on `/usr/local`, and additional paths are mount-bind to it. Those configuration aspects are defined in a [cloud-config](https://github.com/kairos-io/kairos/blob/a1a9bef4dff30e0718fa4d2697f075ce37c7ed90/overlay/files/system/oem/11_persistency.yaml#L11) file. It is possible to override such configuration, via a custom cloud-config, during installation.
+The persistent partition is mounted during boot on `/usr/local`, and additional paths are mount-bind to it. Those configuration aspects are defined in a [cloud-config]([https://github.com/kairos-io/kairos/blob/a1a9bef4dff30e0718fa4d2697f075ce37c7ed90/overlay/files/system/oem/11_persistency.yaml#L11](https://github.com/kairos-io/packages/blob/9b49d6aacd554cd990c87b63de1221328bbcdb81/packages/static/kairos-overlay-files/files/system/oem/00_rootfs.yaml#L18)) file. It is possible to override such configuration, via a custom cloud-config, during installation.
 
 The Recovery system allows to perform emergency tasks, in case of failure from the active and passive images. Furthermore a fallback mechanism will take place, so that in case of failures the booting sequence will be as follows: “A -> B -> Recovery”.
 
