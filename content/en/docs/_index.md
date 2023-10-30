@@ -135,7 +135,17 @@ However, Kairos have different goals and takes completely unique approaches to t
 
 Requirements: Needs only Docker.
 
-Run `./earthly.sh +all --FLAVOR=opensuse`, should produce a Docker image along with a working ISO.
+Run the following command to produce a Docker image along with a working ISO:
+
+```bash
+earthly +iso \
+  --FAMILY=rhel \
+  --FLAVOR=fedora \
+  --FLAVOR_RELEASE=38 \
+  --BASE_IMAGE=fedora:38 \
+  --MODEL=generic \
+  --VARIANT=core
+```
 
 
 ## What's next?
