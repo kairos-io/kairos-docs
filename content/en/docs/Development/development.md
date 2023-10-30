@@ -37,7 +37,7 @@ earthly +iso \
 - **Flavor**: is the distribution (the name flavor is kept for backwards compatibility). In this case `fedora`
 - **Family**: is a group of distributions that get built in a very similar way. In this case `rhel`, which can build `fedora`, `rockylinux` and `almalinux`.
 - **Flavor release**: is the version of the distribution. In this case `38`
-- **Base image**: is the base image used to build the distribution. In this case `fedora**:38`, but you could use your own image which itself is based on `fedora**:38`.
+- **Base image**: is the base image used to build the distribution. In this case `fedora**:38`, but you could use your own image which itself is based on `fedora:38`.
 - **Model**: is the hardware model. In this case all ISOs are `generic`
 - **Variant**: is the Kairos variant, which can be `core` or `standard`. `core` is the minimal Kairos OS, while `standard` includes `k3s`.
 
