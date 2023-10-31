@@ -3,22 +3,22 @@ const DOWNLOAD_CARDS_TREE = [
     {
         integration:"ubuntu",
         links: {
-            "X86":`https://github.com/kairos-io/kairos/releases/download/${params.kairosVersion}/kairos-standard-ubuntu-amd64-generic-${params.kairosVersion}-k3s${params.k3sVersion}.iso`,
-            "ARM":`docker pull quay.io/kairos/kairos-ubuntu-arm-rpi-img:${params.kairosVersion}-k3s${params.k3sVersion.replace("+", "-")}`
+            "X86":`https://github.com/kairos-io/kairos/releases/download/${params.kairosVersion}/kairos-ubuntu-23.04-standard-amd64-generic-${params.kairosVersion}-k3s${params.k3sVersion}.iso`,
+            "ARM":`docker pull quay.io/kairos/ubuntu:23.04-standard-arm64-rpi4-${params.kairosVersion}-k3s${params.k3sVersion.replace("+", "-")}-img`
         }
     },
     {
         integration:"fedora",
         links: {
-            "X86":`https://github.com/kairos-io/kairos/releases/download/${params.kairosVersion}/kairos-standard-fedora-amd64-generic-${params.kairosVersion}-k3s${params.k3sVersion}.iso`,
+            "X86":`https://github.com/kairos-io/kairos/releases/download/${params.kairosVersion}/kairos-fedora-38-standard-amd64-generic-${params.kairosVersion}-k3s${params.k3sVersion}.iso`,
             "ARM":"// Temporarily there is no Fedora ARM support, please visit the link below for more information."
         }
     },
     {
         integration:"alpine",
         links: {
-            "X86":`https://github.com/kairos-io/kairos/releases/download/${params.kairosVersion}/kairos-standard-alpine-ubuntu-amd64-generic-${params.kairosVersion}-k3s${params.k3sVersion}.iso`,
-            "ARM":`docker pull quay.io/kairos/kairos-alpine-arm-rpi:${params.kairosVersion}-k3s${params.k3sVersion.replace("+", "-")}`
+            "X86":`https://github.com/kairos-io/kairos/releases/download/${params.kairosVersion}/kairos-alpine-3.18-standard-amd64-generic-${params.kairosVersion}-k3s${params.k3sVersion}.iso`,
+            "ARM":`docker pull quay.io/kairos/alpine:3.18-standard-arm64-rpi4-${params.kairosVersion}-k3s${params.k3sVersion.replace("+", "-")}-img`
         }
     },
       ].map(({integration, links}) => ({
