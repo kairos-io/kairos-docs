@@ -93,7 +93,7 @@ k3s:
 
 
 ```bash
-IMAGE=quay.io/kairos/kairos-opensuse-leap:{{< kairosVersion >}}-{{< k3sVersion >}}
+IMAGE={{< registryURL >}}/{{< exampleStandardImage >}}-{{<kairosVersion>}}-{{<k3sVersionOCI>}}
 
 docker pull $IMAGE
 

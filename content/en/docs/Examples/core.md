@@ -20,7 +20,7 @@ For example, let's say you want to use a standard image. Your cloud config file 
 #cloud-config
 install:
  # Here we specify the image that we want to deploy
- image: "docker:quay.io/kairos/kairos-opensuse-leap:{{< kairosVersion >}}-{{< k3sVersion >}}"
+ image: "docker:{{< registryURL >}}/{{< exampleStandardImage >}}-{{<kairosVersion>}}-{{<k3sVersionOCI>}}"
 ```
 
 {{% alert title="Note" %}}
@@ -40,7 +40,7 @@ install:
  auto: true
  reboot: true
  # Here we specify the image that we want to deploy
- image: "docker:quay.io/kairos/kairos-opensuse-leap:{{< kairosVersion >}}-{{< k3sVersion >}}"
+ image: "docker:{{< registryURL >}}/{{< exampleStandardImage >}}-{{<kairosVersion>}}-{{<k3sVersionOCI>}}"
 
 hostname: "test"
 users:

@@ -48,13 +48,13 @@ spec:
   upgrade:
     # Here goes the image which is tied to the flavor being used.
     # You can also specify your custom image stored in a public registry.
-    image: quay.io/kairos/kairos-opensuse-leap
+    image: {{< registryURL >}}/{{< exampleStandardImage >}}-{{<kairosVersion>}}-{{<k3sVersionOCI>}}
     command:
     - "/usr/sbin/suc-upgrade"
 EOF
 ```
 
-To check all the available versions, see the [images](https://quay.io/repository/kairos/kairos-opensuse-leap?tab=tags) available on the container registry, corresponding to the flavor/version selected.
+To check all the available versions, see the [images](https://quay.io/repository/kairos/opensuse?tab=tags) available on the container registry, corresponding to the flavor/version selected.
 
 {{% alert title="Note" %}}
 
@@ -101,7 +101,7 @@ spec:
               - Pod
       verifyImages:
       - imageReferences:
-        - "quay.io/kairos/kairos-*"
+        - "quay.io/kairos/opensuse*"
         attestors:
         - entries:
           # See: https://kyverno.io/docs/writing-policies/verify-images/#keyless-signing-and-verification
