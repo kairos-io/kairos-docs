@@ -48,7 +48,7 @@ cd Linux_for_Tegra
 # Drop extlinux
 echo "" > ./bootloader/extlinux.conf
 # This is needed so the SDK doesn't complain of missing files (not really used in the flash process)
-IMAGE=quay.io/kairos/core-ubuntu-20-lts-arm-nvidia-jetson-agx-orin:latest
+IMAGE= quay.io/kairos/ubuntu:20.04-core-arm64-nvidia-jetson-agx-orin-{{< kairosVersion>}}
 docker run -ti --rm -v $PWD/rootfs:/rootfs quay.io/luet/base util unpack "$IMAGE" /rootfs
 # workaround needed (SDK writes to the symlink)
 rm rootfs/boot/initrd
@@ -59,16 +59,17 @@ echo "" > rootfs/boot/extlinux/extlinux.conf
 
 ### Prepare the images
 
-You can either download pre-built Kairos images, or build your own from a container image. You can find Kairos core ubuntu images based on Ubuntu `20.04` here: https://quay.io/repository/kairos/core-ubuntu-20-lts-arm-nvidia-jetson-agx-orin.
+You can either download pre-built Kairos images, or build your own from a container image. You can find Kairos core ubuntu images based on Ubuntu `20.04` here: https://quay.io/repository/kairos/ubuntu
+(search for `nvidia` in the tags)
 
 {{< tabpane text=true  >}}
 {{% tab header="Download pre-built partition images from a container image" %}}
 
-We will download pre-built images from a container image. Pre-built images are using https://quay.io/repository/kairos/core-ubuntu-20-lts-arm-nvidia-jetson-agx-orin and contains `.img` files that can be used for flashing. Img files are pushed automatically by the Kairos CI in https://quay.io/repository/kairos/core-ubuntu-20-lts-arm-nvidia-jetson-agx-orin.
+We will download pre-built images from a container image. Pre-built images are using https://quay.io/repository/kairos/ubuntu and contains `.img` files that can be used for flashing. Img files are pushed automatically by the Kairos CI in https://quay.io/repository/kairos/ubuntu (search for tags with `nvidia`).
 
 ```bash
-KAIROS_VERSION=v2.2.0-rc3
-IMAGE=quay.io/kairos/core-ubuntu-20-lts-arm-nvidia-jetson-agx-orin-img:$KAIROS_VERSION
+KAIROS_VERSION={{< kairosVersion >}}
+IMAGE=quay.io/kairos/ubuntu:20.04-core-arm64-nvidia-jetson-agx-orin-$KAIROS_VERSION-img
 docker run -ti --rm -v $PWD/bootloader:/rootfs quay.io/luet/base util unpack "$IMAGE" /rootfs
 mv bootloader/build/*.img bootloader
 ```
@@ -78,7 +79,7 @@ mv bootloader/build/*.img bootloader
 
 If you are customizing the image, or either modifying the default partition sizes you can build the images by running:
 ```bash
-IMAGE=quay.io/kairos/core-ubuntu-20-lts-arm-nvidia-jetson-agx-orin:latest
+IMAGE=quay.io/kairos/ubuntu:20.04-core-arm64-nvidia-jetson-agx-orin-{{< kairosVersion >}}
 docker run --privileged \
         -e container_image=$IMAGE \
         -e STATE_SIZE="14000" \
@@ -231,7 +232,7 @@ The solution here is trying with a different kernel version, as suggested in the
 To customize the default cloud config of the board, generate the images mounting the cloud config you want in the images in `/defaults.yaml`:
 
 ```bash
-IMAGE=quay.io/kairos/core-ubuntu-20-lts-arm-nvidia-jetson-agx-orin:latest
+IMAGE=quay.io/kairos/ubuntu:20.04-core-arm64-nvidia-jetson-agx-orin-{{< kairosVersion >}}
 CLOUD_CONFIG=/cloud/config.yaml
 docker run -v $CLOUD_CONFIG:/defaults.yaml --privileged \
         -e container_image=$IMAGE \

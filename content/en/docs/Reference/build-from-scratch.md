@@ -108,7 +108,7 @@ RUN mkdir -p /run/lock
 RUN touch /usr/libexec/.keep
 
 # Copy the Kairos framework files. We use master builds here for fedora. See https://quay.io/repository/kairos/framework?tab=tags for a list
-COPY --from=quay.io/kairos/framework:master_fedora / /
+COPY --from=quay.io/kairos/framework:master_generic / /
 
 # Set the Kairos arguments in os-release file to identify your Kairos image
 FROM quay.io/kairos/osbuilder-tools:latest as osbuilder
@@ -151,7 +151,7 @@ In the Dockerfile, note the following:
 
 - The base image we're using is fedora. However, you could also base your image on other distributions. See [the Kairos official images](https://github.com/kairos-io/kairos/tree/master/images) for an example.
 - We're installing a set of packages, including `rsync`, `grub`, `systemd`, `kernel`, and we're generating the initramfs inside the image.
-- We're copying the Kairos framework image file to the root of the container. Choose the framework image that closely matches your setup. You can find the framework images published here: https://quay.io/repository/kairos/framework?tab=tags
+- We're copying the Kairos framework image file to the root of the container. Choose the framework image that closely matches your setup (normally `generic`). You can find the framework images published here: https://quay.io/repository/kairos/framework?tab=tags
 
 3. Now build the image with:
 
@@ -232,10 +232,10 @@ Your pipeline that builds the base image should take these instructions into acc
 ### FIPS compliant kairos binaries
 
 As described in the Dockerfile example above, while building a Kairos image from scratch, you need to copy binaries from a framework image. For FIPS compliant binaries, you should use the appropriate framework image.
-[The kairos pipelines already build one](https://github.com/kairos-io/kairos/blob/7d4b7162e08356ee348fafdf3bf7d74c44190930/framework-profile.yaml#L50-L54) Ubuntu 20 tls:
+[The kairos pipelines already build one](https://github.com/kairos-io/kairos/blob/5ec84616e898b8079bd92a7424b4c8bf10c5d816/framework-profile.yaml#L13) Ubuntu 20 tls:
 
 ```
-quay.io/kairos/framework:master_ubuntu-20-lts-fips
+quay.io/kairos/framework:master_fips
 ```
 
 The binaries in this framework image are built [with golang 1.19.10](https://github.com/kairos-io/packages/blob/082ef206ce523bb3e1d1d9f0bd9953b2550ab2b3/packages/toolchain-go/collection.yaml#L36)
