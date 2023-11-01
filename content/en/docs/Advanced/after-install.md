@@ -94,8 +94,7 @@ metadata:
 spec:
   concurrency: 1
   # This is the version (tag) of the image.
-  # The version is referred to the kairos version plus the k3s version.
-  version: "{{<kairosVersion>}}-{{<k3sVersion>}}"
+  version: "{{< exampleImageStandardTag >}}"
   nodeSelector:
     matchExpressions:
       - { key: kubernetes.io/hostname, operator: Exists }
@@ -104,7 +103,7 @@ spec:
   upgrade:
     # Here goes the image which is tied to the flavor being used.
     # Currently can pick between opensuse and alpine
-    image: {{< registryURL >}}/{{< exampleStandardImage >}}-{{<kairosVersion>}}-{{<k3sVersionOCI>}}
+    image: {{< registryURL >}}/{{< exampleImage >}}
     command:
       - "/bin/bash"
       - "-c"

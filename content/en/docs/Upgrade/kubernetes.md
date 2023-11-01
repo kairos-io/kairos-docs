@@ -35,8 +35,7 @@ metadata:
 spec:
   concurrency: 1
   # This is the version (tag) of the image to upgrade to.
-  # The version is refered to the kairos version plus the k3s version.
-  version: "{{<kairosVersion>}}-{{<k3sVersion>}}"
+  version: "{{< exampleImageStandardTag >}}"
   nodeSelector:
     matchExpressions:
       - {key: kubernetes.io/hostname, operator: Exists}
@@ -48,7 +47,7 @@ spec:
   upgrade:
     # Here goes the image which is tied to the flavor being used.
     # You can also specify your custom image stored in a public registry.
-    image: {{< registryURL >}}/{{< exampleStandardImage >}}-{{<kairosVersion>}}-{{<k3sVersionOCI>}}
+    image: {{< registryURL >}}/{{< exampleImage >}}
     command:
     - "/usr/sbin/suc-upgrade"
 EOF
@@ -166,8 +165,7 @@ metadata:
 spec:
   concurrency: 1
   # This is the version (tag) of the image.
-  # The version is refered to the kairos version plus the k3s version.
-  version: "{{< kairosVersion >}}-{{< k3sVersion >}}"
+  version: "{{< exampleImageStandardTag >}}"
   nodeSelector:
     matchExpressions:
       - { key: kubernetes.io/hostname, operator: Exists }
@@ -179,7 +177,7 @@ spec:
   upgrade:
     # Here goes the image which is tied to the flavor being used.
     # Currently can pick between opensuse and alpine
-    image: quay.io/kairos/kairos-opensuse-leap
+    image: {{< registryURL >}}/{{< exampleImage >}}
     command:
       - "/bin/bash"
       - "-c"
@@ -217,8 +215,7 @@ metadata:
 spec:
   concurrency: 1
   # This is the version (tag) of the image.
-  # The version is refered to the kairos version plus the k3s version.
-  version: "{{<kairosVersion>}}-{{<k3sVersion>}}"
+  version: "{{< exampleImageStandardTag >}}"
   nodeSelector:
     matchExpressions:
       - { key: kubernetes.io/hostname, operator: Exists }
@@ -230,7 +227,7 @@ spec:
   upgrade:
     # Here goes the image which is tied to the flavor being used.
     # Currently can pick between opensuse and alpine
-    image: quay.io/kairos/kairos-opensuse-leap
+    image: {{< registryURL >}}/{{< exampleImage >}}
     command:
       - "/bin/bash"
       - "-c"

@@ -93,7 +93,7 @@ k3s:
 
 
 ```bash
-IMAGE={{< registryURL >}}/{{< exampleStandardImage >}}-{{<kairosVersion>}}-{{<k3sVersionOCI>}}
+IMAGE={{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageStandardTag >}}
 
 docker pull $IMAGE
 

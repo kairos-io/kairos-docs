@@ -20,7 +20,7 @@ For example, let's say you want to use a standard image. Your cloud config file 
 #cloud-config
 install:
  # Here we specify the image that we want to deploy
- image: "docker:{{< registryURL >}}/{{< exampleStandardImage >}}-{{<kairosVersion>}}-{{<k3sVersionOCI>}}"
+ image: "docker:{{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageStandardTag >}}"
 ```
 
 {{% alert title="Note" %}}
@@ -40,7 +40,7 @@ install:
  auto: true
  reboot: true
  # Here we specify the image that we want to deploy
- image: "docker:{{< registryURL >}}/{{< exampleStandardImage >}}-{{<kairosVersion>}}-{{<k3sVersionOCI>}}"
+ image: "docker:{{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageStandardTag >}}"
 
 hostname: "test"
 users:

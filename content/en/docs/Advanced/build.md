@@ -76,7 +76,7 @@ apiVersion: build.kairos.io/v1alpha2
 metadata:
   name: hello-kairos
 spec:
-  imageName: "{{< registryURL >}}/{{< exampleStandardImage >}}-{{<kairosVersion>}}-{{<k3sVersionOCI>}}"
+  imageName: "{{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageStandardTag >}}"
   iso: true
   bundles:
   # Bundles available at: https://packages.kairos.io/Kairos/
@@ -128,7 +128,7 @@ kind: OSArtifact
 metadata:
   name: hello-kairos
 spec:
-  imageName: "{{< registryURL >}}/{{< exampleCoreImage >}}-{{<kairosVersion>}}"
+  imageName: "{{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageCoreTag >}}"
   netboot: true
   netbootURL: ...
   bundles: ...
@@ -185,7 +185,7 @@ kind: OSArtifact
 metadata:
   name: hello-kairos
 spec:
-  imageName: "{{< registryURL >}}/{{< exampleCoreImage >}}-{{<kairosVersion>}}"
+  imageName: "{{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageCoreTag >}}"
   cloudImage: true
   cloudConfigRef:
     name: cloud-config
@@ -256,7 +256,7 @@ kind: OSArtifact
 metadata:
   name: hello-kairos
 spec:
-  imageName: "{{< registryURL >}}/{{< exampleCoreImage >}}-{{<kairosVersion>}}"
+  imageName: "{{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageCoreTag >}}"
   azureImage: true
   ...
 ```
@@ -295,7 +295,7 @@ kind: OSArtifact
 metadata:
   name: hello-kairos
 spec:
-  imageName: "{{< registryURL >}}/{{< exampleCoreImage >}}-{{<kairosVersion>}}"
+  imageName: "{{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageCoreTag >}}"
   gceImage: true
   ...
 ```
