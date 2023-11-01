@@ -1,8 +1,9 @@
 #!/bin/bash
 
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+
 cleanup() {
-    popd
-    echo "deleting $workDir"
+    popd > /dev/null
     rm -rf $workDir
 }
 workDir=$(mktemp -d)
@@ -10,25 +11,26 @@ trap "cleanup" EXIT
 
 pushd $workDir > /dev/null
 
-if [ -z "$KAIROS_VERSION" ]; then
-    echo 'KAIROS_VERSION must be defined'
-    return
-fi
-
 curl -s https://raw.githubusercontent.com/kairos-io/kairos/master/.github/flavors.json -o flavors.json
 curl -s https://raw.githubusercontent.com/kairos-io/kairos/master/naming.sh -o naming.sh
 chmod +x naming.sh
 
-echo "<ul>"
-cat flavors.json | jq -c '.[]' |
+KAIROS_VERSION=$(cat $SCRIPT_DIR/../hugo.toml | grep kairos_version | sed 's/kairos_version[[:space:]]=[[:space:]]//g' | sed 's/"//g') && export KAIROS_VERSION
+
+cat flavors.json | jq -crM 'group_by(.flavor) | map({ flavor: .[0].flavor, variants: map(.)}) | .[]' |
 while IFS=$"\n" read -r c; do
-    FAMILY=$(echo "$c" | jq -r '.family') && export FAMILY
+    echo "<table>"
     FLAVOR=$(echo "$c" | jq -r '.flavor') && export FLAVOR
-    FLAVOR_RELEASE=$(echo "$c" | jq -r '.flavorRelease') && export FLAVOR_RELEASE
-    VARIANT=$(echo "$c" | jq -r '.variant') && export VARIANT
-    TARGETARCH=$(echo "$c" | jq -r '.arch') && export TARGETARCH
-    MODEL=$(echo "$c" | jq -r '.model') && export MODEL
-    REGISTRY_AND_ORG=quay.io/kairos && export REGISTRY_AND_ORG
-    printf "<li>$(./naming.sh container_artifact_name)</li>\n"
-done | sort
-echo "</ul>"
+    echo "<tr><th>$FLAVOR</th></tr>"
+    echo "$c" | jq -crM '.variants | .[]' |
+    while IFS=$"\n" read -r b; do
+        FAMILY=$(echo "$b" | jq -r '.family') && export FAMILY
+        FLAVOR_RELEASE=$(echo "$b" | jq -r '.flavorRelease') && export FLAVOR_RELEASE
+        VARIANT=$(echo "$b" | jq -r '.variant') && export VARIANT
+        TARGETARCH=$(echo "$b" | jq -r '.arch') && export TARGETARCH
+        MODEL=$(echo "$b" | jq -r '.model') && export MODEL
+        REGISTRY_AND_ORG=quay.io/kairos && export REGISTRY_AND_ORG
+        printf "<tr><td>$(./naming.sh container_artifact_name)</td></tr>\n"
+    done | sort
+    echo "</table>"
+done
