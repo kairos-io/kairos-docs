@@ -96,7 +96,7 @@ spec:
   upgrade:
     # Here goes the image which is tied to the flavor being used.
     # Currently can pick between opensuse and alpine
-    image: quay.io/kairos/kairos-opensuse
+    image: {{< registryURL >}}/{{< exampleStandardImage >}}-{{<kairosVersion>}}-{{<k3sVersionOCI>}}
     command:
       - "/bin/bash"
       - "-c"

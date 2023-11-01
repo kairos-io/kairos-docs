@@ -118,7 +118,7 @@ You can use [the Kairos released images]({{< relref "../reference/image_matrix" 
 
 ```bash
 docker run --rm -ti --net host quay.io/kairos/auroraboot \
-                    --set "container_image=quay.io/kairos/kairos-opensuse-leap:{{< kairosVersion >}}-{{< k3sVersion >}}"
+                    --set "container_image={{< registryURL >}}/{{< exampleStandardImage >}}-{{<kairosVersion>}}-{{<k3sVersionOCI>}}"
 ```
 
 {{% /tab %}}
@@ -129,10 +129,10 @@ By indicating a `container_image` prefixed with `docker://`, AuroraBoot will pul
 This implies that the host has a docker daemon, and we have to give access to its socket with `-v /var/run/docker.sock:/var/run/docker.sock`.
 
 ```bash
-docker pull quay.io/kairos/kairos-opensuse-leap:{{< kairosVersion >}}-{{< k3sVersion >}}
+docker pull {{< registryURL >}}/{{< exampleStandardImage >}}-{{<kairosVersion>}}-{{<k3sVersionOCI>}}
 # This will use the container image from the host's docker daemon
 docker run --rm -ti -v /var/run/docker.sock:/var/run/docker.sock --net host quay.io/kairos/auroraboot \
-                    --set "container_image=docker://quay.io/kairos/kairos-opensuse-leap:{{< kairosVersion >}}-{{< k3sVersion >}}"
+                    --set "container_image=docker://{{< registryURL >}}/{{< exampleStandardImage >}}-{{<kairosVersion>}}-{{<k3sVersionOCI>}}"
 ```
 {{% /tab %}}
 {{% tab header="Github releases" %}}
@@ -224,7 +224,7 @@ Build the ISO:
 docker run -v "$PWD"/config.yaml:/config.yaml \
                     -v "$PWD"/build:/tmp/auroraboot \
                     --rm -ti quay.io/kairos/auroraboot \
-                    --set container_image=quay.io/kairos/core-rockylinux:{{< kairosVersion >}} \
+                    --set container_image={{< registryURL >}}/{{< exampleCoreImage >}}-{{<kairosVersion>}} \
                     --set "disable_http_server=true" \
                     --set "disable_netboot=true" \
                     --cloud-config /config.yaml \
@@ -450,7 +450,7 @@ To pass-by a cloud-config via pipes, set `--cloud-config -`, for example:
 ```yaml
 cat <<EOF | docker run --rm -i --net host quay.io/kairos/auroraboot \
                     --cloud-config - \
-                    --set "container_image=quay.io/kairos/kairos-opensuse-leap:{{< kairosVersion >}}-{{< k3sVersion >}}"
+                    --set "container_image={{< registryURL >}}/{{< exampleStandardImage >}}-{{<kairosVersion>}}-{{<k3sVersionOCI>}}"
 #cloud-config
 
 install:
@@ -520,7 +520,7 @@ Build the custom ISO with the cloud config:
 docker run -v "$PWD"/config.yaml:/config.yaml \
              -v "$PWD"/build:/tmp/auroraboot \
              --rm -ti quay.io/kairos/auroraboot \
-             --set container_image=quay.io/kairos/core-rockylinux:v1.5.0 \
+             --set container_image={{< registryURL >}}/{{< exampleCoreImage >}}-{{<kairosVersion>}} \
              --set "disable_http_server=true" \
              --set "disable_netboot=true" \
              --cloud-config /config.yaml \
@@ -543,7 +543,7 @@ docker run -v "$PWD"/config.yaml:/config.yaml \
              -v "$PWD"/data:/tmp/data \
              -v "$PWD"/build:/tmp/auroraboot \
              --rm -ti quay.io/kairos/auroraboot \
-             --set container_image=quay.io/kairos/core-rockylinux:{{< kairosVersion >}} \
+             --set container_image={{< registryURL >}}/{{< exampleCoreImage >}}-{{<kairosVersion>}} \
              --set "disable_http_server=true" \
              --set "disable_netboot=true" \
              --cloud-config /config.yaml \
@@ -581,7 +581,7 @@ docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos
 
 ```bash
 docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos/auroraboot \
-        --set container_image=quay.io/kairos/core-rockylinux:{{< kairosVersion >}}
+        --set container_image={{< registryURL >}}/{{< exampleCoreImage >}}-{{<kairosVersion>}}
         --cloud-config /config.yaml
 ```
 
@@ -596,7 +596,7 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock --net host \
   -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot \
   --debug \
   --set "disable_http_server=true" \
-  --set "container_image=quay.io/kairos/kairos-opensuse-leap:{{< kairosVersion >}}-{{< k3sVersion >}}" \
+  --set "container_image={{< registryURL >}}/{{< exampleStandardImage >}}-{{<kairosVersion>}}-{{<k3sVersionOCI>}}" \
   --set "disable_netboot=true" \
   --cloud-config /aurora/config.yaml \
   --set "disk.raw=true" \
@@ -660,7 +660,7 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock --net host \
   -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot \
   --debug \
   --set "disable_http_server=true" \
-  --set "container_image=quay.io/kairos/kairos-opensuse-leap:{{< kairosVersion >}}-{{< k3sVersion >}}" \
+  --set "container_image={{< registryURL >}}/{{< exampleStandardImage >}}-{{<kairosVersion>}}-{{<k3sVersionOCI>}}" \
   --set "disable_netboot=true" \
   --cloud-config /aurora/config.yaml \
   --set "disk.gce=true" \
@@ -675,7 +675,7 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock --net host \
   -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot \
   --debug \
   --set "disable_http_server=true" \
-  --set "container_image=quay.io/kairos/kairos-opensuse-leap:{{< kairosVersion >}}-{{< k3sVersion >}}" \
+  --set "container_image={{< registryURL >}}/{{< exampleStandardImage >}}-{{<kairosVersion>}}-{{<k3sVersionOCI>}}" \
   --set "disable_netboot=true" \
   --cloud-config /aurora/config.yaml \
   --set "disk.vhd=true" \
@@ -688,7 +688,7 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock --net host \
 
 Write down an aurora config file as `aurora.yaml`:
 ```yaml
-container_image: "quay.io/kairos/core-rockylinux:{{< kairosVersion >}}"
+container_image: "{{< registryURL >}}/{{< exampleCoreImage >}}-{{<kairosVersion>}}"
 
 cloud_config: |
     #cloud-config
