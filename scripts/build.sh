@@ -20,6 +20,7 @@ rm -rf "${publicpath}" || true
 [[ ! -d "${publicpath}" ]] && mkdir -p "${publicpath}"
 
 npm install --save-dev autoprefixer postcss-cli postcss
+./kairos-images.sh > ../layouts/partials/kairos-images.html
 
 hugo mod get
 hugo mod graph

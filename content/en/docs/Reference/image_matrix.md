@@ -24,6 +24,22 @@ Below is a list of the available images and their locations on the quay.io regis
 
 Base images are tagged with specific upstream versions (e.g. Ubuntu 20 LTS is pinned to Ubuntu 20:04, openSUSE to openSUSE leap 15.4, etc.).
 
+{{< kairos-images >}}
+
+| **Flavor**                       | amd64                                                              | arm64                                                                                                                                                      |
+|------------------------------------------|--------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Alpine** | [core][c-alpine-opensuse-leap], [standard][k-alpine-opensuse-leap] | [core][c-alpine-arm-rpi], [core-img][c-alpine-arm-rpi-img], [standard][k-alpine-arm-rpi], [standard-img][k-alpine-arm-rpi-img]                             |
+| **Debian** | [core][c-debian], [standard][k-debian] | |
+| **Fedora** | [core][c-fedora], [standard][k-fedora] | |
+| **openSUSE Leap** | [core][c-opensuse-leap], [standard][k-opensuse-leap] | [core][c-opensuse-leap-arm-rpi], [core-img][c-opensuse-leap-arm-rpi-img], [standard][k-opensuse-leap-arm-rpi], [standard-img][k-opensuse-leap-arm-rpi-img] |
+| **openSUSE Tumbleweed** | [core][c-opensuse-tumbleweed], [standard][k-opensuse-tumbleweed]   | [core][c-opensuse-tumbleweed-arm-rpi], [standard][k-opensuse-tumbleweed-arm-rpi] |
+| **Ubuntu 23.04** ** | [core][c-ubuntu], [standard][k-ubuntu] | [core][c-ubuntu-arm-rpi], [core-img][c-ubuntu-arm-rpi-img], [standard][k-ubuntu-arm-rpi], [standard-img][k-ubuntu-arm-rpi-img] |
+| **Ubuntu 22.04  (LTS)** ** | [core][c-ubuntu-22-lts], [standard][k-ubuntu-22-lts] | [core][c-ubuntu-22-lts-arm-rpi], [core-img][c-ubuntu-22-lts-arm-rpi-img], [standard][k-ubuntu-22-lts-arm-rpi], [standard-img][k-ubuntu-22-lts-arm-rpi-img] |
+| **Ubuntu 20.04** ** | [core][c-ubuntu-20-lts], [standard][k-ubuntu-20-lts]               | [core][c-ubuntu-20-lts-arm-rpi], [core-img][c-ubuntu-20-lts-arm-rpi-img], [standard][k-ubuntu-20-lts-arm-rpi], [standard-img][k-ubuntu-20-lts-arm-rpi-img] |
+| **Rocky Linux** | [core][c-rockylinux], [standard][k-rockylinux] | |
+
+
+
 | **Flavor/Variant**                       | amd64                                                              | arm64                                                                                                                                                      |
 |------------------------------------------|--------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **Alpine Linux based (openSUSE kernel)** | [core][c-alpine-opensuse-leap], [standard][k-alpine-opensuse-leap] | [core][c-alpine-arm-rpi], [core-img][c-alpine-arm-rpi-img], [standard][k-alpine-arm-rpi], [standard-img][k-alpine-arm-rpi-img]                             |
