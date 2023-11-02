@@ -87,7 +87,7 @@ Where:
 Container images are stored in Quay.io and follow the following convention:
 
 ```
-domain/kairos/<flavor>:<flavor_release>-<variant>-<arch>-<device>-<version>
+quay.io/kairos/<flavor>:<flavor_release>-<variant>-<arch>-<device>-<version>
 ```
 
 This nomenclature for container images lacks some information for the following reasons:
@@ -107,7 +107,7 @@ As mentioned before, some images are too big to be delivered via GitHub Releases
 The convention is the following:
 
 ```
-domain/kairos/<flavor>:<flavor_release>-<variant>-<arch>-<device>-<version>-img
+quay.io/kairos/<flavor>:<flavor_release>-<variant>-<arch>-<device>-<version>-img
 ```
 
 ### Examples
@@ -120,7 +120,7 @@ There are 2 framework flavors currently. The `generic` and the `fips` (Defined [
 All different framework flavors are stored in the same image, so the details are included in the tag. The name is simplified since not all attributes apply for framework images.
 
 ```
-domain/kairos/framework:<version>_<flavor>
+quay.io/kairos/framework:<version>_<flavor>
 ```
 
 ### Examples

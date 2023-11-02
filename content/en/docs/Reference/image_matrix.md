@@ -38,6 +38,8 @@ Here is one example:
 
 `{{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageStandardTag >}}`
 
+More about Kairos naming conventions [here]({{< relref "./artifacts" >}}).
+
 Notes:
 
 - The **Core** images do not include any Kubernetes engine and can be used as a base for customizations.
