@@ -71,12 +71,12 @@ qemu-system-x86_64 \
 
 ```bash
 docker run --rm -ti --net host quay.io/kairos/auroraboot \
-                    --set "container_image={{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageStandardTag >}}"
+                    --set "container_image={{<oci variant="standard">}}"
                     # Optionally:
                     # --cloud-config ....
 ```
 
-Will netboot the `{{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageStandardTag >}}` image. You can find more details in the [AuroraBoot documentation section]({{< relref "../reference/auroraboot" >}}).
+Will netboot the `{{<oci variant="standard">}}` image. You can find more details in the [AuroraBoot documentation section]({{< relref "../reference/auroraboot" >}}).
 
 ## Notes on booting from network
 

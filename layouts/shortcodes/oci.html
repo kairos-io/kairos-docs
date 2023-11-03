@@ -1,0 +1,1 @@
+{{ $.Page.Site.Params.softwareVersions.registryURL }}/opensuse-leap-15.5-{{ with .Get "variant" }}{{ . }}{{ end }}-amd64-generic-{{ $.Page.Site.Params.softwareVersions.kairos_version }}{{ if eq (.Get "variant") "standard" }}-{{ replace $.Page.Site.Params.softwareVersions.k3s_version "+" "-" }}{{ end }}

@@ -102,14 +102,14 @@ ssh_authorized_keys:
 
 ## Provisioning with AuroraBoot
 
-We now can run [AuroraBoot]({{< relref "../reference/auroraboot" >}}) with `{{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageStandardTag >}}` to provision `openSUSE Leap` machines with those k3s and kairos versions.
+We now can run [AuroraBoot]({{< relref "../reference/auroraboot" >}}) with `{{<oci variant="standard">}}` to provision `openSUSE Leap` machines with those k3s and kairos versions.
 
 AuroraBoot takes `cloud-config` files also from _STDIN_, so we will pipe the configuration file to it, and specify the container image that we want to use for our nodes:
 
 ``` bash
 cat <<EOF | docker run --rm -i --net host quay.io/kairos/auroraboot \
                     --cloud-config - \
-                    --set "container_image={{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageStandardTag >}}"
+                    --set "container_image={{<oci variant="standard">}}"
 #cloud-config
 
 # https://github.com/kairos-io/kairos/issues/885

@@ -76,7 +76,7 @@ apiVersion: build.kairos.io/v1alpha2
 metadata:
   name: hello-kairos
 spec:
-  imageName: "{{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageStandardTag >}}"
+  imageName: "{{<oci variant="standard">}}"
   iso: true
   bundles:
   # Bundles available at: https://packages.kairos.io/Kairos/

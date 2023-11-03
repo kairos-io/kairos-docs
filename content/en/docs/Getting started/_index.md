@@ -30,7 +30,7 @@ Once the installation is complete, you can begin using your Kubernetes cluster.
 
 1. Visit the Kairos [release page on GitHub](https://github.com/kairos-io/kairos/releases)
 1. Select the latest release and download the assets of your flavor. For example,
-   pick the [kairos-opensuse-leap-{{<kairosVersion>}}-{{<k3sVersion>}}.iso](https://github.com/kairos-io/kairos/releases/download/{{<kairosVersion>}}/kairos-standard-opensuse-leap-amd64-generic-{{<kairosVersion>}}-{{<k3sVersion>}}.iso)
+   pick the [{{<image variant="standard">}}.iso](https://github.com/kairos-io/kairos/releases/download/{{<kairosVersion>}}/{{<image variant="standard">}}.iso)
    ISO file for the openSUSE based version, where `{{< k3sVersion >}}` in the name is the `k3s` version and `{{< kairosVersion >}}` is the Kairos one to deploy on a VM.
 1. You can also use [netboot]({{< relref "../installation/netboot" >}}) to boot Kairos over the network
 
@@ -73,14 +73,14 @@ First we check that we have all needed files:
 
 ```bash
 $ ls      
-kairos-core-opensuse-leap-amd64-generic-{{< kairosVersion >}}.iso         kairos-core-opensuse-leap-amd64-generic-{{< kairosVersion >}}.iso.sha256.pem
-kairos-core-opensuse-leap-amd64-generic-{{< kairosVersion >}}.iso.sha256  kairos-core-opensuse-leap-amd64-generic-{{< kairosVersion >}}.iso.sha256.sig
+{{<image variant="core">}}.iso         {{<image variant="core">}}.iso.sha256.pem
+{{<image variant="core">}}.iso.sha256  {{<image variant="core">}}.iso.sha256.sig
 ```
 
 We first verify that the sha256 checksums haven't been tampered with:
 
 ```bash
-$ COSIGN_EXPERIMENTAL=1 cosign verify-blob --cert kairos-core-opensuse-leap-amd64-generic-{{< kairosVersion >}}.iso.sha256.pem --signature kairos-core-opensuse-leap-amd64-generic-{{< kairosVersion >}}.iso.sha256.sig kairos-core-opensuse-leap-amd64-generic-{{< kairosVersion >}}.iso.sha256 
+$ COSIGN_EXPERIMENTAL=1 cosign verify-blob --cert {{<image variant="core">}}.iso.sha256.pem --signature {{<image variant="core">}}.iso.sha256.sig {{<image variant="core">}}.iso.sha256 
 tlog entry verified with uuid: 51ef927a43557386ad7912802607aa421566772524319703a99f8331f0bb778f index: 11977200
 Verified OK
 ```
@@ -90,9 +90,9 @@ Once we see that `Verified OK` we can be sure that the file hasn't been tampered
 For an example of a failure validation see below:
 
 ```bash
-$ COSIGN_EXPERIMENTAL=1 cosign verify-blob --enforce-sct --cert kairos-core-opensuse-leap-amd64-generic-{{< kairosVersion >}}.iso.sha256.pem --signature kairos-core-opensuse-leap-amd64-generic-{{< kairosVersion >}}.iso.sha256.sig kairos-core-opensuse-leap-amd64-generic-{{< kairosVersion >}}.iso.sha256.modified
-Error: verifying blob [kairos-core-opensuse-leap-amd64-generic-{{< kairosVersion >}}.iso.sha256.modified]: invalid signature when validating ASN.1 encoded signature
-main.go:62: error during command execution: verifying blob [kairos-core-opensuse-leap-amd64-generic-{{< kairosVersion >}}.iso.sha256.modified]: invalid signature when validating ASN.1 encoded signature
+$ COSIGN_EXPERIMENTAL=1 cosign verify-blob --enforce-sct --cert {{<image variant="core">}}.iso.sha256.pem --signature {{<image variant="core">}}.iso.sha256.sig {{<image variant="core">}}.iso.sha256.modified
+Error: verifying blob [{{<image variant="core">}}.iso.sha256.modified]: invalid signature when validating ASN.1 encoded signature
+main.go:62: error during command execution: verifying blob [{{<image variant="core">}}.iso.sha256.modified]: invalid signature when validating ASN.1 encoded signature
 ```
 {{% alert title="Info" %}}
 We use `COSIGN_EXPERIMENTAL=1` to verify the blob using the keyless method. That means that only ephemeral keys are created to sign, and it relays on using
@@ -104,8 +104,8 @@ via the CI with no external access to the signing process. For more information 
 Now we can verify that the integrity of the ISO hasnt been compromise:
 
 ```bash
-$ sha256sum -c kairos-core-opensuse-leap-amd64-generic-{{< kairosVersion >}}.iso.sha256 
-kairos-core-opensuse-leap-amd64-generic-{{< kairosVersion >}}.iso: OK
+$ sha256sum -c {{< image variant="core">}}.iso.sha256 
+{{< image variant="core">}}.iso: OK
 ```
 
 Once we reached this point, we can be sure that from the ISO hasn't been tampered with since it was created by our release workflow.
@@ -145,7 +145,7 @@ Here are some additional helpful tips depending on the physical/virtual machine 
       virt-install --name my-first-kairos-vm \
                   --vcpus 1 \
                   --memory 1024 \
-                  --cdrom /path/to/kairos-opensuse-{{< kairosVersion >}}-{{< k3sVersion >}}.iso \
+                  --cdrom /path/to/{{< image variant="standard" >}}.iso \
                   --disk size=30 \
                   --os-variant opensuse-factory \
                   --virt-type kvm

@@ -93,7 +93,7 @@ k3s:
 
 
 ```bash
-IMAGE={{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageStandardTag >}}
+IMAGE={{<oci variant="standard">}}
 
 docker pull $IMAGE
 

@@ -118,7 +118,7 @@ You can use [the Kairos released images]({{< relref "../reference/image_matrix" 
 
 ```bash
 docker run --rm -ti --net host quay.io/kairos/auroraboot \
-                    --set "container_image={{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageStandardTag >}}"
+                    --set "container_image={{<oci variant="standard">}}"
 ```
 
 {{% /tab %}}
@@ -129,10 +129,10 @@ By indicating a `container_image` prefixed with `docker://`, AuroraBoot will pul
 This implies that the host has a docker daemon, and we have to give access to its socket with `-v /var/run/docker.sock:/var/run/docker.sock`.
 
 ```bash
-docker pull {{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageStandardTag >}}
+docker pull {{<oci variant="standard">}}
 # This will use the container image from the host's docker daemon
 docker run --rm -ti -v /var/run/docker.sock:/var/run/docker.sock --net host quay.io/kairos/auroraboot \
-                    --set "container_image=docker://{{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageStandardTag >}}"
+                    --set "container_image=docker://{{<oci variant="standard">}}"
 ```
 {{% /tab %}}
 {{% tab header="Github releases" %}}
@@ -450,7 +450,7 @@ To pass-by a cloud-config via pipes, set `--cloud-config -`, for example:
 ```yaml
 cat <<EOF | docker run --rm -i --net host quay.io/kairos/auroraboot \
                     --cloud-config - \
-                    --set "container_image={{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageStandardTag >}}"
+                    --set "container_image={{<oci variant="standard">}}"
 #cloud-config
 
 install:
@@ -596,7 +596,7 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock --net host \
   -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot \
   --debug \
   --set "disable_http_server=true" \
-  --set "container_image={{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageStandardTag >}}" \
+  --set "container_image={{<oci variant="standard">}}" \
   --set "disable_netboot=true" \
   --cloud-config /aurora/config.yaml \
   --set "disk.raw=true" \
@@ -660,7 +660,7 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock --net host \
   -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot \
   --debug \
   --set "disable_http_server=true" \
-  --set "container_image={{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageStandardTag >}}" \
+  --set "container_image={{<oci variant="standard">}}" \
   --set "disable_netboot=true" \
   --cloud-config /aurora/config.yaml \
   --set "disk.gce=true" \
@@ -675,7 +675,7 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock --net host \
   -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot \
   --debug \
   --set "disable_http_server=true" \
-  --set "container_image={{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageStandardTag >}}" \
+  --set "container_image={{<oci variant="standard">}}" \
   --set "disable_netboot=true" \
   --cloud-config /aurora/config.yaml \
   --set "disk.vhd=true" \

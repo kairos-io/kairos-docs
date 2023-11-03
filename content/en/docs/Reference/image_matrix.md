@@ -40,7 +40,7 @@ quay.io/kairos/<flavor>:<flavor_release>-<variant>-<arch>-<device>-<version>
 Use the search feature to find the images you are looking for.
 Here is one example:
 
-`{{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageStandardTag >}}`
+`{{<oci variant="standard">}}`
 
 More about Kairos naming conventions [here]({{< relref "./artifacts" >}}).
 
