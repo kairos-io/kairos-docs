@@ -125,9 +125,8 @@ auroraboot_version = "v0.2.6"
 flavor = "debian"
 armFlavor = "alpine"
 registryURL = "quay.io/kairos"
-exampleImage = "opensuse"
-exampleImageCoreTag = "leap-15.5-core-amd64-generic-v2.4.1"
-exampleImageStandardTag = "leap-15.5-core-amd64-generic-v2.4.1-k3sv1.27.3-k3s1"
+defaultFlavor = "opensuse"
+defaultFlavorRelease = "leap-15.5"
 # User interface configuration
 [params.ui]
 # Enable to show the side bar menu in its compact state.

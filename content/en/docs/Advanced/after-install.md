@@ -94,7 +94,7 @@ metadata:
 spec:
   concurrency: 1
   # This is the version (tag) of the image.
-  version: "{{< exampleImageStandardTag >}}"
+  version: "{{<ociTag variant="standard">}}"
   nodeSelector:
     matchExpressions:
       - { key: kubernetes.io/hostname, operator: Exists }
@@ -103,7 +103,7 @@ spec:
   upgrade:
     # Here goes the image which is tied to the flavor being used.
     # Currently can pick between opensuse and alpine
-    image: {{< registryURL >}}/{{< exampleImage >}}
+    image: {{< registryURL >}}/{{< defaultFlavor >}}
     command:
       - "/bin/bash"
       - "-c"

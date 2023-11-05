@@ -128,7 +128,7 @@ kind: OSArtifact
 metadata:
   name: hello-kairos
 spec:
-  imageName: "{{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageCoreTag >}}"
+  imageName: "{{<oci variant="core">}}"
   netboot: true
   netbootURL: ...
   bundles: ...
@@ -185,7 +185,7 @@ kind: OSArtifact
 metadata:
   name: hello-kairos
 spec:
-  imageName: "{{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageCoreTag >}}"
+  imageName: "{{<oci variant="core">}}"
   cloudImage: true
   cloudConfigRef:
     name: cloud-config
@@ -256,7 +256,7 @@ kind: OSArtifact
 metadata:
   name: hello-kairos
 spec:
-  imageName: "{{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageCoreTag >}}"
+  imageName: "{{<oci variant="core">}}"
   azureImage: true
   ...
 ```
@@ -295,7 +295,7 @@ kind: OSArtifact
 metadata:
   name: hello-kairos
 spec:
-  imageName: "{{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageCoreTag >}}"
+  imageName: "{{<oci variant="core">}}"
   gceImage: true
   ...
 ```

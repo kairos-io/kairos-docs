@@ -113,7 +113,7 @@ Images signatures are pushed regularly for tagged releases. To verify images wit
 
 ```bash
 cosign verify-attestation \
-        --type spdx {{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageCoreTag >}} \
+        --type spdx {{<oci variant="core">}} \
         --certificate-identity "https://github.com/kairos-io/kairos/.github/workflows/release.yaml@refs/tags/{{< kairosVersion >}}" \
         --certificate-oidc-issuer "https://token.actions.githubusercontent.com"
 ```

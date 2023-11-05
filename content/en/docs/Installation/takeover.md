@@ -13,7 +13,7 @@ Kairos supports takeover installations. Here are a few summarized steps:
 
 ```
 export DEVICE=/dev/sda
-export IMAGE={{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageCoreTag >}}
+export IMAGE={{<oci variant="core">}}
 cat <<'EOF' > config.yaml
 #cloud-config
 users:

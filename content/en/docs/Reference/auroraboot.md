@@ -224,7 +224,7 @@ Build the ISO:
 docker run -v "$PWD"/config.yaml:/config.yaml \
                     -v "$PWD"/build:/tmp/auroraboot \
                     --rm -ti quay.io/kairos/auroraboot \
-                    --set container_image={{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageCoreTag >}} \
+                    --set container_image={{<oci variant="core">}} \
                     --set "disable_http_server=true" \
                     --set "disable_netboot=true" \
                     --cloud-config /config.yaml \
@@ -520,7 +520,7 @@ Build the custom ISO with the cloud config:
 docker run -v "$PWD"/config.yaml:/config.yaml \
              -v "$PWD"/build:/tmp/auroraboot \
              --rm -ti quay.io/kairos/auroraboot \
-             --set container_image={{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageCoreTag >}} \
+             --set container_image={{<oci variant="core">}} \
              --set "disable_http_server=true" \
              --set "disable_netboot=true" \
              --cloud-config /config.yaml \
@@ -543,7 +543,7 @@ docker run -v "$PWD"/config.yaml:/config.yaml \
              -v "$PWD"/data:/tmp/data \
              -v "$PWD"/build:/tmp/auroraboot \
              --rm -ti quay.io/kairos/auroraboot \
-             --set container_image={{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageCoreTag >}} \
+             --set container_image={{<oci variant="core">}} \
              --set "disable_http_server=true" \
              --set "disable_netboot=true" \
              --cloud-config /config.yaml \
@@ -581,7 +581,7 @@ docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos
 
 ```bash
 docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos/auroraboot \
-        --set container_image={{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageCoreTag >}}
+        --set container_image={{<oci variant="core">}}
         --cloud-config /config.yaml
 ```
 
@@ -688,7 +688,7 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock --net host \
 
 Write down an aurora config file as `aurora.yaml`:
 ```yaml
-container_image: "{{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageCoreTag >}}"
+container_image: "{{<oci variant="core">}}"
 
 cloud_config: |
     #cloud-config

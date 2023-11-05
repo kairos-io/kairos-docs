@@ -195,7 +195,7 @@ kind: OSArtifact
 metadata:
   name: hello-kairos
 spec:
-  imageName: "{{< registryURL >}}/{{< exampleImage >}}:{{< exampleImageCoreTag >}}"
+  imageName: "{{<oci variant="core">}}"
   iso: true
   bundles:
   # Bundles available at: https://packages.kairos.io/Kairos/
