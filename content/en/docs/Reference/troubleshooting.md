@@ -18,7 +18,12 @@ To gather useful logs and help developers spot right away issues, it's suggested
 
 To edit the boot commands, type 'e' in the boot menu. To boot with the changes press 'CTRL+X'.
 
-In case logs can't be acquired, taking screenshot or videos while opening up issues it's strongly reccomended!
+In case logs can't be acquired, taking screenshot or videos while opening up issues it's strongly recommended!
+
+Another option that can be enabled is immucore debug logs with `rd.immucore.debug`
+
+After booting, you can find the logs from immucore under `/run/immucore/` (whether you enabled debug output or not).
+Check the [immucore README](https://github.com/kairos-io/immucore/) for more configuration parameters.
 
 ## Initramfs breakpoints
 
