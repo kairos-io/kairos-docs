@@ -9,7 +9,7 @@ description: >
 
 {{% alert title="Note" %}}
 
-The p2p feature of Kairos is crazy and experimental! Do not run in production servers. 
+The p2p feature of Kairos is crazy and experimental! Do not run in production servers.
 Feedback and bug reports are welcome, as we are improving the p2p aspects of Kairos.
 
 {{% /alert %}}
@@ -26,7 +26,7 @@ You can see this example live in the [Kairos and libp2p video]({{< relref "Media
 
 In the following example we are going to bootstrap a new multi-node, single cluster with Kairos. We will use at least 2 nodes, one as a master and one as a worker. Note how we don't specify any role, or either pin any IP in the following configurations.
 
-We will first create a cloud config file for our deployment, and then run [AuroraBoot]({{< relref "../reference/auroraboot" >}}) locally. We then start 2 VMs configured for netbooting. 
+We will first create a cloud config file for our deployment, and then run [AuroraBoot]({{< relref "../reference/auroraboot" >}}) locally. We then start 2 VMs configured for netbooting.
 
 ## Prepare your `cloud-config` file
 
@@ -58,7 +58,7 @@ install:
  reboot: true
 ```
 
-In order to leverage p2p and automatic node co-ordination, we need to generate a unique pre-shared token that will be used by all the nodes that we want to be part of our cluster. 
+In order to leverage p2p and automatic node co-ordination, we need to generate a unique pre-shared token that will be used by all the nodes that we want to be part of our cluster.
 
 We can generate a network token by using the `edgevpn` images, by running it locally:
 
@@ -102,14 +102,14 @@ ssh_authorized_keys:
 
 ## Provisioning with AuroraBoot
 
-We now can run [AuroraBoot]({{< relref "../reference/auroraboot" >}}) with `quay.io/kairos/kairos-opensuse-leap:{{< kairosVersion >}}-{{< k3sVersion >}}` to provision `openSUSE Leap` machines with `k3s 1.21.14` and Kairos `1.5.1`. 
+We now can run [AuroraBoot]({{< relref "../reference/auroraboot" >}}) with `{{<oci variant="standard">}}` to provision `openSUSE Leap` machines with those k3s and kairos versions.
 
 AuroraBoot takes `cloud-config` files also from _STDIN_, so we will pipe the configuration file to it, and specify the container image that we want to use for our nodes:
 
 ``` bash
 cat <<EOF | docker run --rm -i --net host quay.io/kairos/auroraboot \
                     --cloud-config - \
-                    --set "container_image=quay.io/kairos/kairos-opensuse-leap:{{< kairosVersion >}}-{{< k3sVersion >}}"
+                    --set "container_image={{<oci variant="standard">}}"
 #cloud-config
 
 # https://github.com/kairos-io/kairos/issues/885

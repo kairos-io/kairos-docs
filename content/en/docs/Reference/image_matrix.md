@@ -16,81 +16,39 @@ These images are pushed to quay.io and are available for installation and upgrad
 
 Kairos release processes generates images based on official container images from popular Linux distributions. If you don't see your preferred distribution, check if [we are already planning](https://github.com/kairos-io/kairos/issues?q=is%3Aopen+is%3Aissue+label%3Aarea%2Fflavor) support for it or create a new issue.
 
-Below is a list of the available images and their locations on the quay.io registry:
+{{% alert title="Note" %}}
+You can also download ISOs and other artifacts from the [releases page](https://github.com/kairos-io/kairos/releases).
+{{% /alert %}}
+
+Below is a list of the container repositories for each flavor:
+
+| **Flavor**      | repository |
+|-----------------|------------|
+| **Alpine**      | https://quay.io/repository/kairos/alpine   |
+| **Debian**      | https://quay.io/repository/kairos/debian   |
+| **Fedora**      | https://quay.io/repository/kairos/fedora   |
+| **openSUSE**    | https://quay.io/repository/kairos/opensuse |
+| **Ubuntu** **   | https://quay.io/repository/kairos/ubuntu   |
+| **Rocky Linux** | https://quay.io/repository/kairos/rockylinux |
+
+The various images are available with different tags in the form of:
+
+```
+quay.io/kairos/<flavor>:<flavor_release>-<variant>-<arch>-<device>-<version>
+```
+
+Use the search feature to find the images you are looking for.
+Here is one example:
+
+`{{<oci variant="standard">}}`
+
+More about Kairos naming conventions [here]({{< relref "./artifacts" >}}).
+
+Notes:
 
 - The **Core** images do not include any Kubernetes engine and can be used as a base for customizations.
 - The **Standard** images include `k3s` and the [kairos provider](https://github.com/kairos-io/provider-kairos), which enables Kubernetes deployments and optionally enables [p2p]({{< relref "../installation/p2p" >}}).
 - The **-img** repositories contain an img file which can be directly written to an SD card or USB drive for use with ARM devices.
-
-Base images are tagged with specific upstream versions (e.g. Ubuntu 20 LTS is pinned to Ubuntu 20:04, openSUSE to openSUSE leap 15.4, etc.).
-
-| **Flavor/Variant**                       | amd64                                                              | arm64                                                                                                                                                      |
-|------------------------------------------|--------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Alpine Linux based (openSUSE kernel)** | [core][c-alpine-opensuse-leap], [standard][k-alpine-opensuse-leap] | [core][c-alpine-arm-rpi], [core-img][c-alpine-arm-rpi-img], [standard][k-alpine-arm-rpi], [standard-img][k-alpine-arm-rpi-img]                             |
-| **Alpine Linux based (Ubuntu kernel)**   | [core][c-alpine-ubuntu], [standard][k-alpine-ubuntu]               |                                                                                                                                                            |
-| **Debian based**                         | [core][c-debian], [standard][k-debian]                             |                                                                                                                                                            |
-| **Fedora based**                         | [core][c-fedora], [standard][k-fedora]                             |                                                                                                                                                            |
-| **openSUSE Leap based**                  | [core][c-opensuse-leap], [standard][k-opensuse-leap]               | [core][c-opensuse-leap-arm-rpi], [core-img][c-opensuse-leap-arm-rpi-img], [standard][k-opensuse-leap-arm-rpi], [standard-img][k-opensuse-leap-arm-rpi-img] |
-| **openSUSE Tumbleweed based**            | [core][c-opensuse-tumbleweed], [standard][k-opensuse-tumbleweed]   | [core][c-opensuse-tumbleweed-arm-rpi], [standard][k-opensuse-tumbleweed-arm-rpi]                                                                           |
-| **Ubuntu based (rolling)** **            | [core][c-ubuntu], [standard][k-ubuntu]                             | [core][c-ubuntu-arm-rpi], [core-img][c-ubuntu-arm-rpi-img], [standard][k-ubuntu-arm-rpi], [standard-img][k-ubuntu-arm-rpi-img]                             |
-| **Ubuntu based (22 LTS)** **             | [core][c-ubuntu-22-lts], [standard][k-ubuntu-22-lts]               | [core][c-ubuntu-22-lts-arm-rpi], [core-img][c-ubuntu-22-lts-arm-rpi-img], [standard][k-ubuntu-22-lts-arm-rpi], [standard-img][k-ubuntu-22-lts-arm-rpi-img] |
-| **Ubuntu based (20 LTS)** **             | [core][c-ubuntu-20-lts], [standard][k-ubuntu-20-lts]               | [core][c-ubuntu-20-lts-arm-rpi], [core-img][c-ubuntu-20-lts-arm-rpi-img], [standard][k-ubuntu-20-lts-arm-rpi], [standard-img][k-ubuntu-20-lts-arm-rpi-img] |
-| **Rocky Linux based**                    | [core][c-rockylinux], [standard][k-rockylinux]                     |                                                                                                                                                            |
-| **Alma Linux based**                     | [core][c-almalinux]                                                |                                                                                                                                                            |
-
-
-[c-alpine-opensuse-leap]: https://quay.io/repository/kairos/core-alpine-opensuse-leap
-[c-alpine-ubuntu]: https://quay.io/repository/kairos/core-alpine-ubuntu
-[c-alpine-arm-rpi]: https://quay.io/repository/kairos/core-alpine-arm-rpi
-[c-alpine-arm-rpi-img]: https://quay.io/repository/kairos/core-alpine-arm-rpi-img
-[c-debian]: https://quay.io/repository/kairos/core-debian
-[c-fedora]: https://quay.io/repository/kairos/core-fedora
-[c-opensuse-leap]: https://quay.io/repository/kairos/core-opensuse-leap
-[c-opensuse-leap-arm-rpi]: https://quay.io/repository/kairos/core-opensuse-leap-arm-rpi
-[c-opensuse-leap-arm-rpi-img]: https://quay.io/repository/kairos/core-opensuse-leap-arm-rpi-img
-[c-opensuse-tumbleweed]: https://quay.io/repository/kairos/core-opensuse-tumbleweed
-[c-opensuse-tumbleweed-arm-rpi]: https://quay.io/repository/kairos/core-opensuse-tumbleweed-arm-rpi
-[c-opensuse-tumbleweed-arm-rpi-img]: https://quay.io/repository/kairos/core-opensuse-tumbleweed-arm-rpi-img
-[c-ubuntu]: https://quay.io/repository/kairos/core-ubuntu
-[c-ubuntu-arm-rpi]: https://quay.io/repository/kairos/core-ubuntu-arm-rpi
-[c-ubuntu-arm-rpi-img]: https://quay.io/repository/kairos/core-ubuntu-arm-rpi-img
-[c-ubuntu-22-lts]: https://quay.io/repository/kairos/core-ubuntu-22-lts
-[c-ubuntu-22-lts-arm-rpi]: ]https://quay.io/repository/kairos/core-ubuntu-22-lts-arm-rpi
-[c-ubuntu-22-lts-arm-rpi-img]: https://quay.io/repository/kairos/core-ubuntu-22-lts-arm-rpi-img
-[c-ubuntu-20-lts]: https://quay.io/repository/kairos/core-ubuntu-20-lts
-[c-ubuntu-20-lts-arm-rpi]: https://quay.io/repository/kairos/core-ubuntu-20-lts-arm-rpi
-[c-ubuntu-20-lts-arm-rpi-img]: https://quay.io/repository/kairos/core-ubuntu-20-lts-arm-rpi-img
-[c-rockylinux]: https://quay.io/repository/kairos/core-rockylinux
-[c-almalinux]: https://quay.io/repository/kairos/core-almalinux
-
-[k-alpine-opensuse-leap]: https://quay.io/repository/kairos/kairos-alpine-opensuse-leap
-[k-alpine-ubuntu]: https://quay.io/repository/kairos/kairos-alpine-ubuntu
-[k-alpine-arm-rpi]: https://quay.io/repository/kairos/kairos-alpine-arm-rpi
-[k-alpine-arm-rpi-img]: https://quay.io/repository/kairos/kairos-alpine-arm-rpi-img
-[k-debian]: https://quay.io/repository/kairos/kairos-debian
-[k-fedora]: https://quay.io/repository/kairos/kairos-fedora
-[k-opensuse-leap]: https://quay.io/repository/kairos/kairos-opensuse-leap
-[k-opensuse-leap-arm-rpi]: https://quay.io/repository/kairos/kairos-opensuse-leap-arm-rpi
-[k-opensuse-leap-arm-rpi-img]: https://quay.io/repository/kairos/kairos-opensuse-leap-arm-rpi-img
-[k-opensuse-tumbleweed]: https://quay.io/repository/kairos/kairos-opensuse-tumbleweed
-[k-opensuse-tumbleweed-arm-rpi]: https://quay.io/repository/kairos/kairos-opensuse-tumbleweed-arm-rpi
-[k-opensuse-tumbleweed-arm-rpi-img]: https://quay.io/repository/kairos/kairos-opensuse-tumbleweed-arm-rpi-img
-[k-ubuntu]: https://quay.io/repository/kairos/kairos-ubuntu
-[k-ubuntu-22-lts]: https://quay.io/repository/kairos/kairos-ubuntu-22-lts
-[k-ubuntu-20-lts]: https://quay.io/repository/kairos/kairos-ubuntu-20-lts
-[k-ubuntu-arm-rpi]: https://quay.io/repository/kairos/kairos-ubuntu-arm-rpi
-[k-ubuntu-arm-rpi-img]: https://quay.io/repository/kairos/kairos-ubuntu-arm-rpi-img
-[k-ubuntu-22-lts-arm-rpi]: https://quay.io/repository/kairos/kairos-ubuntu-22-lts-arm-rpi
-[k-ubuntu-22-lts-arm-rpi-img]: https://quay.io/repository/kairos/kairos-ubuntu-22-lts-arm-rpi-img
-[k-ubuntu-20-lts-arm-rpi]: https://quay.io/repository/kairos/kairos-ubuntu-20-lts-arm-rpi
-[k-ubuntu-20-lts-arm-rpi-img]: https://quay.io/repository/kairos/kairos-ubuntu-20-lts-arm-rpi-img
-[k-rockylinux]: https://quay.io/repository/kairos/kairos-rockylinux
-
-
-{{% alert title="Note" color="info" %}}
-
-** The `ubuntu` flavor tracks the latest available Ubuntu release (at the time of writing 22.10). The LTS flavors, on the other hand, track the latest LTS available on DockerHub. For example, ubuntu-22-lts uses 22.04 as the base image.
-{{% /alert %}}
 
 {{% alert title="Note" color="info" %}}
 The pipelines do not publish `img` artifacts for the arm architecture because the files are too large for GitHub Actions (they exceed the artifact size limit). These artifacts can be extracted from the published docker images using the following command:
@@ -155,7 +113,7 @@ Images signatures are pushed regularly for tagged releases. To verify images wit
 
 ```bash
 cosign verify-attestation \
-        --type spdx quay.io/kairos/core-alpine-opensuse-leap:{{< kairosVersion >}} \
+        --type spdx {{<oci variant="core">}} \
         --certificate-identity "https://github.com/kairos-io/kairos/.github/workflows/release.yaml@refs/tags/{{< kairosVersion >}}" \
         --certificate-oidc-issuer "https://token.actions.githubusercontent.com"
 ```

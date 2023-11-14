@@ -35,8 +35,7 @@ metadata:
 spec:
   concurrency: 1
   # This is the version (tag) of the image to upgrade to.
-  # The version is refered to the kairos version plus the k3s version.
-  version: "{{<kairosVersion>}}-{{<k3sVersion>}}"
+  version: "{{< ociTag variant=\"standard\" >}}"
   nodeSelector:
     matchExpressions:
       - {key: kubernetes.io/hostname, operator: Exists}
@@ -48,13 +47,13 @@ spec:
   upgrade:
     # Here goes the image which is tied to the flavor being used.
     # You can also specify your custom image stored in a public registry.
-    image: quay.io/kairos/kairos-opensuse-leap
+    image: {{< registryURL >}}/{{< defaultFlavor >}}
     command:
     - "/usr/sbin/suc-upgrade"
 EOF
 ```
 
-To check all the available versions, see the [images](https://quay.io/repository/kairos/kairos-opensuse-leap?tab=tags) available on the container registry, corresponding to the flavor/version selected.
+To check all the available versions, see the [images](https://quay.io/repository/kairos/opensuse?tab=tags) available on the container registry, corresponding to the flavor/version selected.
 
 {{% alert title="Note" %}}
 
@@ -101,7 +100,7 @@ spec:
               - Pod
       verifyImages:
       - imageReferences:
-        - "quay.io/kairos/kairos-*"
+        - "quay.io/kairos/opensuse*"
         attestors:
         - entries:
           # See: https://kyverno.io/docs/writing-policies/verify-images/#keyless-signing-and-verification
@@ -166,8 +165,7 @@ metadata:
 spec:
   concurrency: 1
   # This is the version (tag) of the image.
-  # The version is refered to the kairos version plus the k3s version.
-  version: "{{< kairosVersion >}}-{{< k3sVersion >}}"
+  version: "{{<ociTag variant="standard">}}"
   nodeSelector:
     matchExpressions:
       - { key: kubernetes.io/hostname, operator: Exists }
@@ -179,7 +177,7 @@ spec:
   upgrade:
     # Here goes the image which is tied to the flavor being used.
     # Currently can pick between opensuse and alpine
-    image: quay.io/kairos/kairos-opensuse-leap
+    image: {{< registryURL >}}/{{< defaultFlavor >}}
     command:
       - "/bin/bash"
       - "-c"
@@ -217,8 +215,7 @@ metadata:
 spec:
   concurrency: 1
   # This is the version (tag) of the image.
-  # The version is refered to the kairos version plus the k3s version.
-  version: "{{<kairosVersion>}}-{{<k3sVersion>}}"
+  version: "{{<ociTag variant="standard">}}"
   nodeSelector:
     matchExpressions:
       - { key: kubernetes.io/hostname, operator: Exists }
@@ -230,7 +227,7 @@ spec:
   upgrade:
     # Here goes the image which is tied to the flavor being used.
     # Currently can pick between opensuse and alpine
-    image: quay.io/kairos/kairos-opensuse-leap
+    image: {{< registryURL >}}/{{< defaultFlavor >}}
     command:
       - "/bin/bash"
       - "-c"
