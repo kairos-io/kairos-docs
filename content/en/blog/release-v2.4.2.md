@@ -14,9 +14,9 @@ author: Dimitris Karakasilis ([LinkedIn](https://www.linkedin.com/in/jimmykarily
 </h1>
 
 Did you ever look at a release and couldn't decide if it should be a patch, a minor or a major version bump? It has happened to everybody (if not, let me know).
-This Kairos release was a similar case. We didn't introduce any breaking changes and it was just bug fixes, which makes it a patch release.  At least that's the story for user facing changes. Because, behind the scenes, we made some heavy changes on the way we produce the Kairos artifacts and how we name them.
+This Kairos release was a similar case. We didn't introduce any breaking changes and it was just bug fixes, which makes it a patch release.  At least that's the story for user facing changes. Because, behind the scenes, we made some heavy changes, in the way we produce the Kairos artifacts and how we name them.
 
-The detailed list of changes can be found in the [release notes](https://github.com/kairos-io/kairos/releases/tag/v2.4.2) but the important things to notice are listed below.
+The detailed list of changes can be found in the [release notes](https://github.com/kairos-io/kairos/releases/tag/v2.4.2) but the most important things to notice are listed below.
 
 ## New artifact names
 
@@ -46,12 +46,11 @@ And the same information is there in the bootable artifact name in the same orde
 
 ## Less Earthly, more Dockerfiles
 
-Much of the logic from [Earthly](https://github.com/kairos-io/kairos/blob/a658a3fa5f294b14377631dedfa0031d3551f2b2/Earthfile#L317) has been moved to [the Dockerfiles](https://github.com/kairos-io/kairos/tree/master/imageshttps://github.com/kairos-io/kairos/tree/master/images). And while this seems like an internal technical detail, it does take us close to a simpler build process which everyone can replicate in their own CI to build custom Kairos images. The input to the dockerfiles is the information you see in the artifact names (see above) and comes directly from the [flavors.json file](https://github.com/kairos-io/kairos/blob/a658a3fa5f294b14377631dedfa0031d3551f2b2/.github/flavors.json#L1). If all this sounds complicated, just keep this:
+Much of the logic from [Earthly](https://github.com/kairos-io/kairos/blob/a658a3fa5f294b14377631dedfa0031d3551f2b2/Earthfile#L317) has been moved to [the Dockerfiles](https://github.com/kairos-io/kairos/tree/master/imageshttps://github.com/kairos-io/kairos/tree/master/images). And while this seems like an internal technical detail, it take us closer to a simpler build process, which everyone can replicate in their own CI to build custom Kairos images. The input to the dockerfiles is the information you see in the artifact names (see above) and comes directly from the [flavors.json file](https://github.com/kairos-io/kairos/blob/a658a3fa5f294b14377631dedfa0031d3551f2b2/.github/flavors.json#L1). If all this sounds complicated, just keep this:
 
 In one of the next releases, is will be possible to build a full Kairos image (standard or core) using only one of the dockerfiles (no Earthly) and a block of information like:
 
 ```
-"family": "opensuse",
 "flavor": "opensuse",
 "flavorRelease": "leap-15.5",
 "variant": "standard",
@@ -60,14 +59,13 @@ In one of the next releases, is will be possible to build a full Kairos image (s
 "arch": "amd64",
 ```
 
-This allows one to use a derivative of `opensuse/leap:15.5`, with some modifications on top (e.g. additional packages installed) simply by changing the `baseImage` to the custom one.
-It also justifies the next item, please read on.
+This allows one to change the base image above, to a derivative of `opensuse/leap:15.5` (e.g. on with some additional packages installed). It also justifies the next item, please read on.
 
 ## Alma linux removal from artifacts
 
 We identified that Rocky linux and Alma linux were completely similar in regards to building steps. Given the resource and time constraints we have, we decided to no longer build and release Alma linux artifacts.
 The dockerfile for the [rhel family](https://github.com/kairos-io/kairos/blob/a658a3fa5f294b14377631dedfa0031d3551f2b2/images/Dockerfile.rhel#L1) supports the `almalinux` flavor.
-Building an Alma linux Kairos image from the kairos repository root, is as simple as:
+Building an Alma linux Kairos image from the [Kairos repository](https://github.com/kairos-io/kairos/) root, is as simple as:
 
 ```
 earthly --platform=linux/amd64 +base-image \
@@ -101,8 +99,8 @@ The switch to the Alpine kernel and initramfs system brings several benefits:
 ## Conclusion
 
 The transition to a full Alpine kernel and initramfs system is a significant step forward for our Alpine flavor of Kairos. It simplifies our architecture, improves security, and increases efficiency.
-The changes in the build process make Kairos more friendly to customizations. The naming changes, put some order to the numerous artifacts we generate with every release, making it easier to choose the right one.
-Finally the various bug fixes and smaller improvements should make it a more stable release for everyone.
+The changes in the build process make Kairos more friendly to customizations. The naming changes, make it easier to navigate among the numerous artifacts we generate with every release. Finally the various bug fixes and smaller improvements should make it a more stable release for everyone.
+
 We're excited about these changes and look forward to seeing how they benefit our users.
 
 
