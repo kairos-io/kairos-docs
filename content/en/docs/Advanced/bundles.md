@@ -67,6 +67,12 @@ metallb:
   address_pool: 192.168.1.10-192.168.1.20
 ```
 
+{{% alert title="Warning" %}}
+When a bundle is installed after Kairos installation (see above), changing the
+bundle's configuration block after Kairos installation is complete,
+will not have any effect.
+{{% /alert %}}
+
 ## Bundle types
 
 Bundles can carry also binaries that can be overlayed in the rootfs, either while [building images]({{< relref "build" >}}) or with [Live layering]({{< relref "livelayering" >}}).
