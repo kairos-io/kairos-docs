@@ -507,6 +507,10 @@ k3s-agent:
 {{% /tab %}}
 {{< /tabpane >}}
 
+{{% alert title="Warning" %}}
+The K3s args are only applied when the K3s service is created, which is during installation. Changing the `args` key after installation won't have any effect.
+{{% /alert %}}
+
 For more examples of how to configure K3s manually, see the [examples]({{< relref "../examples" >}}) section or [HA]({{< relref "../examples/ha" >}}).
 
 ### Grub options
