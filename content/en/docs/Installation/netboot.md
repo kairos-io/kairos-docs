@@ -36,9 +36,9 @@ E.g.:
 ```bash
 #!ipxe
 set url https://github.com/kairos-io/kairos/releases/download/{{< kairosVersion >}}
-set kernel kairos-alpine-opensuse-leap-{{< kairosVersion >}}-kernel
-set initrd kairos-alpine-opensuse-leap-{{< kairosVersion >}}-initrd
-set rootfs kairos-alpine-opensuse-leap-{{< kairosVersion >}}.squashfs
+set kernel {{< image flavor="alpine" flavorRelease="3.18" >}}-kernel
+set initrd {{< image flavor="alpine" flavorRelease="3.18" >}}-initrd
+set rootfs {{< image flavor="alpine" flavorRelease="3.18" >}}.squashfs
 
 # Configure interface
 ifconf
@@ -90,10 +90,9 @@ Assuming the current directory has the `kernel`, `initrd` and `squashfs` artifac
 ```bash
 #!/bin/bash
 
-VERSION="{{< kairosVersion >}}"
-wget "https://github.com/kairos-io/kairos/releases/download/${VERSION}/kairos-core-opensuse-leap-amd64-generic-${VERSION}-kernel"
-wget "https://github.com/kairos-io/kairos/releases/download/${VERSION}/kairos-core-opensuse-leap-amd64-generic-${VERSION}-initrd"
-wget "https://github.com/kairos-io/kairos/releases/download/${VERSION}/kairos-core-opensuse-leap-amd64-generic-${VERSION}.squashfs"
+wget "https://github.com/kairos-io/kairos/releases/download/{{< kairosVersion >}}/{{< image >}}-kernel"
+wget "https://github.com/kairos-io/kairos/releases/download/{{< kairosVersion >}}/{{< image >}}-initrd"
+wget "https://github.com/kairos-io/kairos/releases/download/{{< kairosVersion >}}/{{< image >}}.squashfs"
 
 cat << EOF > config.yaml
 #cloud-config

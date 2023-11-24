@@ -67,7 +67,7 @@ To validate the whole chain you would need:
 3. ISO, sha256, certificate and signature files for the release/flavor that you want to verify. All the artifacts are available on the [kairos release page](https://github.com/kairos-io/kairos/releases)
 
 
-In this example we will use the `{{< kairosVersion >}}` version and `opensuse-leap` flavor
+In this example we will use the `{{< kairosVersion >}}` version and `{{< defaultFlavor >}}` flavor and `{{< defaultFlavorRelease >}}` flavor release.
 
 First we check that we have all needed files:
 
