@@ -46,7 +46,8 @@ Building ISOs still works as long as you mount the container `/tmp` disk to a lo
 docker run --rm -ti -v "$PWD"/config.yaml:/config.yaml -v ${PWD}:/tmp quay.io/kairos/auroraboot \ 
                     --set "artifact_version={{< kairosVersion >}}" \
                     --set "release_version={{< kairosVersion >}}" \
-                    --set "flavor=opensuse-leap" \
+                    --set "flavor={{< defaultFlavor >}}" \
+                    --set "flavor_release={{< defaultFlavorRelease >}}" \
                     --set "repository=kairos-io/kairos" \
                     --set "disable_http_server=true" \
                     --set "disable_netboot=true" \
@@ -107,7 +108,7 @@ To use a container image, you can use [the Kairos released images]({{< relref ".
 
 Now we can run AuroraBoot with the version we selected, either from GitHub releases or directly from a container image.
 
-In the example below we selected `{{< kairosVersion >}}-{{< k3sVersion >}}`, `opensuse-leap` flavor, so we would run either one of the following:
+In the example below we selected `{{< kairosVersion >}}-{{< k3sVersion >}}`, `{{< defaultFlavor >}}` flavor, so we would run either one of the following:
 
 {{< tabpane text=true  >}}
 {{% tab header="Container image" %}}
@@ -143,7 +144,8 @@ By indicating a `artifact_version`, a `release_version`, a `flavor` and a `repos
 docker run --rm -ti --net host quay.io/kairos/auroraboot \
                     --set "artifact_version={{< kairosVersion >}}-{{< k3sVersion >}}" \
                     --set "release_version={{< kairosVersion >}}" \
-                    --set "flavor=opensuse-leap" \
+                    --set "flavor={{< defaultFlavor >}}" \
+                    --set "flavor_release={{< defaultFlavorRelease >}}" \
                     --set "repository=kairos-io/provider-kairos"
 ```
 {{% /tab %}}
@@ -257,7 +259,8 @@ Build the ISO:
 docker run -v "$PWD"/build:/tmp/auroraboot -v /var/run/docker.sock:/var/run/docker.sock --rm -ti quay.io/kairos/auroraboot \
                     --set "artifact_version={{< kairosVersion >}}-{{< k3sVersion >}}" \
                     --set "release_version={{< kairosVersion >}}" \
-                    --set "flavor=opensuse-leap" \
+                    --set "flavor={{< defaultFlavor >}}" \
+                    --set "flavor_release={{< defaultFlavorRelease >}}" \
                     --set "repository=kairos-io/provider-kairos" \
                     --set "disable_http_server=true" \
                     --set "disable_netboot=true" \
@@ -570,9 +573,10 @@ docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos
 
 ```bash
 docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos/auroraboot \
-        --set "artifact_version={{< kairosVersion >}}-k3sv1.21.14+k3s1" \
+        --set "artifact_version={{< kairosVersion >}}-{{< k3sVersion >}}" \
         --set "release_version={{< kairosVersion >}}" \
-        --set "flavor=opensuse-leap" \
+        --set "flavor={{< defaultFlavor >}}" \
+        --set "flavor_release={{< defaultFlavorRelease >}}" \
         --set "repository=kairos-io/provider-kairos" \
         --cloud-config /config.yaml
 ```
