@@ -90,6 +90,13 @@ the installation only happens once. Changing the bundle's configuration block
 after Kairos installation is complete, will not have any effect.
 {{% /alert %}}
 
+If you want the installation to stop if a bundle installation fails, you can
+add set the following option to `true` in your Kairos config:
+
+```
+fail_on_bundles_errors: true
+```
+
 ## Bundle types
 
 Bundles can carry also binaries that can be overlayed in the rootfs, either while [building images]({{< relref "build" >}}) or with [Live layering]({{< relref "livelayering" >}}).
