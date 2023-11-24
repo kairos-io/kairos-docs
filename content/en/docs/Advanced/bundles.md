@@ -15,7 +15,22 @@ Bundles are container images containing only files (and not full OS) that can be
 
 To use a bundle in your Kairos configuration, you will need to specify the type of bundle and the target image in your cloud-config file.
 
-To apply a bundle before Kubernetes starts, you can include it in your config like this:
+There are two points in time when the bundles may be installed:
+
+- Right after installation, before booting to the installed system.
+- On first boot, after booting to the installed system. If you are booting a "standard" image (the one with Kubernetes), the bundle is installed before
+  Kubernetes starts.
+
+The first type of installation can be used to create [systemd-sysext extensions](https://www.freedesktop.org/software/systemd/man/devel/systemd-sysext.html).
+You can read more [here](/docs/advanced/livelayering/).
+
+The second type of installation can be used to make changes to the installed system.
+E.g. create kubernetes resource files in `/var/lib/rancher/k3s/server/manifests/`
+like [longhorn community bundle does](https://github.com/kairos-io/community-bundles/blob/4673a2d7002a54e42f2780c30e7185bbe976eb7e/longhorn/run.sh#L5C38-L5C76).
+
+
+To apply a bundle on the first boot (and before Kubernetes starts),
+you can include it in your config like this:
 
 ```yaml
 #cloud-config
@@ -27,7 +42,8 @@ bundles:
 
 Replace `<image>` with the URL or path to the bundle image. The prefix (e.g. `run://`) indicates the type of bundle being used.
 
-To install a bundle after installation instead (for those bundles that explicitly supports that), use the following:
+To install a bundle after installation instead (for bundles that are created to
+be used like that), use the following:
 
 ```yaml
 #cloud-config
@@ -37,9 +53,10 @@ install:
    - run://<image>
 ```
 
-One of the benefits of using bundles is that they can also extend the cloud-config keywords available during installation. This means that by adding bundles to your configuration file, you can add new blocks of configuration options and customize your system even further.
+Bundles have access to the Kairos cloud-config during their installation.
+This allows the user to add new blocks of configuration to configure the bundles.
 
-A full config using a bundle from [community-bundles](https://github.com/kairos-io/community-bundles) that configures `metalLB` might look like this:
+For example, this is how `metalLB` [community bundle](https://github.com/kairos-io/community-bundles) can be configured:
 
 ```yaml
 #cloud-config
@@ -65,6 +82,26 @@ bundles:
 metallb:
   version: 0.13.7
   address_pool: 192.168.1.10-192.168.1.20
+```
+
+{{% alert title="Warning" %}}
+For both types of bundle installation (after installation, on first boot),
+the installation only happens once. Changing the bundle's configuration block
+after Kairos installation is complete, will not have any effect.
+{{% /alert %}}
+
+If you want the installation to stop if a bundle installation fails, you can
+add set the following option to `true` in your Kairos config:
+
+```
+fail_on_bundles_errors: true
+```
+
+If you want to install a bundle after installation has finished, you can use
+the `kairos-agent` to perform a manual installation. E.g.:
+
+```
+kairos-agent install-bundle run://quay.io/kairos/community-bundles:cert-manager_latest
 ```
 
 ## Bundle types
