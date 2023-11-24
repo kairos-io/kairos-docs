@@ -97,6 +97,13 @@ add set the following option to `true` in your Kairos config:
 fail_on_bundles_errors: true
 ```
 
+If you want to install a bundle after installation has finished, you can use
+the `kairos-agent` to perform a manual installation. E.g.:
+
+```
+kairos-agent install-bundle run://quay.io/kairos/community-bundles:cert-manager_latest
+```
+
 ## Bundle types
 
 Bundles can carry also binaries that can be overlayed in the rootfs, either while [building images]({{< relref "build" >}}) or with [Live layering]({{< relref "livelayering" >}}).
