@@ -81,28 +81,28 @@ spec:
   bundles:
   # Bundles available at: https://packages.kairos.io/Kairos/
   - quay.io/kairos/packages:helm-utils-3.10.1
-  cloudConfigRef: |
+  cloudConfigRef:
     name: cloud-config
     key: userdata
   exporters:
     - template:
-      spec:
-        restartPolicy: Never
-        containers:
-          - name: upload
-            image: docker.spectro.jbpe.io/kairos/osbuilder-tools:v0.7.0
-            command:
-              - bash
-            args:
-              - -c
-              - |
-                for f in $(ls /artifacts)
-                do
-                  curl -T /artifacts/$f http://osartifactbuilder-operator-osbuilder-nginx/upload/$f
-                done
-            volumeMounts:
-              - name: artifacts
-                mountPath: /artifacts
+        spec:
+            restartPolicy: Never
+            containers:
+            - name: upload
+                image: quay.io/curl/curl
+                command:
+                - /bin/sh
+                args:
+                - -c
+                - |
+                    for f in $(ls /artifacts)
+                    do
+                    curl -T /artifacts/$f http://osartifactbuilder-operator-osbuilder-nginx/upload/$f
+                    done
+                volumeMounts:
+                - name: artifacts
+                    mountPath: /artifacts
 ```
 
 Apply the manifest with `kubectl apply`.
