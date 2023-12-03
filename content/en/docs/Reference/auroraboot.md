@@ -540,7 +540,7 @@ For example, to override the GRUB config file:
 ```bash
 mkdir -p data/boot/grub2
 # You can replace this step with your own grub config. This GRUB configuration is the boot menu of the ISO
-wget https://github.com/kairos-io/packages/blob/main/packages/livecd/grub2/config/grub_live_bios.cfg -O data/boot/grub2/grub.cfg
+wget https://raw.githubusercontent.com/kairos-io/packages/main/packages/livecd/grub2/config/grub_live_bios.cfg -O data/boot/grub2/grub.cfg
 
 docker run -v "$PWD"/config.yaml:/config.yaml \
              -v "$PWD"/data:/tmp/data \
