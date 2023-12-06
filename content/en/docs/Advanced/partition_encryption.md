@@ -159,7 +159,8 @@ export PORT=$(kubectl get svc kairos-challenger-escrow-service -o json | jq '.sp
 
 ### Register a node
 
-In order to register a node on the KMS, the TPM hash of the node needs to be retrieved first.
+In order to register a node on the KMS, the TPM hash of the node needs to be retrieved first. The TPM hash is a SHA256 sum of the EK public key, which is part of the EK key pair that is present on the TPM from the manufacturer. The EK private key cannot be changed and is unique to the TPM and therefore, the EK public key can be used to uniquely challenge the device. During the challenge, the node will send its public key to the challenger, which will generate a SHA256 checksum and compare it to a local database of checksums. In order to build this database, the checksum needs to be registered with the challenger.
+
 You can get a node TPM hash by running `/system/discovery/kcrypt-discovery-challenger` as root from the LiveCD:
   
 ```
@@ -168,8 +169,7 @@ kairos@localhost:~> echo $ID
 7441c78f1976fb23e6a5c68f0be35be8375b135dcb36fb03cecc60f39c7660bd
 ```
 
-This is the hash you should use in the definition of the `SealedVolume` in the
-examples below.
+This is the TPM hash you should use in the definition of the `SealedVolume` in the examples below.
 
 ### Scenario: Automatically generated keys
 
