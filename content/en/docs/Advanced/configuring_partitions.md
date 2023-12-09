@@ -35,7 +35,7 @@ install:
       fs: ext4
 ```
 
-
+The partitions that can be configured are: `oem`, `recovery`, `state` and `persistent`.
 
 And the following config will leave the default partitions as is, but create 2 new extra partitions with the given sizes, filesystems and labels:
 
