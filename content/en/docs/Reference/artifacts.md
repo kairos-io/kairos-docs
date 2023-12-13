@@ -116,17 +116,21 @@ quay.io/kairos/<flavor>:<flavor_release>-<variant>-<arch>-<device>-<version>-img
 
 ## Framework images
 
-There are 2 framework flavors currently. The `generic` and the `fips` (Defined [here](https://github.com/kairos-io/kairos/blob/5ec84616e898b8079bd92a7424b4c8bf10c5d816/framework-profile.yaml#L9)).
+There are 2 framework flavors currently, `generic` and `fips` (Defined [here](https://github.com/kairos-io/kairos/blob/5ec84616e898b8079bd92a7424b4c8bf10c5d816/framework-profile.yaml#L9)).
 All different framework flavors are stored in the same image, so the details are included in the tag. The name is simplified since not all attributes apply for framework images.
 
 ```
-quay.io/kairos/framework:<version>_<flavor>
+quay.io/kairos/framework:<version>[-fips]
 ```
 
 ### Examples
 
-- `quay.io/kairos/framework:{{< kairosVersion >}}_generic`
-- `quay.io/kairos/framework:master_fips`
+- `quay.io/kairos/framework:{{< defaultFrameworkRelease >}}`
+- `quay.io/kairos/framework:{{< defaultFrameworkRelease >}}-fips`
+- `quay.io/kairos/framework:main`
+- `quay.io/kairos/framework:main-fips`
+- `quay.io/kairos/framework:latest`
+- `quay.io/kairos/framework:latest-fips`
 
 ## Binaries
 
