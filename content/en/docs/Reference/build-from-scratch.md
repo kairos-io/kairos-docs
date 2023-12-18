@@ -108,7 +108,7 @@ RUN mkdir -p /run/lock
 RUN touch /usr/libexec/.keep
 
 # Copy the Kairos framework files. We use master builds here for fedora. See https://quay.io/repository/kairos/framework?tab=tags for a list
-COPY --from=quay.io/kairos/framework:master_generic / /
+COPY --from=quay.io/kairos/framework:{{< defaultFrameworkRelease >}} / /
 
 # Set the Kairos arguments in os-release file to identify your Kairos image
 FROM quay.io/kairos/osbuilder-tools:latest as osbuilder
@@ -235,7 +235,7 @@ As described in the Dockerfile example above, while building a Kairos image from
 [The kairos pipelines already build one](https://github.com/kairos-io/kairos/blob/5ec84616e898b8079bd92a7424b4c8bf10c5d816/framework-profile.yaml#L13) Ubuntu 20 tls:
 
 ```
-quay.io/kairos/framework:master_fips
+quay.io/kairos/framework:{{< defaultFrameworkRelease >}}-fips
 ```
 
 The binaries in this framework image are built [with golang 1.19.10](https://github.com/kairos-io/packages/blob/082ef206ce523bb3e1d1d9f0bd9953b2550ab2b3/packages/toolchain-go/collection.yaml#L36)

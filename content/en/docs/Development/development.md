@@ -49,7 +49,7 @@ Note earthly targets are prefixed with `+` while variables are passed as flags, 
 
 Every source image used as a flavor is inside the `images` folder in the top-level directory. Any Dockerfile have the extension corresponding to the family which can be used as an argument for earthly builds (you will find a `Dockerfile.rhel` that will be used by our command above).
 
-To add a flavor is enough to create a Dockerfile corresponding to the flavor and check if any specific setting is required for it in the `+framework` target.
+To add a flavor is enough to create a Dockerfile corresponding to the flavor and check if any specific setting is required for it on its build target.
 
 Generally to add a flavor the image needs to have installed:
 

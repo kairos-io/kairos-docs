@@ -70,7 +70,7 @@ Kairos releases contains also the __framework__ assets that can be used to [buil
 
 Framework images can be found in quay at: https://quay.io/repository/kairos/framework.
 
-Each tag follow the convention: `<version>_<flavor>`.
+Each tag follow the convention: `<version>[-fips]`.
 
 ## Versioning policy
 
