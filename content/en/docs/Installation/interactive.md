@@ -9,7 +9,7 @@ description: >
 
 The interactive installation can be accessed from the LiveCD ISO and guides the user into the installation process.
 
-It generates a configuration file, which is later accessible after installation in the `/oem/99_custom.yaml` file.
+It generates a configuration file, which is later accessible after installation in the `/oem/90_custom.yaml` file.
 
 ## From the boot menu
 
