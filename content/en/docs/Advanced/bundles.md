@@ -116,10 +116,20 @@ Kairos supports three types of bundles:
 
 - **Package**: This type is a [luet](https://luet.io) package that will be installed in the system. It requires you to specify a `luet` repository in order to work. Luet packages are a powerful way to manage dependencies and install software on your system (prefixed with `luet:`).
 
+You can also specify `local_file: true` in the bundles configuration. In that case the bundle's URL is translated as an absolute path to an image tarball on the filesystem.
+This feature can be used in airgap situations, where you can pre-add bundles to the image before deployment.
 
-{{% alert title="Note" %}}
-In the future, Kairos will also support a local type for use in airgap situations, where you can pre-add bundles to the image before deployment.
-{{% /alert %}}
+For example:
+
+```yaml
+install:
+  bundles:
+  - targets:
+    - container:///home/kairos/mybundle.tar
+    local_file: true
+```
+
+The format of the bundle tarball is the one you get when you `docker save myorg/myimage` or `skopeo copy docker-daemon:myorg/myimage docker-archive:myimage.tar`
 
 It's important to note that bundles do not have any special meaning in terms of immutability. They install files over paths that are mutable in the system, as they are simply overlaid during the boot process. This means that you can use bundles to make changes to your system at any time, even after it has been deployed.
 
