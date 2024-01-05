@@ -5,8 +5,7 @@ import {
     HOT_OFF_PRESS_BLADE,
     MAKES_US_DIFF_BLADE,
     JOIN_US_BLADE,
-    BASICS_BLADE,
-    FOOTER_TREE
+    BASICS_BLADE
 } from "/js/trees.js"
 
 const BLADES = [
@@ -33,10 +32,6 @@ const BLADES = [
     {
         id:"basics-blade",
         tree: BASICS_BLADE,
-    },
-    {
-        id: "footer-content",
-        tree: FOOTER_TREE,
     }
 ]
 
