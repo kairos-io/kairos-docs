@@ -25,26 +25,18 @@ v0.57.0-alpha1
 
 ## Upgrade
 
-To upgrade to the latest available version, run from a shell of a cluster node the following:
-
-```bash
-sudo kairos-agent upgrade
-```
-
-To specify a version, run:
-
-```bash
-sudo kairos-agent upgrade <version>
-```
-
-Use `--force` to force upgrading to avoid checking versions.
-
-To specify a specific image, use the `--source` flag:
+To specify an image, use the `--source` flag:
 
 ```bash
 sudo kairos-agent upgrade --source <type>:<address>
 ```
 Where type can be `dir` or `oci` and address is the path to the dir in the `dir` case or the <repo/image:tag> combination in the <oci> case.
+
+For example, if you wanted to upgrade to the latest available stable release you could run the following command:
+
+```bash
+sudo kairos-agent upgrade --source oci:{{<oci variant="standard">}}
+```
 
 {{% alert title="Note" %}}
 Looking to upgrade from a private registry OCI image? Check the [Private registry auth]({{< relref "../Advanced/private_registry_auth" >}}) page.
