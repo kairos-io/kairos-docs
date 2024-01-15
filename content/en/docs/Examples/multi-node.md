@@ -12,7 +12,7 @@ In the example below we will use a bare metal host to provision a Kairos cluster
 
 Use the standard images which contain `k3s`.
 
-Follow the [Installation]({{< relref "../installation" >}}) documentation, and use the following cloud config file with Kairos for the master and worker:
+Follow the [Installation]({{< relref "../installation" >}}) documentation, using the following cloud config for the master and worker respectively:
 
 {{< tabpane text=true right=true  >}}
 {{% tab header="server" %}}
@@ -49,16 +49,23 @@ users:
 
 k3s-agent:
   enabled: true
+  args:
+  - --with-node-id
   env:
-   K3S_TOKEN: ...
-   K3S_URL: ...
+   K3S_TOKEN: <MASTER_SERVER_TOKEN>
+   K3S_URL: https://<MASTER_SERVER_IP>:6443
 ```
 {{% /tab %}}
 {{< /tabpane >}}
 
-Deploy first the server; the value to use for `K3S_TOKEN` in the worker is stored at /var/lib/rancher/k3s/server/node-token on your server node.
+After having deployed the master node, you can extract the values for the following variables:
 
-Notably:
+- `K3S_TOKEN` from /var/lib/rancher/k3s/server/node-token
+- `K3S_URL` same IP that you use to log into your master node
 
-- we use the `k3s` block to disable `traefik` and `servicelb` (the default `k3s` load balancer)
-- You can add additional configuration as args to k3s here, see [k3s](https://docs.k3s.io/reference/server-config#listeners) documentation
+Since this is a fully manual installation, you are in charge of setting all arguments that your setup will require, by use of the `args` attribute for both the master and server nodes. In this particular case:
+
+- `--disable=traefik,servicelb` will, as you proably guessed it, disable `traefik` and `servicelb` (the default `k3s` load balancer).
+- `--with-node-id` will configure the agent to use the node ID to communicate with the master node
+
+To find out more about args configuration from k3s, follow their [server](https://docs.k3s.io/cli/server) and [agent](https://docs.k3s.io/cli/agent) documentation.
