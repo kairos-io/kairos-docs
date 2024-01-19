@@ -3,8 +3,8 @@ const DOWNLOAD_CARDS_TREE = [
     {
         integration:"ubuntu",
         links: {
-            "X86":`https://github.com/kairos-io/kairos/releases/download/${params.kairosVersion}/kairos-ubuntu-23.04-standard-amd64-generic-${params.kairosVersion}-k3s${params.k3sVersion}.iso`,
-            "ARM":`docker pull quay.io/kairos/ubuntu:23.04-standard-arm64-rpi4-${params.kairosVersion}-k3s${params.k3sVersion.replace("+", "-")}-img`
+            "X86":`https://github.com/kairos-io/kairos/releases/download/${params.kairosVersion}/kairos-ubuntu-23.10-standard-amd64-generic-${params.kairosVersion}-k3s${params.k3sVersion}.iso`,
+            "ARM":`docker pull quay.io/kairos/ubuntu:23.10-standard-arm64-rpi4-${params.kairosVersion}-k3s${params.k3sVersion.replace("+", "-")}-img`
         }
     },
     {
@@ -17,8 +17,8 @@ const DOWNLOAD_CARDS_TREE = [
     {
         integration:"alpine",
         links: {
-            "X86":`https://github.com/kairos-io/kairos/releases/download/${params.kairosVersion}/kairos-alpine-3.18-standard-amd64-generic-${params.kairosVersion}-k3s${params.k3sVersion}.iso`,
-            "ARM":`docker pull quay.io/kairos/alpine:3.18-standard-arm64-rpi4-${params.kairosVersion}-k3s${params.k3sVersion.replace("+", "-")}-img`
+            "X86":`https://github.com/kairos-io/kairos/releases/download/${params.kairosVersion}/kairos-alpine-3.19-standard-amd64-generic-${params.kairosVersion}-k3s${params.k3sVersion}.iso`,
+            "ARM":`docker pull quay.io/kairos/alpine:3.19-standard-arm64-rpi4-${params.kairosVersion}-k3s${params.k3sVersion.replace("+", "-")}-img`
         }
     },
       ].map(({integration, links}) => ({
