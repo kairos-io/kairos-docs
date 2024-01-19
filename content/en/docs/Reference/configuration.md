@@ -508,7 +508,7 @@ k3s-agent:
 {{< /tabpane >}}
 
 {{% alert title="Warning" %}}
-The K3s args are only applied when the K3s service is created, which is during installation. Changing the `args` key after installation won't have any effect.
+The K3s args are only applied when the K3s service is created, which is during installation. Changing the `args` key after installation won't have any effect. If you want to force the generation of the service files, you will need to remove the sentinel file `/usr/local/.kairos/deployed`
 {{% /alert %}}
 
 For more examples of how to configure K3s manually, see the [examples]({{< relref "../examples" >}}) section or [HA]({{< relref "../examples/ha" >}}).
