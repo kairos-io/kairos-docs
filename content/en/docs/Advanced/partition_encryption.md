@@ -8,7 +8,7 @@ description: >
 
 {{% alert title="Note" color="warning" %}}
 
-This feature will be available in Kairos version `1.5.0` and in all future releases.
+This feature is available since Kairos version `1.5.0` and in all later releases.
 
 {{% /alert %}}
 
@@ -60,6 +60,8 @@ kcrypt:
     c_index: ""
     # (optional) Custom TPM device
     tpm_device: ""
+    # (optional) Instructs the client to lookup the KMS using mdns
+    mdns: false
 ```
 
 | Option | Description |
@@ -69,6 +71,7 @@ kcrypt:
 | `kcrypt.challenger.nv_index` | Custom Non-Volatile index to use to store encoded blobs |
 | `kcrypt.challenger.c_index` | Custom Index for the RSA Key pair |
 | `kcrypt.challenger.tpm_device` | Custom TPM device |
+| `kcrypt.challenger.mdns` | Discover KMS using mdns |
 
 ## Requirements
 
@@ -288,6 +291,27 @@ users:
   # Replace with your github user and un-comment the line below:
   # - github:mudler
 ```
+
+## Discoverable Key Management Server (KMS)
+
+By setting `kcrypt.challenger.mdns` to `true` in the config, Kairos will try to
+discover the KMS using the [mdns protocol](https://en.wikipedia.org/wiki/Multicast_DNS).
+For that to work, the `kcrypt.challenger.challenger_server` options should also
+be a domain ending in `.local`. If a server exists in the same network and responds to the request,
+Kairos will use the information from the response to connect to the server.
+
+The server running in the kubernetes cluster (See the [Components section](#components)) does not
+implement the mDNS protocol and thus it won't respond to the client's request. That is because
+the server is running inside Kubernetes, which has its own network and it won't receive
+the client's broadcast message.
+
+A server is needed that runs in the same network as the Kairos node and responds
+with the IP address and port where the KMS is reachable.
+There may be tools that can be configured for the job, but we also provide a little
+utility that does exactly that: https://github.com/kairos-io/simple-mdns-server/
+
+The process to deploy the KMS is similar to the [Online mode](#online-mode).
+An example on how to test this feature locally, can be found [in this document](https://github.com/kairos-io/kcrypt-challenger/blob/main/mdns-notes.md).
 
 ## Troubleshooting  
 - Invoking `/system/discovery/kcrypt-discovery-challenger` without arguments returns the TPM pubhash.
