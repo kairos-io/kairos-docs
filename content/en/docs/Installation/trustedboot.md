@@ -17,15 +17,14 @@ If you want to learn more on what Trusted Boot is and how it works, see the [Tru
 
 ## Enable Trusted Boot in Kairos
 
-Kairos supports Trusted boot by generating special installable medium, and we boot into what we call “UKI-mode”. [UKI](https://uapi-group.org/specifications/specs/unified_kernel_image/) is a specific file format tailored to achieve a tamper-proof system and encryption of user-data bound to the silicon by relying on HW capabilities. This feature is optional and works alongside how Kairos works.
-
-> UKI stands for “Unified Kernel Images”. UKI files are a single, fat binary that encompasses the OS and the needed bits in order to boot the full system with a single, verified file. You can read technical details here: Brave New Trusted Boot World.
+Kairos supports Trusted boot by generating specific installable medium. This feature is optional and works alongside how Kairos works.
 
 ## Requirements
 
 - Secure boot available in the system
 - The Hardware should have a TPM chip or fTPM enabled
 - The Hardware should be capable of booting large EFI files (>32MB)
+- Base image of the OS needs to have at least systemd 252 or newer ( for example ubuntu >=23.04 or fedora >=38 )
 
 ## Usage
 
@@ -89,10 +88,15 @@ git clone https://github.com/kairos-io/kairos
 # cd into the repo
 cd kairos
 
+IMAGE=quay.io/kairos/fedora:38-core-amd64-generic-v3.0.0-alpha1
+
 # build the iso with Earthly
-earthly +uki-iso --BASE_IMAGE=quay.io/kairos/fedora:38-core-amd64-generic-v3.0.0-alpha1
+earthly +uki-iso --BASE_IMAGE=$IMAGE
 
 # resulting ISO is in: build/kairos-fedora-38-core-amd64-generic-v3.0.0-alpha1.uki.iso
+
+# Multiple boot options
+earthly +uki-iso --BASE_IMAGE=$IMAGE --ENKI_FLAGS="--cmdline rd.blacklist=i915"
 ```
 
 {{% /alert %}}
@@ -117,7 +121,7 @@ Flow not entirely tested/validated yet
 {{% /alert %}}
 
 ```bash
-VERSION=2.5.0-1-g21e04f76.uki
+VERSION=v3.0.0-alpha2
 UKI=kairos-fedora-38-core-amd64-generic-v${VERSION}.efi
 UPGRADE_IMAGE=ttl.sh/kairos-uki-tests/upgrade-image
 EFI_FILE=/path/to/efi/file
@@ -153,7 +157,7 @@ DOCKER
 
 To test the ISO file locally QEMU can be used. In order to test Secure Boot components you need an ed2k firmware with secureboot in QEMU. If you don't have QEMU locally and/or you don't have the correct dependencies you can follow the steps below that build a container image with QEMU and the needed dependencies and uses it to run the ISO file.
 
-1. Build the container image with the dependencies:
+1. Build the container image with the dependencies (note to replace disk, VM size and ISO file name):
 
 ```bash
 docker build -t fedora-qemu -<<DOCKER
@@ -170,7 +174,7 @@ RUN <<EOF
 echo "#!/bin/bash -ex" >> /entrypoint.sh
 echo 'nohup swtpm socket --tpmstate dir=/tmp/ --ctrl type=unixio,path=/tmp/swtpm-sock --log level=20 --tpm2 &>/dev/null & ' >> /entrypoint.sh
 echo '[ ! -e /work/disk.img ] && qemu-img create -f qcow2 "/work/disk.img" 8G' >> /entrypoint.sh
-echo '/usr/bin/qemu-system-x86_64 -drive if=pflash,format=raw,unit=0,file="/usr/share/edk2/ovmf/OVMF_CODE.secboot.fd",readonly=on -drive if=pflash,unit=1,format=raw,file="/efivars.fd" -accel kvm -cpu host -m 8096 -drive file=/work/disk.img,if=none,index=0,media=disk,format=raw,id=disk1 -device virtio-blk-pci,drive=disk1,bootindex=0 -boot menu=on -vga virtio -cpu host -smp cores=4,threads=1 -machine q35,smm=on -chardev socket,id=chrtpm,path=/tmp/swtpm-sock -tpmdev emulator,id=tpm0,chardev=chrtpm -device tpm-tis,tpmdev=tpm0 \$@' >> /entrypoint.sh
+echo '/usr/bin/qemu-system-x86_64 -drive if=pflash,format=raw,unit=0,file="/usr/share/edk2/ovmf/OVMF_CODE.secboot.fd",readonly=on -drive if=pflash,unit=1,format=raw,file="/efivars.fd" -accel kvm -cpu host -m 8096 -drive file=/work/disk.img,if=none,index=0,media=disk,format=qcow2,id=disk1 -device virtio-blk-pci,drive=disk1,bootindex=0 -boot order=dc -vga virtio -cpu host -smp cores=4,threads=1 -machine q35,smm=on -chardev socket,id=chrtpm,path=/tmp/swtpm-sock -tpmdev emulator,id=tpm0,chardev=chrtpm -device tpm-tis,tpmdev=tpm0 \$@' >> /entrypoint.sh
 EOF
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT [ "/entrypoint.sh" ]
