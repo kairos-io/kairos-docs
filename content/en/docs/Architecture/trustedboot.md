@@ -6,6 +6,9 @@ date: 2022-11-13
 description: >
 ---
 
+{{% alert title="Warning" %}}
+This section is still a work in progress and only available in Kairos v3.x releases and alphas.
+{{% /alert %}}
 
 *FDE* stands for Full Disk Encryption. It is a security measure that encrypts the entire contents of a disk drive, including the operating system, system files, and user data. The purpose of FDE is to protect data stored on the disk from unauthorized access in the event of theft or loss of the device.
 
@@ -17,14 +20,11 @@ By combining Secure Boot, Measured Boot and FDE we can guarantee that a system w
 
 > You can read more about Trusted Boot in https://0pointer.de/blog/brave-new-trusted-boot-world.html and about SENA here: https://kairos.io/blog/2023/04/18/kairos-is-now-part-of-the-secure-edge-native-architecture-by-spectro-cloud-and-intel/
 
-
-
 ### Considerations
-
 
 ### Security considerations
 
-TODO: Design choices (no pivot, no grub, etc)
+TODO: Design choices (no pivot, no grub,)
 
 
 #### Booting command lines

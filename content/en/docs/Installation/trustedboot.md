@@ -6,6 +6,11 @@ date: 2022-11-13
 description: >
 ---
 
+
+{{% alert title="Warning" %}}
+This section is still a work in progress and only available in Kairos v3.x releases and alphas.
+{{% /alert %}}
+
 "Trusted Boot" is a combination of technologies that allows us to guarantee that a system was not tampered with, and the user-data is protected by cold attacks, it is composed by FDE, Secure Boot and Measured Boot.
 
 If you want to learn more on what Trusted Boot is and how it works, see the [Trusted Boot Architecture]({{< relref "../architecture/trustedboot" >}}) page. This page describes how to enable Trusted Boot support in Kairos.
@@ -51,7 +56,7 @@ To generate the Secure boot certificates and keys run the following commands:
 
 ```bash
 # Generate the keys
-docker run -v $PWD/keys:/work/keys -ti --rm enki genkey "Kairos" -o /work/keys
+docker run -v $PWD/keys:/work/keys -ti --rm enki genkey "My Kairos" -o /work/keys
 ```
 
 {{% alert title="Warning" %}}
@@ -72,8 +77,28 @@ A video of the process in QEMU is available [here](https://github.com/kairos-io/
 
 To build the installable medium you need to run the following command:
 
+{{% alert title="Warning" %}}
+
+This method is still a work in progress.
+For now build the testing Kairos iso with:
+
 ```bash
-CONTAINER_IMAGE=quay.io/kairos/fedora:38-core-amd64-generic-v3.0.0-alpha
+# clone the repo
+git clone https://github.com/kairos-io/kairos
+
+# cd into the repo
+cd kairos
+
+# build the iso with Earthly
+earthly +uki-iso --FLAVOR=fedora --FLAVOR_RELEASE=38 --FAMILY=rhel --MODEL=generic --VARIANT=core --BASE_IMAGE=quay.io/kairos/fedora:38-core-amd64-generic-v3.0.0-alpha1
+
+# resulting ISO is in: build/kairos-fedora-38-core-amd64-generic-v3.0.0-alpha1.uki.iso
+```
+
+{{% /alert %}}
+
+```bash
+CONTAINER_IMAGE=quay.io/kairos/fedora:38-core-amd64-generic-v3.0.0-alpha1
 docker run --rm -v $PWD/build:/result -v $PWD/keys/:/keys enki build-uki $CONTAINER_IMAGE -o /result/trustedboot.iso -k /keys
 ```
 
@@ -86,6 +111,10 @@ The installation process is performed as usual and the [Installation instruction
 In order to upgrade a node to a new version of the OS, you need to generate again the installable medium with the same keys used in the steps before. The process will generate an EFI file which we will pack into a container image that will be used to upgrade the node.
 
 To generate the upgrade image you need to create a naked container image containing containing the EFI files, for example:
+
+{{% alert title="Warning" %}}
+Flow not entirely tested/validated yet
+{{% /alert %}}
 
 ```bash
 VERSION=2.5.0-1-g21e04f76.uki
@@ -152,11 +181,11 @@ DOCKER
 
 ```bash
 # console only
-docker run --privileged -v $PWD:/work -v /dev/kvm:/dev/kvm --rm -ti fedora-qemu -cdrom /work/kairos-fedora-38-core-amd64-generic-v2.5.0-1-g21e04f76.uki.iso -nographic
+docker run --privileged -v $PWD:/work -v /dev/kvm:/dev/kvm --rm -ti fedora-qemu -cdrom /work/kairos-fedora-38-core-amd64-generic-v3.0.0-alpha1.uki.iso -nographic
 
 # GTK (insecure)
 # xhost si:localuser:root # give access to root account to connect to the X server socket
-# docker run -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix --privileged -v $PWD:/work -v /dev/kvm:/dev/kvm --rm -ti fedora-qemu -cdrom /work/kairos-fedora-38-core-amd64-generic-v2.5.0-1-g21e04f76.uki.iso
+# docker run -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix --privileged -v $PWD:/work -v /dev/kvm:/dev/kvm --rm -ti fedora-qemu -cdrom /work/kairos-fedora-38-core-amd64-generic-v3.0.0-alpha1.uki.iso
 ```
 
 Note: To stop the QEMU container you can use `Ctrl-a x` or `Ctrl-a c` to enter the QEMU console and then `quit` to exit.
