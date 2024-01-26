@@ -71,7 +71,7 @@ kcrypt:
 | `kcrypt.challenger.nv_index` | Custom Non-Volatile index to use to store encoded blobs |
 | `kcrypt.challenger.c_index` | Custom Index for the RSA Key pair |
 | `kcrypt.challenger.tpm_device` | Custom TPM device |
-| `kcrypt.challenger.mdns` | Discover KMS using mdns |
+| `kcrypt.challenger.mdns` | Discover KMS using mdns. Defaults to `false` |
 
 ## Requirements
 
