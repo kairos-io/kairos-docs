@@ -90,7 +90,7 @@ git clone https://github.com/kairos-io/kairos
 cd kairos
 
 # build the iso with Earthly
-earthly +uki-iso --FLAVOR=fedora --FLAVOR_RELEASE=38 --FAMILY=rhel --MODEL=generic --VARIANT=core --BASE_IMAGE=quay.io/kairos/fedora:38-core-amd64-generic-v3.0.0-alpha1
+earthly +uki-iso --BASE_IMAGE=quay.io/kairos/fedora:38-core-amd64-generic-v3.0.0-alpha1
 
 # resulting ISO is in: build/kairos-fedora-38-core-amd64-generic-v3.0.0-alpha1.uki.iso
 ```
