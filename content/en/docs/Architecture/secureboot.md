@@ -24,7 +24,7 @@ Now, instead of using a single set of artifacts, we use the upstream artifacts d
 
 Any of the current supported flavors in Kairos can be used with SecureBoot out of the box in UEFI mode.
 
-Currently Archlinux is not supported as it does not provide signed artifacts by default and relies in users generating their own keys to sign those.
+Currently Alpine is not supported as it does not provide signed artifacts by default and relies in users generating their own keys to sign those.
 
 #### Artifacts used on each distro
 
