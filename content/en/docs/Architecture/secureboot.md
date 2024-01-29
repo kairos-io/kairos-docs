@@ -31,5 +31,3 @@ Currently Alpine is not supported as it does not provide signed artifacts by def
  - shim
  - grub
  - kernel
-
-
