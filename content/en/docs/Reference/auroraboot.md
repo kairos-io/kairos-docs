@@ -382,7 +382,7 @@ cloud_config: |
 | `listen_addr`         | Default http binding port for offline ISO generation.                                                                                                                                                                                                                |
 | `cloud_config`        | Cloud config path to use for the machines. A URL can be specified, use `-` to pass-by the cloud-config from _STDIN_                                                                                                                                                  |
 | `iso.data`            | Defines a path to be embedded into the resulting iso. When booting, the files will be accessible at `/run/initramfs/live`                                                                                                                                            |
-| `netboot.cmdlin`      | Override the automatically generated cmdline with a custom one to use during netboot. `config_url` and `rootfs`  are automatically constructed. A reasonable value can be `netboot.cmdline=rd.neednet=1 ip=dhcp rd.cos.disable netboot nodepair.enable console=tty0` |
+| `netboot.cmdlin`      | Override the automatically generated cmdline with a custom one to use during netboot. `config_url` and `rootfs`  are automatically constructed. A reasonable value can be `netboot.cmdline=rd.neednet=1 ip=dhcp rd.cos.disable netboot install-mode console=tty0` |
 
 To use the configuration file with AuroraBoot, run AuroraBoot specifying the file or URL of the config as first argument:
 
