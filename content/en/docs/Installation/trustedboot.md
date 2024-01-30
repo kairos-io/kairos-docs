@@ -56,7 +56,7 @@ To generate the Secure boot certificates and keys run the following commands:
 
 ```bash
 # Generate the keys
-docker run -v $PWD/keys:/work/keys -ti --rm enki genkey "My Kairos" -o /work/keys
+docker run -v $PWD/keys:/work/keys -ti --rm enki genkey "$MY_ORG" -o /work/keys
 ```
 
 {{% alert title="Warning" %}}
