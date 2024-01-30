@@ -204,7 +204,7 @@ docker run -v --net host \
              --rm -ti quay.io/kairos/auroraboot:{{< auroraBootVersion >}} \
              --set container_image=docker://test-byoi \
              --set "disable_http_server=true" \
-             --set "netboot.cmdline=rd.neednet=1 ip=dhcp rd.cos.disable netboot nodepair.enable console=tty0 selinux=0"
+             --set "netboot.cmdline=rd.neednet=1 ip=dhcp rd.cos.disable netboot install-mode console=tty0 selinux=0"
 ```
 
 {{% /tab %}}
