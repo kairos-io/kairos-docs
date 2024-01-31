@@ -30,7 +30,7 @@ By combining Secure Boot, Measured Boot and FDE we can guarantee that a system w
 
 > UKI stands for “Unified Kernel Images”. UKI files are a single, fat binary that encompasses the OS and the needed bits in order to boot the full system with a single, verified file. You can read technical details here: [Brave New Trusted Boot World](https://0pointer.de/blog/brave-new-trusted-boot-world.html).
 
-Trusted Boot in Kairos works by generating UKI images from container images. The UKI file is a single, fat binary that encompasses the OS and the needed bits in order to boot the full system with a single, verified file. This file can be used for upgraes and used as usual in the lifecycle of the Kairos node.
+Trusted Boot in Kairos works by generating UKI images from container images. The UKI file is a single, fat binary that encompasses the OS and the needed bits in order to boot the full system with a single, verified file. This file can be used for upgrades and used as usual in the lifecycle of the Kairos node.
 
 The UKI file is signed with the Secure Boot keys, and the user-data is encrypted with the PCR policies. The UKI file is then loaded by the firmware and booted directly, without any second stage or system pivoting. This is why the UKI file can grow large, and why it requires a specific firmware that supports booting large EFI files. 
 
