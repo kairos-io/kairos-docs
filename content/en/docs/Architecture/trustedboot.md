@@ -70,7 +70,7 @@ The keys are used to sign the UKI file, and to generate a PCR policy keypair req
 
 ![Trusted boot](https://github.com/kairos-io/kairos-docs/assets/2420543/757870d3-3b40-46ea-9c86-13c4a545f167)
 
-There is no difference with a layout of a standard Kairos system (as explained in the [Immutable OS]({{%relref "/docs/architecture/immutable" %}}) page), however in this setup now the partitions containing data are encrypted:
+There is no difference with a layout of a standard Kairos system (as explained in the [Immutable OS]({{%relref "/docs/architecture/immutable" %}}) page), however in this setup now the partitions containing data are always encrypted:
 
 - [List of persistent data path overlayed and encrypted](https://github.com/kairos-io/packages/blob/528682cddf7191fb52580e7c41a33e73c1ee0001/packages/static/kairos-overlay-files/files/system/oem/00_rootfs_uki.yaml#L18) (see also [the bind mount documentation]({{%relref "/docs/advanced/customizing#bind-mounts" %}}) to customize it with your own paths).
 - `/oem` encrypted
