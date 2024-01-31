@@ -56,7 +56,9 @@ To generate the Secure boot certificates and keys run the following commands:
 # Generate the keys
 docker run -v $PWD/keys:/work/keys -ti --rm enki genkey "$MY_ORG" -o /work/keys
 ```
-
+{{% alert title="Warning" %}}
+Substitute `$MY_ORG` for your own string, this can be anything but it help identifying the Keys
+{{% /alert %}}
 {{% alert title="Warning" %}}
 It is very important to preserve the keys generated in this process in a safe place. Loosing the keys will prevent you to generate new images that can be used for upgrades.
 {{% /alert %}}
