@@ -11,7 +11,7 @@ This section is still a work in progress and only available in Kairos v3.x relea
 {{% /alert %}}
 
 Trusted boot is a combination of technologies that allows us to enhance the security posture of a running system. It is composed by FDE, Secure Boot and Measured Boot.
-Trusted boot is an architectural requirement of SENA (Secure Edge Native Architecture) and is a key component of Kairos.
+Trusted boot is an architectural requirement of [SENA (Secure Edge Native Architecture)](https://www.spectrocloud.com/product/sena) and is a key component of Kairos.
 
 > You can read more about Trusted Boot in https://0pointer.de/blog/brave-new-trusted-boot-world.html and about SENA here: https://kairos.io/blog/2023/04/18/kairos-is-now-part-of-the-secure-edge-native-architecture-by-spectro-cloud-and-intel/
 
