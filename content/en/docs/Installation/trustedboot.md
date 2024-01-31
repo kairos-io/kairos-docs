@@ -6,7 +6,6 @@ date: 2022-11-13
 description: >
 ---
 
-
 {{% alert title="Warning" %}}
 This section is still a work in progress and only available in Kairos v3.x releases and alphas.
 {{% /alert %}}
@@ -112,46 +111,7 @@ The installation process is performed as usual and the [Installation instruction
 
 ### Upgrades
 
-In order to upgrade a node to a new version of the OS, you need to generate again the installable medium with the same keys used in the steps before. The process will generate an EFI file which we will pack into a container image that will be used to upgrade the node.
-
-To generate the upgrade image you need to create a naked container image containing containing the EFI files, for example:
-
-{{% alert title="Warning" %}}
-Flow not entirely tested/validated yet
-{{% /alert %}}
-
-```bash
-VERSION=v3.0.0-alpha2
-UKI=kairos-fedora-38-core-amd64-generic-v${VERSION}.efi
-UPGRADE_IMAGE=ttl.sh/kairos-uki-tests/upgrade-image
-EFI_FILE=/path/to/efi/file
-
-mkdir upgrade-image
-mkdir -p upgrade-image/loader/entries
-mkdir -p upgrade-image/EFI/kairos/
-
-mv $EFI_FILE upgrade-image/EFI/kairos/${UKI}
-
-# default @saved
-cat <<EOF > upgrade-image/loader/loader.conf
-default kairos-$VERSION.conf
-timeout 5
-console-mode max
-editor no
-EOF
-
-cat <<EOF > upgrade-image/loader/entries/kairos-$VERSION.conf
-title Kairos $VERSION
-efi /EFI/kairos/$UKI.efi
-version $VERSION
-EOF
-
-cd upgrade-image
-docker build -t $UPGRADE_IMAGE -<<DOCKER
-FROM scratch
-COPY . /
-DOCKER
-```
+See the [Trusted Boot Upgrade]({{< relref "../upgrade/trustedboot" >}}) page.
 
 ### Testing the images locally
 

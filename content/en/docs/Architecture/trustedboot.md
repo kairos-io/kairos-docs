@@ -36,6 +36,16 @@ The UKI file is signed with the Secure Boot keys, and the user-data is encrypted
 
 Due to the design choice to not boot into a second stage, this is being refered nowadays as **USI** (Unified System Image) instead of UKI, or more simply "Bootstrap Image". The benefits of using Unified system images in opposite of UKIs are that the system can be upgraded without the need of a second stage, and that the entire system is verified and signed.
 
+### Building process
+
+For Trusted boot it is required to build a specific installable ISO file medium that contains the UKI files and a container image used for upgrades. Every time to upgrade a system it is required to re-generate the assets with the same keys and use the generated container image for the upgrades.
+
+The UKI files are generated from container images as usual.
+
+![Trusted boot](https://github.com/kairos-io/kairos-docs/assets/2420543/2f49d592-9ae3-43ee-b22b-0313be455bf7)
+
+The process to generate the installable medium is described in the [Trustedboot installation documentation]({{%relref "/docs/installation/trustedboot" %}}). Internally we rely on the *osbuilder* tool to generate all the installation artifacts from a single container image.
+
 ### Booting process
 
 ![boot_1](https://github.com/kairos-io/kairos-docs/assets/2420543/9c406796-b622-4571-abd5-b8d8fed44591)
@@ -76,6 +86,7 @@ There is no difference with a layout of a standard Kairos system (as explained i
 
 TODO: Design choices (no pivot, no grub,)
 
+### systemd-boot
 
 #### Booting command lines
 
