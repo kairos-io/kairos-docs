@@ -57,15 +57,6 @@ The booting process of an installed system with Trusted Boot is different from a
 3. The EFI system starts. The kernel and the initrd are loaded from the UKI file, and the kernel is booted with the command line specified in the UKI file. 
 4. The initrd will decrypt the user-data and mount the portions of it in the root filesystem. This includes for instance any changes to `/etc` (like adding new users and passwords), `/usr/local`, and all the mount bindpoints specified in the configuration file (see [Bind mount d ocumentation]({{%relref "/docs/advanced/customizing#bind-mounts" %}}) ). There is no second stage loaded and no system pivoting, the system is booted directly from the UKI file.
 
-### User data encryption and key generation 
-
-It is required in order to generate USI images to have a set of keys and certificates. In order to understand why those keys are required, we need to understand how the user-data is encrypted and how the system is booted.
-
-![bootingkeys](https://github.com/kairos-io/kairos-docs/assets/2420543/725745a0-0ea6-4330-bea3-e6483f53cc3f)
-
-
-The keys are used to sign the UKI file, and to generate a PCR policy keypair required later on by the system in order to decrypt the encrypted partitions. The keys and certificates are generated with the `enki` tool, that is available in the `enki` container image.
-
 ### Booting system
 
 ![Trusted boot](https://github.com/kairos-io/kairos-docs/assets/2420543/757870d3-3b40-46ea-9c86-13c4a545f167)
@@ -79,14 +70,24 @@ There is no difference with a layout of a standard Kairos system (as explained i
 - `/usr` read only
 - `/` immutable
 
+### User data encryption and key generation 
+
+It is required in order to generate USI images to have a set of keys and certificates. In order to understand why those keys are required, we need to understand how the user-data is encrypted and how the system is booted.
+
+![bootingkeys](https://github.com/kairos-io/kairos-docs/assets/2420543/725745a0-0ea6-4330-bea3-e6483f53cc3f)
+
+
+The keys are used to sign the UKI file, and to generate a PCR policy keypair required later on by the system in order to decrypt the encrypted partitions. The keys and certificates are generated with the `enki` tool, that is available in the `enki` container image.
+
+
 
 ### Considerations
 
-### Security considerations
+#### Security considerations
 
 TODO: Design choices (no pivot, no grub,)
 
-### systemd-boot
+#### systemd-boot
 
 #### Booting command lines
 

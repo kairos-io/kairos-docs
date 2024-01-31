@@ -14,16 +14,22 @@ This section is still a work in progress and only available in Kairos v3.x relea
 
 If you want to learn more on what Trusted Boot is and how it works, see the [Trusted Boot Architecture]({{< relref "../architecture/trustedboot" >}}) page. This page describes how to enable Trusted Boot support in Kairos.
 
-## Enable Trusted Boot in Kairos
-
 Kairos supports Trusted boot by generating specific installable medium. This feature is optional and works alongside how Kairos works.
 
 ## Requirements
+
+The Hardware that will run Kairos needs to have the following requirements:
 
 - Secure boot available in the system
 - The Hardware should have a TPM chip or fTPM enabled
 - The Hardware should be capable of booting large EFI files (>32MB)
 - Base image of the OS needs to have at least systemd 252 or newer ( for example ubuntu >=23.04 or fedora >=38 )
+
+To build the installable medium you need the following installed in the system you use to build the installable medium:
+
+- Docker
+- Git
+- A Linux machine with KVM (for testing the images locally)
 
 ## Usage
 
@@ -33,13 +39,7 @@ Any change, or upgrade of the node to a new version of the OS requires those ass
 
 The steps below will guide you into generating the installable assets, and how to re-generate the assets to upgrade the node to a new version of the OS.
 
-### Requirements
-
-- Docker
-- Git
-- A Linux machine with KVM (for testing the images locally)
-
-### Build the container image used to generate keys and installable medium
+## Build the container image used to generate keys and installable medium
 
 ```bash
 # Build the container image that will be used to generate the keys and installable medium
@@ -48,7 +48,7 @@ cd enki
 docker build -t enki --target tools-image .
 ```
 
-### Key generation
+## Key generation
 
 To generate the Secure boot certificates and keys run the following commands:
 
@@ -63,17 +63,7 @@ Substitute `$MY_ORG` for your own string, this can be anything but it help ident
 It is very important to preserve the keys generated in this process in a safe place. Loosing the keys will prevent you to generate new images that can be used for upgrades.
 {{% /alert %}}
 
-### Enroll the keys in Secure Boot
-
-If your machine is in UEFI setup mode Secure Boot keys will be automatically enrolled. 
-
-If UEFI setup mode is not available, you need to enroll the keys manually in the BIOS/UEFI.
-
-This process can vary depending on the vendor, but in general you need to enter the BIOS/UEFI setup during early boot and import the keys, for an example outline you can check the steps for [HPE Hardware](https://techlibrary.hpe.com/docs/iss/proliant-gen10-uefi/GUID-E4427875-D123-4BBF-9056-342168478A02.html).
-
-A video of the process in QEMU is available [here](https://github.com/kairos-io/kairos/assets/2420543/e45f6a08-ec74-4cfd-bdf0-aeb7b23ac9bc).
-
-### Building installable medium
+## Building installable medium
 
 To build the installable medium you need to run the following commands:
 
@@ -107,15 +97,25 @@ CONTAINER_IMAGE=quay.io/kairos/fedora:38-core-amd64-generic-v3.0.0-alpha1
 docker run --rm -v $PWD/build:/result -v $PWD/keys/:/keys enki build-uki $CONTAINER_IMAGE -o /result/trustedboot.iso -k /keys
 ```
 
-### Installation
+## Installation
 
 The installation process is performed as usual and the [Installation instructions]({{< relref "../installation" >}}) can be followed, however the difference is that user-data will be automatically encrypted (both the OEM and the persistent partition) by using the TPM chip and the Trusted Boot mechanism.
 
-### Upgrades
+### Enroll the keys in Secure Boot
+
+If your machine is in UEFI setup mode Secure Boot keys will be automatically enrolled. 
+
+If UEFI setup mode is not available, you need to enroll the keys manually in the BIOS/UEFI.
+
+This process can vary depending on the vendor, but in general you need to enter the BIOS/UEFI setup during early boot and import the keys, for an example outline you can check the steps for [HPE Hardware](https://techlibrary.hpe.com/docs/iss/proliant-gen10-uefi/GUID-E4427875-D123-4BBF-9056-342168478A02.html).
+
+A video of the process in QEMU is available [here](https://github.com/kairos-io/kairos/assets/2420543/e45f6a08-ec74-4cfd-bdf0-aeb7b23ac9bc).
+
+## Upgrades
 
 See the [Trusted Boot Upgrade]({{< relref "../upgrade/trustedboot" >}}) page.
 
-### Testing the images locally
+## Testing the images locally
 
 To test the ISO file locally QEMU can be used. In order to test Secure Boot components you need an ed2k firmware with secureboot in QEMU. If you don't have QEMU locally and/or you don't have the correct dependencies you can follow the steps below that build a container image with QEMU and the needed dependencies and uses it to run the ISO file.
 
@@ -156,11 +156,11 @@ docker run --privileged -v $PWD:/work -v /dev/kvm:/dev/kvm --rm -ti fedora-qemu 
 
 Note: To stop the QEMU container you can use `Ctrl-a x` or `Ctrl-a c` to enter the QEMU console and then `quit` to exit.
 
-### Data Encryption
+## Data Encryption
 
 The user-data will be automatically encrypted during installation, along with the OEM and the persistent partition by using the TPM chip and the Trusted Boot mechanism.
 
-#### Additional partitions
+### Additional partitions
 
 Additional partitions can be encrypted and specified as part of the cloud-config used during the installation process, for example:
 
