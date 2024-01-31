@@ -75,7 +75,7 @@ A video of the process in QEMU is available [here](https://github.com/kairos-io/
 
 ### Building installable medium
 
-To build the installable medium you need to run the following command:
+To build the installable medium you need to run the following commands:
 
 {{% alert title="Warning" %}}
 
