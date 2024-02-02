@@ -112,7 +112,7 @@ quay.io/kairos/<flavor>:<flavor_release>-<variant>-<arch>-<device>-<version>-img
 
 ### Examples
 
-- `{{< oci variant="core" arch="arm64" model="rpi4" suffix="img"}}`
+- `{{< oci variant="core" arch="arm64" model="rpi4" suffix="img" >}}`
 
 ## Framework images
 
