@@ -98,7 +98,7 @@ This nomenclature for container images lacks some information for the following 
 
 ### Examples
 
-- `quay.io/kairos/ubuntu:23.04-core-amd64-generic-{{< kairosVersion >}}`
+- `{{< oci variant="core" >}}`
 
 ## IMG Images
 
@@ -112,7 +112,7 @@ quay.io/kairos/<flavor>:<flavor_release>-<variant>-<arch>-<device>-<version>-img
 
 ### Examples
 
-- `quay.io/kairos/ubuntu:23.04-core-amd64-generic-v2.4.2-img`
+- `{{< oci variant="core" arch="arm64" model="rpi4" suffix="img"}}`
 
 ## Framework images
 
