@@ -70,7 +70,7 @@ Make sure to set the proper `--model=` in your command (rpi3,rpi4) to build the 
 {{% /alert %}}
 ```
 # Download the Kairos image locally
-IMAGE={{< registryURL >}}/kairos-opensuse-leap-arm-rpi:{{<kairosVersion>}}-{{<k3sVersionOCI>}}
+IMAGE={{<oci variant="standard" model="rpi4" arch="arm64">}}
 docker pull $IMAGE
 # Validate the configuration file
 kairosctl validate cloud-config.yaml

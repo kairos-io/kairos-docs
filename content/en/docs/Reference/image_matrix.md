@@ -54,7 +54,7 @@ Notes:
 The pipelines do not publish `img` artifacts for the arm architecture because the files are too large for GitHub Actions (they exceed the artifact size limit). These artifacts can be extracted from the published docker images using the following command:
 
 ```bash
-export IMAGE={{< registryURL >}}/core-{{< armFlavor >}}-arm-rpi-img:{{< kairosVersion >}}
+export IMAGE={{< oci variant="core" arch="arm64" model="rpi4" suffix="img">}}
 docker run -ti --rm -v $PWD:/image quay.io/luet/base util unpack "$IMAGE" /image
 ```
 
