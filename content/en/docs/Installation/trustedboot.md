@@ -23,7 +23,7 @@ The Hardware that will run Kairos needs to have the following requirements:
 - Secure boot available in the system
 - The Hardware should have a TPM chip or fTPM enabled
 - The Hardware should be capable of booting large EFI files (>32MB)
-- Base image of the OS needs to have at least systemd 252 or newer ( for example ubuntu >=23.04 or fedora >=38 )
+- Base image of the OS needs to have at least systemd 252 or newer ( for example ubuntu >=23.10 or fedora >=38 )
 
 To build the installable medium you need the following installed in the system you use to build the installable medium:
 
@@ -53,12 +53,14 @@ docker build -t enki --target tools-image .
 To generate the Secure boot certificates and keys run the following commands:
 
 ```bash
+MY_ORG="Acme Corp"
 # Generate the keys
 docker run -v $PWD/keys:/work/keys -ti --rm enki genkey "$MY_ORG" -o /work/keys
 ```
 {{% alert title="Warning" %}}
 Substitute `$MY_ORG` for your own string, this can be anything but it help identifying the Keys
 {{% /alert %}}
+
 {{% alert title="Warning" %}}
 It is very important to preserve the keys generated in this process in a safe place. Loosing the keys will prevent you to generate new images that can be used for upgrades.
 {{% /alert %}}
@@ -67,35 +69,23 @@ It is very important to preserve the keys generated in this process in a safe pl
 
 To build the installable medium you need to run the following commands:
 
-{{% alert title="Warning" %}}
-
-This method is still a work in progress.
-For now build the testing Kairos iso with:
-
-```bash
-# clone the repo
-git clone https://github.com/kairos-io/kairos
-
-# cd into the repo
-cd kairos
-
-IMAGE=quay.io/kairos/fedora:38-core-amd64-generic-v3.0.0-alpha1
-
-# build the iso with Earthly
-earthly +uki-iso --BASE_IMAGE=$IMAGE
-
-# resulting ISO is in: build/kairos-fedora-38-core-amd64-generic-v3.0.0-alpha1.uki.iso
-
-# Multiple boot options
-earthly +uki-iso --BASE_IMAGE=$IMAGE --ENKI_FLAGS="--cmdline rd.blacklist=i915"
-```
-
-{{% /alert %}}
-
+{{< tabpane text=true  >}}
+{{% tab header="From a container image" %}}
 ```bash
 CONTAINER_IMAGE=quay.io/kairos/fedora:38-core-amd64-generic-v3.0.0-alpha1
-docker run --rm -v $PWD/build:/result -v $PWD/keys/:/keys enki build-uki $CONTAINER_IMAGE -o /result/trustedboot.iso -k /keys
+# ubuntu:
+# CONTAINER_IMAGE=quay.io/kairos/ubuntu:23.10-core-amd64-generic-v3.0.0-alpha1
+docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys enki build-uki $CONTAINER_IMAGE -t iso -d /result/ -k /keys
 ```
+{{% /tab %}}
+{{% tab header="From a directory" %}}
+```bash
+# Assuming you have a "rootfs" directory with the content of the OS
+# If the image is in a directory ($PWD/rootfs) you can use the following command
+docker run -ti --rm -v $PWD/build:/result -v $PWD/rootfs:/rootfs -v $PWD/keys/:/keys enki build-uki dir:/rootfs/ -t iso -d /result/ -k /keys
+```
+{{% /tab %}}
+{{< /tabpane >}}
 
 ## Installation
 
@@ -103,13 +93,13 @@ The installation process is performed as usual and the [Installation instruction
 
 ### Enroll the keys in Secure Boot
 
-If your machine is in UEFI setup mode Secure Boot keys will be automatically enrolled. 
+If your machine is in UEFI setup mode Secure Boot keys will be automatically enrolled. To enter UEFI Setup mode you need to clear the Secure Boot keys (PKs) from the BIOS/UEFI. 
 
-If UEFI setup mode is not available, you need to enroll the keys manually in the BIOS/UEFI.
+If UEFI setup mode is not available, you need to enroll the keys manually in the BIOS/UEFI. 
 
 This process can vary depending on the vendor, but in general you need to enter the BIOS/UEFI setup during early boot and import the keys, for an example outline you can check the steps for [HPE Hardware](https://techlibrary.hpe.com/docs/iss/proliant-gen10-uefi/GUID-E4427875-D123-4BBF-9056-342168478A02.html).
 
-A video of the process in QEMU is available [here](https://github.com/kairos-io/kairos/assets/2420543/e45f6a08-ec74-4cfd-bdf0-aeb7b23ac9bc).
+A video of the process of importing keys in QEMU is available [here](https://github.com/kairos-io/kairos/assets/2420543/e45f6a08-ec74-4cfd-bdf0-aeb7b23ac9bc).
 
 ## Upgrades
 
@@ -117,9 +107,9 @@ See the [Trusted Boot Upgrade]({{< relref "../upgrade/trustedboot" >}}) page.
 
 ## Testing the images locally
 
-To test the ISO file locally QEMU can be used. In order to test Secure Boot components you need an ed2k firmware with secureboot in QEMU. If you don't have QEMU locally and/or you don't have the correct dependencies you can follow the steps below that build a container image with QEMU and the needed dependencies and uses it to run the ISO file.
+To test the ISO file locally QEMU can be used. In order to test Secure Boot components you need an ed2k firmware with secureboot in QEMU. If you don't have QEMU locally and/or you don't have the correct dependencies you can follow the steps below that build a container image with QEMU and the needed dependencies and use that container to run the ISO file in a VM with Docker.
 
-1. Build the container image with the dependencies (note to replace disk, VM size and ISO file name):
+1. Build the container image with the QEMU/Secure Boot dependencies (note to replace disk, VM size and ISO file name):
 
 ```bash
 docker build -t fedora-qemu -<<DOCKER
@@ -129,7 +119,7 @@ RUN dnf config-manager --add-repo http://www.kraxel.org/repos/firmware.repo
 RUN dnf install -y edk2.git-ovmf-x64 qemu
 RUN dnf install -y swtpm wget
 WORKDIR /
-RUN wget https://github.com/kairos-io/kairos/raw/master/tests/assets/efivars.fd
+RUN wget -q https://github.com/mudler/cos-demo-labs/raw/tests/efivars.fd -O /efivars.fd
 WORKDIR /work
 
 RUN <<EOF
@@ -143,15 +133,11 @@ ENTRYPOINT [ "/entrypoint.sh" ]
 DOCKER
 ```
 
-2. Run the container image with the ISO file:
+2. Run the container image with the ISO file (replace the iso file name with yours):
 
 ```bash
 # console only
 docker run --privileged -v $PWD:/work -v /dev/kvm:/dev/kvm --rm -ti fedora-qemu -cdrom /work/kairos-fedora-38-core-amd64-generic-v3.0.0-alpha1.uki.iso -nographic
-
-# GTK (insecure)
-# xhost si:localuser:root # give access to root account to connect to the X server socket
-# docker run -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix --privileged -v $PWD:/work -v /dev/kvm:/dev/kvm --rm -ti fedora-qemu -cdrom /work/kairos-fedora-38-core-amd64-generic-v3.0.0-alpha1.uki.iso
 ```
 
 Note: To stop the QEMU container you can use `Ctrl-a x` or `Ctrl-a c` to enter the QEMU console and then `quit` to exit.

@@ -19,8 +19,6 @@ See the [Trusted Boot Installation]({{< relref "../installation/trustedboot" >}}
 
 In order to upgrade a node to a new version of the OS, you need to generate again the installable medium with the same keys used in the steps before.
 
-Follow the process in [Trusted Boot Installation]({{< relref "../installation/trustedboot" >}}) to generate the installable medium, and then follow the steps below to create an image that can be used for upgrades.
-
 {{% alert title="Note" %}}
 The resulting container image can be used for upgrades with `kairos-agent`.
 {{% /alert %}}
@@ -33,54 +31,51 @@ First we need to extract the EFI file from the ISO file generated with what expl
 This step is required until [#2171](https://github.com/kairos-io/kairos/issues/2171) is implemented.
 {{% /alert %}}
 
+#### Generate the upgrade image
+
+1. Build the container image used to generate the upgrade image
+
 ```bash
-mkdir iso
-mkdir efiboot
-
-sudo mount -o loop *.iso iso
-sudo mount iso/efiboot.img efiboot 
-
-cp efiboot/EFI/kairos/*.efi .
+# Build the container image that will be used to generate the keys and installable medium
+git clone https://github.com/kairos-io/enki.git
+cd enki
+docker build -t enki --target tools-image .
 ```
 
-To generate the upgrade image you need to create a naked container image containing containing the EFI files and the `systemd-boot` configuration, for example:
-
-{{% alert title="Warning" %}}
-Flow not entirely tested/validated yet
-{{% /alert %}}
+2. Build the Container image used for upgrades
 
 ```bash
-VERSION=v3.0.0-alpha2
-EFI_FILE=$PWD/*.efi 
-UKI=kairos-fedora-38-core-amd64-generic-${VERSION}.efi
-UPGRADE_IMAGE=ttl.sh/kairos-uki-tests/upgrade-image
+CONTAINER_IMAGE=quay.io/kairos/fedora:38-core-amd64-generic-v3.0.0-alpha1
 
-mkdir upgrade-image
-mkdir -p upgrade-image/loader/entries
-mkdir -p upgrade-image/EFI/kairos/
+# ubuntu:
+# CONTAINER_IMAGE=quay.io/kairos/ubuntu:23.10-core-amd64-generic-v3.0.0-alpha1
+docker run --rm -v $PWD/keys:/keys -v $PWD:/work -ti enki build-uki $CONTAINER_IMAGE -t uki -d /work/upgrade-image -k /keys
 
-cp -rfv $EFI_FILE upgrade-image/EFI/kairos/${UKI}
 
-# default @saved
+CONF=$(basename $(ls -1 $PWD/upgrade-image/loader/entries/*.conf))
+# Replace with the version of the OS you are upgrading to (next boot auto selection)
 cat <<EOF > upgrade-image/loader/loader.conf
-default kairos-$VERSION.conf
+default $CONF
 timeout 5
 console-mode max
 editor no
 EOF
 
-cat <<EOF > upgrade-image/loader/entries/kairos-$VERSION.conf
-title Kairos $VERSION
-efi /EFI/kairos/$UKI
-version $VERSION
-EOF
+## Generate the container image
+docker run --rm -v $PWD:/work --entrypoint /bin/tar -ti enki -cf /work/src.tar /work/upgrade-image
 
-cd upgrade-image
-docker build -t $UPGRADE_IMAGE -<<DOCKER
-FROM scratch
-COPY . /
-DOCKER
+CONTAINER_IMAGE_NAME="my-upgrade-image"
+docker run -ti -v $PWD:/work quay.io/luet/base:latest util pack $CONTAINER_IMAGE_NAME /work/src.tar /work/upgrade_image.tar
 
+```
+
+3. Push the upgrade image to a registry
+
+```bash
+# Now you can load upgrade_image.tar to a registry and use it with kairos-agent
+docker load -i upgrade_image.tar
+
+docker push $CONTAINER_IMAGE_NAME
 ```
 
 {{% alert title="Upgrades with Kubernetes" %}}
@@ -89,81 +84,3 @@ In order to upgrade with Kubernetes using system upgrade controller plans you ca
 When invoking `kairos-agent` in the plan however, you need to specify the `--source` flag to point to the image that contains the UKI file.
 
 {{% /alert %}}
-
-
-### Example: e2e image generation
-
-```bash
-
-IMAGE=ttl.sh/uki-kairos-test:awesome
-UPSTREAM_IMAGE=quay.io/kairos/fedora:38-core-amd64-generic-v3.0.0-alpha1
-
-docker build -t $IMAGE -<<DOCKER
-FROM $UPSTREAM_IMAGE
-RUN <<EOF
-echo "wow" >> /wow
-EOF
-DOCKER
-
-docker push $IMAGE
-
-# TODO: this is temporary
-# clone the repo
-git clone https://github.com/kairos-io/kairos
-
-# cd into the repo
-cd kairos
-
-
-# build the iso with Earthly
-earthly +uki-iso --BASE_IMAGE=$IMAGE
-
-# Extract the EFI file from the ISO
-cd build/
-
-mkdir iso
-mkdir efiboot
-
-sudo mount -o loop *.iso iso
-sudo mount iso/efiboot.img efiboot 
-
-cp efiboot/EFI/kairos/*.efi .
-
-ls
-# efiboot  iso  kairos-fedora-38-core-amd64-generic-v3.0.0-alpha1.uki.iso  v3.0.0-alpha1.efi
-
-# Generate the upgrade image
-
-VERSION=v3.0.0-alpha2
-UKI=kairos-fedora-38-core-amd64-generic-${VERSION}.efi
-UPGRADE_IMAGE=ttl.sh/kairos-uki-tests/upgrade-image
-EFI_FILE=$PWD/v3.0.0-alpha1.efi 
-
-mkdir upgrade-image
-mkdir -p upgrade-image/loader/entries
-mkdir -p upgrade-image/EFI/kairos/
-
-cp -rfv $EFI_FILE upgrade-image/EFI/kairos/${UKI}
-
-# default @saved
-cat <<EOF > upgrade-image/loader/loader.conf
-default kairos-$VERSION.conf
-timeout 5
-console-mode max
-editor no
-EOF
-
-cat <<EOF > upgrade-image/loader/entries/kairos-$VERSION.conf
-title Kairos $VERSION
-efi /EFI/kairos/$UKI
-version $VERSION
-EOF
-
-cd upgrade-image
-docker build -t $UPGRADE_IMAGE -<<DOCKER
-FROM scratch
-COPY . /
-DOCKER
-
-docker push $UPGRADE_IMAGE
-```
