@@ -125,7 +125,7 @@ WORKDIR /work
 RUN <<EOF
 echo "#!/bin/bash -ex" >> /entrypoint.sh
 echo 'nohup swtpm socket --tpmstate dir=/tmp/ --ctrl type=unixio,path=/tmp/swtpm-sock --log level=20 --tpm2 &>/dev/null & ' >> /entrypoint.sh
-echo '[ ! -e /work/disk.img ] && qemu-img create -f qcow2 "/work/disk.img" 8G' >> /entrypoint.sh
+echo '[ ! -e /work/disk.img ] && qemu-img create -f qcow2 "/work/disk.img" 35G' >> /entrypoint.sh
 echo '/usr/bin/qemu-system-x86_64 -drive if=pflash,format=raw,unit=0,file="/usr/share/edk2/ovmf/OVMF_CODE.secboot.fd",readonly=on -drive if=pflash,unit=1,format=raw,file="/efivars.fd" -accel kvm -cpu host -m 8096 -drive file=/work/disk.img,if=none,index=0,media=disk,format=qcow2,id=disk1 -device virtio-blk-pci,drive=disk1,bootindex=0 -boot order=dc -vga virtio -cpu host -smp cores=4,threads=1 -machine q35,smm=on -chardev socket,id=chrtpm,path=/tmp/swtpm-sock -tpmdev emulator,id=tpm0,chardev=chrtpm -device tpm-tis,tpmdev=tpm0 \$@' >> /entrypoint.sh
 EOF
 RUN chmod +x /entrypoint.sh

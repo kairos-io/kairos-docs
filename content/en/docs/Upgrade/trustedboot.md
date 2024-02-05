@@ -51,6 +51,35 @@ CONTAINER_IMAGE=quay.io/kairos/fedora:38-core-amd64-generic-v3.0.0-alpha1
 # CONTAINER_IMAGE=quay.io/kairos/ubuntu:23.10-core-amd64-generic-v3.0.0-alpha1
 docker run --rm -v $PWD/keys:/keys -v $PWD:/work -ti enki build-uki $CONTAINER_IMAGE -t uki -d /work/upgrade-image -k /keys
 
+# Generate container-image for upgrades
+docker run --rm -v $PWD/keys:/keys -v $PWD:/work -ti enki build-uki $CONTAINER_IMAGE -t container -d /work/upgrade-image -k /keys
+```
+
+3. Push the upgrade image to a registry
+
+```bash
+# Now you can load upgrade_image.tar to a registry and use it with kairos-agent
+docker load -i *.tar
+#401b8e83daf6: Loading layer [==================================================>]  1.263GB/1.263GB
+# Loaded image: kairos_uki:v3.0.0-alpha2
+docker push <IMAGE_NAME>
+```
+
+{{% alert title="Upgrades with Kubernetes" %}}
+
+In order to upgrade with Kubernetes using system upgrade controller plans you can use the image used to generate the installable medium, and use it as a base image for the upgrade image. 
+When invoking `kairos-agent` in the plan however, you need to specify the `--source` flag to point to the image that contains the UKI file.
+
+{{% /alert %}}
+
+### Reference
+
+
+#### Generate the upgrade image manually
+
+You can also manually generate the container image:
+
+```bash
 
 CONF=$(basename $(ls -1 $PWD/upgrade-image/loader/entries/*.conf))
 # Replace with the version of the OS you are upgrading to (next boot auto selection)
@@ -62,25 +91,9 @@ editor no
 EOF
 
 ## Generate the container image
-docker run --rm -v $PWD:/work --entrypoint /bin/tar -ti enki -cf /work/src.tar /work/upgrade-image
+docker run --rm -v $PWD:/work --entrypoint /bin/tar -ti enki -C /work/upgrade-image -cf /work/src.tar .
 
-CONTAINER_IMAGE_NAME="my-upgrade-image"
+CONTAINER_IMAGE_NAME="ttl.sh/kairos-uki/tests:my-upgrade-image"
 docker run -ti -v $PWD:/work quay.io/luet/base:latest util pack $CONTAINER_IMAGE_NAME /work/src.tar /work/upgrade_image.tar
 
 ```
-
-3. Push the upgrade image to a registry
-
-```bash
-# Now you can load upgrade_image.tar to a registry and use it with kairos-agent
-docker load -i upgrade_image.tar
-
-docker push $CONTAINER_IMAGE_NAME
-```
-
-{{% alert title="Upgrades with Kubernetes" %}}
-
-In order to upgrade with Kubernetes using system upgrade controller plans you can use the image used to generate the installable medium, and use it as a base image for the upgrade image. 
-When invoking `kairos-agent` in the plan however, you need to specify the `--source` flag to point to the image that contains the UKI file.
-
-{{% /alert %}}
