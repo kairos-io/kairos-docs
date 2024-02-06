@@ -24,4 +24,4 @@ Another good news is that, the panel will still take place because the submissio
 
 As you probably know, Kairos is fully open-sourced, for us this means that we will keep working towards reaching out to users and other projects as much as we can. We believe this is the best way to contribute to the community overall and to build a great project.
 
-If you want to know about events we are interested in attending, you can find them on our [Outreach project](https://github.com/orgs/kairos-io/projects/4). If you are an organizer or know about an event where you think we should participate, please open a [Feature Request](https://github.com/kairos-io/kairos/issues/new/choose)
+If you want to know about events we are interested in attending, you can find them on our [Outreach project](https://github.com/orgs/kairos-io/projects/4). If you are an organizer or know about an event where you think we should participate, please open a [Feature Request](https://github.com/kairos-io/kairos/issues/new/choose).
