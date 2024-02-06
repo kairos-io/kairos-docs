@@ -202,4 +202,4 @@ mount /dev/mapper/oem /oem
 mount /dev/mapper/persistent /usr/local
 ```
 
-To mount `/oem` and `/usr/local` after install you can also manually call `kcrypt unlock-all`. However this isn't supported yet.
+To mount `/oem` and `/usr/local` after install you can also manually call `kcrypt unlock-all`. However this isn't [supported yet](https://github.com/kairos-io/kairos/issues/2217).
