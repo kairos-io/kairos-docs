@@ -10,6 +10,8 @@ Last year [I said](/blog/2023/02/07/kairos-at-fosdem-2023/) you could expect Kai
 
 Dimitris did a fantastic job sharing about how we switched our CI/CD pipelines, from using GitHub's free workers to our own, based on Kairos. You can check out the slides and recordings [here](https://fosdem.org/2024/schedule/event/fosdem-2024-2983-from-free-lunch-to-dog-fooding-a-culinary-journey-in-crafting-iac-for-kairos-testing-and-building/) (as soon as they become available). We were quite pleased with the level of attendance, and we believe that the message came across.
 
+If you attended the talk, and tried to reach out in person, we're sorry that we didn't give you a chance, we needed to make space for the next speaker. Please don't hesitate to use any of our communication channels in the [community page](/community/).
+
 ## Special Purpose Operating Systems Panel (SPOS)
 
 Originally, representatives from Kairos, [Flatcar](https://www.flatcar.org/), and [Unikraft](https://unikraft.org/) wanted to have a panel between the different SPOSs. Unfortunately, FOSDEM didn't accept our request until the day of the event, so everything had to be done ad-hoc. Which probably ended up being a good thing because we were lucky to also have the participation from [Eve-OS](https://lfedge.org/projects/eve/), [MicroOS](https://microos.opensuse.org/) and [Softiron](https://softiron.com/) on top of the gang which originally signed up.
