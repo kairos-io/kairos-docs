@@ -4,7 +4,7 @@ date: 2024-02-06T10:53:13+01:00
 author: Mauro Morales ([Twitter](https://twitter.com/mauromrls)) ([GitHub](https://github.com/mauromorales))
 ---
 
-Last year [I said](/blog/2023/02/07/kairos-at-fosdem-2023/) you could expect Kairos to engage further during FOSDEM. And I'm quite pleased to say that's exactly what we did! As part of the open-source ecosystem, we recognize the importance of participating in these types of events. We do so because we understand how critical it to go where our users are, but this year we went a bit further and we also reached out to other similar projects.
+Last year [I said](/blog/2023/02/07/kairos-at-fosdem-2023/) you could expect Kairos to engage further during FOSDEM. And I'm quite pleased to say that's exactly what we did! As part of the open-source ecosystem, we recognize the importance of participating in these types of events. We do so, because we understand how critical it is to go where our users are, but this year we went a bit further and we also reached out to other similar projects.
 
 ## From Free-Lunch to Dog-Fooding: A Culinary Journey in Crafting IaC for Kairos Testing and Building
 
