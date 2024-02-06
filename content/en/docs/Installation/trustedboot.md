@@ -177,3 +177,29 @@ install:
   encrypted_partitions:
   - PARTITION_TWO
 ```
+
+### Notes
+
+#### Mount partitions after install
+
+`/oem` and `/usr/local` can be mounted after installation to prepare content before first-boot.
+
+```bash
+# Note: replace /dev/vda2 with the oem partition location (see with `blkid`)
+# [root@ ~]# blkid 
+# /dev/sr0: BLOCK_SIZE="2048" UUID="2024-02-05-17-00-05-00" LABEL="UKI_ISO_INSTALL" TYPE="iso9660"
+# /dev/vda2: UUID="8bfa06f9-ca4f-56dc-90c9-49cf20f4f45e" TYPE="crypto_LUKS" PARTLABEL="oem" PARTUUID="63deb673-ec99-46f6-9cb6-8399315e4f19"
+# /dev/vda3: UUID="85c39d0f-4867-5227-8334-f5eec606d9eb" TYPE="crypto_LUKS" PARTLABEL="persistent" PARTUUID="d01d9b51-d61a-4b7e-bb1a-8af5c212a213"
+# /dev/vda1: LABEL_FATBOOT="COS_GRUB" LABEL="COS_GRUB" UUID="1C4C-97AA" BLOCK_SIZE="512" TYPE="vfat" PARTLABEL="efi" PARTUUID="6e42d80e-d67a-462b-b99c-2c1b5dda91cf"
+# /dev/mapper/oem: LABEL="COS_OEM" UUID="d10fc63d-9387-442c-9db8-a00e081858ec" BLOCK_SIZE="1024" TYPE="ext4"
+
+# Mount OEM
+/usr/lib/systemd/systemd-cryptsetup attach oem /dev/vda2 - tpm2-device=auto
+mount /dev/mapper/oem /oem
+
+# Mount persistent
+/usr/lib/systemd/systemd-cryptsetup attach persistent /dev/vda3 - tpm2-device=auto
+mount /dev/mapper/persistent /usr/local
+```
+
+To mount `/oem` and `/usr/local` after install you can also manually call `kcrypt unlock-all`. However this isn't supported yet.
