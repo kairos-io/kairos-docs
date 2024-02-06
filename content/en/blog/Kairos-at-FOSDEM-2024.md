@@ -12,7 +12,7 @@ Dimitris did a fantastic job sharing about how we switched our CI/CD pipelines, 
 
 ## Special Purpose Operating Systems Panel (SPOS)
 
-Originally, representatives from Kairos, [Flatcar](https://www.flatcar.org/), and [Unikraft](https://unikraft.org/) wanted to have a panel between the different SPOSs. Unfortunately, FOSDEM didn't accept our request until a the day of the event, so everything had to be done ad-hoc. Which probably ended up being a good thing because we were lucky to also have the participation from [Eve-OS](https://lfedge.org/projects/eve/), [MicroOS](https://microos.opensuse.org/) and [Softiron](https://softiron.com/) on top of the gang which originally signed up.
+Originally, representatives from Kairos, [Flatcar](https://www.flatcar.org/), and [Unikraft](https://unikraft.org/) wanted to have a panel between the different SPOSs. Unfortunately, FOSDEM didn't accept our request until the day of the event, so everything had to be done ad-hoc. Which probably ended up being a good thing because we were lucky to also have the participation from [Eve-OS](https://lfedge.org/projects/eve/), [MicroOS](https://microos.opensuse.org/) and [Softiron](https://softiron.com/) on top of the gang which originally signed up.
 
 I personally found it very helpful to hear we were not alone in our struggles and to learn about how each OS tries to solve sometimes the same problem a little differently depending on their target audience and vision.
 
