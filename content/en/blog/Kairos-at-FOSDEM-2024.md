@@ -8,7 +8,7 @@ Last year [I said](/blog/2023/02/07/kairos-at-fosdem-2023/) you could expect Kai
 
 ## From Free-Lunch to Dog-Fooding: A Culinary Journey in Crafting IaC for Kairos Testing and Building
 
-Dimitris did a fantastic job sharing about how we switched our CI/CD pipelines from using GitHub's free workers to our own based on Kairos. You can check out the slides and recordings [here](https://fosdem.org/2024/schedule/event/fosdem-2024-2983-from-free-lunch-to-dog-fooding-a-culinary-journey-in-crafting-iac-for-kairos-testing-and-building/) (as soon as they become available). We were quite pleased with the level of attendance, and we believe that the message came across.
+Dimitris did a fantastic job sharing about how we switched our CI/CD pipelines, from using GitHub's free workers to our own, based on Kairos. You can check out the slides and recordings [here](https://fosdem.org/2024/schedule/event/fosdem-2024-2983-from-free-lunch-to-dog-fooding-a-culinary-journey-in-crafting-iac-for-kairos-testing-and-building/) (as soon as they become available). We were quite pleased with the level of attendance, and we believe that the message came across.
 
 ## Special Purpose Operating Systems Panel (SPOS)
 
