@@ -115,7 +115,7 @@ offlineSearch = true
 # renovate: datasource=github-releases depName=kairos-io/provider-kairos
 provider_version = "v2.6.3"
 # renovate: datasource=github-releases depName=k3s-io/k3s
-k3s_version = "v1.29.0+k3s1"
+k3s_version = "v1.29.1+k3s2"
 # renovate: datasource=github-releases depName=kairos-io/kairos
 kairos_version = "v2.5.0"
 # renovate: datasource=github-releases depName=kairos-io/osbuilder
