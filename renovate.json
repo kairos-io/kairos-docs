@@ -9,12 +9,6 @@
     "every weekend"
   ],
   "timezone": "Europe/Brussels",
-  "packageRules": [
-    {
-      "matchUpdateTypes": ["patch"],
-      "automerge": true
-    }
-  ],
   "regexManagers": [
     {
       "fileMatch": [
