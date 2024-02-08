@@ -31,7 +31,7 @@ releases=$(git branch -r | sed -n '/origin\/v[0-9]\+\(\.[0-9]\+\)\{2\}/p')
 # build each release branch under public/vX.Y.Z
 for release in $releases; do
     # remove the release_ prefix
-    version=$(echo $release | sed 's/release_//')
+    version=$(echo $release | sed 's/origin\///')
     git checkout $release
     hugo mod get
     hugo mod graph
