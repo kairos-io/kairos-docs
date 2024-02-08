@@ -2,9 +2,10 @@
 set -e
 
 BASE_URL="${BASE_URL:-https://kairos.io}"
+root_dir="$ROOT_DIR:$(pwd)"
 
-binpath="${ROOT_DIR}/bin"
-publicpath="${ROOT_DIR}/public"
+binpath="${root_dir}/bin"
+publicpath="${root_dir}/public"
 export PATH=$PATH:$binpath
 
 if [ -z "$(type -P hugo)" ];
