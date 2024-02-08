@@ -95,6 +95,15 @@ prism_syntax_highlighting = true
 # This menu appears only if you have at least one [params.versions] set.
 version_menu = "Releases"
 
+# Add your release versions here
+[[params.versions]]
+  version = "master"
+  url = "/docs"
+
+[[params.versions]]
+  version = "v3.0.0"
+  url = "/v3.0.0/docs"
+
 # Repository configuration (URLs for in-page links to opening issues and suggesting changes)
 github_repo = "https://github.com/kairos-io/kairos-docs"
 # An optional link to a related project repo. For example, the sibling repository where your product code lives.
