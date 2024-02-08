@@ -6,6 +6,7 @@ root_dir="${ROOT_DIR:-$(pwd)}"
 
 binpath="${root_dir}/bin"
 publicpath="${root_dir}/public"
+current_branch=$(git rev-parse --abbrev-ref HEAD)
 export PATH=$PATH:$binpath
 
 if [ -z "$(type -P hugo)" ];
@@ -35,6 +36,7 @@ for release in $releases; do
 done
 
 # build the main branch under public
+git checkout $current_branch
 hugo mod get
 hugo mod graph
 HUGO_ENV="production" hugo --buildFuture --gc -b "${BASE_URL}" -d "${publicpath}"
