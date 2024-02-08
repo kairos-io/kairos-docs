@@ -7,7 +7,7 @@ root_dir="${ROOT_DIR:-$(pwd)}"
 
 binpath="${root_dir}/bin"
 publicpath="${root_dir}/public"
-current_branch="${BRANCH:-$(git rev-parse --abbrev-ref HEAD)}"
+current_commit="${COMMIT_REF:-$(git rev-parse --abbrev-ref HEAD)}"
 export PATH=$PATH:$binpath
 
 if [ -z "$(type -P hugo)" ];
@@ -27,7 +27,7 @@ npm install --save-dev autoprefixer postcss-cli postcss
 # list all branches to debug
 git fetch --no-tags --no-recurse-submodules origin '+refs/heads/add*:refs/remotes/origin/*'
 # get all release branches
-releases=$(git branch)
+releases=$(git branch | sed '1d' | sed 's/main//g')
 # build each release branch under public/vX.Y.Z
 for release in $releases; do
     # remove the release_ prefix
@@ -39,7 +39,7 @@ for release in $releases; do
 done
 
 # build the main branch under public
-git checkout $current_branch
+git checkout $current_commit
 hugo mod get
 hugo mod graph
 HUGO_ENV="production" hugo --buildFuture --gc -b "${BASE_URL}" -d "${publicpath}"
