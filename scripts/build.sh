@@ -27,7 +27,7 @@ npm install --save-dev autoprefixer postcss-cli postcss
 # list all branches to debug
 git fetch --no-recurse-submodules origin '+refs/heads/v*:refs/remotes/origin/*'
 # get all release branches
-releases=$(git branch -r | sed -n '/origin\/v*/p')
+releases=$(git branch -r | sed -n '/origin\/v[0-9]\+\(\.[0-9]\+\)\{2\}/p')
 # build each release branch under public/vX.Y.Z
 for release in $releases; do
     # remove the release_ prefix
