@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 set -e
 
 BASE_URL="${BASE_URL:-https://kairos.io}"
@@ -42,3 +43,5 @@ hugo mod graph
 HUGO_ENV="production" hugo --buildFuture --gc -b "${BASE_URL}" -d "${publicpath}"
 
 cp -rf CNAME "${publicpath}"
+
+set +x
