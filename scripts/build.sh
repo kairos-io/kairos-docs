@@ -2,7 +2,7 @@
 set -e
 
 BASE_URL="${BASE_URL:-https://kairos.io}"
-root_dir="$ROOT_DIR:$(pwd)"
+root_dir="${ROOT_DIR:-$(pwd)}"
 
 binpath="${root_dir}/bin"
 publicpath="${root_dir}/public"
