@@ -7,7 +7,7 @@ root_dir="${ROOT_DIR:-$(pwd)}"
 
 binpath="${root_dir}/bin"
 publicpath="${root_dir}/public"
-current_branch=$(git rev-parse --abbrev-ref HEAD)
+current_branch="${BRANCH:-$(git rev-parse --abbrev-ref HEAD)}"
 export PATH=$PATH:$binpath
 
 if [ -z "$(type -P hugo)" ];
@@ -24,6 +24,8 @@ rm -rf "${publicpath}" || true
 
 npm install --save-dev autoprefixer postcss-cli postcss
 
+# list all branches to debug
+git branch
 # get all release branches
 releases=$(git branch | grep -E 'release_v[0-9]+\.[0-9]+\.[0-0]+.?')
 # build each release branch under public/vX.Y.Z
