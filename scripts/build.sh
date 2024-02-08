@@ -22,6 +22,19 @@ rm -rf "${publicpath}" || true
 
 npm install --save-dev autoprefixer postcss-cli postcss
 
+# get all release branches
+releases=$(git branch | grep -E 'release_v[0-9]+\.[0-9]+\.[0-0]+.?')
+# build each release branch under public/vX.Y.Z
+for release in $releases; do
+    # remove the release_ prefix
+    version=$(echo $release | sed 's/release_//')
+    git checkout $release
+    hugo mod get
+    hugo mod graph
+    HUGO_ENV="production" hugo --buildFuture --gc -b "${BASE_URL}/$version" -d "${publicpath}/$version"
+done
+
+# build the main branch under public
 hugo mod get
 hugo mod graph
 HUGO_ENV="production" hugo --buildFuture --gc -b "${BASE_URL}" -d "${publicpath}"
