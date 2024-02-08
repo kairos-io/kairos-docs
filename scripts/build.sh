@@ -25,7 +25,7 @@ rm -rf "${publicpath}" || true
 npm install --save-dev autoprefixer postcss-cli postcss
 
 # list all branches to debug
-git fetch --no-tags
+git fetch --no-tags --no-recurse-submodules origin '+refs/heads/
 git branch
 # get all release branches
 releases=$(git branch | grep -E 'release_v[0-9]+\.[0-9]+\.[0-0]+.?')
