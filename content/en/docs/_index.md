@@ -8,6 +8,10 @@ menu:
     weight: 20
 ---
 
+{{% alert color="warning" %}}
+There are [known issues]({{< relref "known-issues">}}) in v3.0.0
+{{% /alert %}}
+
 Welcome to the Kairos Documentation
 
 Kairos is the open-source project that simplifies Edge, cloud, and bare metal OS lifecycle management. With a unified Cloud Native API, Kairos is community-driven, open source, and distro agnostic.
