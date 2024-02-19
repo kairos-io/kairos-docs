@@ -124,7 +124,6 @@ WORKDIR /work
 
 RUN <<EOF
 echo "#!/bin/bash -ex" >> /entrypoint.sh
-echo 'nohup swtpm socket --tpmstate dir=/tmp/ --ctrl type=unixio,path=/tmp/swtpm-sock --log level=20 --tpm2 &>/dev/null & ' >> /entrypoint.sh
 echo '[ ! -e /work/disk.img ] && qemu-img create -f qcow2 "/work/disk.img" 35G' >> /entrypoint.sh
 echo '/usr/bin/qemu-system-x86_64 -drive if=pflash,format=raw,unit=0,file="/usr/share/edk2/ovmf/OVMF_CODE.secboot.fd",readonly=on -drive if=pflash,unit=1,format=raw,file="/efivars.fd" -accel kvm -cpu host -m 8096 -drive file=/work/disk.img,if=none,index=0,media=disk,format=qcow2,id=disk1 -device virtio-blk-pci,drive=disk1,bootindex=0 -boot order=dc -vga virtio -cpu host -smp cores=4,threads=1 -machine q35,smm=on -chardev socket,id=chrtpm,path=/tmp/swtpm-sock -tpmdev emulator,id=tpm0,chardev=chrtpm -device tpm-tis,tpmdev=tpm0 \$@' >> /entrypoint.sh
 EOF
@@ -133,14 +132,31 @@ ENTRYPOINT [ "/entrypoint.sh" ]
 DOCKER
 ```
 
-2. Run the container image with the ISO file (replace the iso file name with yours):
+2. Start a TPM socket:
+
+```bash
+docker run --privileged --entrypoint swtpm -v $PWD/tpmstate:/tmp --rm -ti fedora-qemu socket --tpmstate dir=/tmp/ --ctrl type=unixio,path=/tmp/swtpm-sock --log level=20 --tpm2
+```
+
+Note: you need to keep the TPM container up and running for the VM to boot. Run the commands below in another terminal window.
+
+3. Run the container image with the ISO file (replace the iso file name with yours):
 
 ```bash
 # console only
-docker run --privileged -v $PWD:/work -v /dev/kvm:/dev/kvm --rm -ti fedora-qemu -cdrom /work/kairos-fedora-38-core-amd64-generic-v3.0.0-alpha1.uki.iso -nographic
+docker run --privileged -v $PWD/tpmstate:/tmp -v $PWD:/work -v /dev/kvm:/dev/kvm --rm -ti fedora-qemu -cdrom /work/kairos-fedora-38-core-amd64-generic-v3.0.0-alpha1.uki.iso -nographic
 ```
 
 Note: To stop the QEMU container you can use `Ctrl-a x` or `Ctrl-a c` to enter the QEMU console and then `quit` to exit.
+
+4. After installation, you can run the container image by booting only with the disk
+
+```bash
+# console only
+docker run --privileged -v $PWD/tpmstate:/tmp -v $PWD:/work -v /dev/kvm:/dev/kvm --rm -ti fedora-qemu -nographic
+```
+
+Note: you need to keep the TPM container up and running for the VM to boot.
 
 ## Data Encryption
 
