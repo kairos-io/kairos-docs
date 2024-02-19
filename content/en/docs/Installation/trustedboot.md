@@ -55,10 +55,10 @@ To generate the Secure boot certificates and keys run the following commands:
 ```bash
 MY_ORG="Acme Corp"
 # Generate the keys
-docker run -v $PWD/keys:/work/keys -ti --rm enki genkey "$MY_ORG" -o /work/keys
+docker run -v $PWD/keys:/work/keys -ti --rm enki genkey "$MY_ORG" --expiration-in-days 365 -o /work/keys
 ```
 {{% alert title="Warning" %}}
-Substitute `$MY_ORG` for your own string, this can be anything but it help identifying the Keys
+Substitute `$MY_ORG` for your own string, this can be anything but it help identifying the Keys. The keys duration can specified with `--expiration-in-days`. It is not possible to create keys that do not expire, but it is possible to specify an extremely large value (e.g. 200 years, etc.)
 {{% /alert %}}
 
 {{% alert title="Warning" %}}
