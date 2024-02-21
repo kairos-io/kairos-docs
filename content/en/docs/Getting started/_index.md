@@ -234,7 +234,7 @@ You can find instructions showing how to use the Kairos CLI below. In case you p
 To trigger the installation process via QR code, you need to use the Kairos CLI. The CLI is currently available only for Linux and Windows. It can be downloaded from the release artifact:
 
 ```bash
-curl -L https://github.com/kairos-io/provider-kairos/releases/download/{{<providerVersion>}}/kairosctl-v{{<providerVersion>}}-linux-amd64.tar.gz -o - | tar -xvzf - -C .
+curl -L https://github.com/kairos-io/provider-kairos/releases/download/{{<providerVersion>}}/kairosctl-{{<providerVersion>}}-linux-amd64.tar.gz -o - | tar -xvzf - -C .
 ```
 
 ```bash
