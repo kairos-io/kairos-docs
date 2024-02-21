@@ -40,12 +40,12 @@ $ reboot
 ```
 {{% /tab %}}
 {{% tab header="Kairos v3.0.0 and upwards" %}}
-
 To directly select the entry:
 
 ```bash
 $ kairos-agent bootentry --select statereset
 ```
+
 
 Or to get a list of available boot entries and select one interactively:
 
