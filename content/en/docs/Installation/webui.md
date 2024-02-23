@@ -3,8 +3,7 @@ title: "WebUI"
 linkTitle: "WebUI"
 weight: 1
 date: 2022-11-13
-description: >
-  Use the WebUI at boot to drive the installation
+description: Use the WebUI at boot to drive the installation
 ---
 
 {{% alert title="Note" color="warning" %}}

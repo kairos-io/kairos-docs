@@ -3,8 +3,7 @@ title: "Architecture"
 linkTitle: "Architecture"
 weight: 1
 date: 2022-11-13
-description: >
-  Kairos internal architecture
+description: Kairos internal architecture
 ---
 
 This section contains refrences to how Kairos works internally.

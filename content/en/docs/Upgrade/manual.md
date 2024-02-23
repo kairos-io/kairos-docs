@@ -3,7 +3,6 @@ title: "Manual"
 linkTitle: "Manual"
 weight: 2
 date: 2022-11-13
-description: >
 ---
 
 Upgrades can be run manually from the terminal.

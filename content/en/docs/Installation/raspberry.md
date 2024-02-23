@@ -3,8 +3,7 @@ title: "RaspberryPi"
 linkTitle: "RaspberryPi"
 weight: 4
 date: 2022-11-13
-description: >
-  Install Kairos on RaspberryPi 3 and 4
+description: Install Kairos on RaspberryPi 3 and 4
 ---
 
 Kairos supports Raspberry Pi model 3 and 4 with 64bit architecture.

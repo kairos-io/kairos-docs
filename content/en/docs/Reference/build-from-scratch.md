@@ -2,8 +2,7 @@
 title: "Build Kairos from scratch"
 linkTitle: "Build Kairos from scratch"
 weight: 5
-description: >
-    This article shows how to bring your own image with Kairos, and build a Kairos derivative from scratch using base container images from popular distributions such as Ubuntu, Fedora, openSUSE, etc.
+description: This article shows how to bring your own image with Kairos, and build a Kairos derivative from scratch using base container images from popular distributions such as Ubuntu, Fedora, openSUSE, etc.
 ---
 
 {{% alert title="Note" %}}

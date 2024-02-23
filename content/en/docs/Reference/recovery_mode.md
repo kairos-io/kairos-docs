@@ -3,7 +3,6 @@ title: "Recovery mode"
 linkTitle: "Recovery mode"
 weight: 7
 date: 2022-11-13
-description: >
 ---
 
 The Kairos recovery mode can be used to recover a damaged system or to regain access remotely (with assistance) to a machine which has been lost access to. The recovery mode is accessible only from the GRUB menu, from both the LiveCD, and an installed system.

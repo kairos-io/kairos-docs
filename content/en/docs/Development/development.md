@@ -3,8 +3,7 @@ title: "Development notes"
 linkTitle: "Development"
 weight: 1
 date: 2022-11-13
-description: >
-  Guidelines when developing Kairos
+description: Guidelines when developing Kairos
 ---
 
 Here you can find development notes intended for maintainers and guidance for new contributors.

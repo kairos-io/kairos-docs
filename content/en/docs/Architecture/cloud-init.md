@@ -3,7 +3,6 @@ title: "Cloud init based"
 linkTitle: "Cloud init based"
 weight: 3
 date: 2022-11-13
-description: >
 ---
 
 Kairos supports the [standard cloud-init syntax](https://github.com/mudler/yip#compatibility-with-cloud-init-format) and [its own extended syntax](https://github.com/mudler/yip) to allow to configure a system declaratively with a cloud-config centric approach.

@@ -3,8 +3,7 @@ title: "Network booting"
 linkTitle: "Network booting"
 weight: 5
 date: 2022-12-1
-description: >
-  Install Kairos from network
+description: Install Kairos from network
 ---
 
 Most hardware these days, supports booting an operating system from the network.

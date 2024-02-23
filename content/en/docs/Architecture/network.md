@@ -3,8 +3,7 @@ title: "P2P Network"
 linkTitle: "P2P Network"
 weight: 5
 date: 2023-02-15
-description: >
-    How Kairos leverage Peer-to-peer (P2P) to self-coordinate clusters at the edge.
+description: How Kairos leverage Peer-to-peer (P2P) to self-coordinate clusters at the edge.
 ---
 
 ## Introduction

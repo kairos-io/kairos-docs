@@ -3,8 +3,7 @@ title: "Entangle CRDs"
 linkTitle: "Entangle"
 weight: 8
 date: 2022-11-13
-description: >
- Inter-connecting Kubernetes clusters without the need of exposing any service to the public via E2E P2P encrypted networks.
+description: Inter-connecting Kubernetes clusters without the need of exposing any service to the public via E2E P2P encrypted networks.
  
 ---
 

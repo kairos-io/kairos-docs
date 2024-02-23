@@ -3,8 +3,7 @@ title: "Automated"
 linkTitle: "Automated"
 weight: 3
 date: 2022-11-13
-description: >
-  Install Kairos automatically, with zero touch provisioning
+description: Install Kairos automatically, with zero touch provisioning
 ---
 
 To automate Kairos installation, you can configure a specific portion of the installation configuration file. The configuration file can then be supplied in a few different ways, such as creating an additional ISO to mount, specifying a URL, or even creating an ISO from a container image with an embedded configuration file.

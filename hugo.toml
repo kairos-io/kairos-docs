@@ -51,11 +51,12 @@ anchor = "smart"
 [languages]
 [languages.en]
 title = "Kairos - The immutable Linux meta-distribution for edge Kubernetes"
-description = "The immutable edge Kubernetes"
-images = [ "images/kairos-800x419.jpeg" ]
 languageName ="English"
 # Weight used for sorting.
 weight = 1
+[languages.en.params]
+description = "The immutable edge Kubernetes"
+images = [ "images/kairos-800x419.jpeg" ]
 
 [social]
 twitter = "Kairos_OSS"
@@ -81,11 +82,6 @@ twitter = "Kairos_OSS"
       style = "tango"
 # Everything below this are Site Params
 
-[minify]
-  disableCSS = true
-  disableHTML = false
-  disableJS = true
-
 [params]
 copyright = "Kairos authors"
 privacy_policy = "https://policies.google.com/privacy"
@@ -109,9 +105,6 @@ github_project_repo = "https://github.com/kairos-io/kairos"
 github_branch = "main"
 # Google Custom Search Engine ID. Remove or comment out to disable search.
 #gcs_engine_id = "011737558837375720776:fsdu1nryfng"
-
-# Enable Algolia DocSearch
-algolia_docsearch = false
 
 # Enable Lunr.js offline search
 offlineSearch = true

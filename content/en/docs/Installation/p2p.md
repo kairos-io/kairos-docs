@@ -3,8 +3,7 @@ title: "P2P support"
 linkTitle: "P2P support"
 weight: 6
 date: 2022-11-13
-description: >
-  Install Kairos with p2p support
+description: Install Kairos with p2p support
 ---
 
 {{% alert title="Note" %}}

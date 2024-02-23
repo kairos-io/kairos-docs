@@ -2,8 +2,7 @@
 title: "Bundles"
 linkTitle: "Bundles"
 weight: 4
-description: > 
-    This section describe examples on how to use a Kairos bundle to deploy MetalLB on top of K3s
+description: This section describe examples on how to use a Kairos bundle to deploy MetalLB on top of K3s
 ---
 
 Welcome to the guide on setting up MetalLB on a Kairos cluster with K3s! This tutorial will walk you through the steps of using a Kairos [bundle]({{< relref "../advanced/bundles" >}}) to automatically configure MetalLB on your local network with an IP range of `192.168.1.10-192.168.1.20`. Check out the [MetalLB]({{< relref "../examples/metallb" >}}) example to configure it without a [bundle]({{< relref "../advanced/bundles" >}}).

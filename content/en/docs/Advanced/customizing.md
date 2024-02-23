@@ -2,7 +2,6 @@
 title: "Customizing the system image"
 linkTitle: "Customization"
 weight: 2
-description: >
 ---
 
 Kairos is an open source, container-based operating system. To modify Kairos and add a package, you'll need to build a container image from the [Kairos images]({{< relref "../reference/image_matrix" >}}). Here's an example with Docker which adds `figlet`:

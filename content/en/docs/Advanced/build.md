@@ -2,7 +2,6 @@
 title: "Build Kairos appliances"
 linkTitle: "Build"
 weight: 5
-description: >
 ---
 
 {{% alert title="Note" %}}

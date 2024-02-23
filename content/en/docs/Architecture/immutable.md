@@ -3,7 +3,6 @@ title: "Immutable"
 linkTitle: "Immutable"
 weight: 1
 date: 2022-11-13
-description: >
 ---
 
 Kairos adopts an immutable layout and derivatives created with its toolkit, inherit the same immutability attributes.

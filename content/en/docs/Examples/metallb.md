@@ -2,8 +2,7 @@
 title: "MetalLB"
 linkTitle: "MetalLB"
 weight: 4
-description: > 
-    This section describe examples on how to deploy Kairos with k3s and MetalLB
+description: This section describe examples on how to deploy Kairos with k3s and MetalLB
 ---
 
 Welcome to the guide on using MetalLB with Kairos and K3s on a bare metal host!

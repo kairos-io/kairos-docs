@@ -3,7 +3,6 @@ title: "Trusted Boot Installations"
 linkTitle: "Trusted Boot"
 weight: 6
 date: 2022-11-13
-description: >
 ---
 
 {{% alert title="Warning" %}}
