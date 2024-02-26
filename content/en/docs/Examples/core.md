@@ -2,8 +2,7 @@
 title: "Using Kairos Core Images as an Installer"
 linkTitle: "Using Kairos Core Images as an Installer"
 weight: 4
-description: > 
-    Core images serve as the foundation for creating downstream images or as an installer for deploying other images during the installation process. In this guide, we'll take a closer look at using Kairos core images as an installer to deploy other container images.
+description: Core images serve as the foundation for creating downstream images or as an installer for deploying other images during the installation process. In this guide, we'll take a closer look at using Kairos core images as an installer to deploy other container images.
 ---
 
 Kairos is a powerful, open-source meta-distribution that allows you to easily deploy and manage nodes on your Immutable infrastructure.

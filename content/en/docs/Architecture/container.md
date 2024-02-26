@@ -3,7 +3,6 @@ title: "Container based"
 linkTitle: "Container"
 weight: 2
 date: 2022-11-13
-description: >
 ---
 
 Kairos is a container-based operating system (OS).

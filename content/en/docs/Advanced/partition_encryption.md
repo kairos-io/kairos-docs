@@ -2,8 +2,7 @@
 title: "Encrypting User Data with Kairos"
 linkTitle: "Encrypting User Data with Kairos"
 weight: 5
-description: >
-    This section describes how to encrypt partition with LUKS in Kairos.
+description: This section describes how to encrypt partition with LUKS in Kairos.
 ---
 
 {{% alert title="Note" color="warning" %}}

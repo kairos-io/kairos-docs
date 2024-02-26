@@ -3,7 +3,6 @@ title: "Private registries authentication"
 linkTitle: "Private registries authentication"
 weight: 2
 date: 2023-08-08
-description: >
 ---
 
 

@@ -2,8 +2,7 @@
 title: "High Availability K3s deployments"
 linkTitle: "HA with K3s"
 weight: 3
-description: > 
-    This section contains instructions how to deploy Kairos with a High Available control-plane for K3s 
+description: This section contains instructions how to deploy Kairos with a High Available control-plane for K3s 
 ---
 
 Please refer to the [k3s HA](https://docs.k3s.io/installation/ha-embedded) documentation. 

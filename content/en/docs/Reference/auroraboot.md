@@ -3,8 +3,7 @@ title: "AuroraBoot"
 linkTitle: "AuroraBoot"
 weight: 8
 date: 2023-02-08
-description: >
-    Automatically provision machines with Kairos and AuroraBoot.
+description: Automatically provision machines with Kairos and AuroraBoot.
 ---
 
 **AuroraBoot** is a tool designed to make the process of bootstrapping Kairos machines quick, simple and efficient. It is specifically designed for the Kairos operating system and provides a comprehensive solution for downloading required artifacts and provisioning a machine, both from network or manually via flashing to USB stick. 

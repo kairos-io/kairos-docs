@@ -3,7 +3,6 @@ title: "Upgrading from Kubernetes"
 linkTitle: "Upgrading from Kubernetes"
 weight: 1
 date: 2022-11-13
-description: >
 ---
 
 Kairos upgrades can be performed either manually or via Kubernetes if the cluster is composed of Kairos nodes. In order to trigger upgrades, it is required to apply a `Plan` spec to the target cluster for the upgrade.

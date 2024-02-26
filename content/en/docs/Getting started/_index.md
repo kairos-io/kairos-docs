@@ -3,8 +3,7 @@ title: "Getting Started"
 linkTitle: "Getting Started"
 weight: 2
 icon: fa-regular fa-flag-checkered
-description: >
-  Getting started with Kairos
+description: Getting started with Kairos
 ---
 
 {{% alert title="Note" %}}

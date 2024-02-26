@@ -3,7 +3,6 @@ title: "kairosctl"
 linkTitle: "kairosctl"
 weight: 3
 date: 2022-11-13
-description: >
 ---
 
 The `kairosctl` binary is provided as part of releases associated to each Kairos version. It can be used from an external machine to generate network tokens and pair nodes on first-boot.

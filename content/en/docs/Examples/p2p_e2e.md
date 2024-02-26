@@ -3,8 +3,7 @@ title: "P2P multi-node cluster with AuroraBoot"
 linkTitle: "P2P multi-node cluster with AuroraBoot"
 weight: 6
 date: 2023-02-15
-description: >
-  Full end to end example to bootstrap a self-coordinated cluster with Kairos and AuroraBoot
+description: Full end to end example to bootstrap a self-coordinated cluster with Kairos and AuroraBoot
 ---
 
 {{% alert title="Note" %}}

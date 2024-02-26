@@ -3,8 +3,7 @@ title: "Nvidia AGX Orin"
 linkTitle: "Nvidia AGX Orin"
 weight: 4
 date: 2022-11-13
-description: >
-  Install Kairos on Nvidia AGX Orin
+description: Install Kairos on Nvidia AGX Orin
 ---
 
 This page describes how to install Kairos on [Nvidia AGX Orin](https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/jetson-orin/) in the eMMC.

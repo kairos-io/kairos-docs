@@ -2,7 +2,6 @@
 title: "Pushing configuration to a node after installation"
 linkTitle: "After install"
 weight: 1
-description: >
 ---
 
 Kairos configuration mechanism is based on the `cloud-config `file given during installation, however, it's possible to extend the configuration by providing additional cloud-configs in either `/oem` or `/usr/local/cloud-config`.

@@ -3,8 +3,7 @@ title: "P2P multi-node cluster"
 linkTitle: "P2P multi-node cluster"
 weight: 6
 date: 2022-11-13
-description: >
-  Install Kairos with p2p support, on a multi-node cluster
+description: Install Kairos with p2p support, on a multi-node cluster
 ---
 
 {{% alert title="Note" %}}

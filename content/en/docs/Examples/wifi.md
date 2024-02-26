@@ -2,7 +2,6 @@
 title: "Configuring wifi via cloud-config"
 linkTitle: "Configuring wifi via cloud-config"
 weight: 1
-description: > 
 ---
 
 

@@ -3,8 +3,7 @@ title: "Interactive"
 linkTitle: "Interactive"
 weight: 2
 date: 2022-11-13
-description: >
-  Install Kairos interactively
+description: Install Kairos interactively
 ---
 
 The interactive installation can be accessed from the LiveCD ISO and guides the user into the installation process.

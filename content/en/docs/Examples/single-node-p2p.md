@@ -3,8 +3,7 @@ title: "P2P single-node cluster"
 linkTitle: "P2P single-node cluster"
 weight: 6
 date: 2022-11-13
-description: >
-   This documentation page provides instructions on how to install Kairos with P2P support on a single-node cluster
+description: This documentation page provides instructions on how to install Kairos with P2P support on a single-node cluster
 ---
 
 {{% alert title="Note" color="warning" %}}

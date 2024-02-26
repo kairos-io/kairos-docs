@@ -2,8 +2,7 @@
 title: "Single Node k3s cluster"
 linkTitle: "Single node k3s cluster"
 weight: 1
-description: > 
-    This section describe examples on how to deploy Kairos with k3s as a single-node cluster
+description: This section describe examples on how to deploy Kairos with k3s as a single-node cluster
 ---
 
 In the example below we will use a bare metal host to provision a Kairos node in the local network with K3s.

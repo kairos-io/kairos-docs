@@ -2,7 +2,6 @@
 title: "Configuring partitions"
 linkTitle: "Configuring partitions"
 weight: 1
-description: >
 ---
 
 {{% alert title="Note" color="warning" %}}

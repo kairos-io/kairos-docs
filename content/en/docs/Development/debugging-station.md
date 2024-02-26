@@ -3,8 +3,7 @@ title: "Debugging station"
 linkTitle: "Debugging station"
 weight: 4
 date: 2023-03-15
-description: >
-  Debugging station
+description: Debugging station
 ---
 
 When developing or troubleshooting Kairos, it can be useful to share a local cluster with another peer. This section illustrates how to use [Entangle]({{< relref "../reference/entangle" >}}) to achieve that. We call this setup _debugging-station_.

@@ -2,8 +2,7 @@
 title: "Bundles"
 linkTitle: "Bundles"
 weight: 5
-description: >
-    Bundles are a powerful feature of Kairos that allow you to customize and configure your operating system. This section explains how to use and build custom bundles.
+description: Bundles are a powerful feature of Kairos that allow you to customize and configure your operating system. This section explains how to use and build custom bundles.
 
 ---
 

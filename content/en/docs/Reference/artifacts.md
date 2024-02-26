@@ -3,8 +3,7 @@ title: "Artifact Naming Convention"
 linkTitle: "Artifact Naming Convention"
 weight: 1
 date: 2023-07-19
-description: >
-  Detailed information about how we name our artifacts including repositories.
+description: Detailed information about how we name our artifacts including repositories.
 ---
 
 There are many different artifacts that Kairos produces. In this page we try to summarize them all and have a clear naming convention for them.

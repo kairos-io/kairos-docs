@@ -3,7 +3,6 @@ title: "Takeover"
 linkTitle: "Takeover"
 weight: 7
 date: 2022-11-13
-description: >
 ---
 
 Kairos supports takeover installations. Here are a few summarized steps:

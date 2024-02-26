@@ -3,7 +3,6 @@ title: "Meta-Distribution"
 linkTitle: "Meta-Distribution"
 weight: 4
 date: 2022-11-13
-description: >
 ---
 
 We like to define Kairos as a meta-Linux Distribution, as its goal is to convert other distros to an immutable layout with Kubernetes Native components.

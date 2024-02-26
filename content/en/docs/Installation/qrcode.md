@@ -3,8 +3,7 @@ title: "QR Code"
 linkTitle: "QR Code"
 weight: 1
 date: 2022-11-13
-description: >
-  Use the QR code displayed at boot to drive the installation
+description: Use the QR code displayed at boot to drive the installation
 ---
 
 {{% alert title="Warning" %}}

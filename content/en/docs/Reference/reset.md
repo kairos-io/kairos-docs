@@ -3,7 +3,6 @@ title: "Reset a node"
 linkTitle: "Reset"
 weight: 4
 date: 2022-11-13
-description: >
 ---
 
 Kairos has a recovery mechanism built-in which can be leveraged to restore the system to a known point. At installation time, the recovery partition is created from the installation medium and can be used to restore the system from scratch, leaving configuration intact and cleaning any persistent data accumulated by usage in the host (e.g. Kubernetes images, persistent volumes, etc. ).

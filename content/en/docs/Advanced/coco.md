@@ -2,7 +2,6 @@
 title: "Confidential computing setup"
 linkTitle: "Confidential Computing"
 weight: 9
-description: >
 ---
 
 {{% alert title="Note" %}}

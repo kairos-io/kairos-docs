@@ -3,7 +3,6 @@ title: "FAQ"
 linkTitle: "Frequently asked questions"
 weight: 9
 date: 2022-11-13
-description: >
 ---
 
 ## What is the difference between Kairos compared to Talos/Sidero Metal and Flatcar?

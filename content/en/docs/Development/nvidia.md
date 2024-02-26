@@ -3,8 +3,7 @@ title: "Booting Kairos on Nvidia Jetson ARM"
 linkTitle: "Booting Kairos on Nvidia Jetson ARM"
 weight: 5
 date: 2022-11-13
-description: >
-    This page contains a reference on how to run Kairos on Nvidia Jetson ARM
+description: This page contains a reference on how to run Kairos on Nvidia Jetson ARM
 ---
 
 {{% alert title="Note" %}}

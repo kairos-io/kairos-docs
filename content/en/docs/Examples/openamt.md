@@ -3,8 +3,7 @@ title: "Intel Open AMT Registration"
 linkTitle: "Intel Open AMT Registration"
 weight: 6
 date: 2023-04-17
-description: >
-  This bundle configures Intel AMT devices during Kairos installation.
+description: This bundle configures Intel AMT devices during Kairos installation.
 ---
 
 If Kairos is installed on a device with an Intel AMT device, the device can be automatically registered with an MPS server.

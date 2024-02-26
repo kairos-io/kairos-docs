@@ -3,8 +3,7 @@ title: "Deploying a High-Availability K3s Cluster with KubeVIP"
 linkTitle: "Deploying a High-Availability K3s Cluster with KubeVIP"
 weight: 6
 date: 2022-11-13
-description: >
-    This guide walks through the process of deploying a highly-available, P2P self-coordinated k3s cluster with KubeVIP, which provides a high available Elastic IP for the control plane. 
+description: This guide walks through the process of deploying a highly-available, P2P self-coordinated k3s cluster with KubeVIP, which provides a high available Elastic IP for the control plane. 
 ---
 
 {{% alert title="Note" %}}

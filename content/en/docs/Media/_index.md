@@ -3,8 +3,7 @@ title: "Media"
 linkTitle: "Media"
 weight: 9
 icon: fa-regular fa-circle-play
-description: >
-  Presentation Slides, Videos and other media on Kairos
+description: Presentation Slides, Videos and other media on Kairos
 ---
 
 ## Articles

@@ -2,7 +2,6 @@
 title: "Live layering"
 linkTitle: "Live layering"
 weight: 4
-description: >
 ---
 
 Live layering allows to activates/deactivates system extension images. System extension images may – dynamically at runtime — extend the `/usr/` and `/opt/` directory hierarchies with additional files.
