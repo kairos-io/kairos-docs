@@ -23,6 +23,6 @@ npm install --save-dev autoprefixer postcss-cli postcss
 
 hugo mod get
 hugo mod graph
-HUGO_ENV="production" hugo --buildFuture --gc -b "${BASE_URL}" -d "${publicpath}"
+HUGO_ENV="production" hugo --buildFuture --minify --gc -b "${BASE_URL}" -d "${publicpath}"
 
 cp -rf CNAME "${publicpath}"
