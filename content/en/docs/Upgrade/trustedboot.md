@@ -65,11 +65,60 @@ docker load -i *.tar
 docker push <IMAGE_NAME>
 ```
 
-{{% alert title="Upgrades with Kubernetes" %}}
+#### Upgrades with Kubernetes
 
 In order to upgrade with Kubernetes using system upgrade controller plans you can use the image used to generate the installable medium, and use it as a base image for the upgrade image. 
 When invoking `kairos-agent` in the plan however, you need to specify the `--source` flag to point to the image that contains the UKI file.
 
+In the following example `<CONTAINER_IMAGE>` is the source image used to generate the upgrade image, `<CONTAINER_IMAGE_TAG>` is the tag of that image and `<UPGRADE_IMAGE>` is the generated upgrade image (tag included) as per the documentation above.
+
+
+```yaml
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: upgrade
+  namespace: system-upgrade
+type: Opaque
+stringData:
+  upgrade.sh: |
+    #!/bin/sh
+    mount --rbind host/dev /dev
+    mount --rbind host/run /run
+    kairos-agent upgrade --source oci:<UPGRADE_IMAGE>
+---
+apiVersion: upgrade.cattle.io/v1
+kind: Plan
+metadata:
+  name: os-upgrade
+  namespace: system-upgrade
+  labels:
+    k3s-upgrade: server
+spec:
+  concurrency: 1
+  version: "<CONTAINER_IMAGE_TAG>"
+  nodeSelector:
+    matchExpressions:
+      - {key: kubernetes.io/hostname, operator: Exists}
+  serviceAccountName: system-upgrade
+  secrets:
+    - name: upgrade
+      path: /host/run/system-upgrade/secrets/upgrade
+  cordon: false
+  drain:
+    force: false
+    disableEviction: true
+  upgrade:
+    image: "<CONTAINER_IMAGE>"
+    command: ["chroot", "/host"]
+    args: ["sh", "/run/system-upgrade/secrets/upgrade/upgrade.sh"]
+```
+
+{{% alert title="Note" %}}
+To understand more on how this works, see the [example here](https://github.com/rancher/system-upgrade-controller/blob/master/examples/ubuntu/bionic.yaml) regarding
+the system upgrade controller and the [`suc-upgrade.sh` script](https://github.com/kairos-io/packages/blob/821de2dded0c2f590b539261002c5d257fb8ea07/packages/system/suc-upgrade/suc-upgrade.sh#L13-L15)
+which is used for regular (non trusted boot) upgrades.
 {{% /alert %}}
 
 ### Reference
