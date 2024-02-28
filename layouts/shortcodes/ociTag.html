@@ -1,9 +1,3 @@
-{{- if eq (.Get "flavor") "" -}}
-    {{- $.Page.Site.Params.softwareVersions.defaultFlavor -}}
-{{- else -}}
-    {{- .Get "flavor" -}}
-{{- end -}}
--
 {{- if eq (.Get "flavorRelease") "" -}}
     {{- $.Page.Site.Params.softwareVersions.defaultFlavorRelease -}}
 {{- else -}}
