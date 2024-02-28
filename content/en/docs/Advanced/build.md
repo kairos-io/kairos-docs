@@ -245,6 +245,30 @@ aws ec2 import-snapshot --description "Kairos custom image" --disk-container fil
 
 Follow the procedure described in [AWS docs](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-ebs.html#creating-launching-ami-from-snapshot) to register an AMI from snapshot. Use all default settings except for the firmware, set to force to UEFI boot.
 
+### Use the Image in OpenStack
+
+First get the generated image:
+```bash
+$ PORT=$(kubectl get svc osartifactbuilder-operator-osbuilder-nginx -o json | jq '.spec.ports[0].nodePort')
+$ curl http://<node-ip>:$PORT/hello-kairos.raw -o output.raw
+```
+
+Import the image to Glance:
+
+```bash
+osp image create hello-kairos-image --property hw_firmware_type='uefi' --file ./hello-kairos.raw
+```
+
+Image could be used to create an OpenStack instance.
+
+Set the property to force to UEFI boot. If not kairos won't be able to start and you could be prompted endlessly by :
+
+```bash
+Booting from hard drive...
+```
+
+
+
 ## Build a Cloud Image for Azure
 
 Similarly we can build images for Azure, consider:
