@@ -204,3 +204,12 @@ no = 'Oh snap! Sorry to hear that. Please <a href="https://github.com/kairos-io/
   [[module.imports]]
     path = "github.com/google/docsy/dependencies"
     disable = false
+
+# Add your release versions here
+[[params.versions]]
+  version = "master"
+  url = "/docs"
+
+[[params.versions]]
+  version = "v3.0.0"
+  url = "/v3.0.0/docs"
