@@ -16,7 +16,7 @@ The team is very excited to announce the next major release of Kairos, Kairos v3
 
 ## Trusted Boot
 
-At a glance, this feature will enable users of Kairos, to measure and sign with your own keys the Kernel, initrd and boot cmdline, ensuring that only your images can be booted in a given system. An in depth post will follow explaining the technicalities of how we do this. In the meantime you can head to our docs:
+At a glance, this feature will enable users of Kairos, to measure and sign with your own keys the Kernel, initrd and boot cmdline, ensuring that only your images can be booted in a given system. An in-depth post will follow explaining the technicalities of how we do this. In the meantime, you can head to our docs:
 
 - [Trusted Boot Architecture](https://kairos.io/docs/architecture/trustedboot/)
 - [Trusted Boot Installation](https://kairos.io/docs/installation/trustedboot/)
@@ -24,7 +24,7 @@ At a glance, this feature will enable users of Kairos, to measure and sign with 
 
 ## Versioned Docs
 
-Up until now, we only had one source of documentation. We know this can be problematic because you weren't able to tell from the documentation if a certain feature, configuration or else was meant for the nightly release or if it was already included in the Kairos version you're running. We did our best adding "notes" on some of the sections but as you can image this becomes problematic easily. For this reason, we've decided to version our documentation page starting with v3. To access it all you need to do is head to https://kairos.io/docs/ and click on the Releases menu in the navbar, which will list the available versions inclusing "master" which is our nighly release. Please check it out and let us know what you think.
+Until now, we only had one source of documentation. We know this can be problematic because you weren't able to tell from the documentation if a certain feature, configuration or else was meant for the nightly release or if it was already included in the Kairos version you're running. We did our best adding "notes" on some of the sections, but as you can image this becomes problematic easily. For this reason, we've decided to version our documentation page starting with v3. To access it, all you need to do is head to https://kairos.io/docs/ and click on the Releases' menu in the nav bar, which will list the available versions, including "master" which is our nighly release. Please check it out and let us know what you think.
 
 ## Known Issues
 
