@@ -41,7 +41,7 @@ Reading of `/etc/elemental/config.yaml` was broken for a bit but should be fixed
 
 ## Flavor Updates
 
-* UKI Ubuntu and non-UKI Ubuntu differ a bit. This is because we need to make UKI Ubuntu as slim as possible. We will probably continue working towards this goal
+* UKI Ubuntu and non-UKI Ubuntu differ a bit. This is because there is a limitation on the image size that can be loaded. This is defined by the firmware, so we cannot guarantee a common image size that will work on every system. So far we have seen limits of around 800Mb to 1Gb. We will continue working towards this goal so Kairos UKI images can be booted in as many systems as possible.
 * It is now possible to build Ubuntu 24.04 LTS, but we don't release any artifacts yet, and will only do so when it's officially released.
 
 ---
