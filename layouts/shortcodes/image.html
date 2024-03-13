@@ -1,1 +1,34 @@
-kairos-{{ if .Get "flavor" }}{{ .Get "flavor" }}{{ else }}{{ $.Page.Site.Params.softwareVersions.defaultFlavor }}{{ end }}-{{ if .Get "flavorRelease" }}{{ .Get "flavorRelease" }}{{ else }}{{ $.Page.Site.Params.softwareVersions.defaultFlavorRelease }}{{ end }}-{{ with .Get "variant" }}{{ . }}{{ end }}-amd64-generic-{{ $.Page.Site.Params.softwareVersions.kairos_version }}{{ if eq (.Get "variant") "standard" }}-k3s{{ $.Page.Site.Params.softwareVersions.k3s_version }}{{ end }}
+kairos-
+{{- if .Get "flavor" -}}
+    {{- .Get "flavor" -}}
+{{- else -}}
+    {{- $.Page.Site.Params.softwareVersions.defaultFlavor -}}
+{{- end -}}
+-
+{{- if .Get "flavorRelease" -}}
+    {{- .Get "flavorRelease" -}}
+{{- else -}}
+    {{- $.Page.Site.Params.softwareVersions.defaultFlavorRelease -}}
+{{- end -}}
+-
+{{- with .Get "variant" -}}{{- . -}}{{- end -}}
+-
+{{- if eq (.Get "arch") "" -}}
+    amd64
+{{- else -}}
+    {{- .Get "arch" -}}
+{{- end -}}
+-
+{{- if eq (.Get "model") "" -}}
+    generic
+{{- else -}}
+    {{- .Get "model" -}}
+{{- end -}}
+-
+{{- $.Page.Site.Params.softwareVersions.kairos_version -}}
+{{- if eq (.Get "variant") "standard" -}}
+    -k3s{{- replace $.Page.Site.Params.softwareVersions.k3s_version "+" "-" -}}
+{{- end -}}
+{{- with .Get "suffix" -}}
+    -{{- . -}}
+{{- end -}}
