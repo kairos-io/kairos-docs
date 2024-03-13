@@ -25,7 +25,7 @@ Extract the `img` file from a container image as described [in this page]({{< re
 Plug the SD card to your system. To flash the image, you can either use Etcher or `dd`. Note it's compressed with "XZ", so we need to decompress it first:
 
 ```bash
-xzcat {{< image variant="standard" >}}.img.xz | sudo dd of=<device> oflag=sync status=progress bs=10MB
+xzcat {{< image variant="standard" model="rpi4" arch="arm64">}}.img.xz | sudo dd of=<device> oflag=sync status=progress bs=10MB
 ```
 
 Once the image is flashed, there is no need to carry any other installation steps. We can boot the image, or apply our config.
