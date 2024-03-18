@@ -1,10 +1,13 @@
 #!/bin/bash
+set -x
 set -e
 
 BASE_URL="${BASE_URL:-https://kairos.io}"
+root_dir="${ROOT_DIR:-$(pwd)}"
 
-binpath="${ROOT_DIR}/bin"
-publicpath="${ROOT_DIR}/public"
+binpath="${root_dir}/bin"
+publicpath="${root_dir}/public"
+current_commit="${COMMIT_REF:-$(git rev-parse --abbrev-ref HEAD)}"
 export PATH=$PATH:$binpath
 
 if [ -z "$(type -P hugo)" ];
@@ -21,8 +24,26 @@ rm -rf "${publicpath}" || true
 
 npm install --save-dev autoprefixer postcss-cli postcss
 
+# list all branches to debug
+git fetch --no-recurse-submodules origin '+refs/heads/v*:refs/remotes/origin/*'
+# get all release branches
+releases=$(git branch -r | sed -n '/origin\/v[0-9]\+\(\.[0-9]\+\)\{2\}/p')
+# build each release branch under public/vX.Y.Z
+for release in $releases; do
+    # remove the release_ prefix
+    version=$(echo $release | sed 's/origin\///')
+    git checkout $release
+    hugo mod get
+    hugo mod graph
+    HUGO_ENV="production" hugo --buildFuture --gc -b "${BASE_URL}/$version" -d "${publicpath}/$version"
+done
+
+# build the main branch under public
+git checkout $current_commit
 hugo mod get
 hugo mod graph
 HUGO_ENV="production" hugo --buildFuture --minify --gc -b "${BASE_URL}" -d "${publicpath}"
 
 cp -rf CNAME "${publicpath}"
+
+set +x

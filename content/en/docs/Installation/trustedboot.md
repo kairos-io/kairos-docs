@@ -86,6 +86,56 @@ docker run -ti --rm -v $PWD/build:/result -v $PWD/rootfs:/rootfs -v $PWD/keys/:/
 {{% /tab %}}
 {{< /tabpane >}}
 
+### Config files
+
+Included in the artifact will be a configuration file. On the installation/upgrade media, it is called `norole.conf` but once it has been installed it will be named `active.conf`, `passive.conf` or `recovery.conf` which represents the configuration for the "cos", "fallback" and "recovery" images respectively.
+
+This configuration file includes the "title" of the artifact in the boot menu and the location of the "efi" file to boot. Here's an example:
+
+```
+# cat /efi/loader/entries/active.conf
+efi /EFI/kairos/active.efi
+title Kairos
+```
+
+### Branding
+
+You can overwrite the default "Kairos" title if you pass the `--boot-branding` flag to enki.
+
+
+```bash
+CONTAINER_IMAGE={{<oci flavor="ubuntu" flavorRelease="23.10" variant="core">}}-uki
+docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys enki build-uki $CONTAINER_IMAGE -t iso -d /result/ -k /keys --boot-branding "My Awesome OS"
+```
+
+Your config file should look now like this:
+
+
+```
+# cat /efi/loader/entries/active.conf
+efi /EFI/kairos/active.efi
+title My Awesome OS
+```
+
+{{% alert title="Warning" %}}
+Remember when you build upgrade mediums, to also add your branding, otherwise the new active image will be named differently than your fallback and recovery ones.
+{{% /alert %}}
+
+### Version and cmdline in the config files
+
+In addition to having the "title" and "efi" attributes, you can include in the config files the OS "version" and "cmdline". To do so, pass `--include-version-in-config` or `--include-cmdline-in-config` flags to enki.
+
+{{% alert title="Info" %}}
+The cmdline, will only show what is different between the default cmdline and the currently used cmdline. If you pass `--include-cmdline-in-config` to a default installation, the attribute cmdline will be empty.
+{{% /alert %}}
+
+```
+cmdline awesome=true
+title Awesome OS
+efi /EFI/kairos/active.efi
+version v3.0.0
+```
+
 ## Installation
 
 The installation process is performed as usual and the [Installation instructions]({{< relref "../installation" >}}) can be followed, however the difference is that user-data will be automatically encrypted (both the OEM and the persistent partition) by using the TPM chip and the Trusted Boot mechanism.
