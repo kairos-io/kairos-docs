@@ -243,9 +243,74 @@ install:
   - PARTITION_TWO
 ```
 
-### Notes
+## Notes
 
-#### Mount partitions after install
+### Install additional files from the Installer ISO to the encrypted portions
+
+The ISO installer images can be used to install additional content in the encrypted portion of the disk. 
+
+The osbuilder image can overlay additional files into the iso. For example specify `--overlay-iso /additional/path` to have added the files in the folder inside the ISO. The content can be accessed during installation in `/run/initramfs/live`. 
+For example, to install content of the ISO inside the OEM partition, and to restore those after a reset we can use the following cloud config:
+
+```yaml
+#cloud-config
+
+install:
+  device: "/dev/vda"
+  auto: true
+  partitions:
+    oem:
+      size: 4000
+      fs: ext4
+
+users:
+- name: "kairos"
+  passwd: "kairos"
+
+stages:
+  after-install:
+      - commands:
+        - echo "Copying files to oem and persistent"
+        - /usr/lib/systemd/systemd-cryptsetup attach persistent $(findfs PARTLABEL=persistent) - tpm2-device=auto
+        - /usr/lib/systemd/systemd-cryptsetup attach oem $(findfs PARTLABEL=oem) - tpm2-device=auto
+        - mount /dev/mapper/persistent /usr/local
+        - mount /dev/mapper/oem /oem
+        - mkdir -p /usr/local/.state/opt.bind
+        - mkdir -p /oem/opt.bind
+        - cp -rfv /run/initramfs/live/data/* /usr/local/.state/opt.bind
+        - cp -rfv /run/initramfs/live/data/* /oem/opt.bind
+        - umount /dev/mapper/persistent
+        - umount /dev/mapper/oem
+        - cryptsetup close /dev/mapper/persistent
+        - cryptsetup close /dev/mapper/oem
+
+  after-reset:
+      - commands:
+        - |
+          /bin/bash <<'EOF'
+          #!/bin/bash
+
+          set -e
+          echo "Copying files from oem to persistent"
+          # /oem was mounted in my tests. Let's umount it to be sure.
+          umount /oem || true
+          # Close all encrypted partitions
+          for p in $(ls /dev/mapper/vda*); do cryptsetup close $p; done
+          /usr/lib/systemd/systemd-cryptsetup attach persistent $(findfs PARTLABEL=persistent) - tpm2-device=auto
+          /usr/lib/systemd/systemd-cryptsetup attach oem $(findfs PARTLABEL=oem) - tpm2-device=auto
+          mount /dev/mapper/persistent /usr/local
+          mount /dev/mapper/oem /oem
+          mkdir -p /usr/local/.state/opt.bind
+          cp -rfv /oem/opt.bind/* /usr/local/.state/opt.bind
+          umount /dev/mapper/persistent
+          umount /dev/mapper/oem
+          cryptsetup close /dev/mapper/persistent
+          cryptsetup close /dev/mapper/oem
+
+          EOF
+```
+
+### Mount partitions after install
 
 `/oem` and `/usr/local` can be mounted after installation to prepare content before first-boot.
 
