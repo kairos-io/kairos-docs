@@ -9,7 +9,7 @@ menu:
 ---
 
 {{% alert color="warning" %}}
-There are [known issues]({{< relref "known-issues">}}) in v3.0.0
+There are [known issues]({{< relref "known-issues">}}) in v3.0.1
 {{% /alert %}}
 
 Welcome to the Kairos Documentation
