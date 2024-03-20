@@ -117,7 +117,7 @@ k3s_version = "v1.29.0+k3s1"
 # renovate: datasource=github-releases depName=kairos-io/kairos
 kairos_version = "v3.0.1"
 # renovate: datasource=github-releases depName=kairos-io/osbuilder
-osbuilder_version = "v0.10.2"
+osbuilder_version = "v0.200.7"
 # renovate: datasource=github-releases depName=kairos-io/AuroraBoot
 auroraboot_version = "v0.2.7"
 flavor = "debian"
