@@ -38,15 +38,6 @@ Any change, or upgrade of the node to a new version of the OS requires those ass
 
 The steps below will guide you into generating the installable assets, and how to re-generate the assets to upgrade the node to a new version of the OS.
 
-## Build the container image used to generate keys and installable medium
-
-```bash
-# Build the container image that will be used to generate the keys and installable medium
-git clone https://github.com/kairos-io/enki.git
-cd enki
-docker build -t enki --target tools-image .
-```
-
 ## Key generation
 
 To generate the Secure boot certificates and keys run the following commands:
@@ -54,7 +45,7 @@ To generate the Secure boot certificates and keys run the following commands:
 ```bash
 MY_ORG="Acme Corp"
 # Generate the keys
-docker run -v $PWD/keys:/work/keys -ti --rm enki genkey "$MY_ORG" --expiration-in-days 365 -o /work/keys
+docker run -v $PWD/keys:/work/keys -ti --rm quay.io/kairos/osbuilder-tools:latest genkey "$MY_ORG" --expiration-in-days 365 -o /work/keys
 ```
 {{% alert title="Warning" %}}
 Substitute `$MY_ORG` for your own string, this can be anything but it help identifying the Keys. The keys duration can specified with `--expiration-in-days`. It is not possible to create keys that do not expire, but it is possible to specify an extremely large value (e.g. 200 years, etc.)
@@ -71,17 +62,17 @@ To build the installable medium you need to run the following commands:
 {{< tabpane text=true  >}}
 {{% tab header="From a container image" %}}
 ```bash
-CONTAINER_IMAGE=quay.io/kairos/fedora:38-core-amd64-generic-v3.0.0-alpha1
-# ubuntu:
-# CONTAINER_IMAGE=quay.io/kairos/ubuntu:23.10-core-amd64-generic-v3.0.0-alpha1
-docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys enki build-uki $CONTAINER_IMAGE -t iso -d /result/ -k /keys
+CONTAINER_IMAGE=quay.io/kairos/fedora:38-core-amd64-generic-v3.0.0-beta1-uki
+docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki $CONTAINER_IMAGE -t iso -d /result/ -k /keys
+# to build an EFI file only
+docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki $CONTAINER_IMAGE -t uki -d /result/ -k /keys
 ```
 {{% /tab %}}
 {{% tab header="From a directory" %}}
 ```bash
 # Assuming you have a "rootfs" directory with the content of the OS
 # If the image is in a directory ($PWD/rootfs) you can use the following command
-docker run -ti --rm -v $PWD/build:/result -v $PWD/rootfs:/rootfs -v $PWD/keys/:/keys enki build-uki dir:/rootfs/ -t iso -d /result/ -k /keys
+docker run -ti --rm -v $PWD/build:/result -v $PWD/rootfs:/rootfs -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki dir:/rootfs/ -t iso -d /result/ -k /keys
 ```
 {{% /tab %}}
 {{< /tabpane >}}
@@ -158,7 +149,7 @@ See the [Trusted Boot Upgrade]({{< relref "../upgrade/trustedboot" >}}) page.
 
 To test the ISO file locally QEMU can be used. In order to test Secure Boot components you need an ed2k firmware with secureboot in QEMU. If you don't have QEMU locally and/or you don't have the correct dependencies you can follow the steps below that build a container image with QEMU and the needed dependencies and use that container to run the ISO file in a VM with Docker.
 
-1. Build the container image with the QEMU/Secure Boot dependencies (note to replace disk, VM size and ISO file name):
+1. Build the container image with the QEMU/Secure Boot dependencies (note to replace disk size/cpu/ram not needed):
 
 ```bash
 docker build -t fedora-qemu -<<DOCKER
@@ -193,7 +184,7 @@ Note: you need to keep the TPM container up and running for the VM to boot. Run 
 
 ```bash
 # console only
-docker run --privileged -v $PWD/tpmstate:/tmp -v $PWD:/work -v /dev/kvm:/dev/kvm --rm -ti fedora-qemu -cdrom /work/kairos-fedora-38-core-amd64-generic-v3.0.0-alpha1.uki.iso -nographic
+docker run --privileged -v $PWD/tpmstate:/tmp -v $PWD:/work -v /dev/kvm:/dev/kvm --rm -ti fedora-qemu -nographic -cdrom kairos-fedora-38-core-amd64-generic-v3.0.0-alpha1.uki.iso
 ```
 
 Note: To stop the QEMU container you can use `Ctrl-a x` or `Ctrl-a c` to enter the QEMU console and then `quit` to exit.
@@ -324,11 +315,11 @@ stages:
 # /dev/mapper/oem: LABEL="COS_OEM" UUID="d10fc63d-9387-442c-9db8-a00e081858ec" BLOCK_SIZE="1024" TYPE="ext4"
 
 # Mount OEM
-/usr/lib/systemd/systemd-cryptsetup attach oem /dev/vda2 - tpm2-device=auto
+/usr/lib/systemd/systemd-cryptsetup attach oem $(findfs PARTLABEL=oem) - tpm2-device=auto
 mount /dev/mapper/oem /oem
 
 # Mount persistent
-/usr/lib/systemd/systemd-cryptsetup attach persistent /dev/vda3 - tpm2-device=auto
+/usr/lib/systemd/systemd-cryptsetup attach persistent $(findfs PARTLABEL=persistent) - tpm2-device=auto
 mount /dev/mapper/persistent /usr/local
 ```
 
