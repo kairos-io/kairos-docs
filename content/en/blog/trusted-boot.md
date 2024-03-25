@@ -64,7 +64,7 @@ Considering the transition to modern hardware, especially with widespread EFI su
 
 The goal is clear: we aim to minimize complexity in building a secure, efficient stack, reusing as much components well trusted and established by the community. By reducing the number of components, we strive for a more secure and streamlined system.
 
-### Before (or how it worked up till today)
+## Booting in Linux
 
 When a Linux system starts, it goes through a multi-stage process to load the operating system. This process can be broken down roughly into the following steps:
 
@@ -79,6 +79,24 @@ Throughout these stages, the components—firmware, bootloader, kernel, initrd, 
 This chain is the one we in the Linux and tech industry we are very much familiar with. Several designs and strategies have been developed to secure this stack over time, for instance Verified kernels and drivers, or Secure Boot to sign the bootloader and be able to trust its authenticity. There are various bootloader implementations as well, tied to more secure HW (like TPM devices).
 
 However, as technologies and security measures evolved, attacks evolved as well. Specific hardware now can be leveraged to increase the security posture of the boot process, and it is time for a change, as the market demands more sophisticated security measures to protect against malicious actors.
+
+## Booting with a TPM-equipped Hardware
+
+When a device equipped with TPM, and a sufficiently modern hardware boots, several steps happen sequentially.
+
+Many hardware platforms use a Core Root of Trust for Measurements (CRTM), which is the very first thing that boots, even before the firmware. The CRTM gets a hash of the firmware and sends it to the TPM chip, which measures the running software and is a requirement for trusted boot. The TPM chip then loads the firmware/BIOS. 
+
+The TPM takes note of the measurement and stores the hash in a bank of multiple platform configuration registers (PCRs). In order to store measurements, the TPM chip extends the banks from the previous values, as these changes to the stack are easy to recognize during the boot.
+
+![CRTM trusted boot](https://github.com/kairos-io/kairos-docs/assets/2420543/5a0244c3-ff58-4ea0-83b3-b391ccac0b91)
+
+Next, the BIOS or firmware measures the subsequent stage (bootloader or UKI) and sends it to the TPM, then loads the UKI and continues booting.
+
+Once the TPM is asked to release an encryption key to unseal the full disk encryption, it will check if the measurements it has are valid. If a bootloader is present, it will have already measured the UKI files, and measurement also happens when initrd starts and when the running system is ready to check eventual manipulations (e.g., kernel boot command line). The process is also bound to the secure boot signatures, so any manipulation of the UKI files would be allowed only by the key holders.
+
+If a malicious attacker tries to load custom software or modify an image in any way, they must extend the PCR value and align it with the value it would have had following an expected boot. The cryptographic robustness of the hash algorithm makes achieving this computationally expensive, thereby helping to support security. 
+
+If the firmware or bootloader have been tampered with, the hash values stored in the PCR won’t match expected measurements, and the system will flag an alert and prevent boot from happening — intentionally bricking the host device as a failsafe. 
 
 ## Kairos and Trusted Boot
 
@@ -109,6 +127,8 @@ During the boot process, cryptographic assessments are made using the Trusted Pl
 
 ![bootingkeys](https://github.com/kairos-io/kairos-docs/assets/2420543/49ad3793-b53e-40e9-96da-58cec5d4df4c)
 
+
+
 ## Security consideration
 
 The existing framework guarantees that the initial phase (UKI file) remains immutable, with only this phase capable of decrypting the drive's encrypted data. Indeed there is no pivoting into another system like in the traditional Linux boot process. This design choice ensures that the system remains a single component, with the UKI file acting as the sole point of entry for the system.
@@ -124,3 +144,12 @@ Also, implementing measurements for a second phase would significantly complicat
 An alternative approach involves maintaining a singular initial phase, which would entail measuring all subsequent stages. However, this concept remains a topic of ongoing debate without any concrete solutions thus far.
 
 A concrete example: should a hacker remotely access the system without measures in place for the transitioned stage, they could alter the entire rootfs during operation without detection. In contrast, by leaving the first stage unaltered in the current method, modifications to the rootfs are prevented.
+
+## Learn More
+Trusted boot is one of many recommended security techniques — but it’s absolutely critical to ensuring you can trust the integrity of your device, particularly when it’s deployed in the field.
+
+We've only just scratched the surface of trusted boot as a concept, how it works and the architectural details of the Kairos implementation that contribute to the overall security posture. If you’d like to learn more:
+
+- [Check out our CNCF presentation, available on demand.](https://www.youtube.com/watch?v=6ftX8o_I8P8)
+- Learn more secure edge architectures including trusted boot, by downloading [the SENA white paper](https://kairos.io/blog/2023/04/18/kairos-is-now-part-of-the-secure-edge-native-architecture-by-spectro-cloud-and-intel/). 
+- Check out Kairos’ [trusted boot architectural documentation](https://kairos.io/docs/architecture/trustedboot/) and [try it out for yourself](https://kairos.io/docs/installation/trustedboot/).
