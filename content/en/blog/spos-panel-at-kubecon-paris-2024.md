@@ -6,7 +6,7 @@ author: Mauro Morales ([Twitter](https://twitter.com/mauromrls)) ([GitHub](https
 
 I recently had the opportunity to attend KubeCon 2024. You can find my recap at the [Spectro Cloud Blog](https://www.spectrocloud.com/blog/kubecon-paris-edge-ai-and-la-vie-en-cloud-native), but I'd like to add some additional information about the Special Purpose Operating System Panel in which we participated.
 
-The panel was schedule for the last day of KubeCon, which I think probably hurt the attendance since many people had already left. Nevertheless, according to the scheduling tool 351 people were planning to attend.
+The panel was scheduled for the last day of KubeCon, which I think probably hurt the attendance since many people had already left. Nevertheless, according to the scheduling tool, 351 people were planning to attend.
 
 On set, we had Sean McGinnis from AWS representing Bottlerocket, Danielle Tal from Microsoft representing Flatcar, Felipe Huici from Unikraft representing Unikraft, Justin Haynes from Google representing COS and myself from Spectro Cloud representing Kairos. The panel was moderated by Thilo Fromm also from Microsoft, who did a fantastic job keeping everyone engaged. In the audience we also had representatives from Talos and EveOS. Most of us are part of the Special Purpose Operating System Work Group under the CNCF TAG Runtime.
 
