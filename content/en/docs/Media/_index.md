@@ -40,6 +40,7 @@ Starts at `9:23`:
 
 ### Conferences
 
+{{< youtube id="uD-T9LdfvrM" title="Special Purpose Operating Systems: The Next Step in OS Evolution or One-Trick Ponies?" >}}
 {{< youtube id="dwS-dBAAuOk" title="" >}}
 {{< youtube id="UmBxh5q_AF0" title="Devconf.cz" >}}
 {{< youtube id="46qcE5MC6-8" title="" >}}
