@@ -9,9 +9,10 @@ menu:
 ---
 
 {{% alert color="warning" %}}
-The following issues are specific to v3.0.0
+The following issues are specific to v3.0.1
 {{% /alert %}}
 
+- :warning: openSUSE Tumbleweed was affected by the xz Utils Backdoor. We deleted all related artifacts, so you will not find them on our OCI image repository or GitHub releases. Read more about it [here](https://kairos.io/blog/2024/04/02/xz-utils-backdoor/)
 - Filesystem expansion on rpi4 doesn't work with Alpine [#1995](https://github.com/kairos-io/kairos/issues/1995)
 - `cgroup_memory` not mounted in Alpine rpi4 [#2002](https://github.com/kairos-io/kairos/issues/2002)
 - Upgrade on Alpine arm64 errors [#2135](https://github.com/kairos-io/kairos/issues/2135)
