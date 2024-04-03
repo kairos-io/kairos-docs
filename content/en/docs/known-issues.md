@@ -9,7 +9,7 @@ menu:
 ---
 
 {{% alert color="warning" %}}
-The following issues are specific to v3.0.0
+The following issues are specific to the master branch
 {{% /alert %}}
 
 - Filesystem expansion on rpi4 doesn't work with Alpine [#1995](https://github.com/kairos-io/kairos/issues/1995)
