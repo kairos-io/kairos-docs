@@ -113,11 +113,11 @@ offlineSearch = true
 # renovate: datasource=github-releases depName=kairos-io/provider-kairos
 provider_version = "v2.6.4"
 # renovate: datasource=github-releases depName=k3s-io/k3s
-k3s_version = "v1.29.0+k3s1"
+k3s_version = "v1.29.3+k3s1"
 # renovate: datasource=github-releases depName=kairos-io/kairos
-kairos_version = "v3.0.1"
+kairos_version = "v3.0.3"
 # renovate: datasource=github-releases depName=kairos-io/osbuilder
-osbuilder_version = "v0.200.7"
+osbuilder_version = "v0.200.9"
 # renovate: datasource=github-releases depName=kairos-io/AuroraBoot
 auroraboot_version = "v0.2.7"
 flavor = "debian"
@@ -126,7 +126,7 @@ registryURL = "quay.io/kairos"
 defaultFlavor = "opensuse"
 defaultFlavorRelease = "leap-15.5"
 # renovate: datasource=github-releases depName=kairos-io/kairos-framework
-defaultFrameworkRelease = "v2.4.4"
+defaultFrameworkRelease = "v2.7.22"
 # User interface configuration
 [params.ui]
 # Enable to show the side bar menu in its compact state.
@@ -217,3 +217,11 @@ no = 'Oh snap! Sorry to hear that. Please <a href="https://github.com/kairos-io/
 [[params.versions]]
   version = "v3.0.1"
   url = "/v3.0.1/docs"
+
+[[params.versions]]
+  version = "v3.0.2"
+  url = "/v3.0.2/docs"
+
+[[params.versions]]
+  version = "v3.0.3"
+  url = "/v3.0.3/docs"
