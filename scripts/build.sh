@@ -32,12 +32,14 @@ releases=$(git branch -r | sed -n '/origin\/v[0-9]\+\(\.[0-9]\+\)\{2\}/p')
 for release in $releases; do
     # remove the release_ prefix
     version=$(echo $release | sed 's/origin\///')
+    git checkout go.sum go.mod package.json package-lock.json
     git checkout $release
     hugo mod get
     hugo mod graph
     HUGO_ENV="production" hugo --buildFuture --gc -b "${BASE_URL}/$version" -d "${publicpath}/$version"
 done
 
+git checkout go.sum go.mod package.json package-lock.json
 # build the main branch under public
 git checkout $current_commit
 hugo mod get

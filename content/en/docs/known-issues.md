@@ -8,10 +8,6 @@ menu:
     weight: 20
 ---
 
-{{% alert color="warning" %}}
-The following issues are specific to the master branch
-{{% /alert %}}
-
 - Filesystem expansion on rpi4 doesn't work with Alpine [#1995](https://github.com/kairos-io/kairos/issues/1995)
 - `cgroup_memory` not mounted in Alpine rpi4 [#2002](https://github.com/kairos-io/kairos/issues/2002)
 - Upgrade on Alpine arm64 errors [#2135](https://github.com/kairos-io/kairos/issues/2135)
