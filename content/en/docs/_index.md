@@ -9,7 +9,7 @@ menu:
 ---
 
 {{% alert color="warning" %}}
-There are [known issues]({{< relref "known-issues">}}) on the master branch
+There are [known issues]({{< relref "known-issues">}}) on this version
 {{% /alert %}}
 
 Welcome to the Kairos Documentation
