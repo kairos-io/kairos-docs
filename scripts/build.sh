@@ -36,6 +36,7 @@ for release in $releases; do
     hugo mod get
     hugo mod graph
     HUGO_ENV="production" hugo --buildFuture --gc -b "${BASE_URL}/$version" -d "${publicpath}/$version"
+    git checkout go.sum go.mod package.json package-lock.json
 done
 
 # build the main branch under public
