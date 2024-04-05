@@ -8,15 +8,8 @@ menu:
     weight: 20
 ---
 
-  🐛 Raspberry: EFI booting no longer supported on kernels shipped with ubuntu > 22.04 https://github.com/kairos-io/kairos/issues/2249
-
-We haven't been able to address the following issues on Alpine:
-  🐛 It's not possible to login on an Alpine 3.18 RPi https://github.com/kairos-io/kairos/issues/2439
-  🐛 Filesystem expansion on rpi4 doesn't work with Alpine https://github.com/kairos-io/kairos/issues/1995
-  🐛 cgroup_memory not mounted in Alpine rpi4 https://github.com/kairos-io/kairos/issues/2002
-  🐛 Upgrade on alpine arm errors https://github.com/kairos-io/kairos/issues/2135
-  🐛 reset from the GRUB menu on alpine, gets stuck in an endless loop https://github.com/kairos-io/kairos/issues/2136
-  
+- Raspberry: EFI booting no longer supported on kernels shipped with Ubuntu > 22.04 https://github.com/kairos-io/kairos/issues/2249
+- It's not possible to login on an Alpine 3.18 RPi https://github.com/kairos-io/kairos/issues/2439
 - Filesystem expansion on rpi4 doesn't work with Alpine [#1995](https://github.com/kairos-io/kairos/issues/1995)
 - `cgroup_memory` not mounted in Alpine rpi4 [#2002](https://github.com/kairos-io/kairos/issues/2002)
 - Upgrade on Alpine arm64 errors [#2135](https://github.com/kairos-io/kairos/issues/2135)
