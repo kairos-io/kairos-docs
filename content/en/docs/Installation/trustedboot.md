@@ -84,19 +84,22 @@ Some BIOS/UEFI allows to export the keys to USB stick directly from the BIOS/UEF
 ```bash
 MY_ORG="Acme Corp"
 MACHINE_CERTS="$PWD/path/to/machine-certs"
-# ~$ tree $PWD/path/to/machine-certs
-# $PWD/path/to/machine-certs
-# └── custom
-#     ├── db
-#     │   └── db
-#     ├── dbx
-#     ├── KEK
-#     │   └── KEK
-#     └── PK
+# ~$ tree $MACHINE_CERTS
+# /path/to/machine-certs/
+# ├── db
+# ├── dbx
+# ├── KEK
+# └── PK
 
 # Generate the keys
 docker run -v $MACHINE_CERTS:/work/machine-keys -v $PWD/keys:/work/keys -ti --rm quay.io/kairos/osbuilder-tools:latest genkey "$MY_ORG" --custom-cert-dir /work/machine-keys --expiration-in-days 365 -o /work/keys
 ```
+
+{{% alert title="Warning" %}}
+
+This command can be combined with the `--skip-microsoft-certs-I-KNOW-WHAT-IM-DOING` flag to avoid auto-enrolling the Microsoft keys if not needed.
+
+{{% /alert %}}
 
 ## Building installable medium
 
