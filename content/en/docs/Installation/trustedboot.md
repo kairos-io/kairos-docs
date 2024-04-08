@@ -40,7 +40,11 @@ The steps below will guide you into generating the installable assets, and how t
 
 ## Key generation
 
-To generate the Secure boot certificates and keys run the following commands:
+Keys can be generated from scratch, or the Microsoft certificates can be used, alternatively, if you can export the keys from your BIOS/UEFI you can use the same PK keys.
+
+By default keys are generated including the Microsoft ones, but you can skip them if you know what you are doing (see below).
+
+To generate the Secure boot certificates and keys along with the Microsoft keys run the following commands:
 
 ```bash
 MY_ORG="Acme Corp"
@@ -54,6 +58,45 @@ Substitute `$MY_ORG` for your own string, this can be anything but it help ident
 {{% alert title="Warning" %}}
 It is very important to preserve the keys generated in this process in a safe place. Loosing the keys will prevent you to generate new images that can be used for upgrades.
 {{% /alert %}}
+
+### Custom certificates by skipping Microsoft certificate keys
+
+{{% alert title="Warning" %}}
+Some firmware is signed and verified with Microsoft's or other vendor keys when secure boot is enabled. Removing those keys could brick them. It is preferable to not use the Microsoft certificates for precaution and security reasons, however as this might be potentially a dangerous action, only do this if you know what you are doing. To check if your firmware is signed with Microsoft's keys, you can check https://github.com/Foxboron/sbctl/wiki/FAQ#option-rom. See also: https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot#Enrolling_Option_ROM_digests.
+{{% /alert %}}
+
+If your hardware supports booting with custom Secure Boot keys, you can optionally create keys from scratch and skip the Microsoft certificate keys. To do so, run the following command:
+
+```bash
+MY_ORG="Acme Corp"
+# Generate the keys
+docker run -v $PWD/keys:/work/keys -ti --rm quay.io/kairos/osbuilder-tools:latest genkey "$MY_ORG" --skip-microsoft-certs-I-KNOW-WHAT-IM-DOING --expiration-in-days 365 -o /work/keys
+```
+
+### Exporting keys from BIOS/UEFI and using them
+
+This is useful if you want to handle mass-installations where you don't want to enroll the generated keys manually in your bios/uefi.
+
+Some hardware might require additional vendor keys, that could be e.g. used to sign additional firmware. In order to re-use the same set of keys in the machine, you can export the keys from the BIOS/UEFI and use them to generate the UKI files.
+
+Some BIOS/UEFI allows to export the keys to USB stick directly from the BIOS/UEFI setup menu (for example [HPE](https://techlibrary.hpe.com/docs/iss/proliant-gen10-uefi/GUID-26E9F167-8061-4D85-9A0A-B610D00DFA3B.html)). If you have the keys in a USB stick, you can copy in a directory and use them to generate the UKI files.
+
+```bash
+MY_ORG="Acme Corp"
+MACHINE_CERTS="$PWD/path/to/machine-certs"
+# ~$ tree $PWD/path/to/machine-certs
+# $PWD/path/to/machine-certs
+# └── custom
+#     ├── db
+#     │   └── db
+#     ├── dbx
+#     ├── KEK
+#     │   └── KEK
+#     └── PK
+
+# Generate the keys
+docker run -v $MACHINE_CERTS:/work/machine-keys -v $PWD/keys:/work/keys -ti --rm quay.io/kairos/osbuilder-tools:latest genkey "$MY_ORG" --custom-cert-dir /work/machine-keys --expiration-in-days 365 -o /work/keys
+```
 
 ## Building installable medium
 
