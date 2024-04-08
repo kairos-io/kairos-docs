@@ -105,7 +105,7 @@ To build the installable medium you need to run the following commands:
 {{< tabpane text=true  >}}
 {{% tab header="From a container image" %}}
 ```bash
-CONTAINER_IMAGE=quay.io/kairos/fedora:38-core-amd64-generic-v3.0.0-beta1-uki
+CONTAINER_IMAGE=quay.io/kairos/fedora:38-core-amd64-generic-{{< kairosVersion>}}-uki
 docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki $CONTAINER_IMAGE -t iso -d /result/ -k /keys
 # to build an EFI file only
 docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki $CONTAINER_IMAGE -t uki -d /result/ -k /keys
@@ -167,7 +167,7 @@ The cmdline, will only show what is different between the default cmdline and th
 cmdline awesome=true
 title Awesome OS
 efi /EFI/kairos/active.efi
-version v3.0.0
+version {{< kairosVersion>}}
 ```
 
 ## Installation
@@ -227,7 +227,7 @@ Note: you need to keep the TPM container up and running for the VM to boot. Run 
 
 ```bash
 # console only
-docker run --privileged -v $PWD/tpmstate:/tmp -v $PWD:/work -v /dev/kvm:/dev/kvm --rm -ti fedora-qemu -nographic -cdrom kairos-fedora-38-core-amd64-generic-v3.0.0-alpha1.uki.iso
+docker run --privileged -v $PWD/tpmstate:/tmp -v $PWD:/work -v /dev/kvm:/dev/kvm --rm -ti fedora-qemu -nographic -cdrom kairos-fedora-38-core-amd64-generic-{{< kairosVersion>}}.uki.iso
 ```
 
 Note: To stop the QEMU container you can use `Ctrl-a x` or `Ctrl-a c` to enter the QEMU console and then `quit` to exit.
