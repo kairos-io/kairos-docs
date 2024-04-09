@@ -1,27 +1,27 @@
 import * as params from '@params'
 const DOWNLOAD_CARDS_TREE = [
     {
-        integration:"ubuntu",
+        integration: "ubuntu",
         links: {
-            "X86":`https://github.com/kairos-io/kairos/releases/download/${params.kairosVersion}/kairos-ubuntu-23.10-standard-amd64-generic-${params.kairosVersion}-k3s${params.k3sVersion}.iso`,
-            "ARM":`docker pull quay.io/kairos/ubuntu:23.10-standard-arm64-rpi4-${params.kairosVersion}-k3s${params.k3sVersion.replace("+", "-")}-img`
+            "X86": `https://github.com/kairos-io/kairos/releases/download/${params.kairosVersion}/kairos-ubuntu-23.10-standard-amd64-generic-${params.kairosVersion}-k3s${params.k3sVersion}.iso`,
+            "ARM": `docker pull quay.io/kairos/ubuntu:23.10-standard-arm64-rpi4-${params.kairosVersion}-k3s${params.k3sVersion.replace("+", "-")}-img`
         }
     },
     {
-        integration:"fedora",
+        integration: "fedora",
         links: {
-            "X86":`https://github.com/kairos-io/kairos/releases/download/${params.kairosVersion}/kairos-fedora-38-standard-amd64-generic-${params.kairosVersion}-k3s${params.k3sVersion}.iso`,
-            "ARM":"// Temporarily there is no Fedora ARM support, please visit the link below for more information."
+            "X86": `https://github.com/kairos-io/kairos/releases/download/${params.kairosVersion}/kairos-fedora-38-standard-amd64-generic-${params.kairosVersion}-k3s${params.k3sVersion}.iso`,
+            "ARM": "// Temporarily there is no Fedora ARM support, please visit the link below for more information."
         }
     },
     {
-        integration:"alpine",
+        integration: "alpine",
         links: {
-            "X86":`https://github.com/kairos-io/kairos/releases/download/${params.kairosVersion}/kairos-alpine-3.19-standard-amd64-generic-${params.kairosVersion}-k3s${params.k3sVersion}.iso`,
-            "ARM":`docker pull quay.io/kairos/alpine:3.19-standard-arm64-rpi4-${params.kairosVersion}-k3s${params.k3sVersion.replace("+", "-")}-img`
+            "X86": `https://github.com/kairos-io/kairos/releases/download/${params.kairosVersion}/kairos-alpine-3.19-standard-amd64-generic-${params.kairosVersion}-k3s${params.k3sVersion}.iso`,
+            "ARM": `docker pull quay.io/kairos/alpine:3.19-standard-arm64-rpi4-${params.kairosVersion}-k3s${params.k3sVersion.replace("+", "-")}-img`
         }
     },
-      ].map(({integration, links}) => ({
+].map(({ integration, links }) => ({
     div: {
         children: [
             {
@@ -44,14 +44,14 @@ const DOWNLOAD_CARDS_TREE = [
                             a: {
                                 href: type === "X86" ? links[type] : "",
                                 class: type === "ARM" ? `open-dialog-${integration}` : "unclickable",
-                                children:[
+                                children: [
                                     {
-                                        span:{
+                                        span: {
                                             content: type
                                         }
                                     },
                                     {
-                                        span:{
+                                        span: {
                                             content: " version"
                                         }
                                     },
@@ -64,65 +64,65 @@ const DOWNLOAD_CARDS_TREE = [
                                 ]
                             },
                         })),
-                    {
-                        dialog: {
-                            id: `${integration}-modal`,
-                            children: [
-                                {
-                                    div:{
-                                        class: `copied-${integration}`,
-                                        content: "Copied"
-                                    }
-                                },
-                                {
-                                    p:{
-                                        content: "Please use the following docker command: ",
-                                        children: [
-                                            {
-                                                pre:{
-                                                    class: `code-${integration}`,
-                                                    content: links["ARM"]
+                        {
+                            dialog: {
+                                id: `${integration}-modal`,
+                                children: [
+                                    {
+                                        div: {
+                                            class: `copied-${integration}`,
+                                            content: "Copied"
+                                        }
+                                    },
+                                    {
+                                        p: {
+                                            content: "Please use the following docker command: ",
+                                            children: [
+                                                {
+                                                    pre: {
+                                                        class: `code-${integration}`,
+                                                        content: links["ARM"]
+                                                    }
                                                 }
-                                            }
-                                        ]
-                                    }
-                                },
-                                {
-                                    p:{
-                                        content: "You can find more information: ",
-                                        children: [
-                                            {
-                                                a: {
-                                                    content: "here",
-                                                    href: "https://kairos.io/docs/reference/image_matrix/#image-flavors",
-                                                    target: "_blank"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        p: {
+                                            content: "You can find more information: ",
+                                            children: [
+                                                {
+                                                    a: {
+                                                        content: "here",
+                                                        href: "https://kairos.io/docs/reference/image_matrix/#image-flavors",
+                                                        target: "_blank"
+                                                    }
                                                 }
-                                            }
-                                        ]
-                                    }
-                                },
-                                {
-                                    div:{
-                                        class: "modal-buttons",
-                                        children: [
-                                            {
-                                                button: {
-                                                    class: `copy-to-clipboard-${integration}`,
-                                                    content: "Copy Command",
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        div: {
+                                            class: "modal-buttons",
+                                            children: [
+                                                {
+                                                    button: {
+                                                        class: `copy-to-clipboard-${integration}`,
+                                                        content: "Copy Command",
+                                                    }
+                                                },
+                                                {
+                                                    button: {
+                                                        class: `close-dialog-${integration}`,
+                                                        content: "Close",
+                                                    }
                                                 }
-                                            },
-                                            {
-                                                button: {
-                                                    class: `close-dialog-${integration}`,
-                                                    content: "Close",
-                                                }
-                                            }
-                                        ]
+                                            ]
+                                        }
                                     }
-                                }
-                            ]
+                                ]
+                            }
                         }
-                    }
                     ]
                 }
             }
@@ -143,7 +143,7 @@ export const DOWNLOAD_BLADE_TREE = {
                             }
                         }, ...DOWNLOAD_CARDS_TREE
                     ]
-            }
+                }
             },
             {
                 a: {
@@ -170,27 +170,27 @@ export const WELCOME_BLADE_TREE = {
         class: "welcome-wrapper",
         children: [
             {
-                div:{
+                div: {
                     children: [
                         {
                             img: {
-                                src:"/index/wrapped-armadillo.png",
-                                alt:"wrapped-armadillo",
+                                src: "/index/wrapped-armadillo.png",
+                                alt: "wrapped-armadillo",
                             }
                         }
                     ]
                 }
             },
             {
-                div:{
+                div: {
                     children: [
                         {
-                            h2:{
+                            h2: {
                                 content: "Welcome to &nbsp",
                                 children: [
                                     {
                                         img: {
-                                            src:"/index/kairos-name-logo.png",
+                                            src: "/index/kairos-name-logo.png",
                                             alt: "kairos-name-logo"
                                         }
                                     }
@@ -209,7 +209,7 @@ export const WELCOME_BLADE_TREE = {
                                 content: "Watch this CNCF Webinar to meet Kairos",
                                 children: [
                                     {
-                                        i:{
+                                        i: {
                                             class: "fa-sharp fa-solid fa-circle-play"
                                         }
                                     }
@@ -230,18 +230,18 @@ const HOT_OFF_PRESS_CARDS = [
         link: "https://www.spectrocloud.com/news/spectro-cloud-launches-the-secure-edge-native-architecture-sena",
     },
     {
-        content: "Check us out in this The New Stack article by our maintainer, Ettore di Giacinto",
+        content: "Learn about Trusted Boot in this The New Stack article by our maintainer, Ettore di Giacinto",
         imgSrc: "/index/press-blade/theNewStack.png",
-        link: "https://thenewstack.io/livin-kubernetes-on-the-immutable-edge-with-kairos-project/",
+        link: "https://thenewstack.io/honey-i-secured-your-boot-edge-trusted-boot-with-kairos/",
     },
     {
         content: "Learn how to use the famous OSS project, LocalAI, with Kairos and K3s on your nodes",
         imgSrc: "/index/press-blade/k8s-superpowers.png",
         link: "https://thenewstack.io/looking-for-a-k3os-alternative-choosing-a-container-os-for-edge-k8s/",
     },
-].map(({content, imgSrc, link}) => ({
+].map(({ content, imgSrc, link }) => ({
     div: {
-        children:[
+        children: [
             {
                 p: {
                     content
@@ -284,7 +284,7 @@ export const HOT_OFF_PRESS_BLADE = {
         class: "hot-off-press",
         children: [
             {
-                h2:{
+                h2: {
                     content: "Hot off the press"
                 }
             },
@@ -319,12 +319,12 @@ const MAKES_US_DIFF_CARDS = [
         imgSrc: "/index/makes-diff/box.png",
         content: "Kairos supports automatic node provisioning via CRDs; upgrade management via Kubernetes; node repurposing and machine autoscaling; plus complete configuration management via cloud-init."
     },
-].map(({title, imgSrc, content})=>({
-    div:{
+].map(({ title, imgSrc, content }) => ({
+    div: {
         children: [
             {
                 div: {
-                    children:[
+                    children: [
                         {
                             img: {
                                 src: imgSrc,
@@ -340,7 +340,7 @@ const MAKES_US_DIFF_CARDS = [
                 }
             },
             {
-                p:{
+                p: {
                     content
                 }
             }
@@ -353,12 +353,12 @@ export const MAKES_US_DIFF_BLADE = {
         class: "makes-us-diff",
         children: [
             {
-                h2:{
+                h2: {
                     content: "What makes ",
                     children: [
                         {
                             span: {
-                                content:"Kairos "
+                                content: "Kairos "
                             }
                         },
                         {
@@ -400,21 +400,21 @@ const JOIN_US_CARDS = [
         content: "Join our <br/> Slack channel",
         href: "https://spectrocloudcommunity.slack.com/join/shared_invite/zt-g8gfzrhf-cKavsGD_myOh30K24pImLA#/shared-invite/email"
     },
-].map(({className, content, href})=>({
+].map(({ className, content, href }) => ({
     a: {
         href,
         target: "_blank",
         children: [
             {
-                i:{
+                i: {
                     class: className,
                 }
             },
             {
                 div: {
-                    children:[
+                    children: [
                         {
-                            p:{
+                            p: {
                                 content
                             }
                         }
@@ -427,7 +427,7 @@ const JOIN_US_CARDS = [
 }))
 
 export const JOIN_US_BLADE = {
-    div:{
+    div: {
         class: "join-us-wrap",
         children: [
             {
@@ -472,8 +472,8 @@ export const BASICS_BLADE = {
                 text: "Stretch your wings with best practices of common tasks after installing Kairos.",
                 href: "https://github.com/kairos-io/kairos/tree/master/examples"
             },
-        ].map(({title, imgSrc, text, href})=>({
-            a:{
+        ].map(({ title, imgSrc, text, href }) => ({
+            a: {
                 href,
                 target: "_blank",
                 children: [
@@ -487,18 +487,18 @@ export const BASICS_BLADE = {
                         div: {
                             children: [
                                 {
-                                    h3:{
+                                    h3: {
                                         content: title
                                     }
                                 },
                                 {
-                                    p:{
+                                    p: {
                                         content: text
                                     }
                                 },
                                 {
                                     img: {
-                                        src:"/index/basics/arrowRight.png",
+                                        src: "/index/basics/arrowRight.png",
                                         alt: "Arrow Right"
                                     }
                                 }
