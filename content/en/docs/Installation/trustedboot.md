@@ -97,7 +97,7 @@ docker run -v $MACHINE_CERTS:/work/machine-keys -v $PWD/keys:/work/keys -ti --rm
 
 {{% alert title="Warning" %}}
 
-This command can be combined with the `--skip-microsoft-certs-I-KNOW-WHAT-IM-DOING` flag to avoid auto-enrolling the Microsoft keys if not needed.
+This command can be combined with the `--skip-microsoft-certs-I-KNOW-WHAT-IM-DOING` flag to avoid auto-enrolling the Microsoft keys if not needed (or already present in the "custom certs")
 
 {{% /alert %}}
 
