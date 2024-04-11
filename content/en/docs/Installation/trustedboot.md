@@ -370,3 +370,18 @@ mount /dev/mapper/persistent /usr/local
 ```
 
 To mount `/oem` and `/usr/local` after install you can also manually call `kcrypt unlock-all`. However this isn't [supported yet](https://github.com/kairos-io/kairos/issues/2217).
+
+### Force certificates auto-enrollments
+
+{{% alert title="Warning" %}}
+Don't run auto-enrollments by default! this option is here after you are sure that the certificates generated are correct and after you have verified that manuall enrolling the certificates does not brick your device!
+
+This is specific for large-scale deployments to generate auto-installing ISOs that share the same hardware.
+{{% /alert %}}
+
+If you want to force the auto-enrollment of the certificates in the BIOS/UEFI, you can use the `--secure-boot-enroll` flag in the `build-uki` command.
+
+```bash
+CONTAINER_IMAGE=quay.io/kairos/fedora:38-core-amd64-generic-{{< kairosVersion>}}-uki
+docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki $CONTAINER_IMAGE --secure-boot-enroll force -t iso -d /result/ -k /keys
+```
