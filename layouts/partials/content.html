@@ -1,8 +1,218 @@
 <main>
-    <div id="download-blade"></div>
-    <div id="welcome-blade"></div>
-    <div id="hot-press-blade"></div>
-    <div id="makes-us-diff-blade"></div>
-    <div id="join-us-blade"></div>
-    <div id="basics-blade"></div>
+    <div id="download-blade">
+        <div class="download-card-wrap">
+            <div class="download-cards">
+                <div>Downloads</div>
+                <div>
+                    <div>
+                        <img src="/index/downloads/ubuntu.png" alt="ubuntu.png" loading="lazy">
+                    </div>
+                    <div>
+                        <a href="https://github.com/kairos-io/kairos/releases/download/v3.0.4/kairos-ubuntu-23.10-standard-amd64-generic-v3.0.4-k3sv1.29.3+k3s1.iso" target="_self" class="unclickable">
+                            <span>X86</span><span> version</span>
+                            <img src="/index/downloads/download.svg" alt="download icon" loading="lazy">
+                        </a>
+                        <a href="" target="_self" class="open-dialog-ubuntu">
+                            <span>RPi4</span><span> version</span>
+                            <img src="/index/downloads/download.svg" alt="download icon" loading="lazy">
+                        </a>
+                        <dialog id="ubuntu-modal">
+                            <div class="copied-ubuntu">Copied</div>
+                            <p>Please use the following docker command: </p><pre class="code-ubuntu">docker pull quay.io/kairos/ubuntu:23.10-standard-arm64-rpi4-v3.0.4-k3sv1.29.3-k3s1-img</pre><p></p>
+                            <p>You can find more information: <a href="https://kairos.io/docs/reference/image_matrix/#image-flavors" target="_blank">here</a></p>
+                            <div class="modal-buttons">
+                                <button class="copy-to-clipboard-ubuntu">Copy Command</button>
+                                <button class="close-dialog-ubuntu">Close</button>
+                            </div>
+                        </dialog>
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <img src="/index/downloads/fedora.png" alt="fedora.png" loading="lazy">
+                    </div>
+                    <div>
+                        <a href="https://github.com/kairos-io/kairos/releases/download/v3.0.4/kairos-fedora-38-standard-amd64-generic-v3.0.4-k3sv1.29.3+k3s1.iso" target="_self" class="unclickable">
+                            <span>X86</span><span> version</span>
+                            <img src="/index/downloads/download.svg" alt="download icon" loading="lazy">
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <img src="/index/downloads/alpine.png" alt="alpine.png" loading="lazy">
+                    </div>
+                    <div>
+                        <a href="https://github.com/kairos-io/kairos/releases/download/v3.0.4/kairos-alpine-3.19-standard-amd64-generic-v3.0.4-k3sv1.29.3+k3s1.iso" target="_self" class="unclickable">
+                            <span>X86</span><span> version</span>
+                            <img src="/index/downloads/download.svg" alt="download icon" loading="lazy">
+                        </a>
+                        <a href="" target="_self" class="open-dialog-alpine">
+                            <span>RPi4</span><span> version</span>
+                            <img src="/index/downloads/download.svg" alt="download icon" loading="lazy">
+                        </a>
+                        <dialog id="alpine-modal">
+                            <div class="copied-alpine">Copied</div>
+                            <p>Please use the following docker command: </p><pre class="code-alpine">docker pull quay.io/kairos/alpine:3.19-standard-arm64-rpi4-v3.0.4-k3sv1.29.3-k3s1-img</pre><p></p>
+                            <p>You can find more information: <a href="https://kairos.io/docs/reference/image_matrix/#image-flavors" target="_blank">here</a></p>
+                            <div class="modal-buttons">
+                                <button class="copy-to-clipboard-alpine">Copy Command</button>
+                                <button class="close-dialog-alpine">Close</button>
+                            </div>
+                        </dialog>
+                    </div>
+                </div>
+            </div>
+            <a href="https://kairos.io/docs/reference/image_matrix/#image-flavors" target="_blank" class="download-others-link">
+                See other download alternatives<img src="/index/downloads/arrow-right.svg" alt="arrow-right" loading="lazy">
+            </a>
+        </div>
+    </div>
+    <div id="welcome-blade">
+        <div class="welcome-wrapper">
+            <div>
+                <img src="/index/wrapped-armadillo.png" alt="wrapped-armadillo">
+            </div>
+            <div>
+                <h2>Welcome to &nbsp;</h2>
+                <p>We're here to make your life easier by turning any Linux distribution into a secure, customizable, and easily managed system for edge computing. <br><br> With Kairos, you're not just getting an operating system - you're getting a partner for your edge computing needs.</p>
+                <a href="https://www.cncf.io/online-programs/cncf-on-demand-webinar-meet-kairos-an-oss-project-building-the-immutable-kubernetes-edge/" target="_blank">
+                    Watch this CNCF Webinar to meet Kairos
+                    <i class="fa-sharp fa-solid fa-circle-play"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div id="hot-press-blade">
+        <div class="hot-off-press">
+            <h2>Hot off the press</h2>
+            <div class="press-cards">
+                <div>
+                    <p>See how we're collaborating with Intel and Spectro Cloud on the new Secure Edge-Native Architecture</p>
+                    <div class="press-card-img">
+                        <img src="/index/press-blade/spectro-intel.png" alt="/index/press-blade/spectro-intel.png" loading="lazy">
+                    </div>
+                    <a href="https://www.spectrocloud.com/news/spectro-cloud-launches-the-secure-edge-native-architecture-sena" target="_blank">
+                        Read more
+                        <img src="/index/press-blade/chevronRight.svg" alt="chevronRight" loading="lazy">
+                    </a>
+                </div>
+                <div>
+                    <p>Check us out in this The New Stack article by our maintainer, Ettore di Giacinto</p>
+                    <div class="press-card-img">
+                        <img src="/index/press-blade/theNewStack.png" alt="/index/press-blade/theNewStack.png" loading="lazy">
+                    </div>
+                    <a href="https://thenewstack.io/livin-kubernetes-on-the-immutable-edge-with-kairos-project/" target="_blank">
+                        Read more
+                        <img src="/index/press-blade/chevronRight.svg" alt="chevronRight" loading="lazy">
+                    </a>
+                </div>
+                <div>
+                    <p>Learn how to use the famous OSS project, LocalAI, with Kairos and K3s on your nodes</p>
+                    <div class="press-card-img">
+                        <img src="/index/press-blade/k8s-superpowers.png" alt="/index/press-blade/k8s-superpowers.png" loading="lazy">
+                    </div>
+                    <a href="https://thenewstack.io/looking-for-a-k3os-alternative-choosing-a-container-os-for-edge-k8s/" target="_blank">
+                        Read more
+                        <img src="/index/press-blade/chevronRight.svg" alt="chevronRight" loading="lazy">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="makes-us-diff-blade">
+        <div class="makes-us-diff">
+            <h2>What makes <span>Kairos</span><span> different?</span></h2>
+            <div class="makes-us-diff-cards">
+                <div>
+                    <div>
+                        <img src="/index/makes-diff/swirl.png" alt="/index/makes-diff/swirl.png">
+                        <h3>Customizable to Your Needs</h3>
+                    </div>
+                    <p>With Kairos, you're in the driver's seat. Build custom bootable-OS images for your edge devices from your choice of OS and Kubernetes distribution. These images are delivered as container images, and can be customized and extended to your needs. Kairos fits neatly into your CI/CD pipelines and lets you use the container engine of choice.</p>
+                </div>
+                <div>
+                    <div>
+                        <img src="/index/makes-diff/security.png" alt="/index/makes-diff/security.png">
+                        <h3>Consistent and Secure</h3>
+                    </div>
+                    <p>Say goodbye to inconsistencies across your clusters with our system's immutability as each node boots from the same image, ensuring uniformity. The system's immutability also reduces the risk of malicious attacks, and with data encryption, your stored data remains protected, providing enhanced security for your clusters.</p>
+                </div>
+                <div>
+                    <div>
+                        <img src="/index/makes-diff/rocket.png" alt="/index/makes-diff/rocket.png">
+                        <h3>Easy <br> to Onboard</h3>
+                    </div>
+                    <p>We believe in making things simple. With Kairos, you can onboard nodes via QR code, manually, remotely via SSH, interactively, or completely automated with Kubernetes.</p>
+                </div>
+                <div>
+                    <div>
+                        <img src="/index/makes-diff/box.png" alt="/index/makes-diff/box.png">
+                        <h3>Kubernetes out <br> of the box</h3>
+                    </div>
+                    <p>Kairos supports automatic node provisioning via CRDs; upgrade management via Kubernetes; node repurposing and machine autoscaling; plus complete configuration management via cloud-init.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="join-us-blade">
+        <div class="join-us-wrap">
+            <h2>Join our community</h2>
+            <p>Whether you're a part of a DevOps team, an IT engineer, a hobbyist, or a maker, we welcome you to join us in driving forward our vision of a secure, decentralized, and containerized edge.</p>
+            <div class="join-us-wrap-cards">
+                <a href="https://github.com/kairos-io/kairos" target="_blank">
+                    <i class="fa-brands fa-github"></i>
+                    <div>
+                        <p>Contribute to <br> GitHub</p>
+                    </div>
+                </a>
+                <a href="https://kairoslinux.substack.com/p/karios-chronicles-were-part-of-the?sd=pf" target="_blank">
+                    <i class="fa-solid fa-envelope"></i>
+                    <div>
+                        <p>Sign up to <br> our newsletter</p>
+                    </div>
+                </a>
+                <a href="https://twitter.com/Kairos_OSS" target="_blank">
+                    <i class="fa-brands fa-twitter"></i>
+                    <div>
+                        <p>Follow us <br> on Twitter</p>
+                    </div>
+                </a>
+                <a href="https://spectrocloudcommunity.slack.com/join/shared_invite/zt-g8gfzrhf-cKavsGD_myOh30K24pImLA#/shared-invite/email" target="_blank">
+                    <i class="fa-brands fa-slack"></i>
+                    <div>
+                        <p>Join our <br> Slack channel</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div id="basics-blade">
+        <div class="basics">
+            <a href="https://kairos.io/docs/installation/" target="_blank">
+                <img src="/index/basics/opened-box.png" alt="/index/basics/opened-box.png">
+                <div>
+                    <h3>Installation</h3>
+                    <p>See how to get up and running with Kairos, in less than 15 minutes!</p>
+                    <img src="/index/basics/arrowRight.png" alt="Arrow Right">
+                </div>
+            </a>
+            <a href="https://kairos.io/docs/architecture/" target="_blank">
+                <img src="/index/basics/shell.png" alt="/index/basics/shell.png">
+                <div>
+                    <h3>Architecture</h3>
+                    <p>Get inside Kairos, from the factory <br> to P2P mesh capabilities.</p>
+                    <img src="/index/basics/arrowRight.png" alt="Arrow Right">
+                </div>
+            </a>
+            <a href="https://github.com/kairos-io/kairos/tree/master/examples" target="_blank">
+                <img src="/index/basics/origami-bird.png" alt="/index/basics/origami-bird.png">
+                <div>
+                    <h3>Examples</h3>
+                    <p>Stretch your wings with best practices of common tasks after installing Kairos.</p>
+                    <img src="/index/basics/arrowRight.png" alt="Arrow Right">
+                </div>
+            </a>
+        </div>
+    </div>
 </main>

@@ -15,11 +15,12 @@ $td-enable-google-fonts: false;
 
 
 a {
-    color: #009ffd
+    color: #009ffd;
+    text-decoration: none;
 }
 
 a:hover {
-    color: #03153a
+    color: #03153a;
 }
 
 // Disables text "Kairos" in the menu. Logo contains it already
