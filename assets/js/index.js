@@ -1,4 +1,4 @@
-const INTEGRATIONS = ["ubuntu", "fedora", "alpine"]
+const INTEGRATIONS = ["ubuntu", "alpine"]
 
 INTEGRATIONS.forEach(integration => {
     const modal = document.querySelector(`#${integration}-modal`)

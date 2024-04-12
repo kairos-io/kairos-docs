@@ -1,3 +1,6 @@
+{{ $kairosVersion := $.Page.Site.Params.softwareVersions.kairos_version }}
+{{ $k3sVersion := $.Page.Site.Params.softwareVersions.k3s_version }}
+{{ $tagK3sVersion := replace $k3sVersion "+" "-" | safeHTML }}
 <main>
     <div id="download-blade">
         <div class="download-card-wrap">
@@ -5,20 +8,21 @@
                 <div>Downloads</div>
                 <div>
                     <div>
-                        <img src="/index/downloads/ubuntu.png" alt="ubuntu.png" loading="lazy">
+                        {{ $logo := resources.Get "/img/kairos-ubuntu-logo.png" }}
+                        <img src="{{ $logo.RelPermalink }}" alt="kairos ubuntu logo" loading="lazy"/>
                     </div>
                     <div>
-                        <a href="https://github.com/kairos-io/kairos/releases/download/v3.0.4/kairos-ubuntu-23.10-standard-amd64-generic-v3.0.4-k3sv1.29.3+k3s1.iso" target="_self" class="unclickable">
+                        <a href="https://github.com/kairos-io/kairos/releases/download/{{$kairosVersion}}/kairos-ubuntu-23.10-standard-amd64-generic-{{$kairosVersion}}-k3s{{$k3sVersion}}.iso" target="_self" class="unclickable">
                             <span>X86</span><span> version</span>
-                            <img src="/index/downloads/download.svg" alt="download icon" loading="lazy">
+                            <i class="fa-solid fa-download"></i>
                         </a>
                         <a href="" target="_self" class="open-dialog-ubuntu">
                             <span>RPi4</span><span> version</span>
-                            <img src="/index/downloads/download.svg" alt="download icon" loading="lazy">
+                            <i class="fa-solid fa-download"></i>
                         </a>
                         <dialog id="ubuntu-modal">
                             <div class="copied-ubuntu">Copied</div>
-                            <p>Please use the following docker command: </p><pre class="code-ubuntu">docker pull quay.io/kairos/ubuntu:23.10-standard-arm64-rpi4-v3.0.4-k3sv1.29.3-k3s1-img</pre><p></p>
+                            <p>Please use the following docker command: </p><pre class="code-ubuntu">docker pull quay.io/kairos/ubuntu:23.10-standard-arm64-rpi4-{{$kairosVersion}}-k3s{{$tagK3sVersion}}-img</pre><p></p>
                             <p>You can find more information: <a href="https://kairos.io/docs/reference/image_matrix/#image-flavors" target="_blank">here</a></p>
                             <div class="modal-buttons">
                                 <button class="copy-to-clipboard-ubuntu">Copy Command</button>
@@ -29,31 +33,33 @@
                 </div>
                 <div>
                     <div>
-                        <img src="/index/downloads/fedora.png" alt="fedora.png" loading="lazy">
+                        {{ $logo := resources.Get "/img/kairos-fedora-logo.png" }}
+                        <img src="{{ $logo.RelPermalink }}" alt="kairos fedora logo" loading="lazy"/>
                     </div>
                     <div>
-                        <a href="https://github.com/kairos-io/kairos/releases/download/v3.0.4/kairos-fedora-38-standard-amd64-generic-v3.0.4-k3sv1.29.3+k3s1.iso" target="_self" class="unclickable">
+                        <a href="https://github.com/kairos-io/kairos/releases/download/{{$kairosVersion}}/kairos-fedora-38-standard-amd64-generic-{{$kairosVersion}}-k3s{{$k3sVersion}}.iso" target="_self" class="unclickable">
                             <span>X86</span><span> version</span>
-                            <img src="/index/downloads/download.svg" alt="download icon" loading="lazy">
+                            <i class="fa-solid fa-download"></i>
                         </a>
                     </div>
                 </div>
                 <div>
                     <div>
-                        <img src="/index/downloads/alpine.png" alt="alpine.png" loading="lazy">
+                        {{ $logo := resources.Get "/img/kairos-alpine-logo.png" }}
+                        <img src="{{ $logo.RelPermalink }}" alt="kairos alpine logo" loading="lazy"/>
                     </div>
                     <div>
-                        <a href="https://github.com/kairos-io/kairos/releases/download/v3.0.4/kairos-alpine-3.19-standard-amd64-generic-v3.0.4-k3sv1.29.3+k3s1.iso" target="_self" class="unclickable">
+                        <a href="https://github.com/kairos-io/kairos/releases/download/{{$kairosVersion}}/kairos-alpine-3.19-standard-amd64-generic-{{$kairosVersion}}-k3s{{$k3sVersion}}.iso" target="_self" class="unclickable">
                             <span>X86</span><span> version</span>
-                            <img src="/index/downloads/download.svg" alt="download icon" loading="lazy">
+                            <i class="fa-solid fa-download"></i>
                         </a>
                         <a href="" target="_self" class="open-dialog-alpine">
                             <span>RPi4</span><span> version</span>
-                            <img src="/index/downloads/download.svg" alt="download icon" loading="lazy">
+                            <i class="fa-solid fa-download"></i>
                         </a>
                         <dialog id="alpine-modal">
                             <div class="copied-alpine">Copied</div>
-                            <p>Please use the following docker command: </p><pre class="code-alpine">docker pull quay.io/kairos/alpine:3.19-standard-arm64-rpi4-v3.0.4-k3sv1.29.3-k3s1-img</pre><p></p>
+                            <p>Please use the following docker command: </p><pre class="code-alpine">docker pull quay.io/kairos/alpine:3.19-standard-arm64-rpi4-{{$kairosVersion}}-k3s{{$tagK3sVersion}}-img</pre><p></p>
                             <p>You can find more information: <a href="https://kairos.io/docs/reference/image_matrix/#image-flavors" target="_blank">here</a></p>
                             <div class="modal-buttons">
                                 <button class="copy-to-clipboard-alpine">Copy Command</button>
@@ -64,14 +70,15 @@
                 </div>
             </div>
             <a href="https://kairos.io/docs/reference/image_matrix/#image-flavors" target="_blank" class="download-others-link">
-                See other download alternatives<img src="/index/downloads/arrow-right.svg" alt="arrow-right" loading="lazy">
+                See other download alternatives<i class="fa-solid fa-arrow-right"></i>
             </a>
         </div>
     </div>
     <div id="welcome-blade">
         <div class="welcome-wrapper">
             <div>
-                <img src="/index/wrapped-armadillo.png" alt="wrapped-armadillo">
+                {{ $logo := resources.Get "/img/wrapped-armadillo.png" }}
+                <img src="{{ $logo.RelPermalink }}" alt="wrapped armadillo logo" loading="lazy"/>
             </div>
             <div>
                 <h2>Welcome to &nbsp;</h2>
@@ -90,11 +97,12 @@
                 <div>
                     <p>See how we're collaborating with Intel and Spectro Cloud on the new Secure Edge-Native Architecture</p>
                     <div class="press-card-img">
-                        <img src="/index/press-blade/spectro-intel.png" alt="/index/press-blade/spectro-intel.png" loading="lazy">
+                        {{ $logo := resources.Get "/img/spectro-intel.png" }}
+                        <img src="{{ $logo.RelPermalink }}" alt="spectro intel logo" loading="lazy"/>
                     </div>
                     <a href="https://www.spectrocloud.com/news/spectro-cloud-launches-the-secure-edge-native-architecture-sena" target="_blank">
                         Read more
-                        <img src="/index/press-blade/chevronRight.svg" alt="chevronRight" loading="lazy">
+                        <i class="fa-solid fa-chevron-right"></i>
                     </a>
                 </div>
                 <div>
@@ -104,7 +112,7 @@
                     </div>
                     <a href="https://thenewstack.io/livin-kubernetes-on-the-immutable-edge-with-kairos-project/" target="_blank">
                         Read more
-                        <img src="/index/press-blade/chevronRight.svg" alt="chevronRight" loading="lazy">
+                        <i class="fa-solid fa-chevron-right"></i>
                     </a>
                 </div>
                 <div>
@@ -114,7 +122,7 @@
                     </div>
                     <a href="https://thenewstack.io/looking-for-a-k3os-alternative-choosing-a-container-os-for-edge-k8s/" target="_blank">
                         Read more
-                        <img src="/index/press-blade/chevronRight.svg" alt="chevronRight" loading="lazy">
+                        <i class="fa-solid fa-chevron-right"></i>
                     </a>
                 </div>
             </div>
@@ -126,28 +134,36 @@
             <div class="makes-us-diff-cards">
                 <div>
                     <div>
-                        <img src="/index/makes-diff/swirl.png" alt="/index/makes-diff/swirl.png">
+                        <!-- these are just font awesome icons, why are they pngs?! -->
+                        {{ $logo := resources.Get "/img/swirl.png" }}
+                        <img src="{{ $logo.RelPermalink }}" alt="swirl logo" loading="lazy"/>
                         <h3>Customizable to Your Needs</h3>
                     </div>
                     <p>With Kairos, you're in the driver's seat. Build custom bootable-OS images for your edge devices from your choice of OS and Kubernetes distribution. These images are delivered as container images, and can be customized and extended to your needs. Kairos fits neatly into your CI/CD pipelines and lets you use the container engine of choice.</p>
                 </div>
                 <div>
                     <div>
-                        <img src="/index/makes-diff/security.png" alt="/index/makes-diff/security.png">
+                        <!-- these are just font awesome icons, why are they pngs?! -->
+                        {{ $logo := resources.Get "/img/security.png" }}
+                        <img src="{{ $logo.RelPermalink }}" alt="security logo" loading="lazy"/>
                         <h3>Consistent and Secure</h3>
                     </div>
                     <p>Say goodbye to inconsistencies across your clusters with our system's immutability as each node boots from the same image, ensuring uniformity. The system's immutability also reduces the risk of malicious attacks, and with data encryption, your stored data remains protected, providing enhanced security for your clusters.</p>
                 </div>
                 <div>
                     <div>
-                        <img src="/index/makes-diff/rocket.png" alt="/index/makes-diff/rocket.png">
+                        <!-- these are just font awesome icons, why are they pngs?! -->
+                        {{ $logo := resources.Get "/img/rocket.png" }}
+                        <img src="{{ $logo.RelPermalink }}" alt="rocket logo" loading="lazy"/>
                         <h3>Easy <br> to Onboard</h3>
                     </div>
                     <p>We believe in making things simple. With Kairos, you can onboard nodes via QR code, manually, remotely via SSH, interactively, or completely automated with Kubernetes.</p>
                 </div>
                 <div>
                     <div>
-                        <img src="/index/makes-diff/box.png" alt="/index/makes-diff/box.png">
+                        <!-- these are just font awesome icons, why are they pngs?! -->
+                        {{ $logo := resources.Get "/img/box.png" }}
+                        <img src="{{ $logo.RelPermalink }}" alt="box logo" loading="lazy"/>
                         <h3>Kubernetes out <br> of the box</h3>
                     </div>
                     <p>Kairos supports automatic node provisioning via CRDs; upgrade management via Kubernetes; node repurposing and machine autoscaling; plus complete configuration management via cloud-init.</p>
