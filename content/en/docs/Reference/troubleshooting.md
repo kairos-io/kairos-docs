@@ -90,8 +90,8 @@ When reporting issues, please provide as much information as possible. This incl
 
 Some small things you can do to provide us with the best information possible:
 - When running kairos-agent commands, please add the `--debug` flag and attach the output to the issue
-- You can also run `kairos-agent config` and attach the output to the issue as that provides information about various components of the system
-- You can also run `kairos-agent config show` and attach the output to the issue as that provides the current cloud-config for the system (Be aware that any sensitive information should be redacted before attaching the output)
+- You can also run `kairos-agent state` and attach the output to the issue as that provides information about various components of the system
+- You can also run `kairos-agent config` and attach the output to the issue as that provides the current cloud-config for the system (Be aware that any sensitive information should be redacted before attaching the output)
 - Immucore logs, available under `/run/immucore/` can be useful to attach as well
 - Agent logs, available under `/var/log/kairos/*.log` which are stored on each run of the agent
 - Journalctl logs for the following services (use `journalctl -u <service>` to get the logs) can be useful:
