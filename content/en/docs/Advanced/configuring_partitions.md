@@ -89,6 +89,60 @@ Note that there are some caveats in the `extra partitions` setup:
         - mount -o rw /dev/disk/by-label/PARTITION_TWO /opt/extra
 ```
 
+## Manual partitioning
+
+In some cases, it's desired that the user has full control over the partitioning of the disk.
+This can be achieved by setting the `no-format` option to `true` and making sure the disk
+is prepared with the desired partitions before running the installer.
+
+Here is an example config that instructs the installer to use the "second" disk (/dev/vdb)
+and makes sure the disk is prepared with the desired partitions:
+
+```yaml
+#cloud-config
+
+install:
+  no-format: true
+  auto: false
+  poweroff: false
+  reboot: false
+
+users:
+  - name: "kairos"
+    passwd: "kairos"
+
+stages:
+  kairos-install.pre.before:
+  - if:  '[ -e "/dev/vdb" ]'
+    name: "Create partitions"
+    commands:
+      - |
+        parted --script --machine -- "/dev/vdb" mklabel gpt
+        # Legacy bios
+        sgdisk --new=1:2048:+1M --change-name=1:'bios' --typecode=1:EF02 /dev/vdb
+    layout:
+      device:
+        path: "/dev/vdb"
+      add_partitions:
+        # For efi (comment out the legacy bios partition above)
+        #- fsLabel: COS_GRUB
+        #  size: 64
+        #  pLabel: efi
+        #  filesystem: "fat"
+        - fsLabel: COS_OEM
+          size: 64
+          pLabel: oem
+        - fsLabel: COS_RECOVERY
+          size: 8500
+          pLabel: recovery
+        - fsLabel: COS_STATE
+          size: 18000
+          pLabel: state
+        - fsLabel: COS_PERSISTENT
+          pLabel: persistent
+          size: 0
+          filesystem: "ext4"
+```
 
 
 For more information about the full config available for partitions and extra partitions see the full [cloud-config page]({{< relref "../Reference/configuration" >}})
