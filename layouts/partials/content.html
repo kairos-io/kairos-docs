@@ -108,7 +108,8 @@
                 <div>
                     <p>Check us out in this The New Stack article by our maintainer, Ettore di Giacinto</p>
                     <div class="press-card-img">
-                        <img src="/index/press-blade/theNewStack.png" alt="/index/press-blade/theNewStack.png" loading="lazy">
+                        {{ $logo := resources.Get "/img/theNewStack.png" }}
+                        <img src="{{ $logo.RelPermalink }}" alt="the New Stack logo" loading="lazy"/>
                     </div>
                     <a href="https://thenewstack.io/livin-kubernetes-on-the-immutable-edge-with-kairos-project/" target="_blank">
                         Read more
@@ -118,7 +119,8 @@
                 <div>
                     <p>Learn how to use the famous OSS project, LocalAI, with Kairos and K3s on your nodes</p>
                     <div class="press-card-img">
-                        <img src="/index/press-blade/k8s-superpowers.png" alt="/index/press-blade/k8s-superpowers.png" loading="lazy">
+                        {{ $logo := resources.Get "/img/k8s-superpowers.png" }}
+                        <img src="{{ $logo.RelPermalink }}" alt="k8sgpt kubernetes superpowers logo" loading="lazy"/>
                     </div>
                     <a href="https://thenewstack.io/looking-for-a-k3os-alternative-choosing-a-container-os-for-edge-k8s/" target="_blank">
                         Read more
@@ -206,27 +208,30 @@
     <div id="basics-blade">
         <div class="basics">
             <a href="https://kairos.io/docs/installation/" target="_blank">
-                <img src="/index/basics/opened-box.png" alt="/index/basics/opened-box.png">
+                {{ $logo := resources.Get "/img/opened-box.png" }}
+                <img src="{{ $logo.RelPermalink }}" alt="opened box" loading="lazy"/>
                 <div>
                     <h3>Installation</h3>
                     <p>See how to get up and running with Kairos, in less than 15 minutes!</p>
-                    <img src="/index/basics/arrowRight.png" alt="Arrow Right">
+                    <i class="fa-solid fa-arrow-right"></i>
                 </div>
             </a>
             <a href="https://kairos.io/docs/architecture/" target="_blank">
-                <img src="/index/basics/shell.png" alt="/index/basics/shell.png">
+                {{ $logo := resources.Get "/img/shell.png" }}
+                <img src="{{ $logo.RelPermalink }}" alt="shell" loading="lazy"/>
                 <div>
                     <h3>Architecture</h3>
                     <p>Get inside Kairos, from the factory <br> to P2P mesh capabilities.</p>
-                    <img src="/index/basics/arrowRight.png" alt="Arrow Right">
+                    <i class="fa-solid fa-arrow-right"></i>
                 </div>
             </a>
             <a href="https://github.com/kairos-io/kairos/tree/master/examples" target="_blank">
-                <img src="/index/basics/origami-bird.png" alt="/index/basics/origami-bird.png">
+                {{ $logo := resources.Get "/img/origami-bird.png" }}
+                <img src="{{ $logo.RelPermalink }}" alt="origami bird" loading="lazy"/>
                 <div>
                     <h3>Examples</h3>
                     <p>Stretch your wings with best practices of common tasks after installing Kairos.</p>
-                    <img src="/index/basics/arrowRight.png" alt="Arrow Right">
+                    <i class="fa-solid fa-arrow-right"></i>
                 </div>
             </a>
         </div>
