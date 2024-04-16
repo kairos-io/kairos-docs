@@ -88,5 +88,5 @@ UKI file's signatures are including also the kernel command line, so any change 
 
 - [UEFI](https://documentation.suse.com/sled/15-SP5/html/SLED-all/cha-uefi.html)
 - https://cdrdv2-public.intel.com/671120/a-tour-beyond-bios-implementing-uefi-authenticated-variables-in-smm-with-edkii.pdf
-- [](https://www.vut.cz/www_base/zav_prace_soubor_verejne.php?file_id=132208)
+- [SUPPORT OF SECURE BOOT IN SYSTEMD-BOOT PROJECT](https://www.vut.cz/www_base/zav_prace_soubor_verejne.php?file_id=132208)
 - [Secure Boot](https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot)
