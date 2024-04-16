@@ -376,7 +376,7 @@ To mount `/oem` and `/usr/local` after install you can also manually call `kcryp
 {{% alert title="Warning" %}}
 Don't run auto-enrollments by default! this option is here after you are sure that the certificates generated are correct and after you have verified that manuall enrolling the certificates does not brick your device!
 
-This is specific for large-scale deployments to generate auto-installing ISOs that share the same hardware.
+This is specific for large-scale deployments to generate auto-installing ISOs that are meant to be used on similar hardware multiple times (thus the process only needs to be manually verified once).
 {{% /alert %}}
 
 If you want to force the auto-enrollment of the certificates in the BIOS/UEFI, you can use the `--secure-boot-enroll` flag in the `build-uki` command.
