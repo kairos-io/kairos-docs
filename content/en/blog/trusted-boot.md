@@ -49,7 +49,7 @@ While FDE is a standard feature in various operating systems, its implementation
 
 The Kairos project introduces "Unified Kernel Images" (UKI) to enhance boot security. UKI files are single, fat binaries that contain the OS and necessary boot components in a single, verified file. This approach simplifies the boot process, allowing for the entire system to be booted securely and efficiently. By leveraging EFI files that can be signed and verified through Secure Boot and measured as a single entity, UKI files represent a significant advancement in boot security.
 
-Central to the Trusted Boot mechanism is the Trusted Platform Module (TPM), a dedicated hardware(also emulated by firmware) component designed for secure cryptographic operations. TPM chips play a critical role in storing encryption keys and measurements securely, enabling the system to verify boot integrity and encrypt user data effectively.
+Central to the Trusted Boot mechanism is the Trusted Platform Module (TPM), a dedicated hardware (also emulated by firmware) component designed for secure cryptographic operations. TPM chips play a critical role in storing encryption keys and measurements securely, enabling the system to verify boot integrity and encrypt user data effectively.
 
 
 ## From Grub to systemd-boot
