@@ -77,7 +77,7 @@ When a Linux system starts, it goes through a multi-stage process to load the op
 
 Throughout these stages, the components—firmware, bootloader, kernel, initrd, and the root file system—work in a sequence to load the operating system successfully. 
 
-This chain is the one we in the Linux and tech industry we are very much familiar with. Several designs and strategies have been developed to secure this stack over time, for instance Verified kernels and drivers, or Secure Boot to sign the bootloader and be able to trust its authenticity. There are various bootloader implementations as well, tied to more secure HW (like TPM devices).
+This chain is the one we in the Linux and tech industry are very much familiar with. Several designs and strategies have been developed to secure this stack over time, for instance Verified kernels and drivers, or Secure Boot to sign the bootloader and be able to trust its authenticity. There are various bootloader implementations as well, tied to more secure HW (like TPM devices).
 
 However, as technologies and security measures evolved, attacks evolved as well. Specific hardware now can be leveraged to increase the security posture of the boot process, and it is time for a change, as the market demands more sophisticated security measures to protect against malicious actors.
 
