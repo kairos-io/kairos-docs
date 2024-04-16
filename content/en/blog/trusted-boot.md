@@ -28,7 +28,7 @@ Our goal is simple but complex to achieve: No unauthorized access to the softwar
 
 Here comes Trusted Boot and SENA to the rescue. Easier to explain with an Alice metaphor.
 
-> you can read more about Trusted Boot in https://0pointer.de/blog/brave-new-trusted-boot-world.html and about SENA here: https://kairos.io/blog/2023/04/18/kairos-is-now-part-of-the-secure-edge-native-architecture-by-spectro-cloud-and-intel/
+> You can read more about Trusted Boot in the [Lennart blog](https://0pointer.de/blog/brave-new-trusted-boot-world.html) and about SENA in our [blog post](https://kairos.io/blog/2023/04/18/kairos-is-now-part-of-the-secure-edge-native-architecture-by-spectro-cloud-and-intel/)
 
 Let's imagine Alice has this super cool treasure chest, chock-full of her most prized stuff. She’s big on security, but in a high-tech way – kind of like how your computer needs to keep its data safe. To get this done, your computer uses some smart tricks, things like Trusted Boot, Full Disk Encryption (FDE), Secure Boot, and Measured Boot.
 
