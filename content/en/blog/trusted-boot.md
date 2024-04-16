@@ -134,7 +134,7 @@ During the boot process, cryptographic assessments are made using the Trusted Pl
 
 The existing framework guarantees that the initial phase (UKI file) remains immutable, with only this phase capable of decrypting the drive's encrypted data. Indeed there is no pivoting into another system like in the traditional Linux boot process. This design choice ensures that the system remains a single component, with the UKI file acting as the sole point of entry for the system.
 
-Shifting to a different image introduces potential security vulnerabilities and constraints:
+Shifting to a different image would have introduced potential security vulnerabilities and constraints:
 
 - The current Systemd tools lack the capability to assess another rootfs/file.
 - There is an absence of mechanisms to incorporate PCR with hash checksums of bespoke files in the expanded PCR banks within systemd.
