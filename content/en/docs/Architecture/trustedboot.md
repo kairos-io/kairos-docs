@@ -83,3 +83,10 @@ The keys are used to sign the UKI file, and to generate a PCR policy keypair req
 #### Booting command lines
 
 UKI file's signatures are including also the kernel command line, so any change to the kernel command line will require a new UKI file to be generated and the installer image to be rebuilt. This implies that you cannot change the booting options once the system is installed (and the system won't be able to access the encrypted data)
+
+### References
+
+- [UEFI](https://documentation.suse.com/sled/15-SP5/html/SLED-all/cha-uefi.html)
+- https://cdrdv2-public.intel.com/671120/a-tour-beyond-bios-implementing-uefi-authenticated-variables-in-smm-with-edkii.pdf
+- [SUPPORT OF SECURE BOOT IN SYSTEMD-BOOT PROJECT](https://www.vut.cz/www_base/zav_prace_soubor_verejne.php?file_id=132208)
+- [Secure Boot](https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot)

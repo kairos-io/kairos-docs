@@ -38,23 +38,18 @@ Any change, or upgrade of the node to a new version of the OS requires those ass
 
 The steps below will guide you into generating the installable assets, and how to re-generate the assets to upgrade the node to a new version of the OS.
 
-## Build the container image used to generate keys and installable medium
-
-```bash
-# Build the container image that will be used to generate the keys and installable medium
-git clone https://github.com/kairos-io/enki.git
-cd enki
-docker build -t enki --target tools-image .
-```
-
 ## Key generation
 
-To generate the Secure boot certificates and keys run the following commands:
+Keys can be generated from scratch, or the Microsoft certificates can be used, alternatively, if you can export the keys from your BIOS/UEFI you can use the same PK keys.
+
+By default keys are generated including the Microsoft ones, but you can skip them if you know what you are doing (see below).
+
+To generate the Secure boot certificates and keys along with the Microsoft keys run the following commands:
 
 ```bash
 MY_ORG="Acme Corp"
 # Generate the keys
-docker run -v $PWD/keys:/work/keys -ti --rm enki genkey "$MY_ORG" --expiration-in-days 365 -o /work/keys
+docker run -v $PWD/keys:/work/keys -ti --rm quay.io/kairos/osbuilder-tools:latest genkey "$MY_ORG" --expiration-in-days 365 -o /work/keys
 ```
 {{% alert title="Warning" %}}
 Substitute `$MY_ORG` for your own string, this can be anything but it help identifying the Keys. The keys duration can specified with `--expiration-in-days`. It is not possible to create keys that do not expire, but it is possible to specify an extremely large value (e.g. 200 years, etc.)
@@ -64,6 +59,48 @@ Substitute `$MY_ORG` for your own string, this can be anything but it help ident
 It is very important to preserve the keys generated in this process in a safe place. Loosing the keys will prevent you to generate new images that can be used for upgrades.
 {{% /alert %}}
 
+### Custom certificates by skipping Microsoft certificate keys
+
+{{% alert title="Warning" %}}
+Some firmware is signed and verified with Microsoft's or other vendor keys when secure boot is enabled. Removing those keys could brick them. It is preferable to not use the Microsoft certificates for precaution and security reasons, however as this might be potentially a dangerous action, only do this if you know what you are doing. To check if your firmware is signed with Microsoft's keys, you can check https://github.com/Foxboron/sbctl/wiki/FAQ#option-rom. See also: https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot#Enrolling_Option_ROM_digests.
+{{% /alert %}}
+
+If your hardware supports booting with custom Secure Boot keys, you can optionally create keys from scratch and skip the Microsoft certificate keys. To do so, run the following command:
+
+```bash
+MY_ORG="Acme Corp"
+# Generate the keys
+docker run -v $PWD/keys:/work/keys -ti --rm quay.io/kairos/osbuilder-tools:latest genkey "$MY_ORG" --skip-microsoft-certs-I-KNOW-WHAT-IM-DOING --expiration-in-days 365 -o /work/keys
+```
+
+### Exporting keys from BIOS/UEFI and using them
+
+This is useful if you want to handle mass-installations where you don't want to enroll the generated keys manually in your bios/uefi.
+
+Some hardware might require additional vendor keys, that could be e.g. used to sign additional firmware. In order to re-use the same set of keys in the machine, you can export the keys from the BIOS/UEFI and use them to generate the UKI files.
+
+Some BIOS/UEFI allows to export the keys to USB stick directly from the BIOS/UEFI setup menu (for example [HPE](https://techlibrary.hpe.com/docs/iss/proliant-gen10-uefi/GUID-26E9F167-8061-4D85-9A0A-B610D00DFA3B.html)). If you have the keys in a USB stick, you can copy in a directory and use them to generate the UKI files.
+
+```bash
+MY_ORG="Acme Corp"
+MACHINE_CERTS="$PWD/path/to/machine-certs"
+# ~$ tree $MACHINE_CERTS
+# /path/to/machine-certs/
+# ├── db
+# ├── dbx
+# ├── KEK
+# └── PK
+
+# Generate the keys
+docker run -v $MACHINE_CERTS:/work/machine-keys -v $PWD/keys:/work/keys -ti --rm quay.io/kairos/osbuilder-tools:latest genkey "$MY_ORG" --custom-cert-dir /work/machine-keys --expiration-in-days 365 -o /work/keys
+```
+
+{{% alert title="Warning" %}}
+
+This command can be combined with the `--skip-microsoft-certs-I-KNOW-WHAT-IM-DOING` flag to avoid auto-enrolling the Microsoft keys if not needed (or already present in the "custom certs")
+
+{{% /alert %}}
+
 ## Building installable medium
 
 To build the installable medium you need to run the following commands:
@@ -71,17 +108,17 @@ To build the installable medium you need to run the following commands:
 {{< tabpane text=true  >}}
 {{% tab header="From a container image" %}}
 ```bash
-CONTAINER_IMAGE=quay.io/kairos/fedora:38-core-amd64-generic-v3.0.0-alpha1
-# ubuntu:
-# CONTAINER_IMAGE=quay.io/kairos/ubuntu:23.10-core-amd64-generic-v3.0.0-alpha1
-docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys enki build-uki $CONTAINER_IMAGE -t iso -d /result/ -k /keys
+CONTAINER_IMAGE=quay.io/kairos/fedora:38-core-amd64-generic-{{< kairosVersion>}}-uki
+docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki $CONTAINER_IMAGE -t iso -d /result/ -k /keys
+# to build an EFI file only
+docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki $CONTAINER_IMAGE -t uki -d /result/ -k /keys
 ```
 {{% /tab %}}
 {{% tab header="From a directory" %}}
 ```bash
 # Assuming you have a "rootfs" directory with the content of the OS
 # If the image is in a directory ($PWD/rootfs) you can use the following command
-docker run -ti --rm -v $PWD/build:/result -v $PWD/rootfs:/rootfs -v $PWD/keys/:/keys enki build-uki dir:/rootfs/ -t iso -d /result/ -k /keys
+docker run -ti --rm -v $PWD/build:/result -v $PWD/rootfs:/rootfs -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki dir:/rootfs/ -t iso -d /result/ -k /keys
 ```
 {{% /tab %}}
 {{< /tabpane >}}
@@ -133,7 +170,7 @@ The cmdline, will only show what is different between the default cmdline and th
 cmdline awesome=true
 title Awesome OS
 efi /EFI/kairos/active.efi
-version v3.0.0
+version {{< kairosVersion>}}
 ```
 
 ## Installation
@@ -158,7 +195,7 @@ See the [Trusted Boot Upgrade]({{< relref "../upgrade/trustedboot" >}}) page.
 
 To test the ISO file locally QEMU can be used. In order to test Secure Boot components you need an ed2k firmware with secureboot in QEMU. If you don't have QEMU locally and/or you don't have the correct dependencies you can follow the steps below that build a container image with QEMU and the needed dependencies and use that container to run the ISO file in a VM with Docker.
 
-1. Build the container image with the QEMU/Secure Boot dependencies (note to replace disk, VM size and ISO file name):
+1. Build the container image with the QEMU/Secure Boot dependencies (note to replace disk size/cpu/ram not needed):
 
 ```bash
 docker build -t fedora-qemu -<<DOCKER
@@ -193,7 +230,7 @@ Note: you need to keep the TPM container up and running for the VM to boot. Run 
 
 ```bash
 # console only
-docker run --privileged -v $PWD/tpmstate:/tmp -v $PWD:/work -v /dev/kvm:/dev/kvm --rm -ti fedora-qemu -cdrom /work/kairos-fedora-38-core-amd64-generic-v3.0.0-alpha1.uki.iso -nographic
+docker run --privileged -v $PWD/tpmstate:/tmp -v $PWD:/work -v /dev/kvm:/dev/kvm --rm -ti fedora-qemu -nographic -cdrom kairos-fedora-38-core-amd64-generic-{{< kairosVersion>}}.uki.iso
 ```
 
 Note: To stop the QEMU container you can use `Ctrl-a x` or `Ctrl-a c` to enter the QEMU console and then `quit` to exit.
@@ -324,12 +361,27 @@ stages:
 # /dev/mapper/oem: LABEL="COS_OEM" UUID="d10fc63d-9387-442c-9db8-a00e081858ec" BLOCK_SIZE="1024" TYPE="ext4"
 
 # Mount OEM
-/usr/lib/systemd/systemd-cryptsetup attach oem /dev/vda2 - tpm2-device=auto
+/usr/lib/systemd/systemd-cryptsetup attach oem $(findfs PARTLABEL=oem) - tpm2-device=auto
 mount /dev/mapper/oem /oem
 
 # Mount persistent
-/usr/lib/systemd/systemd-cryptsetup attach persistent /dev/vda3 - tpm2-device=auto
+/usr/lib/systemd/systemd-cryptsetup attach persistent $(findfs PARTLABEL=persistent) - tpm2-device=auto
 mount /dev/mapper/persistent /usr/local
 ```
 
 To mount `/oem` and `/usr/local` after install you can also manually call `kcrypt unlock-all`. However this isn't [supported yet](https://github.com/kairos-io/kairos/issues/2217).
+
+### Force certificates auto-enrollments
+
+{{% alert title="Warning" %}}
+Don't run auto-enrollments by default! this option is here after you are sure that the certificates generated are correct and after you have verified that manuall enrolling the certificates does not brick your device!
+
+This is specific for large-scale deployments to generate auto-installing ISOs that are meant to be used on similar hardware multiple times (thus the process only needs to be manually verified once).
+{{% /alert %}}
+
+If you want to force the auto-enrollment of the certificates in the BIOS/UEFI, you can use the `--secure-boot-enroll` flag in the `build-uki` command.
+
+```bash
+CONTAINER_IMAGE=quay.io/kairos/fedora:38-core-amd64-generic-{{< kairosVersion>}}-uki
+docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki $CONTAINER_IMAGE --secure-boot-enroll force -t iso -d /result/ -k /keys
+```
