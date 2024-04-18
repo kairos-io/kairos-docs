@@ -158,57 +158,6 @@ title My Awesome OS
 Remember when you build upgrade mediums, to also add your branding, otherwise the new active image will be named differently than your fallback and recovery ones.
 {{% /alert %}}
 
-### Additional efi entries
-
-When booting in UKI mode, the cmdline is part of the signed artifact. This means that in order to pass additional options through the cmdline,
-this has to be done at build time. For that reason, `enki build-uki` supports the following arguments:
-
-- `--extend-cmdline`: Use this option to add cmdline parameters to the default entries (active/passive/recovery/auto-reset). This option will not generate additional entries in the systemd-boot menu.
-- `--extra-cmdline`: Use this option to generate additional entries in the systemd-boot menu. For each one of the default entries, a new entry will be created with the specified cmdline (added to the default cmdline).
-- `--single-efi-cmdline`: Use this option to generate entries that are not related to default ones. This option will generate a single entry with the provided cmdline (added to the default cmdline). This argument can be used multiple times.
-
-Examples:
-
-Building with a command like this:
-
-```
-enki build-uki ...more options... --single-efi-cmdline "Lets debug: rd.debug rd.immucore.debug"
-```
-
-Will create a boot menu with the default entries, plus one more: "Lets debug" which will have the debug parameters set.
-Notice how the title of the entry and the cmdline to be used are split by a colon.
-
-Building with a command like this:
-
-```
-enki build-uki ...more options... --extra-cmdline "rd.debug rd.immucore.debug"
-```
-
-Will create a boot menu with the default entries, plus one more for each of the active/passive/recovery entries. Each of these entries will have the debug parameters set.
-
-Building with a command like this:
-
-```
-enki build-uki ...more options... --extend-cmdline "rd.debug rd.immucore.debug"
-```
-
-Will create a boot menu with just the default entries but this time they will have the debug parameters set.
-
-NOTE: `--boot-branding` is applied to `--single-efi-cmdline` too. For example, this command:
-
-```
-enki build-uki ...more options... --boot-branding "My awesome OS" --single-efi-cmdline "Debug logs: rd.debug rd.immucore.debug"
-```
-
-will create this entry:
-
-```
-My awesome OS (Debug logs)
-```
-
-with the additional cmdline parameters.
-
-
 ### Version and cmdline in the config files
 
 In addition to having the "title" and "efi" attributes, you can include in the config files the OS "version" and "cmdline". To do so, pass `--include-version-in-config` or `--include-cmdline-in-config` flags to enki.
@@ -436,3 +385,53 @@ If you want to force the auto-enrollment of the certificates in the BIOS/UEFI, y
 CONTAINER_IMAGE=quay.io/kairos/fedora:38-core-amd64-generic-{{< kairosVersion>}}-uki
 docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki $CONTAINER_IMAGE --secure-boot-enroll force -t iso -d /result/ -k /keys
 ```
+
+### Additional efi entries
+
+When booting in UKI mode, the cmdline is part of the signed artifact. This means that in order to pass additional options through the cmdline,
+this has to be done at build time. For that reason, `enki build-uki` supports the following arguments:
+
+- `--extend-cmdline`: Use this option to add cmdline parameters to the default entries (active/passive/recovery/auto-reset). This option will not generate additional entries in the systemd-boot menu.
+- `--extra-cmdline`: Use this option to generate additional entries in the systemd-boot menu. For each one of the default entries, a new entry will be created with the specified cmdline (added to the default cmdline).
+- `--single-efi-cmdline`: Use this option to generate entries that are not related to default ones. This option will generate a single entry with the provided cmdline (added to the default cmdline). This argument can be used multiple times.
+
+Examples:
+
+Building with a command like this:
+
+```
+enki build-uki ...more options... --single-efi-cmdline "Lets debug: rd.debug rd.immucore.debug"
+```
+
+Will create a boot menu with the default entries, plus one more: "Lets debug" which will have the debug parameters set.
+Notice how the title of the entry and the cmdline to be used are split by a colon.
+
+Building with a command like this:
+
+```
+enki build-uki ...more options... --extra-cmdline "rd.debug rd.immucore.debug"
+```
+
+Will create a boot menu with the default entries, plus one more for each of the active/passive/recovery entries. Each of these entries will have the debug parameters set.
+
+Building with a command like this:
+
+```
+enki build-uki ...more options... --extend-cmdline "rd.debug rd.immucore.debug"
+```
+
+Will create a boot menu with just the default entries but this time they will have the debug parameters set.
+
+NOTE: `--boot-branding` is applied to `--single-efi-cmdline` too. For example, this command:
+
+```
+enki build-uki ...more options... --boot-branding "My awesome OS" --single-efi-cmdline "Debug logs: rd.debug rd.immucore.debug"
+```
+
+will create this entry:
+
+```
+My awesome OS (Debug logs)
+```
+
+with the additional cmdline parameters.
