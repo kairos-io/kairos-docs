@@ -194,6 +194,20 @@ enki build-uki ...more options... --extend-cmdline "rd.debug rd.immucore.debug"
 
 Will create a boot menu with just the default entries but this time they will have the debug parameters set.
 
+NOTE: `--boot-branding` is applied to `--single-efi-cmdline` too. For example, this command:
+
+```
+enki build-uki ...more options... --boot-branding "My awesome OS" --single-efi-cmdline "Debug logs: rd.debug rd.immucore.debug"
+```
+
+will create this entry:
+
+```
+My awesome OS (Debug logs)
+```
+
+with the additional cmdline parameters.
+
 
 ### Version and cmdline in the config files
 
