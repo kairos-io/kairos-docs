@@ -35,7 +35,7 @@ k3s:
 
 bundles:
   - targets:
-      - run://quay.io/kairos/community-bundles:localai_latest
+      - run://quay.io/kairos/community-bundles:LocalAI_latest
 localai:
   serviceType: LoadBalancer
 ```
