@@ -229,3 +229,23 @@ no = 'Oh snap! Sorry to hear that. Please <a href="https://github.com/kairos-io/
 [[params.versions]]
   version = "v3.0.4"
   url = "/v3.0.4/docs"
+
+[[params.versions]]
+  version = "v3.0.5"
+  url = "/v3.0.5/docs"
+
+[[params.versions]]
+  version = "v3.0.6"
+  url = "/v3.0.6/docs"
+
+[[params.versions]]
+  version = "v3.0.7"
+  url = "/v3.0.7/docs"
+
+[[params.versions]]
+  version = "v3.0.8"
+  url = "/v3.0.8/docs"
+
+[[params.versions]]
+  version = "v3.0.9"
+  url = "/v3.0.9/docs"
