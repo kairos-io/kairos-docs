@@ -44,10 +44,10 @@ docker build -t enki --target tools-image .
 2. Build the Container image used for upgrades
 
 ```bash
-CONTAINER_IMAGE=quay.io/kairos/fedora:{{<ociTag flavorRelease="40" variant="core">}}
+CONTAINER_IMAGE={{<oci flavor="fedora" flavorRelease="40" variant="core">}}
 
 # ubuntu:
-# CONTAINER_IMAGE=quay.io/kairos/ubuntu:{{<ociTag flavorRelease="24.04" variant="core">}}
+# CONTAINER_IMAGE={{<oci flavor="ubuntu" flavorRelease="24.04" variant="core">}}
 docker run --rm -v $PWD/keys:/keys -v $PWD:/work -ti enki build-uki $CONTAINER_IMAGE -t uki -d /work/upgrade-image -k /keys
 
 # Generate container-image for upgrades
