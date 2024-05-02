@@ -126,7 +126,7 @@ registryURL = "quay.io/kairos"
 defaultFlavor = "opensuse"
 defaultFlavorRelease = "leap-15.5"
 # renovate: datasource=github-releases depName=kairos-io/kairos-framework
-defaultFrameworkRelease = "v2.7.24"
+defaultFrameworkRelease = "v2.7.31"
 # User interface configuration
 [params.ui]
 # Enable to show the side bar menu in its compact state.
