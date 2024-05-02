@@ -141,7 +141,7 @@ You can overwrite the default "Kairos" title if you pass the `--boot-branding` f
 
 
 ```bash
-CONTAINER_IMAGE={{<oci flavor="ubuntu" flavorRelease="23.10" variant="core">}}-uki
+CONTAINER_IMAGE={{<oci flavor="ubuntu" flavorRelease="24.04" variant="core">}}-uki
 docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys enki build-uki $CONTAINER_IMAGE -t iso -d /result/ -k /keys --boot-branding "My Awesome OS"
 ```
 
