@@ -41,14 +41,6 @@ install:
   # Set to true when installing without Pairing
   auto: true
 
-  # firmware to use ('efi|bios')
-  # This is autodetected so only use this to force the installation to use a different one if needed.
-  # NOTE: This can break your system boot if forced to the wrong value
-  firmware: efi
-  # Disk format ('gpt|msdos')
-  # Defaults to gpt. We recommend not changing it to msdos unless it's needed for legacy hardware
-  part-table: gpt
-
   # Override the grub entry name
   grub-entry-name: Kairos
   
