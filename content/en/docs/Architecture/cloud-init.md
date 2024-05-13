@@ -61,6 +61,12 @@ Below there is a detailed list of the stages available that can be used in the c
 
 Note: Steps executed at the `chroot` stage are running inside the new OS as chroot, allowing to write persisting changes to the image, for example by downloading and installing additional software.
 
+In case you're using a standard image, with the Kairos provider, then these other stages are also available
+
+| **Stage**              | **Description**                                                                                                                                                                                                                                                                    |
+|------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| _provider-kairos.bootstrap.before.<role>_               | The provider fires this stage before starting to bootstrap K3S.                                                 |
+| _provider-kairos.bootstrap.after.<role>_               | The provider fires this stage after it finished bootstrapping K3S.                                                 |
 
 ### Sentinels
 
