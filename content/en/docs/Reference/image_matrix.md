@@ -63,7 +63,17 @@ The artifacts can be found in the `build` directory.
 
 {{% /alert %}}
 
-### Framework images
+### Building core and standard generic images
+
+Unfortunately we don't have the resources and capacity to build every possible artifact in our matrix. Thankfully, you can still build those images manually on your locall machine, all you need is [git](https://git-scm.com/), [docker](https://www.docker.com/) and [earthly](https://earthly.dev/). Here's an example how to build an Almalinux ARM generic image
+
+```
+git checkout https://github.com/kairos-io/kairos.git
+cd kairos
+earthly +all-arm-generic --FAMILY=rhel --FLAVOR=almalinux --FLAVOR_RELEASE=9 --BASE_IMAGE=almalinux:9 --VARIANT=core
+```
+
+## Framework images
 
 Kairos releases contains also the __framework__ assets that can be used to [build Kairos images from Scratch]({{< relref "../reference/build-from-scratch" >}}).
 
