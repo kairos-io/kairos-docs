@@ -81,6 +81,7 @@ If you are customizing the image, or either modifying the default partition size
 IMAGE=quay.io/kairos/ubuntu:20.04-core-arm64-nvidia-jetson-agx-orin-{{< kairosVersion >}}
 docker run --privileged \
         -e container_image=$IMAGE \
+        -e SIZE="15200" \
         -e STATE_SIZE="14000" \
         -e RECOVERY_SIZE="10000" \
         -e DEFAULT_ACTIVE_SIZE="4500" \
@@ -95,9 +96,10 @@ If you have instead the rootfs as a directory, you can create the required parti
 PATH=/rootfs/path
 docker run --privileged \
         -e directory=/rootfs \
-        -e STATE_SIZE="6200" \
-        -e RECOVERY_SIZE="4200" \
-        -e DEFAULT_ACTIVE_SIZE="2000" \
+        -e SIZE="15200" \
+        -e STATE_SIZE="14000" \
+        -e RECOVERY_SIZE="10000" \
+        -e DEFAULT_ACTIVE_SIZE="4500" \
 	-v $PATH:/rootfs \
         -v $PWD/bootloader:/bootloader --entrypoint /prepare_arm_images.sh -ti --rm quay.io/kairos/osbuilder-tools
 ```
