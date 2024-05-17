@@ -1145,6 +1145,47 @@ footer {
     padding: 0 20px;
 }
 
+.cncf-blade  {
+    background: #03153A;
+    padding: 0 20px;
+}
+
+.cncf-blade a {
+    color: #EE5007;
+}
+
+.cncf-blade-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    padding: 64px 0px 84px 0px;
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+}
+
+.cncf-blade-wrap > h2{
+    color: #FFF;
+    text-align: center;
+    font-family: Noto Sans;
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+}
+
+.cncf-blade-wrap > p{
+    max-width: 1055px;
+    color: #FDD3BF;
+    text-align: center;
+    font-family: Noto Sans;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%;
+    letter-spacing: 0.24px;
+}
+
 .basics {
     max-width: 1200px;
     margin: 0 auto;

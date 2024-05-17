@@ -108,8 +108,8 @@
                 <div>
                     <p>Check us out in this The New Stack article by our maintainer, Ettore di Giacinto</p>
                     <div class="press-card-img">
-                        {{ $sclogo := resources.Get "/img/spectrocloud.svg" }}
-                        <img src="{{ $sclogo.RelPermalink }}" alt="the New Stack logo" loading="lazy"/>
+                        {{ $logo := resources.Get "/img/theNewStack.png" }}
+                        <img src="{{ $logo.RelPermalink }}" alt="the New Stack logo" loading="lazy"/>
                     </div>
                     <a href="https://thenewstack.io/honey-i-secured-your-boot-edge-trusted-boot-with-kairos/" target="_blank">
                         Read more
@@ -234,6 +234,14 @@
                     <i class="fa-solid fa-arrow-right"></i>
                 </div>
             </a>
+        </div>
+    </div>
+    <div class="cncf-blade">
+        <div class="join-us-wrap">
+            {{ $cncf := resources.Get "/img/logo_cloudnative.png" }}
+            <h2>We are a Cloud Native Computing Foundation sandbox project.</h2>
+            <img src="{{ $cncf.RelPermalink }}" alt="opened box" loading="lazy"/>
+            <p>The Linux Foundation® (TLF) has registered trademarks and uses trademarks. For a list of TLF trademarks, see <a href="https://www.linuxfoundation.org/trademark-usage/" target="_blank">Trademark Usage</a>.</p>
         </div>
     </div>
 </main>
