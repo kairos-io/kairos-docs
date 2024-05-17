@@ -180,7 +180,7 @@ no = 'Oh snap! Sorry to hear that. Please <a href="https://github.com/kairos-io/
         desc = "Kairos community content"
 [[params.links.user]]
         name = "Slack"
-        url = "https://join.slack.com/t/spectrocloudcommunity/shared_invite/zt-1k7wsz840-ugSsPKzZCP5gkasJ0kNpqw"
+        url = "https://slack.cncf.io/#kairos"
 	icon = "fab fa-slack"
         desc = "Join us on Slack!"
 [[params.links.user]]
