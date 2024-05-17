@@ -81,8 +81,8 @@
                 <img src="{{ $logo.RelPermalink }}" alt="wrapped armadillo logo" loading="lazy"/>
             </div>
             <div>
-                <h2>Welcome to &nbsp;</h2>
-                <p>We're here to make your life easier by turning any Linux distribution into a secure, customizable, and easily managed system for edge computing. <br><br> With Kairos, you're not just getting an operating system - you're getting a partner for your edge computing needs.</p>
+                <h2>Welcome to Kairos&nbsp;</h2>
+                <p>Build custom bootable-OS images for your edge devices from your choice of OS and Kubernetes distribution.</p>
                 <a href="https://www.cncf.io/online-programs/cncf-on-demand-webinar-meet-kairos-an-oss-project-building-the-immutable-kubernetes-edge/" target="_blank">
                     Watch this CNCF Webinar to meet Kairos
                     <i class="fa-sharp fa-solid fa-circle-play"></i>
@@ -108,8 +108,8 @@
                 <div>
                     <p>Check us out in this The New Stack article by our maintainer, Ettore di Giacinto</p>
                     <div class="press-card-img">
-                        {{ $logo := resources.Get "/img/theNewStack.png" }}
-                        <img src="{{ $logo.RelPermalink }}" alt="the New Stack logo" loading="lazy"/>
+                        {{ $sclogo := resources.Get "/img/spectrocloud.svg" }}
+                        <img src="{{ $sclogo.RelPermalink }}" alt="the New Stack logo" loading="lazy"/>
                     </div>
                     <a href="https://thenewstack.io/honey-i-secured-your-boot-edge-trusted-boot-with-kairos/" target="_blank">
                         Read more
@@ -150,25 +150,25 @@
                         <img src="{{ $logo.RelPermalink }}" alt="security logo" loading="lazy"/>
                         <h3>Consistent and Secure</h3>
                     </div>
-                    <p>Say goodbye to inconsistencies across your clusters with our system's immutability as each node boots from the same image, ensuring uniformity. The system's immutability also reduces the risk of malicious attacks, and with data encryption, your stored data remains protected, providing enhanced security for your clusters.</p>
+                    <p>Say goodbye to inconsistencies across your clusters as each node boots from the same immutable image, ensuring uniformity. It also reduces the risk of malicious attacks, and with data encryption, your stored data remains protected, providing enhanced security for your clusters.</p>
                 </div>
                 <div>
                     <div>
                         <!-- these are just font awesome icons, why are they pngs?! -->
                         {{ $logo := resources.Get "/img/rocket.png" }}
                         <img src="{{ $logo.RelPermalink }}" alt="rocket logo" loading="lazy"/>
-                        <h3>Easy <br> to Onboard</h3>
+                        <h3>Easy <br> to Install</h3>
                     </div>
-                    <p>We believe in making things simple. With Kairos, you can onboard nodes via QR code, manually, remotely via SSH, interactively, or completely automated with Kubernetes.</p>
+                    <p>We believe in making things simple. With Kairos, you can set up nodes via QR code, manually, remotely via SSH, interactively or with Kubernetes.</p>
                 </div>
                 <div>
                     <div>
                         <!-- these are just font awesome icons, why are they pngs?! -->
                         {{ $logo := resources.Get "/img/box.png" }}
                         <img src="{{ $logo.RelPermalink }}" alt="box logo" loading="lazy"/>
-                        <h3>Kubernetes out <br> of the box</h3>
+                        <h3>Optimized for <br> Kubernetes</h3>
                     </div>
-                    <p>Kairos supports automatic node provisioning via CRDs; upgrade management via Kubernetes; node repurposing and machine autoscaling; plus complete configuration management via cloud-init.</p>
+                    <p>Kairos is optimized for running Kubernetes workloads, and Upgrades can be also done via Kubernetes. However -  can also be used as a standard Linux distribution.  The configuration management is done via cloud-init.</p>
                 </div>
             </div>
         </div>
