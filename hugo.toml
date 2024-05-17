@@ -159,11 +159,6 @@ no = 'Oh snap! Sorry to hear that. Please <a href="https://github.com/kairos-io/
 	icon = "fab fa-github"
         desc = "Development takes place here!"
 [[params.links.user]]
-	name = "Matrix"
-	url = "https://matrix.to/#/#kairos-io:matrix.org"
-        icon = "fa fa-message"
-        desc = "Join us on Matrix!"
-[[params.links.user]]
 	name = "GitHub discussions"
 	url = "https://github.com/kairos-io/kairos/discussions"
         icon = "fa fa-comments"
@@ -183,12 +178,6 @@ no = 'Oh snap! Sorry to hear that. Please <a href="https://github.com/kairos-io/
         url = "https://slack.cncf.io/#kairos"
 	icon = "fab fa-slack"
         desc = "Join us on Slack!"
-[[params.links.user]]
-        name = "Newsletter"
-        url = "https://kairoslinux.substack.com/"
-	icon = "fa fa-envelope"
-        desc = "Subscribe to the newsletter!"
-
 
 # hugo module configuration
 
