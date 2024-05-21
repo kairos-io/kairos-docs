@@ -32,6 +32,17 @@ Where:
 - `<version>`: the version of Kairos e.g. `v1.0.0` for Core, and can also include the K3S version e.g. `v1.0.0-k3s1` for Standard
 - `<extension>`: `iso`, `squashfs`, `ipxe`
 
+### K3S Version Policy
+
+As mentioned before, the version for the standard image includes both the Kairos and the K3S version e.g. `v3.0.1-k3sv1.28.2+k3s1`. Every Kairos release ships 3 K3S versions, e.g.: `1.27.3`, `1.28.2`, `1.29.1`.
+
+When we bump the version we bump all three of them to their latest available patch release, or if there's a newer minor release, then we bump the smallest of all to the latest minor and the other two to the latest patch. Let's say in hour previous example that `1.30.0` is released upstream and with it versions `1.27.4`, `1.28.3` and `1.29.2`, then the next Kairos release would get rid of the `1.27.3`, add `1.30.0` and bump the two in between to `1.28.3` and `1.29.2`. The resulting versions would be: `v3.1.0-k3sv1.28.3+k3s1`, `v3.1.0-k3sv1.29.2+k3s1` and `v3.1.0-k3sv1.30.0+k3s1`.
+
+Keep in mind that:
+
+- This means that not all K3S releases will make it to a Kairos release.
+- We will try not to bump the K3S minor version during Kairos patch releases, but this will depend on the release cycle and urgency of a K3S bump like in the case of security.
+
 ### Examples
 
 - `kairos-ubuntu-23.04-core-amd64-generic-{{< kairosVersion >}}`
