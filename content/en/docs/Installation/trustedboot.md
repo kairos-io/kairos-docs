@@ -21,6 +21,7 @@ The Hardware that will run Kairos needs to have the following requirements:
 
 - Secure boot available in the system
 - The Hardware should have a TPM chip or fTPM enabled
+- Fast boot disabled at BIOS level ( See also https://github.com/kairos-io/kairos/issues/2579 )
 - The Hardware should be capable of booting large EFI files (>32MB)
 - Base image of the OS needs to have at least systemd 252 or newer ( for example ubuntu >=23.10 or fedora >=38 )
 
