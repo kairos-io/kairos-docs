@@ -137,7 +137,7 @@ $ docker pull $IMAGE
 # docker run --entrypoint /bin/bash --name changes -ti $IMAGE
 # docker commit changes $IMAGE
 # Build an ISO with $IMAGE
-$ docker run -v $PWD:/cOS -v /var/run/docker.sock:/var/run/docker.sock -i --rm quay.io/kairos/osbuilder-tools:latest --name "custom-iso" --debug build-iso --date=false --local --overlay-iso /cOS/files-iso $IMAGE --output /cOS/
+$ docker run -v $PWD:/cOS -v /var/run/docker.sock:/var/run/docker.sock -i --rm quay.io/kairos/osbuilder-tools:latest --name "custom-iso" --debug build-iso --date=false --overlay-iso /cOS/files-iso $IMAGE --output /cOS/
 ```
 {{% /tab %}}
 {{< /tabpane >}}
