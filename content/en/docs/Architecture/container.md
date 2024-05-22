@@ -99,7 +99,7 @@ $ docker run -ti --name custom-container {{< oci variant="core" >}}
 $ docker commit custom-container custom-image
  > sha256:37176f104a870480f9c3c318ab51f6c456571b6612b6a47b96af71b95a0a27c7
 # Builds an ISO from it
-$ docker run -v $PWD:/cOS -v /var/run/docker.sock:/var/run/docker.sock -i --rm quay.io/kairos/osbuilder-tools:v0.1.1 --name "custom-iso" --debug build-iso --date=false --local custom-image --output /cOS/
+$ docker run -v $PWD:/cOS -v /var/run/docker.sock:/var/run/docker.sock -i --rm quay.io/kairos/osbuilder-tools:v0.1.1 --name "custom-iso" --debug build-iso --date=false custom-image --output /cOS/
  > ...
  > ...
  > xorriso : UPDATE : Writing:     147456s   84.0%   fifo 100%  buf  50%   60.5xD

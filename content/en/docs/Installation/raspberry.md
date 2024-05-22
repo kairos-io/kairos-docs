@@ -79,13 +79,11 @@ docker run -v $PWD:/HERE \
  -v /var/run/docker.sock:/var/run/docker.sock \
  --privileged -i --rm \
  --entrypoint=/build-arm-image.sh {{< registryURL >}}/osbuilder-tools:{{< osbuilderVersion >}} \
- --use-lvm \
  --model rpi4 \
  --state-partition-size 6200 \
  --recovery-partition-size 4200 \
  --size 15200 \
  --images-size 2000 \
- --local \
  --config /HERE/cloud-config.yaml \
  --docker-image $IMAGE /HERE/build/out.img
 ```
