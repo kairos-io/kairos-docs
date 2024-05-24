@@ -78,6 +78,7 @@ It is required in order to generate USI images to have a set of keys and certifi
 
 The keys are used to sign the UKI file, and to generate a PCR policy keypair required later on by the system in order to decrypt the encrypted partitions. The keys and certificates are generated with the `enki` tool, that is available in the `enki` container image.
 
+
 ### Considerations
 
 #### Booting command lines
