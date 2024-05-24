@@ -99,3 +99,66 @@ Some small things you can do to provide us with the best information possible:
   - cos-setup-fs
   - cos-setup-boot
   - kairos
+
+## Trusted boot
+
+### TPM Event Logs
+
+The Trusted Platform Module (TPM) logs contain important security-related measurements that are taken during the boot process. These logs are instrumental in ensuring that the boot process is secure and has not been tampered with.
+
+#### Viewing TPM Event Logs
+
+To view TPM event logs, you can use the `tpm2_eventlog` command as follows:
+
+```bash
+tpm2_eventlog /sys/kernel/security/tpm0/binary_bios_measurements
+```
+
+However, for a more detailed and structured view, especially when analyzing what contributes to a specific PCR (Platform Configuration Register) value like PCR 7, the `systemd-pcrlock` tool provides enhanced visibility:
+
+```bash
+/usr/lib/systemd/systemd-pcrlock
+```
+
+This tool is particularly useful for understanding the sequence of events that influence each PCR value during the boot process.
+
+#### Key Management in Firmware
+
+To ensure the integrity and security of your system, it is critical to manage and verify the keys used by the firmware, especially when dealing with upgrades and security patches.
+
+#### Listing Enrolled Keys
+
+You can list keys that are currently enrolled in the firmware using `sbctl`:
+
+```bash
+sbctl list-enrolled-keys
+```
+
+For further details and usage, refer to the `sbctl` tool's GitHub repository:
+[https://github.com/Foxboron/sbctl](https://github.com/Foxboron/sbctl)
+
+##### Verifying EFI Signature
+
+To verify if the EFI executables are signed with the correct keys, you can use tools like `goverify`:
+
+```bash
+go get -u github.com/Foxboron/go-uefi/cmd/goverify
+goverify
+```
+
+This step ensures that any upgrades or installations are performed using authorized and validated keys, thereby preserving the security of the system. More information and source code can be found on GitHub:
+[https://github.com/Foxboron/go-uefi/blob/master/cmd/goverify/main.go](https://github.com/Foxboron/go-uefi/blob/master/cmd/goverify/main.go)
+
+##### Checking if Secure Boot is Enabled
+
+Secure Boot is a security standard that helps to ensure that a device boots using only software that is trusted by the Original Equipment Manufacturer (OEM). When Secure Boot is enabled, the firmware checks each piece of boot software for a valid digital signature.
+
+##### Command to Check Secure Boot Status
+
+To check if Secure Boot is enabled on your system, use the following command:
+
+```bash
+dmesg | grep -i secure
+```
+
+The output will display entries related to Secure Boot, indicating whether it is enabled and showing details about the X.509 certificates loaded during the boot process, as seen in the example output provided in your notes.
