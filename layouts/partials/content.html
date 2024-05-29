@@ -81,8 +81,8 @@
                 <img src="{{ $logo.RelPermalink }}" alt="wrapped armadillo logo" loading="lazy"/>
             </div>
             <div>
-                <h2>Welcome to &nbsp;</h2>
-                <p>We're here to make your life easier by turning any Linux distribution into a secure, customizable, and easily managed system for edge computing. <br><br> With Kairos, you're not just getting an operating system - you're getting a partner for your edge computing needs.</p>
+                <h2>Welcome to Kairos&nbsp;</h2>
+                <p>Build custom bootable-OS images for your edge devices from your choice of OS and Kubernetes distribution.</p>
                 <a href="https://www.cncf.io/online-programs/cncf-on-demand-webinar-meet-kairos-an-oss-project-building-the-immutable-kubernetes-edge/" target="_blank">
                     Watch this CNCF Webinar to meet Kairos
                     <i class="fa-sharp fa-solid fa-circle-play"></i>
@@ -150,25 +150,25 @@
                         <img src="{{ $logo.RelPermalink }}" alt="security logo" loading="lazy"/>
                         <h3>Consistent and Secure</h3>
                     </div>
-                    <p>Say goodbye to inconsistencies across your clusters with our system's immutability as each node boots from the same image, ensuring uniformity. The system's immutability also reduces the risk of malicious attacks, and with data encryption, your stored data remains protected, providing enhanced security for your clusters.</p>
+                    <p>Say goodbye to inconsistencies across your clusters as each node boots from the same immutable image, ensuring uniformity. It also reduces the risk of malicious attacks, and with data encryption, your stored data remains protected, providing enhanced security for your clusters.</p>
                 </div>
                 <div>
                     <div>
                         <!-- these are just font awesome icons, why are they pngs?! -->
                         {{ $logo := resources.Get "/img/rocket.png" }}
                         <img src="{{ $logo.RelPermalink }}" alt="rocket logo" loading="lazy"/>
-                        <h3>Easy <br> to Onboard</h3>
+                        <h3>Easy <br> to Install</h3>
                     </div>
-                    <p>We believe in making things simple. With Kairos, you can onboard nodes via QR code, manually, remotely via SSH, interactively, or completely automated with Kubernetes.</p>
+                    <p>We believe in making things simple. With Kairos, you can set up nodes via QR code, manually, remotely via SSH, interactively or with Kubernetes.</p>
                 </div>
                 <div>
                     <div>
                         <!-- these are just font awesome icons, why are they pngs?! -->
                         {{ $logo := resources.Get "/img/box.png" }}
                         <img src="{{ $logo.RelPermalink }}" alt="box logo" loading="lazy"/>
-                        <h3>Kubernetes out <br> of the box</h3>
+                        <h3>Optimized for <br> Kubernetes</h3>
                     </div>
-                    <p>Kairos supports automatic node provisioning via CRDs; upgrade management via Kubernetes; node repurposing and machine autoscaling; plus complete configuration management via cloud-init.</p>
+                    <p>Kairos is optimized for running Kubernetes workloads, and Upgrades can be also done via Kubernetes. However -  can also be used as a standard Linux distribution.  The configuration management is done via cloud-init.</p>
                 </div>
             </div>
         </div>
@@ -196,10 +196,10 @@
                         <p>Follow us <br> on Twitter</p>
                     </div>
                 </a>
-                <a href="https://spectrocloudcommunity.slack.com/join/shared_invite/zt-g8gfzrhf-cKavsGD_myOh30K24pImLA#/shared-invite/email" target="_blank">
+                <a href="https://slack.cncf.io/#kairos" target="_blank">
                     <i class="fa-brands fa-slack"></i>
                     <div>
-                        <p>Join our <br> Slack channel</p>
+                        <p>Join our <br> Slack channel in the CNCF workspace</p>
                     </div>
                 </a>
             </div>
@@ -234,6 +234,14 @@
                     <i class="fa-solid fa-arrow-right"></i>
                 </div>
             </a>
+        </div>
+    </div>
+    <div class="cncf-blade">
+        <div class="join-us-wrap">
+            {{ $cncf := resources.Get "/img/logo_cloudnative.png" }}
+            <h2>We are a Cloud Native Computing Foundation sandbox project.</h2>
+            <img src="{{ $cncf.RelPermalink }}" alt="opened box" loading="lazy"/>
+            <p>The Linux Foundation® (TLF) has registered trademarks and uses trademarks. For a list of TLF trademarks, see <a href="https://www.linuxfoundation.org/trademark-usage/" target="_blank">Trademark Usage</a>.</p>
         </div>
     </div>
 </main>
