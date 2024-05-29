@@ -115,7 +115,7 @@ provider_version = "v2.6.4"
 # renovate: datasource=github-releases depName=k3s-io/k3s
 k3s_version = "v1.29.3+k3s1"
 # renovate: datasource=github-releases depName=kairos-io/kairos
-kairos_version = "v3.0.11"
+kairos_version = "v3.0.12"
 # renovate: datasource=github-releases depName=kairos-io/osbuilder
 osbuilder_version = "v0.200.9"
 # renovate: datasource=github-releases depName=kairos-io/AuroraBoot
@@ -253,3 +253,11 @@ no = 'Oh snap! Sorry to hear that. Please <a href="https://github.com/kairos-io/
 [[params.versions]]
   version = "v3.0.10"
   url = "/v3.0.10/docs"
+
+[[params.versions]]
+  version = "v3.0.11"
+  url = "/v3.0.11/docs"
+
+[[params.versions]]
+  version = "v3.0.12"
+  url = "/v3.0.12/docs"
