@@ -178,6 +178,11 @@ no = 'Oh snap! Sorry to hear that. Please <a href="https://github.com/kairos-io/
         url = "https://slack.cncf.io/#kairos"
 	icon = "fab fa-slack"
         desc = "Join us on Slack!"
+[[params.links.user]]
+  name = "Mailing List"
+  url = "mailto:cncf-kairos-maintainers@lists.cncf.io"
+  icon = "fa fa-envelope"
+  desc = "Send us an email!"
 
 # hugo module configuration
 
