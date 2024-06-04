@@ -71,6 +71,7 @@ When invoking `kairos-agent` in the plan however, you need to specify the `--sou
 
 In the following example `<CONTAINER_IMAGE>` is the source image used to generate the upgrade image, `<CONTAINER_IMAGE_TAG>` is the tag of that image and `<UPGRADE_IMAGE>` is the generated upgrade image (tag included) as per the documentation above.
 
+The example assumes you have already [installed the system-upgrade-controller and all the relevant CRDs](https://github.com/rancher/system-upgrade-controller?tab=readme-ov-file#deploying).
 
 ```yaml
 ---
