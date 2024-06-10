@@ -64,14 +64,39 @@ docker load -i *.tar
 docker push <IMAGE_NAME>
 ```
 
+#### Upgrade with kairos-agent
+
+Let's assume an upgrade image named `acme.com/acme/kairos` has been built and pushed
+as described in the section above. From a shell inside a running Kairos OS,
+the following command will upgrade to the new version:
+
+```bash
+kairos-agent upgrade --source oci:acme.com/acme/kairos
+```
+
 #### Upgrades with Kubernetes
 
-In order to upgrade with Kubernetes using system upgrade controller plans you can use the image used to generate the installable medium, and use it as a base image for the upgrade image. 
-When invoking `kairos-agent` in the plan however, you need to specify the `--source` flag to point to the image that contains the UKI file.
+Kairos can be upgraded with the [system-upgrade-controller](https://github.com/rancher/system-upgrade-controller) from
+Kubernetes itself. The controller and all the relevant CRDs [should already be installed](https://github.com/rancher/system-upgrade-controller?tab=readme-ov-file#deploying)
+(at the time of writing, this workaround is needed in order to install the system-upgrade-controller: [workaround for the missing "latest" tag](https://github.com/rancher/system-upgrade-controller/issues/302#issuecomment-2027163863)).
 
-In the following example `<CONTAINER_IMAGE>` is the source image used to generate the upgrade image, `<CONTAINER_IMAGE_TAG>` is the tag of that image and `<UPGRADE_IMAGE>` is the generated upgrade image (tag included) as per the documentation above.
+A "Plan" resource needs to be created which will use the image generated in the step above.
+Since that image only contains the EFI files for the upgrade and in order to be able use any ImagePullSecrets
+defined on the cluster, we will create and image that can be used to start a Pod and also contains
+the efi and conf files for the upgrade.
 
-The example assumes you have already [installed the system-upgrade-controller and all the relevant CRDs](https://github.com/rancher/system-upgrade-controller?tab=readme-ov-file#deploying).
+Assuming an upgrade image named `acme.com/acme/kairosUpgradeImage` was built using a Kairos
+image named `acme.com/acme/baseImage`, the following
+dockerfile will create an image that can be used to start a Plan for upgrade:
+
+```
+FROM acme.com/acme/kairos as upgradeImage
+FROM acme.com/acme/baseImage
+COPY --from=upgradeImage / /trusted-boot
+```
+(Let's call the image built with this dockerfile `planImage:vx.y.z`)
+
+The following plan can now be deployed on the cluster:
 
 ```yaml
 ---
@@ -84,9 +109,10 @@ type: Opaque
 stringData:
   upgrade.sh: |
     #!/bin/sh
-    mount --rbind host/dev /dev
-    mount --rbind host/run /run
-    kairos-agent upgrade --source oci:<UPGRADE_IMAGE>
+    rm -rf /host/usr/local/trusted-boot
+    mkdir -p /host/usr/local/trusted-boot
+    mount --rbind /trusted-boot /host/usr/local/trusted-boot
+    chroot /host kairos-agent --debug upgrade --source dir:/usr/local/trusted-boot
 ---
 apiVersion: upgrade.cattle.io/v1
 kind: Plan
@@ -97,7 +123,7 @@ metadata:
     k3s-upgrade: server
 spec:
   concurrency: 1
-  version: "<CONTAINER_IMAGE_TAG>"
+  version: "vx.y.z" # The tag of the "upgrade.image" below
   nodeSelector:
     matchExpressions:
       - {key: kubernetes.io/hostname, operator: Exists}
@@ -110,9 +136,9 @@ spec:
     force: false
     disableEviction: true
   upgrade:
-    image: "<CONTAINER_IMAGE>"
-    command: ["chroot", "/host"]
-    args: ["sh", "/run/system-upgrade/secrets/upgrade/upgrade.sh"]
+    image: "planImage"
+    command: ["sh"]
+    args: ["/run/system-upgrade/secrets/upgrade/upgrade.sh"]
 ```
 
 {{% alert title="Note" %}}
@@ -144,5 +170,4 @@ docker run --rm -v $PWD:/work --entrypoint /bin/tar -ti enki -C /work/upgrade-im
 
 CONTAINER_IMAGE_NAME="ttl.sh/kairos-uki/tests:my-upgrade-image"
 docker run -ti -v $PWD:/work quay.io/luet/base:latest util pack $CONTAINER_IMAGE_NAME /work/src.tar /work/upgrade_image.tar
-
 ```
