@@ -84,3 +84,19 @@ The method we use to overcome this issue is this:
 - We bind decryption again both to PCR 11 and 7 (as before).
 
 When we rebind to PCR 7, the register has the new value which includes the cert in dbx.
+
+### Steps
+
+With the above now clarified, here are the steps to revoke the `db.pem` certificate from user space in Kairos.
+
+TODO - write the following steps:
+
+#### Generate a new db cert
+#### Sign the new image with the new certificate
+#### Enroll the new certificate in db
+#### Enroll the old certificate in dbx
+#### Upgrade to the new image
+#### Unbind PCR 7
+#### Reboot
+#### Bind again to PCR 11 and 7
+#### Reboot to ensure everything works
