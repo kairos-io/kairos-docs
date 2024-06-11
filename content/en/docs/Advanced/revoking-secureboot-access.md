@@ -61,3 +61,26 @@ $ sign-efi-sig-list -c keys/KEK.pem -k keys/KEK.key dbx db-dbx.esl db-dbx.auth
 
 (Notice how we sign the `.auth` file using the "KEK" key so that enrollement is allowed)
 
+### PCRs and disk encryption
+
+As described in the ["Trusted Boot"]({{< relref "../architecture/trustedboot" >}}) documentation page,
+the decryption of the disk partitions is bound to some PCR registers on the TPM chip.
+Specifically registers 11 and 7.
+There are 2 ways to bind to a PCR register, the direct and the indirect. You can
+read more in the [`systemd-cryptenroll` docs](https://www.freedesktop.org/software/systemd/man/latest/systemd-cryptenroll.html#TPM2%20PCRs%20and%20policies) but in a nutshell, the indirect binding
+allows the actual value of the PCR to change while the direct one does not.
+For this reason, in Kairos, the decryption is bound indirectly to PCR 11 (which allows
+us to upgrade to newer kernels) and directly to PCR 7, which prevents booting if
+the UEFI databases have been altered, e.g. by enrolling a new key.
+
+And although this makes sense, security wise, it's exactly what we are trying to achieve here. We
+want to enroll a certificate in `dbx`. This would change the value of PCR 7 thus
+decryption of the disk partitions will no longer be possible after reboot.
+
+The method we use to overcome this issue is this:
+- We "unbind" decryption from PCR 7, binding only to PCR 11 indirectly.
+- We enroll the blacklisted cert in dbx.
+- We reboot to the upgraded system.
+- We bind decryption again both to PCR 11 and 7 (as before).
+
+When we rebind to PCR 7, the register has the new value which includes the cert in dbx.
