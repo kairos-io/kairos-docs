@@ -233,8 +233,29 @@ You can now reboot to check if everything works correctly
 reboot
 ```
 
+#### Verifying that it worked
+
+- Check what keys are enrolled in UEFI db:
+
+```
+mokutil --list-enrolled --db | grep -E 'Issuer:|Subject:'
+```
+
+You should find your new certificate in the list
+
+- Check if the old certificate is in dbx:
+
+```
+mokutil --list-enrolled --dbx | grep -E 'Issuer:|Subject:'
+```
+
+You should find your old certificate in the list.
+
+- Check that the old images are not bootable
+
+Just reboot and when presented with the boot menu, select "fallback" or "recovery".
+Since those images haven't been upgraded yet, they are still signed with the old
+certificate. They should not boot and UEFI should show an error.
+
 TODO:
-- Write instructions on how to verify that revocation works. Specifically,
-how to list which keys are in db and dbx (sbctl ?) and how to check that old images
-are not bootable anymore (try to boot fallback or recovery?).
 - Write instructions on how to upgrade fallback and recovery too
