@@ -2,6 +2,7 @@
 title: "Revoking secure boot access"
 linkTitle: "Revoking secure boot access"
 weight: 10
+date: 2022-06-12
 ---
 
 This document describes how an administrator can prevent certain OS images from
