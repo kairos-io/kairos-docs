@@ -227,6 +227,31 @@ systemd-cryptenroll --wipe-slot=password /dev/vda2
 systemd-cryptenroll --wipe-slot=password /dev/vda3
 ```
 
+The following command:
+
+```bash
+cryptsetup luksDump /dev/vda2 | grep "pcrs: "
+```
+
+should show output similar to this:
+
+```
+	tpm2-hash-pcrs:   7
+	tpm2-pubkey-pcrs: 11
+```
+
+which means the decryption is now bound again to PCR 7 (directly) and PCR 11 (indirectly).
+
+This command:
+
+```
+systemd-cryptenroll /dev/vda2
+```
+
+should only show `tmp2` (and not `password`)
+
+(same thing for `/dev/vda3`)
+
 You can now reboot to check if everything works correctly
 
 ```bash
@@ -257,5 +282,19 @@ Just reboot and when presented with the boot menu, select "fallback" or "recover
 Since those images haven't been upgraded yet, they are still signed with the old
 certificate. They should not boot and UEFI should show an error.
 
-TODO:
-- Write instructions on how to upgrade fallback and recovery too
+
+#### Upgrading recovery
+
+After successfully booting to "active", you can now upgrade `recovery` to make
+can still boot if the next update goes wrong.
+
+Obviously the recovery image will also need to be signed with the new certificate.
+
+The upgrade command is:
+
+```
+kairos-agent upgrade --recovery --source oci:<YOUR_UPGRADE_IMAGE_HERE>
+```
+
+The "fallback" image will be upgraded on the next upgrade. Read the ["Container based"]({{< relref "../architecture/container" >}})
+document to understand more.
