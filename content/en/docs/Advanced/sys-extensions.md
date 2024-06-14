@@ -132,7 +132,7 @@ So if using binaries from the system extensions is needed during boot, make sure
 ### Known issues
 
 - Sysext images need to be named with the extension `.sysext.raw` to be identified correctly. This is a design choice to avoid conflicts with other files that could be present in the EFI partition and we don't expect this to change in the future.
-- Any folder that is mounted as a system extension will be mounted as read-only. So if your sysext is mounting `/usr/local/bin` to add binaries, it will be mounted as read-only. Other sysexts can eb added and they will be merged correctly, but the final dir will be read-only. This is a limitation of the current systemd version (lower than 256) and will be addressed in future releases.
+- Any folder that is mounted as a system extension will be mounted as read-only. So if your sysext is mounting `/usr/local/bin` to add binaries, it will be mounted as read-only. Other sysexts can be added and they will be merged correctly, but the final dir will be read-only. This is a limitation of the current systemd version (lower than 256) and will be addressed in future releases.
 - Only `/usr` can be extended. This is a design choice and might change in the future to allow other directories to be extended.
 - System extensions provided binaries are only available after the `initramfs` stage.
 - Any extensions bundled on the install media will be available in the `active` and `passive` boot entries. Any other custom entries will need to have the sysexts copied manually to the proper directory in the EFI partition.
