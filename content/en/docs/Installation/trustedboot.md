@@ -149,11 +149,6 @@ docker run -ti --rm -v $PWD/system-extensions:/system-extensions -v $PWD/build:/
 {{% /tab %}}
 {{< /tabpane >}}
 
-
-```bash
-
-
-
 ### Config files
 
 Included in the artifact will be a configuration file. On the installation/upgrade media, it is called `norole.conf` but once it has been installed it will be named `active.conf`, `passive.conf` or `recovery.conf` which represents the configuration for the "cos", "fallback" and "recovery" images respectively.
