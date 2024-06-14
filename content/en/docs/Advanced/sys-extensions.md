@@ -103,7 +103,7 @@ Check the `Bundling system extensions during the installable medium build` secti
 
 ### Adding system extensions to the installed system
 
-Its possible to add system extension s once the system is installed or as part of the installation process without having to bundle them directly on the install media. This is done by copying the sysexts directly into the EFI partition in the proper place.
+Its possible to add system extensions once the system is installed or as part of the installation process without having to bundle them directly on the install media. This is done by copying the sysexts directly into the EFI partition in the proper place.
 
 The paths to copy the sysexts are:
 - `EFI/kairos/active.efi.extra.d/` for the sysexts that will be loaded when choosing the active boot entry.
