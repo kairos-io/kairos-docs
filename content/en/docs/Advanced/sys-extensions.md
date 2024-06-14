@@ -121,7 +121,7 @@ This is also a good choice for testing sysexts before bundling them into the ins
 ### Boot workflow
 
 During boot, systemd-stub will copy and measure the system extensions from the proper directory according to the loaded EFI file (`/EFI/kairos/$EFI_FILE.efi.extra.d/`) and copy them into the initrd `/.extra/sysext` directory.
-Immucore then will extract the public keys from the firmware and save them under `/run/verity.d` so the systemd extensions can be veried against those.
+[Immucore](https://github.com/kairos-io/immucore/) then will extract the public keys from the firmware and save them under `/run/verity.d` so the systemd extensions can be veried against those.
 Immucore will then verify those sysexts to see if they are signed and verity protected. If they are, they will be copied under `/run/extensions` and during the `initramfs` yip stage the `systemd-sysext` service will be run and they will be mounted in their proper directories.
 
 The enablement of the system extensions service is done at the last step in the `initramfs` stage to not collide with anything in those stage writing to the directories under `/usr/local` (mounted from persistent partition), as some dirs get mounted as read only, they could collide with the stages writing to those dirs.
