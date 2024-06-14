@@ -126,7 +126,7 @@ Immucore will then verify those sysexts to see if they are signed and verity pro
 
 The enablement of the system extensions service is done at the last step in the `initramfs` stage to not collide with anything in those stage writing to the directories under `/usr/local` (mounted from persistent partition), as some dirs get mounted as read only, they could collide with the stages writing to those dirs.
 
-So if using binaries from the system extensions is needed during boot, make sure they are done after the `initramfs` stage. Otherwise they wont be available in earlier stages.
+So, if using binaries from the system extensions is needed during boot, make sure they are done after the `initramfs` stage. Otherwise, they wont be available in earlier stages.
 
 
 ### Known issues
