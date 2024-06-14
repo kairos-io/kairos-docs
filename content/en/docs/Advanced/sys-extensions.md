@@ -98,7 +98,7 @@ ro root-verity-sig bdb3ee65-ed86-480c-a750-93015254f1a7 root-x86-64-verity-sig v
 
 ### Adding system extensions to build medium
 
-Check the `Bundling system extensions during the installable medium build` section in the [Trusted Boot Installations]({{%relref "/docs/Installation/trustedboot" %}}) for more information on how to add system extensions to the build medium.
+Check the `Bundling system extensions during the installable medium build` section in the [Trusted Boot Installations]({{%relref "/docs/Installation/trustedboot#bundling-system-extensions-during-the-installable-medium-build" %}}) for more information on how to add system extensions to the build medium.
 
 
 ### Adding system extensions to the installed system
