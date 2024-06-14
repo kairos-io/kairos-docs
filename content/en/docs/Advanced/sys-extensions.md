@@ -124,7 +124,7 @@ During boot, systemd-stub will copy and measure the system extensions from the p
 [Immucore](https://github.com/kairos-io/immucore/) then will extract the public keys from the firmware and save them under `/run/verity.d` so the systemd extensions can be veried against those.
 Immucore will then verify those sysexts to see if they are signed and verity protected. If they are, they will be copied under `/run/extensions` and during the `initramfs` yip stage the `systemd-sysext` service will be run and they will be mounted in their proper directories.
 
-The enablement of the system extensions service is done at the last step in the `initramfs` stage to not collide with anything in those stage writing to the directories under `/usr/local` (mounted from persistent partition), as some dirs get mounted as read only, they could collide with the stages writing to those dirs.
+The enablement of the system extensions service is done at the last step in the `initramfs` stage to not collide with anything in those stages writing to the directories under `/usr/local` (mounted from persistent partition), as some dirs get mounted as read only, they could collide with the stages writing to those dirs.
 
 So, if using binaries from the system extensions is needed during boot, make sure they are done after the `initramfs` stage. Otherwise, they wont be available in earlier stages.
 
