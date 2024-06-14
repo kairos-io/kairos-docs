@@ -16,8 +16,8 @@ The process of creating signed images that can be trusted to boot, requires the
 signing keys to be safe and only accessible to the vendor that produces the OS images.
 
 In the unfortunate case in which a signing certificate has been compromised, it's
-important that the keys is blacklisted it on every machine.
-Failing to do so, will allow be possible for the malicious actor with access to the key,
+important that the key is blacklisted on every machine.
+Failing to do so, will make it possible for the malicious actor with access to the key,
 to generate OS images that the system will accept to boot.
 This will allow them boot and decrypt the filesystem, thus gaining full access
 to the data on that machine and full control over it.
@@ -25,7 +25,7 @@ to the data on that machine and full control over it.
 The UEFI firmware has a special "database" in which blacklisted certificates can
 be "enrolled" (image hashes can also be enrolled, but more on that on the next scenario).
 
-If only one machine is running the signed OS images and physical access to that machine is
+If only one machine is running the signed OS images, and physical access to that machine is
 possible, then usually the simplest way is to boot into the machine's UEFI management utility
 and enroll the certificate in the `dbx` database manually. 
 
@@ -50,8 +50,8 @@ in order to do the enrollement, while using the unsigned format needs the privat
 keys to be present.
 
 If you followed [the instructions to create signing keys]({{< relref "../Installation/trustedboot.md#key-generation" >}}), you should have a directory with a `db.pem` certificate. This is the certificate
-we will blacklist. To do so we need to convert it to the "esl" format and then
-sign it to create the final `.auth` file which will be used for enrollement.
+we will blacklist. To do so, we need to convert it to the "esl" format and then
+sign it to create the final `.auth` file, which will be used for enrollement.
 The utilities used are usually shipped in the various distros under a name like `efitools` (e.g. in Ubuntu). Here are the commands to generate the needed signed authenticated variables file:
 
 ```bash
@@ -70,9 +70,9 @@ Specifically registers 11 and 7.
 There are 2 ways to bind to a PCR register, the direct and the indirect. You can
 read more in the [`systemd-cryptenroll` docs](https://www.freedesktop.org/software/systemd/man/latest/systemd-cryptenroll.html#TPM2%20PCRs%20and%20policies) but in a nutshell, the indirect binding
 allows the actual value of the PCR to change while the direct one does not.
-For this reason, in Kairos, the decryption is bound indirectly to PCR 11 (which allows
+**For this reason, in Kairos, the decryption is bound indirectly to PCR 11 (which allows
 us to upgrade to newer kernels) and directly to PCR 7, which prevents booting if
-the UEFI databases have been altered, e.g. by enrolling a new key.
+the UEFI databases have been altered, e.g. by enrolling a new key.**
 
 And although this makes sense, security wise, it's exactly what we are trying to achieve here. We
 want to enroll a certificate in `dbx`. This would change the value of PCR 7 thus
