@@ -1,6 +1,6 @@
 ---
-title: "Extending the system with system extensions"
-linkTitle: "Extending the system with system extensions"
+title: "Extending the system with systemd extensions"
+linkTitle: "Extending the system with systemd extensions"
 weight: 3
 ---
 
