@@ -124,6 +124,31 @@ docker run -ti --rm -v $PWD/build:/result -v $PWD/rootfs:/rootfs -v $PWD/keys/:/
 {{% /tab %}}
 {{< /tabpane >}}
 
+
+## Bundling system extensions during the installable medium build
+
+System extensions can be bundled in the installable medium. To bundle system extensions, you need to create a new image with the extensions you want to add. System extensions are bundled in the root on the media install. When building your Trusted Boot image, you can add the system extensions to the iso by using the `--overlay-iso` flag and pointing it to the directory containing the system extensions.
+
+{{< tabpane text=true  >}}
+{{% tab header="From a container image" %}}
+```bash
+# Assuming your system extensions are stored on $PWD/system-extensions
+CONTAINER_IMAGE=quay.io/kairos/fedora:38-core-amd64-generic-{{< kairosVersion>}}-uki
+docker run -ti --rm -v $PWD/system-extensions:/system-extensions -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki $CONTAINER_IMAGE -t iso -d /result/ -k /keys --overlay-iso /system-extensions
+# to build an EFI file only
+docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki $CONTAINER_IMAGE -t uki -d /result/ -k /keys
+```
+{{% /tab %}}
+{{% tab header="From a directory" %}}
+```bash
+# Assuming you have a "rootfs" directory with the content of the OS
+# If the image is in a directory ($PWD/rootfs) you can use the following command
+# Assuming your system extensions are stored on $PWD/system-extensions
+docker run -ti --rm -v $PWD/system-extensions:/system-extensions -v $PWD/build:/result -v $PWD/rootfs:/rootfs -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki dir:/rootfs/ -t iso -d /result/ -k /keys --overlay-iso /system-extensions
+```
+{{% /tab %}}
+{{< /tabpane >}}
+
 ### Config files
 
 Included in the artifact will be a configuration file. On the installation/upgrade media, it is called `norole.conf` but once it has been installed it will be named `active.conf`, `passive.conf` or `recovery.conf` which represents the configuration for the "cos", "fallback" and "recovery" images respectively.
