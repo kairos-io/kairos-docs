@@ -173,6 +173,9 @@ echo "Generating temporary passphrase"
 dd if=/dev/random bs=32 count=1 of=/tmp/random_keyfile
 
 echo "Adding password slot"
+# We temporarily switch to a passphrase decryption here, so that we can remove the "tpm" decryption
+# option below. After we add the "tpm" option back (bound to different PCR registers),
+# we remove the passphrase again.
 cryptsetup luksAddKey --token-type systemd-tpm2 /dev/vda2 /tmp/random_keyfile
 cryptsetup luksAddKey --token-type systemd-tpm2 /dev/vda3 /tmp/random_keyfile
 
