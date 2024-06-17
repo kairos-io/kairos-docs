@@ -10,7 +10,7 @@ booting on their hardware in the context of ["Trusted Boot"]({{< relref "../arch
 
 Two different scenarios will be covered, with the process being only slightly different for each case.
 
-## Scenario 1 - Signing certificate no longer trusted
+## Scenario 1 - Signing certificate is no longer trusted
 
 The process of creating signed images that can be trusted to boot, requires the
 signing keys to be safe and only accessible to the vendor that produces the OS images.
