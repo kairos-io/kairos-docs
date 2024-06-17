@@ -144,7 +144,7 @@ efi-updatevar -f db.auth db
 ```
 
 {{% alert title="Warning" %}}
-You will need the`efitools` installed on the Kairos image for this commands to work!
+You will need the `efitools` installed on the Kairos image for this commands to work!
 {{% /alert %}}
 
 #### Enroll the old certificate in dbx
