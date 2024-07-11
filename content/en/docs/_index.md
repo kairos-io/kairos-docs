@@ -16,7 +16,7 @@ menu:
 - Reset from the GRUB menu on Alpine gets stuck in an endless loop [#2136](https://github.com/kairos-io/kairos/issues/2136)
 {{% /alert %}}
 
-{{% alert title="Deprecation Warnings" color="default" %}}
+{{% alert title="Deprecation Warnings" color="primary" %}}
 Starting on v3.5.0, reading of `/etc/elemental/config.yaml` will be deprecated. Use `/etc/kairos/config.yaml` instead. [#2233](https://github.com/kairos-io/kairos/issues/2233)
 {{% /alert %}}
 
