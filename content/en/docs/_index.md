@@ -8,11 +8,33 @@ menu:
     weight: 20
 ---
 
-{{% alert color="warning" %}}
-There are [known issues]({{< relref "known-issues">}}) on this version
+{{% alert title="Known Issues" color="warning" %}}
+- RPi EFI booting no longer supported on kernels shipped with Ubuntu 24.04+ [#2249](https://github.com/kairos-io/kairos/issues/2249)
+- It's not possible to login on an Alpine 3.19 RPi [#2439](https://github.com/kairos-io/kairos/issues/2439)
+- Expired password on system with no rtc (e.g. rpi4) on Alpine [#1994](https://github.com/kairos-io/kairos/issues/1994)
+- `cgroup_memory` not mounted in Alpine rpi4 [#2002](https://github.com/kairos-io/kairos/issues/2002) which causes issues with K3s and other software
+- Reset from the GRUB menu on Alpine gets stuck in an endless loop [#2136](https://github.com/kairos-io/kairos/issues/2136)
 {{% /alert %}}
 
-Welcome to the Kairos Documentation
+{{% alert title="Deprecation Warnings" color="default" %}}
+Starting on v3.5.0, reading of `/etc/elemental/config.yaml` will be deprecated. Use `/etc/kairos/config.yaml` instead. [#2233](https://github.com/kairos-io/kairos/issues/2233)
+{{% /alert %}}
+
+{{% alert title="Remarkable Changes" color="info" %}}
+By default, Uki artifacts (identified by the `-uki` suffix) no longer include Linux modules and firmware in the image. Real-world testing has shown that many EFI firmwares are very particular about the size of the EFI image, often refusing to boot if the file exceeds 300-400MB. Given the wide variety of EFI firmware implementations, predicting whether a UKI EFI file will boot on different hardware is challenging.
+
+To enhance compatibility, we decided to slim down the UKI files by removing the largest components: the Linux modules and firmware packages. This results in EFI files around 200-300MB, which are much more likely to boot correctly across various EFI implementations.
+
+However, this change comes with a trade-off. Smaller images, while being more compatible with a wide range of EFI firmwares, may lack comprehensive hardware support because they do not include all the Linux modules and firmware packages. This means that certain hardware components may not function correctly or optimally when using these slimmer UKI images.
+
+On the other hand, larger UKI images, which include all necessary modules and firmware for extensive hardware support, provide better functionality and compatibility with a broad range of hardware. However, these larger images are more likely to encounter boot issues due to EFI firmware limitations, as many EFI implementations refuse to boot files larger than 300-400MB.
+
+We publish `-uki` artifacts ourselves, which are the slimmed versions, as examples of how to build a slimmer UKI artifact. **While these serve as a reference, we recommend always building your own custom images to tailor them to your specific hardware needs.** If you need to include those packages for full hardware support, you can create a custom artifact to add them back, as detailed in the Kairos docs.
+
+We recommend keeping your UKI EFI files as small as possible to maximize boot success across different EFI firmware implementations. While smaller images offer better compatibility, they may lack full hardware support. Conversely, larger images, which include all necessary modules and firmware, provide comprehensive hardware support but may fail to boot due to EFI firmware constraints.
+{{% /alert %}}
+
+Welcome to the Kairos {{< kairosVersion >}} Documentation
 
 Kairos is the open-source project that simplifies Edge, cloud, and bare metal OS lifecycle management. With a unified Cloud Native API, Kairos is community-driven, open source, and distro agnostic.
 
