@@ -159,16 +159,23 @@ However, Kairos have different goals and takes completely unique approaches to t
 
 ### Building Kairos
 
-Requirements: Needs only Docker.
+Requirements: [Docker](https://www.docker.com/) and [Earthly](https://earthly.dev/).
 
-Run the following command to produce a Docker image along with a working ISO:
+First we need to clone the repository
+
+```bash
+git clone https://github.com/kairos-io/kairos.git
+cd kairos
+```
+
+Then we can build the ISO with the following command for a Kairos core image based on {{< defaultFlavor >}}:
 
 ```bash
 earthly +iso \
-  --FAMILY=rhel \
-  --FLAVOR=fedora \
-  --FLAVOR_RELEASE=38 \
-  --BASE_IMAGE=fedora:38 \
+  --FAMILY={{< defaultFamily >}} \
+  --FLAVOR={{< defaultFlavor >}} \
+  --FLAVOR_RELEASE={{< defaultFlavorRelease >}} \
+  --BASE_IMAGE={{< defaultBaseImage >}} \
   --MODEL=generic \
   --VARIANT=core
 ```
