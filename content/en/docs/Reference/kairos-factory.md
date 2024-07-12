@@ -70,16 +70,17 @@ earthly +base-image \
   --BOOTLOADER=systemd-boot # The bootloader to use, in the case of UKI it has to be systemd-boot
 ```
 
-Earthly will output an OCI artifact with a tag similar to `quay.io/kairos/ubuntu:24.04-core-amd64-generic-v3.1.0`. I'd recommend you re-tag this to something that makes sense to you.
+Earthly will output an OCI artifact with a tag similar to `quay.io/kairos/ubuntu:24.04-core-amd64-generic-v3.1.0`. I'd recommend you re-tag this to something that makes sense to you, for example:
 
 ```bash
-docker tag quay.io/kairos/ubuntu:24.04-core-amd64-generic-v3.1.0 kairos-base-image
+docker tag quay.io/kairos/ubuntu:24.04-core-amd64-generic-v3.1.0 ttl.sh/kairos-base-image:24h
+docker push ttl.sh/kairos-base-image:24h
 ```
 
 Now we can produce the UKI artifact that we will use to boot our machines:
 
 ```bash
-earthly +uki-iso --BASE_IMAGE=kairos-base-image \
+earthly +uki-iso --BASE_IMAGE=ttl.sh/kairos-base-image:24 \
   --ENKI_KEYS_DIR=/path/to/keys
 ```
 
