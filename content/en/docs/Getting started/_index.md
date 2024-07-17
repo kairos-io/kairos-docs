@@ -159,6 +159,10 @@ Here are some additional helpful tips depending on the physical/virtual machine 
   {{% /tab %}}
 {{< /tabpane >}}
 
+{{% alert title="Warning" %}}
+If you're booting in UEFI mode, make sure that your storage device where you're planning to install Kairos, is configured as ACHI and not RAID.
+{{% /alert %}}
+
 After booting you'll be greeted with a GRUB boot menu with multiple options.
 The option you choose will depend on how you plan to install Kairos:
 
