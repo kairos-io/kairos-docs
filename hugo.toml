@@ -115,9 +115,9 @@ provider_version = "v2.7.1"
 # renovate: datasource=github-releases depName=k3s-io/k3s
 k3s_version = "v1.30.2+k3s1"
 # renovate: datasource=github-releases depName=kairos-io/kairos
-kairos_version = "v3.1.0"
+kairos_version = "v3.1.1"
 # renovate: datasource=github-releases depName=kairos-io/osbuilder
-osbuilder_version = "v0.300.1"
+osbuilder_version = "v0.300.2"
 # renovate: datasource=github-releases depName=kairos-io/AuroraBoot
 auroraboot_version = "v0.2.7"
 flavor = "debian"
@@ -128,7 +128,7 @@ defaultFamily = "opensuse"
 defaultFlavor = "opensuse"
 defaultFlavorRelease = "leap-15.6"
 # renovate: datasource=github-releases depName=kairos-io/kairos-framework
-defaultFrameworkRelease = "v2.9.2"
+defaultFrameworkRelease = "v2.10.2"
 # User interface configuration
 [params.ui]
 # Enable to show the side bar menu in its compact state.
@@ -269,3 +269,7 @@ no = 'Oh snap! Sorry to hear that. Please <a href="https://github.com/kairos-io/
 [[params.versions]]
   version = "v3.1.0"
   url = "/v3.1.0/docs"
+
+[[params.versions]]
+  version = "v3.1.1"
+  url = "/v3.1.1/docs"

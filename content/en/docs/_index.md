@@ -10,10 +10,6 @@ menu:
 
 {{% alert title="Known Issues" color="warning" %}}
 - RPi EFI booting no longer supported on kernels shipped with Ubuntu 24.04+ [#2249](https://github.com/kairos-io/kairos/issues/2249)
-- It's not possible to login on an Alpine 3.19 RPi [#2439](https://github.com/kairos-io/kairos/issues/2439)
-- Expired password on system with no rtc (e.g. rpi4) on Alpine [#1994](https://github.com/kairos-io/kairos/issues/1994)
-- `cgroup_memory` not mounted in Alpine rpi4 [#2002](https://github.com/kairos-io/kairos/issues/2002) which causes issues with K3s and other software
-- Reset from the GRUB menu on Alpine gets stuck in an endless loop [#2136](https://github.com/kairos-io/kairos/issues/2136)
 {{% /alert %}}
 
 {{% alert title="Deprecation Warnings" color="primary" %}}
