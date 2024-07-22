@@ -1,9 +1,9 @@
 ---
-title: "Kairos release v3.1"
-date: 2024-07-11
-linkTitle: "Kairos release v3.1"
-description: "Kairos release v3.1"
-author: Mauro Morales ([Twitter](https://twitter.com/mauromrls)) ([GitHub](https://github.com/mauromorales))
+title: "Kairos release v3.1.1"
+date: 2024-07-19
+linkTitle: "Kairos release v3.1.1"
+description: "Kairos release v3.1.1"
+author: Itxaka Serrano ([Twitter](https://twitter.com/itxaka)) ([GitHub](https://github.com/itxaka))
 ---
 <h1 align="center">
   <br>
