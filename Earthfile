@@ -1,6 +1,6 @@
 VERSION 0.6
 # renovate: datasource=docker depName=renovate/renovate versioning=docker
-ARG RENOVATE_VERSION=37
+ARG RENOVATE_VERSION=38
 
 docs:
     FROM node:19-bullseye
