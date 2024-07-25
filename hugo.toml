@@ -129,6 +129,8 @@ defaultFlavor = "opensuse"
 defaultFlavorRelease = "leap-15.6"
 # renovate: datasource=github-releases depName=kairos-io/kairos-framework
 defaultFrameworkRelease = "v2.10.2"
+# renovate: datasource=github-releases depName=rancher/system-upgrade-controller
+system_upgrade_controller = "v0.13.4"
 # User interface configuration
 [params.ui]
 # Enable to show the side bar menu in its compact state.
