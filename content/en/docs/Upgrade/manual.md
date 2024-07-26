@@ -46,7 +46,7 @@ Once you have tested the new system and are happy with it, you can upgrade the r
 
 ## Upgrading the recovery system
 
-The recovery system is there for a reason, to help you recover the active system in case of failure. This is why we don't allow upgrading the active system and recovery one at the same time. You should try to keep your recovery system as close as possible to the active one.
+The recovery system is there for a reason, to help you recover the active system in case of failure. This is why we don't allow upgrading the active system and recovery one at the same time and it needs to be done in a separate step. It's advised to also upgrade the recovery system often, to keep it close to the active one. This will make sure you have a familiar system to work with, when you boot to the recovery system instead of an old image you haven't used for quite a long time.
 
 {{% alert title="Warning" color="warning" %}}
 Only upgrade the recovery system, when you are sure that the active system is running correctly.
