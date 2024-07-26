@@ -36,7 +36,7 @@ To push configurations to a node, it is necessary [system-upgrade-controller](ht
 To install [system-upgrade-controller](https://github.com/rancher/system-upgrade-controller), use kubectl:
 
 ```bash
-kubectl apply -f https://github.com/rancher/system-upgrade-controller/releases/download/v0.9.1/system-upgrade-controller.yaml
+kubectl apply -f https://github.com/rancher/system-upgrade-controller/releases/download/{{< system-upgrade-controller-version >}}/system-upgrade-controller.yaml
 ```
 
 {{% alert title="Note" %}}

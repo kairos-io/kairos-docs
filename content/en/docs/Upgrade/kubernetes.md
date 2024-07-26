@@ -1,8 +1,9 @@
 ---
 title: "Upgrading from Kubernetes"
-linkTitle: "Upgrading from Kubernetes"
-weight: 1
+linkTitle: "From Kubernetes"
+weight: 2
 date: 2022-11-13
+description: Learn how to upgrade Kairos using Kubernetes
 ---
 
 Kairos upgrades can be performed either manually or via Kubernetes if the cluster is composed of Kairos nodes. In order to trigger upgrades, it is required to apply a `Plan` spec to the target cluster for the upgrade.
@@ -14,7 +15,7 @@ Kairos upgrades can be performed either manually or via Kubernetes if the cluste
 To install it, use kubectl:
 
 ```bash
-kubectl apply -f https://github.com/rancher/system-upgrade-controller/releases/download/v0.9.1/system-upgrade-controller.yaml
+kubectl apply -f https://github.com/rancher/system-upgrade-controller/releases/download/{{< system-upgrade-controller-version >}}/system-upgrade-controller.yaml
 ```
 
 ### Upgrading from version X to version Y with Kubernetes

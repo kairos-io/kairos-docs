@@ -1,8 +1,9 @@
 ---
 title: "Trusted Boot Upgrades"
-linkTitle: "Trusted Boot Upgrades"
+linkTitle: "Trusted Boot"
 weight: 6
 date: 2022-11-13
+description: Learn how to upgrade a Kairos node with Trusted Boot enabled
 ---
 
 
