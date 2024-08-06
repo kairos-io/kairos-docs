@@ -25,7 +25,7 @@
                             <p>Please use the following docker command: </p><pre class="code-ubuntu">docker pull quay.io/kairos/ubuntu:24.04-standard-arm64-rpi4-{{$kairosVersion}}-k3s{{$tagK3sVersion}}-img</pre><p></p>
                             <p>You can find more information: <a href="https://kairos.io/docs/reference/image_matrix/#image-flavors" target="_blank">here</a></p>
                             <div class="modal-buttons">
-                                <button class="copy-to-clipboard-ubuntu">Copy Command</button>
+                                <button class="copy-to-clipboard-ubuntu plausible-event-name=Docker+Pull plausible-event-flavor=ubuntu plausible-event-flavor_release=24.04 plausible-event-version={{$kairosVersion}}-k3s{{$tagK3sVersion}} plausible-event-arch=arm64 plausible-event-variant=standard plausible-event-model=rpi4">Copy Command</button>
                                 <button class="close-dialog-ubuntu">Close</button>
                             </div>
                         </dialog>
@@ -37,7 +37,7 @@
                         <img src="{{ $logo.RelPermalink }}" alt="kairos fedora logo" loading="lazy"/>
                     </div>
                     <div>
-                        <a href="https://github.com/kairos-io/kairos/releases/download/{{$kairosVersion}}/kairos-fedora-38-standard-amd64-generic-{{$kairosVersion}}-k3s{{$k3sVersion}}.iso" target="_self" class="unclickable">
+                        <a href="https://github.com/kairos-io/kairos/releases/download/{{$kairosVersion}}/kairos-fedora-40-standard-amd64-generic-{{$kairosVersion}}-k3s{{$k3sVersion}}.iso" target="_self" class="unclickable">
                             <span>X86</span><span> version</span>
                             <i class="fa-solid fa-download"></i>
                         </a>
@@ -62,7 +62,7 @@
                             <p>Please use the following docker command: </p><pre class="code-alpine">docker pull quay.io/kairos/alpine:3.19-standard-arm64-rpi4-{{$kairosVersion}}-k3s{{$tagK3sVersion}}-img</pre><p></p>
                             <p>You can find more information: <a href="https://kairos.io/docs/reference/image_matrix/#image-flavors" target="_blank">here</a></p>
                             <div class="modal-buttons">
-                                <button class="copy-to-clipboard-alpine">Copy Command</button>
+                                <button class="copy-to-clipboard-alpine plausible-event-name=Docker+Pull plausible-event-flavor=alpine plausible-event-flavor_release=3.19 plausible-event-version={{$kairosVersion}}-k3s{{$tagK3sVersion}} plausible-event-arch=arm64 plausible-event-variant=standard plausible-event-model=rpi4">Copy Command</button>
                                 <button class="close-dialog-alpine">Close</button>
                             </div>
                         </dialog>
