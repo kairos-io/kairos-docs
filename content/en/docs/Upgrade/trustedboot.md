@@ -67,6 +67,10 @@ docker push <IMAGE_NAME>
 
 #### Upgrade with kairos-agent
 
+{{% alert title="Warning" %}}
+For upgrading use the image that has been loaded with `docker load` in the step earlier. That contains the EFI files for the upgrade process. **Do not use** the container image used (`$CONTAINER_IMAGE` in the example above) used as input!
+{{% /alert %}}
+
 Let's assume an upgrade image named `acme.com/acme/kairos` has been built and pushed
 as described in the section above. From a shell inside a running Kairos OS,
 the following command will upgrade to the new version:
