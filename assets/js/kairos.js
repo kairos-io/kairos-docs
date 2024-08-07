@@ -42,7 +42,14 @@ function replaceContent(distroInfo) {
         if (flavorClass) {
             // Extract the values part of the class
             const values = flavorClass.split('=')[1];
-            onlyDistros = values.split(',');
+            console.log(values)
+            const isList = values.includes(',');
+            if (isList) {
+                onlyDistros = values.split(',');
+            } else {
+                onlyDistros = [values];
+            }
+            console.log(onlyDistros )
         }
 
         const distroInfoName = distroInfo[1].charAt(0).toUpperCase() + distroInfo[1].slice(1).toLowerCase() + '+' + distroInfo[2];
