@@ -108,8 +108,8 @@ To build the installable medium you need to run the following commands:
 
 {{< tabpane text=true  >}}
 {{% tab header="From a container image" %}}
-```bash
-CONTAINER_IMAGE=quay.io/kairos/fedora:38-core-amd64-generic-{{< kairosVersion>}}-uki
+```bash {class="meta-distro only-flavors=Ubuntu+24.04,Fedora+40"}
+CONTAINER_IMAGE={{<ociMeta variant="core">}}-uki
 docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki $CONTAINER_IMAGE -t iso -d /result/ -k /keys
 # to build an EFI file only
 docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki $CONTAINER_IMAGE -t uki -d /result/ -k /keys
@@ -131,9 +131,9 @@ System extensions can be bundled in the installable medium. To bundle system ext
 
 {{< tabpane text=true  >}}
 {{% tab header="From a container image" %}}
-```bash
+```bash {class="meta-distro only-flavors=Ubuntu+24.04,Fedora+40,foobar"}
 # Assuming your system extensions are stored on $PWD/system-extensions
-CONTAINER_IMAGE=quay.io/kairos/fedora:38-core-amd64-generic-{{< kairosVersion>}}-uki
+CONTAINER_IMAGE={{<ociMeta variant="core">}}-uki
 docker run -ti --rm -v $PWD/system-extensions:/system-extensions -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki $CONTAINER_IMAGE -t iso -d /result/ -k /keys --overlay-iso /system-extensions
 # to build an EFI file only
 docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki $CONTAINER_IMAGE -t uki -d /result/ -k /keys
@@ -166,8 +166,8 @@ title Kairos
 You can overwrite the default "Kairos" title if you pass the `--boot-branding` flag to enki.
 
 
-```bash
-CONTAINER_IMAGE={{<oci flavor="ubuntu" flavorRelease="24.04" variant="core">}}-uki
+```bash {class="meta-distro only-flavors=Ubuntu+24.04,Fedora+40"}
+CONTAINER_IMAGE={{<ociMeta variant="core">}}-uki
 docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys enki build-uki $CONTAINER_IMAGE -t iso -d /result/ -k /keys --boot-branding "My Awesome OS"
 ```
 
@@ -254,9 +254,9 @@ Note: you need to keep the TPM container up and running for the VM to boot. Run 
 
 3. Run the container image with the ISO file (replace the iso file name with yours):
 
-```bash
+```bash {class="meta-distro only-flavors=Ubuntu+24.04,Fedora+40"}
 # console only
-docker run --privileged -v $PWD/tpmstate:/tmp -v $PWD:/work -v /dev/kvm:/dev/kvm --rm -ti fedora-qemu -nographic -cdrom kairos-fedora-38-core-amd64-generic-{{< kairosVersion>}}.uki.iso
+docker run --privileged -v $PWD/tpmstate:/tmp -v $PWD:/work -v /dev/kvm:/dev/kvm --rm -ti fedora-qemu -nographic -cdrom kairos-$$flavor-$$flavorRelease-core-amd64-generic-{{< kairosVersion>}}.uki.iso
 ```
 
 Note: To stop the QEMU container you can use `Ctrl-a x` or `Ctrl-a c` to enter the QEMU console and then `quit` to exit.
@@ -407,8 +407,8 @@ This is specific for large-scale deployments to generate auto-installing ISOs th
 
 If you want to force the auto-enrollment of the certificates in the BIOS/UEFI, you can use the `--secure-boot-enroll` flag in the `build-uki` command.
 
-```bash
-CONTAINER_IMAGE=quay.io/kairos/fedora:38-core-amd64-generic-{{< kairosVersion>}}-uki
+```bash {class="meta-distro only-flavors=Ubuntu+24.04,Fedora+40"}
+CONTAINER_IMAGE={{<ociMeta variant="core">}}-uki
 docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki $CONTAINER_IMAGE --secure-boot-enroll force -t iso -d /result/ -k /keys
 ```
 
