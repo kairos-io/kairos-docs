@@ -24,7 +24,13 @@ function calculateBaseImage(distroInfo) {
 function replaceContent(distroInfo) {
     let newDistroInfo = distroInfo;
     const metaDistroElements = document.querySelectorAll('.meta-distro');
+    const metaDistroInlineElements = document.querySelectorAll('.meta-distro-inline');
     let onlyDistros = [];
+
+    const familyRegex = new RegExp(/\$\$family/, 'gi');
+    const flavorRegex = new RegExp(/\$\$flavor/, 'gi');
+    const flavorReleaseRegex = new RegExp(/\$\$flavorRelease/, 'gi');
+    const baseImageRegex = new RegExp(/\$\$baseImage/, 'gi');
 
     metaDistroElements.forEach(metaDistro => {
         // Extract the class list
@@ -66,27 +72,51 @@ function replaceContent(distroInfo) {
         }
 
         const preTags = metaDistro.querySelectorAll('pre');
-        const familyRegex = new RegExp(/\$\$family/, 'gi');
-        const flavorRegex = new RegExp(/\$\$flavor/, 'gi');
-        const flavorReleaseRegex = new RegExp(/\$\$flavorRelease/, 'gi');
-        const baseImageRegex = new RegExp(/\$\$baseImage/, 'gi');
+        const aTags = metaDistro.querySelectorAll('a');
 
-        preTags.forEach(pre => {
-            pre.textContent = pre.dataset.originalContent;
-            pre.textContent = pre.textContent.replace(familyRegex, newDistroInfo[0])
-                                            .replace(flavorReleaseRegex, newDistroInfo[2])
-                                            .replace(flavorRegex, newDistroInfo[1])
-                                            .replace(baseImageRegex, calculateBaseImage(newDistroInfo));
+        const elements = [...preTags, ...aTags];
+        elements.forEach(e => {
+            e.textContent = e.dataset.originalContent.replace(familyRegex, newDistroInfo[0])
+                                                     .replace(flavorReleaseRegex, newDistroInfo[2])
+                                                     .replace(flavorRegex, newDistroInfo[1])
+                                                     .replace(baseImageRegex, calculateBaseImage(newDistroInfo));
         });
+        aTags.forEach(a => {
+            a.href = a.dataset.originalHref.replace(familyRegex, newDistroInfo[0])
+                                           .replace(flavorReleaseRegex, newDistroInfo[2])
+                                           .replace(flavorRegex, newDistroInfo[1])
+                                           .replace(baseImageRegex, calculateBaseImage(newDistroInfo));
+
+        });
+    });
+
+    metaDistroInlineElements.forEach(e => {
+        e.textContent = e.dataset.originalContent.replace(familyRegex, newDistroInfo[0])
+                                                    .replace(flavorReleaseRegex, newDistroInfo[2])
+                                                    .replace(flavorRegex, newDistroInfo[1])
+                                                    .replace(baseImageRegex, calculateBaseImage(newDistroInfo));
     });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     const distroSelect = document.getElementById('distro-select');
     let distroInfo = [params.defaultFamily, params.defaultFlavor, params.defaultFlavorRelease];
-    const preTags = document.querySelectorAll('.meta-distro pre');
-    preTags.forEach(pre => {
-        pre.dataset.originalContent = pre.textContent;
+    const metaElements = document.querySelectorAll('.meta-distro');
+    const inlineMetaElements = document.querySelectorAll('.meta-distro-inline');
+    inlineMetaElements.forEach(e => {
+        e.dataset.originalContent = e.textContent;
+    });
+
+    metaElements.forEach(metaElement => {
+        const preElements = metaElement.querySelectorAll('pre');
+        const aElements = metaElement.querySelectorAll('a');
+        const elements = [...preElements, ...aElements];
+        elements.forEach((e, i) => {
+            e.dataset.originalContent = e.textContent;
+        });
+        aElements.forEach(a => {
+            a.dataset.originalHref = a.href;
+        });
     });
 
     const savedDistro = localStorage.getItem('selectedDistro');
