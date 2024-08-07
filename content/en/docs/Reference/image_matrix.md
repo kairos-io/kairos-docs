@@ -23,12 +23,12 @@ Below is a list of the container repositories for each flavor:
 
 | **Flavor**      | repository |
 |-----------------|------------|
-| **Alpine**      | https://quay.io/repository/kairos/alpine   |
-| **Debian**      | https://quay.io/repository/kairos/debian   |
-| **Fedora**      | https://quay.io/repository/kairos/fedora   |
-| **openSUSE**    | https://quay.io/repository/kairos/opensuse |
-| **Ubuntu** **   | https://quay.io/repository/kairos/ubuntu   |
-| **Rocky Linux** | https://quay.io/repository/kairos/rockylinux |
+| **Alpine**      | {{< container-repo-link flavor="alpine" >}}     |
+| **Debian**      | {{< container-repo-link flavor="debian" >}}     |
+| **Fedora**      | {{< container-repo-link flavor="fedora" >}}     |
+| **openSUSE**    | {{< container-repo-link flavor="opensuse" >}}   |
+| **Ubuntu**      | {{< container-repo-link flavor="ubuntu" >}}     |
+| **Rocky Linux** | {{< container-repo-link flavor="rockylinux" >}} |
 
 The various images are available with different tags in the form of:
 
@@ -67,7 +67,7 @@ The artifacts can be found in the `build` directory.
 
 Unfortunately we don't have the resources and capacity to build every possible artifact in our matrix. Thankfully, you can still build those images manually on your local machine, all you need is [git](https://git-scm.com/), [docker](https://www.docker.com/) and [earthly](https://earthly.dev/). Here's an example how to build an Almalinux ARM generic image
 
-```
+```bash
 git checkout https://github.com/kairos-io/kairos.git
 cd kairos
 earthly +all-arm-generic --FAMILY=rhel --FLAVOR=almalinux --FLAVOR_RELEASE=9 --BASE_IMAGE=almalinux:9 --VARIANT=core
