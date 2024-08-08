@@ -169,6 +169,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert.remove();
             });
             const selectedDistro = distroSelect.value;
+            const selectedDistroArry = selectedDistro.split(';');
+            const plausibleDistro = selectedDistroArry[1] + ' ' + selectedDistroArry[2];
+            plausible('Change Flavor', { props: { distro: plausibleDistro, flavor: selectedDistroArry[1], flavor_release: selectedDistroArry[2] } });
             localStorage.setItem('selectedDistro', selectedDistro);
             replaceContent(selectedDistro.split(';'));
         });
