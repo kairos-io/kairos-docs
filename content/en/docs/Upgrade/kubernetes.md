@@ -22,7 +22,7 @@ kubectl apply -f https://github.com/rancher/system-upgrade-controller/releases/d
 
 To trigger an upgrade, create a plan for `system-upgrade-controller` which refers to the image version that we want to upgrade.
 
-```bash
+```bash {class="meta-distro"}
 cat <<'EOF' | kubectl apply -f -
 ---
 apiVersion: upgrade.cattle.io/v1
@@ -35,7 +35,7 @@ metadata:
 spec:
   concurrency: 1
   # This is the version (tag) of the image to upgrade to.
-  version: "{{< ociTag variant=\"standard\" >}}"
+  version: "{{< ociTagMeta variant=\"standard\" >}}"
   nodeSelector:
     matchExpressions:
       - {key: kubernetes.io/hostname, operator: Exists}
@@ -47,7 +47,7 @@ spec:
   upgrade:
     # Here goes the image which is tied to the flavor being used.
     # You can also specify your custom image stored in a public registry.
-    image: {{< registryURL >}}/{{< defaultFlavor >}}
+    image: {{< registryURL >}}/$$flavor
     command:
     - "/usr/sbin/suc-upgrade"
 EOF
@@ -81,7 +81,7 @@ To learn more about this specific Kyverno feature, you can refer to the [documen
 
 A Kyverno policy for standard images might look like the following:
 
-```yaml
+```yaml {class="meta-distro"}
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
@@ -100,7 +100,7 @@ spec:
               - Pod
       verifyImages:
       - imageReferences:
-        - "quay.io/kairos/opensuse*"
+        - "quay.io/kairos/$$flavor*"
         attestors:
         - entries:
           # See: https://kyverno.io/docs/writing-policies/verify-images/#keyless-signing-and-verification
@@ -139,7 +139,7 @@ This configuration file prepare the system with the `cert-manager`, `system-upgr
 
 It is possible to run additional commands before the upgrade takes place into the node, consider the following example:
 
-```yaml
+```yaml {class="meta-distro"}
 ---
 apiVersion: v1
 kind: Secret
@@ -165,7 +165,7 @@ metadata:
 spec:
   concurrency: 1
   # This is the version (tag) of the image.
-  version: "{{<ociTag variant="standard">}}"
+  version: "{{<ociTagMeta variant="standard">}}"
   nodeSelector:
     matchExpressions:
       - { key: kubernetes.io/hostname, operator: Exists }
@@ -175,9 +175,7 @@ spec:
     force: false
     disableEviction: true
   upgrade:
-    # Here goes the image which is tied to the flavor being used.
-    # Currently can pick between opensuse and alpine
-    image: {{< registryURL >}}/{{< defaultFlavor >}}
+    image: {{< registryURL >}}/$$flavor
     command:
       - "/bin/bash"
       - "-c"
@@ -192,7 +190,7 @@ spec:
 
 If you already have a `c3os` deployment, upgrading to Kairos requires changing every instance of `c3os` to `kairos` in the configuration file. This can be either done manually or with Kubernetes before rolling the upgrade.  Consider customizing the upgrade plan, for instance:
 
-```yaml
+```yaml {class="meta-distro"}
 ---
 apiVersion: v1
 kind: Secret
@@ -215,7 +213,7 @@ metadata:
 spec:
   concurrency: 1
   # This is the version (tag) of the image.
-  version: "{{<ociTag variant="standard">}}"
+  version: "{{<ociTagMeta variant="standard">}}"
   nodeSelector:
     matchExpressions:
       - { key: kubernetes.io/hostname, operator: Exists }
@@ -225,9 +223,7 @@ spec:
     force: false
     disableEviction: true
   upgrade:
-    # Here goes the image which is tied to the flavor being used.
-    # Currently can pick between opensuse and alpine
-    image: {{< registryURL >}}/{{< defaultFlavor >}}
+    image: {{< registryURL >}}/$$flavor
     command:
       - "/bin/bash"
       - "-c"
