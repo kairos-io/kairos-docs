@@ -91,7 +91,7 @@ k3s:
 2. Build the ISO with [AuroraBoot]({{< relref "../reference/auroraboot" >}}) by running the following command:
 
 
-```bash {class="meta-distro"}
+```bash
 IMAGE={{<oci variant="standard">}}
 
 docker pull $IMAGE

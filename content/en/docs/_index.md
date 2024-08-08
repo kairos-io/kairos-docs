@@ -167,12 +167,12 @@ cd kairos
 
 Then we can build the ISO with the following command for a Kairos core image based on {{<flavorCode >}}:
 
-```bash {class="meta-distro"}
+```bash
 earthly +iso \
-  --FAMILY=$$family \
-  --FLAVOR=$$flavor \
-  --FLAVOR_RELEASE=$$flavorRelease \
-  --BASE_IMAGE=$$baseImage \
+  --FAMILY=@family \
+  --FLAVOR=@flavor \
+  --FLAVOR_RELEASE=@flavorRelease \
+  --BASE_IMAGE=@baseImage \
   --MODEL=generic \
   --VARIANT=core
 ```

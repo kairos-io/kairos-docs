@@ -105,7 +105,7 @@ We now can run [AuroraBoot]({{< relref "../reference/auroraboot" >}}) with {{<oc
 
 AuroraBoot takes `cloud-config` files also from _STDIN_, so we will pipe the configuration file to it, and specify the container image that we want to use for our nodes:
 
-``` bash {class="meta-distro"}
+``` bash
 cat <<EOF | docker run --rm -i --net host quay.io/kairos/auroraboot \
                     --cloud-config - \
                     --set "container_image={{<oci variant="standard">}}"

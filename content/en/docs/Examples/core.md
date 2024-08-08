@@ -15,7 +15,7 @@ To begin using Kairos core images as an installer, you'll need to start by using
 
 For example, let's say you want to use a standard image. Your cloud config file might look something like this:
 
-```yaml {class="meta-distro"}
+```yaml
 #cloud-config
 install:
  # Here we specify the image that we want to deploy
@@ -31,7 +31,7 @@ Once you've chosen your image, you can move on to the installation process by fo
 
 For example, a full cloud-config might look like this:
 
-```yaml {class="meta-distro"}
+```yaml
 #cloud-config
 
 install:

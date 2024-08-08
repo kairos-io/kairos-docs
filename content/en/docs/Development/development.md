@@ -23,12 +23,12 @@ To build a Kairos OS you only need Docker. There is a convenience script in the 
 
 To build a Kairos ISO, you need to specify a few parameters. For example, to build Kairos {{<flavorCode >}} with `earthly` installed locally:
 
-```bash {class="meta-distro"}
+```bash
 earthly +iso \
-  --FAMILY=rhel \
-  --FLAVOR=$$flavor \
-  --FLAVOR_RELEASE=$$flavorRelease \
-  --BASE_IMAGE=$$BaseImage \
+  --FAMILY=@family \
+  --FLAVOR=@flavor \
+  --FLAVOR_RELEASE=@flavorRelease \
+  --BASE_IMAGE=@baseImage \
   --MODEL=generic \
   --VARIANT=core
 ```

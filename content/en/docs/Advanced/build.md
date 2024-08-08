@@ -53,7 +53,7 @@ serve the artifact files after they are built. See below for more.
 
 To build an ISO, consider the following spec, which provides a hybrid bootable ISO (UEFI/MBR), with the `core` kairos image, adding `helm`:
 
-```yaml {class="meta-distro"}
+```yaml
 kind: Secret
 apiVersion: v1
 metadata:
@@ -122,7 +122,7 @@ $ curl http://<node-ip>:$PORT/hello-kairos.iso -o output.iso
 
 It is possible to use the CRD to prepare artifacts required for netbooting, by enabling `netboot: true` for instance:
 
-```yaml {class="meta-distro"}
+```yaml
 kind: OSArtifact
 metadata:
   name: hello-kairos
@@ -142,7 +142,7 @@ Custom user-data from the Cloud provider is automatically retrieved, additionall
 
 A Cloud Image boots in QEMU and also in AWS, consider:
 
-```yaml {class="meta-distro"}
+```yaml
 kind: Secret
 apiVersion: v1
 metadata:
@@ -273,7 +273,7 @@ Booting from hard drive...
 
 Similarly we can build images for Azure, consider:
 
-```yaml {class="meta-distro"}
+```yaml
 apiVersion: build.kairos.io/v1alpha1
 kind: OSArtifact
 metadata:
@@ -312,7 +312,7 @@ Note:  There is currently no way of altering the boot disk of an Azure VM via GU
 
 Similarly we can build images for GCE, consider:
 
-```yaml {class="meta-distro"}
+```yaml
 apiVersion: build.kairos.io/v1alpha1
 kind: OSArtifact
 metadata:

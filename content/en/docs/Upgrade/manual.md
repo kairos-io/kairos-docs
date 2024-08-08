@@ -38,7 +38,7 @@ Where type can be `dir` or `oci` and address is the path to the dir in the `dir`
 
 For example, if you wanted to upgrade to the latest available stable release you could run the following command:
 
-```bash {class="meta-distro"}
+```bash
 sudo kairos-agent upgrade --source oci:{{<oci variant="standard">}}
 ```
 
@@ -54,7 +54,7 @@ Only upgrade the recovery system, when you are sure that the active system is ru
 
 To make this process less error prone, the upgrade command provides an extra flag that will upgrade the recovery only. It uses the same system and flags as the normal upgrade.
 
-```bash {class="meta-distro"}
+```bash
 sudo kairos-agent upgrade --recovery --source oci:{{<oci variant="standard">}}
 ```
 

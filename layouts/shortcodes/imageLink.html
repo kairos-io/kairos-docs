@@ -1,5 +1,5 @@
 <div class="meta-distro">
-    <a href="https://github.com/kairos-io/kairos/releases/download/{{- $.Page.Site.Params.softwareVersions.kairos_version -}}/kairos-$$flavor-$$flavorRelease-
+    <a href="https://github.com/kairos-io/kairos/releases/download/{{- $.Page.Site.Params.softwareVersions.kairos_version -}}/kairos-@flavor-@flavorRelease-
 {{- with .Get "variant" -}}{{- . -}}{{- end -}}
 -
 {{- if eq (.Get "arch") "" -}}
@@ -20,7 +20,7 @@
 {{- end -}}
 {{- with .Get "suffix" -}}
     {{- . -}}
-{{- end -}}">kairos-$$flavor-$$flavorRelease-
+{{- end -}}">kairos-@flavor-@flavorRelease-
 {{- with .Get "variant" -}}{{- . -}}{{- end -}}
 -
 {{- if eq (.Get "arch") "" -}}

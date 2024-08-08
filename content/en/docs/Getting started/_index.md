@@ -58,7 +58,7 @@ In this example we will use the `{{< kairosVersion >}}` version and {{<flavorCod
 
 First we check that we have all needed files:
 
-```bash {class="meta-distro"}
+```bash
 $ ls      
 {{<image variant="core" suffix=".iso">}}         {{<image variant="core" suffix=".iso.sha256.pem">}}
 {{<image variant="core" suffix=".iso.sha256">}}  {{<image variant="core" suffix=".iso.sha256.sig">}}
@@ -66,7 +66,7 @@ $ ls
 
 We first verify that the sha256 checksums haven't been tampered with:
 
-```bash {class="meta-distro"}
+```bash
 $ COSIGN_EXPERIMENTAL=1 cosign verify-blob --cert {{<image variant="core" suffix=".iso.sha256.pem">}} --signature {{<image variant="core" suffix=".iso.sha256.sig">}} {{<image variant="core" suffix=".iso.sha256">}} 
 tlog entry verified with uuid: 51ef927a43557386ad7912802607aa421566772524319703a99f8331f0bb778f index: 11977200
 Verified OK
@@ -76,7 +76,7 @@ Once we see that `Verified OK` we can be sure that the file hasn't been tampered
 
 For an example of a failure validation see below:
 
-```bash {class="meta-distro"}
+```bash
 $ COSIGN_EXPERIMENTAL=1 cosign verify-blob --enforce-sct --cert {{<image variant="core" suffix=".iso.sha256.pem">}} --signature {{<image variant="core" suffix=".iso.sha256.sig">}} {{<image variant="core" suffix=".iso.sha256.modified">}}
 Error: verifying blob [{{<image variant="core" suffix=".iso.sha256.modified">}}]: invalid signature when validating ASN.1 encoded signature
 main.go:62: error during command execution: verifying blob [{{<image variant="core" suffix=".iso.sha256.modified">}}]: invalid signature when validating ASN.1 encoded signature
@@ -90,7 +90,7 @@ via the CI with no external access to the signing process. For more information 
 
 Now we can verify that the integrity of the ISO hasnt been compromise:
 
-```bash {class="meta-distro"}
+```bash
 $ sha256sum -c {{<image variant="core" suffix=".iso.sha256">}}
 {{<image variant="core" suffix=".iso">}}: OK
 ```
@@ -133,7 +133,7 @@ virt-install --os-variant list
 
 And replace it in the following script
 
-```bash {class="meta-distro"}
+```bash
 virt-install --name my-first-kairos-vm \
             --vcpus 1 \
             --memory 1024 \

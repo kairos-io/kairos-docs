@@ -52,7 +52,7 @@ Notes:
 {{% alert title="Note" color="info" %}}
 The pipelines do not publish `img` artifacts for the arm architecture because the files are too large for GitHub Actions (they exceed the artifact size limit). These artifacts can be extracted from the published docker images using the following command:
 
-```bash {class="meta-distro only-flavors=openSUSE+Leap+15.6,openSUSE+Tumbleweed,Ubuntu+20.04,Ubuntu+22.04,Alpine+19"}
+```bash {class="only-flavors=openSUSE+Leap-15.6,openSUSE+Tumbleweed,Ubuntu+20.04,Ubuntu+22.04,Alpine+3.19"}
 export IMAGE={{<oci variant="core" arch="arm64" model="rpi4" suffix="img">}}
 docker run -ti --rm -v $PWD:/image quay.io/luet/base util unpack "$IMAGE" /image
 ```
@@ -67,10 +67,10 @@ The artifacts can be found in the `build` directory.
 
 Unfortunately we don't have the resources and capacity to build every possible artifact in our matrix. Thankfully, you can still build those images manually on your local machine, all you need is [git](https://git-scm.com/), [docker](https://www.docker.com/) and [earthly](https://earthly.dev/). Here's an example how to build an Almalinux ARM generic image
 
-```bash {class="meta-distro"}
+```bash
 git checkout https://github.com/kairos-io/kairos.git
 cd kairos
-earthly +all-arm-generic --FAMILY=$$family --FLAVOR=$$flavor --FLAVOR_RELEASE=$$flavorRelease --BASE_IMAGE=$$baseImage --VARIANT=core
+earthly +all-arm-generic --FAMILY=@family --FLAVOR=@flavor --FLAVOR_RELEASE=@flavorRelease --BASE_IMAGE=@baseImage --VARIANT=core
 ```
 
 ## Framework images
@@ -116,7 +116,7 @@ Release changelogs are available for Kairos core and for each component. Below i
 
   SBOM lists are regularly pushed via the CI as part of the Github releases assets. For instance, 
 
-  ```bash {class="meta-distro"}
+  ```bash
   https://github.com/kairos-io/kairos/releases/download/{{< kairosVersion >}}/{{<image variant="core" suffix="-sbom.spdx.json" >}}
   ```
 
@@ -126,7 +126,7 @@ Release changelogs are available for Kairos core and for each component. Below i
 
 Images signatures are pushed regularly for tagged releases. To verify images with `cosign` ([install guide](https://docs.sigstore.dev/cosign/installation/)) for example, you can use the following command:
 
-```bash {class="meta-distro" }
+```bash
 cosign verify-attestation \
         --type spdx {{<oci variant="core">}} \
         --certificate-identity "https://github.com/kairos-io/kairos/.github/workflows/release.yaml@refs/tags/{{< kairosVersion >}}" \

@@ -32,7 +32,7 @@ The ipxe ISOs from the Kairos release artifacts, were built with a ipxe script t
 
 E.g.:
 
-```bash {class="meta-distro"}
+```bash
 #!ipxe
 set url https://github.com/kairos-io/kairos/releases/download/{{< kairosVersion >}}
 set kernel {{<image variant="standard" suffix="-kernel" >}}
@@ -68,7 +68,7 @@ qemu-system-x86_64 \
 
 [AuroraBoot]({{< relref "../reference/auroraboot" >}}) is a Kairos convinience tool that can be used to quickly deploy Kairos from Network with zero-touch configuration, for instance:
 
-```bash {class="meta-distro"}
+```bash
 docker run --rm -ti --net host quay.io/kairos/auroraboot \
                     --set "container_image={{<oci variant="standard">}}"
                     # Optionally:
@@ -86,7 +86,7 @@ Another way to boot with the release artifacts is using [pixiecore](https://gith
 Assuming the current directory has the `kernel`, `initrd` and `squashfs` artifacts,
 `pixiecore` server can be started with `docker` like this:
 
-```bash {class="meta-distro"}
+```bash
 #!/bin/bash
 
 wget "https://github.com/kairos-io/kairos/releases/download/{{< kairosVersion >}}/{{<image variant="standard" suffix="-kernel">}}"

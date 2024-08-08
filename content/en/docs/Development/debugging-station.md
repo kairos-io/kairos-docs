@@ -162,7 +162,7 @@ In this file, you can specify various settings for your debugging station. For e
 
 To automatically boot and install the debugging station, we can use [Auroraboot]({{< relref "../reference/auroraboot" >}}). The following example shows how to use the cloud config above with it:
 
-```bash {class="meta-distro"}
+```bash
 cat <<EOF | docker run --rm -i --net host quay.io/kairos/auroraboot \
                     --cloud-config - \
                     --set "container_image={{<oci variant="standard">}}"

@@ -63,7 +63,7 @@ Consider the following example which resets a machine by changing the config fil
 
 {{< tabpane text=true  >}}
 {{% tab header="Kairos v3.0.0 and upwards" %}}
-```yaml {class="meta-distro"}
+```yaml
 ---
 apiVersion: v1
 kind: Secret
@@ -116,7 +116,7 @@ spec:
   upgrade:
     # Here goes the image which is tied to the flavor being used.
     # Currently can pick between opensuse and alpine
-    image: {{< registryURL >}}/$$flavor
+    image: {{< registryURL >}}/@flavor
     command:
       - "/bin/bash"
       - "-c"
@@ -128,7 +128,7 @@ spec:
 ```
 {{% /tab %}}
 {{% tab header="Kairos before v3.0.0" %}}
-```yaml {class="meta-distro"}
+```yaml
 ---
 apiVersion: v1
 kind: Secret
@@ -181,7 +181,7 @@ spec:
   upgrade:
     # Here goes the image which is tied to the flavor being used.
     # Currently can pick between opensuse and alpine
-    image: {{< registryURL >}}/$$flavor
+    image: {{< registryURL >}}/@flavor
     command:
       - "/bin/bash"
       - "-c"

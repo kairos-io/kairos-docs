@@ -24,7 +24,7 @@ Extract the `img` file from a container image as described [in this page]({{< re
 
 Plug the SD card to your system. To flash the image, you can either use Etcher or `dd`. Note it's compressed with "XZ", so we need to decompress it first:
 
-```bash {class="meta-distro only-flavors=openSUSE+Leap+15.6,openSUSE+Tumbleweed,Ubuntu+20.04,Ubuntu+22.04,Alpine+19"}
+```bash {class="only-flavors=openSUSE+Leap-15.6,openSUSE+Tumbleweed,Ubuntu+20.04,Ubuntu+22.04,Alpine+3.19"}
 xzcat {{<image variant="standard" model="rpi4" arch="arm64" suffix=".img.xz">}} | sudo dd of=<device> oflag=sync status=progress bs=10MB
 ```
 
@@ -68,7 +68,7 @@ From Kairos v2.4.0 onward, Raspberry Pi models 3 and 4 have different images. Th
 Make sure to set the proper `--model=` in your command (rpi3,rpi4) to build the image for your model.
 {{% /alert %}}
 
-```bash {class="meta-distro only-flavors=openSUSE+Leap+15.6,openSUSE+Tumbleweed,Ubuntu+20.04,Ubuntu+22.04,Alpine+19"}
+```bash {class="only-flavors=openSUSE+Leap-15.6,openSUSE+Tumbleweed,Ubuntu+20.04,Ubuntu+22.04,Alpine+3.19"}
 # Download the Kairos image locally
 IMAGE={{<oci variant="standard" model="rpi4" arch="arm64">}}
 docker pull $IMAGE

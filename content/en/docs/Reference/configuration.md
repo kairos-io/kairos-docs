@@ -359,7 +359,7 @@ Writing YAML files can be a tedious process, and it's easy to make syntax or ind
 
 Here's an example of how to test your configurations on the `initramfs` stage using a Docker container:
 
-```bash {class="meta-distro"}
+```bash
 # List the YAML files in your current directory
 $ ls -liah
 total 4,0K

@@ -22,7 +22,7 @@ kubectl apply -f https://github.com/rancher/system-upgrade-controller/releases/d
 
 To trigger an upgrade, create a plan for `system-upgrade-controller` which refers to the image version that we want to upgrade.
 
-```bash {class="meta-distro"}
+```bash
 cat <<'EOF' | kubectl apply -f -
 ---
 apiVersion: upgrade.cattle.io/v1
@@ -47,7 +47,7 @@ spec:
   upgrade:
     # Here goes the image which is tied to the flavor being used.
     # You can also specify your custom image stored in a public registry.
-    image: {{< registryURL >}}/$$flavor
+    image: {{< registryURL >}}/@flavor
     command:
     - "/usr/sbin/suc-upgrade"
 EOF
@@ -81,7 +81,7 @@ To learn more about this specific Kyverno feature, you can refer to the [documen
 
 A Kyverno policy for standard images might look like the following:
 
-```yaml {class="meta-distro"}
+```yaml
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
@@ -100,7 +100,7 @@ spec:
               - Pod
       verifyImages:
       - imageReferences:
-        - "quay.io/kairos/$$flavor*"
+        - "quay.io/kairos/@flavor*"
         attestors:
         - entries:
           # See: https://kyverno.io/docs/writing-policies/verify-images/#keyless-signing-and-verification
@@ -139,7 +139,7 @@ This configuration file prepare the system with the `cert-manager`, `system-upgr
 
 It is possible to run additional commands before the upgrade takes place into the node, consider the following example:
 
-```yaml {class="meta-distro"}
+```yaml
 ---
 apiVersion: v1
 kind: Secret
@@ -175,7 +175,7 @@ spec:
     force: false
     disableEviction: true
   upgrade:
-    image: {{< registryURL >}}/$$flavor
+    image: {{< registryURL >}}/@flavor
     command:
       - "/bin/bash"
       - "-c"
@@ -190,7 +190,7 @@ spec:
 
 If you already have a `c3os` deployment, upgrading to Kairos requires changing every instance of `c3os` to `kairos` in the configuration file. This can be either done manually or with Kubernetes before rolling the upgrade.  Consider customizing the upgrade plan, for instance:
 
-```yaml {class="meta-distro"}
+```yaml
 ---
 apiVersion: v1
 kind: Secret
@@ -223,7 +223,7 @@ spec:
     force: false
     disableEviction: true
   upgrade:
-    image: {{< registryURL >}}/$$flavor
+    image: {{< registryURL >}}/@flavor
     command:
       - "/bin/bash"
       - "-c"
