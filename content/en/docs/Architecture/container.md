@@ -43,35 +43,35 @@ The Image support matrix in [here]({{< relref "../reference/image_matrix" >}}) l
 
 To inspect an image and run it locally, you can use a container engine like Docker or Podman:
 
-```
-$ docker pull {{< oci variant="core" >}}
+```bash {class="meta-distro"}
+docker pull {{< ociMeta variant="core" >}}
 ```
 
 We can run it locally with docker as a container to inspect it, as it is runnable:
 
-```
-$ docker run -ti --rm {{< oci variant="core" >}}
-/ # cat /etc/os-release
+```bash {class="meta-distro"}
+$ docker run -ti --rm {{< ociMeta variant="core" >}}
+$ cat /etc/os-release
 ...
-KAIROS_NAME="kairos-core-{{< flavor >}}"
+KAIROS_NAME="kairos-core-$$flavor"
 KAIROS_VERSION="{{< kairosVersion >}}"
 KAIROS_ID="kairos"
-KAIROS_ID_LIKE="kairos-core-{{< flavor >}}"
+KAIROS_ID_LIKE="kairos-core-$$flavor"
 KAIROS_VERSION_ID="{{< kairosVersion >}}"
-KAIROS_PRETTY_NAME="kairos-core-{{< flavor >}} {{< kairosVersion >}}"
+KAIROS_PRETTY_NAME="kairos-core-$$flavor {{< kairosVersion >}}"
 KAIROS_BUG_REPORT_URL="https://github.com/kairos-io/kairos/issues"
 KAIROS_HOME_URL="https://github.com/kairos-io/kairos"
-KAIROS_IMAGE_REPO="{{< oci variant="core" >}}
+KAIROS_IMAGE_REPO="{{< ociMeta variant="core" >}}
 KAIROS_IMAGE_LABEL="latest"
 KAIROS_GITHUB_REPO="kairos-io/kairos"
 KAIROS_VARIANT="core"
-KAIROS_FLAVOR="{{< flavor >}}"
+KAIROS_FLAVOR="$$flavor"
 ```
 
 And check out things like what's the kernel inside:
 
 ```bash
-/ $ ls -liah /boot/
+$ ls -liah /boot/
 total 102M
 6692018 drwxr-xr-x 2 root root 4.0K Apr 16  2020 .
 6817515 drwxr-xr-x 1 root root 4.0K Oct 10 16:11 ..
@@ -90,8 +90,8 @@ total 102M
 
 The CI process generates bootable medium by the container images, and similarly, we can modify this image to introduce our changes and remaster an ISO as described in [Automated installation]({{< relref "../installation/automated" >}}), but that can be resumed in the following steps:
 
-```bash
-$ docker run -ti --name custom-container {{< oci variant="core" >}}
+```bash {class="meta-distro"}
+$ docker run -ti --name custom-container {{< ociMeta variant="core" >}}
 # # Do your changes inside the container..
 # echo "foo" > /foo
 # ...
