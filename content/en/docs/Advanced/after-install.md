@@ -47,7 +47,7 @@ Several roll-out strategies can be used with `system-upgrade-controller` which a
 
 The following pushes a new cloud config over the `/oem` directory and reboots the node:
 
-```bash
+```bash {class="meta-distro"}
 cat <<'EOF' | kubectl apply -f -
 ---
 apiVersion: v1
@@ -93,7 +93,7 @@ metadata:
 spec:
   concurrency: 1
   # This is the version (tag) of the image.
-  version: "{{<ociTag variant="standard">}}"
+  version: "{{<ociTagMeta variant="standard">}}"
   nodeSelector:
     matchExpressions:
       - { key: kubernetes.io/hostname, operator: Exists }
@@ -102,7 +102,7 @@ spec:
   upgrade:
     # Here goes the image which is tied to the flavor being used.
     # Currently can pick between opensuse and alpine
-    image: {{< registryURL >}}/{{< defaultFlavor >}}
+    image: {{< registryURL >}}/$$flavor
     command:
       - "/bin/bash"
       - "-c"
