@@ -14,6 +14,8 @@ function getSelectValueFromText(text) {
 function calculateBaseImage(distroInfo) {
     let baseImage = distroInfo[1] + ':' + distroInfo[2];
 
+    // Special case for OpenSUSE since they use a slash to separate the family and flavor
+    // e.g. opensuse/leap:15.6 and opensuse/tumbleweed (notice that this last one has no tag but it uses the latest tag by default)
     if (distroInfo[1] == 'opensuse') {
         baseImage = distroInfo[1] + '/' + distroInfo[2].replace('-', ':');
     } 
