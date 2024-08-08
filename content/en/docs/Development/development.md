@@ -21,24 +21,24 @@ Kairos uses [earthly](https://earthly.dev/) as a build system instead of Makefil
 
 To build a Kairos OS you only need Docker. There is a convenience script in the root of the repository `earthly.sh` which wraps `earthly` inside Docker to avoid to install locally which can be used instead of `earthly` (e.g. `./earthly.sh +iso ...`). However, for daily development, it is strongly suggested to install Earthly it on your workstation. The `earthly.sh` script runs `earthly` in a container, and as such there are limitations on image caching between builds.
 
-To build a Kairos ISO, you need to specify a few parameters. For example, to build Kairos Fedora with `earthly` installed locally:
+To build a Kairos ISO, you need to specify a few parameters. For example, to build Kairos {{< flavorMetaCode >}} with `earthly` installed locally:
 
-```bash
+```bash {class="meta-distro"}
 earthly +iso \
   --FAMILY=rhel \
-  --FLAVOR=fedora \
-  --FLAVOR_RELEASE=38 \
-  --BASE_IMAGE=fedora:38 \
+  --FLAVOR=$$flavor \
+  --FLAVOR_RELEASE=$$flavorRelease \
+  --BASE_IMAGE=$$BaseImage \
   --MODEL=generic \
   --VARIANT=core
 ```
 
-- **Flavor**: is the distribution (the name flavor is kept for backwards compatibility). In this case `fedora`
-- **Family**: is a group of distributions that get built in a very similar way. In this case `rhel`, which can build `fedora`, `rockylinux` and `almalinux`.
-- **Flavor release**: is the version of the distribution. In this case `38`
-- **Base image**: is the base image used to build the distribution. In this case `fedora**:38`, but you could use your own image which itself is based on `fedora:38`.
+- **Flavor**: is the distribution (the name flavor is kept for backwards compatibility). In this case {{< flavorMetaCode >}}
+- **Family**: is a group of distributions that get built in a very similar way. In this case {{< familyMetaCode >}}. The best example of grouped family we have at the moment is `rhel`, which can build `fedora`, `rockylinux` and `almalinux`.
+- **Flavor release**: is the version of the distribution. In this case {{< flavorReleaseMetaCode >}}
+- **Base image**: is the base image used to build the distribution. In this case {{< baseImageMetaCode >}}, but you could use your own image which itself is based on {{< baseImageMetaCode >}}.
 - **Model**: is the hardware model. In this case all ISOs are `generic`
-- **Variant**: is the Kairos variant, which can be `core` or `standard`. `core` is the minimal Kairos OS, while `standard` includes `k3s`.
+- **Variant**: is the Kairos variant, which can be `core` or `standard`. `core` is the minimal Kairos OS, while `standard` includes `k3s` among other features.
 
 This will build a container image from scratch and create an ISO which is ready to be booted.
 
