@@ -6,9 +6,8 @@ weight: 2
 
 Kairos is an open source, container-based operating system. To modify Kairos and add a package, you'll need to build a container image from the [Kairos images]({{< relref "../reference/image_matrix" >}}). Here's an example with Docker which adds `figlet`:
 
-```docker
-# Use images from reference/image_matrix/
-FROM {{<oci variant="standard">}}
+```dockerfile {class="meta-distro"}
+FROM {{<ociMeta variant="standard">}}
 
 RUN zypper in -y figlet
 
@@ -18,10 +17,10 @@ RUN envsubst '${VERSION}' </etc/os-release
 
 After creating your Dockerfile, you can build your own image by running the following command:
 
-```bash
+```bash {class="meta-distro"}
 $ docker build -t docker.io/<yourorg>/myos:0.1 .
 Sending build context to Docker daemon  2.048kB
-Step 1/3 : FROM {{<oci variant="standard">}}
+Step 1/3 : FROM {{<ociMeta variant="standard">}}
  ---> 897dc0cddf91
 Step 2/3 : RUN zypper install -y figlet
  ---> Using cache
@@ -106,12 +105,6 @@ ln -sf "initrd-${kernel}" /boot/initrd
 kernel=$(ls /lib/modules | head -n1)
 depmod -a "${kernel}"
 ```
-
-{{% alert title="Note" %}}
-
-If you are using an Alpine-based distribution, modifying the kernel is only possible by rebuilding the kernel and initrd outside of the Dockerfile and then embedding it into the image. This is because dracut and systemd are not supported in musl-based distributions. We are currently exploring ways to provide initramfs that can be generated from musl systems as well.
-
-{{% /alert %}}
 
 After you have modified the kernel and initrd, you can use the kairos-agent upgrade command to update your nodes, or [within Kubernetes]({{< relref "../upgrade/kubernetes" >}}).
 
