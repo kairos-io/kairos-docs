@@ -107,7 +107,7 @@ metadata:
 spec:
   concurrency: 2
   # This is the version (tag) of the image.
-  version: "{{< ociTagMeta variant=\"standard\" >}}"
+  version: "{{<ociTag variant=\"standard\" >}}"
   nodeSelector:
     matchExpressions:
       - { key: kubernetes.io/hostname, operator: Exists }
@@ -172,7 +172,7 @@ metadata:
 spec:
   concurrency: 2
   # This is the version (tag) of the image.
-  version: "{{< ociTagMeta variant=\"standard\" >}}"
+  version: "{{<ociTag variant=\"standard\" >}}"
   nodeSelector:
     matchExpressions:
       - { key: kubernetes.io/hostname, operator: Exists }

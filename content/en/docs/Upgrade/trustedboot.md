@@ -45,7 +45,7 @@ docker build -t enki --target tools-image .
 2. Build the Container image used for upgrades
 
 ```bash {class="meta-distro only-flavors=Ubuntu+24.04,Fedora+40"}
-CONTAINER_IMAGE={{<ociMeta variant="core">}}
+CONTAINER_IMAGE={{<oci variant="core">}}
 
 docker run --rm -v $PWD/keys:/keys -v $PWD:/work -ti enki build-uki $CONTAINER_IMAGE -t uki -d /work/upgrade-image -k /keys
 

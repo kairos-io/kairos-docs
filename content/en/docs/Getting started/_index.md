@@ -29,7 +29,7 @@ Once the installation is complete, you can begin using your Kubernetes cluster.
 ## Download
 
 1. Select your flavor (Linux distribution and release) from the nav bar
-2. Click the following link to download an iso: {{<imageMetaLink variant="standard" suffix=".iso">}}  
+2. Click the following link to download an iso: {{<imageLink variant="standard" suffix=".iso">}}  
 
 {{% alert title="Note" %}}
 
@@ -54,20 +54,20 @@ To validate the whole chain you would need:
 3. ISO, sha256, certificate and signature files for the release/flavor that you want to verify. All the artifacts are available on the [kairos release page](https://github.com/kairos-io/kairos/releases)
 
 
-In this example we will use the `{{< kairosVersion >}}` version and {{< flavorMetaCode >}} flavor and {{< flavorReleaseMetaCode >}} flavor release.
+In this example we will use the `{{< kairosVersion >}}` version and {{<flavorCode >}} flavor and {{<flavorReleaseCode >}} flavor release.
 
 First we check that we have all needed files:
 
 ```bash {class="meta-distro"}
 $ ls      
-{{<imageMeta variant="core" suffix=".iso">}}         {{<imageMeta variant="core" suffix=".iso.sha256.pem">}}
-{{<imageMeta variant="core" suffix=".iso.sha256">}}  {{<imageMeta variant="core" suffix=".iso.sha256.sig">}}
+{{<image variant="core" suffix=".iso">}}         {{<image variant="core" suffix=".iso.sha256.pem">}}
+{{<image variant="core" suffix=".iso.sha256">}}  {{<image variant="core" suffix=".iso.sha256.sig">}}
 ```
 
 We first verify that the sha256 checksums haven't been tampered with:
 
 ```bash {class="meta-distro"}
-$ COSIGN_EXPERIMENTAL=1 cosign verify-blob --cert {{<imageMeta variant="core" suffix=".iso.sha256.pem">}} --signature {{<imageMeta variant="core" suffix=".iso.sha256.sig">}} {{<imageMeta variant="core" suffix=".iso.sha256">}} 
+$ COSIGN_EXPERIMENTAL=1 cosign verify-blob --cert {{<image variant="core" suffix=".iso.sha256.pem">}} --signature {{<image variant="core" suffix=".iso.sha256.sig">}} {{<image variant="core" suffix=".iso.sha256">}} 
 tlog entry verified with uuid: 51ef927a43557386ad7912802607aa421566772524319703a99f8331f0bb778f index: 11977200
 Verified OK
 ```
@@ -77,9 +77,9 @@ Once we see that `Verified OK` we can be sure that the file hasn't been tampered
 For an example of a failure validation see below:
 
 ```bash {class="meta-distro"}
-$ COSIGN_EXPERIMENTAL=1 cosign verify-blob --enforce-sct --cert {{<imageMeta variant="core" suffix=".iso.sha256.pem">}} --signature {{<imageMeta variant="core" suffix=".iso.sha256.sig">}} {{<imageMeta variant="core" suffix=".iso.sha256.modified">}}
-Error: verifying blob [{{<imageMeta variant="core" suffix=".iso.sha256.modified">}}]: invalid signature when validating ASN.1 encoded signature
-main.go:62: error during command execution: verifying blob [{{<imageMeta variant="core" suffix=".iso.sha256.modified">}}]: invalid signature when validating ASN.1 encoded signature
+$ COSIGN_EXPERIMENTAL=1 cosign verify-blob --enforce-sct --cert {{<image variant="core" suffix=".iso.sha256.pem">}} --signature {{<image variant="core" suffix=".iso.sha256.sig">}} {{<image variant="core" suffix=".iso.sha256.modified">}}
+Error: verifying blob [{{<image variant="core" suffix=".iso.sha256.modified">}}]: invalid signature when validating ASN.1 encoded signature
+main.go:62: error during command execution: verifying blob [{{<image variant="core" suffix=".iso.sha256.modified">}}]: invalid signature when validating ASN.1 encoded signature
 ```
 {{% alert title="Info" %}}
 We use `COSIGN_EXPERIMENTAL=1` to verify the blob using the keyless method. That means that only ephemeral keys are created to sign, and it relays on using
@@ -91,8 +91,8 @@ via the CI with no external access to the signing process. For more information 
 Now we can verify that the integrity of the ISO hasnt been compromise:
 
 ```bash {class="meta-distro"}
-$ sha256sum -c {{< imageMeta variant="core" suffix=".iso.sha256">}}
-{{< imageMeta variant="core" suffix=".iso">}}: OK
+$ sha256sum -c {{<image variant="core" suffix=".iso.sha256">}}
+{{<image variant="core" suffix=".iso">}}: OK
 ```
 
 Once we reached this point, we can be sure that from the ISO hasn't been tampered with since it was created by our release workflow.
@@ -137,7 +137,7 @@ And replace it in the following script
 virt-install --name my-first-kairos-vm \
             --vcpus 1 \
             --memory 1024 \
-            --cdrom /path/to/{{< imageMeta variant="standard" suffix=".iso" >}} \
+            --cdrom /path/to/{{<image variant="standard" suffix=".iso" >}} \
             --disk size=30 \
             --os-variant OS_VARIANT \
             --virt-type kvm

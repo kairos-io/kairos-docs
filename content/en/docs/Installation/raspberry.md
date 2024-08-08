@@ -25,7 +25,7 @@ Extract the `img` file from a container image as described [in this page]({{< re
 Plug the SD card to your system. To flash the image, you can either use Etcher or `dd`. Note it's compressed with "XZ", so we need to decompress it first:
 
 ```bash {class="meta-distro only-flavors=openSUSE+Leap+15.6,openSUSE+Tumbleweed,Ubuntu+20.04,Ubuntu+22.04,Alpine+19"}
-xzcat {{< imageMeta variant="standard" model="rpi4" arch="arm64" suffix=".img.xz">}} | sudo dd of=<device> oflag=sync status=progress bs=10MB
+xzcat {{<image variant="standard" model="rpi4" arch="arm64" suffix=".img.xz">}} | sudo dd of=<device> oflag=sync status=progress bs=10MB
 ```
 
 Once the image is flashed, there is no need to carry any other installation steps. We can boot the image, or apply our config.
@@ -70,7 +70,7 @@ Make sure to set the proper `--model=` in your command (rpi3,rpi4) to build the 
 
 ```bash {class="meta-distro only-flavors=openSUSE+Leap+15.6,openSUSE+Tumbleweed,Ubuntu+20.04,Ubuntu+22.04,Alpine+19"}
 # Download the Kairos image locally
-IMAGE={{<ociMeta variant="standard" model="rpi4" arch="arm64">}}
+IMAGE={{<oci variant="standard" model="rpi4" arch="arm64">}}
 docker pull $IMAGE
 # Validate the configuration file
 kairosctl validate cloud-config.yaml

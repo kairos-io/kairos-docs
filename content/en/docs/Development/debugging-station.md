@@ -165,7 +165,7 @@ To automatically boot and install the debugging station, we can use [Auroraboot]
 ```bash {class="meta-distro"}
 cat <<EOF | docker run --rm -i --net host quay.io/kairos/auroraboot \
                     --cloud-config - \
-                    --set "container_image={{<ociMeta variant="standard">}}"
+                    --set "container_image={{<oci variant="standard">}}"
 #cloud-config
 
 install:

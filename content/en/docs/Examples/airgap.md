@@ -92,7 +92,7 @@ k3s:
 
 
 ```bash {class="meta-distro"}
-IMAGE={{<ociMeta variant="standard">}}
+IMAGE={{<oci variant="standard">}}
 
 docker pull $IMAGE
 

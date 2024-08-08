@@ -44,13 +44,13 @@ The Image support matrix in [here]({{< relref "../reference/image_matrix" >}}) l
 To inspect an image and run it locally, you can use a container engine like Docker or Podman:
 
 ```bash {class="meta-distro"}
-docker pull {{< ociMeta variant="core" >}}
+docker pull {{<oci variant="core" >}}
 ```
 
 We can run it locally with docker as a container to inspect it, as it is runnable:
 
 ```bash {class="meta-distro"}
-$ docker run -ti --rm {{< ociMeta variant="core" >}}
+$ docker run -ti --rm {{<oci variant="core" >}}
 $ cat /etc/os-release
 ...
 KAIROS_NAME="kairos-core-$$flavor"
@@ -61,7 +61,7 @@ KAIROS_VERSION_ID="{{< kairosVersion >}}"
 KAIROS_PRETTY_NAME="kairos-core-$$flavor {{< kairosVersion >}}"
 KAIROS_BUG_REPORT_URL="https://github.com/kairos-io/kairos/issues"
 KAIROS_HOME_URL="https://github.com/kairos-io/kairos"
-KAIROS_IMAGE_REPO="{{< ociMeta variant="core" >}}
+KAIROS_IMAGE_REPO="{{<oci variant="core" >}}
 KAIROS_IMAGE_LABEL="latest"
 KAIROS_GITHUB_REPO="kairos-io/kairos"
 KAIROS_VARIANT="core"
@@ -91,7 +91,7 @@ total 102M
 The CI process generates bootable medium by the container images, and similarly, we can modify this image to introduce our changes and remaster an ISO as described in [Automated installation]({{< relref "../installation/automated" >}}), but that can be resumed in the following steps:
 
 ```bash {class="meta-distro"}
-$ docker run -ti --name custom-container {{< ociMeta variant="core" >}}
+$ docker run -ti --name custom-container {{<oci variant="core" >}}
 # # Do your changes inside the container..
 # echo "foo" > /foo
 # ...

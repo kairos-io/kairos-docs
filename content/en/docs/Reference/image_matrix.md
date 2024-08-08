@@ -39,7 +39,7 @@ quay.io/kairos/<flavor>:<flavor_release>-<variant>-<arch>-<device>-<version>
 Use the search feature to find the images you are looking for.
 Here is one example:
 
-{{<ociMetaCode variant="standard">}}
+{{<ociCode variant="standard">}}
 
 More about Kairos naming conventions [here]({{< relref "./artifacts" >}}).
 
@@ -53,7 +53,7 @@ Notes:
 The pipelines do not publish `img` artifacts for the arm architecture because the files are too large for GitHub Actions (they exceed the artifact size limit). These artifacts can be extracted from the published docker images using the following command:
 
 ```bash {class="meta-distro only-flavors=openSUSE+Leap+15.6,openSUSE+Tumbleweed,Ubuntu+20.04,Ubuntu+22.04,Alpine+19"}
-export IMAGE={{< ociMeta variant="core" arch="arm64" model="rpi4" suffix="img">}}
+export IMAGE={{<oci variant="core" arch="arm64" model="rpi4" suffix="img">}}
 docker run -ti --rm -v $PWD:/image quay.io/luet/base util unpack "$IMAGE" /image
 ```
 
@@ -117,10 +117,10 @@ Release changelogs are available for Kairos core and for each component. Below i
   SBOM lists are regularly pushed via the CI as part of the Github releases assets. For instance, 
 
   ```bash {class="meta-distro"}
-  https://github.com/kairos-io/kairos/releases/download/{{< kairosVersion >}}/{{< imageMeta variant="core" suffix="-sbom.spdx.json" >}}
+  https://github.com/kairos-io/kairos/releases/download/{{< kairosVersion >}}/{{<image variant="core" suffix="-sbom.spdx.json" >}}
   ```
 
- is the SBOM for the core {{< flavorMetaCode >}} image.
+ is the SBOM for the core {{<flavorCode >}} image.
 
 ## Image verification
 
@@ -128,7 +128,7 @@ Images signatures are pushed regularly for tagged releases. To verify images wit
 
 ```bash {class="meta-distro" }
 cosign verify-attestation \
-        --type spdx {{<ociMeta variant="core">}} \
+        --type spdx {{<oci variant="core">}} \
         --certificate-identity "https://github.com/kairos-io/kairos/.github/workflows/release.yaml@refs/tags/{{< kairosVersion >}}" \
         --certificate-oidc-issuer "https://token.actions.githubusercontent.com"
 ```

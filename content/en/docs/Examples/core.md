@@ -19,7 +19,7 @@ For example, let's say you want to use a standard image. Your cloud config file 
 #cloud-config
 install:
  # Here we specify the image that we want to deploy
- image: "docker:{{<ociMeta variant="standard">}}"
+ image: "docker:{{<oci variant="standard">}}"
 ```
 
 {{% alert title="Note" %}}
@@ -39,7 +39,7 @@ install:
  auto: true
  reboot: true
  # Here we specify the image that we want to deploy
- image: "docker:{{<ociMeta variant="standard">}}"
+ image: "docker:{{<oci variant="standard">}}"
 
 hostname: "test"
 users:

@@ -71,7 +71,7 @@ The basic usage of AuroraBoot involves passing it several parameters that define
 
 AuroraBoot will download the artifacts required for bootstrapping the nodes, and prepare the environment required for a zero-touch deployment.
 
-For example, to netboot a machine with the latest version of Kairos and {{< flavorMetaCode >}} using a cloud config, you would run the following command:
+For example, to netboot a machine with the latest version of Kairos and {{<flavorCode >}} using a cloud config, you would run the following command:
 
 ```bash {class="meta-distro"}
 docker run --rm -ti --net host quay.io/kairos/auroraboot \
@@ -107,7 +107,7 @@ To use a container image, you can use [the Kairos released images]({{< relref ".
 
 Now we can run AuroraBoot with the version we selected, either from GitHub releases or directly from a container image.
 
-In the example below we selected `{{< kairosVersion >}}-{{< k3sVersion >}}`, {{< flavorMetaCode >}} flavor, so we would run either one of the following:
+In the example below we selected `{{< kairosVersion >}}-{{< k3sVersion >}}`, {{<flavorCode >}} flavor, so we would run either one of the following:
 
 {{< tabpane text=true  >}}
 {{% tab header="Container image" %}}
@@ -118,7 +118,7 @@ You can use [the Kairos released images]({{< relref "../reference/image_matrix" 
 
 ```bash {class="meta-distro" }
 docker run --rm -ti --net host quay.io/kairos/auroraboot \
-                    --set "container_image={{<ociMeta variant="standard">}}"
+                    --set "container_image={{<oci variant="standard">}}"
 ```
 
 {{% /tab %}}
@@ -129,10 +129,10 @@ By indicating a `container_image` prefixed with `docker://`, AuroraBoot will pul
 This implies that the host has a docker daemon, and we have to give access to its socket with `-v /var/run/docker.sock:/var/run/docker.sock`.
 
 ```bash {class="meta-distro"}
-docker pull {{<ociMeta variant="standard">}}
+docker pull {{<oci variant="standard">}}
 # This will use the container image from the host's docker daemon
 docker run --rm -ti -v /var/run/docker.sock:/var/run/docker.sock --net host quay.io/kairos/auroraboot \
-                    --set "container_image=docker://{{<ociMeta variant="standard">}}"
+                    --set "container_image=docker://{{<oci variant="standard">}}"
 ```
 {{% /tab %}}
 {{% tab header="Github releases" %}}
@@ -225,7 +225,7 @@ Build the ISO:
 docker run -v "$PWD"/config.yaml:/config.yaml \
                     -v "$PWD"/build:/tmp/auroraboot \
                     --rm -ti quay.io/kairos/auroraboot \
-                    --set container_image={{<ociMeta variant="core">}} \
+                    --set container_image={{<oci variant="core">}} \
                     --set "disable_http_server=true" \
                     --set "disable_netboot=true" \
                     --cloud-config /config.yaml \
@@ -452,7 +452,7 @@ To pass-by a cloud-config via pipes, set `--cloud-config -`, for example:
 ```yaml {class="meta-distro"}
 cat <<EOF | docker run --rm -i --net host quay.io/kairos/auroraboot \
                     --cloud-config - \
-                    --set "container_image={{<ociMeta variant="standard">}}"
+                    --set "container_image={{<oci variant="standard">}}"
 #cloud-config
 
 install:
@@ -522,7 +522,7 @@ Build the custom ISO with the cloud config:
 docker run -v "$PWD"/config.yaml:/config.yaml \
              -v "$PWD"/build:/tmp/auroraboot \
              --rm -ti quay.io/kairos/auroraboot \
-             --set container_image={{<ociMeta variant="core">}} \
+             --set container_image={{<oci variant="core">}} \
              --set "disable_http_server=true" \
              --set "disable_netboot=true" \
              --cloud-config /config.yaml \
@@ -545,7 +545,7 @@ docker run -v "$PWD"/config.yaml:/config.yaml \
              -v "$PWD"/data:/tmp/data \
              -v "$PWD"/build:/tmp/auroraboot \
              --rm -ti quay.io/kairos/auroraboot \
-             --set container_image={{<ociMeta variant="core">}} \
+             --set container_image={{<oci variant="core">}} \
              --set "disable_http_server=true" \
              --set "disable_netboot=true" \
              --cloud-config /config.yaml \
@@ -584,7 +584,7 @@ docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos
 
 ```bash {class="meta-distro"}
 docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos/auroraboot \
-        --set container_image={{<ociMeta variant="core">}}
+        --set container_image={{<oci variant="core">}}
         --cloud-config /config.yaml
 ```
 
@@ -599,7 +599,7 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock --net host \
   -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot \
   --debug \
   --set "disable_http_server=true" \
-  --set "container_image={{<ociMeta variant="standard">}}" \
+  --set "container_image={{<oci variant="standard">}}" \
   --set "disable_netboot=true" \
   --cloud-config /aurora/config.yaml \
   --set "disk.raw=true" \
@@ -663,7 +663,7 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock --net host \
   -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot \
   --debug \
   --set "disable_http_server=true" \
-  --set "container_image={{<ociMeta variant="standard">}}" \
+  --set "container_image={{<oci variant="standard">}}" \
   --set "disable_netboot=true" \
   --cloud-config /aurora/config.yaml \
   --set "disk.gce=true" \
@@ -678,7 +678,7 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock --net host \
   -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot \
   --debug \
   --set "disable_http_server=true" \
-  --set "container_image={{<ociMeta variant="standard">}}" \
+  --set "container_image={{<oci variant="standard">}}" \
   --set "disable_netboot=true" \
   --cloud-config /aurora/config.yaml \
   --set "disk.vhd=true" \
@@ -692,7 +692,7 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock --net host \
 Write down an aurora config file as `aurora.yaml`:
 
 ```yaml {class="meta-distro"}
-container_image: "{{<ociMeta variant="core">}}"
+container_image: "{{<oci variant="core">}}"
 
 cloud_config: |
     #cloud-config

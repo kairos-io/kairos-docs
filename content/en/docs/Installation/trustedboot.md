@@ -109,7 +109,7 @@ To build the installable medium you need to run the following commands:
 {{< tabpane text=true  >}}
 {{% tab header="From a container image" %}}
 ```bash {class="meta-distro only-flavors=Ubuntu+24.04,Fedora+40"}
-CONTAINER_IMAGE={{<ociMeta variant="core">}}-uki
+CONTAINER_IMAGE={{<oci variant="core">}}-uki
 docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki $CONTAINER_IMAGE -t iso -d /result/ -k /keys
 # to build an EFI file only
 docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki $CONTAINER_IMAGE -t uki -d /result/ -k /keys
@@ -133,7 +133,7 @@ System extensions can be bundled in the installable medium. To bundle system ext
 {{% tab header="From a container image" %}}
 ```bash {class="meta-distro only-flavors=Ubuntu+24.04,Fedora+40,foobar"}
 # Assuming your system extensions are stored on $PWD/system-extensions
-CONTAINER_IMAGE={{<ociMeta variant="core">}}-uki
+CONTAINER_IMAGE={{<oci variant="core">}}-uki
 docker run -ti --rm -v $PWD/system-extensions:/system-extensions -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki $CONTAINER_IMAGE -t iso -d /result/ -k /keys --overlay-iso /system-extensions
 # to build an EFI file only
 docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki $CONTAINER_IMAGE -t uki -d /result/ -k /keys
@@ -167,7 +167,7 @@ You can overwrite the default "Kairos" title if you pass the `--boot-branding` f
 
 
 ```bash {class="meta-distro only-flavors=Ubuntu+24.04,Fedora+40"}
-CONTAINER_IMAGE={{<ociMeta variant="core">}}-uki
+CONTAINER_IMAGE={{<oci variant="core">}}-uki
 docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys enki build-uki $CONTAINER_IMAGE -t iso -d /result/ -k /keys --boot-branding "My Awesome OS"
 ```
 
@@ -408,7 +408,7 @@ This is specific for large-scale deployments to generate auto-installing ISOs th
 If you want to force the auto-enrollment of the certificates in the BIOS/UEFI, you can use the `--secure-boot-enroll` flag in the `build-uki` command.
 
 ```bash {class="meta-distro only-flavors=Ubuntu+24.04,Fedora+40"}
-CONTAINER_IMAGE={{<ociMeta variant="core">}}-uki
+CONTAINER_IMAGE={{<oci variant="core">}}-uki
 docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki $CONTAINER_IMAGE --secure-boot-enroll force -t iso -d /result/ -k /keys
 ```
 
