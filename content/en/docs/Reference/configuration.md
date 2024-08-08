@@ -359,7 +359,7 @@ Writing YAML files can be a tedious process, and it's easy to make syntax or ind
 
 Here's an example of how to test your configurations on the `initramfs` stage using a Docker container:
 
-```bash
+```bash {class="meta-distro"}
 # List the YAML files in your current directory
 $ ls -liah
 total 4,0K
@@ -375,7 +375,7 @@ stages:
 
 
 # Run the cloud-init command on your YAML files in a Docker container
-$ docker run -ti -v $PWD:/test --entrypoint /usr/bin/kairos-agent --rm {{< oci variant="core" >}} run-stage --cloud-init-paths /test initramfs
+$ docker run -ti -v $PWD:/test --entrypoint /usr/bin/kairos-agent --rm {{< ociMeta variant="core" >}} run-stage --cloud-init-paths /test initramfs
 
 # Output from the run-stage command
 INFO[2023-05-17T11:32:09+02:00] kairos-agent version 0.0.0                   

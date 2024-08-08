@@ -114,7 +114,13 @@ Release changelogs are available for Kairos core and for each component. Below i
 
 ## Service Billing Of Materials (SBOM)
 
-  SBOM lists are regularly pushed via the CI as part of the Github releases assets. For instance, `https://github.com/kairos-io/kairos/releases/download/{{< kairosVersion >}}/{{< image variant="core" suffix="-sbom.spdx.json" >}}` is the SBOM for the core {{< defaultFlavor >}} image.
+  SBOM lists are regularly pushed via the CI as part of the Github releases assets. For instance, 
+
+  ```bash {class="meta-distro"}
+  https://github.com/kairos-io/kairos/releases/download/{{< kairosVersion >}}/{{< imageMeta variant="core" suffix="-sbom.spdx.json" >}}
+  ```
+
+ is the SBOM for the core {{< flavorMetaCode >}} image.
 
 ## Image verification
 

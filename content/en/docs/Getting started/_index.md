@@ -61,7 +61,7 @@ First we check that we have all needed files:
 ```bash {class="meta-distro"}
 $ ls      
 {{<imageMeta variant="core" suffix=".iso">}}         {{<imageMeta variant="core" suffix=".iso.sha256.pem">}}
-{{<imageMeta variant="core" suffix=".iso.sha256">}}  {{<image variant="core" suffix=".iso.sha256.sig">}}
+{{<imageMeta variant="core" suffix=".iso.sha256">}}  {{<imageMeta variant="core" suffix=".iso.sha256.sig">}}
 ```
 
 We first verify that the sha256 checksums haven't been tampered with:

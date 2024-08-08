@@ -107,7 +107,7 @@ To use a container image, you can use [the Kairos released images]({{< relref ".
 
 Now we can run AuroraBoot with the version we selected, either from GitHub releases or directly from a container image.
 
-In the example below we selected `{{< kairosVersion >}}-{{< k3sVersion >}}`, `{{< defaultFlavor >}}` flavor, so we would run either one of the following:
+In the example below we selected `{{< kairosVersion >}}-{{< k3sVersion >}}`, {{< flavorMetaCode >}} flavor, so we would run either one of the following:
 
 {{< tabpane text=true  >}}
 {{% tab header="Container image" %}}
@@ -141,7 +141,7 @@ By indicating a `artifact_version`, a `release_version`, a `flavor` and a `repos
 
 ```bash {class="meta-distro"}
 docker run --rm -ti --net host quay.io/kairos/auroraboot \
-                    --set "artifact_version={{< kairosVersion >}}-{{< k3sVersion >}}" \
+                    --set "artifact_version={{< kairosVersion >}}-{{< k3sVersionOCI >}}" \
                     --set "release_version={{< kairosVersion >}}" \
                     --set "flavor=$$flavor" \
                     --set "flavor_release=$$flavorRelease" \
@@ -256,7 +256,7 @@ ls
 Build the ISO:
 ```bash {class="meta-distro"}
 docker run -v "$PWD"/build:/tmp/auroraboot -v /var/run/docker.sock:/var/run/docker.sock --rm -ti quay.io/kairos/auroraboot \
-                    --set "artifact_version={{< kairosVersion >}}-{{< k3sVersion >}}" \
+                    --set "artifact_version={{< kairosVersion >}}-{{< k3sVersionOCI >}}" \
                     --set "release_version={{< kairosVersion >}}" \
                     --set "flavor=$$flavor" \
                     --set "flavor_release=$$flavorRelease" \
@@ -572,7 +572,7 @@ docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos
 
 ```bash {class="meta-distro"}
 docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos/auroraboot \
-        --set "artifact_version={{< kairosVersion >}}-{{< k3sVersion >}}" \
+        --set "artifact_version={{< kairosVersion >}}-{{< k3sVersionOCI >}}" \
         --set "release_version={{< kairosVersion >}}" \
         --set "flavor=$$flavor" \
         --set "flavor_release=$$flavorRelease" \
