@@ -4,7 +4,7 @@ linkTitle: "Confidential Computing"
 weight: 9
 ---
 
-{{% alert title="Note" %}}
+{{% alert title="Warning" color="warning" %}}
 This page describes features that are still experimental in Kairos. There are a lot of things that can be improved and might be more streamlined in the future.
 {{% /alert %}}
 

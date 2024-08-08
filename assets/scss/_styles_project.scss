@@ -1326,3 +1326,15 @@ footer {
 
 // load variables_project
 @import "variables_project";
+
+// center the distro select vertically
+.distro-select-wrapper {
+    display: flex;
+    align-items: center;
+    height: 100%; /* Ensure the wrapper takes the full height of the parent */
+}
+
+#distro-select {
+    margin: 0; /* Remove default margin if any */
+    /* You can add any other styles needed for the select here */
+}

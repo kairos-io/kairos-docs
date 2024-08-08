@@ -45,8 +45,8 @@ Building ISOs still works as long as you mount the container `/tmp` disk to a lo
 docker run --rm -ti -v "$PWD"/config.yaml:/config.yaml -v ${PWD}:/tmp quay.io/kairos/auroraboot \ 
                     --set "artifact_version={{< kairosVersion >}}" \
                     --set "release_version={{< kairosVersion >}}" \
-                    --set "flavor={{< defaultFlavor >}}" \
-                    --set "flavor_release={{< defaultFlavorRelease >}}" \
+                    --set "flavor=@flavor" \
+                    --set "flavor_release=@flavorRelease" \
                     --set "repository=kairos-io/kairos" \
                     --set "disable_http_server=true" \
                     --set "disable_netboot=true" \
@@ -71,13 +71,13 @@ The basic usage of AuroraBoot involves passing it several parameters that define
 
 AuroraBoot will download the artifacts required for bootstrapping the nodes, and prepare the environment required for a zero-touch deployment.
 
-For example, to netboot a machine with the latest version of Kairos and Rocky Linux using a cloud config, you would run the following command:
+For example, to netboot a machine with the latest version of Kairos and {{<flavorCode >}} using a cloud config, you would run the following command:
 
 ```bash
 docker run --rm -ti --net host quay.io/kairos/auroraboot \
                     --set "artifact_version={{< kairosVersion >}}" \
                     --set "release_version={{< kairosVersion >}}" \
-                    --set "flavor=rockylinux" \
+                    --set "flavor=@flavor" \
                     --set repository="kairos-io/kairos" \
                     --cloud-config https://...
 ```
@@ -107,7 +107,7 @@ To use a container image, you can use [the Kairos released images]({{< relref ".
 
 Now we can run AuroraBoot with the version we selected, either from GitHub releases or directly from a container image.
 
-In the example below we selected `{{< kairosVersion >}}-{{< k3sVersion >}}`, `{{< defaultFlavor >}}` flavor, so we would run either one of the following:
+In the example below we selected `{{< kairosVersion >}}-{{< k3sVersion >}}`, {{<flavorCode >}} flavor, so we would run either one of the following:
 
 {{< tabpane text=true  >}}
 {{% tab header="Container image" %}}
@@ -141,10 +141,10 @@ By indicating a `artifact_version`, a `release_version`, a `flavor` and a `repos
 
 ```bash
 docker run --rm -ti --net host quay.io/kairos/auroraboot \
-                    --set "artifact_version={{< kairosVersion >}}-{{< k3sVersion >}}" \
+                    --set "artifact_version={{< kairosVersion >}}-{{< k3sVersionOCI >}}" \
                     --set "release_version={{< kairosVersion >}}" \
-                    --set "flavor={{< defaultFlavor >}}" \
-                    --set "flavor_release={{< defaultFlavorRelease >}}" \
+                    --set "flavor=@flavor" \
+                    --set "flavor_release=@flavorRelease" \
                     --set "repository=kairos-io/provider-kairos"
 ```
 {{% /tab %}}
@@ -159,12 +159,12 @@ Generic hardware based netbooting is out of scope for this document.
 Nodes need to be configured to boot over network, and after AuroraBoot is started should be ready to accept a connection, a typical output of a successfull run is:
 
 ```bash                                                                                                                                                                      
-2023/02/08 14:27:30 DHCP: Offering to boot 08:00:27:54:1a:d1                                                                                                                                                       
-2023/02/08 14:27:30 TFTP: Sent "08:00:27:54:1a:d1/4" to 192.168.68.113:6489                                                                                                                                        
-2023/02/08 14:27:36 DHCP: Offering to boot 08:00:27:54:1a:d1                                                                                                                                                       
+2023/02/08 14:27:30 DHCP: Offering to boot 08:00:27:54:1a:d1
+2023/02/08 14:27:30 TFTP: Sent "08:00:27:54:1a:d1/4" to 192.168.68.113:6489
+2023/02/08 14:27:36 DHCP: Offering to boot 08:00:27:54:1a:d1
 2023/02/08 14:27:36 HTTP: Sending ipxe boot script to 192.168.68.113:45435                               
 2023/02/08 14:27:36 HTTP: Sent file "kernel" to 192.168.68.113:45435                                     
-2023/02/08 14:27:36 HTTP: Sent file "initrd-0" to 192.168.68.113:45435                                                                                                                                             
+2023/02/08 14:27:36 HTTP: Sent file "initrd-0" to 192.168.68.113:45435
 2023/02/08 14:27:49 HTTP: Sent file "other-0" to 192.168.68.113:43044 
 ```
 
@@ -256,10 +256,10 @@ ls
 Build the ISO:
 ```bash
 docker run -v "$PWD"/build:/tmp/auroraboot -v /var/run/docker.sock:/var/run/docker.sock --rm -ti quay.io/kairos/auroraboot \
-                    --set "artifact_version={{< kairosVersion >}}-{{< k3sVersion >}}" \
+                    --set "artifact_version={{< kairosVersion >}}-{{< k3sVersionOCI >}}" \
                     --set "release_version={{< kairosVersion >}}" \
-                    --set "flavor={{< defaultFlavor >}}" \
-                    --set "flavor_release={{< defaultFlavorRelease >}}" \
+                    --set "flavor=@flavor" \
+                    --set "flavor_release=@flavorRelease" \
                     --set "repository=kairos-io/provider-kairos" \
                     --set "disable_http_server=true" \
                     --set "disable_netboot=true" \
@@ -342,7 +342,7 @@ artifact_version: "v..."
 release_version: "{{< kairosVersion >}}"
 
 # Flavor
-flavor: "rockylinux"
+flavor: "@flavor"
 
 # Github repository
 repository: "kairos-io/kairos"
@@ -563,7 +563,7 @@ See the [Airgap example]({{< relref "../examples/airgap" >}}) in the [examples s
 docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos/auroraboot \
         --set "artifact_version={{< kairosVersion >}}" \
         --set "release_version={{< kairosVersion >}}" \
-        --set "flavor=rockylinux" \
+        --set "flavor=@flavor" \
         --set repository="kairos-io/kairos" \
         --cloud-config /config.yaml
 ```
@@ -572,10 +572,10 @@ docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos
 
 ```bash
 docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos/auroraboot \
-        --set "artifact_version={{< kairosVersion >}}-{{< k3sVersion >}}" \
+        --set "artifact_version={{< kairosVersion >}}-{{< k3sVersionOCI >}}" \
         --set "release_version={{< kairosVersion >}}" \
-        --set "flavor={{< defaultFlavor >}}" \
-        --set "flavor_release={{< defaultFlavorRelease >}}" \
+        --set "flavor=@flavor" \
+        --set "flavor_release=@flavorRelease" \
         --set "repository=kairos-io/provider-kairos" \
         --cloud-config /config.yaml
 ```
@@ -690,6 +690,7 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock --net host \
 ### Use the config file
 
 Write down an aurora config file as `aurora.yaml`:
+
 ```yaml
 container_image: "{{<oci variant="core">}}"
 

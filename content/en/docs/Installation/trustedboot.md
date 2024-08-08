@@ -5,10 +5,6 @@ weight: 6
 date: 2022-11-13
 ---
 
-{{% alert title="Warning" %}}
-This section is still a work in progress and only available in Kairos v3.x releases and alphas.
-{{% /alert %}}
-
 "Trusted Boot" is a combination of technologies that allows us to guarantee that a system was not tampered with, and the user-data is protected by cold attacks, it is composed by FDE, Secure Boot and Measured Boot.
 
 If you want to learn more on what Trusted Boot is and how it works, see the [Trusted Boot Architecture]({{< relref "../architecture/trustedboot" >}}) page. This page describes how to enable Trusted Boot support in Kairos.
@@ -52,17 +48,17 @@ MY_ORG="Acme Corp"
 # Generate the keys
 docker run -v $PWD/keys:/work/keys -ti --rm quay.io/kairos/osbuilder-tools:latest genkey "$MY_ORG" --expiration-in-days 365 -o /work/keys
 ```
-{{% alert title="Warning" %}}
+{{% alert title="Warning" color="warning" %}}
 Substitute `$MY_ORG` for your own string, this can be anything but it help identifying the Keys. The keys duration can specified with `--expiration-in-days`. It is not possible to create keys that do not expire, but it is possible to specify an extremely large value (e.g. 200 years, etc.)
 {{% /alert %}}
 
-{{% alert title="Warning" %}}
+{{% alert title="Warning" color="warning" %}}
 It is very important to preserve the keys generated in this process in a safe place. Loosing the keys will prevent you to generate new images that can be used for upgrades.
 {{% /alert %}}
 
 ### Custom certificates by skipping Microsoft certificate keys
 
-{{% alert title="Warning" %}}
+{{% alert title="Warning" color="warning" %}}
 Some firmware is signed and verified with Microsoft's or other vendor keys when secure boot is enabled. Removing those keys could brick them. It is preferable to not use the Microsoft certificates for precaution and security reasons, however as this might be potentially a dangerous action, only do this if you know what you are doing. To check if your firmware is signed with Microsoft's keys, you can check https://github.com/Foxboron/sbctl/wiki/FAQ#option-rom. See also: https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot#Enrolling_Option_ROM_digests.
 {{% /alert %}}
 
@@ -108,8 +104,8 @@ To build the installable medium you need to run the following commands:
 
 {{< tabpane text=true  >}}
 {{% tab header="From a container image" %}}
-```bash
-CONTAINER_IMAGE=quay.io/kairos/fedora:38-core-amd64-generic-{{< kairosVersion>}}-uki
+```bash {class="only-flavors=Ubuntu+24.04,Fedora+40"}
+CONTAINER_IMAGE={{<oci variant="core">}}-uki
 docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki $CONTAINER_IMAGE -t iso -d /result/ -k /keys
 # to build an EFI file only
 docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki $CONTAINER_IMAGE -t uki -d /result/ -k /keys
@@ -131,9 +127,9 @@ System extensions can be bundled in the installable medium. To bundle system ext
 
 {{< tabpane text=true  >}}
 {{% tab header="From a container image" %}}
-```bash
+```bash {class="only-flavors=Ubuntu+24.04,Fedora+40,foobar"}
 # Assuming your system extensions are stored on $PWD/system-extensions
-CONTAINER_IMAGE=quay.io/kairos/fedora:38-core-amd64-generic-{{< kairosVersion>}}-uki
+CONTAINER_IMAGE={{<oci variant="core">}}-uki
 docker run -ti --rm -v $PWD/system-extensions:/system-extensions -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki $CONTAINER_IMAGE -t iso -d /result/ -k /keys --overlay-iso /system-extensions
 # to build an EFI file only
 docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki $CONTAINER_IMAGE -t uki -d /result/ -k /keys
@@ -166,8 +162,8 @@ title Kairos
 You can overwrite the default "Kairos" title if you pass the `--boot-branding` flag to enki.
 
 
-```bash
-CONTAINER_IMAGE={{<oci flavor="ubuntu" flavorRelease="24.04" variant="core">}}-uki
+```bash {class="only-flavors=Ubuntu+24.04,Fedora+40"}
+CONTAINER_IMAGE={{<oci variant="core">}}-uki
 docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys enki build-uki $CONTAINER_IMAGE -t iso -d /result/ -k /keys --boot-branding "My Awesome OS"
 ```
 
@@ -254,9 +250,9 @@ Note: you need to keep the TPM container up and running for the VM to boot. Run 
 
 3. Run the container image with the ISO file (replace the iso file name with yours):
 
-```bash
+```bash {class="only-flavors=Ubuntu+24.04,Fedora+40"}
 # console only
-docker run --privileged -v $PWD/tpmstate:/tmp -v $PWD:/work -v /dev/kvm:/dev/kvm --rm -ti fedora-qemu -nographic -cdrom kairos-fedora-38-core-amd64-generic-{{< kairosVersion>}}.uki.iso
+docker run --privileged -v $PWD/tpmstate:/tmp -v $PWD:/work -v /dev/kvm:/dev/kvm --rm -ti fedora-qemu -nographic -cdrom kairos-@flavor-@flavorRelease-core-amd64-generic-{{< kairosVersion>}}.uki.iso
 ```
 
 Note: To stop the QEMU container you can use `Ctrl-a x` or `Ctrl-a c` to enter the QEMU console and then `quit` to exit.
@@ -407,8 +403,8 @@ This is specific for large-scale deployments to generate auto-installing ISOs th
 
 If you want to force the auto-enrollment of the certificates in the BIOS/UEFI, you can use the `--secure-boot-enroll` flag in the `build-uki` command.
 
-```bash
-CONTAINER_IMAGE=quay.io/kairos/fedora:38-core-amd64-generic-{{< kairosVersion>}}-uki
+```bash {class="only-flavors=Ubuntu+24.04,Fedora+40"}
+CONTAINER_IMAGE={{<oci variant="core">}}-uki
 docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki $CONTAINER_IMAGE --secure-boot-enroll force -t iso -d /result/ -k /keys
 ```
 

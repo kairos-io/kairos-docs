@@ -35,7 +35,7 @@ metadata:
 spec:
   concurrency: 1
   # This is the version (tag) of the image to upgrade to.
-  version: "{{< ociTag variant=\"standard\" >}}"
+  version: "{{<ociTag variant=\"standard\" >}}"
   nodeSelector:
     matchExpressions:
       - {key: kubernetes.io/hostname, operator: Exists}
@@ -47,7 +47,7 @@ spec:
   upgrade:
     # Here goes the image which is tied to the flavor being used.
     # You can also specify your custom image stored in a public registry.
-    image: {{< registryURL >}}/{{< defaultFlavor >}}
+    image: {{< registryURL >}}/@flavor
     command:
     - "/usr/sbin/suc-upgrade"
 EOF
@@ -100,7 +100,7 @@ spec:
               - Pod
       verifyImages:
       - imageReferences:
-        - "quay.io/kairos/opensuse*"
+        - "quay.io/kairos/@flavor*"
         attestors:
         - entries:
           # See: https://kyverno.io/docs/writing-policies/verify-images/#keyless-signing-and-verification
@@ -175,9 +175,7 @@ spec:
     force: false
     disableEviction: true
   upgrade:
-    # Here goes the image which is tied to the flavor being used.
-    # Currently can pick between opensuse and alpine
-    image: {{< registryURL >}}/{{< defaultFlavor >}}
+    image: {{< registryURL >}}/@flavor
     command:
       - "/bin/bash"
       - "-c"
@@ -225,9 +223,7 @@ spec:
     force: false
     disableEviction: true
   upgrade:
-    # Here goes the image which is tied to the flavor being used.
-    # Currently can pick between opensuse and alpine
-    image: {{< registryURL >}}/{{< defaultFlavor >}}
+    image: {{< registryURL >}}/@flavor
     command:
       - "/bin/bash"
       - "-c"

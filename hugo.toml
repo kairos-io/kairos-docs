@@ -58,21 +58,13 @@ weight = 1
 description = "The immutable edge Kubernetes"
 images = [ "images/kairos-800x419.jpeg" ]
 
-[social]
+# language not really in use just a hack to trigger the navbar-lang-selector which at the moment is used for distro selector
+[languages.es]
+languageName ="Es"
+
+[params.social]
 twitter = "Kairos_OSS"
 
-[[menu.main]]
-    name = "Contribute"
-    weight = 50
-    url = "https://github.com/kairos-io/kairos/contribute"
-    pre = "<i class='fab fa-github'></i>"
-    post = "" 
-[[menu.main]]
-    name = "Contribution guidelines"
-    weight = 50
-    url = "https://github.com/kairos-io/kairos/blob/master/CONTRIBUTING.md"
-    pre = "<i class='fab fa-github'></i>"
-    post = "" 
 [markup]
   [markup.goldmark]
     [markup.goldmark.renderer]
@@ -121,9 +113,7 @@ osbuilder_version = "v0.300.2"
 # renovate: datasource=github-releases depName=kairos-io/AuroraBoot
 auroraboot_version = "v0.2.7"
 flavor = "debian"
-armFlavor = "alpine"
 registryURL = "quay.io/kairos"
-defaultBaseImage = "opensuse/leap:15.6"
 defaultFamily = "opensuse"
 defaultFlavor = "opensuse"
 defaultFlavorRelease = "leap-15.6"
@@ -136,7 +126,7 @@ system_upgrade_controller = "v0.13.4"
 # Enable to show the side bar menu in its compact state.
 sidebar_menu_compact = true
 # Enable to show the foldable triangle
-sidebar_menu_foldable = true
+sidebar_menu_foldable = false
 #  Set to true to disable breadcrumb navigation.
 breadcrumb_disable = false
 #  Set to true to hide the sidebar search box (the top nav search box will still be displayed if search is enabled)

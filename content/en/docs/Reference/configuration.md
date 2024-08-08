@@ -375,7 +375,7 @@ stages:
 
 
 # Run the cloud-init command on your YAML files in a Docker container
-$ docker run -ti -v $PWD:/test --entrypoint /usr/bin/kairos-agent --rm {{< oci variant="core" >}} run-stage --cloud-init-paths /test initramfs
+$ docker run -ti -v $PWD:/test --entrypoint /usr/bin/kairos-agent --rm {{<oci variant="core" >}} run-stage --cloud-init-paths /test initramfs
 
 # Output from the run-stage command
 INFO[2023-05-17T11:32:09+02:00] kairos-agent version 0.0.0                   
@@ -499,7 +499,7 @@ k3s-agent:
 {{% /tab %}}
 {{< /tabpane >}}
 
-{{% alert title="Warning" %}}
+{{% alert title="Warning" color="warning" %}}
 The K3s args are only applied when the K3s service is created, which is during installation. Changing the `args` key after installation won't have any effect.
 {{% /alert %}}
 

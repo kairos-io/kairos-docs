@@ -143,7 +143,7 @@ sudo chattr -i /sys/firmware/efi/efivars/{PK,KEK,db}*
 efi-updatevar -f db.auth db
 ```
 
-{{% alert title="Warning" %}}
+{{% alert title="Warning" color="warning" %}}
 You will need the `efitools` installed on the Kairos image for this commands to work!
 {{% /alert %}}
 

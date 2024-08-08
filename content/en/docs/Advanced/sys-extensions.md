@@ -5,13 +5,13 @@ weight: 3
 ---
 
 
-{{% alert title="Warning" %}}
+{{% alert title="Warning" color="warning" %}}
 This feature is in preview state and only available in Kairos v3.1.x releases and alphas.
 Please check the section "Known issues" at the bottom for more information.
 {{% /alert %}}
 
 
-{{% alert title="Warning" %}}
+{{% alert title="Warning" color="warning" %}}
 This feature is only available for Trusted Boot images. See the [Trusted Boot documentation]({{%relref "/docs/Architecture/trustedboot" %}}) for more information.
 {{% /alert %}}
 

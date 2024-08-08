@@ -1,9 +1,4 @@
-{{- if eq (.Get "flavorRelease") "" -}}
-    {{- $.Page.Site.Params.softwareVersions.defaultFlavorRelease -}}
-{{- else -}}
-    {{- .Get "flavorRelease" -}}
-{{- end -}}
--
+@flavorRelease-
 {{- with .Get "variant" -}}
     {{- . -}}
 {{- end -}}

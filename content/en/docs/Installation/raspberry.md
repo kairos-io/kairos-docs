@@ -24,8 +24,8 @@ Extract the `img` file from a container image as described [in this page]({{< re
 
 Plug the SD card to your system. To flash the image, you can either use Etcher or `dd`. Note it's compressed with "XZ", so we need to decompress it first:
 
-```bash
-xzcat {{< image variant="standard" model="rpi4" arch="arm64">}}.img.xz | sudo dd of=<device> oflag=sync status=progress bs=10MB
+```bash {class="only-flavors=openSUSE+Leap-15.6,openSUSE+Tumbleweed,Ubuntu+20.04,Ubuntu+22.04,Alpine+3.19"}
+xzcat {{<image variant="standard" model="rpi4" arch="arm64" suffix=".img.xz">}} | sudo dd of=<device> oflag=sync status=progress bs=10MB
 ```
 
 Once the image is flashed, there is no need to carry any other installation steps. We can boot the image, or apply our config.
@@ -55,7 +55,7 @@ You can push additional `cloud config` files. For a full reference check out the
 The following shell script shows how to locally rebuild and customize the image with docker
 
 
-{{% alert title="Warning" %}}
+{{% alert title="Warning" color="warning" %}}
 If you're using osbuilder between versions 0.6.0 and 0.6.5, you need to pass the flag `--use-lvm` to the `build-arm-image.sh` script, the same way you pass `--local`. Starting form osbuilder 0.6.6 this will be the default behaviour.
 {{% /alert %}}
 
@@ -63,11 +63,12 @@ If you're using osbuilder between versions 0.6.0 and 0.6.5, you need to pass the
 Validating the config is not required in the following process, but it can save you some time. Use [kairosctl]({{< relref "../reference/kairosctl" >}}) to perform the schema validations.
 {{% /alert %}}
 
-{{% alert title="Warning" %}}
+{{% alert title="Warning" color="warning" %}}
 From Kairos v2.4.0 onward, Raspberry Pi models 3 and 4 have different images. The images for those models are built differently. 
 Make sure to set the proper `--model=` in your command (rpi3,rpi4) to build the image for your model.
 {{% /alert %}}
-```
+
+```bash {class="only-flavors=openSUSE+Leap-15.6,openSUSE+Tumbleweed,Ubuntu+20.04,Ubuntu+22.04,Alpine+3.19"}
 # Download the Kairos image locally
 IMAGE={{<oci variant="standard" model="rpi4" arch="arm64">}}
 docker pull $IMAGE

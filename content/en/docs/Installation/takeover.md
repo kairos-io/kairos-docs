@@ -10,7 +10,7 @@ Kairos supports takeover installations. Here are a few summarized steps:
 - From the dedicated control panel (OVH, Hetzner, etc.), boot in *rescue* mode
 - [Install docker](https://docs.docker.com/engine/install/debian/) and run for example:
 
-```
+```bash
 export DEVICE=/dev/sda
 export IMAGE={{<oci variant="core">}}
 cat <<'EOF' > config.yaml

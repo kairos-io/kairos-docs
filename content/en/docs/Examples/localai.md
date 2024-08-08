@@ -5,7 +5,7 @@ weight: 4
 description: This section describe examples on how to deploy Kairos with k3s and LocalAI
 ---
 
-{{% alert title="Warning" %}}
+{{% alert title="Warning" color="warning" %}}
 This tutorial will download an AI model which is around 4Gib.
 
 Keep in mind that AI models are performance hungry. Performance on a VM can be poor depending on your host CPU. To get the best performance, use a bare-metal machine.

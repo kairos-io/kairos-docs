@@ -102,7 +102,7 @@ spec:
   upgrade:
     # Here goes the image which is tied to the flavor being used.
     # Currently can pick between opensuse and alpine
-    image: {{< registryURL >}}/{{< defaultFlavor >}}
+    image: {{< registryURL >}}/@flavor
     command:
       - "/bin/bash"
       - "-c"

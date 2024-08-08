@@ -32,12 +32,6 @@ It is possible to reset the state of a node by either booting into the "Reset" m
 On a Kairos booted system, logged as root:
 
 {{< tabpane text=true  >}}
-{{% tab header="Kairos before v3.0.0" %}}
-```bash
-$ grub2-editenv /oem/grubenv set next_entry=statereset
-$ reboot
-```
-{{% /tab %}}
 {{% tab header="Kairos v3.0.0 and upwards" %}}
 To directly select the entry:
 
@@ -52,6 +46,12 @@ Or to get a list of available boot entries and select one interactively:
 $ kairos-agent bootentry
 ```
 {{% /tab %}}
+{{% tab header="Kairos before v3.0.0" %}}
+```bash
+$ grub2-editenv /oem/grubenv set next_entry=statereset
+$ reboot
+```
+{{% /tab %}}
 {{< /tabpane >}}
 
 
@@ -62,72 +62,6 @@ $ kairos-agent bootentry
 Consider the following example which resets a machine by changing the config file used during installation:
 
 {{< tabpane text=true  >}}
-{{% tab header="Kairos before v3.0.0" %}}
-```yaml
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: custom-script
-  namespace: system-upgrade
-type: Opaque
-stringData:
-  config.yaml: |
-    #cloud-config
-    hostname: testcluster-{{ trunc 4 .MachineID }}
-    k3s:
-      enabled: true
-    users:
-    - name: kairos
-      passwd: kairos
-      ssh_authorized_keys:
-      - github:mudler
-  add-config-file.sh: |
-    #!/bin/sh
-    set -e
-    if diff /host/run/system-upgrade/secrets/custom-script/config.yaml /host/oem/90_custom.yaml >/dev/null; then
-        echo config present
-        exit 0
-    fi
-    # we can't cp, that's a symlink!
-    cat /host/run/system-upgrade/secrets/custom-script/config.yaml > /host/oem/90_custom.yaml
-    kairos-agent bootentry --select statereset
-    sync
-
-    mount --rbind /host/dev /dev
-    mount --rbind /host/run /run
-    nsenter -i -m -t 1 -- reboot
-    exit 1
----
-apiVersion: upgrade.cattle.io/v1
-kind: Plan
-metadata:
-  name: reset-and-reconfig
-  namespace: system-upgrade
-spec:
-  concurrency: 2
-  # This is the version (tag) of the image.
-  version: "{{< ociTag variant=\"standard\" >}}"
-  nodeSelector:
-    matchExpressions:
-      - { key: kubernetes.io/hostname, operator: Exists }
-  serviceAccountName: system-upgrade
-  cordon: false
-  upgrade:
-    # Here goes the image which is tied to the flavor being used.
-    # Currently can pick between opensuse and alpine
-    image: {{< registryURL >}}/{{< defaultFlavor >}}
-    command:
-      - "/bin/bash"
-      - "-c"
-    args:
-      - bash /host/run/system-upgrade/secrets/custom-script/add-config-file.sh
-  secrets:
-    - name: custom-script
-      path: /host/run/system-upgrade/secrets/custom-script
-```
-
-{{% /tab %}}
 {{% tab header="Kairos v3.0.0 and upwards" %}}
 ```yaml
 ---
@@ -173,7 +107,7 @@ metadata:
 spec:
   concurrency: 2
   # This is the version (tag) of the image.
-  version: "{{< ociTag variant=\"standard\" >}}"
+  version: "{{<ociTag variant=\"standard\" >}}"
   nodeSelector:
     matchExpressions:
       - { key: kubernetes.io/hostname, operator: Exists }
@@ -182,7 +116,7 @@ spec:
   upgrade:
     # Here goes the image which is tied to the flavor being used.
     # Currently can pick between opensuse and alpine
-    image: {{< registryURL >}}/{{< defaultFlavor >}}
+    image: {{< registryURL >}}/@flavor
     command:
       - "/bin/bash"
       - "-c"
@@ -192,6 +126,72 @@ spec:
     - name: custom-script
       path: /host/run/system-upgrade/secrets/custom-script
 ```
+{{% /tab %}}
+{{% tab header="Kairos before v3.0.0" %}}
+```yaml
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: custom-script
+  namespace: system-upgrade
+type: Opaque
+stringData:
+  config.yaml: |
+    #cloud-config
+    hostname: testcluster-{{ trunc 4 .MachineID }}
+    k3s:
+      enabled: true
+    users:
+    - name: kairos
+      passwd: kairos
+      ssh_authorized_keys:
+      - github:mudler
+  add-config-file.sh: |
+    #!/bin/sh
+    set -e
+    if diff /host/run/system-upgrade/secrets/custom-script/config.yaml /host/oem/90_custom.yaml >/dev/null; then
+        echo config present
+        exit 0
+    fi
+    # we can't cp, that's a symlink!
+    cat /host/run/system-upgrade/secrets/custom-script/config.yaml > /host/oem/90_custom.yaml
+    kairos-agent bootentry --select statereset
+    sync
+
+    mount --rbind /host/dev /dev
+    mount --rbind /host/run /run
+    nsenter -i -m -t 1 -- reboot
+    exit 1
+---
+apiVersion: upgrade.cattle.io/v1
+kind: Plan
+metadata:
+  name: reset-and-reconfig
+  namespace: system-upgrade
+spec:
+  concurrency: 2
+  # This is the version (tag) of the image.
+  version: "{{<ociTag variant=\"standard\" >}}"
+  nodeSelector:
+    matchExpressions:
+      - { key: kubernetes.io/hostname, operator: Exists }
+  serviceAccountName: system-upgrade
+  cordon: false
+  upgrade:
+    # Here goes the image which is tied to the flavor being used.
+    # Currently can pick between opensuse and alpine
+    image: {{< registryURL >}}/@flavor
+    command:
+      - "/bin/bash"
+      - "-c"
+    args:
+      - bash /host/run/system-upgrade/secrets/custom-script/add-config-file.sh
+  secrets:
+    - name: custom-script
+      path: /host/run/system-upgrade/secrets/custom-script
+```
+
 {{% /tab %}}
 {{< /tabpane >}}
 

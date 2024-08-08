@@ -6,6 +6,10 @@ date: 2022-11-13
 description: Install Kairos on Nvidia AGX Orin
 ---
 
+{{% alert title="Warning" color="warning" %}}
+Despite the Flavor you may have selected to look into the docs. The Nvidia AGX Orin only works with Ubuntu 20.04
+{{% /alert %}}
+
 This page describes how to install Kairos on [Nvidia AGX Orin](https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/jetson-orin/) in the eMMC.
 
 

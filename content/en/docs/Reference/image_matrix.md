@@ -36,12 +36,7 @@ The various images are available with different tags in the form of:
 quay.io/kairos/<flavor>:<flavor_release>-<variant>-<arch>-<device>-<version>
 ```
 
-Use the search feature to find the images you are looking for.
-Here is one example:
-
-`{{<oci variant="standard">}}`
-
-More about Kairos naming conventions [here]({{< relref "./artifacts" >}}).
+For example: {{<ociCode variant="standard">}}. More about Kairos naming conventions [here]({{< relref "./artifacts" >}}).
 
 Notes:
 
@@ -52,8 +47,8 @@ Notes:
 {{% alert title="Note" color="info" %}}
 The pipelines do not publish `img` artifacts for the arm architecture because the files are too large for GitHub Actions (they exceed the artifact size limit). These artifacts can be extracted from the published docker images using the following command:
 
-```bash
-export IMAGE={{< oci variant="core" arch="arm64" model="rpi4" suffix="img">}}
+```bash {class="only-flavors=openSUSE+Leap-15.6,openSUSE+Tumbleweed,Ubuntu+20.04,Ubuntu+22.04,Alpine+3.19"}
+export IMAGE={{<oci variant="core" arch="arm64" model="rpi4" suffix="img">}}
 docker run -ti --rm -v $PWD:/image quay.io/luet/base util unpack "$IMAGE" /image
 ```
 
@@ -70,7 +65,7 @@ Unfortunately we don't have the resources and capacity to build every possible a
 ```bash
 git checkout https://github.com/kairos-io/kairos.git
 cd kairos
-earthly +all-arm-generic --FAMILY=rhel --FLAVOR=almalinux --FLAVOR_RELEASE=9 --BASE_IMAGE=almalinux:9 --VARIANT=core
+earthly +all-arm-generic --FAMILY=@family --FLAVOR=@flavor --FLAVOR_RELEASE=@flavorRelease --BASE_IMAGE=@baseImage --VARIANT=core
 ```
 
 ## Framework images
@@ -114,7 +109,13 @@ Release changelogs are available for Kairos core and for each component. Below i
 
 ## Service Billing Of Materials (SBOM)
 
-  SBOM lists are regularly pushed via the CI as part of the Github releases assets. For instance, `https://github.com/kairos-io/kairos/releases/download/{{< kairosVersion >}}/core-rockylinux-{{< kairosVersion >}}-sbom.spdx.json` is the SBOM for the `core-rockylinux` image.
+  SBOM lists are regularly pushed via the CI as part of the Github releases assets. For instance, 
+
+  ```bash
+  https://github.com/kairos-io/kairos/releases/download/{{< kairosVersion >}}/{{<image variant="core" suffix="-sbom.spdx.json" >}}
+  ```
+
+ is the SBOM for the core {{<flavorCode >}} image.
 
 ## Image verification
 

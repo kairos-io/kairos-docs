@@ -165,14 +165,14 @@ git clone https://github.com/kairos-io/kairos.git
 cd kairos
 ```
 
-Then we can build the ISO with the following command for a Kairos core image based on {{< defaultFlavor >}}:
+Then we can build the ISO with the following command for a Kairos core image based on {{<flavorCode >}}:
 
 ```bash
 earthly +iso \
-  --FAMILY={{< defaultFamily >}} \
-  --FLAVOR={{< defaultFlavor >}} \
-  --FLAVOR_RELEASE={{< defaultFlavorRelease >}} \
-  --BASE_IMAGE={{< defaultBaseImage >}} \
+  --FAMILY=@family \
+  --FLAVOR=@flavor \
+  --FLAVOR_RELEASE=@flavorRelease \
+  --BASE_IMAGE=@baseImage \
   --MODEL=generic \
   --VARIANT=core
 ```
