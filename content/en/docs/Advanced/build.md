@@ -53,7 +53,7 @@ serve the artifact files after they are built. See below for more.
 
 To build an ISO, consider the following spec, which provides a hybrid bootable ISO (UEFI/MBR), with the `core` kairos image, adding `helm`:
 
-```yaml
+```yaml {class="meta-distro"}
 kind: Secret
 apiVersion: v1
 metadata:
@@ -75,7 +75,7 @@ apiVersion: build.kairos.io/v1alpha2
 metadata:
   name: hello-kairos
 spec:
-  imageName: "{{<oci variant="standard">}}"
+  imageName: "{{<ociMeta variant="standard">}}"
   iso: true
   bundles:
   # Bundles available at: https://packages.kairos.io/Kairos/
@@ -122,12 +122,12 @@ $ curl http://<node-ip>:$PORT/hello-kairos.iso -o output.iso
 
 It is possible to use the CRD to prepare artifacts required for netbooting, by enabling `netboot: true` for instance:
 
-```yaml
+```yaml {class="meta-distro"}
 kind: OSArtifact
 metadata:
   name: hello-kairos
 spec:
-  imageName: "{{<oci variant="core">}}"
+  imageName: "{{<ociMeta variant="core">}}"
   netboot: true
   netbootURL: ...
   bundles: ...
@@ -142,7 +142,7 @@ Custom user-data from the Cloud provider is automatically retrieved, additionall
 
 A Cloud Image boots in QEMU and also in AWS, consider:
 
-```yaml
+```yaml {class="meta-distro"}
 kind: Secret
 apiVersion: v1
 metadata:
@@ -184,7 +184,7 @@ kind: OSArtifact
 metadata:
   name: hello-kairos
 spec:
-  imageName: "{{<oci variant="core">}}"
+  imageName: "{{<ociMeta variant="core">}}"
   cloudImage: true
   cloudConfigRef:
     name: cloud-config
@@ -273,13 +273,13 @@ Booting from hard drive...
 
 Similarly we can build images for Azure, consider:
 
-```yaml
+```yaml {class="meta-distro"}
 apiVersion: build.kairos.io/v1alpha1
 kind: OSArtifact
 metadata:
   name: hello-kairos
 spec:
-  imageName: "{{<oci variant="core">}}"
+  imageName: "{{<ociMeta variant="core">}}"
   azureImage: true
   ...
 ```
@@ -312,13 +312,13 @@ Note:  There is currently no way of altering the boot disk of an Azure VM via GU
 
 Similarly we can build images for GCE, consider:
 
-```yaml
+```yaml {class="meta-distro"}
 apiVersion: build.kairos.io/v1alpha1
 kind: OSArtifact
 metadata:
   name: hello-kairos
 spec:
-  imageName: "{{<oci variant="core">}}"
+  imageName: "{{<ociMeta variant="core">}}"
   gceImage: true
   ...
 ```
