@@ -33,6 +33,7 @@ function replaceContent(distroInfo) {
     const baseImageRegex = new RegExp(/\$\$baseImage/, 'gi');
 
     metaDistroElements.forEach(metaDistro => {
+        let newDistroInfo = distroInfo;
         // Extract the class list
         const classList = metaDistro.className.split(' ');
 
@@ -48,6 +49,8 @@ function replaceContent(distroInfo) {
             } else {
                 onlyDistros = [values];
             }
+        } else {
+            onlyDistros = [];
         }
 
         const distroInfoName = distroInfo[1].charAt(0).toUpperCase() + distroInfo[1].slice(1).toLowerCase() + '+' + distroInfo[2];

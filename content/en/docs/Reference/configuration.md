@@ -499,7 +499,7 @@ k3s-agent:
 {{% /tab %}}
 {{< /tabpane >}}
 
-{{% alert title="Warning" %}}
+{{% alert title="Warning" color="warning" %}}
 The K3s args are only applied when the K3s service is created, which is during installation. Changing the `args` key after installation won't have any effect.
 {{% /alert %}}
 
