@@ -9,6 +9,8 @@ menu:
 ---
 
 {{% alert title="Known Issues" color="warning" %}}
+- Kairos user ids change on upgrade, breaking ssh login [#2797](https://github.com/kairos-io/kairos/issues/2797)
+- Long duration hang during boot [#2802](https://github.com/kairos-io/kairos/issues/2802)
 - RPi EFI booting no longer supported on kernels shipped with Ubuntu 24.04+ [#2249](https://github.com/kairos-io/kairos/issues/2249)
 - RPi Alpine is a bit slow to sync the date on boot
 {{% /alert %}}
