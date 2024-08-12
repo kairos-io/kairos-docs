@@ -2,3 +2,4 @@
 <script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
 {{ $built := resources.Get "js/kairos.js" | js.Build (dict "minify" "true" "params" (dict "defaultFamily" $.Page.Site.Params.softwareVersions.defaultFamily "defaultFlavor" $.Page.Site.Params.softwareVersions.defaultFlavor "defaultFlavorRelease" $.Page.Site.Params.softwareVersions.defaultFlavorRelease)) | resources.Fingerprint "sha512" }}
 <script type="module" src="{{ $built.RelPermalink }}" integrity="{{ $built.Data.Integrity }}" defer></script>
+<script async defer src="https://buttons.github.io/buttons.js"></script>
