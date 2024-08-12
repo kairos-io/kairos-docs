@@ -1,6 +1,6 @@
 ---
 title: "Our First Hackweek"
-date: 2024-08-09
+date: 2024-08-13
 linkTitle: "Our First Hackweek"
 description: "Our First Hackweek"
 author: Mauro Morales ([Twitter](https://twitter.com/mauromrls)) ([GitHub](https://github.com/mauromorales))
