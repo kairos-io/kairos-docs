@@ -39,7 +39,7 @@ I'm hoping to have it in good shape to be used in one of our upcoming events. St
 
 As for me, I first decided to try to install Kairos on a Raspberry Pi 5. I wasn't sure where to start since I'm not an expert on how ARM boards boot a system. So I opened a new session with ChatGPT and went on a mission to understand how such systems boot. While I cannot call this experiment a success, since my Raspberry is not properly booting, I did learn a lot and feel much more confident to tackle some booting issue with these boards in the future. I decided not to pursue this further because the Kernel is not ready for it, but I put my learnings on a blog post.
 
-I decided to use the rest of the week to do some major change on our docs by introducing a Flavor Picker, where you can choose which Kairos Flavor (e.g. Ubuntu, openSUSE, etc) you prefer to read the docs and all scripts will show the selected flavor so that you don't have to be changing them manually but just copy and paste. A blog post about this change is also on the works.
+I decided to use the rest of the week to do some major change on our docs by introducing a Flavor Picker, where you can choose which Kairos Flavor (e.g. Ubuntu, openSUSE, etc) you prefer to read the docs and all scripts will show the selected flavor so that you don't have to be changing them manually but just copy and paste. A blog post about this change is also in the works.
 
 ## Conclusion
 
