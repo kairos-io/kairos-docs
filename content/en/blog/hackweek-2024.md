@@ -6,7 +6,7 @@ description: "Our First Hackweek"
 author: Mauro Morales ([Twitter](https://twitter.com/mauromrls)) ([GitHub](https://github.com/mauromorales))
 ---
 
-Last week was a special week. We had our first hackweek! With everyone in the team connecting from their own corners of the world, Belgium, Greece, Italy and Spain, we came together not in person, but through a shared passion for hacking. Unlike typical team-building events, this hackweek was all about individual exploration—each team member diving into their own projects, driven by personal curiosity and the opportunity to experiment.
+Last week was a special week. We had our first hackweek! With everyone in the team connecting from their own corners of the world, Belgium, Greece, Italy and Spain, we came together not in person, but through a shared passion for hacking. Unlike typical team-building events, this hackweek was all about individual exploration — each team member diving into their own projects, driven by personal curiosity and the opportunity to experiment.
 
 Over the course of the week, we set aside our usual tasks to focus entirely on these self-driven projects, tackling challenges we rarely have time to address or exploring new avenues. In this post, I’ll share a glimpse of some of the projects we worked on.
 
