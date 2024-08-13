@@ -43,6 +43,6 @@ I decided to use the rest of the week to do some major change on our docs by int
 
 ## Conclusion
 
-While we each worked independently, the results of our individual efforts have already begun to ripple through the Kairos project, influencing our roadmap and inspiring new directions for future development. This hackweek wasn’t about team building—it was about giving each person the space to innovate on their own terms, and the results speak for themselves.
+While we each worked independently, the results of our individual efforts have already begun to ripple through the Kairos project, influencing our roadmap and inspiring new directions for future development. This hackweek wasn’t about team building — it was about giving each person the space to innovate on their own terms, and the results speak for themselves.
 
 The projects we embarked on, whether big or small, demonstrated the power of focused, independent exploration. We’re excited to see how these initial ideas will evolve as we continue to develop and refine them in the coming months. This hackweek has shown us that sometimes, the best way to move forward is to give everyone the freedom to explore their own path, and we’re eager to see where those paths will lead Kairos next.
