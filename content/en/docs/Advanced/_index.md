@@ -3,6 +3,7 @@ title: "Advanced"
 linkTitle: "Advanced"
 icon: fa-regular fa-gear
 weight: 5
-description: Advanced settings
+description: |
+    In this section we will show you advanced configurations for your Kairos system.
 ---
 
