@@ -588,7 +588,7 @@ Kairos comes with the `kairos` user pre-configured, however, it is possible to c
 
 ### Add a user during first-install
 
-Consider the following example cloud-config, which adds the `testuser` user to the system with admin access:
+Consider the following example cloud-config, containing the default `kairos` user (which always has sudo access) and adds the `testuser` user to the system with admin access:
 
 ```yaml
 #cloud-config
