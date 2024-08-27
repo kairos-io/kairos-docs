@@ -50,7 +50,8 @@ anchor = "smart"
 
 [languages]
 [languages.en]
-title = "Kairos - The immutable Linux meta-distribution for edge Kubernetes"
+# This is the title of the community page
+title = "Kairos"
 languageName ="English"
 # Weight used for sorting.
 weight = 1
@@ -114,9 +115,9 @@ osbuilder_version = "v0.300.2"
 auroraboot_version = "v0.2.7"
 flavor = "debian"
 registryURL = "quay.io/kairos"
-defaultFamily = "opensuse"
-defaultFlavor = "opensuse"
-defaultFlavorRelease = "leap-15.6"
+defaultFamily = "ubuntu"
+defaultFlavor = "ubuntu"
+defaultFlavorRelease = "24.04"
 # renovate: datasource=github-releases depName=kairos-io/kairos-framework
 defaultFrameworkRelease = "v2.10.2"
 # renovate: datasource=github-releases depName=rancher/system-upgrade-controller

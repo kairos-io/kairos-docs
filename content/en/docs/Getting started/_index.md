@@ -1,312 +1,148 @@
 ---
 title: "Getting Started"
 linkTitle: "Getting Started"
-weight: 2
+weight: 1
 icon: fa-regular fa-flag-checkered
-description: Getting started with Kairos
+no_list: true
+description: |
+    Deploy a Kubernetes cluster the Kairos way!
 ---
 
-{{% alert title="Note" %}}
-- If you prefer video format, you can also watch our [Introduction to Kairos video]({{< relref "Media#introduction-to-kairos" >}} "Media") on the [Media Section]({{< relref "Media" >}} "Media")
-- If you are looking into installing Kairos with Full disk encryption, see [here]({{< relref "../installation/trustedboot" >}})
+{{% alert title="Objective" %}}
+This guide will teach you how easy it is to deploy a Kubernetes cluster using Kairos. To make this guide quick and effective we will make some decisions for you. We will do a traditional, interactive installation, of a single node cluster on a virtual machine (VM) on x86_64 architecture. At the end of the guide we will provide you with links to do many other different setups.
 {{% /alert %}}
 
-Ready to launch your Kubernetes cluster with ease? With Kairos, deployment is a breeze! Simply download the pre-packaged artifacts, boot up on a VM or bare metal, and let Kairos handle the rest. Whether you're a Linux or Windows user, our quickstart guide will have you up and running in no time. Kairos can build a Kubernetes cluster for you with just a few simple steps!
-
-The goal of this quickstart is to help you quickly and easily deploy a Kubernetes cluster using Kairos releases. With Kairos, you can easily build a k3s cluster in a VM, or a baremetal using our pre-packaged artifacts, even if you don't already have a cluster. This process can also be used on bare metal hosts with some configuration adjustments. Check out our documentation further for more detailed instructions and [examples]({{< relref "../examples" >}}).
-
-To create a Kubernetes cluster with Kairos, the only thing needed is one or more machines that will become the Kubernetes nodes. No previously existing clusters is needed.
-
-Once the installation is complete, you can begin using your Kubernetes cluster.
+Ready to launch your Kubernetes cluster with ease? With Kairos, deployment is a breeze! Simply download an ISO, boot up on a VM, and let Kairos handle the rest. Whether on Linux, Windows or macOS, this guide will have you up and running in no time. Kairos can build a Kubernetes cluster for you with just a few simple steps!
 
 ## Prerequisites
 
-- A VM (hypervisor) or a physical server (bare-metal) that boots ISOs
-- A Linux or a Windows machine where to run the Kairos CLI (optional, we will see)
-- A `cloud-init` configuration file (example below)
-- At least 30+ Gb of available disk space.
+- A Virtual Machine Manager (VMM) like VirtualBox, KVM, or VMware.
+- At least 35+ Gb of available disk space.
 
-## Download
+## Do you prefer to watch a video?
 
-1. Select your flavor (Linux distribution and release) from the nav bar
+{{< youtube id="XAIsitP5OII" title="Getting Started with Kairos" >}}
+
+## Download an ISO
+
+{{% alert title="Kairos Flavor" color="info" %}}
+Kairos comes in many flavors. These are the underlying Linux distributions on which we build our final OS. Some examples are Alpine Kairos, openSUSE Kairos and Ubuntu Kairos.
+{{% /alert %}}
+
+1. Select your Kairos Flavor from the nav bar
 2. Click the following link to download an iso: {{<imageLink variant="standard" suffix=".iso">}}  
 
-{{% alert title="Note" %}}
-
-Alternatively you can visit the Kairos [release page on GitHub](https://github.com/kairos-io/kairos/releases) and check out all our artifacts. Reading the [artifact naming convention]({{< relref "../reference/artifacts" >}}) can help you find the best artifact for you.
-
-It is also possible to [netboot]({{< relref "../installation/netboot" >}}) Kairos over the network
-{{% /alert %}}
-
-
-## Checking artifacts signatures
-
-Our ISO releases have sha256 files to checksum the validity of the artifacts. At the same time, our sha256 files are signed automatically in the CI during the 
-release workflow to verify that they haven't been tampered with, adding an extra step to the supply chain. 
-
-It is recommended that before starting any installation the whole security chain is validated by verifying our sha256 signature and validating that the checksum matches with the download artifacts.
-
-
-To validate the whole chain you would need:
-
-1. `sha256sum` which is usually installed by default on most linux distributions.
-2. `cosign` to verify the signatures of the sha256 file. You can install cosign via their [installation docs](https://docs.sigstore.dev/cosign/installation/)
-3. ISO, sha256, certificate and signature files for the release/flavor that you want to verify. All the artifacts are available on the [kairos release page](https://github.com/kairos-io/kairos/releases)
-
-
-In this example we will use the `{{< kairosVersion >}}` version and {{<flavorCode >}} flavor and {{<flavorReleaseCode >}} flavor release.
-
-First we check that we have all needed files:
-
-```bash
-$ ls      
-{{<image variant="core" suffix=".iso">}}         {{<image variant="core" suffix=".iso.sha256.pem">}}
-{{<image variant="core" suffix=".iso.sha256">}}  {{<image variant="core" suffix=".iso.sha256.sig">}}
-```
-
-We first verify that the sha256 checksums haven't been tampered with:
-
-```bash
-$ COSIGN_EXPERIMENTAL=1 cosign verify-blob --cert {{<image variant="core" suffix=".iso.sha256.pem">}} --signature {{<image variant="core" suffix=".iso.sha256.sig">}} {{<image variant="core" suffix=".iso.sha256">}} 
-tlog entry verified with uuid: 51ef927a43557386ad7912802607aa421566772524319703a99f8331f0bb778f index: 11977200
-Verified OK
-```
-
-Once we see that `Verified OK` we can be sure that the file hasn't been tampered with, and we can continue verifying the iso checksum.
-
-For an example of a failure validation see below:
-
-```bash
-$ COSIGN_EXPERIMENTAL=1 cosign verify-blob --enforce-sct --cert {{<image variant="core" suffix=".iso.sha256.pem">}} --signature {{<image variant="core" suffix=".iso.sha256.sig">}} {{<image variant="core" suffix=".iso.sha256.modified">}}
-Error: verifying blob [{{<image variant="core" suffix=".iso.sha256.modified">}}]: invalid signature when validating ASN.1 encoded signature
-main.go:62: error during command execution: verifying blob [{{<image variant="core" suffix=".iso.sha256.modified">}}]: invalid signature when validating ASN.1 encoded signature
-```
-{{% alert title="Info" %}}
-We use `COSIGN_EXPERIMENTAL=1` to verify the blob using the keyless method. That means that only ephemeral keys are created to sign, and it relays on using
-OIDC Identity Tokens to authenticate so not even Kairos developers have access to the private keys and can modify an existing signature. All signatures are done
-via the CI with no external access to the signing process. For more information about keyless signing please check the [cosign docs](https://github.com/sigstore/cosign/blob/main/KEYLESS.md)
-{{% /alert %}}
-
-
-Now we can verify that the integrity of the ISO hasnt been compromise:
-
-```bash
-$ sha256sum -c {{<image variant="core" suffix=".iso.sha256">}}
-{{<image variant="core" suffix=".iso">}}: OK
-```
-
-Once we reached this point, we can be sure that from the ISO hasn't been tampered with since it was created by our release workflow.
-
-## Booting
-
-Now that you have the ISO at hand, it's time to boot!
-
-Here are some additional helpful tips depending on the physical/virtual machine you're using.
-
-### On Bare-Metal
-
-When deploying on a bare metal server, directly flash the image into a USB stick. There are multiple ways to do this:
-
-#### From the CLI
-
-```bash
-dd if=/path/to/iso of=/path/to/dev bs=4MB
-```
-
-#### From the GUI
-
-For example using an application like [balenaEtcher](https://www.balena.io/etcher/) but can be any other application which allows you to write bootable USBs.
-
-### On QEMU
+## Create a Virtual Machine (VM)
 
 {{% alert title="Warning" color="warning" %}}
-Make sure you have KVM enabled, this will improve the performance of your VM significantly!
+Make sure you have KVM enabled in your VMM, this will improve the performance of your VM significantly!
 {{% /alert %}}
 
-This would be the way to start it via the command line, but you can also use the GUI
+This step will vary depending on the Virtual Machine Manager that you are using. Here are some general steps to get you started:
 
-First find the OS_VARIANT to the flavor you are using
+1. Open your VMM.
+2. Create a new VM.
+3. Select the downloaded ISO as the boot media.
+4. Configure the VM hardware
+    1. We recommend at least 2 CPUs and 4GB of RAM for the best experience but Kairos can run on less.
+    2. Allocate at least 35GB of disk space.
+    3. Add a TPM device
+5. Start the VM.
 
-```bash
-virt-install --os-variant list
-```
+## Perform an Interactive Installation
 
-And replace it in the following script
+The first time you boot the VM, you will be greeted with a GRUB boot menu with multiple options. Select the option that says "Interactive Install" and press Enter.
 
-```bash
-virt-install --name my-first-kairos-vm \
-            --vcpus 1 \
-            --memory 1024 \
-            --cdrom /path/to/{{<image variant="standard" suffix=".iso" >}} \
-            --disk size=30 \
-            --os-variant OS_VARIANT \
-            --virt-type kvm
-```
+Wait for the system to boot up. You will be greeted with a Kairos logo and the interactive installation manager will ask you the following questions:
 
-Immediately after open a viewer, so you can interact with the boot menu:
+- **What's the target install device** (e.g. /dev/vda). Kairos will detect the biggest disk available and suggest it. If you are happy with the suggestion, press Enter. Otherwise erase the suggestion and type the device you want to use, or the question mark. The question mark will show you a list of available devices.
+- **User to setup** (e.g. Kairos). The default user is Kairos but it is also a required user so for now just press Enter and later on we will teach you how to add more users.
+- **Password** this one doesn't have a default, so type a password and press Enter.
+- **SSH access** (e.g. github:mauromorales). This is optional but very useful. Kairos will go and fetch your public key from GitHub or GitLab and add it to the user's authorized keys. If you don't have a key on GitHub or GitLab, you can paste your public key here. If you don't want to add a key, just press Enter.
+- **Do you want to setup a full mesh-support?** (y/n). This step enables P2P support. For now we will not enable it, so just press Enter.
+- **Do you want to enable k3s?** (y/n). This step enables the installation of K3s. Write "y" and press Enter.
+* **Are your settings ok?** (y/n). If you are happy with the settings, write "y" and press Enter. Otherwise write "n" and press Enter to start again.
 
-```bash
-virt-viewer my-first-kairos-vm
-```
+The installation will start and you will see the Kairos' agent different steps.
 
-{{% alert title="Warning" color="warning" %}}
-If you're booting in UEFI mode, make sure that your storage device where you're planning to install Kairos, is configured as ACHI and not RAID.
+{{% alert title="Remember to eject the CD!" color="warning" %}}
+Some VMMs will not eject the CD automatically. Make sure to eject the CD before rebooting.
 {{% /alert %}}
 
-After booting you'll be greeted with a GRUB boot menu with multiple options.
-The option you choose will depend on how you plan to install Kairos:
-
-- The first entry will boot into installation with a QR code or [WebUI]({{< relref "../installation/webui" >}}),
-  which we'll cover in the next step.
-- The second entry will boot into [Manual installation mode]({{< relref "../installation/manual" >}}),
-  where you can install Kairos manually using the console.
-- The third boot option boots into [Interactive installation mode]({{< relref "../installation/interactive" >}}),
-  where you can use the terminal host to drive the installation and skip the Configuration and Provisioning step.
-
-To begin the installation process, select the first entry and let the machine boot. Eventually, a QR code will be printed on the screen. Follow the next step in the documentation to complete the installation.
-
-![livecd](https://user-images.githubusercontent.com/2420543/189219806-29b4deed-b4a1-4704-b558-7a60ae31caf2.gif)
-
-## Configuration
-
-After booting up the ISO, the machine will wait for you to provide configuration details before continuing with the installation process. There are different ways to provide these details:
-
-- Use the [WebUI]({{< relref "../installation/webui" >}}) to continue the installation.
-- Serve the configuration via QR code.
-- Connect to the machine via [SSH]({{< relref "../installation/manual" >}}) and start the installation process with a configuration file ( with `kairos-agent manual-install <config>`).
-- [Use a datasource iso, or a generating a custom one]({{< relref "../installation/automated" >}})
-
-The configuration file is a YAML file with `cloud-init` syntax and additional Kairos configuration details. In this example, we'll configure the node as a single-node Kubernetes cluster using K3s. We'll also set a default password for the Kairos user and define SSH keys.
-
-Here's an example configuration file that you can use as a starting point:
-
-{{% alert title="Warning" color="warning" %}}
-The `#cloud-config` at the top is not a comment. Make sure to start your configuration file with it.
-{{% /alert %}}
-
-```yaml
-#cloud-config
-
-# Define the user accounts on the node.
-users:
-- name: "kairos"                       # The username for the user.
-  passwd: "kairos"                      # The password for the user.
-  ssh_authorized_keys:                  # A list of SSH keys to add to the user's authorized keys.
-  - github:mudler                       # A key from the user's GitHub account.
-  - "ssh-rsa AAA..."                    # A raw SSH key.
-
-# Enable K3s on the node.
-k3s:
-  enabled: true                         # Set to true to enable K3s.
-```
-
-Save this file as config.yaml and use it to start the installation process with kairos-agent manual-install config.yaml. This will configure the node as a single-node Kubernetes cluster and set the default password and SSH keys as specified in the configuration file.
-
-[Check out the full configuration reference]({{< relref "../reference/configuration" >}}).
-
-**Note**:
-
-- `users`: This block defines the user accounts on the node. In this example, it creates a user named `kairos` with the password `kairos` and adds two SSH keys to the user's authorized keys.
-- `k3s`: This block enables K3s on the node.
-- If you want to enable experimental P2P support, check out [P2P installation]({{< relref "../installation/p2p" >}})
-
-{{% alert title="Note" %}}
-
-Several configurations can be added at this stage. [See the configuration reference]({{< relref "../reference/configuration" >}}) for further reading.
-
-{{% /alert %}}
-
-## Provisioning
-
-{{% alert title="Note" %}}
-
-You can find instructions showing how to use the Kairos CLI below. In case you prefer to install via SSH and log in to the box, see the [Manual installation]({{< relref "../installation/manual" >}}) section or the [Interactive installation]({{< relref "../installation/interactive" >}}) section to perform the installation manually from the console.
-
-{{% /alert %}}
-
-To trigger the installation process via QR code, you need to use the Kairos CLI. The CLI is currently available only for Linux and Windows. It can be downloaded from the release artifact:
+When the installation is complete you will need to reboot the system. You can do this with the following command:
 
 ```bash
-curl -L https://github.com/kairos-io/provider-kairos/releases/download/{{<providerVersion>}}/kairosctl-{{<providerVersion>}}-linux-amd64.tar.gz -o - | tar -xvzf - -C .
+reboot
 ```
 
-```bash
-# optionally, install the CLI locally
-mv kairosctl /usr/local/bin/kairosctl
-chmod +x /usr/local/bin/kairosctl
-```
+## First Boot
 
-The CLI allows to register a node with a QR Code screenshot, an QR Code image, or an EdgeVPN token. During pairing, the configuration is sent over, and the node will continue the installation process.
+After the reboot you will again see the GRUB boot menu. This time the options don't include any installation, instead you can start the system in either active, passive (fallback) or rescue mode. We will learn more about that in the next steps. For now, just select the first option that only says "Kairos" and press Enter. If you don't touch anything, the system will boot automatically after a few seconds.
 
-In a terminal window from your desktop/workstation, run:
+After the system finishes booting, you will see a login prompt. Go ahead and login with the user `kairos` and the password you set during the installation.
 
-```
-kairosctl register --reboot --device /dev/sda --config config.yaml
-```
+## SSH into the system
 
-**Note**:
 
-- By default, the CLI will automatically take a screenshot to get the QR code. Make sure it fits into the screen. Alternatively, an image path or an EdgeVPN token can be supplied via arguments (e.g. `kairosctl register /img/path` or `kairosctl register <EdgeVPN token>`).
-- The `--reboot` flag will make the node reboot automatically after the installation is completed.
-- The `--device` flag determines the specific drive where Kairos will be installed. Replace `/dev/sda` with your drive. Any existing data will be overwritten, so please be cautious.
-- The `--config` flag is used to specify the config file used by the installation process.
+{{% alert title="Check your VMM Networking configuration" color="warning" %}}
+Accessing your VM via SSH will depend on your VMM networking configuration. Make sure you have the correct network settings to access the VM.
+{{% /alert %}}
 
-After a few minutes, the configuration is distributed to the node and the installation starts. At the end of the installation, the system is automatically rebooted.
 
-## Accessing the Node
-
-After the boot process, the node starts and is loaded into the system. You should already have SSH connectivity when the console is available.
-
-To access to the host, log in as `kairos`:
+On the VM info you can find the IP associated to it, use it to SSH into the system:
 
 ```bash
 ssh kairos@IP
 ```
 
-**Note**:
+{{% alert title="Authorized Keys" color="info" %}}
+If you configured the SSH key during the installation, you will be able to login without a password.
+{{% /alert %}}
 
-- `sudo` permissions are configured for the Kairos user.
+Now enter the password you set during the installation.
 
-You will be greeted with a welcome message:
+## Check Your Running Cluster
 
-```
-Welcome to Kairos!
+{{% alert title="Batteries included" color="info" %}}
+Along with k3s, the standard images come with kubectl and k9s pre-installed. Kubectl is the Kubernetes command-line tool, and k9s is a terminal-based UI to interact with your Kubernetes clusters.
+{{% /alert %}}
 
-Refer to https://kairos.io for documentation.
-kairos@kairos:~>
-```
+After logging in, you can check the status of the cluster with the `kubectl` tool. First switch to the `root` user with the following command:
 
-It can take a few moments to get the K3s server running. However, you should be able to inspect the service and see K3s running. For example, with systemd-based flavors:
-
-```
-$ sudo systemctl status k3s
-● k3s.service - Lightweight Kubernetes
-     Loaded: loaded (/etc/systemd/system/k3s.service; enabled; vendor preset: disabled)
-    Drop-In: /etc/systemd/system/k3s.service.d
-             └─override.conf
-     Active: active (running) since Thu 2022-09-01 12:02:39 CEST; 4 days ago
-       Docs: https://k3s.io
-   Main PID: 1834 (k3s-server)
-      Tasks: 220
+```bash
+sudo -i
 ```
 
-The K3s `kubeconfig` file is available at `/etc/rancher/k3s/k3s.yaml`. Please refer to the [K3s](https://rancher.com/docs/k3s/latest/en/) documentation.
+{{% alert title="Bug setting the KUBECONFIG automatically" color="warning" %}}
+There's a bug that affects all but openSUSE systems that prevents the KUBECONFIG to be set automatically. The fix has been merged and will be part of the v3.1.2 release. In the meantime just follow the steps below to set the KUBECONFIG manually.
+{{% /alert %}}
 
-## See Also
+```bash
+export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+```
 
-There are other ways to install Kairos:
+If you display the pods within the `kube-system` namespace, you should see the `coredns` and `local-path-provisioner` pods running. E.g.:
 
-- [Automated installation]({{< relref "../installation/automated" >}})
-- [Manual login and installation]({{< relref "../installation/manual" >}})
-- [Create decentralized clusters]({{< relref "../installation/p2p" >}})
-- [Take over installation]({{< relref "../installation/takeover" >}})
-- [Installation via network]({{< relref "../installation/netboot" >}})
-- [Raspberry Pi]({{< relref "../installation/raspberry" >}})
-- [CAPI Lifecycle Management (TODO)]()
+```
+root@localhost:~# kubectl get pods -n kube-system
+NAME                                      READY   STATUS      RESTARTS   AGE
+coredns-576bfc4dc7-nc982                  1/1     Running     0          5h9m
+helm-install-traefik-crd-28sfl            0/1     Completed   0          5h9m
+helm-install-traefik-kdxmj                0/1     Completed   1          5h9m
+local-path-provisioner-86f46b7bf7-5fs46   1/1     Running     0          5h9m
+metrics-server-557ff575fb-zmdlf           1/1     Running     0          5h9m
+svclb-traefik-00b7a912-xh4zd              2/2     Running     0          5h8m
+traefik-5fb479b77-mfq7h                   1/1     Running     0          5h8m
+```
+
+## Conclusion
+
+Congratulations :tada: You have successfully deployed a Kubernetes cluster using Kairos :rocket: You can now start deploying your applications and services on your new cluster
+
+**Please refer to the [K3s](https://rancher.com/docs/k3s/latest/en/) documentation, to learn more about the Kubernetes distribution that Kairos uses in the standard images.**
 
 ## What's Next?
 
-- [Upgrade nodes with Kubernetes]({{< relref "../upgrade/kubernetes" >}})
-- [Upgrade nodes manually]({{< relref "../upgrade/manual" >}})
-- [Encrypt partitions]({{< relref "../advanced/partition_encryption" >}})
-- [Immutable architecture]({{< relref "../architecture/immutable" >}})
+- [What is Kairos?]({{< relref "./what-is-kairos" >}})
+- [Other ways to install Kairos]({{< relref "../installation" >}})
+- [Upgrading]({{< relref "../upgrade" >}})

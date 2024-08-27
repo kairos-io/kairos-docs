@@ -1,41 +1,54 @@
 ---
 title: "Manual installation"
 linkTitle: "Manual installation"
-weight: 1
+weight: 2
 date: 2022-11-13
 description: Install Kairos manually
 ---
 
-To install manually, follow the [quickstart]({{< relref "../Getting started" >}}). When the QR code is prompted at the screen, you will be able to log in via SSH to the box with the password `kairos` as `kairos` user.
-
 {{% alert title="Note" %}}
 
-**Note**: After the installation, the password login is disabled, users, and SSH keys to log in must be configured via cloud-init.
+After the installation, the password login is disabled, users, and SSH keys to log in must be configured via cloud-init.
 
 {{% /alert %}}
 
 
-## Installation
+## Cloud Configuration
 
-To start the installation, run the following command from the console:
-
-```bash
-sudo kairos-agent manual-install --device "auto" $CONFIG
-```
-
-Where the configuration can be a `cloud-init` file or a URL to it:
+Kairos uses yip a subset of cloud-init to configure a node. Here's a simple example:
 
 ```yaml
-#cloud-init
+#cloud-config
 
-p2p:
-  network_token: ....
-# extra configuration
+# Define the user accounts on the node.
+users:
+- name: "kairos"                       # The username for the user.
+  passwd: "kairos"                      # The password for the user.
+  ssh_authorized_keys:                  # A list of SSH keys to add to the user's authorized keys.
+  - github:mudler                       # A key from the user's GitHub account.
+  - "ssh-rsa AAA..."                    # A raw SSH key.
+
+# Enable K3s on the node.
+k3s:
+  enabled: true                         # Set to true to enable K3s.
 ```
 
-The token `p2p.network_token` is a base64 encoded string which
-contains an [`edgevpn` token](https://github.com/mudler/edgevpn/blob/master/docs/content/en/docs/Concepts/Token/_index.md). For more information, [check out the architecture section]({{< relref "../architecture/network" >}}).
+What do these settings do?
 
-**Note**: 
-- The command is disruptive and will erase any content on the drive.
-- The parameter **"auto"** selects the biggest drive available in the machine.
+- The `#cloud-config` at the top is not a comment. Make sure to start your configuration file with it.
+- `users`: This block defines the user accounts on the node. In this example, it creates a user named `kairos` with the password `kairos` and adds two SSH keys to the user's authorized keys.
+- `k3s`: This block enables K3s on the node.
+
+[Check out the full configuration reference]({{< relref "../reference/configuration" >}}).
+
+Save this file as config.yaml and pass it to the kairos agent during the installation process.
+
+{{% alert title="Warning" color="warning" %}}
+The command is disruptive and will erase any content on the drive.
+{{% /alert %}}
+
+```bash
+sudo kairos-agent manual-install --device "auto" config.yaml
+```
+
+This will configure the node as a single-node Kubernetes cluster and set the default password and SSH keys as specified in the configuration file.

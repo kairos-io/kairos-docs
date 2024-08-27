@@ -3,14 +3,9 @@ title: "Examples"
 linkTitle: "Examples"
 icon: fa-regular fa-file
 weight: 5
-description: This section contains various examples, how-to and tutorial to use Kairos
+description: |
+    Here, you will find a variety of examples that demonstrate how to use Kairos to create and manage Kubernetes clusters on bare metal.
 ---
-
-Welcome to the examples section of the Kairos documentation! Here, you will find a variety of examples that demonstrate how to use Kairos to create and manage Kubernetes clusters on bare metal.
-
-## Getting Started
-
-- [Quick Start Guide]({{< relref "../Getting started" >}}): This guide will walk you through the process of installing Kairos and creating your first Kubernetes cluster on bare metal.
 
 ## Troubleshooting
 
