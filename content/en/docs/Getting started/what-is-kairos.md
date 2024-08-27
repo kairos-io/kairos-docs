@@ -144,4 +144,5 @@ earthly +iso \
 
 ## What's next?
 
-See the [quickstart]({{< relref "Getting started" >}}) to install Kairos on a VM and create a Kubernetes cluster!
+- [Different ways to install Kairos]({{< relref "../installation" >}})
+- [Upgrading]({{< relref "../upgrade" >}})

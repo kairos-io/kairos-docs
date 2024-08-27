@@ -1,7 +1,7 @@
 ---
 title: "WebUI"
 linkTitle: "WebUI"
-weight: 1
+weight: 2
 date: 2022-11-13
 description: Use the WebUI at boot to drive the installation
 ---

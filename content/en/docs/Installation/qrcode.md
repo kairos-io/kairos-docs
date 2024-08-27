@@ -1,7 +1,7 @@
 ---
 title: "QR Code"
 linkTitle: "QR Code"
-weight: 1
+weight: 2
 date: 2022-11-13
 description: Use the QR code displayed at boot to drive the installation
 ---
@@ -68,4 +68,3 @@ By default, the CLI will automatically take a screenshot to get the QR code. Mak
 {{% /alert %}}
 
 After a few minutes, the configuration is distributed to the node and the installation starts. At the end of the installation, the system is automatically rebooted.
-
