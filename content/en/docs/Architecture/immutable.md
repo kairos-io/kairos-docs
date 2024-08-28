@@ -57,7 +57,7 @@ The persistent partition is mounted during boot on `/usr/local`, and additional 
 
 The Recovery system allows to perform emergency tasks, in case of failure from the active and passive images. Furthermore a fallback mechanism will take place, so that in case of failures the booting sequence will be as follows: “A -> B -> Recovery”.
 
-The upgrade happens in a transition image and takes place only after all the necessary steps are completed. An upgrade of the ‘A/B’ partitions can be done [with Kubernetes](/upgrade/kubernetes) or [manually](/upgrade/manual). The upgrade will create a new pristine image, that will be selected as active for the next reboot, the old one will be flagged as passive. If we are performing the same from the passive system, only the active is subject to changes.
+The upgrade happens in a transition image and takes place only after all the necessary steps are completed. An upgrade of the ‘A/B’ partitions can be done [with Kubernetes](/docs/upgrade/kubernetes) or [manually](/docs/upgrade/manual). The upgrade will create a new pristine image, that will be selected as active for the next reboot, the old one will be flagged as passive. If we are performing the same from the passive system, only the active is subject to changes.
 
 ### Kernel and Initrd
 
