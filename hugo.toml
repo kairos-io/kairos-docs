@@ -104,13 +104,13 @@ offlineSearch = true
 
 [params.softwareVersions]
 # renovate: datasource=github-releases depName=kairos-io/provider-kairos
-provider_version = "v2.7.1"
+provider_version = "v2.7.3"
 # renovate: datasource=github-releases depName=k3s-io/k3s
-k3s_version = "v1.30.2+k3s1"
+k3s_version = "v1.30.4+k3s1"
 # renovate: datasource=github-releases depName=kairos-io/kairos
-kairos_version = "v3.1.1"
+kairos_version = "v3.1.2"
 # renovate: datasource=github-releases depName=kairos-io/osbuilder
-osbuilder_version = "v0.300.2"
+osbuilder_version = "v0.300.3"
 # renovate: datasource=github-releases depName=kairos-io/AuroraBoot
 auroraboot_version = "v0.2.7"
 flavor = "debian"
@@ -142,7 +142,7 @@ footer_about_disable = false
 # If you want this feature, but occasionally need to remove the "Feedback" section from a single page,
 # add "hide_feedback: true" to the page's front matter.
 [params.ui.feedback]
-enable = true
+enable = false
 # The responses that the user sees after clicking "yes" (the page was helpful) or "no" (the page was not helpful).
 yes = 'Awesome! Glad to hear it! Please <a href="https://github.com/kairos-io/kairos/issues/new">tell us how we can improve</a>.'
 no = 'Oh snap! Sorry to hear that. Please <a href="https://github.com/kairos-io/kairos/issues/new">tell us how we can improve</a>.'
@@ -200,69 +200,13 @@ no = 'Oh snap! Sorry to hear that. Please <a href="https://github.com/kairos-io/
   url = "/docs"
 
 [[params.versions]]
-  version = "v3.0.0"
-  url = "/v3.0.0/docs"
-
-[[params.versions]]
-  version = "v3.0.1"
-  url = "/v3.0.1/docs"
-
-[[params.versions]]
-  version = "v3.0.2"
-  url = "/v3.0.2/docs"
-
-[[params.versions]]
-  version = "v3.0.3"
-  url = "/v3.0.3/docs"
-
-[[params.versions]]
-  version = "v3.0.4"
-  url = "/v3.0.4/docs"
-
-[[params.versions]]
-  version = "v3.0.5"
-  url = "/v3.0.5/docs"
-
-[[params.versions]]
-  version = "v3.0.6"
-  url = "/v3.0.6/docs"
-
-[[params.versions]]
-  version = "v3.0.7"
-  url = "/v3.0.7/docs"
-
-[[params.versions]]
-  version = "v3.0.8"
-  url = "/v3.0.8/docs"
-
-[[params.versions]]
-  version = "v3.0.9"
-  url = "/v3.0.9/docs"
-
-[[params.versions]]
-  version = "v3.0.10"
-  url = "/v3.0.10/docs"
-
-[[params.versions]]
-  version = "v3.0.11"
-  url = "/v3.0.11/docs"
-
-[[params.versions]]
-  version = "v3.0.12"
-  url = "/v3.0.12/docs"
-
-[[params.versions]]
-  version = "v3.0.13"
-  url = "/v3.0.13/docs"
-
-[[params.versions]]
   version = "v3.0.14"
   url = "/v3.0.14/docs"
 
 [[params.versions]]
-  version = "v3.1.0"
-  url = "/v3.1.0/docs"
+  version = "v3.1.2"
+  url = "/v3.1.1/docs"
 
 [[params.versions]]
-  version = "v3.1.1"
-  url = "/v3.1.1/docs"
+  version = "Other"
+  url = "/docs/announcements/releases"
