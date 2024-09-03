@@ -6,7 +6,7 @@ weight: 2
 
 Kairos is an open source, container-based operating system. To modify Kairos and add a package, you'll need to build a container image from the [Kairos images]({{< relref "../reference/image_matrix" >}}). Here's an example with Docker which adds `figlet`:
 
-```dockerfile
+```dockerfile {class="only-flavors=openSUSE+Leap-15.6,openSUSE+Tumbleweed"}
 FROM {{<oci variant="standard">}}
 
 RUN zypper in -y figlet
