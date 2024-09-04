@@ -149,6 +149,10 @@ stages:
                     - github:mauromorales
 ```
 
+{{% alert color="info" %}}
+The `.MachineID` comes from [YIP](https://github.com/mudler/yip) which is processing our configuration file, and `trunc` comes from [sprig](http://masterminds.github.io/sprig/) which extends Golang Templating functions.
+{{% /alert %}}
+
 Save the file and reboot the node. After the reboot, you should see something similar to the following:
 
 ```bash
