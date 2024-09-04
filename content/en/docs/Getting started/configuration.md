@@ -97,7 +97,7 @@ The `stages` directive is used to define the different stages of the configurati
 
 ## Configuring the hostname
 
-Configuring the hostname is a simple task. All we have to do is add the `hostname` directive at the root level of the configuration file with the value we want to give to this node. The order of the directives isot important. Let's add it after the `k3s` directive:
+Configuring the hostname is a simple task. All we have to do is add the `hostname` directive at the root level of the configuration file with the value we want to give to this node. The order of the directives is not important. Let's add it after the `k3s` directive:
 
 ```yaml
 #cloud-config
