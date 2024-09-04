@@ -61,3 +61,22 @@ sudo kairos-agent upgrade --recovery --source oci:{{<oci variant="standard">}}
 ## What about the passive system?
 
 The passive system is the one that is not running. It is not possible to upgrade it directly. The passive system will be upgraded when the active system is rebooted.
+
+## Upgrading single entries (trusted boot installations)
+
+On systems installed in ["trusted boot" mode](../../Architecture/trustedboot/), it's not possible to edit the cmdline
+without generating a new bootable image because the cmdline is part of the signed artifact.
+For this reason, custom cmdlines are generated as separate artifacts at build time.
+Being different artifacts though, means that they will need to be upgraded too.
+
+This can be achieved by passing the name of the `efi` file (without the extension) to the upgrade command like this:
+
+```bash
+kairos-agent upgrade --source oci:{{<oci variant="standard">}} --boot-entry <efi_file_name_here>
+```
+
+You can find the efi file name by listing all the efi files in the installed system:
+
+```bash
+ls /efi/EFI/kairos/*.efi
+```
