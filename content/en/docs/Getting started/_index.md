@@ -194,6 +194,12 @@ Kairos uses providers to install Kubernetes distributions. The Kairos provider i
 
 ## What's Next?
 
+Ready to configure your newly deployed Kairos node?
+
+<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "./configuration" >}}">
+    Quick configuration guide
+</a>
+
 Find out about the features in Kairos, the goals that drive our project and how to join our community.
 
 <a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "./what-is-kairos" >}}">
@@ -204,10 +210,4 @@ Want to install on bare-metal? A Raspberry Pi? A cloud provider? Check out our o
 
 <a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "../installation" >}}">
     Other ways to install Kairos
-</a>
-
-Ready to upgrade your system? Check out our upgrade guide.
-
-<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "../upgrade" >}}">
-    Upgrade your system
 </a>
