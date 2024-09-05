@@ -77,11 +77,11 @@ install:
   # if no fs is given the partition will be created but not formatted
   # These partitions are not automounted only created and formatted
   extra-partitions:
-    - Name: myPartition
+    - name: myPartition
       size: 100
       fs: ext4
       label: ONE_PARTITION
-    - Name: myOtherPartition
+    - name: myOtherPartition
       size: 200
       fs: ext4
       label: TWO_PARTITION
