@@ -76,7 +76,7 @@ No problem, just [build your image from scratch](/reference/build-from-scratch/)
 
 **Can I easily rollback an upgrade?**
 
-You can! Boot into the passive (fallback) system, and apply an upgrade with the previous image (or to any image you'd rather upgrade to). This will revert whatever change you have on the active boot while keeping your passive image intact.
+You can! Boot into the passive (fallback) system, and apply an upgrade with the previous image (or to any image you'd rather upgrade to). This will completely replace the active image with the one you specify, keeping your passive image intact.
 
 <script type="application/ld+json">
 {
