@@ -6,10 +6,6 @@ description: |
   Learn the basics of configuring an immutable OS like Kairos
 ---
 
-{{% alert title="Prerequisites" color="warning" %}}
-All you need for this guide is a single node Kairos cluster. If you don't have one yet, you can follow the [Getting Started guide](/docs/getting-started) to deploy one.
-{{% /alert %}}
-
 {{% alert title="Objective" %}}
 This guide will teach you the basics about immutability and configuration in Kairos. We will achieve this by configuring the hostname of your Kairos node.
 {{% /alert %}}
@@ -212,10 +208,10 @@ Cloud init is a standard in the industry and is widely supported. It is also ver
 
 ## What's next?
 
-Ready to upgrade?
+Ok, but how do I add a package?
 
-<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "../upgrade" >}}">
-    Upgrade Guide
+<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "./building-and-upgrading" >}}">
+    Building And Upgrading Guide
 </a>
 
 What other configuration options are available?
