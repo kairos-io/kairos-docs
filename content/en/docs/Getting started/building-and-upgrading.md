@@ -76,7 +76,7 @@ No problem, just [build your image from scratch](/reference/build-from-scratch/)
 
 **Can I easily rollback an upgrade?**
 
-You can! Boot into the passive (fallback) system, and apply an upgrade with the previous image (or to any image you'd rather upgrade to). This will completely replace the active image with the one you specify, keeping your passive image intact.
+Yes you can! Boot into the passive (fallback) system, and apply an upgrade with the previous image (or to any image you'd rather upgrade to). This will completely replace the active image with the one you specify, keeping your passive image intact.
 
 <script type="application/ld+json">
 {
@@ -85,26 +85,26 @@ You can! Boot into the passive (fallback) system, and apply an upgrade with the 
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "Q?",
+      "name": "When should I add things on the Dockerfile and when to the cloud-config?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "A"
+        "text": "The answer to this will depend on your setup but here are two things to keep in mind. If you can install software via Kubernetes, then you don't need to build your own images, for example for a Ruby on Rails application, you don't need Ruby at the host system, since it will running in containers. If you cannot or don't want to install on Kubernetes, then just keep this in mind. Changes to your cloud-config can be applied on a node and the effects will be present as soon as you reboot, giving you a faster feedback loop, while changes done at the Dockerfile level, will require that you build a new image and upgrade all your nodes."
       }
     },
     {
       "@type": "Question",
-      "name": "Q?",
+      "name": "What if I don't want to base my image on the Kairos released artifacts?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "A"
+        "text": "No problem, just [build your image from scratch](/reference/build-from-scratch/)"
       }
     },
     {
       "@type": "Question",
-      "name": "Q?",
+      "name": "Can I easily rollback an upgrade?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "A"
+        "text": "Yes you can! Boot into the passive (fallback) system, and apply an upgrade with the previous image (or to any image you'd rather upgrade to). This will completely replace the active image with the one you specify, keeping your passive image intact."
       }
     },
   ]
