@@ -28,7 +28,7 @@ Start by creating a file called `Dockerfile` with the following content
 ```
 FROM quay.io/kairos/ubuntu:24.04-standard-amd64-generic-v3.1.2-k3sv1.30.4-k3s1 
 
-RUN apt-get update && apt-get install ruby
+RUN apt-get update && apt-get install -y ruby
 ```
 
 We base our own image on the Kairos image, then we proceed to install the `ruby` package. This would be done differently depending on the package manager of the flavor of your choosing.
