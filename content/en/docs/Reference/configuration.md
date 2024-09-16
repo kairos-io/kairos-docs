@@ -977,7 +977,7 @@ In case the user already exists, only the `password` and `ssh-authorized-keys` a
 - **homedir**: User's home directory. Defaults to /home/*name*
 - **no-create-home**: Boolean. Skip home directory creation.
 - **primary-group**: Default group for the user. Defaults to a new group created named after the user.
-- **groups**: Add user to these additional groups
+- **groups**: Add user to these additional groups. Kairos creates an `admin` group by default which is also added to the sudoers file. Add a user to the `admin` group if you want them to have `sudo` access.
 - **no-user-group**: Boolean. Skip default group creation.
 - **ssh-authorized-keys**: List of public SSH keys to authorize for this user
 - **system**: Create the user as a system user. No home directory will be created.
