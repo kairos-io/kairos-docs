@@ -26,10 +26,18 @@ a non-bootable system. This section describes those measure and how they work.
 - UKI installations:
   The cmdline option has to be added manually when creating the `.efi` artifacts ([Read how]({{ <relref "../Installation/trustedboot.md#additional-efi-entries" }})).
 
-## Automatic reboots in case of systemd crash
+## Automatic reboot in case of systemd crash
 
 - Non-UKI:
   By default, Kairos adds `rd.shell=0 systemd.crash_reboot=yes` to the kernel cmdline. This makes systemd restart in case it crashes ([Read more](https://www.freedesktop.org/software/systemd/man/249/systemd.html#systemd.crash_reboot))
 
 - UKI:
   Again, the relevant options need to be added manually (see previous section)
+
+## Booting to fallback
+
+- non-UKI installations:
+  TODO: describe the grub flow
+
+- UKI installations:
+  While [a similar solution exists](https://systemd.io/AUTOMATIC_BOOT_ASSESSMENT/) in systemd to automatically reboot to a fallback entry, it's not yet implemented in Kairos. You can monitor [the tracking issue](https://github.com/kairos-io/kairos/issues/2864) for updates.
