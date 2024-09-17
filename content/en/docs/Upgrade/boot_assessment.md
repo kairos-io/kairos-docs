@@ -25,3 +25,11 @@ a non-bootable system. This section describes those measure and how they work.
   By default, Kairos adds `panic=5` to the kernel cmdline. This instructs the kernel to reboot after 5 seconds if a panic occurs.
 - UKI installations:
   The cmdline option has to be added manually when creating the `.efi` artifacts ([Read how]({{ <relref "../Installation/trustedboot.md#additional-efi-entries" }})).
+
+## Automatic reboots in case of systemd crash
+
+- Non-UKI:
+  By default, Kairos adds `rd.shell=0 systemd.crash_reboot=yes` to the kernel cmdline. This makes systemd restart in case it crashes ([Read more](https://www.freedesktop.org/software/systemd/man/249/systemd.html#systemd.crash_reboot))
+
+- UKI:
+  Again, the relevant options need to be added manually (see previous section)
