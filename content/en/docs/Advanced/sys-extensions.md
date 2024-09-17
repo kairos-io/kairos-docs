@@ -75,7 +75,9 @@ This feature is in preview state and only available in Enki from version 0.1.4
 
 You can also build a system extension from a docker image directly by using [enki](https://github.com/kairos-io/enki) and using a dockerfile to isolate the artifacts you want converted into a system extension.
 
-Notice that when converting a docker image into a system extension, the last layer is the only one converted (The last command in a given Dockerfile) so have that in mind. This is useful for packages that ONLY install things in /usr or manual installation under /usr
+Notice that when converting a docker image into a system extension, the last layer is the only one converted (The last command in a given Dockerfile) so have that in mind. This is useful for packages that ONLY install things in /usr or manual installation under /usr.
+
+The `/usr/lib/extension-release.d/extension-release.NAME` file necessary for identifying the system extension is automatically created by the command so in this case you should not worry about that file.
 
 
 For example for a given Dockerfiles as such:
