@@ -15,6 +15,10 @@ Please check the section "Known issues" at the bottom for more information.
 This feature is only available for Trusted Boot images. See the [Trusted Boot documentation]({{%relref "/docs/Architecture/trustedboot" %}}) for more information.
 {{% /alert %}}
 
+{{% alert title="Signing keys for system extensions" color="info" %}}
+Sysexts need to be signed with the same key/cert as the ones used to sign the EFI files. As those are part of the system and available in the EFI firmware, we can extract the public part and verify the sysexts locally. Any of the PK, KEK or DB keys can be used to sign sysexts.
+{{% /alert %}}
+
 ### Introduction
 
 System extensions are a way to extend the system with additional files and directories that are mounted at boot time. System extension images may – dynamically at runtime — extend the /usr/ directory hierarchies with additional files. This is particularly useful on immutable system images where a /usr/ hierarchy residing on a read-only file system shall be extended temporarily at runtime without making any persistent modifications.
@@ -23,7 +27,7 @@ Or on a Trusted Boot system where the system is booted from a read-only EFI and 
 For more information on system extensions, please refer to the [System extensions documentation](https://www.freedesktop.org/software/systemd/man/latest/systemd-sysext.html).
 
 
-### Building system extensions
+### Building system extensions manually
 
 To build a system extension, you need to create a directory with the files you want to add to the system. Then you can use the `systemd-repart` tool to create a system extension image which is signed and verity protected.
 
@@ -62,8 +66,82 @@ This will generate a signed+verity sysextension that can then be used by sysext 
 Some extension examples are available under https://github.com/Itxaka/sysext-examples for k3s and sbctl.
 
 
-### Verifying the system extensions
+### Building system extensions from a docker image with enki
 
+{{% alert title="Warning" color="warning" %}}
+This feature is in preview state and only available in Enki from version 0.1.4
+{{% /alert %}}
+
+
+You can also build a system extension from a docker image directly by using [enki](https://github.com/kairos-io/enki) and using a dockerfile to isolate the artifacts you want converted into a system extension.
+
+Notice that when converting a docker image into a system extension, the last layer is the only one converted (The last command in a given Dockerfile) so have that in mind. This is useful for packages that ONLY install things in /usr or manual installation under /usr.
+
+The `/usr/lib/extension-release.d/extension-release.NAME` file necessary for identifying the system extension is automatically created by the command so in this case you should not worry about that file.
+
+
+For example for a given Dockerfiles as such:
+
+```dockerfile
+FROM anchore/grype:latest AS grype
+
+
+FROM scratch
+COPY --from=grype /grype /usr/local/bin/grype
+```
+
+Only the files added in the last step will be converted to a sysext, so the contents of the sysext would be the `/usr/local/bin/grype` binary only.
+
+Or for a even more manual one:
+```dockerfile
+FROM alpine:3.19
+RUN apk add curl
+RUN curl -L https://github.com/Foxboron/sbctl/releases/download/0.15.4/sbctl-0.15.4-linux-amd64.tar.gz | tar xvzf - --strip-components=1 -C /usr/local/bin/
+```
+
+Again, only the files in the last step would be converted into a system extension, so we would get the contents of the extracted tar archive at the `/usr/local/bin/` path.
+
+
+After building the chosen Dockerfile, we would just need to run osbuilder with the `sysext` command and the key and certificate, like we would do with `systemd-repart`. Notice that we are binding the local `keys/` dir into the container `/keys` dir for ease of access to the given keys and the current dir under `/build` on the container so we set the `--output=/build` flag when calling Enki:
+
+```bash
+$ docker run \
+-v "$PWD"/keys:/keys \
+-v "$PWD":/build/ \
+-v /var/run/docker.sock:/var/run/docker.sock \
+--rm \
+{{< registryURL >}}/enki:{{< enkiVersion >}} sysext NAME CONTAINER_IMAGE --private-key=/keys/PRIVATE_KEY --certificate=/keys/CERTIFICATE --output=/build
+```
+
+The explanation of the docker command flags is as follows:
+ - `-v "$PWD"/keys:/keys`: We mount the current dir + keys dir into the container `/keys` path. So Enki has access to the keys to sign the sysext.
+ - `-v "$PWD":/build/`: Mount the current dir into the container `/build` path. So the generated sysext is available after the container is gone. 
+ - `-v /var/run/docker.sock:/var/run/docker.sock`: We pass the docker sock into the container so it can access our locally built container images. So we avoid pushing them and pulling them from a remote registry.
+ - `--rm`: Once the container exit, remove it so we dont leave stuff lying around.
+
+The explanation of the Enki command flags is as follows:
+ - `sysext`: Subcommand to call, in this case we want to build a sysext
+ - `NAME`: Output and internal name of the sysext.
+ - `CONTAINER_IMAGE`: Image from which we will extract the last layer and covert it to a system extension.
+ - `--private-key`: Private key to sign the system extension.
+ - `--certificate`: Certificate to sign the system extension.
+ - `--output`: Dir where we will output the system extension. Make sure that this matches the directory that passed to the docker command to be able to keep the generated system extension once the container exists and its removed.
+
+Example of a successful run:
+```bash
+$ docker run -v "$PWD":/build/ -v /tmp/keys/:/keys -v /var/run/docker.sock:/var/run/docker.sock --rm -ti enki sysext grype sysext --private-key=/keys/db.key --certificate=/keys/db.pem --output /build
+2024-09-16T14:59:36Z INF Starting enki version 
+2024-09-16T14:59:36Z INF 🚀 Start sysext creation
+2024-09-16T14:59:36Z INF 💿 Getting image info
+2024-09-16T14:59:36Z INF 📤 Extracting archives from image layer
+2024-09-16T14:59:37Z INF 📦 Packing sysext into raw image
+2024-09-16T14:59:37Z INF 🎉 Done sysext creation output=/build/grype.sysext.raw
+$ ls -ltra *.raw
+-rw-r--r-- 1 root root 64729088 sep 16 17:24 grype.sysext.raw
+```
+
+
+### Verifying the system extensions
 
 You can use `systemd-dissect` to verify the system extension, the ID, ARCHITECTURE and the partitions that are included in the system extension.
 
