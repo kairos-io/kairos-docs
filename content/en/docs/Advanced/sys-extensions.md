@@ -123,7 +123,7 @@ The explanation of the Enki command flags is as follows:
  - `CONTAINER_IMAGE`: Image from which we will extract the last layer and covert it to a system extension.
  - `--private-key`: Private key to sign the system extension.
  - `--certificate`: Certificate to sign the system extension.
- - `--output`: Dir where we will output the system extension. Make sure that this matches what is passed to the docker command to be able to keep the generated system extension once the container exists and its removed.
+ - `--output`: Dir where we will output the system extension. Make sure that this matches the directory that passed to the docker command to be able to keep the generated system extension once the container exists and its removed.
 
 Example of a successful run:
 ```bash
