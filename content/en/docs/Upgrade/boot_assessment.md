@@ -21,27 +21,32 @@ a non-bootable system. This section describes those measure and how they work.
 
 ## Automatic reboot in case of a kernel panic
 
-- Non-UKI installations:
+- Simple installations:
   By default, Kairos adds `panic=5` to the kernel cmdline. This instructs the kernel to reboot after 5 seconds if a panic occurs.
-- UKI installations:
+
+- "Trusted boot" installations:
   The cmdline option has to be added manually when creating the `.efi` artifacts ([Read how]({{ <relref "../Installation/trustedboot.md#additional-efi-entries" }})).
 
 ## Automatic reboot in case of systemd crash
 
-- Non-UKI:
+- Simple installations:
   By default, Kairos adds `rd.shell=0 systemd.crash_reboot=yes` to the kernel cmdline. This makes systemd restart in case it crashes ([Read more](https://www.freedesktop.org/software/systemd/man/249/systemd.html#systemd.crash_reboot))
 
-- UKI:
+- "Trusted boot" installations:
   Again, the relevant options need to be added manually (see previous section)
 
 ## Booting to fallback
 
-- non-UKI installations:
+- Simple installations:
   In the sections above, we described how Kairos configures the system so that it automatically reboots when a failure occurs.
   Additionally, Kairos uses a combination of grub environment variables and sentinel files to detect that the failed boot,
   occurred after and upgrade. In that case, it sets the "fallback" boot entry as the default one.
   In other words, if the system fails to boot after and upgrade, the system will reboot automatically to the previous version
   of Kairos (the one before the upgrade).
 
-- UKI installations:
+- "Trusted boot" installations:
   While [a similar solution exists](https://systemd.io/AUTOMATIC_BOOT_ASSESSMENT/) in systemd to automatically reboot to a fallback entry, it's not yet implemented in Kairos. You can monitor [the tracking issue](https://github.com/kairos-io/kairos/issues/2864) for updates.
+
+## Validating the image signatures (Trusted boot installations)
+
+When Kairos is installed [in trusted boot mode]({{ <relref "../Installation/trustedboot.md" }})), the OS image comes as single signed file. The certificate signing the image has to be enrolled in the system's firmware database otherwise the system won't allow booting it. This is also true when Kairos is being upgraded to a new version (which is a new image). For this reason, when upgrading, the `kairos-agent` will perform a check to see if the certificate that signs the new image is enrolled (and not blacklisted) in the firmware database. If not, the upgrade will be aborted to avoid a situation where booting is not possible.
