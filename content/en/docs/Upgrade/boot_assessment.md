@@ -40,8 +40,8 @@ a non-bootable system. This section describes those measure and how they work.
 - Simple installations:
   In the sections above, we described how Kairos configures the system so that it automatically reboots when a failure occurs.
   Additionally, Kairos uses a combination of grub environment variables and sentinel files to detect that the failed boot,
-  occurred after and upgrade. In that case, it sets the "fallback" boot entry as the default one.
-  In other words, if the system fails to boot after and upgrade, the system will reboot automatically to the previous version
+  occurred after an upgrade. In that case, it sets the "fallback" boot entry as the default one.
+  In other words, if the system fails to boot after an upgrade, the system will reboot automatically to the previous version
   of Kairos (the one before the upgrade).
 
 - "Trusted boot" installations:
@@ -49,4 +49,4 @@ a non-bootable system. This section describes those measure and how they work.
 
 ## Validating the image signatures (Trusted boot installations)
 
-When Kairos is installed [in trusted boot mode]({{ <relref "../Installation/trustedboot.md" }})), the OS image comes as single signed file. The certificate signing the image has to be enrolled in the system's firmware database otherwise the system won't allow booting it. This is also true when Kairos is being upgraded to a new version (which is a new image). For this reason, when upgrading, the `kairos-agent` will perform a check to see if the certificate that signs the new image is enrolled (and not blacklisted) in the firmware database. If not, the upgrade will be aborted to avoid a situation where booting is not possible.
+When Kairos is installed [in trusted boot mode]({{ <relref "../Installation/trustedboot.md" }})), the OS image comes as a single signed file. The certificate signing the image has to be enrolled in the system's firmware database otherwise the system won't allow booting it. This is also true when Kairos is being upgraded to a new version (which is a new image). For this reason, when upgrading, the `kairos-agent` will perform a check to see if the certificate that signs the new image is enrolled (and not blacklisted) in the firmware database. If not, the upgrade will be aborted to avoid a situation where booting is not possible.
