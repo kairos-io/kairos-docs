@@ -340,7 +340,7 @@ debug: true
 stages:
    boot:
      - name: "Run systemd-firstboot"
-       systemd-firstboot:
+       systemd_firstboot:
          hostname: "myhostname"
 ```
 
