@@ -37,7 +37,11 @@ a non-bootable system. This section describes those measure and how they work.
 ## Booting to fallback
 
 - non-UKI installations:
-  TODO: describe the grub flow
+  In the sections above, we described how Kairos configures the system so that it automatically reboots when a failure occurs.
+  Additionally, Kairos uses a combination of grub environment variables and sentinel files to detect that the failed boot,
+  occurred after and upgrade. In that case, it sets the "fallback" boot entry as the default one.
+  In other words, if the system fails to boot after and upgrade, the system will reboot automatically to the previous version
+  of Kairos (the one before the upgrade).
 
 - UKI installations:
   While [a similar solution exists](https://systemd.io/AUTOMATIC_BOOT_ASSESSMENT/) in systemd to automatically reboot to a fallback entry, it's not yet implemented in Kairos. You can monitor [the tracking issue](https://github.com/kairos-io/kairos/issues/2864) for updates.
