@@ -120,7 +120,7 @@ install:
   # recovery-system.size: 5000
   
   # Use a different container image for the installation
-  image: "docker:.."
+  source: "docker:.."
   # Add bundles in runtime
   bundles:
     - ...
