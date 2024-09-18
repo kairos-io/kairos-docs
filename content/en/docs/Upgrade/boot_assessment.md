@@ -25,7 +25,7 @@ a non-bootable system. This section describes those measure and how they work.
   By default, Kairos adds `panic=5` to the kernel cmdline. This instructs the kernel to reboot after 5 seconds if a panic occurs.
 
 - "Trusted boot" installations:
-  The cmdline option has to be added manually when creating the `.efi` artifacts ([Read how]({{ <relref "../Installation/trustedboot.md#additional-efi-entries" }})).
+  The cmdline option has to be added manually when creating the `.efi` artifacts ([Read how]({{< relref "../Installation/trustedboot.md#additional-efi-entries" >}})).
 
 ## Automatic reboot in case of systemd crash
 
@@ -49,4 +49,4 @@ a non-bootable system. This section describes those measure and how they work.
 
 ## Validating the image signatures (Trusted boot installations)
 
-When Kairos is installed [in trusted boot mode]({{ <relref "../Installation/trustedboot.md" }})), the OS image comes as a single signed file. The certificate signing the image has to be enrolled in the system's firmware database otherwise the system won't allow booting it. This is also true when Kairos is being upgraded to a new version (which is a new image). For this reason, when upgrading, the `kairos-agent` will perform a check to see if the certificate that signs the new image is enrolled (and not blacklisted) in the firmware database. If not, the upgrade will be aborted to avoid a situation where booting is not possible.
+When Kairos is installed [in trusted boot mode]({{< relref "../Installation/trustedboot.md" >}})), the OS image comes as a single signed file. The certificate signing the image has to be enrolled in the system's firmware database otherwise the system won't allow booting it. This is also true when Kairos is being upgraded to a new version (which is a new image). For this reason, when upgrading, the `kairos-agent` will perform a check to see if the certificate that signs the new image is enrolled (and not blacklisted) in the firmware database. If not, the upgrade will be aborted to avoid a situation where booting is not possible.
