@@ -68,6 +68,12 @@ In case you're using a standard image, with the Kairos provider, then these othe
 | _provider-kairos.bootstrap.before.<role>_               | The provider fires this stage before starting to bootstrap K3S.                                                 |
 | _provider-kairos.bootstrap.after.<role>_               | The provider fires this stage after it finished bootstrapping K3S.                                                 |
 
+
+### Modules
+
+For each stage, a number of modules are available, that implement various useful functions.
+Read more about them in this page: [Stage modules]({{ < relref "../Reference/stage_modules.md" > }})
+
 ### Sentinels
 
 When a Kairos boots it creates sentinel files in order to allow to execute cloud-init steps programmaticaly.
