@@ -335,12 +335,13 @@ Runs [`systemd-firstboot`](https://www.freedesktop.org/software/systemd/man/late
 ```yaml
 #cloud-config
 
+debug: true
+
 stages:
    boot:
      - name: "Run systemd-firstboot"
        systemd-firstboot:
-         - setup-machine-id: "true"
-         - hostname: "myhostname"
+         hostname: "myhostname"
 ```
 
 ### `datasource`
