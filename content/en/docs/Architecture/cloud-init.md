@@ -83,9 +83,9 @@ In case you're using a standard image, with the Kairos provider, then these othe
 | _provider-kairos.bootstrap.after.<role>_  | The provider fires this stage after it finished bootstrapping K3S. |
 
 
-### Install stages in detail
+### Stages during kairos-agent operations in detail
 
-![Install Stages](install_stages.png)
+![Install Stages](https://github.com/user-attachments/assets/b050f247-990a-4395-9b45-334e04f84d45)
 
 ### Sentinels
 
