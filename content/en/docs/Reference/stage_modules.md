@@ -1,3 +1,10 @@
+---
+title: "Stage modules"
+linkTitle: "Stage modules"
+weight: 3
+date: 2024-09-19
+---
+
 For each stage in the cloud-init file, various modules are available that
 implement different functionality each. This page describes what each one does
 and how to use it.
