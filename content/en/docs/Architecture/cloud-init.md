@@ -72,7 +72,7 @@ In case you're using a standard image, with the Kairos provider, then these othe
 ### Modules
 
 For each stage, a number of modules are available, that implement various useful functions.
-Read more about them in this page: [Stage modules]({{ < relref "../Reference/stage_modules.md" > }})
+Read more about them in this page: [Stage modules]({{< relref "../Reference/stage_modules.md" >}})
 
 ### Sentinels
 

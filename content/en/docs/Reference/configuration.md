@@ -852,4 +852,4 @@ stages:
 ### Modules
 
 For each stage, a number of modules are available, that implement various useful functions.
-Read more about them in this page: [Stage modules]({{ < relref "../Reference/stage_modules.md" > }})
+Read more about them in this page: [Stage modules]({{< relref "../Reference/stage_modules.md" >}})
