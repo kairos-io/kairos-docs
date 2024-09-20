@@ -89,19 +89,19 @@ spec:
             restartPolicy: Never
             containers:
             - name: upload
-                image: quay.io/curl/curl
-                command:
-                - /bin/sh
-                args:
-                - -c
-                - |
-                    for f in $(ls /artifacts)
-                    do
-                    curl -T /artifacts/$f http://osartifactbuilder-operator-osbuilder-nginx/upload/$f
-                    done
-                volumeMounts:
-                - name: artifacts
-                    mountPath: /artifacts
+              image: quay.io/curl/curl
+              command:
+              - /bin/sh
+              args:
+              - -c
+              - |
+                  for f in $(ls /artifacts)
+                  do
+                  curl -T /artifacts/$f http://osartifactbuilder-operator-osbuilder-nginx/upload/$f
+                  done
+              volumeMounts:
+              - name: artifacts
+                  mountPath: /artifacts
 ```
 
 Apply the manifest with `kubectl apply`.
