@@ -76,6 +76,36 @@ In case you're using a standard image, with the Kairos provider, then these othe
 | _provider-kairos.bootstrap.after.<role>_  | The provider fires this stage after it finished bootstrapping K3S. |
 
 
+### System stages with after and before substages
+The system run stages that are not part of an action (install,upgrade,reset) all have sub-stages so users can override or modify system behaviour.
+
+This applies to `rootfs`, `initramfs`, `boot`, `fs`, `reconcile` and `network` stages. All of those stages will also run a suffixed `after` and `before` substage that users can hook into to change different setting before the main stage is run.
+
+As those stages are run as part of the system os during different phases and some default configs are shipped with a Kairos system, we add those stages on the fly so they are easily overridable or reverted if one would not want something that ships with KAiros.
+
+For example if we detect that we are running on a VM, [we try to enable the helper services that VM vendors provide](https://github.com/kairos-io/packages/blob/main/packages/static/kairos-overlay-files/files/system/oem/26_vm.yaml) but that may conflict with a user approach of having no superfluous services running. As that config is shipped as part of the base image, its not easy to remove it unless you build a new artifact.
+
+Instead we can revert that by having a config that disables it as soon as possible.
+
+We know that the stage is run during `boot` stage as shown in the [config file](https://github.com/kairos-io/packages/blob/main/packages/static/kairos-overlay-files/files/system/oem/26_vm.yaml) so we could write the following config:
+
+```yaml
+name: "Disable QEMU tools"
+stages:
+  boot.after:
+    - name: "Disable QEMU"
+      if: |
+        grep -iE "qemu|kvm|Virtual Machine" /sys/class/dmi/id/product_name && \
+        ( [ -e "/sbin/systemctl" ] || [ -e "/usr/bin/systemctl" ] || [ -e "/usr/sbin/systemctl" ] || [ -e "/usr/bin/systemctl" ] )
+      commands:
+        - systemctl stop qemu-guest-agent
+```
+
+Notice how we set the stage to be `boot.after`. That will run immediately after the `boot` stage has run, so we dont have to know where it will run and play with trying to disable it in the same stage and run into race problems, we cna just use that substage to make sure that our configs runs after the default system ones.
+
+All the mentioned stages (`rootfs`, `initramfs`, `boot`, `fs`, `reconcile` and `network`) have `STAGE.before` and `STAGE.after` substages.
+
+
 ### Stages during kairos-agent operations in detail
 
 ![Install Stages](https://github.com/user-attachments/assets/b050f247-990a-4395-9b45-334e04f84d45)
