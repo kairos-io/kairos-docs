@@ -90,21 +90,7 @@ You can find us at:
 
 Project Office Hours is an opportunity for attendees to meet the maintainers of the project, learn more about the project, ask questions, learn about new features and upcoming updates.
 
-Office hours are happening weekly on Wednesday - 5:30 – 6:00pm CEST. [Meeting link](https://meet.google.com/aus-mhta-azb)
-
-Besides, we have monthly meetup to participate actively into the roadmap planning and presentation which takes part during the office hours:
-
-#### Roadmap planning
-
-We will discuss on agenda items and groom issues, where we plan where they fall into the release timeline.
-
-Occurring: Monthly on the first Wednesday - 5:30 – 6:30pm CEST. 
-
-#### Roadmap presentation
-
-We will discuss the items of the roadmaps and the expected features on the next releases
-
-Occurring: Monthly on the second Wednesday - 5:30pm CEST.
+Office hours are happening weekly on Wednesday - 15:30 – 16:00pm UTC. [Meeting link](https://meet.jit.si/kairos-community-meetings-362341)
 
 ## Alternatives
 
