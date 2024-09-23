@@ -55,24 +55,17 @@ Below there is a detailed list of the stages available that can be used in the c
 | _kairos-uki-install.after_ | This stage is executed after installation of the OS ends. Only run under Trusted Boot                                                                                                                                                                                               |                         
 | _kairos-uki-reset.pre_     | This stage is executed before reset. Only run under Trusted Boot                                                                                                                                                                                                                    |                         
 | _kairos-uki-reset.after_   | This stage is executed after reset. Only run under Trusted Boot                                                                                                                                                                                                                     |                       
-| _kairos-uki-upgrade.pre_   | This stage is executed before upgrade. Only run under Trusted Boot                                                                                                                                                                                                                    |                       
+| _kairos-uki-upgrade.pre_   | This stage is executed before upgrade. Only run under Trusted Boot                                                                                                                                                                                                                  |                       
 | _kairos-uki-upgrade.after_ | This stage is executed after upgrade. Only run under Trusted Boot                                                                                                                                                                                                                   |                       
 | _before-install_           | This stage happens after partitioning but before the image OS is applied                                                                                                                                                                                                            |
-| _after-install-chroot_     | This stage happens after installing active and grub                                                                                                                                                                                                                                 |
+| _after-install-chroot_     | This stage happens after installing active and grub inside chroot[^1]                                                                                                                                                                                                               |
 | _after-install_            | This stage runs after active,passive and recovery images are installed and after disks have been encrypted                                                                                                                                                                          |
-| _before-reset_             | This stage happens after partitions have been formatted and mounted but before the image has been reset                                                                                                                                                                          |
-| _after-reset_              | This stage happens after partitions have been formatted and mounted and active and passive images reset                                                                                                                                                                          |
-| _after-reset-chroot_       | This stage happens after active has been reset but before passive has been touched.                                                                                                                                                                                                 |
+| _before-reset_             | This stage happens after partitions have been formatted and mounted but before the image has been reset                                                                                                                                                                             |
+| _after-reset_              | This stage happens after partitions have been formatted and mounted and active and passive images reset                                                                                                                                                                             |
+| _after-reset-chroot_       | This stage happens after active has been reset but before passive has been touched inside chroot[^1]                                                                                                                                                                                |
 | _before-upgrade_           | This stage happens after mounting partitions with RW but before any image has been upgraded                                                                                                                                                                                         |
 | _after-upgrade_            | This stage happens after upgrade has been done                                                                                                                                                                                                                                      |
-| _after-upgrade-chroot_     | This stage happens after the image has been upgraded                                                                                                                                                                                                                                |
-
-Note: Steps executed at the `chroot` stage are running inside the new OS as chroot, allowing to write persisting changes to the image, for example by downloading and installing additional software.
-
-{{% alert title="About after and before substages" color="info" %}}
-All the above stages are automatically run with a `before` and `after` suffix automatically, so users can always run something before of after the given
-stage with ease. So if a configuration is doing something in the `before-install` stage and you want to runs something before it, you could use the `before-install.before` to run it before the main stage runs.
-{{% /alert %}}
+| _after-upgrade-chroot_     | This stage happens after the image has been upgraded inside chroot[^1]                                                                                                                                                                                                              |
 
 
 In case you're using a standard image, with the Kairos provider, then these other stages are also available
@@ -95,3 +88,8 @@ When a Kairos boots it creates sentinel files in order to allow to execute cloud
 - /run/cos/live_mode is created when booting from the LiveCD
 
 To execute a block using the sentinel files you can specify: `if: '[ -f "/run/cos/..." ]'`, for instance:
+
+
+
+
+[^1]: Steps executed at the `chroot` stage are running inside the new OS as chroot, allowing to write persisting changes to the image, for example by downloading and installing additional software.
