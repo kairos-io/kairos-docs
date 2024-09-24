@@ -110,6 +110,12 @@ All the mentioned stages (`rootfs`, `initramfs`, `boot`, `fs`, `reconcile` and `
 
 ![Install Stages](https://github.com/user-attachments/assets/b050f247-990a-4395-9b45-334e04f84d45)
 
+
+### Modules
+
+For each stage, a number of modules are available, that implement various useful functions.
+Read more about them in this page: [Stage modules]({{< relref "../Reference/stage_modules.md" >}})
+
 ### Sentinels
 
 When a Kairos boots it creates sentinel files in order to allow to execute cloud-init steps programmaticaly.
