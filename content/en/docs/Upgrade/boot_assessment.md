@@ -25,7 +25,7 @@ a non-bootable system. This section describes those measure and how they work.
   By default, Kairos adds `panic=5` to the kernel cmdline. This instructs the kernel to reboot after 5 seconds if a panic occurs.
 
 - "Trusted boot" installations:
-  The same option are included in the default cmdline, when an image is built with enki ([trusted boot docs]({{< relref "../Installation/trustedboot.md" >}})).
+  The same option are included in [the default cmdline](https://github.com/kairos-io/enki/blob/efdf1136a6aa605cbb8a198833d4dd788df18a8d/pkg/constants/constants.go#L56), when an image is built with enki ([trusted boot docs]({{< relref "../Installation/trustedboot.md" >}})).
 
 ## Automatic reboot in case of systemd crash
 
@@ -33,7 +33,7 @@ a non-bootable system. This section describes those measure and how they work.
   By default, Kairos adds `rd.shell=0 systemd.crash_reboot=yes` to the kernel cmdline. This makes systemd restart in case it crashes ([Read more](https://www.freedesktop.org/software/systemd/man/249/systemd.html#systemd.crash_reboot))
 
 - "Trusted boot" installations:
-  The same options are included in the default cmdline, when an image is built with enki ([trusted boot docs]({{< relref "../Installation/trustedboot.md" >}})).
+  The same options are included in [the default cmdline](https://github.com/kairos-io/enki/blob/efdf1136a6aa605cbb8a198833d4dd788df18a8d/pkg/constants/constants.go#L56), when an image is built with enki ([trusted boot docs]({{< relref "../Installation/trustedboot.md" >}})).
 
 ## Booting to fallback
 
