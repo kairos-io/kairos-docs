@@ -18,6 +18,21 @@ In Kairos the `/oem` directory keeps track of all the configuration of the syste
 
 By using the standard cloud-config syntax, a subset of the functionalities are available and the settings will be executed in the boot stage.
 
+### Configuration order
+
+When an action is done (install, upgrade, reset) several default dirs in the system are read to obtain the configuration and are merged together.
+The dirs and the order in which they are read and merged is as show below from first to last. Notice that any values found in different dirs will override existing ones in previous dirs.
+
+ - /run/initramfs/live (Only available on LiveCD/Netboot)
+ - /usr/local/cloud-config
+ - /etc/kairos
+ - /etc/elemental (deprecated)
+ - /oem
+
+This means that you could ship an ISO with a bundled config (see [Automated install]({{< relref "../Installation/automated.md" >}}) or [Auroraboot]({{< relref "../Reference/auroraboot.md" >}}) to see how) that adds a generic configuration that you want everywhere, and using userdata you can then overwrite the default config if needed per node/datacenter/deployment, as the useradata is read and stored into `/oem` it will be read later in the process and overwrite whatever you shipped on the defaults bundled with the ISO.
+
+In order to see the final config, you can run on a running system `kairos-agent config` and that should show the final configuration after scanning all sources.
+
 ## Boot stages
 
 During boot the stages are emitted in an event-based pattern until a system completes its boot process 
