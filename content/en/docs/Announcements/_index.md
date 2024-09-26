@@ -15,6 +15,10 @@ description: "A single stop to learn about Known Issues, Deprecation Warnings an
 Starting on v3.5.0, reading of `/etc/elemental/config.yaml` will be deprecated. Use `/etc/kairos/config.yaml` instead. [#2233](https://github.com/kairos-io/kairos/issues/2233)
 {{% /alert %}}
 
+{{% alert title="Config dirs read ordering" color="primary" %}}
+Starting on v3.2.0, we have agreed on the order the config dirs are read upon. See the [cloud-config]({{< relref "../Architecture/cloud-init/#configuration-order" >}}) page for more info.
+{{% /alert %}}
+
 {{% alert title="Remarkable Changes" color="info" %}}
 By default, Uki artifacts (identified by the `-uki` suffix) no longer include Linux modules and firmware in the image. Real-world testing has shown that many EFI firmwares are very particular about the size of the EFI image, often refusing to boot if the file exceeds 300-400MB. Given the wide variety of EFI firmware implementations, predicting whether a UKI EFI file will boot on different hardware is challenging.
 
