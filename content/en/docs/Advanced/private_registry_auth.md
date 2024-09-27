@@ -12,7 +12,7 @@ implements the default basic authentication used by docker for private registrie
 To install/upgrade with a container image behind a registry with authentication, Kairos reads the following files in order to find about registry auth:
 
 - ${XDG_CONFIG_HOME}/.docker/config.json
-- If set, DOCKER_CONFIG environment variable which points to a file.
+- If set, DOCKER_CONFIG environment variable which points to a directory [as per the docs](https://docs.docker.com/reference/cli/docker/#environment-variables).
 - ${XDG_RUNTIME_DIR}/containers/auth.json for podman
 
 
