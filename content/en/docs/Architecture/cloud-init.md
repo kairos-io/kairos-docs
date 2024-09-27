@@ -21,7 +21,7 @@ By using the standard cloud-config syntax, a subset of the functionalities are a
 ### Configuration order
 
 When an action is done (install, upgrade, reset) several default dirs in the system are read to obtain the configuration and are merged together.
-The dirs and the order in which they are read and merged is as show below from first to last. Notice that any values found in different dirs will override existing ones in previous dirs.
+The dirs and the order in which they are read and merged, is as shown below, from first to last. Notice that any values found in different dirs will override existing ones in previous dirs.
 
  - /run/initramfs/live (Only available on LiveCD/Netboot)
  - /usr/local/cloud-config
@@ -32,6 +32,8 @@ The dirs and the order in which they are read and merged is as show below from f
 This means that you could ship an ISO with a bundled config (see [Automated install]({{< relref "../Installation/automated.md" >}}) or [Auroraboot]({{< relref "../Reference/auroraboot.md" >}}) to see how) that adds a generic configuration that you want everywhere, and using userdata you can then overwrite the default config if needed per node/datacenter/deployment, as the useradata is read and stored into `/oem` it will be read later in the process and overwrite whatever you shipped on the defaults bundled with the ISO.
 
 In order to see the final config, you can run on a running system `kairos-agent config` and that should show the final configuration after scanning all sources.
+
+NOTE: Other than configuration (for installation/upgrade/reset/etc), in the cloud config files, you can also define ["stages"](#boot-stages) to be run during boot. When the same stage is defined in more than one cloud config files, all definitions will be respected. In other words, stages won't be overwritten.
 
 ## Boot stages
 
