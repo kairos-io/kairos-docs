@@ -33,6 +33,8 @@ strict: false
 # The install block is to drive automatic installations without user interaction.
 install:
   # Device for automated installs
+  # This can be either a full device path (so /dev/sda) or you can use the udev facility to identify the disk by UUID, path, label, diskseq or id (/dev/disk/by-{uuid,label,path,diskseq})
+  # Note that to use a disk by UUID or label, it has first to have that added from userspace, for example with `mkfs.ext4 -L LABEL -U UUID /dev/sda` otherwise disks dont come with UUID/label if they are empty
   device: "/dev/sda"
   # Reboot after installation
   reboot: true
