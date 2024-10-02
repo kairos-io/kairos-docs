@@ -142,6 +142,11 @@ $ docker run -v $PWD:/cOS -v /var/run/docker.sock:/var/run/docker.sock -i --rm q
 {{% /tab %}}
 {{< /tabpane >}}
 
+{{% alert title="Cloud config" %}}
+In the case of Auroraboot, make sure that the cloud config that you are mounting in the container (`-v $PWD/cloud_init.yaml:/cloud_init.yaml`) exists. Otherwise docker will create en empty directory to mount it on the container without any warnings adn you will end up with an empty cloud config.
+{{% /alert %}}
+
+
 This will create a new ISO with your specified cloud configuration embedded in it. You can then use this ISO to boot your machine and automatically install Kairos with your desired settings.
 
 You can as well modify the image in this step and add additional packages before deployment. See [customizing the system image]({{< relref "../advanced/customizing" >}}).
