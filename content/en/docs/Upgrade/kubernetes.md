@@ -10,13 +10,7 @@ Kairos upgrades can be performed either manually or via Kubernetes if the cluste
 
 ## Prerequisites
 
-- It is necessary [system-upgrade-controller](https://github.com/rancher/system-upgrade-controller) to be deployed in the target cluster.
-
-To install it, use kubectl:
-
-```bash
-kubectl apply -f https://github.com/rancher/system-upgrade-controller/releases/download/{{< system-upgrade-controller-version >}}/system-upgrade-controller.yaml
-```
+system-upgrade-controller needs to be deployed on the target cluster. [Read the instructions here]({{< relref "./system-upgrade-controller" >}})
 
 ### Upgrading from version X to version Y with Kubernetes
 

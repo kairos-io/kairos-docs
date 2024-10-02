@@ -79,9 +79,7 @@ kairos-agent upgrade --source oci:acme.com/acme/kairos
 
 #### Upgrades with Kubernetes
 
-Kairos can be upgraded with the [system-upgrade-controller](https://github.com/rancher/system-upgrade-controller) from
-Kubernetes itself. The controller and all the relevant CRDs [should already be installed](https://github.com/rancher/system-upgrade-controller?tab=readme-ov-file#deploying)
-(at the time of writing, this workaround is needed in order to install the system-upgrade-controller: [workaround for the missing "latest" tag](https://github.com/rancher/system-upgrade-controller/issues/302#issuecomment-2027163863)).
+To upgrade Kairos with Kubernetes, system-upgrade-controller needs to be deployed on the target cluster. [Read the instructions here]({{< relref "./system-upgrade-controller" >}}).
 
 A "Plan" resource needs to be created which will use the image generated in the step above.
 Since that image only contains the EFI files for the upgrade and in order to be able use any ImagePullSecrets
