@@ -47,6 +47,15 @@ spec:
 EOF
 ```
 
+To upgrade the "recovery" image instead of the active one, just pass `--recovery` to the `suc-upgrade script:
+
+```
+...
+    command:
+    - "/usr/sbin/suc-upgrade"
+    - "--recovery"
+```
+
 To check all the available versions, see the [images](https://quay.io/repository/kairos/opensuse?tab=tags) available on the container registry, corresponding to the flavor/version selected.
 
 {{% alert title="Note" %}}
