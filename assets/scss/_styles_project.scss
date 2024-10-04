@@ -105,6 +105,13 @@ body {
     display: flex;
 }
 
+.hero-latest-release-version a {
+    color: #FFF;
+    &:visited {
+        color: inherit;
+    }
+}
+
 .hero-latest-release-version div:first-child {
     padding: 14px 20px;
     background: rgba(251, 158, 112, 0.50);
