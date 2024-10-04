@@ -30,7 +30,7 @@ spec:
       containers:
         - name: git
           image: alpine/git
-          command: ["git", "clone", "https://github.com/rancher/system-upgrade-controller", "/homedir/system-upgrade-controller"]
+          command: ["git", "clone", "--branch", "{{< system-upgrade-controller-version >}}", "https://github.com/rancher/system-upgrade-controller", "/homedir/system-upgrade-controller"]
           volumeMounts:
             - name: homedir
               mountPath: /homedir
@@ -40,6 +40,8 @@ spec:
             path: /home/kairos
             type: Directory
 ```
+
+(make sure you checkout the desired branch/release)
 
 Then, from the `/home/kairos` directory, you can run this command to deploy the system-upgrade-controller:
 
