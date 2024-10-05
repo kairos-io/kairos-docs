@@ -1,4 +1,5 @@
 ---
+title: "Enabling kdump"
 linkTitle: "Enabling kdump"
 weight: 4
 description: This section describe examples on how to enable kdump in Kairos derivatives
