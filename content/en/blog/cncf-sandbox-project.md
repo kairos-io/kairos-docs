@@ -18,7 +18,7 @@ We've been quiet about this milestone until now because the CNCF onboarding proc
 
 ## Growing and Collaborating with the Cloud Native Community
 
-Joining the CNCF has opened many doors for us to connect with other projects and communities. This past year, we've had the privilege of participating in KubeCon + CloudNativeCon Europe in Hong Kong as part of the Project Pavilion, where we had a booth to engage with users and fellow contributors. We’ll be doing the same at KubeCon North America, and we’d love to see you there!
+Joining the CNCF has opened many doors for us to connect with other projects and communities. This past year, we've had the privilege of participating in KubeCon + CloudNativeCon in Hong Kong as part of the Project Pavilion, where we had a booth to engage with users and fellow contributors. We’ll be doing the same at KubeCon North America, and we’d love to see you there!
 
 Come visit us on Wednesday, November 13, from 10:30 am to 3:15 pm at the Project Pavilion area of KubeCon North America. Through these events, we've had the chance to collaborate with other CNCF project maintainers, share knowledge, and learn from one another. The spirit of open collaboration is at the heart of everything we do, and we’ve gained valuable insights that are helping us make Kairos even better for you, our users.
 
