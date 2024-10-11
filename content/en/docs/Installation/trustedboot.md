@@ -176,7 +176,7 @@ efi /EFI/kairos/active.efi
 title My Awesome OS
 ```
 
-You can use a custom boot splash screen `--splash` flag to enki.
+You can use a custom boot splash screen by specifying the  `--splash` flag when calling enki.
 
 
 ```bash {class="only-flavors=Ubuntu+24.04,Fedora+40"}
