@@ -110,7 +110,7 @@ k3s_version = "v1.31.1+k3s1"
 # renovate: datasource=github-releases depName=kairos-io/kairos
 kairos_version = "v3.2.1"
 # renovate: datasource=github-releases depName=kairos-io/osbuilder
-osbuilder_version = "v0.300.3"
+osbuilder_version = "v0.400.2"
 # renovate: datasource=github-releases depName=kairos-io/enki
 enki_version = "v0.1.4"
 # renovate: datasource=github-releases depName=kairos-io/AuroraBoot
