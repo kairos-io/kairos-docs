@@ -176,6 +176,20 @@ efi /EFI/kairos/active.efi
 title My Awesome OS
 ```
 
+You can use a custom boot splash screen by specifying the  `--splash` flag when calling enki.
+
+
+```bash {class="only-flavors=Ubuntu+24.04,Fedora+40"}
+CONTAINER_IMAGE={{<oci variant="core">}}-uki
+docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys -v $PWD/splash/:/splash enki build-uki $CONTAINER_IMAGE -t iso -d /result/ -k /keys --boot-branding "My Awesome OS" --splash /splash/my-awesome-splash.bmp
+```
+
+
+{{% alert title="Info" %}}
+Splash images must be provided in 32 bit BMP format, no other image formats besides BMP are supported.
+{{% /alert %}}
+
+
 {{% alert title="Warning" %}}
 Remember when you build upgrade mediums, to also add your branding, otherwise the new active image will be named differently than your fallback and recovery ones.
 {{% /alert %}}
