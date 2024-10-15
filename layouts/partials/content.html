@@ -205,6 +205,33 @@
             </div>
         </div>
     </div>
+    <div id="partners-blade">
+        <div class="partners">
+            <h2>Our Support Partners</h2>
+            <p>Our partners provide top-tier support for deploying and managing Kubernetes at the edge. They offer services such as Custom OS image creation and deployment, Edge security consulting, Troubleshooting, maintenance and more.</p>
+            <div class="partners-cards">
+                <div>
+                    <div>
+                        <img src="https://cdn.prod.website-files.com/64105dfa8da6a9f617932c6c/6436dd214eb8384a99b03071_SpectroCloud_horizontal_logo_on%20light%20bg%20(1).svg" alt="Spectro Cloud Logo" loading="lazy"/>
+                    </div>
+                    <p><span>Spectro Cloud</span> is the main supporter behind Kairos and provides enterprise-grade Kubernetes management through its platform, Palette, which allows organizations to deploy, manage, and scale Kubernetes across various environments, including public clouds, data centers, bare metal, and edge computing.</p>
+                    <div class="buttons astro-7XAARZHW">
+                        <a id="quickstart" href="mailto:kairos@spectrocloud.com" class="astro-7XAARZHW">
+                            Contact
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="cncf-blade">
+        <div class="join-us-wrap">
+            {{ $cncf := resources.Get "/img/logo_cloudnative.png" }}
+            <h2>We are a Cloud Native Computing Foundation sandbox project.</h2>
+            <img src="{{ $cncf.RelPermalink }}" alt="opened box" loading="lazy"/>
+            <p>The Linux Foundation® (TLF) has registered trademarks and uses trademarks. For a list of TLF trademarks, see <a href="https://www.linuxfoundation.org/trademark-usage/" target="_blank">Trademark Usage</a>.</p>
+        </div>
+    </div>
     <div id="basics-blade">
         <div class="basics">
             <a href="https://kairos.io/docs/installation/" target="_blank">
@@ -234,33 +261,6 @@
                     <i class="fa-solid fa-arrow-right"></i>
                 </div>
             </a>
-        </div>
-    </div>
-    <div class="cncf-blade">
-        <div class="join-us-wrap">
-            {{ $cncf := resources.Get "/img/logo_cloudnative.png" }}
-            <h2>We are a Cloud Native Computing Foundation sandbox project.</h2>
-            <img src="{{ $cncf.RelPermalink }}" alt="opened box" loading="lazy"/>
-            <p>The Linux Foundation® (TLF) has registered trademarks and uses trademarks. For a list of TLF trademarks, see <a href="https://www.linuxfoundation.org/trademark-usage/" target="_blank">Trademark Usage</a>.</p>
-        </div>
-    </div>
-    <div id="partners-blade">
-        <div class="partners">
-            <h2>Our Support Partners</h2>
-            <p>Our partners provide top-tier support for deploying and managing Kubernetes at the edge. They offer services such as Custom OS image creation and deployment, Edge security consulting, Troubleshooting, maintenance and more.</p>
-            <div class="partners-cards">
-                <div>
-                    <div>
-                        <img src="https://cdn.prod.website-files.com/64105dfa8da6a9f617932c6c/6436dd214eb8384a99b03071_SpectroCloud_horizontal_logo_on%20light%20bg%20(1).svg" alt="Spectro Cloud Logo" loading="lazy"/>
-                    </div>
-                    <p><span>Spectro Cloud</span> is the main supporter behind Kairos and provides enterprise-grade Kubernetes management through its platform, Palette, which allows organizations to deploy, manage, and scale Kubernetes across various environments, including public clouds, data centers, bare metal, and edge computing.</p>
-                    <div class="buttons astro-7XAARZHW">
-                        <a id="quickstart" href="mailto:kairos@spectrocloud.com" class="astro-7XAARZHW">
-                            Contact
-                        </a>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </main>
