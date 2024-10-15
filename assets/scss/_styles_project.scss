@@ -1059,6 +1059,114 @@ footer {
     }
 }
 
+#partners-blade{
+    background: #F5F7FA;
+}
+
+.partners{
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 64px 0px 84px 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+}
+
+.partners > h2 {
+    margin-bottom: 49px;
+    color: #03153A;
+    text-align: center;
+    font-family: Noto Sans;
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+}
+
+.partners > p{
+    max-width: 1055px;
+    color: black;
+    text-align: center;
+    font-family: Noto Sans;
+    font-size: 1.4rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%;
+    letter-spacing: 0.24px;
+}
+
+.partners > p > span{
+    font-weight: 700;
+}
+
+.partners > h2 > span:first-child{
+    color: #EE5007;
+}
+
+.partners-cards {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    gap: 54px;
+}
+
+.partners-cards > div {
+    padding: 50px;
+    max-width: 573px;
+    border-radius: 20px;
+    background: #FFF;
+    box-shadow: 0px 17px 56px -10px rgba(6, 17, 77, 0.11);
+}
+
+.partners-cards > div > p{
+    color: #707594;
+    font-family: Noto Sans;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 160%;
+
+    span {
+        color: black;
+        font-weight: 600;
+    }
+}
+
+.partners-cards > div > div {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.partners-cards > div img{
+    width: 100%;
+    height: 143px;
+}
+
+.partners-cards > div h3 {
+    margin-top: 13px;
+    max-width: 300px;
+    color: #03153A;
+    font-family: Noto Sans;
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 130%;
+}
+@media screen and (max-width: 630px) {
+    .partners-cards > div {
+        padding: 30px;
+    }
+}
+
+@media screen and (max-width: 420px) {
+    .partners-cards > div h3{
+        margin-top: -23px;
+        margin-bottom: 20px;
+        font-size: 29px;
+    }
+}
+
 #join-us-blade {
     background: #EE5007;
 }
@@ -1300,6 +1408,21 @@ footer {
         font-size: 17px;
     }
     .makes-us-diff-cards > div > div{
+        flex-direction: column;
+    }
+    .partners > h2{
+        font-size: 36px;
+    }
+    .partners-cards > div img{
+        margin-left: -25px;
+    }
+    .partners-cards > div h3{
+        font-size: 29px;
+    }
+    .partners-cards > div > p{
+        font-size: 17px;
+    }
+    .partners-cards > div > div{
         flex-direction: column;
     }
 
