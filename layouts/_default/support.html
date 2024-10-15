@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.Language.Lang }}" class="astro-7XAARZHW">
+  <head>
+    {{ partial "head.html" . }}
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
+    <link rel="manifest" href="/favicons/site.webmanifest">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-config" content="/favicons/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+  </head>
+  <body class="td-section astro-7XAARZHW">
+    <header class="hero astro-7XAARZHW">
+      {{ partial "navbar.html" . }}
+
+      <div class="overlay astro-7XAARZHW">
+        <div class="constraint vertical astro-7XAARZHW">
+          <div class="header astro-7XAARZHW">
+
+            <div class="hero-wrapper astro-7XAARZHW">
+              <h1 class="title astro-7XAARZHW">
+                  Professional Support for Kairos
+              </h1>
+              <span class="subtitle astro-7XAARZHW">
+                  We work with trusted partners to provide top-tier support for deploying and managing Kubernetes at the edge.
+              </span>
+              <p>asdf</p>
+            </div>
+
+            <div class="hero-logo astro-7XAARZHW">
+              <img src="/index/armadillo.png" alt="main logo" width="318" class="astro-7XAARZHW">
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div id="partners-blade">
+        <div class="partners">
+            <h2>Our Support Partners</h2>
+            <div class="partners-cards">
+                <div>
+                    <div>
+                        <img src="https://cdn.prod.website-files.com/64105dfa8da6a9f617932c6c/6436dd214eb8384a99b03071_SpectroCloud_horizontal_logo_on%20light%20bg%20(1).svg" alt="Spectro Cloud Logo" loading="lazy"/>
+                    </div>
+                    <p><span>Spectro Cloud</span> provides enterprise-grade Kubernetes management through its platform, Palette, which allows organizations to deploy, manage, and scale Kubernetes across various environments, including public clouds, data centers, bare metal, and edge computing.</p>
+                    <div class="buttons astro-7XAARZHW">
+                        <a id="quickstart" href="mailto:kairos@spectrocloud.com" class="astro-7XAARZHW">
+                            Contact
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="welcome-blade">
+        <div class="welcome-wrapper">
+            <div>
+                {{ $logo := resources.Get "/img/wrapped-armadillo.png" }}
+                <img src="{{ $logo.RelPermalink }}" alt="wrapped armadillo logo" loading="lazy"/>
+            </div>
+            <div>
+                <h2>Join the list of companies supporting Kairos</h2>
+                <p>Companies and experts in the cloud-native space, who offer support for Kairos systems can be listed in this page.</p>
+                <div class="buttons astro-7XAARZHW">
+                    <a id="quickstart" href="mailto:members@kairos.io" class="astro-7XAARZHW">
+                        Apply
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{ partial "footer.html" . }}
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    {{ partialCached "scripts.html" . }}
+  </body>
+</html>
