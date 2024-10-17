@@ -71,9 +71,6 @@ This command will generate a network token that we can use in the configuration,
 ``` yaml
 #cloud-config
 
-# https://github.com/kairos-io/kairos/issues/885
-config_url: ""
-
 install:
  auto: true
  device: "auto"
@@ -141,9 +138,17 @@ Afterward, you should be able to ssh to one of the machines and be able to use y
 ``` bash
 $ ssh kairos@IP
 $ sudo su -
+$ k9s
+```
+
+{{% alert title="Warning" color="warning" %}}
+
+If k9s doesn't automatically pick up the kubeconfig, you can manually fetch it and pass it to k9s:
+
+``` bash
 $ kairos get-kubeconfig > kubeconfig
 $ KUBECONFIG=kubeconfig k9s
-```
+{{% /alert %}}
 
 ## Notes
 
