@@ -273,15 +273,16 @@ Sets the `systemd-timesyncd` daemon file (`/etc/system/timesyncd.conf`) file acc
 #cloud-config
 
 stages:
-   boot:
-     - name: "Setup NTP"
-       systemctl:
-         enable:
-         - systemd-timesyncd
-       timesyncd:
+    boot:
+      - name: "Setup NTP"
+        systemctl:
+          enable:
+            - systemd-timesyncd
+        timesyncd:
           NTP: "0.pool.org foo.pool.org"
-          FallbackNTP: ""
-          ...
+      - name: "Restart NTP service so it gets the new config"
+        commands:
+          - systemctl restart systemd-timesyncd
 ```
 
 ### `systemctl`
