@@ -280,6 +280,7 @@ stages:
             - systemd-timesyncd
         timesyncd:
           NTP: "0.pool.org foo.pool.org"
+          FallbackNTP: "us.pool.ntp.org"
       - name: "Restart NTP service so it gets the new config"
         commands:
           - systemctl restart systemd-timesyncd
