@@ -148,6 +148,7 @@ If k9s doesn't automatically pick up the kubeconfig, you can manually fetch it a
 ``` bash
 $ kairos get-kubeconfig > kubeconfig
 $ KUBECONFIG=kubeconfig k9s
+```
 {{% /alert %}}
 
 ## Notes
