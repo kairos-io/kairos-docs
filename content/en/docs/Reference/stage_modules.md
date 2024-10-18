@@ -19,17 +19,17 @@ A way to configure the `/etc/resolv.conf` file.
 #cloud-config
 
 stages:
-   boot:
-     - name: "Setup dns"
-       dns:
-         nameservers:
-         - 8.8.8.8
-         - 1.1.1.1
-         search:
-         - foo.bar
-         options:
-         - ..
-         path: "/etc/resolv.conf.bak"
+  boot:
+    - name: "Setup dns"
+      dns:
+        nameservers:
+          - 8.8.8.8
+          - 1.1.1.1
+        search:
+          - foo.bar
+        options:
+          - ..
+        path: "/etc/resolv.conf.bak"
 ```
 
 ### `downloads`
@@ -40,22 +40,22 @@ Download files to specified locations
 #cloud-config
 
 stages:
-   boot:
+  boot:
     - downloads:
-      - path: /tmp/out
-        url: "https://www...."
-        permissions: 0700
-        owner: 0
-        group: 0
-        timeout: 0
-        owner_string: "root"
-      - path: /tmp/out
-        url: "https://www...."
-        permissions: 0700
-        owner: 0
-        group: 0
-        timeout: 0
-        owner_string: "root"
+        - path: /tmp/out
+          url: "https://www...."
+          permissions: 0700
+          owner: 0
+          group: 0
+          timeout: 0
+          owner_string: "root"
+        - path: /tmp/out
+          url: "https://www...."
+          permissions: 0700
+          owner: 0
+          group: 0
+          timeout: 0
+          owner_string: "root"
 ```
 
 ### `git`
@@ -66,16 +66,16 @@ Pull git repositories, using golang native git (no need of git in the host).
 #cloud-config
 
 stages:
-   boot:
+  boot:
     - git:
-       url: "git@gitlab.com:.....git"
-       path: "/oem/cloud-config-files"
-       branch: "main"
-       auth:
-         insecure: true
-         private_key: |
-          -----BEGIN RSA PRIVATE KEY-----
-          -----END RSA PRIVATE KEY-----
+        url: "git@gitlab.com:.....git"
+        path: "/oem/cloud-config-files"
+        branch: "main"
+        auth:
+          insecure: true
+          private_key: |
+            -----BEGIN RSA PRIVATE KEY-----
+            -----END RSA PRIVATE KEY-----
 ```
 
 ### `ensure_entities`
@@ -86,19 +86,19 @@ A `user` or a `group` in the [entity](https://github.com/mudler/entities) format
 #cloud-config
 
 stages:
-   boot:
-     - name: "Setup users"
-       ensure_entities:
-       -  path: /etc/passwd
-          entity: |
-                  kind: "user"
-                  username: "foo"
-                  password: "x"
-                  uid: 0
-                  gid: 0
-                  info: "Foo!"
-                  homedir: "/home/foo"
-                  shell: "/bin/bash"
+  boot:
+    - name: "Setup users"
+      ensure_entities:
+        -  path: /etc/passwd
+           entity: |
+             kind: "user"
+             username: "foo"
+             password: "x"
+             uid: 0
+             gid: 0
+             info: "Foo!"
+             homedir: "/home/foo"
+             shell: "/bin/bash"
 ```
 
 ### `directories`
@@ -109,13 +109,13 @@ A list of directories to be created on disk. Runs before `files`.
 #cloud-config
 
 stages:
-   boot:
-     - name: "Setup folders"
-       directories:
-       - path: "/etc/foo"
-         permissions: 0600
-         owner: 0
-         group: 0
+  boot:
+    - name: "Setup folders"
+      directories:
+        - path: "/etc/foo"
+          permissions: 0600
+          owner: 0
+          group: 0
 ```
 
 ### `files`
@@ -126,15 +126,15 @@ A list of files to write to disk.
 #cloud-config
 
 stages:
-   boot:
-     - files:
+  boot:
+    - files:
         - path: /tmp/bar
-          content: |
-                    #!/bin/sh
-                    echo "test"
-          permissions: 0777
-          owner: 1000
-          group: 100
+      content: |
+        #!/bin/sh
+        echo "test"
+      permissions: 0777
+      owner: 1000
+      group: 100
 ```
 
 ### `commands`
@@ -145,10 +145,10 @@ A list of arbitrary commands to run after file writes and directory creation.
 #cloud-config
 
 stages:
-   boot:
-     - name: "Setup something"
-       commands:
-         - echo 1 > /bar
+  boot:
+    - name: "Setup something"
+      commands:
+        - echo 1 > /bar
 ```
 
 ### `delete_entities`
@@ -159,19 +159,19 @@ A `user` or a `group` in the [entity](https://github.com/mudler/entities) format
 #cloud-config
 
 stages:
-   boot:
-     - name: "Setup users"
-       delete_entities:
-       -  path: /etc/passwd
-          entity: |
-                  kind: "user"
-                  username: "foo"
-                  password: "x"
-                  uid: 0
-                  gid: 0
-                  info: "Foo!"
-                  homedir: "/home/foo"
-                  shell: "/bin/bash"
+  boot:
+    - name: "Setup users"
+      delete_entities:
+        -  path: /etc/passwd
+           entity: |
+             kind: "user"
+             username: "foo"
+             password: "x"
+             uid: 0
+             gid: 0
+             info: "Foo!"
+             homedir: "/home/foo"
+             shell: "/bin/bash"
 ```
 
 ### `hostname`
@@ -183,9 +183,9 @@ Templates can be used to allow dynamic configuration. For example in mass-instal
 #cloud-config
 
 stages:
-   boot:
-     - name: "Setup hostname"
-       hostname: "node-{{ trunc 4 .MachineID }}"
+  boot:
+    - name: "Setup hostname"
+      hostname: "node-{{ trunc 4 .MachineID }}"
 ```
 
 ### `sysctl`
@@ -196,10 +196,10 @@ Kernel configuration. It sets `/proc/sys/<key>` accordingly, similarly to `sysct
 #cloud-config
 
 stages:
-   boot:
-     - name: "Setup exception trace"
-       systctl:
-         debug.exception-trace: "0"
+  boot:
+    - name: "Setup exception trace"
+      systctl:
+        debug.exception-trace: "0"
 ```
 
 ### `users`
@@ -226,12 +226,12 @@ In case the user already exists, only the `password` and `ssh-authorized-keys` a
 #cloud-config
 
 stages:
-   boot:
-     - name: "Setup users"
-       users: 
-          bastion: 
-            passwd: "strongpassword"
-            homedir: "/home/foo
+  boot:
+    - name: "Setup users"
+      users:
+        bastion:
+          passwd: "strongpassword"
+          homedir: "/home/foo
 ```
 
 ### `authorized_keys`
@@ -243,12 +243,12 @@ SSH keys can be obtained from GitHub user accounts by using the format github:${
 #cloud-config
 
 stages:
-   boot:
-     - name: "Setup exception trace"
-       authorized_keys:
-         mudler:
-         - "github:mudler"
-         - "ssh-rsa: ..."
+  boot:
+    - name: "Setup exception trace"
+      authorized_keys:
+        mudler:
+          - "github:mudler"
+          - "ssh-rsa: ..."
 ```
 
 ### `modules`
@@ -259,10 +259,10 @@ A list of kernel modules to load.
 #cloud-config
 
 stages:
-   boot:
-     - name: "Setup users"
-       modules:
-       - nvidia
+  boot:
+    - name: "Setup users"
+      modules:
+        - nvidia
 ```
 
 ### `timesyncd`
@@ -273,15 +273,17 @@ Sets the `systemd-timesyncd` daemon file (`/etc/system/timesyncd.conf`) file acc
 #cloud-config
 
 stages:
-   boot:
-     - name: "Setup NTP"
-       systemctl:
-         enable:
-         - systemd-timesyncd
-       timesyncd:
-          NTP: "0.pool.org foo.pool.org"
-          FallbackNTP: ""
-          ...
+  boot:
+    - name: "Setup NTP"
+      systemctl:
+        enable:
+          - systemd-timesyncd
+      timesyncd:
+        NTP: "0.pool.org foo.pool.org"
+        FallbackNTP: "us.pool.ntp.org"
+    - name: "Restart NTP service so it gets the new config"
+      commands:
+        - systemctl restart systemd-timesyncd
 ```
 
 ### `systemctl`
@@ -292,17 +294,17 @@ A list of systemd services to `enable`, `disable`, `mask` or `start`.
 #cloud-config
 
 stages:
-   boot:
-     - name: "Setup users"
-       systemctl:
-         enable:
+  boot:
+    - name: "Setup users"
+      systemctl:
+        enable:
           - systemd-timesyncd
           - cronie
-         mask:
+        mask:
           - purge-kernels
-         disable:
+        disable:
           - crond
-         start:
+        start:
           - cronie
 ```
 
@@ -314,11 +316,11 @@ A string to specify where to set the environment file
 #cloud-config
 
 stages:
-   boot:
-     - name: "Setup users"
-       environment_file: "/home/user/.envrc"
-       environment:
-         FOO: "bar"
+  boot:
+    - name: "Setup users"
+      environment_file: "/home/user/.envrc"
+      environment:
+        FOO: "bar"
 ```
 
 ### `environment`
@@ -329,10 +331,10 @@ A map of variables to write in `/etc/environment`, or otherwise specified in `en
 #cloud-config
 
 stages:
-   boot:
-     - name: "Setup users"
-       environment:
-         FOO: "bar"
+  boot:
+    - name: "Setup users"
+      environment:
+        FOO: "bar"
 ```
 
 ### `systemd_firstboot`
@@ -345,10 +347,10 @@ Runs [`systemd-firstboot`](https://www.freedesktop.org/software/systemd/man/late
 debug: true
 
 stages:
-   boot:
-     - name: "Run systemd-firstboot"
-       systemd_firstboot:
-         hostname: "myhostname"
+  boot:
+    - name: "Run systemd-firstboot"
+      systemd_firstboot:
+        hostname: "myhostname"
 ```
 
 ### `datasource`
@@ -361,13 +363,13 @@ is stored into the provided path.
 #cloud-config
 
 stages:
-   boot:
-     - name: "Fetch cloud provider's user data"
-       datasource:
-         providers:
-         - "aws"
-         - "digitalocean"
-         path: "/etc/cloud-data"
+  boot:
+    - name: "Fetch cloud provider's user data"
+      datasource:
+        providers:
+          - "aws"
+          - "digitalocean"
+        path: "/etc/cloud-data"
 ```
 
 ### `layout`
@@ -381,28 +383,28 @@ oem images where the default partitions might not suit the actual disk geometry.
 #cloud-config
 
 stages:
-   boot:
-     - name: "Repart disk"
-       layout:
-         device:
-           # It will partition a device including the given filesystem label
-           # or partition label (filesystem label matches first) or the device
-           # provided in 'path'. The label check has precedence over path when
-           # both are provided.
-           label: "COS_RECOVERY"
-           path: "/dev/sda"
-         # Only last partition can be expanded and it happens after all the other
-         # partitions are created. size: 0 means all available free space
-         expand_partition:
-           size: 4096
-         add_partitions:
-           - fsLabel: "COS_STATE"
-             size: 8192
-             # No partition label is applied if omitted
-             pLabel: "state"
-           - fsLabel: "COS_PERSISTENT"
-             # default filesystem is ext2 if omitted
-             filesystem: "ext4"
+  boot:
+    - name: "Repart disk"
+      layout:
+        device:
+          # It will partition a device including the given filesystem label
+          # or partition label (filesystem label matches first) or the device
+          # provided in 'path'. The label check has precedence over path when
+          # both are provided.
+          label: "COS_RECOVERY"
+          path: "/dev/sda"
+        # Only last partition can be expanded and it happens after all the other
+        # partitions are created. size: 0 means all available free space
+        expand_partition:
+          size: 4096
+        add_partitions:
+          - fsLabel: "COS_STATE"
+            size: 8192
+            # No partition label is applied if omitted
+            pLabel: "state"
+          - fsLabel: "COS_PERSISTENT"
+            # default filesystem is ext2 if omitted
+            filesystem: "ext4"
 ```
 
 You can also set custom partitions within the `kairos-install.pre.before` stage. In the following example we will do a
