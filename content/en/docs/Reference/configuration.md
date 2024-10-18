@@ -855,3 +855,18 @@ stages:
 
 For each stage, a number of modules are available, that implement various useful functions.
 Read more about them in this page: [Stage modules]({{< relref "../Reference/stage_modules.md" >}})
+
+## Running commands on different shells
+
+By default, all commands are executed in the `sh` shell. However, it is possible to run commands in a different shell by prefixing the command with the executable.
+
+For example, to run a command in the `bash` shell, you can use the following syntax:
+
+```yaml
+#cloud-config
+stages:
+  boot.after:
+    - name: "do something"
+      commands:
+        - bash /path/to/script.sh
+```
