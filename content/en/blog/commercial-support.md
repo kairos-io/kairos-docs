@@ -10,7 +10,7 @@ We are excited to announce that Kairos now offers commercial support options! As
 
 ## Spectro Cloud: Our First Official Support Partner
 
-We’re proud to welcome [Spectro Cloud](https://www.spectrocloud.com/) as the first commercial support partner for Kairos. As a company that has been involved with Kairos since its inception, Spectro Cloud brings extensive experience with edge systems in production environments. Their expertise will benefit users who need dependable support for their Kubernetes-based edge deployments. Spectro Cloud offers service-level agreements (SLAs) that guarantee response times, helping teams maintain the stability and reliability needed for mission-critical systems.
+We’re proud to welcome [Spectro Cloud](https://www.spectrocloud.com/) as the first commercial support partner for Kairos. As a company that has been involved with Kairos since its inception, Spectro Cloud brings extensive experience with edge systems in production environments. Their expertise will benefit users who need dependable support for their Kubernetes-based edge deployments. Get in touch with Spectro Cloud to learn more about their support offerings.
 
 <div class="buttons astro-small">
     <a id="quickstart" href="mailto:kairos@spectrocloud.com" class="astro-small plausible-event-partner=Spectro+Cloud">
@@ -24,8 +24,8 @@ For those who prefer to stick with the community support model, nothing is chang
 
 ## What Does This Mean for You?
 
-1. Greater Flexibility: Now you can choose between community support or commercial support with SLAs based on your requirements.
-2. Enhanced Expertise: Spectro Cloud’s involvement ensures that you’re backed by a partner who understands the unique challenges of edge computing.
+1. Greater Flexibility: Now you can choose between community support or commercial support based on your requirements.
+2. Enhanced Expertise: Spectro Cloud's involvement ensures that you're backed by a partner who understands the unique challenges of edge computing.
 3. Future Partner Expansion: We plan to add new partners over time, giving you even more options to choose from.
 
 ## Want to Become a Kairos Support Partner?
