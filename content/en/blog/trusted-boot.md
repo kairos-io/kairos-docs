@@ -3,7 +3,7 @@ title: "Unlocking the Mysteries of Trusted Boot: A Deep Dive into Secure System 
 date: 2024-04-10
 linkTitle: "Unlocking the Mysteries of Trusted Boot: A Deep Dive into Secure System Boot Processes"
 description: ""
-author: Ettore Di Giacinto ([Twitter](https://twitter.com/mudler_it)) ([GitHub](https://github.com/mudler))
+author: Ettore Di Giacinto ([X](https://x.com/mudler_it)) ([GitHub](https://github.com/mudler))
 ---
 
 

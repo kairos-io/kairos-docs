@@ -3,7 +3,7 @@ title: "Kairos release v2.0"
 date: 2023-04-13
 linkTitle: "Announcing v2.0 Kairos release"
 description: "Introducing Kairos 2.0: long live UKI!"
-author: Ettore Di Giacinto ([Twitter](https://twitter.com/mudler_it)) ([GitHub](https://github.com/mudler))
+author: Ettore Di Giacinto ([X](https://x.com/mudler_it)) ([GitHub](https://github.com/mudler))
 ---
 <h1 align="center">
   <br>

@@ -1,7 +1,7 @@
 ---
 title: "Kairos at the KCD Amsterdam and Paris 2023"
 date: 2023-03-09T10:53:13+01:00
-author: Mauro Morales ([Twitter](https://twitter.com/mauromrls)) ([GitHub](https://github.com/mauromorales))
+author: Mauro Morales ([X](https://x.com/mauromrls)) ([GitHub](https://github.com/mauromorales))
 ---
 
 We recently had the opportunity to sponsor two Kubernetes events, [KCD Amsterdam][amsterdam] and [KCD Paris][paris]. This blog post, is a summary about my personal experience attending them.

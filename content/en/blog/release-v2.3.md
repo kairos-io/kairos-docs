@@ -3,7 +3,7 @@ title: "Unveiling Kairos v2.3 - FIPS Compliance and More!"
 date: 2023-07-10
 linkTitle: "Unveiling Kairos v2.3"
 description: "Unveiling Kairos v2.3 - FIPS Compliance and More!"
-author: Mauro Morales ([Twitter](https://twitter.com/mauromrls)) ([GitHub](https://github.com/mauromorales))
+author: Mauro Morales ([X](https://x.com/mauromrls)) ([GitHub](https://github.com/mauromorales))
 ---
 <h1 align="center">
   <br>

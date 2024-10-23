@@ -3,7 +3,7 @@ title: "Kairos release v2.5"
 date: 2024-01-11
 linkTitle: "Kairos release v2.5"
 description: "Kairos release v2.5"
-author: Mauro Morales ([Twitter](https://twitter.com/mauromrls)) ([GitHub](https://github.com/mauromorales))
+author: Mauro Morales ([X](https://x.com/mauromrls)) ([GitHub](https://github.com/mauromorales))
 ---
 <h1 align="center">
   <br>

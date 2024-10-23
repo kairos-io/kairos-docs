@@ -1,7 +1,7 @@
 ---
 title: "The Importance of Resilient Infrastructure: How Kairos Could Have Mitigated the CrowdStrike Outage"
 date: 2024-07-22T10:53:13+01:00
-author: Mauro Morales ([Twitter](https://twitter.com/mauromrls)) ([GitHub](https://github.com/mauromorales))
+author: Mauro Morales ([X](https://x.com/mauromrls)) ([GitHub](https://github.com/mauromorales))
 ---
 
 The recent CrowdStrike update fiasco that wreaked havoc across industries, causing BSODs and crippling critical systems, starkly highlights the need for resilient and immutable infrastructure. If affected organizations had adopted an immutable OS like Kairos, their systems would have shown greater resilience against such widespread disruptions.

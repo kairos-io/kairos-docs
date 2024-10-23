@@ -1,7 +1,7 @@
 ---
 title: "Kairos Joins the CNCF as a Sandbox Project"
 date: 2024-10-08T12:53:13+01:00
-author: Mauro Morales ([Twitter](https://twitter.com/mauromrls)) ([GitHub](https://github.com/mauromorales))
+author: Mauro Morales ([X](https://x.com/mauromrls)) ([GitHub](https://github.com/mauromorales))
 ---
 
 We’re thrilled to announce that since April 2024, Kairos has been officially part of the Cloud Native Computing Foundation (CNCF) as a Sandbox Project. This marks an important milestone for Kairos and, more importantly, for our entire community of users and contributors.

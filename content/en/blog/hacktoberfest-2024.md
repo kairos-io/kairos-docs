@@ -1,7 +1,7 @@
 ---
 title: "Hacktoberfest 2024"
 date: 2024-10-07T16:53:13+01:00
-author: Mauro Morales ([Twitter](https://twitter.com/mauromrls)) ([GitHub](https://github.com/mauromorales))
+author: Mauro Morales ([X](https://x.com/mauromrls)) ([GitHub](https://github.com/mauromorales))
 ---
 
 ![Kairos' Hacktoberfest](https://github.com/user-attachments/assets/e79ca5ed-97fe-4eaf-b31c-1fd01ff457f0)

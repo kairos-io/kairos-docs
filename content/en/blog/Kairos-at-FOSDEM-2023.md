@@ -1,7 +1,7 @@
 ---
 title: "Kairos at FOSDEM 2023"
 date: 2023-02-07T10:53:13+01:00
-author: Mauro Morales ([Twitter](https://twitter.com/mauromrls)) ([GitHub](https://github.com/mauromorales))
+author: Mauro Morales ([X](https://x.com/mauromrls)) ([GitHub](https://github.com/mauromorales))
 ---
 
 I recently had the opportunity to attend FOSDEM 2023 and share a bit about the Kairos project. In this post I want to summarize what I presented and share other interesting presentations I attended, which I believe are relevant for Kairos and our community.
