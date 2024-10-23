@@ -3,7 +3,7 @@ title: "Our First Hackweek"
 date: 2024-08-13
 linkTitle: "Our First Hackweek"
 description: "Our First Hackweek"
-author: Mauro Morales ([Twitter](https://twitter.com/mauromrls)) ([GitHub](https://github.com/mauromorales))
+author: Mauro Morales ([X](https://x.com/mauromrls)) ([GitHub](https://github.com/mauromorales))
 ---
 
 Last week was a special week. We had our first hackweek! With everyone in the team connecting from their own corners of the world, Belgium, Greece, Italy and Spain, we came together not in person, but through a shared passion for hacking. Unlike typical team-building events, this hackweek was all about individual exploration — each team member diving into their own projects, driven by personal curiosity and the opportunity to experiment.

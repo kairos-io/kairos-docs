@@ -3,7 +3,7 @@ title: "Kairos, SpectroCloud, and Canonical Collaborate to Deliver Revolutionary
 date: 2023-03-13
 linkTitle: "Kairos, SpectroCloud, and Canonical Collaboration at MWC"
 description: Kairos, the open-source distributed infrastructure platform, has collaborated with SpectroCloud and Canonical to develop a revolutionary Telco Radio Edge solution. The solution leverages the latest advances in OpenRAN automation and distributed compute management, and is set to take center stage at this year's Mobile World Congress.
-author: Ettore Di Giacinto ([Twitter](https://twitter.com/mudler_it)) ([GitHub](https://github.com/mudler))
+author: Ettore Di Giacinto ([X](https://x.com/mudler_it)) ([GitHub](https://github.com/mudler))
 ---
 
 Hello Kairos community!

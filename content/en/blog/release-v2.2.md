@@ -3,7 +3,7 @@ title: "Kairos release v2.2"
 date: 2023-06-15
 linkTitle: "Announcing v2.2 Kairos release"
 description: "Kairos 2.2 release: ARM enhancements"
-author: Ettore Di Giacinto ([Twitter](https://twitter.com/mudler_it)) ([GitHub](https://github.com/mudler))
+author: Ettore Di Giacinto ([X](https://x.com/mudler_it)) ([GitHub](https://github.com/mudler))
 ---
 <h1 align="center">
   <br>

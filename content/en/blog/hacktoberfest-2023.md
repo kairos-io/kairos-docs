@@ -1,7 +1,7 @@
 ---
 title: "Hacktoberfest 2023"
 date: 2023-09-26T16:53:13+01:00
-author: Mauro Morales ([Twitter](https://twitter.com/mauromrls)) ([GitHub](https://github.com/mauromorales))
+author: Mauro Morales ([X](https://x.com/mauromrls)) ([GitHub](https://github.com/mauromorales))
 ---
 
 Hacktoberfest 2023 is here, and we are excited to announce that Kairos is taking part by creating some good first issues

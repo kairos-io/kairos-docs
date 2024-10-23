@@ -1,7 +1,7 @@
 ---
 title: "xz Utils Backdoor"
 date: 2024-04-02T20:53:13+01:00
-author: Mauro Morales ([Twitter](https://twitter.com/mauromrls)) ([GitHub](https://github.com/mauromorales))
+author: Mauro Morales ([X](https://x.com/mauromrls)) ([GitHub](https://github.com/mauromorales))
 ---
 
 It's all over the tech news. Someone managed to put a backdoor on xz Utils, a very common package on Linux systems. In this post I want to share with you about what happened, how it impacted Kairos images, and what you should do in case you were affected.

@@ -3,7 +3,7 @@ title: "Understanding Immutable Linux OS: Benefits, Architecture, and Challenges
 date: 2023-03-22
 linkTitle: "Understanding Immutable Linux OS: Benefits, Architecture, and Challenges"
 description: "In this post we are trying to answer some of the typical questions that help understanding Immutable OSes principles and we will dive a bit in what solutions are out there, and what are the challenges in the field"
-author: Ettore Di Giacinto ([Twitter](https://twitter.com/mudler_it)) ([GitHub](https://github.com/mudler))
+author: Ettore Di Giacinto ([X](https://x.com/mudler_it)) ([GitHub](https://github.com/mudler))
 ---
 
 For years, the traditional Linux operating system has been a top pick for its flexibility and ability to be customized. But as great as it is, there are use cases in which stricter security rules and higher reliability standards are needed. That's where immutable Linux operating systems come in - offering a more secure and reliable option, especially in settings where security is paramount.

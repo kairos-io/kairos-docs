@@ -3,7 +3,7 @@ title: "Kairos release v1.6"
 date: 2023-02-26
 linkTitle: "Announcing v1.6 Kairos release"
 description: "Introducing Kairos 1.6: Get ready to boot with AuroraBoot!"
-author: Ettore Di Giacinto ([Twitter](https://twitter.com/mudler_it)) ([GitHub](https://github.com/mudler))
+author: Ettore Di Giacinto ([X](https://x.com/mudler_it)) ([GitHub](https://github.com/mudler))
 ---
 <h1 align="center">
   <br>

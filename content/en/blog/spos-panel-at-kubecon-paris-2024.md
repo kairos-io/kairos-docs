@@ -1,7 +1,7 @@
 ---
 title: "SPOS Panel at KubeCon Paris 2024"
 date: 2024-03-26T16:53:13+01:00
-author: Mauro Morales ([Twitter](https://twitter.com/mauromrls)) ([GitHub](https://github.com/mauromorales))
+author: Mauro Morales ([X](https://x.com/mauromrls)) ([GitHub](https://github.com/mauromorales))
 ---
 
 I recently had the opportunity to attend KubeCon 2024. You can find my recap at the [Spectro Cloud Blog](https://www.spectrocloud.com/blog/kubecon-paris-edge-ai-and-la-vie-en-cloud-native), but I'd like to add some additional information about the Special Purpose Operating System Panel in which we participated.

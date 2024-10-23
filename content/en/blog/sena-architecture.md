@@ -3,7 +3,7 @@ title: "Kairos is now part of the Secure Edge-Native Architecture by Spectro Clo
 date: 2023-04-18
 linkTitle: "The Secure Edge-Native Architecture"
 description: "Learn about how Kairos is now part of SENA, the Secure Edge-Native Architecture announced by Spectro Cloud and developed in collaboration with Intel, enabling organizations to securely deploy, provision, operate and manage at scale edge locations. Discover the benefits of SENA and what's coming up in the future roadmap of Kairos' secure edge computing solutions."
-author: Ettore Di Giacinto ([Twitter](https://twitter.com/mudler_it)) ([GitHub](https://github.com/mudler))
+author: Ettore Di Giacinto ([X](https://x.com/mudler_it)) ([GitHub](https://github.com/mudler))
 ---
 
 The Kairos team is thrilled to announce the release of the Secure Edge-Native Architecture (SENA) whitepaper! You can download it [here](https://github.com/kairos-io/kairos/files/11250843/Secure-Edge-Native-Architecture-white-paper-20240417.3.pdf)

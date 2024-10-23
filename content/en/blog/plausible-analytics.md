@@ -3,7 +3,7 @@ title: "Adding Analytics to Kairos.io"
 date: 2024-08-01
 linkTitle: "Adding Analytics to Kairos.io"
 description: "Using a privacy focused analytics service on kairos.io"
-author: Mauro Morales ([Twitter](https://twitter.com/mauromrls)) ([GitHub](https://github.com/mauromorales))
+author: Mauro Morales ([X](https://x.com/mauromrls)) ([GitHub](https://github.com/mauromorales))
 ---
 
 We recently added analytics to our website. We were hesitant about this before because we are committed to your privacy and didn't like the idea of setting up Google Analytics. Thankfully, we've found a good open-source solution that is designed for privacy. You can find more about them on their website https://plausible.io/about

@@ -3,7 +3,7 @@ title: "Kairos release v3"
 date: 2024-03-08
 linkTitle: "Kairos release v3"
 description: "Kairos release v3"
-author: Mauro Morales ([Twitter](https://twitter.com/mauromrls)) ([GitHub](https://github.com/mauromorales))
+author: Mauro Morales ([X](https://x.com/mauromrls)) ([GitHub](https://github.com/mauromorales))
 ---
 <h1 align="center">
   <br>
