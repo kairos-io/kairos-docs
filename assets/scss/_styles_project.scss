@@ -286,6 +286,15 @@ main > div {
     gap: 40px;
 }
 
+.buttons:where(.astro-small) {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: center;
+    margin-top: 53px;
+    gap: 40px;
+}
+
 .buttons:where(.astro-7XAARZHW)>a:where(.astro-7XAARZHW) {
     display: flex;
     justify-content: center;
@@ -295,6 +304,21 @@ main > div {
     font-weight: 600;
     font-size: 20px;
     line-height: 100%;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+}
+
+.buttons:where(.astro-small)>a:where(.astro-small) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 240px;
+    height: 54px;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 100%;
+    background: #EE5007;
     color: #fff;
     text-decoration: none;
     border-radius: 6px;
