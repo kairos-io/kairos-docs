@@ -10,7 +10,13 @@ We are excited to announce that Kairos now offers commercial support options! As
 
 ## Spectro Cloud: Our First Official Support Partner
 
-We’re proud to welcome Spectro Cloud as the first commercial support partner for Kairos. As a company that has been involved with Kairos since its inception, Spectro Cloud brings extensive experience with edge systems in production environments. Their expertise will benefit users who need dependable support for their Kubernetes-based edge deployments. Spectro Cloud offers service-level agreements (SLAs) that guarantee response times, helping teams maintain the stability and reliability needed for mission-critical systems.
+We’re proud to welcome [Spectro Cloud](https://www.spectrocloud.com/) as the first commercial support partner for Kairos. As a company that has been involved with Kairos since its inception, Spectro Cloud brings extensive experience with edge systems in production environments. Their expertise will benefit users who need dependable support for their Kubernetes-based edge deployments. Spectro Cloud offers service-level agreements (SLAs) that guarantee response times, helping teams maintain the stability and reliability needed for mission-critical systems.
+
+<div class="buttons astro-small">
+    <a id="quickstart" href="mailto:kairos@spectrocloud.com" class="astro-small plausible-event-partner=Spectro+Cloud">
+        Contact Spectro Cloud
+    </a>
+</div>
 
 ## Community Support Remains Unchanged
 
