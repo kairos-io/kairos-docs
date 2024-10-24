@@ -3,10 +3,17 @@ title: "RaspberryPi"
 linkTitle: "RaspberryPi"
 weight: 4
 date: 2022-11-13
-description: Install Kairos on RaspberryPi 3 and 4
+description: Install Kairos on RaspberryPi
 ---
 
+{{% alert title="Info" color="info" %}}
 Kairos supports Raspberry Pi model 3 and 4 with 64bit architecture.
+{{% /alert %}}
+
+{{% alert title="Warning" color="warning" %}}
+Model 5 is currently not supported because of how we use U-boot to boot the device. There's currently some work from the people from SUSE, see https://github.com/openSUSE/u-boot/pull/29 for more information.
+{{% /alert %}}
+
 
 If you are not familiar with the process, it is suggested to follow the [quickstart]({{< relref "../Getting started" >}}) first to see how Kairos works.
 
