@@ -57,7 +57,7 @@ languageName ="English"
 weight = 1
 [languages.en.params]
 description = "The immutable edge Kubernetes"
-images = [ "images/kairos-800x419.jpeg" ]
+images = [ "images/Kairos_800x419.png" ]
 
 # language not really in use just a hack to trigger the navbar-lang-selector which at the moment is used for distro selector
 [languages.es]
