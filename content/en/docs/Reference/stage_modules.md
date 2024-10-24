@@ -125,7 +125,7 @@ A list of files to write to disk.
 ```yaml
 #cloud-config
 stages:
-  default:
+  boot:
     - files:
       - path: /tmp/bar
         encoding: "b64" # "base64", "gz", "gzip", "gz+base64", "gzip+base64", "gz+b64", "gzip+b64"
