@@ -277,7 +277,7 @@ main > div {
     width: 100%;
     background: #ee5007;
 }
-.buttons:where(.astro-7XAARZHW) {
+.buttons:where(.astro-7XAARZHW), .contact-link {
     display: flex;
     flex-flow: row wrap;
     align-items: center;
@@ -295,7 +295,7 @@ main > div {
     gap: 40px;
 }
 
-.buttons:where(.astro-7XAARZHW)>a:where(.astro-7XAARZHW) {
+.buttons:where(.astro-7XAARZHW)>a:where(.astro-7XAARZHW), .contact-link {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -325,7 +325,7 @@ main > div {
 }
 
 
-#quickstart:where(.astro-7XAARZHW) {
+#quickstart:where(.astro-7XAARZHW), .contact-link {
     background: #ee5007;
     box-shadow: 0 0 2px #0003, 0 1px 2px #0000001a, inset 0 -1px #0003;
     border-radius: 4px;
@@ -1177,6 +1177,7 @@ footer {
     font-weight: 600;
     line-height: 130%;
 }
+
 @media screen and (max-width: 630px) {
     .partners-cards > div {
         padding: 30px;
@@ -1398,7 +1399,7 @@ footer {
         display: block;
     }
 
-    #quickstart:where(.astro-7XAARZHW), #download:where(.astro-7XAARZHW) {
+    #quickstart:where(.astro-7XAARZHW), #download:where(.astro-7XAARZHW), .contact-link {
         width: 100%;
         max-width: 304px;
     }
