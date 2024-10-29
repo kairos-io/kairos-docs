@@ -2,7 +2,7 @@
 title: "Installing system-upgrade-controller"
 linkTitle: "System Upgrade Controller"
 weight: 4
-date: 2024-10-2
+date: 2024-10-02
 description: Install the system-upgrade-controller
 ---
 

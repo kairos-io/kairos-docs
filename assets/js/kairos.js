@@ -176,4 +176,12 @@ document.addEventListener('DOMContentLoaded', () => {
             replaceContent(selectedDistro.split(';'));
         });
     }
+
+    // Send event when contact link is clicked for each partner
+    const contactLinks = document.querySelectorAll('.contact-link');
+    contactLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            plausible('Contact Partner', { props: { partner: link.dataset.partner } });
+        });
+    });
 });

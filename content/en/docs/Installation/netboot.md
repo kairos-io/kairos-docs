@@ -2,7 +2,7 @@
 title: "Network booting"
 linkTitle: "Network booting"
 weight: 5
-date: 2022-12-1
+date: 2022-12-01
 description: Install Kairos from network
 ---
 
