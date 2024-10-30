@@ -7,6 +7,15 @@ description: This section describes how to use Virtual Box to boot Kairos in "Tr
 
 To install Kairos in [trusted boot mode]() ... TODO
 
+## Enroll the PK key
+
+This is a manual process.
+
+TODO: screenshots, process etc
+
+
+## Create a VM
+
 ```bash
 #!/bin/bash
 
