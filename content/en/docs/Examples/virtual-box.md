@@ -5,14 +5,15 @@ weight: 1
 description: This section describes how to use Virtual Box to boot Kairos in "Trusted boot" mode
 ---
 
-To install Kairos in [trusted boot mode]() ... TODO
+To install Kairos in ["Trusted Boot Mode"]({{< relref "../architecture/trustedboot" >}}) the machine needs to meet the following requirements:
 
-## Enroll the PK key
+- Must have a tpm v2.0 chip
+- Must be able to boot in EFI mode (not "legacy BIOS")
+- Must have 1Gb of RAM or more
+- Must have 40Gb of disk or more
 
-This is a manual process.
-
-TODO: screenshots, process etc
-
+The following steps describe how to create a virtual machine suitable for Kairos
+trusted boot setup, using [VirtualBox](https://www.virtualbox.org/).
 
 ## Create a VM
 
@@ -83,3 +84,11 @@ cleanup
 createVM
 VBoxManage startvm "$VM_NAME"
 ```
+
+## Enroll the PK key
+
+This is a manual process.
+
+TODO: screenshots, process etc
+
+
