@@ -24,6 +24,7 @@ set -e
 VM_NAME="KairosAI"
 ISO_PATH=$PWD/kairos.iso
 DISK_PATH=$PWD/Kairos.vdi
+BRIDGE_ADAPTER_NAME="kairos"
 
 cleanup() {
     if VBoxManage list vms | grep -q "\"$VM_NAME\""; then
@@ -40,6 +41,10 @@ cleanup() {
         echo "Unregistering and deleting VM '$VM_NAME'..."
         VBoxManage unregistervm "$VM_NAME" --delete
 
+        # Remove the custom network adapter
+        echo "Removing bridged network adapter '$BRIDGE_ADAPTER_NAME'..."
+        VBoxManage hostonlyif remove "$BRIDGE_ADAPTER_NAME"
+
         echo "Cleanup complete. VM '$VM_NAME' and associated files have been deleted."
     else
         echo "No VM named '$VM_NAME' found. No action needed."
@@ -54,11 +59,16 @@ createVM() {
         --chipset piix3 \
         --firmware efi \
         --nictype1 82540EM \
-        --nic1 nat \
-        --bridgeadapter1 en0 \
+        --nic1 bridged \
         --tpm-type "2.0" \
         --boot1 disk \
-        --boot2 dvd
+        --boot2 dvd # doesn't work
+
+    # Create a bridged network adapter
+    echo "Creating bridged network adapter '$BRIDGE_ADAPTER_NAME'..."
+    VBoxManage hostonlyif create
+    VBoxManage hostonlyif ipconfig "$BRIDGE_ADAPTER_NAME" --ip 192.168.56.1
+    VBoxManage modifyvm "$VM_NAME" --nic1 bridged --bridgeadapter1 "$BRIDGE_ADAPTER_NAME"
 
     VBoxManage createmedium disk --filename "$DISK_PATH" --size 40960
     VBoxManage storagectl "$VM_NAME" --name "SATA Controller" --add sata --controller IntelAhci
