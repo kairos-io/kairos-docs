@@ -25,7 +25,25 @@ set -e
 VM_NAME="KairosAI"
 ISO_PATH=$PWD/kairos.iso
 DISK_PATH=$PWD/Kairos.vdi
-BRIDGE_ADAPTER_NAME="kairos"
+
+findOrCreateBridge() {
+    # Check for an existing interface that starts with "vboxnet"
+    existing_iface=$(ip link show | grep -o 'vboxnet[0-9]\+')
+
+    if [[ -n "$existing_iface" ]]; then
+        # If an interface was found, return its name
+        echo "$existing_iface"
+    else
+        # If no such interface exists, create a new one
+        VBoxManage hostonlyif create > /dev/null 2>&1
+
+        # Capture the name of the newly created interface
+        new_iface=$(ip link show | grep -o 'vboxnet[0-9]\+' | tail -n 1)
+
+        # Return the name of the new interface
+        echo "$new_iface"
+    fi
+}
 
 cleanup() {
     if VBoxManage list vms | grep -q "\"$VM_NAME\""; then
@@ -41,10 +59,6 @@ cleanup() {
         # Unregister and delete the VM and all associated files
         echo "Unregistering and deleting VM '$VM_NAME'..."
         VBoxManage unregistervm "$VM_NAME" --delete
-
-        # Remove the custom network adapter
-        echo "Removing bridged network adapter '$BRIDGE_ADAPTER_NAME'..."
-        VBoxManage hostonlyif remove "$BRIDGE_ADAPTER_NAME"
 
         echo "Cleanup complete. VM '$VM_NAME' and associated files have been deleted."
     else
@@ -66,10 +80,9 @@ createVM() {
         --boot2 dvd # doesn't work
 
     # Create a bridged network adapter
-    echo "Creating bridged network adapter '$BRIDGE_ADAPTER_NAME'..."
-    VBoxManage hostonlyif create
-    VBoxManage hostonlyif ipconfig "$BRIDGE_ADAPTER_NAME" --ip 192.168.56.1
-    VBoxManage modifyvm "$VM_NAME" --nic1 bridged --bridgeadapter1 "$BRIDGE_ADAPTER_NAME"
+    bridgeInterface=$(findOrCreateBridge)
+    VBoxManage hostonlyif ipconfig "$bridgeInterface" --ip 192.168.56.1
+    VBoxManage modifyvm "$VM_NAME" --nic1 bridged --bridgeadapter1 "$bridgeInterface"
 
     VBoxManage createmedium disk --filename "$DISK_PATH" --size 40960
     VBoxManage storagectl "$VM_NAME" --name "SATA Controller" --add sata --controller IntelAhci
@@ -80,9 +93,40 @@ createVM() {
     VBoxManage storageattach "$VM_NAME" --storagectl "IDE Controller" --port 0 --device 0 --type dvddrive --medium "$ISO_PATH"
 }
 
-cleanup
-createVM
-VBoxManage startvm "$VM_NAME"
+usage() {
+    echo "Usage: $0 {create|start|stop|cleanup}"
+}
+
+run() {
+    # Check if a command was provided
+    if [ -z "$1" ]; then
+        usage
+        exit 1
+    fi
+
+    # Determine which command to run based on the first argument
+    case "$1" in
+        create)
+            createVM
+            ;;
+        start)
+            VBoxManage startvm "$VM_NAME"
+            ;;
+        stop)
+            VBoxManage controlvm "$VM_NAME" poweroff
+            ;;
+        cleanup)
+            cleanup
+            ;;
+        *)
+            echo "Invalid command: $1"
+            usage
+            exit 1
+            ;;
+    esac
+}
+
+run $@
 ```
 
 ## Enroll the PK key
