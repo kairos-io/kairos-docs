@@ -26,22 +26,26 @@ VM_NAME="KairosAI"
 ISO_PATH=$PWD/kairos.iso
 DISK_PATH=$PWD/Kairos.vdi
 
-findOrCreateBridge() {
-    # Check for an existing interface that starts with "vboxnet"
-    existing_iface=$(ip link show | grep -o 'vboxnet[0-9]\+')
-
-    if [[ -n "$existing_iface" ]]; then
-        # If an interface was found, return its name
-        echo "$existing_iface"
+findInterface() {
+    if [[ -n "$IFACE_NAME" ]]; then
+        echo $IFACE_NAME
+    elif command -v ip > /dev/null 2>&1; then
+        echo $(ip link show | grep -o 'vboxnet[0-9]\+' | tail -n 1)
+    elif command -v ifconfig > /dev/null 2>&1; then
+        echo $(ifconfig -a | grep -o 'vboxnet[0-9]\+' | tail -n 1)
     else
+        echo ""
+    fi
+}
+
+findOrCreateBridge() {
+    IFACE_NAME=$(findInterface)
+
+    if [[ -z "$IFACE_NAME" ]]; then
         # If no such interface exists, create a new one
-        VBoxManage hostonlyif create > /dev/null 2>&1
-
-        # Capture the name of the newly created interface
-        new_iface=$(ip link show | grep -o 'vboxnet[0-9]\+' | tail -n 1)
-
-        # Return the name of the new interface
-        echo "$new_iface"
+        if VBoxManage hostonlyif create > /dev/null 2>&1; then
+           IFACE_NAME=$(findInterface)
+        fi
     fi
 }
 
@@ -67,22 +71,22 @@ cleanup() {
 }
 
 createVM() {
-    VBoxManage createvm --name "$VM_NAME" --ostype "Linux_64" --register
+    VBoxManage createvm --name "$VM_NAME" --ostype "Ubuntu24_LTS_arm64" --register
     VBoxManage modifyvm "$VM_NAME" \
-        --memory 10000 \
-        --cpus 3 \
+        --memory 2000 \
+        --cpus 1 \
         --chipset piix3 \
         --firmware efi \
         --nictype1 82540EM \
         --nic1 bridged \
         --tpm-type "2.0" \
+        --graphicscontroller vmsvga \
         --boot1 disk \
         --boot2 dvd # doesn't work
 
     # Create a bridged network adapter
-    bridgeInterface=$(findOrCreateBridge)
-    VBoxManage hostonlyif ipconfig "$bridgeInterface" --ip 192.168.56.1
-    VBoxManage modifyvm "$VM_NAME" --nic1 bridged --bridgeadapter1 "$bridgeInterface"
+    # VBoxManage hostonlyif ipconfig "$IFACE_NAME" --ip 192.168.56.1
+    VBoxManage modifyvm "$VM_NAME" --nic1 bridged --bridgeadapter1 "$IFACE_NAME" 
 
     VBoxManage createmedium disk --filename "$DISK_PATH" --size 40960
     VBoxManage storagectl "$VM_NAME" --name "SATA Controller" --add sata --controller IntelAhci
@@ -107,6 +111,12 @@ run() {
     # Determine which command to run based on the first argument
     case "$1" in
         create)
+            findOrCreateBridge
+	    if [[ -z "$IFACE_NAME" ]]; then
+              echo "Failed to find or create host-only network interface."
+              echo "You need to pass an interface manually via the environment variable: IFACE_NAME"
+              exit 1
+            fi
             createVM
             ;;
         start)
@@ -126,7 +136,7 @@ run() {
     esac
 }
 
-run $@
+echo $(run $@)
 ```
 
 ## Enroll the PK key
