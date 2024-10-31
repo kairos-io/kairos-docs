@@ -17,6 +17,12 @@ trusted boot setup, using [VirtualBox](https://www.virtualbox.org/).
 
 ## Create a VM
 
+{{< alert color="warning" title="Warning" >}}
+On macOS you need to make sure you install the VirtualBox Extension Pack to enable USB 2.0 and USB 3.0 support.
+
+https://www.virtualbox.org/wiki/Downloads
+{{< /alert >}}
+
 ```bash
 #!/bin/bash
 
