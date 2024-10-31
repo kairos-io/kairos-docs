@@ -35,7 +35,7 @@ mkdir -p $OUTDIR/keys
 
 cleanup() {
   # Run with docker to avoid sudo
- docker run --rm --entrypoint /bin/bash -v $PWD/build:/result $OSBUILDER_IMAGE -c 'rm -rf /result/*'
+  docker run --rm --entrypoint /bin/bash -v $PWD/build:/result $OSBUILDER_IMAGE -c 'rm -rf /result/*'
   rm -rf $OUTDIR
 }
 
@@ -48,7 +48,7 @@ buildISO() {
 }
 
 fixPermissions() {
-   docker run --privileged -e USERID=$(id -u) -e GROUPID=$(id -g) --entrypoint /usr/bin/sh -v $OUTDIR:/workdir --rm $OSBUILDER_IMAGE -c 'chown -R $USERID:$GROUPID /workdir'
+  docker run --privileged -e USERID=$(id -u) -e GROUPID=$(id -g) --entrypoint /usr/bin/sh -v $OUTDIR:/workdir --rm $OSBUILDER_IMAGE -c 'chown -R $USERID:$GROUPID /workdir'
 }
 
 echo "Cleaning up old artifacts" && cleanup
