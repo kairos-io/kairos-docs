@@ -15,6 +15,51 @@ To install Kairos in ["Trusted Boot Mode"]({{< relref "../architecture/trustedbo
 The following steps describe how to create a virtual machine suitable for Kairos
 trusted boot setup, using [VirtualBox](https://www.virtualbox.org/).
 
+## Create an ISO
+
+If you don't already have an ISO to boot, you can create one using the following script:
+
+TODO:
+
+- Templetize the version of the image below
+
+```bash
+#!/bin/bash
+
+set -e
+
+IMAGE="${IMAGE:-quay.io/kairos/ubuntu:24.04-core-amd64-generic-v3.2.1-uki}"
+OSBUILDER_IMAGE="quay.io/kairos/osbuilder-tools:latest"
+OUTDIR=$PWD/build
+mkdir -p $OUTDIR/keys
+
+cleanup() {
+  # Run with docker to avoid sudo
+ docker run --rm --entrypoint /bin/bash -v $PWD/build:/result $OSBUILDER_IMAGE -c 'rm -rf /result/*'
+  rm -rf $OUTDIR
+}
+
+generateEfiKeys() {
+  docker run --rm -v $OUTDIR/keys:/result $OSBUILDER_IMAGE genkey -e 7 --output /result KairosKeys
+}
+
+buildISO() {
+  docker run --rm -v $OUTDIR:/result -v $OUTDIR/keys/:/keys  $OSBUILDER_IMAGE build-uki oci:$IMAGE --output-dir /result --keys /keys --output-type iso --boot-branding "KairosAI"
+}
+
+fixPermissions() {
+   docker run --privileged -e USERID=$(id -u) -e GROUPID=$(id -g) --entrypoint /usr/bin/sh -v $OUTDIR:/workdir --rm $OSBUILDER_IMAGE -c 'chown -R $USERID:$GROUPID /workdir'
+}
+
+echo "Cleaning up old artifacts" && cleanup
+echo "Generating UEFI keys" && generateEfiKeys
+echo "Building ISO" && buildISO
+echo "Fixing permissions" && fixPermissions
+```
+
+If the script succeeds, you will find a `.iso` file inside `$PWD/build` and a
+keys directory with the UEFI keys used to sign the image.
+
 ## Create a VM
 
 {{< alert color="warning" title="Warning" >}}
