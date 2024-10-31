@@ -43,8 +43,21 @@ generateEfiKeys() {
   docker run --rm -v $OUTDIR/keys:/result $OSBUILDER_IMAGE genkey -e 7 --output /result KairosKeys
 }
 
+buildBaseImage() {
+  docker build -t kairos-localai - <<EOF
+  FROM $IMAGE
+  RUN curl -L -o localai https://github.com/mudler/LocalAI/releases/download/v2.22.1/local-ai-Linux-x86_64
+  RUN chmod +x localai
+  RUN mv localai /usr/bin/localai
+EOF
+}
+
 buildISO() {
-  docker run --rm -v $OUTDIR:/result -v $OUTDIR/keys/:/keys  $OSBUILDER_IMAGE build-uki oci:$IMAGE --output-dir /result --keys /keys --output-type iso --boot-branding "KairosAI"
+  docker run --rm \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -v $OUTDIR:/result -v $OUTDIR/keys/:/keys  \
+    $OSBUILDER_IMAGE build-uki oci://kairos-localai \
+    --output-dir /result --keys /keys --output-type iso --boot-branding "KairosAI"
 }
 
 fixPermissions() {
@@ -53,6 +66,7 @@ fixPermissions() {
 
 echo "Cleaning up old artifacts" && cleanup
 echo "Generating UEFI keys" && generateEfiKeys
+echo "Building base image" && buildBaseImage
 echo "Building ISO" && buildISO
 echo "Fixing permissions" && fixPermissions
 ```
