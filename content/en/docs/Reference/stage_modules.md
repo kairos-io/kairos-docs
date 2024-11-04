@@ -129,9 +129,7 @@ stages:
     - files:
       - path: /tmp/bar
         encoding: "b64" # "base64", "gz", "gzip", "gz+base64", "gzip+base64", "gz+b64", "gzip+b64"
-        content: |
-                  #!/bin/sh
-                  echo "test"
+        content: IyEvYmluL3NoCgplY2hvICJ0ZXN0Igo=
         permissions: 0777
         owner: 1000
         group: 100
