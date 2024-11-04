@@ -136,7 +136,12 @@ cleanup() {
 }
 
 createVM() {
-    VBoxManage createvm --name "$VM_NAME" --ostype "Ubuntu24_LTS_arm64" --register
+    if [[ $(uname -m) == "x86_64" ]]; then
+        ostype="Linux_64"
+    else
+        ostype="Linux_arm64"
+    fi
+    VBoxManage createvm --name "$VM_NAME" --ostype "$ostype" --register
     VBoxManage modifyvm "$VM_NAME" \
         --memory 2000 \
         --cpus 1 \
@@ -145,12 +150,14 @@ createVM() {
         --nictype1 82540EM \
         --nic1 bridged \
         --tpm-type "2.0" \
-        --graphicscontroller vmsvga \
-        --boot1 disk \
-        --boot2 dvd # doesn't work
+        --graphicscontroller vmsvga
+        # These don't work of efi
+        # https://www.virtualbox.org/ticket/19364
+        #--boot1 disk \
+        #--boot2 dvd
 
     # Create a bridged network adapter
-    # VBoxManage hostonlyif ipconfig "$IFACE_NAME" --ip 192.168.56.1
+    VBoxManage hostonlyif ipconfig "$IFACE_NAME" --ip 192.168.56.1
     VBoxManage modifyvm "$VM_NAME" --nic1 bridged --bridgeadapter1 "$IFACE_NAME" 
 
     VBoxManage createmedium disk --filename "$DISK_PATH" --size 40960
@@ -177,7 +184,7 @@ run() {
     case "$1" in
         create)
             findOrCreateBridge
-	    if [[ -z "$IFACE_NAME" ]]; then
+            if [[ -z "$IFACE_NAME" ]]; then
               echo "Failed to find or create host-only network interface."
               echo "You need to pass an interface manually via the environment variable: IFACE_NAME"
               exit 1
