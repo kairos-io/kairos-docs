@@ -251,11 +251,13 @@ run() {
 
 run $@
 ```
+## Change boot order
 
-## Enroll the PK key
+Unfortunately, Virtual box doesn't support changing boot order in efi mode (https://www.virtualbox.org/ticket/19364).
+This means, after installation, the order needs to change manually, in order to boot from the disk instead of the cdrom (iso).
 
-This is a manual process.
+## Use localai web UI
+
+Visit http://127.0.0.1:8080 from your browser to use LocalAI web UI
 
 TODO: screenshots, process etc
-
-
