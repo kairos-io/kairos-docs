@@ -31,7 +31,6 @@ set -e
 IMAGE="${IMAGE:-quay.io/kairos/ubuntu:24.04-core-amd64-generic-v3.2.1-uki}"
 OSBUILDER_IMAGE="quay.io/kairos/osbuilder-tools:latest"
 OUTDIR=$PWD/build
-mkdir -p $OUTDIR/keys
 
 cleanup() {
   # Run with docker to avoid sudo
@@ -40,7 +39,50 @@ cleanup() {
 }
 
 generateEfiKeys() {
+  mkdir -p $OUTDIR/keys
   docker run --rm -v $OUTDIR/keys:/result $OSBUILDER_IMAGE genkey -e 7 --output /result KairosKeys
+}
+
+generateConfig() {
+  mkdir -p $OUTDIR/config
+  cat << EOF > "$OUTDIR/config/config.yaml"
+#cloud-config
+
+users:
+  - name: kairos
+    passwd: kairos
+
+install:
+  auto: true
+  reboot: true
+
+stages:
+  initramfs:
+    - files:
+        - path: /etc/systemd/system/localai.service
+          permissions: 0644
+          content: |
+            [Unit]
+            Description=Local AI server
+            After=network-online.target
+            Wants=network-online.target
+
+            [Service]
+            Type=simple
+            ExecStart=/usr/bin/localai --models-path="/usr/local/models"
+            Restart=on-failure
+            RestartSec=10
+
+            [Install]
+            WantedBy=multi-user.target
+  boot:
+    - name: "Starting localai"
+      commands:
+        - |
+          systemctl enable localai.service
+          systemctl start localai.service
+EOF
+
 }
 
 buildBaseImage() {
@@ -55,21 +97,30 @@ EOF
 buildISO() {
   docker run --rm \
     -v /var/run/docker.sock:/var/run/docker.sock \
-    -v $OUTDIR:/result -v $OUTDIR/keys/:/keys  \
+    -v $OUTDIR:/result \
+    -v $OUTDIR/keys/:/keys  \
+    -v $OUTDIR/config/:/config \
     $OSBUILDER_IMAGE build-uki oci://kairos-localai \
     --output-dir /result --keys /keys --output-type iso --boot-branding "KairosAI" \
-    --extend-cmdline "rd.debug rd.immucore.debug rd.shell"
+    --overlay-iso /config \
+    --extend-cmdline "rd.immucore.debug rd.debug rd.shell"
 }
 
 fixPermissions() {
   docker run --privileged -e USERID=$(id -u) -e GROUPID=$(id -g) --entrypoint /usr/bin/sh -v $OUTDIR:/workdir --rm $OSBUILDER_IMAGE -c 'chown -R $USERID:$GROUPID /workdir'
 }
 
+moveISOFile() {
+  mv build/kairos*.iso ./kairos.iso
+}
+
 echo "Cleaning up old artifacts" && cleanup
+echo "Generating Config" && generateConfig
 echo "Generating UEFI keys" && generateEfiKeys
 echo "Building base image" && buildBaseImage
 echo "Building ISO" && buildISO
 echo "Fixing permissions" && fixPermissions
+echo "Moving iso to current dir" && moveISOFile
 ```
 
 If the script succeeds, you will find a `.iso` file inside `$PWD/build` and a
@@ -91,29 +142,6 @@ set -e
 VM_NAME="KairosAI"
 ISO_PATH=$PWD/kairos.iso
 DISK_PATH=$PWD/Kairos.vdi
-
-findInterface() {
-    if [[ -n "$IFACE_NAME" ]]; then
-        echo $IFACE_NAME
-    elif command -v ip > /dev/null 2>&1; then
-        echo $(ip link show | grep -o 'vboxnet[0-9]\+' | tail -n 1)
-    elif command -v ifconfig > /dev/null 2>&1; then
-        echo $(ifconfig -a | grep -o 'vboxnet[0-9]\+' | tail -n 1)
-    else
-        echo ""
-    fi
-}
-
-findOrCreateBridge() {
-    IFACE_NAME=$(findInterface)
-
-    if [[ -z "$IFACE_NAME" ]]; then
-        # If no such interface exists, create a new one
-        if VBoxManage hostonlyif create > /dev/null 2>&1; then
-           IFACE_NAME=$(findInterface)
-        fi
-    fi
-}
 
 cleanup() {
     if VBoxManage list vms | grep -q "\"$VM_NAME\""; then
@@ -144,22 +172,20 @@ createVM() {
     fi
     VBoxManage createvm --name "$VM_NAME" --ostype "$ostype" --register
     VBoxManage modifyvm "$VM_NAME" \
-        --memory 2000 \
-        --cpus 1 \
+        --memory 10000 \
+        --cpus 2 \
         --chipset piix3 \
-        --firmware efi \
+        --firmware efi64 \
         --nictype1 82540EM \
-        --nic1 bridged \
+        --nic1 nat \
+        --natpf1 "guestssh,tcp,,2222,,22" \
+        --natpf1 "localai,tcp,,8080,,8080" \
         --tpm-type "2.0" \
         --graphicscontroller vmsvga
         # These don't work of efi
         # https://www.virtualbox.org/ticket/19364
         #--boot1 disk \
         #--boot2 dvd
-
-    # Create a bridged network adapter
-    VBoxManage hostonlyif ipconfig "$IFACE_NAME" --ip 192.168.56.1
-    VBoxManage modifyvm "$VM_NAME" --nic1 bridged --bridgeadapter1 "$IFACE_NAME" 
 
     VBoxManage createmedium disk --filename "$DISK_PATH" --size 40960
     VBoxManage storagectl "$VM_NAME" --name "SATA Controller" --add sata --controller IntelAhci
@@ -168,6 +194,26 @@ createVM() {
     # Add an IDE controller for CD-ROM and attach the ISO
     VBoxManage storagectl "$VM_NAME" --name "IDE Controller" --add ide
     VBoxManage storageattach "$VM_NAME" --storagectl "IDE Controller" --port 0 --device 0 --type dvddrive --medium "$ISO_PATH"
+
+
+    # Lots of non working things here. See the hack at the end of this function
+    #VBoxManage modifynvram $VM_NAME inituefivarstore
+    #VBoxManage modifynvram $VM_NAME enrollmssignatures
+    #VBoxManage modifynvram $VM_NAME enrollorclpk
+    #VBoxManage modifynvram $VM_NAME changevar --name=PK --filename=$PWD/build/keys/PK.der
+    #VBoxManage modifynvram $VM_NAME enrollmok ‑‑mok=$PWD/build/keys/KEK.auth ‑‑owner‑uuid=KairosKeys
+    #VBoxManage modifynvram $VM_NAME secureboot ‑‑enable
+    #VBoxManage modifynvram KairosAI changevar --name=db --filename=$PWD/build/keys/db.der
+
+    # Hack to allow enrolling the PK key
+    # I don't know why exactly but only this works. We allow it to boot once,
+    # probably some default UEFI vars are written on the first boot which then
+    # allow us to just enroll our PK key.
+    # Also, it only works after adding disks and all (that's why it's here at the end).
+    # Probably because it needs the cdrom to enroll some of the keys except the PK (?)
+    VBoxManage startvm "$VM_NAME" --type=headless && sleep 3
+    VBoxManage controlvm "$VM_NAME" poweroff && sleep 3
+    VBoxManage modifynvram $VM_NAME enrollpk ‑‑platform‑key=$PWD/build/keys/PK.der ‑‑owner‑uuid=KairosKeys
 }
 
 usage() {
@@ -184,12 +230,6 @@ run() {
     # Determine which command to run based on the first argument
     case "$1" in
         create)
-            findOrCreateBridge
-            if [[ -z "$IFACE_NAME" ]]; then
-              echo "Failed to find or create host-only network interface."
-              echo "You need to pass an interface manually via the environment variable: IFACE_NAME"
-              exit 1
-            fi
             createVM
             ;;
         start)
@@ -209,7 +249,7 @@ run() {
     esac
 }
 
-echo $(run $@)
+run $@
 ```
 
 ## Enroll the PK key
