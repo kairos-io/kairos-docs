@@ -57,7 +57,8 @@ buildISO() {
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v $OUTDIR:/result -v $OUTDIR/keys/:/keys  \
     $OSBUILDER_IMAGE build-uki oci://kairos-localai \
-    --output-dir /result --keys /keys --output-type iso --boot-branding "KairosAI"
+    --output-dir /result --keys /keys --output-type iso --boot-branding "KairosAI" \
+    --extend-cmdline "rd.debug rd.immucore.debug rd.shell"
 }
 
 fixPermissions() {
