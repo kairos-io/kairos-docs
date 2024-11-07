@@ -21,9 +21,14 @@ Every component is extensible and modular such as it can be customized and repla
 
 In order to convert a Linux Distribution to Kairos, the distribution must meet the following requirements:
 
-- Either use `systemd` or another init system
-- Use `grub` as bootloader
-- If the system supposedly is meant to be used with EFI, the kernel needs to have enabled the `CONFIG_EFI_STUB` option ( see: https://docs.kernel.org/admin-guide/efi-stub.html)
+- Trusted Boot Images
+  - Use a recent enough version of `systemd` as init system
+  - Use `systemd-boot` as bootloader
+- Secure Boot Only Images
+  - Either use `systemd` or `openrc` init system
+  - Use `grub` as bootloader
+- All
+  - If the system supposedly is meant to be used with EFI, the kernel needs to have enabled the `CONFIG_EFI_STUB` option ( see: https://docs.kernel.org/admin-guide/efi-stub.html)
 
 To build Kairos from scratch, see [the documentation]({{< relref "../reference/build-from-scratch" >}}) section.
 
