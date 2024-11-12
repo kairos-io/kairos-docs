@@ -22,7 +22,7 @@ Every component is extensible and modular such as it can be customized and repla
 In order to convert a Linux Distribution to Kairos, the distribution must meet the following requirements:
 
 - Trusted Boot Images
-  - Use a recent enough version of `systemd` as init system
+  - Use a recent enough version of `systemd` (256+) as init system
   - Use `systemd-boot` as bootloader
 - Secure Boot Only Images
   - Either use `systemd` or `openrc` init system
