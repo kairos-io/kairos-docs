@@ -6,6 +6,12 @@ weight: 2
 description: "A single stop to learn about Known Issues, Deprecation Warnings and/or Remarkable Changes in this release"
 ---
 
+{{% alert title="SUC Upgrade" color="warning" %}}
+We have identified a potential issue when upgrading from older versions into 3.2.2 via Kubernetes with suc-upgrade. **If your upgrade scenario is via Kubernetes, we recommend NOT upgrading to this version and waiting for v3.2.3**.
+
+If you still need to upgrade, check [#3010](https://github.com/kairos-io/kairos/issues/3010) for a workaround
+{{% /alert %}}
+
 {{% alert title="Enki" color="warning" %}}
 Enki has been deprecated in favor of [AuroraBoot](https://github.com/kairos-io/auroraboot).
 {{% /alert %}}
