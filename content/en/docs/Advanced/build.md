@@ -101,7 +101,7 @@ spec:
                   done
               volumeMounts:
               - name: artifacts
-                  mountPath: /artifacts
+                mountPath: /artifacts
 ```
 
 Apply the manifest with `kubectl apply`.
