@@ -4,6 +4,7 @@ title: Alerts Styling
 This page demonstrates the styling and colors of alerts in the Kairos Docs.
 
 The goal will be to standardize alerts between notes, info, etc. across different pages.
+
 ## Alerts
 
 {{% alert title="Note" color="primary" %}}
