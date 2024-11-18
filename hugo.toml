@@ -108,20 +108,20 @@ provider_version = "v2.7.5"
 # renovate: datasource=github-releases depName=k3s-io/k3s
 k3s_version = "v1.31.2+k3s1"
 # renovate: datasource=github-releases depName=kairos-io/kairos
-kairos_version = "v3.2.2"
+kairos_version = "v3.2.3"
 # renovate: datasource=github-releases depName=kairos-io/osbuilder
 osbuilder_version = "v0.400.3"
 # renovate: datasource=github-releases depName=kairos-io/enki
 enki_version = "v0.2.2"
 # renovate: datasource=github-releases depName=kairos-io/AuroraBoot
-auroraboot_version = "v0.3.1"
+auroraboot_version = "v0.3.3"
 flavor = "debian"
 registryURL = "quay.io/kairos"
 defaultFamily = "ubuntu"
 defaultFlavor = "ubuntu"
 defaultFlavorRelease = "24.04"
 # renovate: datasource=github-releases depName=kairos-io/kairos-framework
-defaultFrameworkRelease = "v2.14.3"
+defaultFrameworkRelease = "v2.14.4"
 # renovate: datasource=github-releases depName=rancher/system-upgrade-controller
 system_upgrade_controller = "v0.14.1"
 # User interface configuration
