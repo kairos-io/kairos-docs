@@ -24,8 +24,8 @@ If you don't already have an ISO to boot, you can create one using the following
 
 set -e
 
-IMAGE="${IMAGE:-{{- $.Page.Site.Params.softwareVersions.registryURL -}}/ubuntu:24.04-core-amd64-generic-{{- $.Page.Site.Params.softwareVersions.kairos_version -}}-uki}"
-AURORABOOT_IMAGE="{{- $.Page.Site.Params.softwareVersions.registryURL -}}/auroraboot:latest"
+IMAGE="${IMAGE:-{{< registryURL >}}/ubuntu:24.04-core-amd64-generic-{{< kairosVersion >}}-uki}"
+AURORABOOT_IMAGE="{{< registryURL >}}/auroraboot:latest"
 OUTDIR=$PWD/build
 
 cleanup() {
