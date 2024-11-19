@@ -96,10 +96,14 @@ buildISO() {
     -v $OUTDIR:/result \
     -v $OUTDIR/keys/:/keys  \
     -v $OUTDIR/config/:/config \
-    $AURORABOOT_IMAGE build-uki oci://kairos-localai \
-    --output-dir /result --keys /keys --output-type iso --boot-branding "KairosAI" \
+    $AURORABOOT_IMAGE build-uki \
+    --output-dir /result \
+    --keys /keys \
+    --output-type iso \
+    --boot-branding "KairosAI" \
     --overlay-iso /config \
-    --extend-cmdline "rd.immucore.debug rd.debug rd.shell"
+    --extend-cmdline "rd.immucore.debug rd.debug rd.shell" \
+    oci://kairos-localai
 }
 
 fixPermissions() {
