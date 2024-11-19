@@ -19,28 +19,24 @@ trusted boot setup, using [VirtualBox](https://www.virtualbox.org/).
 
 If you don't already have an ISO to boot, you can create one using the following script:
 
-TODO:
-
-- Templetize the version of the image below
-
 ```bash
 #!/bin/bash
 
 set -e
 
-IMAGE="${IMAGE:-quay.io/kairos/ubuntu:24.04-core-amd64-generic-v3.2.1-uki}"
-OSBUILDER_IMAGE="quay.io/kairos/osbuilder-tools:latest"
+IMAGE="${IMAGE:-{{- $.Page.Site.Params.softwareVersions.registryURL -}}/ubuntu:24.04-core-amd64-generic-{{- $.Page.Site.Params.softwareVersions.kairos_version -}}-uki}"
+AURORABOOT_IMAGE="{{- $.Page.Site.Params.softwareVersions.registryURL -}}/auroraboot:latest"
 OUTDIR=$PWD/build
 
 cleanup() {
   # Run with docker to avoid sudo
-  docker run --rm --entrypoint /bin/bash -v $PWD/build:/result $OSBUILDER_IMAGE -c 'rm -rf /result/*'
+  docker run --rm --entrypoint /bin/bash -v $PWD/build:/result $AURORABOOT_IMAGE -c 'rm -rf /result/*'
   rm -rf $OUTDIR
 }
 
 generateEfiKeys() {
   mkdir -p $OUTDIR/keys
-  docker run --rm -v $OUTDIR/keys:/result $OSBUILDER_IMAGE genkey -e 7 --output /result KairosKeys
+  docker run --rm -v $OUTDIR/keys:/result $AURORABOOT_IMAGE genkey -e 7 --output /result KairosKeys
 }
 
 generateConfig() {
@@ -100,14 +96,14 @@ buildISO() {
     -v $OUTDIR:/result \
     -v $OUTDIR/keys/:/keys  \
     -v $OUTDIR/config/:/config \
-    $OSBUILDER_IMAGE build-uki oci://kairos-localai \
+    $AURORABOOT_IMAGE build-uki oci://kairos-localai \
     --output-dir /result --keys /keys --output-type iso --boot-branding "KairosAI" \
     --overlay-iso /config \
     --extend-cmdline "rd.immucore.debug rd.debug rd.shell"
 }
 
 fixPermissions() {
-  docker run --privileged -e USERID=$(id -u) -e GROUPID=$(id -g) --entrypoint /usr/bin/sh -v $OUTDIR:/workdir --rm $OSBUILDER_IMAGE -c 'chown -R $USERID:$GROUPID /workdir'
+  docker run --privileged -e USERID=$(id -u) -e GROUPID=$(id -g) --entrypoint /usr/bin/sh -v $OUTDIR:/workdir --rm $AURORABOOT_IMAGE -c 'chown -R $USERID:$GROUPID /workdir'
 }
 
 moveISOFile() {
@@ -195,18 +191,8 @@ createVM() {
     VBoxManage storagectl "$VM_NAME" --name "IDE Controller" --add ide
     VBoxManage storageattach "$VM_NAME" --storagectl "IDE Controller" --port 0 --device 0 --type dvddrive --medium "$ISO_PATH"
 
-
-    # Lots of non working things here. See the hack at the end of this function
-    #VBoxManage modifynvram $VM_NAME inituefivarstore
-    #VBoxManage modifynvram $VM_NAME enrollmssignatures
-    #VBoxManage modifynvram $VM_NAME enrollorclpk
-    #VBoxManage modifynvram $VM_NAME changevar --name=PK --filename=$PWD/build/keys/PK.der
-    #VBoxManage modifynvram $VM_NAME enrollmok ‑‑mok=$PWD/build/keys/KEK.auth ‑‑owner‑uuid=KairosKeys
-    #VBoxManage modifynvram $VM_NAME secureboot ‑‑enable
-    #VBoxManage modifynvram KairosAI changevar --name=db --filename=$PWD/build/keys/db.der
-
     # Hack to allow enrolling the PK key
-    # I don't know why exactly but only this works. We allow it to boot once,
+    # Not sure why, but only this works. We allow it to boot once,
     # probably some default UEFI vars are written on the first boot which then
     # allow us to just enroll our PK key.
     # Also, it only works after adding disks and all (that's why it's here at the end).
