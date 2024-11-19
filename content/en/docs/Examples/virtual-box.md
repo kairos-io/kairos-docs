@@ -47,6 +47,8 @@ generateConfig() {
 users:
   - name: kairos
     passwd: kairos
+    groups:
+      - admin
 
 install:
   auto: true
