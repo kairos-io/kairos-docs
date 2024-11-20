@@ -14,6 +14,7 @@ To install Kairos in ["Trusted Boot Mode"]({{< relref "../architecture/trustedbo
 
 The following steps describe how to create a virtual machine suitable for Kairos
 trusted boot setup, using [VirtualBox](https://www.virtualbox.org/).
+As an example workload, [LocalAI](https://localai.io/) will be used.
 
 ## Create an ISO
 
@@ -243,6 +244,7 @@ run() {
 
 run $@
 ```
+
 ## Change boot order
 
 Unfortunately, Virtual box doesn't support changing boot order in efi mode (https://www.virtualbox.org/ticket/19364).
@@ -251,5 +253,3 @@ This means, after installation, the order needs to change manually, in order to 
 ## Use localai web UI
 
 Visit http://127.0.0.1:8080 from your browser to use LocalAI web UI
-
-TODO: screenshots, process etc
