@@ -3,7 +3,7 @@ title: "Kairos release v2.4"
 date: 2023-09-19
 linkTitle: "Kairos release v2.4"
 description: "Kairos release v2.4"
-author: Dimitris Karakasilis ([LinkedIn](https://www.linkedin.com/in/jimmykarily/)) ([GitHub](https://github.com/jimmykarily))
+author: Dimitris Karakasilis ([LinkedIn](https://www.linkedin.com/in/dkarakasilis/)) ([GitHub](https://github.com/jimmykarily))
 ---
 <h1 align="center">
   <br>

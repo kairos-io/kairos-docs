@@ -3,7 +3,7 @@ title: "Kairos release v2.4.2"
 date: 2023-11-14
 linkTitle: "Kairos release v2.4.2"
 description: "A patch release that looks bigger than it is"
-author: Dimitris Karakasilis ([LinkedIn](https://www.linkedin.com/in/jimmykarily/)) ([GitHub](https://github.com/jimmykarily)), Itxaka Serrano Garcia ([GitHub](https://github.com/Itxaka))
+author: Dimitris Karakasilis ([LinkedIn](https://www.linkedin.com/in/dkarakasilis/)) ([GitHub](https://github.com/jimmykarily)), Itxaka Serrano Garcia ([GitHub](https://github.com/Itxaka))
 
 ---
 <h1 align="center">
