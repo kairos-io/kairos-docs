@@ -113,14 +113,6 @@ After logging in, you can check the status of the cluster with the `kubectl` too
 sudo -i
 ```
 
-{{% alert title="Bug setting the KUBECONFIG automatically" color="warning" %}}
-There's a bug that affects all but openSUSE systems that prevents the KUBECONFIG to be set automatically. The fix has been merged and will be part of the v3.1.2 release. In the meantime just follow the steps below to set the KUBECONFIG manually.
-{{% /alert %}}
-
-```bash
-export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
-```
-
 If you display the pods within the `kube-system` namespace, you should see the `coredns` and `local-path-provisioner` pods running. E.g.:
 
 ```
