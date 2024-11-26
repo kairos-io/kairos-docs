@@ -31,11 +31,13 @@ WORKDIR /k3s
 
 RUN <<EOF
 
+# Create directories
 mkdir -p usr/local/bin
 mkdir -p usr/local/sbin
 mkdir -p usr/local/lib/systemd/system/
 mkdir -p usr/lib/extension-release.d/
 
+# Download latest k3s
 latest_version=$(curl -s https://api.github.com/repos/k3s-io/k3s/releases/latest | jq -r '.tag_name')
 URL=https://github.com/k3s-io/k3s/releases/download/${latest_version}/k3s
 curl -o usr/local/bin/k3s -fsSL ${URL}
@@ -44,6 +46,7 @@ ln -s ./k3s usr/local/bin/kubectl
 ln -s ./k3s usr/local/bin/ctr
 ln -s ./k3s usr/local/bin/crictl
 
+# Create extensions-release file
 name=k3s-"$latest_version"
 printf "ID=_any\nARCHITECTURE=x86-64\n" > usr/lib/extension-release.d/extension-release."${name}"
 printf "EXTENSION_RELOAD_MANAGER=1\n" >> usr/lib/extension-release.d/extension-release."${name}"
@@ -51,10 +54,34 @@ find . -type d -empty -delete
 
 EOF
 
+# Create just one layer with all the files that we need
 FROM scratch
-
-# Last layer includes all the needed files:
 COPY --from=builder /k3s /
+```
+
+Build the image using docker:
+
+```bash
+docker build -t k3s-sysext .
+```
+
+If you don't have a set of keys already,
+create one with the following Auroraboot command:
+
+```bash
+docker run --rm -v "$PWD"/keys:/keys quay.io/kairos/auroraboot:latest \
+  genkey --output /keys
+```
+
+Build the system extension using Auroraboot:
+
+```bash
+docker run \
+  -v "$PWD"/keys:/keys \
+  -v "$PWD":/build/ \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  --rm \
+  quay.io/kairos/auroraboot:latest sysext k3s k3s-sysext --private-key=/keys/PRIVATE_KEY --certificate=/keys/CERTIFICATE --output=/build
 ```
 
 ## Deploying Kairos with a sysext
