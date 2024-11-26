@@ -11,7 +11,7 @@ A container-based operating system is an OS that is shipped via containers. Inde
 
 - **Single-image** The OS is a single container image which contains all the OS components, including Kernel and Initrd.
 - **Tamper-proof upgrades** Upgrades are atomic, A/B swaps with fallback mechanisms and automatic boot assessment.
-- **Distributed via container registries** Bootable images are standard OCI artifacts that can be hosted in any container regist
+- **Distributed via container registries** Bootable images are standard OCI artifacts that can be hosted in any container registry.
 - **Platform Engineer-friendly** Adapt the infrastructure to your needs by plugging images into your already-existing workflow pipeline. Customizing an immutable OS becomes as easy as writing a Dockerfile.
 
 ## A/B Upgrades
@@ -29,7 +29,7 @@ If you are operating a Kubernetes cluster and deploying applications on top, cha
 
 ![kairos-factory](https://user-images.githubusercontent.com/2420543/197808767-e213709d-af21-4e32-9a78-818f34170077.png)
 
-Container images can be extended after a build by using standard container building practices and seamlessly plug into your existing pipelines. Kairos allows to seamlessly upgrade to container images that are derived from other versions.
+Container images can be extended after a build by using standard container building practices and can seamlessly plug into your existing pipelines. Kairos allows you to seamlessly upgrade to container images that are derived from other versions.
 
 We believe that bringing rollbacks, or incremental patches upgrades increases the exposure to infrastructure drift. In opposition, immutable, single images are deployed to the nodes as they were apps - no more discrepancies in your nodes - no need of configuration management tools like Chef, Ansible, or alikes.
 

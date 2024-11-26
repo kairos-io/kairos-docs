@@ -20,8 +20,8 @@ By using the standard cloud-config syntax, a subset of the functionalities are a
 
 ### Configuration order
 
-When an action is done (install, upgrade, reset) several default dirs in the system are read to obtain the configuration and are merged together.
-The dirs and the order in which they are read and merged, is as shown below, from first to last. Notice that any values found in different dirs will override existing ones in previous dirs.
+When an action is done (install, upgrade, reset) several default directories in the system are read to obtain the configuration and are merged together.
+The directories and the order in which they are read and merged, is as shown below, from first to last. Notice that any values found in different directories will override existing ones in previous directories.
 
  - /run/initramfs/live (Only available on LiveCD/Netboot)
  - /usr/local/cloud-config
@@ -51,7 +51,7 @@ stages:
    before-reset:
      - name: "Setting"
        commands:
-       - | 
+       - |
           echo "Run a command before reset the node!"
 
 ```
@@ -68,12 +68,12 @@ Below there is a detailed list of the stages available that can be used in the c
 | _reconcile_                | This stage is executed 5m after boot and periodically each 60m.                                                                                                                                                                                                                     |
 | _kairos-install.pre_       | This stage is executed before installation of the OS starts                                                                                                                                                                                                                         |
 | _kairos-uki-install.pre_   | This stage is executed before installation of the OS starts. Only run under Trusted Boot                                                                                                                                                                                            |
-| _kairos-install.after_     | This stage is executed after installation of the OS ends                                                                                                                                                                                                                            |                         
-| _kairos-uki-install.after_ | This stage is executed after installation of the OS ends. Only run under Trusted Boot                                                                                                                                                                                               |                         
-| _kairos-uki-reset.pre_     | This stage is executed before reset. Only run under Trusted Boot                                                                                                                                                                                                                    |                         
-| _kairos-uki-reset.after_   | This stage is executed after reset. Only run under Trusted Boot                                                                                                                                                                                                                     |                       
-| _kairos-uki-upgrade.pre_   | This stage is executed before upgrade. Only run under Trusted Boot                                                                                                                                                                                                                  |                       
-| _kairos-uki-upgrade.after_ | This stage is executed after upgrade. Only run under Trusted Boot                                                                                                                                                                                                                   |                       
+| _kairos-install.after_     | This stage is executed after installation of the OS ends                                                                                                                                                                                                                            |
+| _kairos-uki-install.after_ | This stage is executed after installation of the OS ends. Only run under Trusted Boot                                                                                                                                                                                               |
+| _kairos-uki-reset.pre_     | This stage is executed before reset. Only run under Trusted Boot                                                                                                                                                                                                                    |
+| _kairos-uki-reset.after_   | This stage is executed after reset. Only run under Trusted Boot                                                                                                                                                                                                                     |
+| _kairos-uki-upgrade.pre_   | This stage is executed before upgrade. Only run under Trusted Boot                                                                                                                                                                                                                  |
+| _kairos-uki-upgrade.after_ | This stage is executed after upgrade. Only run under Trusted Boot                                                                                                                                                                                                                   |
 | _before-install_           | This stage happens after partitioning but before the image OS is applied                                                                                                                                                                                                            |
 | _after-install-chroot_     | This stage happens after installing active and grub inside chroot[^1]                                                                                                                                                                                                               |
 | _after-install_            | This stage runs after active,passive and recovery images are installed and after disks have been encrypted                                                                                                                                                                          |
