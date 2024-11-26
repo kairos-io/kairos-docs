@@ -18,8 +18,8 @@ users:
 - name: "kairos"
   passwd: "kairos"
   lock_passwd: true
-  groups: "admin"
-  ssh_authorized_keys:
+  groups: [ "admin" ]
+  # ssh_authorized_keys:
   # - github:mudler
 
 # enable debug logging
