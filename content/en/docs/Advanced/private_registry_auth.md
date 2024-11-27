@@ -6,7 +6,7 @@ date: 2023-08-08
 ---
 
 
-As the source for install or upgrade can be an OCI image and sometimes those are behind a private repository, Kairos
+As the source for install or upgrade can be an OCI image and sometimes those are behind a private container registry, Kairos
 implements the default basic authentication used by docker for private registries.
 
 To install/upgrade with a container image behind a registry with authentication, Kairos reads the following files in order to find about registry auth:
@@ -15,6 +15,11 @@ To install/upgrade with a container image behind a registry with authentication,
 - If set, DOCKER_CONFIG environment variable which points to a directory [as per the docs](https://docs.docker.com/reference/cli/docker/#environment-variables).
 - ${XDG_RUNTIME_DIR}/containers/auth.json for podman
 
+{{% alert title="Note" color="info" %}}
+If you are using `sudo` to perform the upgrade, you have a couple of options:
+- You can create the file `/root/.docker/config.json` with your credentials.
+- You can use `sudo --preserve-env` to give `sudo` access to the relevant environment variables.
+{{% /alert %}}
 
 See the [login docs for docker](https://docs.docker.com/engine/reference/commandline/login/) or the [login docs for podman](https://docs.podman.io/en/latest/markdown/podman-login.1.html) for more information.
 
