@@ -34,7 +34,7 @@ To specify an image, use the `--source` flag:
 ```bash
 sudo kairos-agent upgrade --source <type>:<address>
 ```
-Where type can be `dir` or `oci` and address is the path to the dir in the `dir` case or the <repo/image:tag> combination in the <oci> case.
+Where type can be `dir` or `oci` and address is the path to the directory in the `dir` case or the `<repo/image:tag>` combination in the `oci` case.
 
 For example, if you wanted to upgrade to the latest available stable release you could run the following command:
 
