@@ -76,12 +76,26 @@ docker run --rm -v "$PWD"/keys:/keys quay.io/kairos/auroraboot:latest \
 Build the system extension using Auroraboot:
 
 ```bash
-docker run \
+docker run --rm \
   -v "$PWD"/keys:/keys \
-  -v "$PWD":/build/ \
+  -v "$PWD"/system-extensions:/build/ \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  --rm \
-  quay.io/kairos/auroraboot:latest sysext k3s k3s-sysext --private-key=/keys/PRIVATE_KEY --certificate=/keys/CERTIFICATE --output=/build
+  quay.io/kairos/auroraboot:latest sysext k3s k3s-sysext --private-key=/keys/db.key --certificate=/keys/db.pem --output=/build
+```
+
+## Creating a Kairos image signed with the same keys
+
+```bash
+docker run --rm --privileged \
+  -v $PWD/build:/result \
+  -v $PWD/keys:/keys \
+  -v $PWD/system-extensions:/system-extensions \
+  quay.io/kairos/auroraboot build-uki \
+    --output-dir /result \
+    --overlay-iso /system-extensions \
+    -k /keys \
+    --output-type iso \
+    oci:{{<oci variant="core">}}-uki
 ```
 
 ## Deploying Kairos with a sysext
