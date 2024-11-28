@@ -46,12 +46,76 @@ ln -s ./k3s usr/local/bin/kubectl
 ln -s ./k3s usr/local/bin/ctr
 ln -s ./k3s usr/local/bin/crictl
 
+# Create service files
+cat << K3SSERVICE > usr/local/lib/systemd/system/k3s.service
+[Unit]
+Description=Lightweight Kubernetes
+Documentation=https://k3s.io
+Wants=network-online.target
+After=network-online.target
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+Type=notify
+EnvironmentFile=-/etc/default/%N
+EnvironmentFile=-/etc/sysconfig/%N
+EnvironmentFile=-/usr/local/lib/systemd/system/k3s.service.env
+KillMode=process
+Delegate=yes
+# Having non-zero Limit*s causes performance problems due to accounting overhead
+# in the kernel. We recommend using cgroups to do container-local accounting.
+LimitNOFILE=1048576
+LimitNPROC=infinity
+LimitCORE=infinity
+TasksMax=infinity
+TimeoutStartSec=0
+Restart=always
+RestartSec=5s
+ExecStartPre=/bin/sh -xc '! /usr/bin/systemctl is-enabled --quiet nm-cloud-setup.service 2>/dev/null'
+ExecStartPre=-/sbin/modprobe br_netfilter
+ExecStartPre=-/sbin/modprobe overlay
+ExecStart=/usr/local/bin/k3s server
+K3SSERVICE
+
+cat << AGENTSERVICE > usr/local/lib/systemd/system/k3s-agent.service
+[Unit]
+Description=Lightweight Kubernetes
+Documentation=https://k3s.io
+Wants=network-online.target
+After=network-online.target
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+Type=notify
+EnvironmentFile=-/etc/default/%N
+EnvironmentFile=-/etc/sysconfig/%N
+EnvironmentFile=-/usr/local/lib/systemd/system/k3s-agent.service.env
+KillMode=process
+Delegate=yes
+# Having non-zero Limit*s causes performance problems due to accounting overhead
+# in the kernel. We recommend using cgroups to do container-local accounting.
+LimitNOFILE=1048576
+LimitNPROC=infinity
+LimitCORE=infinity
+TasksMax=infinity
+TimeoutStartSec=0
+Restart=always
+RestartSec=5s
+ExecStartPre=/bin/sh -xc '! /usr/bin/systemctl is-enabled --quiet nm-cloud-setup.service 2>/dev/null'
+ExecStartPre=-/sbin/modprobe br_netfilter
+ExecStartPre=-/sbin/modprobe overlay
+ExecStart=/usr/local/bin/k3s agent
+AGENTSERVICE
+
 # Create extensions-release file
 name=k3s-"$latest_version"
 printf "ID=_any\nARCHITECTURE=x86-64\n" > usr/lib/extension-release.d/extension-release."${name}"
 printf "EXTENSION_RELOAD_MANAGER=1\n" >> usr/lib/extension-release.d/extension-release."${name}"
 find . -type d -empty -delete
-
 EOF
 
 # Create just one layer with all the files that we need
@@ -80,10 +144,14 @@ docker run --rm \
   -v "$PWD"/keys:/keys \
   -v "$PWD"/system-extensions:/build/ \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  quay.io/kairos/auroraboot:latest sysext k3s k3s-sysext --private-key=/keys/db.key --certificate=/keys/db.pem --output=/build
+  quay.io/kairos/auroraboot:latest sysext --private-key=/keys/db.key --certificate=/keys/db.pem --output=/build k3s k3s-sysext
 ```
 
-## Creating a Kairos image signed with the same keys
+## Creating a Kairos image
+
+The following command will create a Kairos iso which embeds the system extension
+we created in the steps above. The OS image itself will be signed with the same
+set of keys as the system extension.
 
 ```bash
 docker run --rm --privileged \
@@ -98,7 +166,20 @@ docker run --rm --privileged \
     oci:{{<oci variant="core">}}-uki
 ```
 
-## Deploying Kairos with a sysext
+## Deploying Kairos
+
+The ISO inside the `build` directory is ready to be booted on a system that
+supports secure boot, either a VM or real hardware.
+
+The process is described in the Kairos docs here:
+
+https://kairos.io/docs/installation/trustedboot/#installation
+
+After the installation has finished, we can check that k3s is indeed available:
+
+```bash
+# TODO
+```
 
 ## Conclusion
 
