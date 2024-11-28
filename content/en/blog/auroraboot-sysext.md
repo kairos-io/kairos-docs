@@ -175,13 +175,53 @@ The process is described in the Kairos docs here:
 
 https://kairos.io/docs/installation/trustedboot/#installation
 
+The following config.yaml will ensure the k3s service starts automatically on boot:
+
+```yaml
+#cloud-config
+
+users:
+  - name: kairos
+    passwd: kairos
+    groups:
+      - admin
+
+stages:
+    boot:
+    - name: "Starting localai"
+      commands:
+        - |
+          systemctl enable k3s.service
+          systemctl start k3s.service
+```
+
 After the installation has finished, we can check that k3s is indeed available:
 
 ```bash
-# TODO
+# Make sure we get a login shell for root
+sudo -i
+systemd-sysext status
+```
+
+the output should look something like this:
+
+```
+HIERARCHY      EXTENSIONS SINCE
+/usr/bin       none       -
+/usr/include   none       -
+/usr/lib       k3s        Thu 2024-11-28 14:46:40 UTC
+/usr/local/bin k3s        Thu 2024-11-28 14:46:40 UTC
+/usr/local/lib k3s        Thu 2024-11-28 14:46:40 UTC
+/usr/sbin      none       -
+/usr/share     none       -
+/usr/src       none       -
 ```
 
 ## Conclusion
+
+With the help of systemd system extensions we managed to extend a core image with
+k3s. The system extension can be built and updated on a different pace than the OS itself.
+It's also signed and checked by systemd making it tamper proof.
 
 ## Read more
 
