@@ -188,7 +188,7 @@ users:
 
 stages:
     boot:
-    - name: "Starting localai"
+    - name: "Starting k3s"
       commands:
         - |
           systemctl enable k3s.service
