@@ -5,13 +5,35 @@ linkTitle: "Creating Kairos system extensions"
 author: Dimitris Karakasilis ([GitHub](https://github.com/jimmykarily), [LinkedIn](https://www.linkedin.com/in/dkarakasilis/))
 ---
 
-The most secure way to install Kairos is in [trusted boot mode](https://kairos.io/docs/installation/trustedboot/). In this mode, the whole OS is measured and signed, making it impossible for a malicious actor to tamper with it. It's natural to ask, should there be another way to install Kairos then? The answer is, there are some prerequisites for Trusted boot to work (e.g. the existence of a TPM chip) and some limitations posed by the various firmwares. One such limitation is the maximum size of the efi file that the system can boot. This limit is different between implementations and we've seen it ranging from 800Mb to more than 1.3Gb. No matter what the limit is, eventually, a project may hit it. The reasons could be, additional drivers, more tools and binaries or dependencies in general.
+In this guide, you'll learn how to extend Kairos OS functionality using system extensions while maintaining security through trusted boot. We'll walk through creating a system extension that adds Kubernetes capabilities (k3s) to a Kairos core image. This approach allows you to keep your base OS image small and secure while dynamically adding features at runtime. Whether you're dealing with firmware size limitations or want to maintain separate lifecycles for different components, system extensions provide a powerful solution that doesn't compromise on security.
 
-One first step would be to ensure that there are no unnecessary files dangling in the OS image. But sometimes, this is not enough to make the final efi image small enough to boot on a specific device (or hypervisor).
+## Understanding Trusted Boot in Kairos
 
-In such cases, there is another concept that can help. That is the [systemd system extensions](https://www.freedesktop.org/software/systemd/man/latest/systemd-sysext.html). In their own words:
+The most secure way to install Kairos is in [trusted boot mode](https://kairos.io/docs/installation/trustedboot/). In this mode, the whole OS is measured and signed, making it impossible for a malicious actor to tamper with it.
+
+### Limitations and Challenges
+
+You might wonder - should there be another way to install Kairos? The answer lies in some practical limitations:
+
+- Trusted boot requires specific hardware support (like a TPM chip)
+- Different firmware implementations have varying size limits for EFI files
+- We've observed these limits ranging from 800MB to more than 1.3GB
+- Projects can hit these limits when adding:
+  - Additional drivers
+  - Extra tools and binaries
+  - Other dependencies
+
+### Addressing Size Constraints
+
+One first step would be to ensure that there are no unnecessary files in the OS image. However, optimization alone isn't always enough to make the final EFI image small enough to boot on specific devices or hypervisors.
+
+This is where [systemd system extensions](https://www.freedesktop.org/software/systemd/man/latest/systemd-sysext.html) come into play. In their own words:
 
 > System extension images may – dynamically at runtime — extend the /usr/ and /opt/ directory hierarchies with additional files
+
+The following diagram illustrates how system extensions overlay on top of the base OS:
+
+![System Extensions Architecture](/assets/img/k3s-sysext.png)
 
 The system extensions are images signed with the same keys as your OS, which makes them tamper proof. They are "overlayed" at runtime and can be used to extract parts of the system to separate images, making the main OS image smaller and thus possible to boot but also easier to maintain. The lifecycle of the extensions is different from that of the OS, thus they can be built and deployed separately.
 
