@@ -34,7 +34,7 @@ This is where [systemd system extensions](https://www.freedesktop.org/software/s
 The following diagram illustrates how system extensions overlay on top of the base OS:
 
 TODO: Change the link to the image
-![System Extensions Architecture](https://github.com/kairos-io/kairos-docs/blob/a18649ea37108c6de084b49532d9077ed2fa882d/assets/img/k3s-sysext.png)
+![System Extensions Architecture](https://raw.githubusercontent.com/kairos-io/kairos-docs/a18649ea37108c6de084b49532d9077ed2fa882d/assets/img/k3s-sysext.png)
 
 The system extensions are images signed with the same keys as your OS, which makes them tamper proof. They are "overlayed" at runtime and can be used to extract parts of the system to separate images, making the main OS image smaller and thus possible to boot but also easier to maintain. The lifecycle of the extensions is different from that of the OS, thus they can be built and deployed separately.
 
@@ -204,7 +204,7 @@ supports secure boot, either a VM or real hardware.
 
 The process is described in the Kairos docs here:
 
-https://kairos.io/docs/installation/trustedboot/#installation
+https://kairos.io/docs/installation/trustedboot#installation
 
 The following config.yaml will ensure the k3s service starts automatically on boot:
 
