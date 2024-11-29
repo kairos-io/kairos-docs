@@ -200,14 +200,14 @@ users:
     passwd: kairos
     groups:
       - admin
-
 stages:
-    boot:
-    - name: "Starting k3s"
-      commands:
-        - |
-          systemctl enable k3s.service
-          systemctl start k3s.service
+   boot:
+     - name: "Setup users"
+       systemctl:
+         enable:
+          - k3s
+         start:
+          - k3s
 EOF
 ```
 
