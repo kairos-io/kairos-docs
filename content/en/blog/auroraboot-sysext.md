@@ -178,6 +178,9 @@ docker run --rm \
   -v "$PWD"/overlay-iso:/build/ \
   -v /var/run/docker.sock:/var/run/docker.sock \
   quay.io/kairos/auroraboot:latest sysext --private-key=/keys/db.key --certificate=/keys/db.pem --output=/build k3s k3s-sysext
+
+# Fix directory permissions
+docker run -e USERID=$(id -u) -e GROUPID=$(id -g) --entrypoint /usr/bin/sh -v "$PWD"/overlay-iso:/overlay-iso --rm quay.io/kairos/auroraboot:latest -c 'chown -R $USERID:$GROUPID /overlay-iso'
 ```
 
 ## Creating a Kairos config
