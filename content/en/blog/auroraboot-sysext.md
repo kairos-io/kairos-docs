@@ -175,43 +175,22 @@ Build the system extension using Auroraboot:
 ```bash
 docker run --rm \
   -v "$PWD"/keys:/keys \
-  -v "$PWD"/system-extensions:/build/ \
+  -v "$PWD"/overlay-iso:/build/ \
   -v /var/run/docker.sock:/var/run/docker.sock \
   quay.io/kairos/auroraboot:latest sysext --private-key=/keys/db.key --certificate=/keys/db.pem --output=/build k3s k3s-sysext
 ```
 
-## Creating a Kairos image
-
-The following command will create a Kairos iso which embeds the system extension
-we created in the steps above. The OS image itself will be signed with the same
-set of keys as the system extension.
-
-```bash
-docker run --rm --privileged \
-  -v $PWD/build:/result \
-  -v $PWD/keys:/keys \
-  -v $PWD/system-extensions:/system-extensions \
-  quay.io/kairos/auroraboot build-uki \
-    --output-dir /result \
-    --overlay-iso /system-extensions \
-    -k /keys \
-    --output-type iso \
-    oci:{{<oci variant="core">}}-uki
-```
-
-## Deploying Kairos
-
-The ISO inside the `build` directory is ready to be booted on a system that
-supports secure boot, either a VM or real hardware.
-
-The process is described in the Kairos docs here:
-
-https://kairos.io/docs/installation/trustedboot#installation
+## Creating a Kairos config
 
 The following config.yaml will ensure the k3s service starts automatically on boot:
 
-```yaml
+```bash
+cat << EOF > overlay-iso/config.yaml
 #cloud-config
+
+install:
+  auto: true
+  reboot: true
 
 users:
   - name: kairos
@@ -226,7 +205,34 @@ stages:
         - |
           systemctl enable k3s.service
           systemctl start k3s.service
+EOF
 ```
+
+## Creating a Kairos image
+
+The following command will create a Kairos iso which embeds the system extension
+we created in the steps above. The OS image itself will be signed with the same
+set of keys as the system extension.
+
+```bash
+docker run --rm --privileged \
+  -v $PWD/build:/result \
+  -v $PWD/keys:/keys \
+  -v $PWD/overlay-iso:/overlay-iso \
+  quay.io/kairos/auroraboot build-uki \
+    --output-dir /result \
+    --overlay-iso /overlay-iso \
+    -k /keys \
+    --output-type iso \
+    oci:{{<oci variant="core">}}-uki
+```
+
+## Deploying Kairos
+
+The ISO inside the `build` directory is ready to be booted on a system that supports secure boot, either a VM or real hardware.
+The process is described in the Kairos docs here: https://kairos.io/docs/installation/trustedboot#installation
+
+The config we created above will ensure that installation starts automatically and the machine is shutdown after it's done.
 
 After the installation has finished, we can check that k3s is indeed available:
 
