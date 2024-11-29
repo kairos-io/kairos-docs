@@ -17,7 +17,7 @@ The system extensions are images signed with the same keys as your OS, which mak
 
 ## Building a sysext for Kairos
 
-A system extension can be created manually by using the systemd tooling ([systemd-sysext](https://www.freedesktop.org/software/systemd/man/latest/systemd-sysext.html), [systemd-repart](https://www.freedesktop.org/software/systemd/man/latest/systemd-repart.html)) but Kairos offers another option using the [Auroraboot tool](https://github.com/kairos-io/AuroraBoot).
+A system extension can be created manually by using the systemd tooling ([systemd-sysext](https://www.freedesktop.org/software/systemd/man/latest/systemd-sysext.html), [systemd-repart](https://www.freedesktop.org/software/systemd/man/latest/systemd-repart.html)). The Kairos project offers one more option, using the [Auroraboot tool](https://github.com/kairos-io/AuroraBoot).
 
 For the purposes of this document, let's use Auroraboot to create a system extension to package [k3s](https://k3s.io/) in a way that it can be overlayed on top of a Kairos core image (Kairos "core" images don't ship k3s).
 
