@@ -45,10 +45,12 @@ A system extension can be created manually by using the systemd tooling ([system
 For the purposes of this document, let's use Auroraboot to create a system extension to package [k3s](https://k3s.io/) in a way that it can be overlayed on top of a Kairos core image (Kairos "core" images don't ship k3s).
 
 {{% alert title="Note" %}}
-This guide was tested with Auroraboot v0.3.3. While newer versions should work similarly, command syntax might vary slightly. You can check your Auroraboot version with:
+This guide was tested with Auroraboot v0.3.3. While newer versions should work similarly, command syntax might vary slightly. You can check what the latest Auroraboot version is with:
 ```bash
 docker run --rm quay.io/kairos/auroraboot:latest --version
 ```
+
+You can specify a particular Auroraboot version by using a tagged image, for example: `quay.io/kairos/auroraboot:v0.3.3`.
 {{% /alert %}}
 
 Auroraboot `sysext` command uses the last layer of a container image to create a system extension. This is all explained in details [in the documentation](https://kairos.io/docs/advanced/sys-extensions/), so let's just create the necessary Dockerfile for the k3s extension we are building here.
