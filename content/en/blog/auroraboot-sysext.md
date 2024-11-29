@@ -33,7 +33,8 @@ This is where [systemd system extensions](https://www.freedesktop.org/software/s
 
 The following diagram illustrates how system extensions overlay on top of the base OS:
 
-![System Extensions Architecture](/assets/img/k3s-sysext.png)
+TODO: Change the link to the image
+![System Extensions Architecture](https://github.com/kairos-io/kairos-docs/blob/a18649ea37108c6de084b49532d9077ed2fa882d/assets/img/k3s-sysext.png)
 
 The system extensions are images signed with the same keys as your OS, which makes them tamper proof. They are "overlayed" at runtime and can be used to extract parts of the system to separate images, making the main OS image smaller and thus possible to boot but also easier to maintain. The lifecycle of the extensions is different from that of the OS, thus they can be built and deployed separately.
 
@@ -43,7 +44,15 @@ A system extension can be created manually by using the systemd tooling ([system
 
 For the purposes of this document, let's use Auroraboot to create a system extension to package [k3s](https://k3s.io/) in a way that it can be overlayed on top of a Kairos core image (Kairos "core" images don't ship k3s).
 
+{{% alert title="Note" %}}
+This guide was tested with Auroraboot v0.3.3. While newer versions should work similarly, command syntax might vary slightly. You can check your Auroraboot version with:
+```bash
+docker run --rm quay.io/kairos/auroraboot:latest --version
+```
+{{% /alert %}}
+
 Auroraboot `sysext` command uses the last layer of a container image to create a system extension. This is all explained in details [in the documentation](https://kairos.io/docs/advanced/sys-extensions/), so let's just create the necessary Dockerfile for the k3s extension we are building here.
+
 
 ```Dockerfile
 FROM ubuntu AS builder
@@ -239,11 +248,50 @@ HIERARCHY      EXTENSIONS SINCE
 /usr/src       none       -
 ```
 
+## Alternative Use Cases and Approaches
+
+While this guide focused on k3s, system extensions can be used for various other purposes:
+
+1. **Driver Management**
+   - GPU drivers for specific hardware
+   - Network interface drivers
+   - Storage drivers for specialized hardware
+
+2. **Development Tools**
+   - Compiler toolchains
+   - Debug tools
+   - Monitoring agents
+
+3. **Application Stacks**
+   - Container runtimes (Docker, containerd)
+   - Database engines
+   - Web servers
+
+4. **Alternative Orchestrators**
+   - Nomad
+   - Docker Swarm
+   - K0s
+
+Each of these can be packaged as separate system extensions, allowing you to:
+- Keep the base image minimal and secure
+- Update components independently
+- Mix and match functionality based on needs
+- Maintain different signing keys for different extension types
+
 ## Conclusion
 
-With the help of systemd system extensions we managed to extend a core image with
-k3s. The system extension can be built and updated on a different pace than the OS itself.
-It's also signed and checked by systemd making it tamper proof.
+This guide demonstrated how to leverage systemd system extensions to extend Kairos OS
+functionality while maintaining security through trusted boot. We successfully:
+- Created a system extension to add k3s capabilities
+- Built and signed the extension with the same keys as the OS
+- Integrated it with a core Kairos image
+- Deployed the combined system securely
+
+System extensions solve the practical challenges of firmware size limitations while
+enabling modular, secure OS customization. This approach allows independent
+lifecycle management of components and maintains the security benefits of trusted
+boot, making it an ideal solution for production environments where both
+flexibility and security are crucial.
 
 ## Read more
 
