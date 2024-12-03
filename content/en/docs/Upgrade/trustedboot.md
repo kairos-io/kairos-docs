@@ -13,7 +13,7 @@ This section is still a work in progress and only available in Kairos v3.x relea
 
 This section covers how to upgrade a Kairos node with Trusted Boot enabled.
 
-See the [Trusted Boot Installation]({{< relref "../installation/trustedboot" >}}) and [Trusted Boot Architecture]({{< relref "../architecture/trustedboot" >}}) pages for more references. 
+See the [Trusted Boot Installation]({{< relref "../installation/trustedboot" >}}) and [Trusted Boot Architecture]({{< relref "../architecture/trustedboot" >}}) pages for more references.
 
 ### Upgrades
 
@@ -37,9 +37,9 @@ This step is required until [#2171](https://github.com/kairos-io/kairos/issues/2
 
 ```bash
 # Build the container image that will be used to generate the keys and installable medium
-git clone https://github.com/kairos-io/enki.git
-cd enki
-docker build -t enki --target tools-image .
+git clone https://github.com/kairos-io/AuroraBoot.git auroraboot
+cd auroraboot
+docker build -t auroraboot .
 ```
 
 2. Build the Container image used for upgrades
@@ -47,10 +47,10 @@ docker build -t enki --target tools-image .
 ```bash {class="only-flavors=Ubuntu+24.04,Fedora+40"}
 CONTAINER_IMAGE={{<oci variant="core">}}
 
-docker run --rm -v $PWD/keys:/keys -v $PWD:/work -ti enki build-uki $CONTAINER_IMAGE -t uki -d /work/upgrade-image -k /keys
+docker run --rm -v $PWD/keys:/keys -v $PWD:/work -ti auroraboot build-uki -t uki -d /work/upgrade-image -k /keys $CONTAINER_IMAGE
 
 # Generate container-image for upgrades
-docker run --rm -v $PWD/keys:/keys -v $PWD:/work -ti enki build-uki $CONTAINER_IMAGE -t container -d /work/upgrade-image -k /keys
+docker run --rm -v $PWD/keys:/keys -v $PWD:/work -ti auroraboo tbuild-uki -t container -d /work/upgrade-image -k /keys $CONTAINER_IMAGE
 ```
 
 3. Push the upgrade image to a registry
@@ -167,7 +167,7 @@ editor no
 EOF
 
 ## Generate the container image
-docker run --rm -v $PWD:/work --entrypoint /bin/tar -ti enki -C /work/upgrade-image -cf /work/src.tar .
+docker run --rm -v $PWD:/work --entrypoint /bin/tar -ti auroraboot -C /work/upgrade-image -cf /work/src.tar .
 
 CONTAINER_IMAGE_NAME="ttl.sh/kairos-uki/tests:my-upgrade-image"
 docker run -ti -v $PWD:/work quay.io/luet/base:latest util pack $CONTAINER_IMAGE_NAME /work/src.tar /work/upgrade_image.tar

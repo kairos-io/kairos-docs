@@ -159,12 +159,12 @@ title Kairos
 
 ### Branding
 
-You can overwrite the default "Kairos" title if you pass the `--boot-branding` flag to enki.
+You can overwrite the default "Kairos" title if you pass the `--boot-branding` flag to auroraboot.
 
 
 ```bash {class="only-flavors=Ubuntu+24.04,Fedora+40"}
 CONTAINER_IMAGE={{<oci variant="core">}}-uki
-docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys enki build-uki $CONTAINER_IMAGE -t iso -d /result/ -k /keys --boot-branding "My Awesome OS"
+docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys {{< registryURL >}}/auroraboot:{{< auroraBootVersion >}} build-uki -t iso -d /result/ -k /keys --boot-branding "My Awesome OS" $CONTAINER_IMAGE
 ```
 
 Your config file should look now like this:
@@ -176,12 +176,11 @@ efi /EFI/kairos/active.efi
 title My Awesome OS
 ```
 
-You can use a custom boot splash screen by specifying the  `--splash` flag when calling enki.
-
+You can use a custom boot splash screen by specifying the  `--splash` flag when calling auroraboot.
 
 ```bash {class="only-flavors=Ubuntu+24.04,Fedora+40"}
 CONTAINER_IMAGE={{<oci variant="core">}}-uki
-docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys -v $PWD/splash/:/splash enki build-uki $CONTAINER_IMAGE -t iso -d /result/ -k /keys --boot-branding "My Awesome OS" --splash /splash/my-awesome-splash.bmp
+docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys -v $PWD/splash/:/splash {{< registryURL >}}/auroraboot:{{< auroraBootVersion >}} build-uki -t iso -d /result/ -k /keys --boot-branding "My Awesome OS" --splash /splash/my-awesome-splash.bmp $CONTAINER_IMAGE
 ```
 
 
@@ -196,7 +195,7 @@ Remember when you build upgrade mediums, to also add your branding, otherwise th
 
 ### Version and cmdline in the config files
 
-In addition to having the "title" and "efi" attributes, you can include in the config files the OS "version" and "cmdline". To do so, pass `--include-version-in-config` or `--include-cmdline-in-config` flags to enki.
+In addition to having the "title" and "efi" attributes, you can include in the config files the OS "version" and "cmdline". To do so, pass `--include-version-in-config` or `--include-cmdline-in-config` flags to auroraboot.
 
 {{% alert title="Info" %}}
 The cmdline, will only show what is different between the default cmdline and the currently used cmdline. If you pass `--include-cmdline-in-config` to a default installation, the attribute cmdline will be empty.
@@ -215,9 +214,9 @@ The installation process is performed as usual and the [Installation instruction
 
 ### Enroll the keys in Secure Boot
 
-If your machine is in UEFI setup mode Secure Boot keys will be automatically enrolled. To enter UEFI Setup mode you need to clear the Secure Boot keys (PKs) from the BIOS/UEFI. 
+If your machine is in UEFI setup mode Secure Boot keys will be automatically enrolled. To enter UEFI Setup mode you need to clear the Secure Boot keys (PKs) from the BIOS/UEFI.
 
-If UEFI setup mode is not available, you need to enroll the keys manually in the BIOS/UEFI. 
+If UEFI setup mode is not available, you need to enroll the keys manually in the BIOS/UEFI.
 
 This process can vary depending on the vendor, but in general you need to enter the BIOS/UEFI setup during early boot and import the keys, for an example outline you can check the steps for [HPE Hardware](https://techlibrary.hpe.com/docs/iss/proliant-gen10-uefi/GUID-E4427875-D123-4BBF-9056-342168478A02.html).
 
@@ -320,9 +319,9 @@ install:
 
 ### Install additional files from the Installer ISO to the encrypted portions
 
-The ISO installer images can be used to install additional content in the encrypted portion of the disk. 
+The ISO installer images can be used to install additional content in the encrypted portion of the disk.
 
-The osbuilder image can overlay additional files into the iso. For example specify `--overlay-iso /additional/path` to have added the files in the folder inside the ISO. The content can be accessed during installation in `/run/initramfs/live`. 
+The osbuilder image can overlay additional files into the iso. For example specify `--overlay-iso /additional/path` to have added the files in the folder inside the ISO. The content can be accessed during installation in `/run/initramfs/live`.
 For example, to install content of the ISO inside the OEM partition, and to restore those after a reset we can use the following cloud config:
 
 ```yaml
@@ -389,7 +388,7 @@ stages:
 
 ```bash
 # Note: replace /dev/vda2 with the oem partition location (see with `blkid`)
-# [root@ ~]# blkid 
+# [root@ ~]# blkid
 # /dev/sr0: BLOCK_SIZE="2048" UUID="2024-02-05-17-00-05-00" LABEL="UKI_ISO_INSTALL" TYPE="iso9660"
 # /dev/vda2: UUID="8bfa06f9-ca4f-56dc-90c9-49cf20f4f45e" TYPE="crypto_LUKS" PARTLABEL="oem" PARTUUID="63deb673-ec99-46f6-9cb6-8399315e4f19"
 # /dev/vda3: UUID="85c39d0f-4867-5227-8334-f5eec606d9eb" TYPE="crypto_LUKS" PARTLABEL="persistent" PARTUUID="d01d9b51-d61a-4b7e-bb1a-8af5c212a213"
@@ -425,7 +424,7 @@ docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osb
 ### Additional efi entries
 
 When booting in UKI mode, the cmdline is part of the signed artifact. This means that in order to pass additional options through the cmdline,
-this has to be done at build time. For that reason, `enki build-uki` supports the following arguments:
+this has to be done at build time. For that reason, `auroraboot build-uki` supports the following arguments:
 
 - `--extend-cmdline`: Use this option to add cmdline parameters to the default entries (active/passive/recovery/auto-reset). This option will not generate additional entries in the systemd-boot menu.
 - `--extra-cmdline`: Use this option to generate additional entries in the systemd-boot menu. For each one of the default entries, a new entry will be created with the specified cmdline (added to the default cmdline).
@@ -436,7 +435,7 @@ Examples:
 Building with a command like this:
 
 ```
-enki build-uki ...more options... --single-efi-cmdline "Lets debug: rd.debug rd.immucore.debug"
+auroraboot build-uki ...more options... --single-efi-cmdline "Lets debug: rd.debug rd.immucore.debug"
 ```
 
 Will create a boot menu with the default entries, plus one more: "Lets debug" which will have the debug parameters set.
@@ -445,7 +444,7 @@ Notice how the title of the entry and the cmdline to be used are split by a colo
 Building with a command like this:
 
 ```
-enki build-uki ...more options... --extra-cmdline "rd.debug rd.immucore.debug"
+auroraboot build-uki ...more options... --extra-cmdline "rd.debug rd.immucore.debug"
 ```
 
 Will create a boot menu with the default entries, plus one more for each of the active/passive/recovery entries. Each of these entries will have the debug parameters set.
@@ -453,7 +452,7 @@ Will create a boot menu with the default entries, plus one more for each of the 
 Building with a command like this:
 
 ```
-enki build-uki ...more options... --extend-cmdline "rd.debug rd.immucore.debug"
+auroraboot build-uki ...more options... --extend-cmdline "rd.debug rd.immucore.debug"
 ```
 
 Will create a boot menu with just the default entries but this time they will have the debug parameters set.
@@ -461,7 +460,7 @@ Will create a boot menu with just the default entries but this time they will ha
 NOTE: `--boot-branding` is applied to `--single-efi-cmdline` too. For example, this command:
 
 ```
-enki build-uki ...more options... --boot-branding "My awesome OS" --single-efi-cmdline "Debug logs: rd.debug rd.immucore.debug"
+auroraboot build-uki ...more options... --boot-branding "My awesome OS" --single-efi-cmdline "Debug logs: rd.debug rd.immucore.debug"
 ```
 
 will create this entry:
