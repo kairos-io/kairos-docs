@@ -89,7 +89,7 @@ docker run --privileged \
         -e STATE_SIZE="14000" \
         -e RECOVERY_SIZE="10000" \
         -e DEFAULT_ACTIVE_SIZE="4500" \
-        -v $PWD/bootloader:/bootloader --entrypoint /prepare_arm_images.sh -ti --rm quay.io/kairos/osbuilder-tools
+        -v $PWD/bootloader:/bootloader --entrypoint /prepare_arm_images.sh -ti --rm quay.io/kairos/auroraboot:{{< auroraBootVersion >}}
 ```
 
 {{% /tab %}}
@@ -105,7 +105,7 @@ docker run --privileged \
         -e RECOVERY_SIZE="10000" \
         -e DEFAULT_ACTIVE_SIZE="4500" \
 	-v $PATH:/rootfs \
-        -v $PWD/bootloader:/bootloader --entrypoint /prepare_arm_images.sh -ti --rm quay.io/kairos/osbuilder-tools
+        -v $PWD/bootloader:/bootloader --entrypoint /prepare_arm_images.sh -ti --rm quay.io/kairos/auroraboot:{{< auroraBootVersion >}}
 ```
 
 {{% /tab %}}
@@ -244,7 +244,7 @@ docker run -v $CLOUD_CONFIG:/defaults.yaml --privileged \
         -e STATE_SIZE="14000" \
         -e RECOVERY_SIZE="10000" \
         -e DEFAULT_ACTIVE_SIZE="4500" \
-        -v $PWD/bootloader:/bootloader --entrypoint /prepare_arm_images.sh -ti --rm quay.io/kairos/osbuilder-tools
+        -v $PWD/bootloader:/bootloader --entrypoint /prepare_arm_images.sh -ti --rm quay.io/kairos/auroraboot:{{< auroraBootVersion >}}
 ```
 
 ### Debugging

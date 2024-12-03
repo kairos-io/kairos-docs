@@ -46,7 +46,7 @@ To generate the Secure boot certificates and keys along with the Microsoft keys 
 ```bash
 MY_ORG="Acme Corp"
 # Generate the keys
-docker run -v $PWD/keys:/work/keys -ti --rm quay.io/kairos/osbuilder-tools:latest genkey "$MY_ORG" --expiration-in-days 365 -o /work/keys
+docker run -v $PWD/keys:/work/keys -ti --rm quay.io/kairos/auroraboot:{{< auroraBootVersion >}} genkey --expiration-in-days 365 -o /work/keys "$MY_ORG"
 ```
 {{% alert title="Warning" color="warning" %}}
 Substitute `$MY_ORG` for your own string, this can be anything but it help identifying the Keys. The keys duration can specified with `--expiration-in-days`. It is not possible to create keys that do not expire, but it is possible to specify an extremely large value (e.g. 200 years, etc.)
@@ -67,7 +67,7 @@ If your hardware supports booting with custom Secure Boot keys, you can optional
 ```bash
 MY_ORG="Acme Corp"
 # Generate the keys
-docker run -v $PWD/keys:/work/keys -ti --rm quay.io/kairos/osbuilder-tools:latest genkey "$MY_ORG" --skip-microsoft-certs-I-KNOW-WHAT-IM-DOING --expiration-in-days 365 -o /work/keys
+docker run -v $PWD/keys:/work/keys -ti --rm quay.io/kairos/auroraboot:{{< auroraBootVersion >}} genkey --skip-microsoft-certs-I-KNOW-WHAT-IM-DOING --expiration-in-days 365 -o /work/keys "$MY_ORG"
 ```
 
 ### Exporting keys from BIOS/UEFI and using them
@@ -89,7 +89,7 @@ MACHINE_CERTS="$PWD/path/to/machine-certs"
 # └── PK
 
 # Generate the keys
-docker run -v $MACHINE_CERTS:/work/machine-keys -v $PWD/keys:/work/keys -ti --rm quay.io/kairos/osbuilder-tools:latest genkey "$MY_ORG" --custom-cert-dir /work/machine-keys --expiration-in-days 365 -o /work/keys
+docker run -v $MACHINE_CERTS:/work/machine-keys -v $PWD/keys:/work/keys -ti --rm quay.io/kairos/auroraboot:{{< auroraBootVersion >}} genkey --custom-cert-dir /work/machine-keys --expiration-in-days 365 -o /work/keys "$MY_ORG"
 ```
 
 {{% alert title="Warning" %}}
@@ -106,16 +106,16 @@ To build the installable medium you need to run the following commands:
 {{% tab header="From a container image" %}}
 ```bash {class="only-flavors=Ubuntu+24.04,Fedora+40"}
 CONTAINER_IMAGE={{<oci variant="core">}}-uki
-docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki $CONTAINER_IMAGE -t iso -d /result/ -k /keys
+docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/auroraboot:{{< auroraBootVersion >}} build-uki -t iso -d /result/ -k /keys $CONTAINER_IMAGE
 # to build an EFI file only
-docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki $CONTAINER_IMAGE -t uki -d /result/ -k /keys
+docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/auroraboot:{{< auroraBootVersion >}} build-uki -t uki -d /result/ -k /keys $CONTAINER_IMAGE
 ```
 {{% /tab %}}
 {{% tab header="From a directory" %}}
 ```bash
 # Assuming you have a "rootfs" directory with the content of the OS
 # If the image is in a directory ($PWD/rootfs) you can use the following command
-docker run -ti --rm -v $PWD/build:/result -v $PWD/rootfs:/rootfs -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki dir:/rootfs/ -t iso -d /result/ -k /keys
+docker run -ti --rm -v $PWD/build:/result -v $PWD/rootfs:/rootfs -v $PWD/keys/:/keys quay.io/kairos/auroraboot:{{< auroraBootVersion >}} build-uki -t iso -d /result/ -k /keys dir:/rootfs/
 ```
 {{% /tab %}}
 {{< /tabpane >}}
@@ -130,9 +130,9 @@ System extensions can be bundled in the installable medium. To bundle system ext
 ```bash {class="only-flavors=Ubuntu+24.04,Fedora+40,foobar"}
 # Assuming your system extensions are stored on $PWD/system-extensions
 CONTAINER_IMAGE={{<oci variant="core">}}-uki
-docker run -ti --rm -v $PWD/system-extensions:/system-extensions -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki $CONTAINER_IMAGE -t iso -d /result/ -k /keys --overlay-iso /system-extensions
+docker run -ti --rm -v $PWD/system-extensions:/system-extensions -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/auroraboot:{{< auroraBootVersion >}} build-uki -t iso -d /result/ -k /keys --overlay-iso /system-extensions $CONTAINER_IMAGE
 # to build an EFI file only
-docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki $CONTAINER_IMAGE -t uki -d /result/ -k /keys
+docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/auroraboot:{{< auroraBootVersion >}} build-uki -t uki -d /result/ -k /keys $CONTAINER_IMAGE
 ```
 {{% /tab %}}
 {{% tab header="From a directory" %}}
@@ -140,7 +140,7 @@ docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osb
 # Assuming you have a "rootfs" directory with the content of the OS
 # If the image is in a directory ($PWD/rootfs) you can use the following command
 # Assuming your system extensions are stored on $PWD/system-extensions
-docker run -ti --rm -v $PWD/system-extensions:/system-extensions -v $PWD/build:/result -v $PWD/rootfs:/rootfs -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki dir:/rootfs/ -t iso -d /result/ -k /keys --overlay-iso /system-extensions
+docker run -ti --rm -v $PWD/system-extensions:/system-extensions -v $PWD/build:/result -v $PWD/rootfs:/rootfs -v $PWD/keys/:/keys quay.io/kairos/auroraboot:{{< auroraBootVersion >}} build-uki -t iso -d /result/ -k /keys --overlay-iso /system-extensions dir:/rootfs/
 ```
 {{% /tab %}}
 {{< /tabpane >}}
@@ -418,7 +418,7 @@ If you want to force the auto-enrollment of the certificates in the BIOS/UEFI, y
 
 ```bash {class="only-flavors=Ubuntu+24.04,Fedora+40"}
 CONTAINER_IMAGE={{<oci variant="core">}}-uki
-docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/osbuilder-tools:latest build-uki $CONTAINER_IMAGE --secure-boot-enroll force -t iso -d /result/ -k /keys
+docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/auroraboot:{{< auroraBootVersion >}} build-uki --secure-boot-enroll force -t iso -d /result/ -k /keys $CONTAINER_IMAGE
 ```
 
 ### Additional efi entries

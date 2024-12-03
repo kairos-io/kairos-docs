@@ -88,7 +88,7 @@ To create a custom ISO, you will need Docker installed on your machine.
 Here's an example of how you might do this:
 
 {{% alert title="Warning" %}}
-The image passed to the osbuilder-tools, needs to have one of the accepted schemes: `docker`, `oci`, `file`, `dir` or `channel`.
+The image passed to the auroraboot image, needs to have one of the accepted schemes: `docker`, `oci`, `file`, `dir` or `channel`.
 
 If you don't pass one, we will make an attempt to read it as a web URL but depending on your URL this might throw an error.
 {{% /alert %}}
@@ -137,7 +137,7 @@ $ docker pull $IMAGE
 # docker run --entrypoint /bin/bash --name changes -ti $IMAGE
 # docker commit changes $IMAGE
 # Build an ISO with $IMAGE
-$ docker run -v $PWD:/cOS -v /var/run/docker.sock:/var/run/docker.sock -i --rm quay.io/kairos/osbuilder-tools:latest --name "custom-iso" --debug build-iso --date=false --overlay-iso /cOS/files-iso $IMAGE --output /cOS/
+$ docker run -v $PWD:/cOS -v /var/run/docker.sock:/var/run/docker.sock -i --rm quay.io/kairos/auroraboot:{{< auroraBootVersion >}} --debug build-iso --name "custom-iso" --date=false --overlay-iso /cOS/files-iso --output /cOS/ $IMAGE
 ```
 {{% /tab %}}
 {{< /tabpane >}}

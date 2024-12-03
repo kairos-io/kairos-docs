@@ -86,7 +86,7 @@ mkdir -p build
 docker run -v $PWD:/HERE \
  -v /var/run/docker.sock:/var/run/docker.sock \
  --privileged -i --rm \
- --entrypoint=/build-arm-image.sh {{< registryURL >}}/osbuilder-tools:{{< osbuilderVersion >}} \
+ --entrypoint=/build-arm-image.sh {{< registryURL >}}/auroraboot:{{< auroraBootVersion >}} \
  --model rpi4 \
  --state-partition-size 6200 \
  --recovery-partition-size 4200 \
