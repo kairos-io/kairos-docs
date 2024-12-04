@@ -126,7 +126,7 @@ The `new-keys` directory created above can be used to prepare the new image with
 docker run --rm -v $PWD/unpacked:/unpacked \
   -v $PWD/build:/result \
   -v $PWD/new-keys/:/keys \
-  quay.io/kairos/auroraboot:{{< auroraBootVersion> }} \
+  quay.io/kairos/auroraboot:{{< auroraBootVersion >}} \
   build-uki \
   --output-dir /result \
   --keys /keys \
