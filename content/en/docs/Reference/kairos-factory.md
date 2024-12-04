@@ -81,7 +81,7 @@ Now we can produce the UKI artifact that we will use to boot our machines:
 
 ```bash
 earthly +uki-iso --BASE_IMAGE=ttl.sh/kairos-base-image:24 \
-  --ENKI_KEYS_DIR=/path/to/keys
+  --AURORABOOT_KEYS_DIR=/path/to/keys
 ```
 
 This will output an ISO file that you can use to boot your machines e.g.:

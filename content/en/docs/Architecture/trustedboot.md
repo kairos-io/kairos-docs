@@ -72,8 +72,7 @@ It is required in order to generate USI images to have a set of keys and certifi
 ![bootingkeys](https://github.com/kairos-io/kairos-docs/assets/2420543/725745a0-0ea6-4330-bea3-e6483f53cc3f)
 
 
-The keys are used to sign the UKI file, and to generate a PCR policy keypair required later on by the system in order to decrypt the encrypted partitions. The keys and certificates are generated with the `enki` tool, that is available in the `enki` container image.
-
+The keys are used to sign the UKI file, and to generate a PCR policy keypair required later on by the system in order to decrypt the encrypted partitions. The keys and certificates are generated with the `auroraboot` tool, that is available in the `auroraboot` container image.
 
 ### Expanding the system with system extensions
 

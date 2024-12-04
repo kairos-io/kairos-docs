@@ -54,7 +54,7 @@ The directory with the sources needs to be structured in a way that the files ar
 
 Then you can use the `systemd-repart` tool to create the sysext image:
 ```bash
-$ systemd-repart -S -s SOURCE_DIR NAME.sysext.raw --private-key=PRIVATE_KEY --certificate=CERTIFICATE       
+$ systemd-repart -S -s SOURCE_DIR NAME.sysext.raw --private-key=PRIVATE_KEY --certificate=CERTIFICATE
 ```
 
 {{% alert title="Warning" %}}
@@ -66,14 +66,14 @@ This will generate a signed+verity sysextension that can then be used by sysext 
 Some extension examples are available under https://github.com/Itxaka/sysext-examples for k3s and sbctl.
 
 
-### Building system extensions from a docker image with enki
+### Building system extensions from a docker image with auroraboot
 
 {{% alert title="Warning" color="warning" %}}
-This feature is in preview state and only available in Enki from version 0.1.4
+This feature is in preview state and only available in Auroraboot from version v0.3.0
 {{% /alert %}}
 
 
-You can also build a system extension from a docker image directly by using [enki](https://github.com/kairos-io/enki) and using a dockerfile to isolate the artifacts you want converted into a system extension.
+You can also build a system extension from a docker image directly by using [auroraboot](https://github.com/kairos-io/AuroraBoot) and using a dockerfile to isolate the artifacts you want converted into a system extension.
 
 Notice that when converting a docker image into a system extension, the last layer is the only one converted (The last command in a given Dockerfile) so have that in mind. This is useful for packages that ONLY install things in /usr or manual installation under /usr.
 
@@ -102,7 +102,7 @@ RUN curl -L https://github.com/Foxboron/sbctl/releases/download/0.15.4/sbctl-0.1
 Again, only the files in the last step would be converted into a system extension, so we would get the contents of the extracted tar archive at the `/usr/local/bin/` path.
 
 
-After building the chosen Dockerfile, we would just need to run osbuilder with the `sysext` command and the key and certificate, like we would do with `systemd-repart`. Notice that we are binding the local `keys/` dir into the container `/keys` dir for ease of access to the given keys and the current dir under `/build` on the container so we set the `--output=/build` flag when calling Enki:
+After building the chosen Dockerfile, we would just need to run osbuilder with the `sysext` command and the key and certificate, like we would do with `systemd-repart`. Notice that we are binding the local `keys/` dir into the container `/keys` dir for ease of access to the given keys and the current dir under `/build` on the container so we set the `--output=/build` flag when calling auroraboot:
 
 ```bash
 $ docker run \
@@ -110,27 +110,27 @@ $ docker run \
 -v "$PWD":/build/ \
 -v /var/run/docker.sock:/var/run/docker.sock \
 --rm \
-{{< registryURL >}}/enki:{{< enkiVersion >}} sysext NAME CONTAINER_IMAGE --private-key=/keys/PRIVATE_KEY --certificate=/keys/CERTIFICATE --output=/build
+{{< registryURL >}}/auroraboot:{{< auroraBootVersion >}} sysext --private-key=/keys/PRIVATE_KEY --certificate=/keys/CERTIFICATE --output=/build NAME CONTAINER_IMAGE
 ```
 
 The explanation of the docker command flags is as follows:
- - `-v "$PWD"/keys:/keys`: We mount the current dir + keys dir into the container `/keys` path. So Enki has access to the keys to sign the sysext.
- - `-v "$PWD":/build/`: Mount the current dir into the container `/build` path. So the generated sysext is available after the container is gone. 
+ - `-v "$PWD"/keys:/keys`: We mount the current dir + keys dir into the container `/keys` path. So auroraboot has access to the keys to sign the sysext.
+ - `-v "$PWD":/build/`: Mount the current dir into the container `/build` path. So the generated sysext is available after the container is gone.
  - `-v /var/run/docker.sock:/var/run/docker.sock`: We pass the docker sock into the container so it can access our locally built container images. So we avoid pushing them and pulling them from a remote registry.
  - `--rm`: Once the container exit, remove it so we dont leave stuff lying around.
 
-The explanation of the Enki command flags is as follows:
+The explanation of the auroraboot command flags is as follows:
  - `sysext`: Subcommand to call, in this case we want to build a sysext
- - `NAME`: Output and internal name of the sysext.
- - `CONTAINER_IMAGE`: Image from which we will extract the last layer and covert it to a system extension.
  - `--private-key`: Private key to sign the system extension.
  - `--certificate`: Certificate to sign the system extension.
  - `--output`: Dir where we will output the system extension. Make sure that this matches the directory that passed to the docker command to be able to keep the generated system extension once the container exists and its removed.
+ - `NAME`: Output and internal name of the sysext.
+ - `CONTAINER_IMAGE`: Image from which we will extract the last layer and covert it to a system extension.
 
 Example of a successful run:
 ```bash
-$ docker run -v "$PWD":/build/ -v /tmp/keys/:/keys -v /var/run/docker.sock:/var/run/docker.sock --rm -ti enki sysext grype sysext --private-key=/keys/db.key --certificate=/keys/db.pem --output /build
-2024-09-16T14:59:36Z INF Starting enki version 
+$ docker run -v "$PWD":/build/ -v /tmp/keys/:/keys -v /var/run/docker.sock:/var/run/docker.sock --rm -ti {{< registryURL >}}/auroraboot:{{< auroraBootVersion >}} sysext --private-key=/keys/db.key --certificate=/keys/db.pem --output /build grype sysext
+2024-09-16T14:59:36Z INF Starting auroraboot version
 2024-09-16T14:59:36Z INF 🚀 Start sysext creation
 2024-09-16T14:59:36Z INF 💿 Getting image info
 2024-09-16T14:59:36Z INF 📤 Extracting archives from image layer

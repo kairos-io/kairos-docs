@@ -110,7 +110,7 @@ RUN touch /usr/libexec/.keep
 COPY --from=quay.io/kairos/framework:{{< defaultFrameworkRelease >}} / /
 
 # Set the Kairos arguments in os-release file to identify your Kairos image
-FROM quay.io/kairos/osbuilder-tools:latest as osbuilder
+FROM quay.io/kairos/auroraboot:{{< auroraBootVersion >}} as auroraboot
 RUN zypper install -y gettext
 RUN mkdir /workspace
 COPY --from=base /etc/os-release /workspace/os-release
@@ -129,7 +129,7 @@ RUN OS_NAME=kairos-core-fedora \
   /update-os-release.sh
 
 FROM base
-COPY --from=osbuilder /workspace/os-release /etc/os-release
+COPY --from=auroraboot /workspace/os-release /etc/os-release
 
 # Activate Kairos services
 RUN systemctl enable cos-setup-reconcile.timer && \
