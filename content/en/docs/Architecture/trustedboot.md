@@ -78,9 +78,9 @@ The keys are used to sign the UKI file, and to generate a PCR policy keypair req
 
 Check the relevant documentation on how to [extend the system with system extensions]({{%relref "/docs/advanced/sys-extensions" %}})
 
-### Trusted Boot Boot Assessment
+### Trusted Boot - Boot Assessment
 
-See the [Trusted Boot Boot Assessment]({{%relref "/docs/examples/boot_assessment_trusted_boot" %}}) documentation for more information on how to enable automatic boot assessment with Trusted Boot and how to make your own services participate in the boot assessment process.
+See the [Trusted Boot - Boot Assessment]({{%relref "/docs/examples/boot_assessment_trusted_boot" %}}) documentation for more information on how to enable automatic boot assessment with Trusted Boot and how to make your own services participate in the boot assessment process.
 
 ### Considerations
 
