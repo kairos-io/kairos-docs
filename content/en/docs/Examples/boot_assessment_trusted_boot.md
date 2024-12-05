@@ -11,6 +11,10 @@ In this tutorial, we will walk through how to configure Kairos to enable **autom
 
 ---
 
+{{% alert color="info" %}}
+All the commands shown in this tutorial are meant to be run on a Kairos node.
+{{% /alert %}}
+
 
 ## Overview of Trusted Boot Automatic Boot Assessment
 
