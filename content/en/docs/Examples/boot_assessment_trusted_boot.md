@@ -5,32 +5,56 @@ weight: 4
 description: This section describe examples on how to enable Automatic Boot Assessment with Trusted Boot in your own services.
 ---
 
+## Boot Assessment in Kairos: Introduction and Extensions
 
+Kairos provides a robust mechanism for assessing the success or failure of boot entries through integration with `systemd-boot`. This document is divided into two parts:
 
-In this tutorial, we will walk through how to configure Kairos to enable **automatic boot assessment**, where the boot loader can determine the health of a boot entry. Specifically, we'll configure systemd services to trigger the `boot-complete.target` to mark boot entries as *good* or *bad*. We'll also cover how to implement automatic reboots when a service fails, allowing retries of a boot entry until success or exhaustion of attempts.
+1. **Kairos Default Boot Assessment Strategy**: Explains how boot assessment is managed in a standard Kairos installation.
+2. **Extending the Default Boot Assessment**: Shows how to customize and extend Kairos boot assessment by integrating additional systemd services and adding automatic reboot mechanisms.
 
 ---
+
+## Part 1: Kairos Default Boot Assessment Strategy
+
+Kairos uses `systemd-boot` to manage boot entries and determine their health based on runtime behavior. The current boot assessment strategy in Kairos works as follows:
+
+1. **Boot Entry Marking**:
+   - If the system successfully reaches `multi-user.target`, the boot entry is marked as *good*.
+   - If it does not, retries are consumed for the boot entry.
+
+2. **Failure Handling**:
+   - Kernel panics, `initramfs` failures, or any unexpected reboots reduce the retry count for the current boot entry.
+   - No Kairos services explicitly auto-reboot on failure.
+
+3. **Retry Exhaustion and Fallbacks**:
+   - Each boot entry is given a limited number of retries (3 by default).
+   - If retries are exhausted:
+      - The **passive (fallback)** entry is booted next.
+      - If the passive entry also fails, the system boots into **recovery** mode.
+      - If recovery fails, the system attempts **autorecovery**.
+
+{{% alert color="info" %}}
+Current boot fallback behaviour is not set in stone yet and prone to changes in the future.
+{{% /alert %}}
+
+This default behavior ensures resilience and an automatic progression to recovery states, but it can be further extended to incorporate custom services and automatic reboot logic.
+
+
+
+
+
+## Part 2: Extending the Default Boot Assessment with Your Own Services
+
+While the default Kairos behavior is sufficient for many use cases, you can extend the boot assessment mechanism to include custom services and additional robustness features, such as:
+
+- Integrating custom systemd services into the boot assessment process.
+- Adding automatic reboot behavior for services that fail.
+
 
 {{% alert color="info" %}}
 All the commands shown in this tutorial are meant to be run on a Kairos node.
 {{% /alert %}}
 
-
-## Overview of Trusted Boot Automatic Boot Assessment
-
-`systemd-boot` manages boot entries and provides a mechanism to automatically assess their success or failure. The key features are:
-
-1. **Boot Entry Marking**:
-    - A boot entry is marked as *good* when the `boot-complete.target` is reached during startup.
-    - If the system fails to reach `boot-complete.target`, the boot entry is marked as *bad*.
-
-2. **Retries**:
-    - By default, each boot entry has **3 retries**. A failure to reach `boot-complete.target` reduces the retry count. Once retries are exhausted, another boot entry is chosen if available.
-
-3. **Service-Level Controls**:
-    - Configure services to participate in boot entry assessment and trigger reboots on failure.
-
----
 
 ## Step 1: Configuring a Service to Trigger `boot-complete.target`
 
@@ -149,6 +173,7 @@ stages:
 
 ## Notes
 
+ - We expect the number of checks for a system to be marked "good" to keep growing as we add more checks to the boot assessment process.
  - Services are started on both passive and active boot entries. So if a service is failing on active, and the failure is not due to the OS, it will also fail on passive. This can lead to the system rebooting on passive boot entries as well as active and end in the system booting to recovery.
  - We recommend using this feature with caution, as it can lead to a boot loop if not configured correctly.
  - Ideally, as the upgrade is done against the active images, we would recommend having 2 service overrides, one for the active and one for the passive, to avoid the system rebooting on passive boot entries and having a safe fallback to the active boot entry. This can be achieved by using and IF stanza when using cloud-init to check for the system state (marked by the files `/run/cos/active_mode` and `/run/cos/passive_mode`) so the service that auto reboots can be started only on the active boot entry.
