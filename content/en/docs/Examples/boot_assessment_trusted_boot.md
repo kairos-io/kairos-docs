@@ -110,9 +110,90 @@ While the above configurations are independent, combining them can create a robu
   - During the retry, if boot-complete.target is not reached, the boot entry is not marked as good, and retries continue.
   - If retries are exhausted, the system attempts the next available boot entry.
 
+
+## Using cloud configs to automate the process
+
+As usual you can use [cloud-init]({{%relref "/docs/architecture/cloud-init" %}}) with the different [stages]({{%relref "/docs/reference/stage_modules" %}}) to automate this process. Here is an example of how to use cloud-init to enable boot assessment and configure services to participate in the boot assessment process:
+
+```yaml
+#cloud-config
+name: Enable Boot assessment for <service-name>
+stages:
+  initramfs:
+    - name: Configure service to trigger boot-complete.target
+      files:
+         - path: /etc/systemd/system/<service-name>.service.d/override.conf
+           permissions: 0644
+           owner: 0
+           group: 0
+           content: |
+             [Unit]
+             # Ensure this unit starts after default system targets
+             After=default.target graphical.target multi-user.target
+             # Ensure this unit completes before boot-complete.target
+             Before=boot-complete.target
+             # If auto reboot on service failure is wanted
+             FailureAction=reboot
+             [Install]
+             # Make this service a hard dependency of boot-complete.target
+             RequiredBy=boot-complete.target
+    - name: Enable service
+      systemctl:
+         enabled:
+            - <service-name>
+```
+
+
 ## Notes
 
  - Services are started on both passive and active boot entries. So if a service is failing on active, and the failure is not due to the OS, it will also fail on passive. This can lead to the system rebooting on passive boot entries as well as active and end in the system booting to recovery.
  - We recommend using this feature with caution, as it can lead to a boot loop if not configured correctly.
- - Ideally, as the upgrade is done against the active images, we would recommend having 2 services, one for the active and one for the passive, to avoid the system rebooting on passive boot entries and having a safe fallback to the active boot entry. This can be achieved by using the `ConditionPathExists` directive in the service file to check if the service is running on the active or passive boot entry (marked by the files `/run/cos/active_mode` and `/run/cos/passive_mode`) so the service that auto reboots can be started only on the active boot entry.
+ - Ideally, as the upgrade is done against the active images, we would recommend having 2 service overrides, one for the active and one for the passive, to avoid the system rebooting on passive boot entries and having a safe fallback to the active boot entry. This can be achieved by using and IF stanza when using cloud-init to check for the system state (marked by the files `/run/cos/active_mode` and `/run/cos/passive_mode`) so the service that auto reboots can be started only on the active boot entry.
+
+The follow up example uses [cloud-init]({{%relref "/docs/architecture/cloud-init" %}}) to generate 2 different service overrides during initramfs, one for the active and one for the passive boot entry. Only when selecting the active entry will the service auto restart:
+
+```yaml
+#cloud-config
+name: Enable Boot assessment for <service-name>
+stages:
+  initramfs:
+    - name: Configure service to trigger boot-complete.target on active
+      if: '[ ! -f "/run/cos/active_mode" ]'
+      files:
+        - path: /etc/systemd/system/<service-name>.service.d/override.conf
+          permissions: 0644
+          owner: 0
+          group: 0
+          content: |
+            [Unit]
+            # Ensure this unit starts after default system targets
+            After=default.target graphical.target multi-user.target
+            # Ensure this unit completes before boot-complete.target
+            Before=boot-complete.target
+            # If auto reboot on service failure is wanted
+            FailureAction=reboot
+            [Install]
+            # Make this service a hard dependency of boot-complete.target
+            RequiredBy=boot-complete.target
+    - name: Configure service to trigger boot-complete.target on passive
+      if: '[ ! -f "/run/cos/passive_mode" ]'
+      files:
+        - path: /etc/systemd/system/<service-name>.service.d/override.conf
+          permissions: 0644
+          owner: 0
+          group: 0
+          content: |
+            [Unit]
+            # Ensure this unit starts after default system targets
+            After=default.target graphical.target multi-user.target
+            # Ensure this unit completes before boot-complete.target
+            Before=boot-complete.target
+            [Install]
+            # Make this service a hard dependency of boot-complete.target
+            RequiredBy=boot-complete.target
+    - name: Enable service
+      systemctl:
+         enabled:
+            - <service-name>
+```
    
