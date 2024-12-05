@@ -6,7 +6,6 @@ description: This section describe examples on how to enable Automatic Boot Asse
 ---
 
 
-# Enabling Automatic Boot Assessment with Trusted Boot
 
 In this tutorial, we will walk through how to configure Kairos to enable **automatic boot assessment**, where the boot loader can determine the health of a boot entry. Specifically, we'll configure systemd services to trigger the `boot-complete.target` to mark boot entries as *good* or *bad*. We'll also cover how to implement automatic reboots when a service fails, allowing retries of a boot entry until success or exhaustion of attempts.
 
