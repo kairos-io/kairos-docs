@@ -34,7 +34,7 @@ All the commands shown in this tutorial are meant to be run on a Kairos node.
 
 ## Step 1: Configuring a Service to Trigger `boot-complete.target`
 
-To ensure a service's success or failure impacts the boot assessment, modify its service file to interact with `boot-complete.target`:
+To ensure a service's failure impacts the boot assessment, modify its service file to interact with `boot-complete.target`:
 
 1. **Edit the Service File**:  
 
