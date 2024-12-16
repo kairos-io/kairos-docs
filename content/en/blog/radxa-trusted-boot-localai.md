@@ -12,16 +12,19 @@ author: Mauro Morales ([X](https://x.com/mauromrls)) ([GitHub](https://github.co
 ## Prepare the Radxa X4
 
 {{< alert title="Warning" color="warning" >}}
-- Radxa's Firmware to enable Secure Boot is still in beta. Use it at your own risk.
-- Without proper cooling, the Radxa X4 might overheat and shut down during the firmware update process, which could brick the device.
+- Without proper cooling, the Radxa X4 will overheat and might shut down during the firmware update process, which could brick the device.
+- Radxa's Firmware to enable Secure Boot is still in beta as of writing of this document. Use it at your own risk.
 {{< /alert >}}
 
 Once you have a Radxa X4 and the proper cooling, we first need to flash the Radxa X4 Beta Firmware to enable Secure Boot. Follow these steps:
 
 1. Go to this  [Radxa X4 Beta Firmware](https://forum.radxa.com/t/enabling-secureboot/22704/15) and request access to the firmware.
-2. Extract the contents of the zip file
-3. Rename the top directory to `EFI`
-4. Copy the `EFI` directory to a USB drive formatted as FAT32
+2. Extract the contents of the zip file  
+    {{< figure src="https://github.com/user-attachments/assets/d1614177-2e88-4a01-b514-4d1572b28a7a" title="An elephant at sunset" >}}
+3. Format a USB drive as FAT32  
+    ![Format USB Drive](https://github.com/user-attachments/assets/69088541-3314-4593-9495-6569c4d4a413)
+3. Rename the top directory to `EFI` and copy the contents to the USB drive  
+    ![Copy Contents to USB Drive](https://github.com/user-attachments/assets/3b2e73aa-fa4c-4ec6-b1ee-c5d76453d198)
 5. Follow the instructions on the Radxa Documentation to [Upgrade the BIOS](https://docs.radxa.com/en/x/x4/bios/update-bios)
 6. Do a G3 power cycle (unplug the power cable, wait for 10 seconds, and plug it back in)
 
@@ -63,6 +66,27 @@ docker build --build-arg="RELEASE=1.0.0" \ # This should either be the version o
              -t ttl.sh/kairos-radxa-uki:24h \
              -f images/Dockerfile.kairos-ubuntu ./images
 ```
+
+---
+
+```bash
+docker build -t kairos-radxa -f images/Dockerfile.kairos-radxa ./images/
+```
+
+```bash
+MY_ORG="Acme Corp"
+# Generate the keys
+docker run -v $PWD/keys:/work/keys -ti --rm quay.io/kairos/osbuilder-tools:latest genkey "$MY_ORG" --expiration-in-days 365 -o /work/keys
+```
+
+```bash
+CONTAINER_IMAGE=ttl.sh/kairos-radxa:24h
+docker run -ti --rm -v $PWD/build:/result \
+                    -v $PWD/keys/:/keys \
+                    -v /var/run/docker.sock:/var/run/docker.sock \
+                    quay.io/kairos/osbuilder-tools:latest build-uki $CONTAINER_IMAGE -t iso -d /result/ -k /keys
+```
+
 
 ## Create a bootable image and flash it to the Radxa X4
 
