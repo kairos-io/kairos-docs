@@ -69,6 +69,12 @@ $ mkisofs -output ci.iso -volid cidata -joliet -rock user-data meta-data
 
 Once the ISO is created, you can attach it to your machine and boot up as usual, along with the Kairos ISO.
 
+{{% alert title="Warning" %}}
+For security reasons, when Kairos is installed in [trusted boot mode]({{< relref "../Installation/trustedboot.md" >}}), datasources are not parsed after installation. This prevents someone from plugging a usb stick on an edge device, applying arbitrary configuration to the system post-installation. To force parsing of the datasources after installation, you can set add the `kairos.pull_datasources` option to the cmdline. This requires extending the cmdline when building the installation medium with Auroraboot ([read more]({{< relref "../Installation/trustedboot.md#additional-efi-entries" >}})).
+
+This security feature is only enabled when the system boots in trusted boot mode and only after installation (they are parsed in "live" mode). On "plain" boot mode, datasources are always parsed.
+{{% /alert %}}
+
 ## Via config URL
 
 Another way to supply your Kairos configuration file is to specify a URL as a boot argument during startup. To do this, add `config_url=<URL>` as a boot argument. This will allow the machine to download your configuration from the specified URL and perform the installation using the provided settings.
