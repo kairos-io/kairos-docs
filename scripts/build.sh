@@ -8,11 +8,6 @@ root_dir="${ROOT_DIR:-$(pwd)}"
 binpath="${root_dir}/bin"
 publicpath="${root_dir}/public"
 current_commit="${COMMIT_REF:-$(git rev-parse --abbrev-ref HEAD)}"
-if [ "$BRANCH" = "main" ]; then
-  environment="production"
-else
-  environment="staging"
-fi
 
 # Output the result
 echo "Branch: $BRANCH"
@@ -53,7 +48,8 @@ git checkout go.sum go.mod package.json package-lock.json
 git checkout $current_commit
 hugo mod get
 hugo mod graph
-HUGO_ENV="production" hugo --buildFuture --minify --gc -b "${BASE_URL}" -d "${publicpath}"
+# CONTEXT is set by netlify
+HUGO_ENV="${CONTEXT}" hugo --buildFuture --minify --gc -b "${BASE_URL}" -d "${publicpath}"
 
 cp -rf CNAME "${publicpath}"
 
