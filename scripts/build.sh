@@ -8,6 +8,15 @@ root_dir="${ROOT_DIR:-$(pwd)}"
 binpath="${root_dir}/bin"
 publicpath="${root_dir}/public"
 current_commit="${COMMIT_REF:-$(git rev-parse --abbrev-ref HEAD)}"
+if [ "$BRANCH" = "main" ]; then
+  environment="production"
+else
+  environment="staging"
+fi
+
+# Output the result
+echo "Branch: $BRANCH"
+echo "Environment: $environment"
 export PATH=$PATH:$binpath
 
 if [ -z "$(type -P hugo)" ];
