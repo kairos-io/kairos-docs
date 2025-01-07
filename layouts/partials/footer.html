@@ -1,5 +1,7 @@
 <footer>
+    {{ if eq .Site.Environment "production" }}
     <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=051a8a26-af2c-4a22-a7d6-dba22bef829f" />
+    {{ end }}
     <div id="footer-content">
         <div>
             <div class="footer-logo">
