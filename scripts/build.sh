@@ -45,7 +45,7 @@ for release in $releases; do
     git checkout $release
     hugo mod get
     hugo mod graph
-    HUGO_ENV="${environment}" hugo --buildFuture --gc -b "${BASE_URL}/$version" -d "${publicpath}/$version"
+    HUGO_ENVIRONMENT="${environment}" hugo --buildFuture --gc -b "${BASE_URL}/$version" -d "${publicpath}/$version"
 done
 
 git checkout go.sum go.mod package.json package-lock.json
