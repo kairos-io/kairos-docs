@@ -6,6 +6,11 @@ description: "In this post we are trying to answer some of the typical questions
 author: Ettore Di Giacinto ([X](https://x.com/mudler_it)) ([GitHub](https://github.com/mudler))
 ---
 
+{{% alert color="info" title="Updates" %}}
+- 2025-01-10: Added project status for each solution in the comparison table
+{{% /alert %}}
+
+
 For years, the traditional Linux operating system has been a top pick for its flexibility and ability to be customized. But as great as it is, there are use cases in which stricter security rules and higher reliability standards are needed. That's where immutable Linux operating systems come in - offering a more secure and reliable option, especially in settings where security is paramount.
 
 {{< card header="![castle](https://user-images.githubusercontent.com/2420543/226939911-6801ecab-d023-4357-92f2-b782ae086462.png)" subtitle="_An illustration of a fortress surrounded by a moat and guarded by armored knights, with a banner flying the Linux penguin logo, medieval, fortified, secure, trending on Artstation._ Author: _Midjourney AI_"
@@ -67,34 +72,34 @@ Here are some popular Immutable OS solutions, although this list is not exhausti
 
 The following are some of the most popular Immutable OS solutions:
 
-- CoreOS: A Linux-based operating system designed for containers and cloud computing, which uses an immutable file system called "Container Linux". CoreOS has now merged with Red Hat Enterprise Linux.
-- Project Atomic: A CentOS-based Linux distribution, that focuses on container deployment and management, using a layered approach that allows for easy rollbacks.
-- Ubuntu Core: Ubuntu Core is a version of the Ubuntu operating system designed and [engineered for IoT and embedded systems](https://ubuntu.com/core/services/guide/intro-ubuntu-core). It uses snap packages exclusively to create a confined and transaction-based system. It also updates itself and its applications automatically.
-- RancherOS: - A Linux-based operating system that is designed to be minimal, lightweight, and optimized for running containers. RancherOS uses Docker for all system processes, and its file system is mounted read-only, making it immutable.
-- Talos: An open-source Linux distribution designed to run Kubernetes, K3s, or other container orchestration systems. It features a highly secure, API-managed infrastructure with automated and scalable operations and is suitable for cloud, containers, and general-purpose environments.
-- K3OS (discontinued): A minimal Linux distribution designed specifically for running Kubernetes clusters. k3os is built around k3s, a lightweight Kubernetes distribution, and uses the immutable Container Linux file system with an A/B update model to ensure smooth and reliable updates. It is suitable for cloud and container environments.
-- Flatcar Container Linux: A Linux-based operating system that is based on CoreOS and is designed for use in containerized environments. Like CoreOS, Flatcar Container Linux uses an immutable file system to provide stability and security.
-- Fedora Silverblue: A Fedora-based Linux distribution, that uses an immutable file system and a transactional update model, to provide a stable and secure environment. Fedora Silverblue is designed for use in desktop and containerized environments. A nice overview can be found [here](ttps://www.lifeintech.com/2021/11/19/immutable-os/) or [here](https://www.redhat.com/sysadmin/immutability-silverblue)
-- Photon OS: A Linux-based operating system developed by VMware, which is designed to run containerized workloads. Photon OS uses a minimal package set and an immutable file system for enhanced security and manageability.
-- openSUSE MicroOS: An openSUSE-based Linux distributions with transaction-update and is designed to host container workloads with automated administration and patching. Install MicroOS to get a quick, small environment for deploying Containers, or any other workload that benefits from Transactional Updates. As a rolling release distribution, the software is always up-to-date. Server and Desktop have different naming like openSUSE MicroOS Desktop GNOME is Aeon and openSUSE MicroOS Desktop Plasma is Kalpa. Information about MicroOS can be found [here](https://microos.opensuse.org/) and the iso can be downloaded [here](https://get.opensuse.org/microos/)
+- **CoreOS**: A Linux-based operating system designed for containers and cloud computing, which uses an immutable file system called "Container Linux". CoreOS has now merged with Red Hat Enterprise Linux.
+- **Project Atomic**: A CentOS-based Linux distribution, that focuses on container deployment and management, using a layered approach that allows for easy rollbacks.
+- **Ubuntu Core**: Ubuntu Core is a version of the Ubuntu operating system designed and [engineered for IoT and embedded systems](https://ubuntu.com/core/services/guide/intro-ubuntu-core). It uses snap packages exclusively to create a confined and transaction-based system. It also updates itself and its applications automatically.
+- **RancherOS**: - A Linux-based operating system that is designed to be minimal, lightweight, and optimized for running containers. RancherOS uses Docker for all system processes, and its file system is mounted read-only, making it immutable.
+- **Talos**: An open-source Linux distribution designed to run Kubernetes, K3s, or other container orchestration systems. It features a highly secure, API-managed infrastructure with automated and scalable operations and is suitable for cloud, containers, and general-purpose environments.
+- **K3OS**: A minimal Linux distribution designed specifically for running Kubernetes clusters. k3os is built around k3s, a lightweight Kubernetes distribution, and uses the immutable Container Linux file system with an A/B update model to ensure smooth and reliable updates. It is suitable for cloud and container environments.
+- **Flatcar**: A Linux-based operating system that is based on CoreOS and is designed for use in containerized environments. Like CoreOS, Flatcar Container Linux uses an immutable file system to provide stability and security.
+- **Fedora Silverblue**: A Fedora-based Linux distribution, that uses an immutable file system and a transactional update model, to provide a stable and secure environment. Fedora Silverblue is designed for use in desktop and containerized environments. A nice overview can be found [here](ttps://www.lifeintech.com/2021/11/19/immutable-os/) or [here](https://www.redhat.com/sysadmin/immutability-silverblue)
+- **Photon OS**: A Linux-based operating system developed by VMware, which is designed to run containerized workloads. Photon OS uses a minimal package set and an immutable file system for enhanced security and manageability.
+- **openSUSE MicroOS**: An openSUSE-based Linux distributions with transaction-update and is designed to host container workloads with automated administration and patching. Install MicroOS to get a quick, small environment for deploying Containers, or any other workload that benefits from Transactional Updates. As a rolling release distribution, the software is always up-to-date. Server and Desktop have different naming like openSUSE MicroOS Desktop GNOME is Aeon and openSUSE MicroOS Desktop Plasma is Kalpa. Information about MicroOS can be found [here](https://microos.opensuse.org/) and the iso can be downloaded [here](https://get.opensuse.org/microos/)
 
 To simplify the comparison between the different Immutable OS solutions, the following table highlights their key differences and the environments they are targeted for:
 
-| Solution | Based on | Update Model | Target Environment |
-|---|---|---|---|
-| CoreOS | Gentoo | Transactional Updates | Cloud |
-| Talos | Nothing | Container image update | Cloud, Containers, General purpose |
-| K3OS | Alpine | A/B | Cloud, Containers |
-| Project Atomic | CentOS | Layered Packages | Containers |
-| Ubuntu Core | Ubuntu | Transactional Updates | IoT, Embedded Systems |
-| RancherOS | Linux | Docker for System Processes | Containers |
-| Flatcar Container Linux | CoreOS | Transactional Updates | Cloud |
-| Red Hat Atomic Host | Red Hat | Transactional Updates | Cloud, optimized for running containers |
-| SLE Micro | SUSE | Transactional Updates | Containers, Cloud, Edge, General purpose |
-| MicroOS | openSUSE | Transactional Updates | Desktop, Containers, Cloud, Edge, General purpose |
-| Fedora Silverblue | Fedora | Transactional Updates | Desktop, Containers |
-| Photon OS | Linux | Immutable File System | Cloud |
-| Kairos | Any Linux distribution | Immutable File System | Cloud, Edge, General purpose |
+| Solution | Based on | Update Model | Target Environment | Project Status |
+|---|---|---|---|---|
+| CoreOS | Gentoo | Transactional Updates | Cloud | Actively Maintained |
+| Talos | Nothing | Container image update | Cloud, Containers, General purpose | Actively Maintained |
+| K3OS | Alpine | A/B | Cloud, Containers | Discontinued |
+| Project Atomic | CentOS | Layered Packages | Containers | Discontinued |
+| Ubuntu Core | Ubuntu | Transactional Updates | IoT, Embedded Systems | Actively Maintained |
+| RancherOS | Linux | Docker for System Processes | Containers | Discontinued |
+| Flatcar | CoreOS | Transactional Updates | Cloud | Actively Maintained & a CNCF Project |
+| Red Hat Atomic Host | Red Hat | Transactional Updates | Cloud, optimized for running containers | Discontinued |
+| SLE Micro | SUSE | Transactional Updates | Containers, Cloud, Edge, General purpose | Actively Maintained |
+| MicroOS | openSUSE | Transactional Updates | Desktop, Containers, Cloud, Edge, General purpose | Actively Maintained |
+| Fedora Silverblue | Fedora | Transactional Updates | Desktop, Containers | Actively Maintained |
+| Photon OS | Linux | Immutable File System | Cloud | Actively Maintained |
+| Kairos | Any Linux distribution | Immutable File System | Cloud, Edge, General purpose | Actively Maintained & a CNCF Project |
 
 {{% alert color="info" %}}
 _"So, what's Kairos? What's the challenges that Kairos tries to overcome?"_
