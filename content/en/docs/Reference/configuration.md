@@ -588,7 +588,7 @@ Usually secret gists are used to share such config files.
 
 Kairos comes with the `kairos` user pre-configured, however, it is possible to configure additional users to the system via the cloud-init config mechanism
 
-### Add a user during first-install
+### Add a user
 
 Consider the following example cloud-config, containing the default `kairos` user (which always has sudo access) and adds the `testuser` user to the system with admin access:
 
@@ -612,9 +612,11 @@ users:
   - "admin"
 ```
 
-### Add a user to an existing install
+The above cloud config will be respected on every boot. Adding a user in the config at any point will be reflected on the next boot.
+The top level `users:` key is mapped automatically to a [`boot` stage](https://github.com/mudler/yip/blob/4fd77a2709e0d98c25c14925530f74f55d704ac6/pkg/schema/loader_cloudinit.go#L96).
 
-To add an user to an existing installation you can simply add a `/oem` file for the new user. For instance, consider the following:
+For this reason, the above snippet is equivalent to adding the user by explicitly defining the stage. E.g. by creating this file inside `/oem`:
+
 ```yaml
 stages:
    initramfs:
