@@ -11,55 +11,62 @@ In the example below we will use a bare metal host to provision a Kairos node in
 
 Use the standard images which contain `k3s`.
 
-Follow the [Installation]({{< relref "../installation/" >}}) documentation, and use the following cloud config file with Kairos:
+Follow the [Installation]({{< relref "../installation/" >}}) documentation, using the following cloud config:
 
 ```yaml
 #cloud-config
 
-hostname: metal-{{ trunc 4 .MachineID }}
 users:
 - name: kairos
-  # Change to your pass here
   passwd: kairos
-  ssh_authorized_keys:
-  # Replace with your github user and un-comment the line below:
-  # - github:mudler
+  groups:
+    - admin
 
 k3s:
   enabled: true
-  args:
-  - --node-label "nodetype=small"
 
 write_files:
 - path: /var/lib/rancher/k3s/server/manifests/myapp.yaml
   permissions: "0644"
   content: |
-    apiVersion: v1
-    kind: Namespace
+    apiVersion: apps/v1
+    kind: Deployment
     metadata:
-      name: myapp
+      name: nginx
+      labels:
+        app: nginx
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: nginx
+      template:
+        metadata:
+          labels:
+            app: nginx
+        spec:
+          containers:
+            - name: nginx
+              image: nginx:latest
+              ports:
+                - containerPort: 80
     ---
     apiVersion: v1
-    kind: ConfigMap
+    kind: Service
     metadata:
-      name: foobar
-      namespace: myapp
-    data:
-      foo: bar
+      name: nginx
+    spec:
+      selector:
+        app: nginx
+      ports:
+        - protocol: TCP
+          port: 80
+          targetPort: 80
+      type: ClusterIP
 ```
 
-Notably:
+### Explanation of the cloud-config 
 
-- We use the `k3s` block to set the node label
-- In a single-node setup, you may wish to use a non-generated node name. This can be achieved with these options:
-  ```
-  k3s:
-    enabled: true
-    replace_args: true
-    args:
-    - --node-name=my-node
-  ```
-  {{% alert title="Note" %}}
-  `replace_args` replaces all arguments otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the arguments you need.
-  {{% /alert %}}
-- We use `write_files` to write manifests to the default `k3s` manifest directory (`/var/lib/rancher/k3s/server/manifests/`) see [docs]({{< relref "../reference/configuration#kubernetes-manifests" >}}) to create a Namespace and ConfigMap.
+- Creates a user `kairos` with password `kairos` and add it to the `admin` group so we can access the node with SSH
+- Enables `k3s` installation
+- Writes a Kubernetes manifest to deploy a simple Nginx deployment and service. There might be better deployments of Nginx, but this is just an example. The manifest is written to `/var/lib/rancher/k3s/server/manifests/` so it will be applied by the K3s agent automatically. See [docs]({{< relref "../reference/configuration#kubernetes-manifests" >}}) for more information.
