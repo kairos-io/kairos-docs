@@ -647,6 +647,62 @@ testuser
 localhost:~$
 ```
 
+## k3s configuration
+
+This section allows you to configure the k3s server instances.
+
+### `k3s.enable`
+
+Enables the k3s server instance. Accepted: `true`, `false`.
+
+### `k3s.env`
+
+Additional environment variables for the k3s server instance.
+
+### `k3s.args`
+
+Additional arguments for the k3s server instance.
+
+### `k3s.replace_env`
+
+Replaces all environment variables otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the environment variables you need.
+
+### `k3s.replace_args`
+
+Replaces all arguments otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the arguments you need.
+
+### `k3s.embedded_registry`
+
+Enables the embedded registry in k3s. Accepted: `true`, `false`.
+
+## k3s-agent configuration
+
+This section allows you to configure the k3s agent instances.
+
+### `k3s-agent.enable`
+
+Enables the k3s agent instance. Accepted: `true`, `false`.
+
+### `k3s-agent.env`
+
+Additional environment variables for the k3s agent instance.
+
+### `k3s-agent.args`
+
+Additional arguments for the k3s agent instance.
+
+### `k3s-agent.replace_env`
+
+Replaces all environment variables otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the environment variables you need.
+
+### `k3s-agent.replace_args`
+
+Replaces all arguments otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the arguments you need.
+
+### `k3s-agent.embedded_registry`
+
+Enables the embedded registry in k3s. Accepted: `true`, `false`.
+
 ## P2P configuration
 
 P2P functionalities are experimental Kairos features and disabled by default. In order to enable them, just use the `p2p` configuration block.
