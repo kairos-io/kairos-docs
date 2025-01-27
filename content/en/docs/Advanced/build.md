@@ -245,6 +245,8 @@ aws ec2 import-snapshot --description "Kairos custom image" --disk-container fil
 
 Follow the procedure described in [AWS docs](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-ebs.html#creating-launching-ami-from-snapshot) to register an AMI from snapshot. Use all default settings except for the firmware, set to force to UEFI boot.
 
+Since release v3.3.0, Kairos release pipeline is pushing an public image to AWS, which you can use. Read how to deploy Kairos using an AMI (the released or a custom one), in the [relevant page]({{< relref "../installation/aws" >}}).
+
 ### Use the Image in OpenStack
 
 First get the generated image:
