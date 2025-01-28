@@ -34,6 +34,16 @@ You should at least specify a user and a password (or SSH key) if you need to SS
 
 When you click on `Launch instance` the instance will be created and Kairos will boot into "auto-reset mode" by default. This means, that Kairos will "install" itself on the first boot and then reboot.
 
+You can specify a different image to be installed using a block like the following in the userdata:
+
+```yaml
+reset:
+  system:
+    uri: "quay.io/kairos/opensuse:leap-15.6-standard-amd64-generic-master-k3sv1.32.1-rc2-k3s1"
+```
+
+This will reset to the specified image on the first boot instead of the image booted.
+
 ## Access the instance
 
 Once the instance is running, you can access it via SSH. Make sure reset has completed and the system has rebooted into "active" mode. The following command should report "active_boot":
