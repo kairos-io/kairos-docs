@@ -119,7 +119,7 @@ defaultFamily = "ubuntu"
 defaultFlavor = "ubuntu"
 defaultFlavorRelease = "24.04"
 # renovate: datasource=github-releases depName=kairos-io/kairos-framework
-defaultFrameworkRelease = "v2.14.8"
+defaultFrameworkRelease = "v2.15.11"
 # renovate: datasource=github-releases depName=rancher/system-upgrade-controller
 system_upgrade_controller = "v0.14.1"
 # User interface configuration
