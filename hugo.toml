@@ -108,7 +108,7 @@ provider_version = "v2.9.2"
 # renovate: datasource=github-releases depName=k3s-io/k3s
 k3s_version = "v1.32.1+k3s1"
 # renovate: datasource=github-releases depName=kairos-io/kairos
-kairos_version = "v3.3.0"
+kairos_version = "v3.3.1"
 # renovate: datasource=github-releases depName=kairos-io/osbuilder
 osbuilder_version = "v0.401.0"
 # renovate: datasource=github-releases depName=kairos-io/AuroraBoot
@@ -119,7 +119,7 @@ defaultFamily = "ubuntu"
 defaultFlavor = "ubuntu"
 defaultFlavorRelease = "24.04"
 # renovate: datasource=github-releases depName=kairos-io/kairos-framework
-defaultFrameworkRelease = "v2.15.11"
+defaultFrameworkRelease = "v2.15.12"
 # renovate: datasource=github-releases depName=rancher/system-upgrade-controller
 system_upgrade_controller = "v0.14.1"
 # User interface configuration
@@ -200,8 +200,8 @@ no = 'Oh snap! Sorry to hear that. Please <a href="https://github.com/kairos-io/
   url = "/docs"
 
 [[params.versions]]
-  version = "v3.3.0"
-  url = "/v3.3.0/docs"
+  version = "v3.3.1"
+  url = "/v3.3.1/docs"
 
 [[params.versions]]
   version = "v3.2.4"
