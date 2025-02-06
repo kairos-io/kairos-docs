@@ -93,7 +93,7 @@ install:
   # partitions are not already present within the disk.
   no-format: false
 
-  # if no-format is used and elemental is running over an existing deployment
+  # if no-format is used and Kairos is running over an existing deployment
   # force can be used to force installation.
   force: false
 
