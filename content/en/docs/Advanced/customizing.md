@@ -131,6 +131,18 @@ install:
 ...
 ```
 
+To do this after installation, simply add a cloud config file in the `/oem` folder, for instance, to make `/var/lib/docker` persistent:
+
+```yaml
+#cloud-config
+
+stages:
+  rootfs:
+  - name: "user_custom_mount"
+    environment_file: "/run/cos/custom-layout.env"
+    environment:
+       CUSTOM_BIND_MOUNTS: "/var/lib/docker"
+```
 
 ### Ephemeral mounts
 
