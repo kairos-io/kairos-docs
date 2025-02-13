@@ -127,7 +127,7 @@ System extensions can be bundled in the installable medium. To bundle system ext
 
 {{< tabpane text=true  >}}
 {{% tab header="From a container image" %}}
-```bash {class="only-flavors=Ubuntu+24.04,Fedora+40,foobar"}
+```bash {class="only-flavors=Ubuntu+24.04,Fedora+40"}
 # Assuming your system extensions are stored on $PWD/system-extensions
 CONTAINER_IMAGE={{<oci variant="core">}}-uki
 docker run -ti --rm -v $PWD/system-extensions:/system-extensions -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/auroraboot:{{< auroraBootVersion >}} build-uki -t iso -d /result/ -k /keys --overlay-iso /system-extensions $CONTAINER_IMAGE
