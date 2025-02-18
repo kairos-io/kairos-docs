@@ -119,6 +119,8 @@ function replaceContent(distroInfo) {
     metaDistroElements.forEach(e => {
         e.innerHTML = decodeHTML(replaceVariables(e.dataset.originalContent, newDistroInfo));
     });
+
+    Prism.highlightAll();
 }
 
 document.addEventListener('DOMContentLoaded', () => {

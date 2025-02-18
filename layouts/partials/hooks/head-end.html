@@ -1,3 +1,9 @@
+<script>
+        // https://prismjs.com/docs/Prism.html#.manual
+        // We want to call replaceVariables before we highlight code
+        window.Prism = window.Prism || {};
+        Prism.manual = true;
+</script>
 <script defer data-domain="kairos.io" src="https://plausible.io/js/script.outbound-links.file-downloads.tagged-events.js"></script>
 <script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
 {{ $built := resources.Get "js/kairos.js" | js.Build (dict "minify" "true" "params" (dict "defaultFamily" $.Page.Site.Params.softwareVersions.defaultFamily "defaultFlavor" $.Page.Site.Params.softwareVersions.defaultFlavor "defaultFlavorRelease" $.Page.Site.Params.softwareVersions.defaultFlavorRelease)) | resources.Fingerprint "sha512" }}
