@@ -6,7 +6,7 @@ date: 2022-11-13
 description: Install Kairos with p2p support
 ---
 
-{{% alert title="Note" %}}
+{{% alert title="Note" color="success" %}}
 
 This feature is crazy and experimental! Do not run in production servers. 
 Feedback and bug reports are welcome, as we are improving the p2p aspects of Kairos.
@@ -73,7 +73,7 @@ p2p:
 
 The `p2p` block is used to configure settings related to the mesh functionalities. The minimum required argument is the `network_token` and there is no need to configure `k3s` manually with the `k3s` block as it is already implied.
 
-{{% alert title="Note" %}}
+{{% alert title="Note" color="success" %}}
 
 The `k3s` block can still be used to override other `k3s` settings, e.g. `args`.
 

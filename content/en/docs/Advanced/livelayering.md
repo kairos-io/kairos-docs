@@ -68,7 +68,7 @@ For example, a bundle can be defined as a naked container image containing only 
 Consider the following Dockerfile to create an extension which adds `/usr/bin/ipfs` to the system:
 
 
-{{% alert title="Note" %}}
+{{% alert title="Note" color="success" %}}
 Note that systemd extensions require an extension-release file, which can be used to validate different aspects of the system being run.
 
 If you don't want to limit to a single OS, you can use the special key `_any` but keep in mind that this is only available in systemd versions 252+.

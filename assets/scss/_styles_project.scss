@@ -1480,22 +1480,9 @@ footer {
     }
 }
 
+@import 'td/code-dark';
 // load variables_project
 @import "variables_project";
-
-.alert-primary {
-    background-color: #edf1ff;
-    border-color: #4c7bd7;
-
-    .alert-heading {
-        color: #4c7bd7;
-    }
-}
-.alert-info {
-    .alert-heading {
-        color: #71b7b1;
-    }
-}
 
 // center the distro select vertically
 .distro-select-wrapper {

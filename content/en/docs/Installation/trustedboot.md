@@ -92,7 +92,7 @@ MACHINE_CERTS="$PWD/path/to/machine-certs"
 docker run -v $MACHINE_CERTS:/work/machine-keys -v $PWD/keys:/work/keys -ti --rm quay.io/kairos/auroraboot:{{< auroraBootVersion >}} genkey --custom-cert-dir /work/machine-keys --expiration-in-days 365 -o /work/keys "$MY_ORG"
 ```
 
-{{% alert title="Warning" %}}
+{{% alert title="Warning" color="warning" %}}
 
 This command can be combined with the `--skip-microsoft-certs-I-KNOW-WHAT-IM-DOING` flag to avoid auto-enrolling the Microsoft keys if not needed (or already present in the "custom certs")
 
@@ -184,12 +184,12 @@ docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys -v $PWD/splash/:/s
 ```
 
 
-{{% alert title="Info" %}}
+{{% alert title="Info" color="success" %}}
 Splash images must be provided in 32 bit BMP format, no other image formats besides BMP are supported.
 {{% /alert %}}
 
 
-{{% alert title="Warning" %}}
+{{% alert title="Warning" color="warning" %}}
 Remember when you build upgrade mediums, to also add your branding, otherwise the new active image will be named differently than your fallback and recovery ones.
 {{% /alert %}}
 
@@ -197,7 +197,7 @@ Remember when you build upgrade mediums, to also add your branding, otherwise th
 
 In addition to having the "title" and "efi" attributes, you can include in the config files the OS "version" and "cmdline". To do so, pass `--include-version-in-config` or `--include-cmdline-in-config` flags to auroraboot.
 
-{{% alert title="Info" %}}
+{{% alert title="Info" color="success" %}}
 The cmdline, will only show what is different between the default cmdline and the currently used cmdline. If you pass `--include-cmdline-in-config` to a default installation, the attribute cmdline will be empty.
 {{% /alert %}}
 
@@ -408,7 +408,7 @@ To mount `/oem` and `/usr/local` after install you can also manually call `kcryp
 
 ### Force certificates auto-enrollments
 
-{{% alert title="Warning" %}}
+{{% alert title="Warning" color="warning" %}}
 Don't run auto-enrollments by default! this option is here after you are sure that the certificates generated are correct and after you have verified that manuall enrolling the certificates does not brick your device!
 
 This is specific for large-scale deployments to generate auto-installing ISOs that are meant to be used on similar hardware multiple times (thus the process only needs to be manually verified once).

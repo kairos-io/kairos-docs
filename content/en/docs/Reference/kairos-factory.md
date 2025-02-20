@@ -5,7 +5,7 @@ weight: 4
 description: "Converting any base image into a Kairos ready image"
 ---
 
-{{% alert title="Ongoing Project" %}}
+{{% alert title="Ongoing Project" color="warning" %}}
 The Kairos factory is an ongoing project. Things might change, and we are working on improving the documentation and the process. If you encounter any issues, please feel free to open up issues and help us improve the Documentation!
 
 For further info check out [#1914](https://github.com/kairos-io/kairos/issues/1914)

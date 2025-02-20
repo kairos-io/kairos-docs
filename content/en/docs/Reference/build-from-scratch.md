@@ -5,7 +5,7 @@ weight: 5
 description: This article shows how to bring your own image with Kairos, and build a Kairos derivative from scratch using base container images from popular distributions such as Ubuntu, Fedora, openSUSE, etc.
 ---
 
-{{% alert title="Note" %}}
+{{% alert title="Note" color="success" %}}
 By default, Core and Standard Kairos images are pre-configured, optimized and maintained by the Kairos team, meeting most use cases. However, if you're an advanced user interested in creating your own derivative or building new flavors for Kairos core images, this section is reserved just for you.
 
 While the process of building these images is still a work in progress, it's already usable for general consumption. You can follow our development efforts in the [factory epic](https://github.com/kairos-io/kairos/issues/116). For instance, we are currently working on adding features like [conformance tests](https://github.com/kairos-io/kairos/issues/958) to enable users to test images built with this process, ensuring their correctness before attempting to boot the system.

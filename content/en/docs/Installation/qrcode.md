@@ -6,7 +6,7 @@ date: 2022-11-13
 description: Use the QR code displayed at boot to drive the installation
 ---
 
-{{% alert title="Warning" %}}
+{{% alert title="Warning" color="warning" %}}
 You will need a Standard Kairos OS image in order to use QR Code feature.
 {{% /alert %}}
 
@@ -63,7 +63,7 @@ kairosctl register --reboot --device /dev/sda --config config.yaml
 - The `--device` flag determines the specific drive where Kairos will be installed. Replace `/dev/sda` with your drive. Any existing data will be overwritten, so please be cautious.
 - The `--config` flag is used to specify the config file used by the installation process.
 
-{{% alert title="Note" %}}
+{{% alert title="Note" color="success" %}}
 By default, the CLI will automatically take a screenshot to get the QR code. Make sure it fits into the screen. Alternatively, an image path or a token can be supplied via arguments (e.g. `kairosctl register /img/path` or `kairosctl register <token>`).
 {{% /alert %}}
 

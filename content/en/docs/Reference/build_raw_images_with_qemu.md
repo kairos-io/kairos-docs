@@ -7,7 +7,7 @@ description: This article shows how to bring your own image with Kairos, and bui
 
 This page provides a reference guide on how to build raw images for Kairos using QEMU. It covers the process of using a default cloud configuration and a script to generate bootable images. The cloud configuration can be customized to suit different use cases. This mechanism can be used to create golden images, or simply be an alternative to use tools like Packer. 
 
-{{% alert title="Note" %}}
+{{% alert title="Note" color="success" %}}
 This method differs from the ones documented in the [Auroraboot]({{< ref "/docs/Reference/auroraboot" >}}) section: this method is suitable if you need to create appliances that have to run a full-installation. AuroraBoot will create instead images pre-installed which will skip the usual Kairos installation process in runtime
 {{% /alert %}}
 
@@ -59,7 +59,7 @@ stages:
          [[ "$(echo "$(df -h | grep COS_PERSISTENT)" | awk '{print $5}' | tr -d '%')" -ne 100 ]] && resize2fs /dev/disk/by-label/COS_PERSISTENT
 ```
 
-{{% alert title="Note" %}}
+{{% alert title="Note" color="success" %}}
 `install.poweroff` is set to `true` to power off the machine after installation and `install.auto` is set to `true` to enable automated installations. Both of these settings are **needed** to function properly.
 {{% /alert %}}
 

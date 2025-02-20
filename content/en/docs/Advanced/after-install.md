@@ -39,7 +39,7 @@ To install [system-upgrade-controller](https://github.com/rancher/system-upgrade
 kubectl apply -f https://github.com/rancher/system-upgrade-controller/releases/download/{{< system-upgrade-controller-version >}}/system-upgrade-controller.yaml
 ```
 
-{{% alert title="Note" %}}
+{{% alert title="Note" color="success" %}}
 
 Several roll-out strategies can be used with `system-upgrade-controller` which are not illustrated here in this example. For instance, it can be specified in the number of hosts which are running the upgrades, filtering by labels, and more. [Refer to the project documentation](https://github.com/rancher/system-upgrade-controller) on how to create efficient strategies to roll plans on the nodes. In the example above, the plans are applied to every host of the cluster, one-by-one in sequence.
 

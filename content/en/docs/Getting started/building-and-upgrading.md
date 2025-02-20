@@ -6,7 +6,7 @@ description: |
     Kairos is an immutable OS so we cannot install new packages on a running system. Instead, adding packages is achieved by building a container image and upgrading the node with it.
 ---
 
-{{% alert title="Objective" %}}
+{{% alert title="Objective" color="success" %}}
 This guide will walk you through the steps to build a new Kairos container image and add additional packages. You will then use the newly built image to upgrade a Kairos node manually.
 {{% /alert %}}
 

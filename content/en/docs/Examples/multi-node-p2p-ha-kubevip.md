@@ -6,7 +6,7 @@ date: 2022-11-13
 description: This guide walks through the process of deploying a highly-available, P2P self-coordinated k3s cluster with KubeVIP, which provides a high available Elastic IP for the control plane. 
 ---
 
-{{% alert title="Note" %}}
+{{% alert title="Warning" color="warning" %}}
 
 This feature is crazy and experimental! Do not run in production servers. 
 Feedback and bug reports are welcome, as we are improving the p2p aspects of Kairos.

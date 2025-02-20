@@ -6,7 +6,7 @@ date: 2023-02-15
 description: Full end to end example to bootstrap a self-coordinated cluster with Kairos and AuroraBoot
 ---
 
-{{% alert title="Note" %}}
+{{% alert title="Note" color="success" %}}
 
 The p2p feature of Kairos is crazy and experimental! Do not run in production servers.
 Feedback and bug reports are welcome, as we are improving the p2p aspects of Kairos.
@@ -17,7 +17,7 @@ Deploying Kubernetes at the Edge can be a complex and time-consuming process, es
 
 To leverage p2p self-coordination capabilities of Kairos, you will need to configure the `network_token` under the `p2p` configuration block in your cloud-config file. Once you have set this, Kairos will handle the configuration of each node.
 
-{{% alert title="Note" %}}
+{{% alert title="Note" color="success" %}}
 You can see this example live in the [Kairos and libp2p video]({{< relref "Media#how-kairos-uses-libp2p" >}} "Media") in the [Media Section]({{< relref "Media" >}} "Media")
 {{% /alert %}}
 

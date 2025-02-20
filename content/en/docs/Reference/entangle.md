@@ -7,7 +7,7 @@ description: Inter-connecting Kubernetes clusters without the need of exposing a
  
 ---
 
-{{% alert title="Note" %}}
+{{% alert title="Note" color="success" %}}
 
 This feature is crazy and experimental! Do not run in production servers. 
 Feedback and bug reports are welcome, as we are improving the p2p aspects of Kairos.
