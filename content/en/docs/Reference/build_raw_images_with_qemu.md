@@ -7,11 +7,12 @@ description: This article shows how to bring your own image with Kairos, and bui
 
 This page provides a reference guide on how to build raw images for Kairos using QEMU. It covers the process of using a default cloud configuration and a script to generate bootable images. The cloud configuration can be customized to suit different use cases.
 
-## Requirements
+{{% alert title="Note" %}}
+The following tools are required in the system:
 
 - `qemu`
 - A Kairos ISO (or a custom built one)
-
+{{% /alert %}}
 
 ## Default Cloud Configuration
 The following is the default `cloud-config` file used for Kairos. You can modify this file as needed to fit your environment:
@@ -54,7 +55,9 @@ stages:
          [[ "$(echo "$(df -h | grep COS_PERSISTENT)" | awk '{print $5}' | tr -d '%')" -ne 100 ]] && resize2fs /dev/disk/by-label/COS_PERSISTENT
 ```
 
-Note: `install.poweroff` is set to `true` to power off the machine after installation and `install.auto` is set to `true` to enable automated installations. Both of these settings are **needed** to function properly.
+{{% alert title="Note" %}}
+`install.poweroff` is set to `true` to power off the machine after installation and `install.auto` is set to `true` to enable automated installations. Both of these settings are **needed** to function properly.
+{{% /alert %}}
 
 ## Script to Build Raw Images
 
@@ -101,12 +104,14 @@ ${QEMU} -m 8096 -smp cores=2 \
    - KVM acceleration (`-enable-kvm`)
    - Attaching the raw disk and ISO images as drives.
 
-## Customizing the Cloud Configuration
+## Customizing the Cloud Configuration and Building the Image
 
 To customize your installation:
 1. Modify the `cloud-config` YAML as needed.
-2. Pass the modified configuration as an argument to the script:
+2. Pass the modified configuration as an argument to the script (optionally, pass the Kairos ISO as the second argument):
 
 ```bash
-./build_image.sh my_custom_cloud_config.yaml [kairos.iso]
+./build_image.sh my_custom_cloud_config.yaml
 ```
+
+This script will generate a raw disk image with the specified cloud configuration.
