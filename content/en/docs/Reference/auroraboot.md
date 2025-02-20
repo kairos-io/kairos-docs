@@ -592,6 +592,10 @@ docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos
 
 AuroraBoot can generate raw disk images (EFI) that can be used as cloud images (for example as AWS AMI images) or QEMU.
 
+{{% alert title="Note" %}}
+This method differs from the ones documented in the [Build raw images with QEMU]({{< ref "/docs/Reference/build_raw_images_with_qemu" >}}). The raw disk images created with AuroraBoot don't run any installation steps and are ready to use. If you need to run installation steps in order to customize your installation flow, please use the [QEMU example]({{< ref "/docs/Reference/build_raw_images_with_qemu" >}}).
+{{% /alert %}}
+
 Consider the following example:
 
 ```bash

@@ -5,14 +5,18 @@ weight: 5
 description: This article shows how to bring your own image with Kairos, and build a Kairos derivative from scratch using base container images from popular distributions such as Ubuntu, Fedora, openSUSE, etc.
 ---
 
-This page provides a reference guide on how to build raw images for Kairos using QEMU. It covers the process of using a default cloud configuration and a script to generate bootable images. The cloud configuration can be customized to suit different use cases.
+This page provides a reference guide on how to build raw images for Kairos using QEMU. It covers the process of using a default cloud configuration and a script to generate bootable images. The cloud configuration can be customized to suit different use cases. This mechanism can be used to create golden images, or simply be an alternative to use tools like Packer. 
 
 {{% alert title="Note" %}}
+This method differs from the ones documented in the [Auroraboot]({{< ref "/docs/Reference/auroraboot" >}}) section: this method is suitable if you need to create appliances that have to run a full-installation. AuroraBoot will create instead images pre-installed which will skip the usual Kairos installation process in runtime
+{{% /alert %}}
+
+## Requirements
+
 The following tools are required in the system:
 
 - `qemu`
 - A Kairos ISO (or a custom built one)
-{{% /alert %}}
 
 ## Default Cloud Configuration
 The following is the default `cloud-config` file used for Kairos. You can modify this file as needed to fit your environment:
