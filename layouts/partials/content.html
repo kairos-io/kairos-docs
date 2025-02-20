@@ -181,25 +181,19 @@
                 <a href="https://github.com/kairos-io/kairos" target="_blank">
                     <i class="fa-brands fa-github"></i>
                     <div>
-                        <p>Contribute to <br> GitHub</p>
+                        <p>Contribute on GitHub</p>
                     </div>
                 </a>
-                <a href="https://kairoslinux.substack.com/p/karios-chronicles-were-part-of-the?sd=pf" target="_blank">
-                    <i class="fa-solid fa-envelope"></i>
+                <a href="https://www.linkedin.com/company/kairos-oss/" target="_blank">
+                    <i class="fa-brands fa-linkedin"></i>
                     <div>
-                        <p>Sign up to <br> our newsletter</p>
-                    </div>
-                </a>
-                <a href="https://x.com/Kairos_OSS" target="_blank">
-                    <i class="fa-brands fa-x-twitter"></i>
-                    <div>
-                        <p>Follow us <br> on X</p>
+                        <p>Follow us LinkedIn</p>
                     </div>
                 </a>
                 <a href="https://slack.cncf.io/#kairos" target="_blank">
                     <i class="fa-brands fa-slack"></i>
                     <div>
-                        <p>Join our <br> Slack channel in the CNCF workspace</p>
+                        <p>Join the conversation</p>
                     </div>
                 </a>
             </div>
@@ -212,7 +206,8 @@
             <div class="partners-cards">
                 <div>
                     <div>
-                        <img src="https://cdn.prod.website-files.com/64105dfa8da6a9f617932c6c/6436dd214eb8384a99b03071_SpectroCloud_horizontal_logo_on%20light%20bg%20(1).svg" alt="Spectro Cloud Logo" loading="lazy"/>
+                        {{ $sclogo := resources.Get "/img/spectrocloud-light.svg" }}
+                        <img src="{{ $sclogo.RelPermalink }}" alt="Spectro Cloud Logo" loading="lazy"/>
                     </div>
                     <p><span>Spectro Cloud</span> is the main supporter behind Kairos and provides enterprise-grade Kubernetes management through its platform, Palette, which allows organizations to deploy, manage, and scale Kubernetes across various environments, including public clouds, data centers, bare metal, and edge computing.</p>
                     <div class="buttons astro-7XAARZHW">
