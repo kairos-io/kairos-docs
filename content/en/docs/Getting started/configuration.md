@@ -6,7 +6,7 @@ description: |
   Learn the basics of configuring an immutable OS like Kairos
 ---
 
-{{% alert title="Objective" %}}
+{{% alert title="Objective" color="success" %}}
 This guide will teach you the basics about immutability and configuration in Kairos. We will achieve this by configuring the hostname of your Kairos node.
 {{% /alert %}}
 

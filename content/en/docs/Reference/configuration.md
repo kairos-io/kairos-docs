@@ -344,7 +344,7 @@ stages:
           - 8.8.8.8
 ```
 
-{{% alert title="Note" %}}
+{{% alert title="Note" color="success" %}}
 
 Kairos does not use [cloud-init](https://cloud-init.io/). [yip](https://github.com/mudler/yip) was created with the goal of being distro agnostic, and does not use Bash at all (with the exception of systemd configurations, which are assumed to be available). This makes it possible to run yip on minimal Linux distros that have been built from scratch.
 
@@ -400,7 +400,7 @@ INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.after'
 
 ### Validate Your Cloud Config
 
-{{% alert title="Note" %}}
+{{% alert title="Note" color="success" %}}
 
 Validation of configuration is available on Kairos [v1.6.0-rc1](https://github.com/kairos-io/kairos/releases/tag/v1.6.0-rc1) and later. If you're interested in the validation rules or want to build a tool based on it, you can access them online via `https://kairos.io/RELEASE/cloud-config.json` e.g. [v1.6.0 cloud-config.json](https://kairos.io/v1.6.0/cloud-config.json)
 

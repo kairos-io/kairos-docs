@@ -6,7 +6,7 @@ date: 2022-11-13
 description: Kairos makes it easy to configure automatic High Availability (HA) in your cluster by using cloud-config. With just a few simple steps, you can have a fully-functioning HA setup in your cluster.
 ---
 
-{{% alert title="Note" %}}
+{{% alert title="Warning" color="warning" %}}
 
 This feature is crazy and experimental! Do not run in production servers. 
 Feedback and bug reports are welcome, as we are improving the p2p aspects of Kairos.

@@ -6,7 +6,7 @@ date: 2022-11-13
 description: Install Kairos with p2p support, on a multi-node cluster
 ---
 
-{{% alert title="Note" %}}
+{{% alert title="Warning" color="warning" %}}
 
 This feature is crazy and experimental! Do not run in production servers. 
 Feedback and bug reports are welcome, as we are improving the p2p aspects of Kairos.

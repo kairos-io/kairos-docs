@@ -57,7 +57,7 @@ Then you can use the `systemd-repart` tool to create the sysext image:
 $ systemd-repart -S -s SOURCE_DIR NAME.sysext.raw --private-key=PRIVATE_KEY --certificate=CERTIFICATE
 ```
 
-{{% alert title="Warning" %}}
+{{% alert title="Warning" color="warning" %}}
 Note that the extensions MUST have a `/usr/lib/extension-release.d/extension-release.NAME` file in which the NAME needs to match the sysext NAME (extension is ignored). This is an enforcement by systemd to ensure the sysext is correctly identified and some sanity checks are done with the info in that file.
 {{% /alert %}}
 

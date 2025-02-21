@@ -15,7 +15,7 @@ These images are pushed to quay.io and are available for installation and upgrad
 
 Kairos release processes generates images based on official container images from popular Linux distributions. If you don't see your preferred distribution, check if [we are already planning](https://github.com/kairos-io/kairos/issues?q=is%3Aopen+is%3Aissue+label%3Aarea%2Fflavor) support for it or create a new issue.
 
-{{% alert title="Note" %}}
+{{% alert title="Note" color="success" %}}
 You can also download ISOs and other artifacts from the [releases page](https://github.com/kairos-io/kairos/releases).
 {{% /alert %}}
 

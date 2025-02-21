@@ -97,13 +97,11 @@ function replaceContent(distroInfo) {
             // Insert the new alert div above the highlight element
             highlightElement.parentNode.insertBefore(alertDiv, highlightElement);
 
-            console.log(onlyDistros[0])
             const availableDistro = getSelectValueFromText(onlyDistros[0].replace(/\+/g, ' '));
-        console.log(availableDistro)
             newDistroInfo = availableDistro.split(';');
         }
 
-        const preTags = highlightElement.querySelectorAll('pre');
+        const preTags = highlightElement.querySelectorAll('code');
         const aTags = highlightElement.querySelectorAll('a');
 
         const elements = [...preTags, ...aTags];
@@ -119,8 +117,6 @@ function replaceContent(distroInfo) {
     metaDistroElements.forEach(e => {
         e.innerHTML = decodeHTML(replaceVariables(e.dataset.originalContent, newDistroInfo));
     });
-
-    Prism.highlightAll();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -133,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     highlightElements.forEach(highlightElement => {
-        const preElements = highlightElement.querySelectorAll('pre');
+        const preElements = highlightElement.querySelectorAll('code');
         const aElements = highlightElement.querySelectorAll('a');
         const elements = [...preElements, ...aElements];
         elements.forEach((e, i) => {

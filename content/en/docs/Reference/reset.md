@@ -13,7 +13,7 @@ The configuration files in `/oem` are kept intact, the node on the next reboot a
 
 # How to
 
-{{% alert title="Note" %}}
+{{% alert title="Note" color="success" %}}
 
 By following the steps below you will _reset_ entirely a node and the persistent data will be lost. This includes _every_ user-data stored on the machine.
 

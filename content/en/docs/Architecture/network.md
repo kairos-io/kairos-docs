@@ -14,7 +14,7 @@ To address these challenges, Kairos provides an easy and robust solution for dep
 
 In this document, we will examine the advantages of using Kairos to deploy Kubernetes clusters at the edge, and how p2p technology facilitates self-coordination for a zero-touch configuration experience. We will also explore how Kairos' highly adaptable and container-based approach, combined with an immutable OS and meta-distribution, makes it an excellent choice for edge deployments.
 
-{{% alert title="Note" %}}
+{{% alert title="Note" color="success" %}}
 You can also watch our [Kairos and libp2p video]({{< relref "../media/#how-kairos-uses-libp2p" >}} "Media") in the [Media Section]({{< relref "../media" >}} "Media")
 {{% /alert %}}
 

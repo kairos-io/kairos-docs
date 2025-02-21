@@ -50,7 +50,7 @@ And that's it! You should now have LocalAI and K3s set up on your Kairos node.
 
 The first thing you want to check is which models you have available. By default, the LocalAI Kairos bundle downloads the `ggml-gpt4all-j.bin` model available from [gpt4all](https://github.com/nomic-ai/gpt4all). 
 
-{{% alert title="Warning" %}}
+{{% alert title="Warning" color="warning" %}}
 Remember to change the IP with your own.
 {{% /alert %}}
 

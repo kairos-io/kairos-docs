@@ -111,7 +111,7 @@ docker run --privileged \
 
 After running any of the commands above, the generated images files required for flashing will be inside the `bootloader` directory (`bootloader/efi.img`, `bootloader/recovery_partition.img`, `bootloader/state_partition.img`, `bootloader/oem.img`, `bootloader/persistent.img` ).
 
-{{% alert title="Note" %}}
+{{% alert title="Note" color="success" %}}
 The persistent image is optional, as you can store the system persistent data rather in an SD card or an NVME disk. The default `persistent.img` is of 2GB size. To create a persistent image manually of the size you prefer instead you can run:
 
 ```
@@ -133,7 +133,7 @@ wget 'https://kairos.io/examples/images/flash_t234_qspi_sdmmc.xml' -O ./bootload
 
 If you are editing the partition sizes and generating the images manually, use the example config file as a baseline and edit the `size` accordingly to the corresponding partitions (find the respective `filename` and compare the file size, see the notes below).
 
-{{% alert title="Note on editing the parition layout manually" %}}
+{{% alert title="Note on editing the parition layout manually" color="success" %}}
 
 If you want to use the original file, identify the `sdmmc_user` section ( e.g. `<device type="sdmmc_user" instance="3" sector_size="512" num_sectors="INT_NUM_SECTORS" >` ), inside there is an "APP" partition ( `<partition name="APP" id="1" type="data">` ), remove it , and add the following instead:
 
@@ -192,11 +192,11 @@ Be mindful also to change the esp partition or add it if required:
 You can also remove the other partitions under `sdmmc_user` as not effectively used by Kairos during boot.
 {{% /alert %}}
 
-{{% alert title="Note" %}}
+{{% alert title="Note" color="success" %}}
 The `COS_PERSISTENT` partition is optional. You can also use an SD card, or an nvme drive instead. The only requirement is to have the partition labeled as `COS_PERSISTENT`.
 {{% /alert %}}
 
-{{% alert title="Note" %}}
+{{% alert title="Note" color="success" %}}
 If modifiying the parition sizes, you need to replace the size inside the `<size></size>` tags of each partition in the XML:
 
 ```

@@ -83,7 +83,7 @@ metallb:
   address_pool: 192.168.1.10-192.168.1.20
 ```
 
-{{% alert title="Warning" %}}
+{{% alert title="Warning" color="warning" %}}
 For both types of bundle installation (after installation, on first boot),
 the installation only happens once. Changing the bundle's configuration block
 after Kairos installation is complete, will not have any effect.

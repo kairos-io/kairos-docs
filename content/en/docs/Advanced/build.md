@@ -4,7 +4,7 @@ linkTitle: "Build"
 weight: 5
 ---
 
-{{% alert title="Note" %}}
+{{% alert title="Warning" color="warning" %}}
 
 This page is a work in progress!
 The feature is experimental and API is likely going to be subject to changes, don't rely on it yet!

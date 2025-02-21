@@ -6,7 +6,7 @@ date: 2022-11-13
 description: This documentation page provides instructions on how to install Kairos with P2P support on a single-node cluster
 ---
 
-{{% alert title="Note" color="warning" %}}
+{{% alert title="Warning" color="warning" %}}
 
 This feature is crazy and experimental! Do not run in production servers. 
 Feedback and bug reports are welcome, as we are improving the p2p aspects of Kairos.
@@ -39,7 +39,7 @@ p2p:
 
 ```
 
-{{% alert title="Note" %}}
+{{% alert title="Warning" color="warning" %}}
 
 One important note is that this example requires the YAML format when editing the configuration file, and that the indentation needs to be accurate, otherwise the configuration will fail.
 

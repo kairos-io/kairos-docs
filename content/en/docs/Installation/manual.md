@@ -6,7 +6,7 @@ date: 2022-11-13
 description: Install Kairos manually
 ---
 
-{{% alert title="Note" %}}
+{{% alert title="Note" color="success" %}}
 
 After the installation, the password login is disabled, users, and SSH keys to log in must be configured via cloud-init.
 

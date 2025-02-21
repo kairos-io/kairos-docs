@@ -22,7 +22,7 @@ install:
  source: "docker:{{<oci variant="standard">}}"
 ```
 
-{{% alert title="Note" %}}
+{{% alert title="Note" color="success" %}}
 Looking to install from a private registry OCI image? Check the [Private registry auth]({{< relref "../Advanced/private_registry_auth" >}}) page.
 {{% /alert %}}
 
