@@ -176,16 +176,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const savedDistro = localStorage.getItem('selectedDistro');
     if (savedDistro) {
-            const displayName = document.querySelector(`[data-distro="${savedDistro}"]`).textContent.trim();
-            distroSelect.dataset.distro = savedDistro;
-            distroSelect.textContent = displayName;
             distroInfo = savedDistro.split(';');
-    } else {
-        const defaultDistroValue = distroInfo.join(';');
-        const displayName = document.querySelector(`[data-distro="${defaultDistroValue}"]`).textContent.trim();
-        distroSelect.dataset.distro = defaultDistroValue;
-        distroSelect.textContent = displayName;
     }
+    const defaultDistroValue = distroInfo.join(';');
+    const displayName = document.querySelector(`[data-distro="${defaultDistroValue}"]`).textContent.trim();
+    distroSelect.dataset.distro = defaultDistroValue;
+    distroSelect.textContent = displayName;
+
     const savedAnalyticsState = localStorage.getItem('useAnalytics');
     if (savedAnalyticsState) {
         document.getElementById('analytics-select').dataset.analyticsState = savedAnalyticsState;
