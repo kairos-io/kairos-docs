@@ -1498,25 +1498,16 @@ footer {
     /* You can add any other styles needed for the select here */
 }
 
-.telemetry-wrapper {
-    padding: 0.375rem 2.25rem 0.375rem 0.75rem
-}
-
-.telemetry-wrapper input {
-    margin-right: 0.3rem;
-}
-
-#telemetry-info {
+#analytics-info {
     color: $success; 
     cursor: pointer;
     position: relative;
 }
 
-#telemetry-modal {
+#analytics-modal {
     display: none;
     background: #212529;
     position: absolute;
-    top: 5.5rem;
     left: 0;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -1528,7 +1519,7 @@ footer {
     white-space: normal;
 }
 
-#telemetry-modal::before {
+#analytics-modal::before {
     content: "";
     position: absolute;
     top: -10px;
