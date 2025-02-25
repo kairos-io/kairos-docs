@@ -181,8 +181,9 @@ document.addEventListener('DOMContentLoaded', () => {
             distroSelect.textContent = displayName;
             distroInfo = savedDistro.split(';');
     } else {
-        distroSelect.dataset.distro = distroInfo.join(';');
-        const displayName = document.querySelector(`[data-distro="${distroSelect.dataset.distro}"]`).textContent.trim();
+        const defaultDistroValue = distroInfo.join(';');
+        const displayName = document.querySelector(`[data-distro="${defaultDistroValue}"]`).textContent.trim();
+        distroSelect.dataset.distro = defaultDistroValue;
         distroSelect.textContent = displayName;
     }
     const savedAnalyticsState = localStorage.getItem('useAnalytics');
