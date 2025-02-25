@@ -1,22 +1,94 @@
 <ul class="navbar-nav mt-2 mt-lg-0">
-    <li class="nav-item mr-4 mb-2 mb-lg-0">
-        <div class="distro-select-wrapper">
-            <select id="distro-select" class="form-select">
-                <option value="alpine;alpine;3.19">Alpine 3.19</option>
-                <option value="debian;debian;bookworm">Debian Bookworm</option>
-                <option value="debian;debian;testing">Debian Testing</option>
-                <option value="rhel;fedora;40">Fedora 40</option>
-                <option value="opensuse;opensuse;leap-15.6">openSUSE Leap-15.6</option>
-                <option value="opensuse;opensuse;tumbleweed">openSUSE Tumbleweed</option>
-                <option value="rhel;rockylinux;9">Rockylinux 9</option>
-                <option value="ubuntu;ubuntu;24.10">Ubuntu 24.10</option>
-                <option value="ubuntu;ubuntu;24.04">Ubuntu 24.04</option>
-                <option value="ubuntu;ubuntu;22.04">Ubuntu 22.04</option>
-                <option value="ubuntu;ubuntu;20.04">Ubuntu 20.04</option>
-            </select>
-        </div>
+    <li class="td-light-dark-menu nav-item dropdown">
+        <button class="btn btn-link nav-link dropdown-toggle d-flex align-items-center" id="distro-select" type="button" aria-expanded="false" data-bs-toggle="dropdown" data-bs-display="static" data-distro="rhel;roskylinux;9" aria-label="Toggle Flavor">
+            Rockylinux 9
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-flavor-text">
+            <li>
+                <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="alpine;alpine;3.19" aria-pressed="false">
+                Alpine 3.19
+                </button>
+            </li>
+            <li>
+                <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="debian;debian;bookworm" aria-pressed="false">
+                Debian Bookworm
+                </button>
+            </li>
+            <li>
+                <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="debian;debian;testing" aria-pressed="false">
+                Debian Testing
+                </button>
+            </li>
+            <li>
+                <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="rhel;fedora;40" aria-pressed="false">
+                Fedora 40
+                </button>
+            </li>
+            <li>
+                <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="opensuse;opensuse;leap-15.6" aria-pressed="false">
+                openSUSE Leap-15.6
+                </button>
+            </li>
+            <li>
+                <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="opensuse;opensuse;tumbleweed" aria-pressed="false">
+                openSUSE Tumbleweed
+                </button>
+            </li>
+            <li>
+                <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="rhel;rockylinux;9" aria-pressed="true">
+                Rockylinux 9
+                </button>
+            </li>
+            <li>
+                <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="ubuntu;ubuntu;24.10" aria-pressed="false">
+                Ubuntu 24.10
+                </button>
+            </li>
+            <li>
+                <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="ubuntu;ubuntu;24.04" aria-pressed="false">
+                Ubuntu 24.04
+                </button>
+            </li>
+            <li>
+                <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="ubuntu;ubuntu;22.04" aria-pressed="false">
+                Ubuntu 22.04
+                </button>
+            </li>
+            <li>
+                <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="ubuntu;ubuntu;20.04" aria-pressed="false">
+                Ubuntu 20.04
+                </button>
+            </li>
+        </ul>
     </li>
     <li class="nav-item mr-4 mb-2 mb-lg-0 mt-lg-2">
         <a class="github-button" href="https://github.com/kairos-io/kairos" data-size="large" data-show-count="true" aria-label="Star kairos-io/kairos on GitHub">Star</a>
+    </li>
+    <li class="td-light-dark-menu nav-item dropdown">
+        <button class="btn btn-link nav-link dropdown-toggle d-flex align-items-center" id="analytics-select" type="button" aria-expanded="false" aria-controls="widget2" data-bs-toggle="dropdown" data-bs-display="static" data-analytics-state="on" aria-label="Toggle Analytics">
+            <div>
+                <i id="analytics-current-icon" class="fa-solid fa-user-tie"></i>
+            </div> &nbsp;
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-scarf-text" data-bs-popper="static">
+            <li>
+                <button type="button" id="analytics-on" class="dropdown-item d-flex align-items-center" aria-pressed="false">
+                <i class="fa-solid fa-user-tie"></i> Business use &nbsp;<i id="analytics-info" class="fa-solid fa-circle-info"></i>
+                </button>
+                <div id="analytics-modal">
+                    <p>
+                    If you are using Kairos for business purposes, please allow us to collect anonymous usage data. By leaving this option enabled, some of the download links will go through Scarf, which help us understand project adoption.
+                    </p>
+                    <p>
+                    Scarf purges personally identifiable information immediately after metadata lookup, ensuring that no sensitive data is stored. It is a GDPR-compliant and used amoung different projects in the CNCF like Linkerd, Falco and others. You can learn more about it on <a href="https://scarf.sh/" target="_blank">scarf.sh</a>.
+                    </p>
+                </div>
+            </li>
+            <li>
+                <button type="button" id="analytics-off" class="dropdown-item d-flex align-items-center" aria-pressed="false">
+                <i class="fa-solid fa-house-user"></i> Personal use
+                </button>
+            </li>
+        </ul>
     </li>
 </ul>

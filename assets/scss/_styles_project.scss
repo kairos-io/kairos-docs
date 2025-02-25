@@ -1493,6 +1493,38 @@ footer {
 }
 
 #distro-select {
+    border: none;
     margin: 0; /* Remove default margin if any */
     /* You can add any other styles needed for the select here */
+}
+
+#analytics-info {
+    color: $success; 
+    cursor: pointer;
+    position: relative;
+}
+
+#analytics-modal {
+    display: none;
+    background: #212529;
+    position: absolute;
+    left: 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    width: 250px;
+    z-index: 10;
+    font-size: 14px;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+#analytics-modal::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: 10px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent white transparent;
 }
