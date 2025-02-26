@@ -173,6 +173,14 @@
             </div>
         </div>
     </div>
+    <div class="cncf-blade">
+        <div class="join-us-wrap">
+            {{ $cncf := resources.Get "/img/logo_cloudnative.png" }}
+            <h2>We are a Cloud Native Computing Foundation sandbox project.</h2>
+            <img src="https://www.cncf.io/wp-content/uploads/2022/07/cncf-white-logo.svg" alt="opened box" loading="lazy" width="300em" height="auto"/>
+            <p>The Linux Foundation® (TLF) has registered trademarks and uses trademarks. For a list of TLF trademarks, see <a href="https://www.linuxfoundation.org/trademark-usage/" target="_blank">Trademark Usage</a>.</p>
+        </div>
+    </div>
     <div id="join-us-blade">
         <div class="join-us-wrap">
             <h2>Join our community</h2>
@@ -219,12 +227,33 @@
             </div>
         </div>
     </div>
-    <div class="cncf-blade">
-        <div class="join-us-wrap">
-            {{ $cncf := resources.Get "/img/logo_cloudnative.png" }}
-            <h2>We are a Cloud Native Computing Foundation sandbox project.</h2>
-            <img src="https://www.cncf.io/wp-content/uploads/2022/07/cncf-white-logo.svg" alt="opened box" loading="lazy" width="300em" height="auto"/>
-            <p>The Linux Foundation® (TLF) has registered trademarks and uses trademarks. For a list of TLF trademarks, see <a href="https://www.linuxfoundation.org/trademark-usage/" target="_blank">Trademark Usage</a>.</p>
+    <div id="hot-adopters-blade">
+        <div class="hot-off-adopters">
+            <h2>Adopters</h2>
+            <div class="press-cards">
+                <div>
+                    <p>DeEEP Network uses Kairos under the hood of their device to offer a highly secure system with trusted boot.</p>
+                    <div class="press-card-img">
+                        {{ $logo := resources.Get "/img/deeep-network.png" }}
+                        <img src="{{ $logo.RelPermalink }}" alt="spectro intel logo" loading="lazy"/>
+                    </div>
+                    <a href="https://www.deeep.network" target="_blank">
+                        Read more
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                </div>
+                <div>
+                    <p>Are you using Kairos for your product or within your company? <span>We want to hear from you!</span></p>
+                    <div class="press-card-img">
+                        {{ $logo := resources.Get "/img/your-logo-here.png" }}
+                        <img src="{{ $logo.RelPermalink }}" alt="the New Stack logo" loading="lazy"/>
+                    </div>
+                    <a href="mailto:members@kairos.io">
+                        Contact us
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
     <div id="basics-blade">
