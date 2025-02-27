@@ -85,7 +85,4 @@ write_files:
       YOUR_TOKEN
 ```
 
-- `K3S_TOKEN` from /var/lib/rancher/k3s/server/node-token
-- `K3S_URL` same IP that you use to log into your master node
-
 Since this is a fully manual installation, you are in charge of setting all arguments that your setup will require, by use of the `args` attribute for both the master and server nodes.
