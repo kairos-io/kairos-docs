@@ -10,66 +10,36 @@ Here you can find development notes intended for maintainers and guidance for ne
 
 ## Repository structure
 
-Kairos uses [earthly](https://earthly.dev/) as a build system instead of Makefiles. This ensures that despite the environment you should be able to build `Kairos` seamlessly. To track external packages (like kernels, additional binaries, and so on) which follow their own versioning [luet](https://luet.io) is used and there is a separate [repository](https://github.com/kairos-io/packages) with package building specifications.
+Kairos uses Docker as a build system instead of Makefiles. This ensures that despite the environment you should be able to build `Kairos` seamlessly. To track specific packages (like Immucore or the Agent) which follow their own versioning and cadence [kairos-framework](https://github.com/kairos-io/kairos-framework) is used which provides a snapshot of versions built for Kairos.
 
-- [The Kairos repository](https://github.com/kairos-io/kairos) - contains the OS definitions (`Dockerfile`s) and configuration. The releases generate ISOs without (Kairos core) and with (Kairos standard) Kubernetes engine.
-- [The kairos-agent repository](https://github.com/kairos-io/kairos-agent/) contains the `kairos-agent` code
-- [The packages repository](https://github.com/kairos-io/packages) contains package specifications used by `kairos` while building OS images.
+- [The Kairos repository](https://github.com/kairos-io/kairos) - contains the build definitions for releasing Kairos artifacts and testing changes to Kairos.
+- [The kairos-framework repository](https://github.com/kairos-io/kairos-framework) - provides a snapshot of the required binaries for a kairos flavors. This includes the agent, immucore, kcrypt, default OEM cloud configs, etc...
+- [The kairos-agent repository](https://github.com/kairos-io/kairos-agent/) contains the `kairos-agent` code which is the Operations interface. IT deals with installing, upgrading, reseting and so on.
 - [The provider-kairos repository](https://github.com/kairos-io/provider-kairos) contains the kairos provider component which uses the SDK to bring up a Kubernetes cluster with `k3s`.
+- [The packages repository](https://github.com/kairos-io/packages) contains package source specifications used by `kairos-framework`.
 
 ## Build Kairos
 
-To build a Kairos OS you only need Docker. There is a convenience script in the root of the repository `earthly.sh` which wraps `earthly` inside Docker to avoid to install locally which can be used instead of `earthly` (e.g. `./earthly.sh +iso ...`). However, for daily development, it is strongly suggested to install Earthly it on your workstation. The `earthly.sh` script runs `earthly` in a container, and as such there are limitations on image caching between builds.
+To build a Kairos OS you only need Docker and the Dockerfile from the Kairos repo under `images/Dockerfile`
 
-To build a Kairos ISO, you need to specify a few parameters. For example, to build Kairos {{<flavorCode >}} with `earthly` installed locally:
+Bui.ding Kairos is a 2 step process, on the first one we generate the OCI artifact with the actual system on it. Thats the heart of Kairos, everything on Kairos comes from an OCI artifact. Then the second step is converting that into  a consumable artifact like an ISO or a Raw Disk image.
+
+To build the OCI artifact you can run a docker build with a given base image that you want your artifact to be based on and a version for internal tracking, for example:
 
 ```bash
-earthly +iso \
-  --FAMILY=@family \
-  --FLAVOR=@flavor \
-  --FLAVOR_RELEASE=@flavorRelease \
-  --BASE_IMAGE=@baseImage \
-  --MODEL=generic \
-  --VARIANT=core
+docker build -t kairosDev:v1.0.0 --build-arg VERSION=v1.0.0 --build-arg BASE_IMAGE=@baseImage -f images/Dockerfile .
 ```
 
-- **Flavor**: is the distribution (the name flavor is kept for backwards compatibility). In this case {{<flavorCode >}}
-- **Family**: is a group of distributions that get built in a very similar way. In this case {{<familyCode >}}. The best example of grouped family we have at the moment is `rhel`, which can build `fedora`, `rockylinux` and `almalinux`.
-- **Flavor release**: is the version of the distribution. In this case {{<flavorReleaseCode >}}
-- **Base image**: is the base image used to build the distribution. In this case {{<baseImageCode >}}, but you could use your own image which itself is based on {{<baseImageCode >}}.
-- **Model**: is the hardware model. In this case all ISOs are `generic`
-- **Variant**: is the Kairos variant, which can be `core` or `standard`. `core` is the minimal Kairos OS, while `standard` includes `k3s` among other features.
+To build a Kairos ISO, you just call AuroraBoot with the generated OCI artifact:
 
-This will build a container image from scratch and create an ISO which is ready to be booted.
+```bash
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $PWD/build/:/output \
+  quay.io/kairos/auroraboot:v0.5.0 build-iso --output /output/ docker:myBaseKairos:v1.0.0 
+```
 
-Note earthly targets are prefixed with `+` while variables are passed as flags, and `ARGS` can be passed as parameters with `--`.
+You can see some example of builds in either the [kairos-init repo](https://github.com/kairos-io/kairos-init/blob/main/.github/workflows/test.yml), which builds a series of OCI containers of different base images, variants and platforms or on the [Kairos repo](https://github.com/kairos-io/kairos/tree/master/.github/workflows) itself which generates not only different types of platforms and variants and base images but also generates different types of artifacts, like Isos, Trusted Boot isos, Trusted Boot upgrade artifacts, Raw Disk images and so on.
 
-### Adding flavors
-
-Every source image used as a flavor is inside the `images` folder in the top-level directory. Any Dockerfile have the extension corresponding to the family which can be used as an argument for earthly builds (you will find a `Dockerfile.rhel` that will be used by our command above).
-
-To add a flavor is enough to create a Dockerfile corresponding to the flavor and check if any specific setting is required for it on its build target.
-
-Generally to add a flavor the image needs to have installed:
-
-- An init system (systemd or openRC are supported)
-- Kernel
-- GRUB
-- rsync
-
-If you are building a flavor without Earthly, be sure to consume the packages from our repository to convert it to a Kairos-based version.
-
-### Bumping packages
-
-Let's assume there is some change you introduce in a package consumed by kairos
-(e.g. [kcrypt](https://github.com/kairos-io/kcrypt)). In order to build a kairos image
-with the updated package, first tag the repository (`kcrypt` in our example).
-Then trigger [the auto-bump pipeline](https://github.com/kairos-io/packages/actions/workflows/autobump.yaml)
-on the packages repository. This should create at least on PR which bumps the desired package to the latest tag.
-It may also create more PRs if other packages had new tags recently. When PR passes CI, merge it.
-Next, in order to bump the packages on kairos, manually trigger [the bump-repos pipeline](https://github.com/kairos-io/kairos/actions/workflows/bump_repos.yml).
-This will automatically open a PR on the kairos repository which can be merged when it passes CI.
-After this, any images produced by the kairos repository, will have the latest version of the package(s).
+For more information on kairos-init, see the [kairos factory documentation](../Reference/kairos-factory.md)
 
 ## New controllers
 
