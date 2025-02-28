@@ -48,11 +48,8 @@ Notes:
 The pipelines do not publish `raw` artifacts for the arm architecture because the files are too large for GitHub Actions (they exceed the artifact size limit). These artifacts can be extracted from the published docker images using the following command:
 
 ```bash {class="only-flavors=openSUSE+Leap-15.6,openSUSE+Tumbleweed,Ubuntu+20.04,Ubuntu+22.04,Alpine+3.19"}
-docker run -ti --rm -v $PWD:/image gcr.io/go-containerregistry/crane export "{{<oci variant="core" arch="arm64" model="rpi4" suffix="img">}}" /image/image.tar
-tar xvf image.tar
+docker run -ti --rm -v $PWD:/image gcr.io/go-containerregistry/crane export "{{<oci variant="core" arch="arm64" model="rpi4" suffix="img">}}" - | tar -xvf -
 ```
-
-(replace `$IMAGE` with the proper image)
 
 The artifacts can be found in the `build` directory.
 
