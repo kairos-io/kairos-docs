@@ -60,7 +60,7 @@ The artifacts can be found in the `build` directory.
 
 ### Building core and standard generic images
 
-Unfortunately we don't have the resources and capacity to build every possible artifact in our matrix. Thankfully, you can still build those images manually on your local machine, all you need is [git](https://git-scm.com/), [docker](https://www.docker.com/). Here's an example how to build an Almalinux ARM RPI4 container image.
+Unfortunately we don't have the resources and capacity to build every possible artifact in our matrix. Thankfully, you can still build those images manually on your local machine, all you need is [git](https://git-scm.com/) and [docker](https://www.docker.com/). Here's an example how to build an Almalinux ARM RPI4 container image.
 
 ```bash
 git checkout https://github.com/kairos-io/kairos.git

@@ -192,7 +192,7 @@ Init:
  - Run system cleanup to avoid leftovers
 
 
-As you can see, both of these stages runs separatedly so you can hijack this in the middle and add or remove things.
+As you can see, both of these stages runs separately so you can hijack this in the middle and add or remove things.
 
 For example, it's possible to add extra modules to be added to the initrd, or a specific kernel instead of the default latest one.
 Extra services can be either added or made required, etc..

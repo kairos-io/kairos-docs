@@ -13,14 +13,14 @@ Here you can find development notes intended for maintainers and guidance for ne
 Kairos uses Docker as a build system instead of Makefiles. This ensures that despite the environment you should be able to build `Kairos` seamlessly. To track specific packages, like [Immucore](https://github.com/kairos-io/immucore) or the [Kairos' Agent](https://github.com/kairos-io/kairos-agent) which follow their own versioning and cadence, the [Kairos Framework](https://github.com/kairos-io/kairos-framework) is used. Using [luet](https://luet.io), the Framework includes a snapshot of multiple versions built for Kairos.
 
 - [The Kairos repository](https://github.com/kairos-io/kairos) - contains the build definitions for releasing Kairos artifacts and testing changes to Kairos.
-- [The kairos-framework repository](https://github.com/kairos-io/kairos-framework) - provides a snapshot of the required binaries for a kairos flavors. This includes the agent, immucore, kcrypt, default OEM cloud configs, etc...
+- [The kairos-framework repository](https://github.com/kairos-io/kairos-framework) - provides a snapshot of the required binaries for a kairos flavor. This includes the agent, immucore, kcrypt, default OEM cloud configs, etc...
 - [The kairos-agent repository](https://github.com/kairos-io/kairos-agent/) contains the `kairos-agent` code which is the Operations interface. IT deals with installing, upgrading, reseting and so on.
 - [The provider-kairos repository](https://github.com/kairos-io/provider-kairos) contains the kairos provider component which uses the SDK to bring up a Kubernetes cluster with `k3s`.
 - [The packages repository](https://github.com/kairos-io/packages) contains package source specifications used by `kairos-framework`.
 
 ## Build Kairos
 
-To build a Kairos OS you only need Docker and the Dockerfile from the Kairos repo under `images/Dockerfile`
+To build a Kairos OS you only need Docker and the Dockerfile from the Kairos repo [under `images/Dockerfile`](https://github.com/kairos-io/kairos/blob/master/images/Dockerfile)
 
 Building Kairos is a 2 step process, on the first one we generate the OCI artifact with the actual system on it. That's the heart of Kairos, everything on Kairos comes from an OCI artifact. Then the second step is converting that image into a consumable artifact like an ISO or a Raw Disk image.
 
