@@ -112,6 +112,8 @@ hostname: debugging-station-{{ trunc 4 .MachineID }}
 users:
 - name: kairos
   passwd: kairos
+  groups:
+  - admin
   ssh_authorized_keys:
   - github:mudler
 
@@ -178,6 +180,8 @@ hostname: debugging-station-{{ trunc 4 .MachineID }}
 users:
 - name: kairos
   passwd: kairos
+  groups:
+  - admin
   ssh_authorized_keys:
   - github:mudler
 

@@ -102,6 +102,8 @@ users:
 - name: kairos
   # Change to your pass here
   passwd: kairos
+  groups:
+  - admin
 
 stages:
   'provider-kairos.bootstrap.after.k3s-ready':

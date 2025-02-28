@@ -131,6 +131,8 @@ bundles:
 users:
 - name: kairos
   passwd: kairos
+  groups:
+  - admin
 
 k3s:
  enabled: true

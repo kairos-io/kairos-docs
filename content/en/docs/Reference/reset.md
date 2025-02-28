@@ -80,6 +80,8 @@ stringData:
     users:
     - name: kairos
       passwd: kairos
+      groups:
+      - admin
       ssh_authorized_keys:
       - github:mudler
   add-config-file.sh: |
@@ -145,6 +147,8 @@ stringData:
     users:
     - name: kairos
       passwd: kairos
+      groups:
+      - admin
       ssh_authorized_keys:
       - github:mudler
   add-config-file.sh: |
