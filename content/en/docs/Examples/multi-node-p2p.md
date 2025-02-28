@@ -24,6 +24,9 @@ Consider the following example, which uses cloud-config to automatically configu
 hostname: kairoslab-{{ trunc 4 .MachineID }}
 users:
 - name: kairos
+  passwd: kairos
+  groups:
+    - admin
   ssh_authorized_keys:
   # Replace with your github user and un-comment the line below:
   # - github:mudler
