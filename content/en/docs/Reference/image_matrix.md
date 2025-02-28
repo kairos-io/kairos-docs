@@ -21,8 +21,8 @@ You can also download ISOs and other artifacts from the [releases page](https://
 
 Below is a list of the container repositories for each flavor:
 
-| **Flavor**      | repository |
-|-----------------|------------|
+| **Flavor**      | repository                                      |
+|-----------------|-------------------------------------------------|
 | **Alpine**      | {{< container-repo-link flavor="alpine" >}}     |
 | **Debian**      | {{< container-repo-link flavor="debian" >}}     |
 | **Fedora**      | {{< container-repo-link flavor="fedora" >}}     |
@@ -65,7 +65,7 @@ Unfortunately we don't have the resources and capacity to build every possible a
 ```bash
 git checkout https://github.com/kairos-io/kairos.git
 cd kairos
-docker build --platform arm64 --build-arg BASE_IMG=almalinux:9 --build-arg MODEL=rpi4 --build-arg VERSION=1.0.0 -f images/Dockerfile -t mycustomimage:1.0.0 .
+docker build --platform linux/arm64 --build-arg BASE_IMG=almalinux:9 --build-arg MODEL=rpi4 --build-arg VERSION=1.0.0 -f images/Dockerfile -t mycustomimage:1.0.0 .
 ```
 
 {{% alert title="Note" color="success" %}}

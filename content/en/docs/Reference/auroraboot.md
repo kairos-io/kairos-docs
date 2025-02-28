@@ -615,50 +615,9 @@ docker run -P -v /var/run/docker.sock:/var/run/docker.sock \
 
 The raw disk image will be available in the current directory with the `.raw` image extension
 
+
 To generate a BIOS raw image just change `disk.efi=true` for `disk.bios=true`
 
-The cloud config file (`01_reset.yaml`) in the raw image oem partition should look like the following:
-
-```yaml
-#cloud-config
-
-## First Setup
-## This block is needed as the image will boot to rescue mode and configure the drive of the
-## VM to create needed partitions with the proper sizes.
-name: "Expand disk layout"
-stages:
-  rootfs.before:
-    - name: "Add state partition"
-      layout:
-        device:
-          path: /dev/sda
-        add_partitions:
-          - fsLabel: COS_STATE
-            size: 150240
-            pLabel: state
-    - name: "Add persistent partition"
-      layout:
-        device:
-          path: /dev/sda
-        add_partitions:
-          - fsLabel: COS_PERSISTENT
-            pLabel: persistent
-            size: 0 # all space
-  network:
-    - if: '[ -f "/run/cos/recovery_mode" ]'
-      name: "Run auto reset"
-      commands:
-        - kairos-agent --debug reset --unattended --reboot
-  after-reset:
-    - if: '[ -f "/oem/01_reset.yaml" ]'
-      name: "Auto remove this file"
-      commands:
-        - rm /oem/01_reset.yaml
-
-```
-
-
-{{% alert title="Note" color="success" %}}
 To generate GCE and VHD images set `disk.gce=true` or `disk.vhd=true` respectively in the AuroraBoot command. For example:
 
 ```bash
@@ -689,7 +648,6 @@ docker run -P -v /var/run/docker.sock:/var/run/docker.sock \
   --set "state_dir=/aurora"
 ```
 
-{{% /alert %}}
 
 ### Use the config file
 

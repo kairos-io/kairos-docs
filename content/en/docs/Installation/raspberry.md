@@ -32,7 +32,7 @@ Extract the `img` file from a container image as described [in this page]({{< re
 Plug the SD card to your system. To flash the image, you can either use Etcher or `dd`. Note it's compressed with "XZ", so we need to decompress it first:
 
 ```bash {class="only-flavors=openSUSE+Leap-15.6,openSUSE+Tumbleweed,Ubuntu+20.04,Ubuntu+22.04,Alpine+3.19"}
-sudo dd if={{<image variant="standard" model="rpi4" arch="arm64" suffix=".img.xz">}} of=<device> oflag=sync status=progress bs=10MB
+sudo dd if={{<image variant="standard" model="rpi4" arch="arm64" suffix=".raw">}} of=<device> oflag=sync status=progress bs=10MB
 ```
 
 Once the image is flashed, there is no need to carry any other installation steps. We can boot the image, or apply our config.
