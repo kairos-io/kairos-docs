@@ -24,11 +24,7 @@ In order to run the Kairos Factory, you will need docker installed on your syste
 
 ## The Kairos Factory Process
 
-The process consists of a single step:
-
-1. Run [kairos-init](https://github.com/kairos-io/kairos-init) in your Dockerfile
-
-Optionally, use [auroraboot.md](auroraboot.md) to generate artifacts (isos, raw images, etc..) based on the generated OCI artifact.
+The Kairos factory is a single step process applied on a container image. All you need to do is run [kairos-init](https://github.com/kairos-io/kairos-init) in your Dockerfile. Optionally, you can use [auroraboot.md](auroraboot.md) to generate artifacts (isos, raw images, etc..) based on the generated OCI artifact.
 
 
 ## What is Kairos-init?
@@ -182,8 +178,8 @@ kairos-init is divided in 2 phases, one its the install phase which install all 
 
 Install:
  - Install required packages via system package manager
- - Install [kairos-framework]() into the system
- - Install k8s provider and tools if its an standard image
+ - Install [kairos-framework](https://github.com/kairos-io/kairos-framework) into the system
+ - Install the Kairos' provider, including a k8s distribution and tools if it's a standard image
 
 Init:
  - Fill the /etc/kairos-release data (needed for upgrades, grub booting, kernel cmdline, etc...)
@@ -196,12 +192,12 @@ Init:
  - Run system cleanup to avoid leftovers
 
 
-As you can see, both of this stages runs separatedly so you can hijack this in the middle and add or remove things.
+As you can see, both of these stages runs separatedly so you can hijack this in the middle and add or remove things.
 
-For example, its possible to add extra modules to be added to the initrd, or a specific kernel instead of the default latest one.
+For example, it's possible to add extra modules to be added to the initrd, or a specific kernel instead of the default latest one.
 Extra services can be either added or made required, etc..
 
-The separation its also very useful for caching, as once the install phase has been cached by docker we can modify the following steps to fix any issues before the init phase is run, without removing the cache, which is really good under cross platforms like aarch64 where installing packages is very slow unless you are on the native platform. 
+The separation it's also very useful for caching, as once the install phase has been cached by docker we can modify the following steps to fix any issues before the init phase is run, without removing the cache. This is particularly useful under cross platform builds where speed can take a big impact depending on your setup. 
 
 ## Examples
 
