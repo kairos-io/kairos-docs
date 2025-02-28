@@ -10,7 +10,7 @@ Here you can find development notes intended for maintainers and guidance for ne
 
 ## Repository structure
 
-Kairos uses Docker as a build system instead of Makefiles. This ensures that despite the environment you should be able to build `Kairos` seamlessly. To track specific packages (like Immucore or the Agent) which follow their own versioning and cadence [kairos-framework](https://github.com/kairos-io/kairos-framework) is used which provides a snapshot of versions built for Kairos.
+Kairos uses Docker as a build system instead of Makefiles. This ensures that despite the environment you should be able to build `Kairos` seamlessly. To track specific packages, like [Immucore](https://github.com/kairos-io/immucore) or the [Kairos' Agent](https://github.com/kairos-io/kairos-agent) which follow their own versioning and cadence, the [Kairos Framework](https://github.com/kairos-io/kairos-framework) is used. Using [luet](https://luet.io), the Framework includes a snapshot of multiple versions built for Kairos.
 
 - [The Kairos repository](https://github.com/kairos-io/kairos) - contains the build definitions for releasing Kairos artifacts and testing changes to Kairos.
 - [The kairos-framework repository](https://github.com/kairos-io/kairos-framework) - provides a snapshot of the required binaries for a kairos flavors. This includes the agent, immucore, kcrypt, default OEM cloud configs, etc...
@@ -22,7 +22,7 @@ Kairos uses Docker as a build system instead of Makefiles. This ensures that des
 
 To build a Kairos OS you only need Docker and the Dockerfile from the Kairos repo under `images/Dockerfile`
 
-Bui.ding Kairos is a 2 step process, on the first one we generate the OCI artifact with the actual system on it. Thats the heart of Kairos, everything on Kairos comes from an OCI artifact. Then the second step is converting that into  a consumable artifact like an ISO or a Raw Disk image.
+Building Kairos is a 2 step process, on the first one we generate the OCI artifact with the actual system on it. That's the heart of Kairos, everything on Kairos comes from an OCI artifact. Then the second step is converting that image into a consumable artifact like an ISO or a Raw Disk image.
 
 To build the OCI artifact you can run a docker build with a given base image that you want your artifact to be based on and a version for internal tracking, for example:
 
@@ -37,7 +37,7 @@ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $PWD/build/:/out
   quay.io/kairos/auroraboot:v0.5.0 build-iso --output /output/ docker:myBaseKairos:v1.0.0 
 ```
 
-You can see some example of builds in either the [kairos-init repo](https://github.com/kairos-io/kairos-init/blob/main/.github/workflows/test.yml), which builds a series of OCI containers of different base images, variants and platforms or on the [Kairos repo](https://github.com/kairos-io/kairos/tree/master/.github/workflows) itself which generates not only different types of platforms and variants and base images but also generates different types of artifacts, like Isos, Trusted Boot isos, Trusted Boot upgrade artifacts, Raw Disk images and so on.
+You can see some example of builds in either the [kairos-init repo](https://github.com/kairos-io/kairos-init/blob/main/.github/workflows/test.yml), which builds a series of OCI containers of different base images, variants and platforms or on the [Kairos repo](https://github.com/kairos-io/kairos/tree/master/.github/workflows) itself which generates not only different types of platforms and variants and base images but also generates different types of artifacts, like ISOs, Trusted Boot ISOs, Trusted Boot upgrade artifacts, raw disk images and so on.
 
 For more information on kairos-init, see the [kairos factory documentation](../Reference/kairos-factory.md)
 

@@ -115,7 +115,7 @@ git clone https://github.com/kairos-io/kairos.git
 cd kairos
 ```
 
-Then we can build an OCI artifacts which is the base of all things Kairos. Our ISOs, cloud images, upgrade artifacts are all OCI artifacts and they are managed like a normal OCI artifact. Can be pushed, tagged, labelled, build on top by using it as FROM in a Dockerfile, etc..
+Then we can build an OCI artifact which is the base of all things Kairos. Our ISOs, cloud images, upgrade artifacts are all OCI artifacts and they are managed like a normal OCI artifact. They can be pushed, tagged, labelled, build on top by using it as FROM in a Dockerfile, etc..
 
 To build the base artifact we can do:
 ```bash
