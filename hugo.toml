@@ -1,4 +1,4 @@
-baseURL = "https://kairos.io"
+baseURL = "https://kairos.io/v3.3.1/"
 title = "Kairos"
 
 enableRobotsTXT = true
@@ -191,7 +191,7 @@ no = 'Oh snap! Sorry to hear that. Please <a href="https://github.com/kairos-io/
 
 # Add your release versions here
 [[params.versions]]
-  version = "master"
+  version = "dev"
   url = "/docs"
 
 [[params.versions]]
