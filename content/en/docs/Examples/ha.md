@@ -23,6 +23,8 @@ users:
 - name: kairos
   # Change to your pass here
   passwd: kairos
+  groups:
+  - admin
   #ssh_authorized_keys:
   ## Add your github user here!
   #- github:mudler
@@ -46,6 +48,8 @@ users:
 - name: kairos
   # Change to your pass here
   passwd: kairos
+  groups:
+  - admin
   ssh_authorized_keys:
   # Add your github user here!
   - github:mudler
@@ -74,6 +78,8 @@ users:
 - name: kairos
   # Change to your pass here
   passwd: kairos
+  groups:
+  - admin
   #ssh_authorized_keys:
   ## Add your github user here!
   #- github:mudler
@@ -99,6 +105,8 @@ users:
 - name: kairos
   # Change to your pass here
   passwd: kairos
+  groups:
+  - admin
   #ssh_authorized_keys:
   ## Add your github user here!
   #- github:mudler

@@ -39,6 +39,8 @@ hostname: kairoslab-{{ trunc 4 .MachineID }}
 users:
 - name: kairos
   passwd: kairos
+  groups:
+  - admin
   ssh_authorized_keys:
   # Replace with your github user and un-comment the line below:
   - github:mudler
@@ -80,6 +82,8 @@ hostname: kairoslab-{{ trunc 4 .MachineID }}
 users:
 - name: kairos
   passwd: kairos
+  groups:
+  - admin
   ssh_authorized_keys:
   - github:mudler
   - github:mauromorales
@@ -120,6 +124,8 @@ hostname: kairoslab-{{ trunc 4 .MachineID }}
 users:
 - name: kairos
   passwd: kairos
+  groups:
+  - admin
   ssh_authorized_keys:
   - github:mudler
   - github:mauromorales
