@@ -93,7 +93,7 @@ prism_syntax_highlighting = true
 
 # Menu title if your navbar has a versions selector to access old versions of your site.
 # This menu appears only if you have at least one [params.versions] set.
-version_menu = "Releases"
+version_menu = "v3.0.14"
 
 # Repository configuration (URLs for in-page links to opening issues and suggesting changes)
 github_repo = "https://github.com/kairos-io/kairos-docs"
@@ -108,6 +108,9 @@ github_branch = "main"
 
 # Enable Lunr.js offline search
 offlineSearch = true
+
+archived_version = true
+url_latest_version = "https://kairos.io/v3.3.1/docs"
 
 [params.softwareVersions]
 # renovate: datasource=github-releases depName=kairos-io/provider-kairos
@@ -201,64 +204,20 @@ no = 'Oh snap! Sorry to hear that. Please <a href="https://github.com/kairos-io/
 
 # Add your release versions here
 [[params.versions]]
-  version = "master"
+  version = "dev"
   url = "/docs"
 
 [[params.versions]]
-  version = "v3.0.0"
-  url = "/v3.0.0/docs"
+  version = "v3.1.3"
+  url = "/v3.1.3/docs"
 
 [[params.versions]]
-  version = "v3.0.1"
-  url = "/v3.0.1/docs"
+  version = "v3.2.4"
+  url = "/v3.2.4/docs"
 
 [[params.versions]]
-  version = "v3.0.2"
-  url = "/v3.0.2/docs"
-
-[[params.versions]]
-  version = "v3.0.3"
-  url = "/v3.0.3/docs"
-
-[[params.versions]]
-  version = "v3.0.4"
-  url = "/v3.0.4/docs"
-
-[[params.versions]]
-  version = "v3.0.5"
-  url = "/v3.0.5/docs"
-
-[[params.versions]]
-  version = "v3.0.6"
-  url = "/v3.0.6/docs"
-
-[[params.versions]]
-  version = "v3.0.7"
-  url = "/v3.0.7/docs"
-
-[[params.versions]]
-  version = "v3.0.8"
-  url = "/v3.0.8/docs"
-
-[[params.versions]]
-  version = "v3.0.9"
-  url = "/v3.0.9/docs"
-
-[[params.versions]]
-  version = "v3.0.10"
-  url = "/v3.0.10/docs"
-
-[[params.versions]]
-  version = "v3.0.11"
-  url = "/v3.0.11/docs"
-
-[[params.versions]]
-  version = "v3.0.12"
-  url = "/v3.0.12/docs"
-
-[[params.versions]]
-  version = "v3.0.13"
-  url = "/v3.0.13/docs"
+  version = "v3.1.3"
+  url = "/v3.1.3/docs"
 
 [[params.versions]]
   version = "v3.0.14"
