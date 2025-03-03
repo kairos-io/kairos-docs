@@ -21,8 +21,8 @@ You can also download ISOs and other artifacts from the [releases page](https://
 
 Below is a list of the container repositories for each flavor:
 
-| **Flavor**      | repository |
-|-----------------|------------|
+| **Flavor**      | repository                                      |
+|-----------------|-------------------------------------------------|
 | **Alpine**      | {{< container-repo-link flavor="alpine" >}}     |
 | **Debian**      | {{< container-repo-link flavor="debian" >}}     |
 | **Fedora**      | {{< container-repo-link flavor="fedora" >}}     |
@@ -45,14 +45,11 @@ Notes:
 - The **-img** repositories contain an img file which can be directly written to an SD card or USB drive for use with ARM devices.
 
 {{% alert title="Note" color="info" %}}
-The pipelines do not publish `img` artifacts for the arm architecture because the files are too large for GitHub Actions (they exceed the artifact size limit). These artifacts can be extracted from the published docker images using the following command:
+The pipelines do not publish `raw` artifacts for the arm architecture because the files are too large for GitHub Actions (they exceed the artifact size limit). These artifacts can be extracted from the published docker images using the following command:
 
 ```bash {class="only-flavors=openSUSE+Leap-15.6,openSUSE+Tumbleweed,Ubuntu+20.04,Ubuntu+22.04,Alpine+3.19"}
-export IMAGE={{<oci variant="core" arch="arm64" model="rpi4" suffix="img">}}
-docker run -ti --rm -v $PWD:/image quay.io/luet/base util unpack "$IMAGE" /image
+docker run -ti --rm -v $PWD:/image gcr.io/go-containerregistry/crane export "{{<oci variant="core" arch="arm64" model="rpi4" suffix="img">}}" - | tar -xvf -
 ```
-
-(replace `$IMAGE` with the proper image)
 
 The artifacts can be found in the `build` directory.
 
@@ -60,13 +57,20 @@ The artifacts can be found in the `build` directory.
 
 ### Building core and standard generic images
 
-Unfortunately we don't have the resources and capacity to build every possible artifact in our matrix. Thankfully, you can still build those images manually on your local machine, all you need is [git](https://git-scm.com/), [docker](https://www.docker.com/) and [earthly](https://earthly.dev/). Here's an example how to build an Almalinux ARM generic image
+Unfortunately we don't have the resources and capacity to build every possible artifact in our matrix. Thankfully, you can still build those images manually on your local machine, all you need is [git](https://git-scm.com/) and [docker](https://www.docker.com/). Here's an example how to build an Almalinux ARM RPI4 container image.
 
 ```bash
 git checkout https://github.com/kairos-io/kairos.git
 cd kairos
-earthly +all-arm-generic --FAMILY=@family --FLAVOR=@flavor --FLAVOR_RELEASE=@flavorRelease --BASE_IMAGE=@baseImage --VARIANT=core
+docker build --platform linux/arm64 --build-arg BASE_IMG=almalinux:9 --build-arg MODEL=rpi4 --build-arg VERSION=1.0.0 -f images/Dockerfile -t mycustomimage:1.0.0 .
 ```
+
+{{% alert title="Note" color="success" %}}
+
+See the [kairos-factory.md](kairos-factory.md) page for more info.
+
+{{% /alert %}}
+
 
 ## Framework images
 
