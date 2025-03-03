@@ -6,7 +6,6 @@
 
 [build.environment]
   HUGO_VERSION = "0.113.0"
-  HUGO_BASEURL = "/v3.3.1/"
 
 [[redirects]]
 from = "/docs/contribution-guidelines/"

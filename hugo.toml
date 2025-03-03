@@ -1,4 +1,4 @@
-baseURL = "https://kairos.io/v3.3.1/"
+baseURL = "https://kairos.io/"
 title = "Kairos"
 
 enableRobotsTXT = true
@@ -95,6 +95,9 @@ github_branch = "main"
 
 # Enable Lunr.js offline search
 offlineSearch = true
+
+url_latest_version = "https://kairos.io/v3.3.1/docs"
+development = true
 
 [params.softwareVersions]
 # renovate: datasource=github-releases depName=kairos-io/provider-kairos
