@@ -24,7 +24,7 @@ Unfortunately Google Cloud [doesn't allow users to search among public images in
 
 ```
 gcloud --project  <your_project_here> compute instances create kairos-vm-test \
-  --image=projects/palette-kairos/global/images/kairos-ubuntu-24-04-core-amd64-generic-{{< google_cloud_image_version >}} \
+  --image=projects/palette-kairos/global/images/kairos-ubuntu-24-04-core-amd64-generic-{{- $.Page.Site.Params.softwareVersions.google_cloud_image_version -}} \
   --image-project=palette-kairos \
   --zone=europe-central2-c \
   --metadata-from-file=user-data=<path_to_your_cloud_config> \
