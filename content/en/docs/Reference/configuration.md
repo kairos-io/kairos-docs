@@ -651,7 +651,7 @@ localhost:~$
 
 This section allows you to configure the k3s server instances.
 
-### `k3s.enable`
+### `k3s.enabled`
 
 Enables the k3s server instance. Accepted: `true`, `false`.
 
@@ -679,7 +679,7 @@ Enables the embedded registry in k3s. Accepted: `true`, `false`.
 
 This section allows you to configure the k3s agent instances.
 
-### `k3s-agent.enable`
+### `k3s-agent.enabled`
 
 Enables the k3s agent instance. Accepted: `true`, `false`.
 
