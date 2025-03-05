@@ -22,7 +22,7 @@ Unfortunately Google Cloud [doesn't allow users to search among public images in
 1. Create a VM using the latest Kairos image:
 
 
-```
+```bash {class="only-flavors=Ubuntu+24.04"}
 gcloud --project  <your_project_here> compute instances create kairos-vm-test \
   --image=projects/palette-kairos/global/images/kairos-ubuntu-24-04-core-amd64-generic-{{< googleVersion >}} \
   --image-project=palette-kairos \
