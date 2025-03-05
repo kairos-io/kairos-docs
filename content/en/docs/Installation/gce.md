@@ -12,7 +12,7 @@ If you want to build a custom image, you can follow the instructions in the [Bui
 ## Prerequisites
 
 - A Google Cloud account with permissions to create VMs.
-- A Google Cloud compatible image of Kairos. You can use the public image provided by Kairos or build your own image.
+- A Google Cloud compatible image of Kairos. You can use the public image provided by Kairos or [build your own image]({{< ref "/docs/Reference/auroraboot.md#generate-raw-disk-images" >}}).
 
 ## Deploy a VM
 
