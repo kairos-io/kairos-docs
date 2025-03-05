@@ -12,7 +12,7 @@ If you want to build a custom image, you can follow the instructions in the [Bui
 ## Prerequisites
 
 - A Google Cloud account with permissions to create VMs.
-- A Google Cloud compatible image of Kairos. You can use the public image provided by Kairos or [build your own image]({{< ref "/docs/Reference/auroraboot.md#generate-raw-disk-images" >}}).
+- A Google Cloud compatible image of Kairos. You can use the public image provided by Kairos (see below) or [build your own image]({{< ref "/docs/Reference/auroraboot.md#generate-raw-disk-images" >}}) and upload it to your google project ([check how the Kairos CI does it](https://github.com/kairos-io/kairos/blob/48d5c2bc8fc5555263f799db8a3388d7d46cd559/.github/workflows/upload-cloud-images.yaml#L36-L89)).
 
 ## Deploy a VM
 
@@ -24,7 +24,7 @@ Unfortunately Google Cloud [doesn't allow users to search among public images in
 
 ```
 gcloud --project  <your_project_here> compute instances create kairos-vm-test \
-  --image=projects/palette-kairos/global/images/kairos-ubuntu-24-04-core-amd64-generic-{{- $.Page.Site.Params.softwareVersions.google_cloud_image_version -}} \
+  --image=projects/palette-kairos/global/images/kairos-ubuntu-24-04-core-amd64-generic-{{< googleVersion >}} \
   --image-project=palette-kairos \
   --zone=europe-central2-c \
   --metadata-from-file=user-data=<path_to_your_cloud_config> \
@@ -47,7 +47,7 @@ You can specify a different image to be installed using a block like the followi
 ```yaml
 reset:
   system:
-    uri: "quay.io/kairos/opensuse:leap-15.6-standard-amd64-generic-master-k3sv1.32.1-rc2-k3s1"
+    uri: "quay.io/kairos/opensuse:leap-15.6-standard-amd64-generic-{{< kairosVersion >}}-{{< k3sVersionOCI >}}"
 ```
 
 This will reset to the specified image on the first boot instead of the image booted. Once the instance is running, you can access it via SSH. Make sure reset has completed and the system has rebooted into "active" mode. The following command should report "active_boot":
