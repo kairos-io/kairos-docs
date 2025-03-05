@@ -8,7 +8,7 @@ description: Full end to end example to bootstrap a self-coordinated cluster wit
 
 {{% alert title="Note" color="success" %}}
 
-The p2p feature of Kairos is crazy and experimental! Do not run in production servers.
+This feature is experimental. Run in production servers at your own risk.
 Feedback and bug reports are welcome, as we are improving the p2p aspects of Kairos.
 
 {{% /alert %}}

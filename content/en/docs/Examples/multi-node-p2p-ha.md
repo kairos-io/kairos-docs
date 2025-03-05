@@ -8,7 +8,7 @@ description: Kairos makes it easy to configure automatic High Availability (HA) 
 
 {{% alert title="Warning" color="warning" %}}
 
-This feature is crazy and experimental! Do not run in production servers. 
+This feature is experimental. Run in production servers at your own risk.
 Feedback and bug reports are welcome, as we are improving the p2p aspects of Kairos.
 
 {{% /alert %}}
