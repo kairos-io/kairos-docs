@@ -78,11 +78,7 @@ k0s:
     args:
         - --single
     enabled: true
-users:
-- name: kairos
-  passwd: kairos
-  groups:
-    - admin
+
 write_files:
 - path: /var/lib/k0s/manifests/my-nginx/my-nginx.yaml
   permissions: "0644"
