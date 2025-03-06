@@ -85,8 +85,6 @@ users:
 
 k0s:
   enabled: true
-  args:
-  - --single # will configure the master node as a single node cluster
 
 write_files:
 - path: /var/lib/k0s/manifests/nginx/nginx.yaml
