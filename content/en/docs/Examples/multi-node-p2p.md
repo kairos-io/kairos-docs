@@ -13,6 +13,10 @@ Feedback and bug reports are welcome, as we are improving the p2p aspects of Kai
 
 {{% /alert %}}
 
+{{% alert title="Note" color="info" %}}
+This functionality is available on both k3s and k0s. You'll need a standard image with the respective Kubernetes distribution of your choice.
+{{% /alert %}}
+
 A multi-node scenario with non-HA is the default peer-to-peer (P2P) configuration in Kairos. To set this up, you will need to configure the `network_token` under the `p2p` configuration in your cloud-config file. Once you have set this, Kairos will handle the configuration of each node.
 
 Consider the following example, which uses cloud-config to automatically configure the cluster:
