@@ -21,6 +21,10 @@ Unfortunately Google Cloud [doesn't allow users to search among public images in
 1. Make sure you are authenticated with the cli: `gcloud auth login`
 1. Create a VM using the latest Kairos image:
 
+{{% alert title="Note" color="warning" %}}
+As described below, it is possible to reset to any desired image on first boot. That's the reason only one Kairos flavor is published in Google Cloud (Ubuntu 24.04). This allows us to save costs and time by not pushing unnecessary artifacts.
+{{% /alert %}}
+
 
 ```bash {class="only-flavors=Ubuntu+24.04"}
 gcloud --project  <your_project_here> compute instances create kairos-vm-test \
