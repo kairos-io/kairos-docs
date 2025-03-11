@@ -1,7 +1,6 @@
 ---
 title: "Multi-Node Cluster"
 linkTitle: "Multi-node cluster"
-weight: 1
 description: This section describe examples on how to deploy Kairos as a multi-node cluster
 ---
 

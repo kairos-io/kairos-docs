@@ -1,8 +1,6 @@
 ---
 title: "Intel Open AMT Registration"
 linkTitle: "Intel Open AMT Registration"
-weight: 6
-date: 2023-04-17
 description: This bundle configures Intel AMT devices during Kairos installation.
 ---
 

@@ -1,16 +1,16 @@
 ---
-title: "Configuring Automatic High Availability in Kairos"
-linkTitle: "Configuring Automatic High Availability in Kairos"
-weight: 6
-date: 2022-11-13
+title: "P2P Multi-Node Cluster with High Availability"
+linkTitle: "P2P multi-node cluster HA"
 description: Kairos makes it easy to configure automatic High Availability (HA) in your cluster by using cloud-config. With just a few simple steps, you can have a fully-functioning HA setup in your cluster.
 ---
 
-{{% alert title="Warning" color="warning" %}}
-
-This feature is experimental. Run in production servers at your own risk.
+{{% alert title="Network" color="warning" %}}
+This feature is experimental and has only been tested on local setups. Run in production servers at your own risk.
 Feedback and bug reports are welcome, as we are improving the p2p aspects of Kairos.
+{{% /alert %}}
 
+{{% alert title="K8s Distribution" color="warning" %}}
+This feature is only working with the k3s distribution.
 {{% /alert %}}
 
 To enable automatic HA rollout, enable the `p2p.auto.ha.enable` option in your cloud-config, and set up a number of `master_nodes`. The number of `master_nodes` is the number of additional masters in addition to the initial HA role. There will always be a minimum of 1 master, which is already taken into account. For example, setting up `master_nodes` to two will result in a total of 3 master nodes in your cluster.

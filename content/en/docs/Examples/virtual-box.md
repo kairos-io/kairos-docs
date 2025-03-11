@@ -1,7 +1,6 @@
 ---
-title: "Kairos Trusted Boot in Virtual Box"
-linkTitle: "Kairos Trusted Boot in Virtual Box"
-weight: 1
+title: "Kairos' Trusted Boot in Virtual Box"
+linkTitle: "Trusted Boot in Virtual Box"
 description: This section describes how to use Virtual Box to boot Kairos in "Trusted boot" mode
 ---
 

@@ -1,7 +1,6 @@
 ---
 title: "MetalLB"
 linkTitle: "MetalLB"
-weight: 4
 description: This section describe examples on how to deploy Kairos with k3s and MetalLB
 ---
 

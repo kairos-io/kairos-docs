@@ -6,11 +6,9 @@ date: 2022-11-13
 description: Install Kairos with p2p support
 ---
 
-{{% alert title="Note" color="success" %}}
-
-This feature is experimental. Run in production servers at your own risk.
+{{% alert title="Network" color="warning" %}}
+This feature is experimental and has only been tested on local setups. Run in production servers at your own risk.
 Feedback and bug reports are welcome, as we are improving the p2p aspects of Kairos.
-
 {{% /alert %}}
 
 Deploying Kubernetes at the Edge can be a complex and time-consuming process, especially when it comes to setting up and managing multiple clusters. To make this process easier, Kairos leverages peer-to-peer technology to automatically coordinate and create Kubernetes clusters without the need of a control management interface.

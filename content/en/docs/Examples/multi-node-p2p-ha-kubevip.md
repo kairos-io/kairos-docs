@@ -1,16 +1,12 @@
 ---
 title: "Deploying a High-Availability K3s Cluster with KubeVIP"
-linkTitle: "Deploying a High-Availability K3s Cluster with KubeVIP"
-weight: 6
-date: 2022-11-13
+linkTitle: "P2P multi-node cluster HA with KubeVIP"
 description: This guide walks through the process of deploying a highly-available, P2P self-coordinated k3s cluster with KubeVIP, which provides a high available Elastic IP for the control plane. 
 ---
 
-{{% alert title="Warning" color="warning" %}}
-
-This feature is experimental. Run in production servers at your own risk.
+{{% alert title="Network" color="warning" %}}
+This feature is experimental and has only been tested on local setups. Run in production servers at your own risk.
 Feedback and bug reports are welcome, as we are improving the p2p aspects of Kairos.
-
 {{% /alert %}}
 
 K3s is a lightweight Kubernetes distribution that is easy to install and operate. It's a great choice for small and edge deployments, but it can also be used to create a high-availability (HA) cluster with the help of [KubeVIP](https://kube-vip.io/). In this guide, we'll walk through the process of deploying a highly-available k3s cluster with KubeVIP, which provides a high available ip for the control plane.

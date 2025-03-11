@@ -1,7 +1,6 @@
 ---
 title: "Bundles"
 linkTitle: "Bundles"
-weight: 4
 description: This section describe examples on how to use a Kairos bundle to deploy MetalLB on top of K3s
 ---
 
