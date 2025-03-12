@@ -1,7 +1,6 @@
 ---
 title: "Keylime agent"
 linkTitle: "Keylime agent"
-weight: 4
 description: This section describes an example on how to create a custom derivative with the Keylime agent
 ---
 

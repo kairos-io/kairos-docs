@@ -1,7 +1,6 @@
 ---
 title: "Run stages along with K3s"
 linkTitle: "Run stages along with K3s"
-weight: 4
 description: This section describes a method to run stages with k3s.
 ---
 

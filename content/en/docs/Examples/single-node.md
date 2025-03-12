@@ -1,7 +1,6 @@
 ---
 title: "Single-Node cluster"
 linkTitle: "Single-node cluster"
-weight: 1
 description: This section describe examples on how to deploy Kairos single-node cluster
 ---
 

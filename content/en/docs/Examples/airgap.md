@@ -1,7 +1,6 @@
 ---
 title: "How to Create an Airgap K3s Installation with Kairos"
-linkTitle: "Airgapped ISO with AuroraBoot"
-weight: 4
+linkTitle: "Airgapped ISO"
 description: This section describe examples on how to use AuroraBoot and Kairos bundles to create ISOs for airgapped installs
 ---
 
