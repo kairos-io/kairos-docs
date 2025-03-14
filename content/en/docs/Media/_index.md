@@ -16,17 +16,13 @@ description: Presentation Slides, Videos and other media on Kairos
 
 ## Videos
 
-### Introduction to Kairos
-
-{{< youtube id="WzKf6WrL3nE" title="Introduction to Kairos" >}}
-
 ### Meet Kairos, an OSS project building the immutable Kubernetes edge
 
 {{< youtube id="kiDQujibz2k" title="Meet Kairos, an OSS project building the immutable Kubernetes edge" >}}
 
 ### How we build and maintain Kairos
 
-{{< youtube id="XD5nfMf59v4" title="How we build and maintain Kairos" >}}
+{{< youtube id="P8voTbQGmP8" title="How we build and maintain Kairos" >}}
 
 
 ### CNCF TAG-Runtime Meeting 09-14-2023 (Kairos) 

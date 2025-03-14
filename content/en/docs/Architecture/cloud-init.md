@@ -118,7 +118,7 @@ stages:
         - systemctl stop qemu-guest-agent
 ```
 
-Notice how we set the stage to be `boot.after`. That will run immediately after the `boot` stage has run, so we dont have to know where it will run and play with trying to disable it in the same stage and run into race problems, we cna just use that substage to make sure that our configs runs after the default system ones.
+Notice how we set the stage to be `boot.after`. That will run immediately after the `boot` stage has run, so we dont have to know where it will run and play with trying to disable it in the same stage and run into race problems, we can just use that substage to make sure that our configs runs after the default system ones.
 
 All the mentioned stages (`rootfs`, `initramfs`, `boot`, `fs`, `reconcile` and `network`) have `STAGE.before` and `STAGE.after` substages.
 

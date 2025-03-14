@@ -2,11 +2,10 @@
 title: "Bundles"
 linkTitle: "Bundles"
 weight: 5
-description: Bundles are a powerful feature of Kairos that allow you to customize and configure your operating system. This section explains how to use and build custom bundles.
-
+description: Bundles are a powerful feature of Kairos that let you customize and configure your operating system. This section explains how to use and build custom bundles.
 ---
 
-Bundles are a powerful feature of Kairos that allow you to customize and configure your operating system, as well as your Kubernetes cluster. Whether you want to add custom logic, install additional packages, or make any other changes to your system, bundles make it easy to apply these changes after installation or before bootstrapping a node.
+Whether you need to add custom logic, install extra packages, or make other modifications to your system, bundles simplify the process. They can be applied after installation or before bootstrapping a node.
 
 Bundles are container images containing only files (and not full OS) that can be used to install new software or extend the cloud-init syntax. You can find community-supported bundles in the [community-bundles](https://github.com/kairos-io/community-bundles) repository.
 
@@ -134,9 +133,9 @@ It's important to note that bundles do not have any special meaning in terms of 
 
 ## Create bundles
 
-To build your own bundle, you will need to create a Dockerfile and any necessary files and scripts. A bundle is simply a container image that includes all the necessary assets to perform a specific task.
+To build your own bundle, start by creating a Dockerfile along with any required files and scripts. A bundle is essentially a container image that packages all the assets needed for a specific task.
 
-To create a bundle, you will need to define a base image and copy over any necessary files and scripts to the image. For example, you might use the following Dockerfile to create a bundle image that deploys everything inside `assets` in the Kubernetes cluster:
+When defining your bundle, choose a base image and copy the relevant files and scripts into it. For example, the following Dockerfile creates a bundle that deploys everything inside assets to a Kubernetes cluster:
 
 ```Dockerfile
 FROM alpine
