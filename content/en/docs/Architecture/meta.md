@@ -49,7 +49,7 @@ Optional/External:
 - [edgevpn](https://mudler.github.io/edgevpn) (optional) as fabric for the distributed network, node coordination and bootstrap. Provides also embedded DNS capabilities for the cluster. Internally uses [libp2p](https://github.com/libp2p/go-libp2p) for the P2P mesh capabilities.
 - [nohang](https://github.com/hakavlad/nohang) A sophisticated low memory handler for Linux.
 - [entangle](https://github.com/kairos-io/entangle) a CRD to interconnect Kubernetes clusters
-- [entangle-proxy](https://github.com/kairos-io/entangle-proxy) a CRD to control interconnetted clusters
+- [entangle-proxy](https://github.com/kairos-io/entangle-proxy) a CRD to control interconnected clusters
 - [osbuilder](https://github.com/kairos-io/osbuilder) is used to build bootable artifacts from container images
 - [AuroraBoot](https://github.com/kairos-io/AuroraBoot) is the Kairos Node bootstrapper
 
