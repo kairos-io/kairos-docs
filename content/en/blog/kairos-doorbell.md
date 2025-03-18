@@ -1,10 +1,10 @@
 ---
 title: "How I Automated My Doorbell with Kairos (and You Can Too)"
-date: 2023-03-18T10:53:13+01:00
+date: 2025-03-18T10:53:13+01:00
 author: Mauro Morales ([LinkedIn](https://www.linkedin.com/in/mauromorales/)) ([GitHub](https://github.com/mauromorales))
 ---
 
-Picture this: You’re deep in focus, coding away, and the doorbell rings. Except… you never hear it. The mailman leaves, and now your package is on an adventure you didn’t plan for. That’s exactly what happened to me, so I did what any geek would do—turn my dumb doorbell into a smart one using Kairos.
+Picture this: You’re deep in focus, coding away, and the doorbell rings. Except… you never hear it. The mailman leaves, and now your package is on an adventure you didn't plan for. That’s exactly what happened to me, so I did what any geek would do—turn my dumb doorbell into a smart one using Kairos.
 
 {{< alert color="warning" title="Disclaimer" >}}
 The information provided in this post is for educational and informational purposes only. I am not a professional electrician, engineer, or security expert. Any modifications to electrical systems, including doorbells, carry inherent risks, such as damage to property, malfunction, or personal injury. If you choose to follow the steps outlined here, you do so at your own risk. Always take proper safety precautions, consult professionals when necessary, and ensure compliance with local laws and regulations. I cannot be held liable for any consequences resulting from the use or misuse of the information in this post.
@@ -23,13 +23,29 @@ And on the software side of things all you need is docker, but you can also use 
 
 ## Hardware
 
-My doorbell is a Honeywell D117, aka Ding Dong (gotta love the name). It’s using the D780 transformer with the following connection (left diagram)
+My doorbell is a Honeywell D117, aka Ding Dong (gotta love the name). It’s using the D780 transformer with the following connection (diagram on the left of the picture).
+
+![Diagram](https://github.com/user-attachments/assets/2fbdd893-dba4-496e-9bbc-6450418d5eb4)
+
 
 The transformer takes 220V and produces an 8V current
+
+![Transformer](https://github.com/user-attachments/assets/da048846-16f8-41ca-8673-1467a1028fa3)
+
 We can now use a relay to detect when the circuit is closed. I wasn’t able to find an 8V AC relay, so I tried with a 12V AC and a 6V AC. The 12V one didn’t work but the 6V one did. I cannot tell how bad an idea this is so only try this at your own risk.
 The brand is FINDER and the part number is 40.52.8.006.0000, I bought it from [Reichelt](https://www.reichelt.de/de/de/shop/produkt/steckrelais_2x_um_250v_8a_6vac_rm_5_0mm-271335) and got it sent to Belgium
 
-Connect A1 and A2 to 0F and T3 respectively. We will use the always open circuit on the other side of the relay so connect a male to female cable on 11 and 14 which will go to the Raspberry Pi. I connected it to GPIO 23 https://pinout.xyz/pinout/pin16_gpio23/ and Ground (14) https://pinout.xyz/pinout/ground
+Connect A1 and A2 to 0F and T3 respectively.
+
+![Doorbell Wiring](https://github.com/user-attachments/assets/f1afd596-60ef-4181-92c3-250af52693a3)
+
+We will use the always open circuit on the other side of the relay so connect a male to female cable on 11 and 14 which will go to the Raspberry Pi.
+
+![Relay Wiring](https://github.com/user-attachments/assets/8aac2983-3208-4792-a14e-713afea7bd0d)
+
+I connected it to [GPIO 23](https://pinout.xyz/pinout/pin16_gpio23/) and [Ground (14)](https://pinout.xyz/pinout/ground)
+
+![RPi Wiring](https://github.com/user-attachments/assets/c10b4573-dc3d-478c-9853-07abbafaef8c)
 
 ## Software
 
@@ -262,6 +278,8 @@ localhost:~ # kubectl logs rpi-doorbell-67c78c5969-s6pw8
 [2025-03-05 18:28:26] 🔔 🚪 Doorbell pressed at 2025-03-05 18:28:26!
 [2025-03-06 09:59:18] 🔔 🚪 Doorbell pressed at 2025-03-06 09:59:18!
 ```
+
+![Telegram](https://github.com/user-attachments/assets/c86d85e4-86b5-465d-bf1a-83a8850916bc)
 
 ## Conclusion
 
