@@ -25,27 +25,46 @@ And on the software side of things all you need is docker, but you can also use 
 
 My doorbell is a Honeywell D117, aka Ding Dong (gotta love the name). It’s using the D780 transformer with the following connection (diagram on the left of the picture).
 
-![Diagram](https://github.com/user-attachments/assets/2fbdd893-dba4-496e-9bbc-6450418d5eb4)
+{{< figure
+  src="https://github.com/user-attachments/assets/2fbdd893-dba4-496e-9bbc-6450418d5eb4"
+  alt="Diagram of a Honeywell D117 doorbell with a D780 transformer"
+  width="50%"
+>}}
 
 
 The transformer takes 220V and produces an 8V current
 
-![Transformer](https://github.com/user-attachments/assets/da048846-16f8-41ca-8673-1467a1028fa3)
+{{< figure
+  src="https://github.com/user-attachments/assets/da048846-16f8-41ca-8673-1467a1028fa3"
+  alt="Transformer D780"
+  width="50%"
+>}}
 
-We can now use a relay to detect when the circuit is closed. I wasn’t able to find an 8V AC relay, so I tried with a 12V AC and a 6V AC. The 12V one didn’t work but the 6V one did. I cannot tell how bad an idea this is so only try this at your own risk.
-The brand is FINDER and the part number is 40.52.8.006.0000, I bought it from [Reichelt](https://www.reichelt.de/de/de/shop/produkt/steckrelais_2x_um_250v_8a_6vac_rm_5_0mm-271335) and got it sent to Belgium
+We can now use a relay to detect when the circuit is closed. I wasn’t able to find an 8V AC relay, so I tried with a 12V AC and a 6V AC. The 12V one didn't work but the 6V one did. I cannot tell how bad an idea this is so only try this at your own risk. The brand is FINDER and the part number is `40.52.8.006.0000`, I bought it from [Reichelt](https://www.reichelt.de/de/de/shop/produkt/steckrelais_2x_um_250v_8a_6vac_rm_5_0mm-271335) and got it sent to Belgium
 
-Connect A1 and A2 to 0F and T3 respectively.
+Connect `A1` and `A2` to `0F` and `T3` respectively.
 
-![Doorbell Wiring](https://github.com/user-attachments/assets/f1afd596-60ef-4181-92c3-250af52693a3)
+{{< figure
+  src="https://github.com/user-attachments/assets/f1afd596-60ef-4181-92c3-250af52693a3"
+  alt="Doorbell Wiring"
+  width="50%"
+>}}
 
 We will use the always open circuit on the other side of the relay so connect a male to female cable on 11 and 14 which will go to the Raspberry Pi.
 
-![Relay Wiring](https://github.com/user-attachments/assets/8aac2983-3208-4792-a14e-713afea7bd0d)
+{{< figure
+  src="https://github.com/user-attachments/assets/8aac2983-3208-4792-a14e-713afea7bd0d"
+  alt="Relay Wiring"
+  width="50%"
+>}}
 
 I connected it to [GPIO 23](https://pinout.xyz/pinout/pin16_gpio23/) and [Ground (14)](https://pinout.xyz/pinout/ground)
 
-![RPi Wiring](https://github.com/user-attachments/assets/c10b4573-dc3d-478c-9853-07abbafaef8c)
+{{< figure
+  src="https://github.com/user-attachments/assets/c10b4573-dc3d-478c-9853-07abbafaef8c"
+  alt="RPi Wiring"
+  width="50%"
+>}}
 
 ## Software
 
@@ -279,8 +298,12 @@ localhost:~ # kubectl logs rpi-doorbell-67c78c5969-s6pw8
 [2025-03-06 09:59:18] 🔔 🚪 Doorbell pressed at 2025-03-06 09:59:18!
 ```
 
-![Telegram](https://github.com/user-attachments/assets/c86d85e4-86b5-465d-bf1a-83a8850916bc)
-
 ## Conclusion
 
 With this setup me and my partner can subscribe to the Telegram Bot and get notifications to our phones. I can also mute the bot if I’m in a meeting and don’t want to be disturbed. I could extend the system to not notify at certain hours of the day but still keep logs. If I’m not happy with Telegram then I can connect it to a different system. Whenever there’s a new version of Kairos I can upgrade the system remotely via the command line or through Kubernetes. If you have a similar setup but don’t want to buy a smart doorbell just yet, I can only recommend this setup.
+
+{{< figure
+  src="https://github.com/user-attachments/assets/c86d85e4-86b5-465d-bf1a-83a8850916bc"
+  alt="Telegram Bot"
+  width="50%"
+>}}
