@@ -395,3 +395,9 @@ ____________________________________O/_______
 ```
 
 From there you can access the web UI by visiting `http://localhost:8080` in your browser.
+
+{{< figure
+  src="https://github.com/user-attachments/assets/685e85b4-9559-48c6-973c-221b43883baa"
+  alt="Kairos Web UI running on localhost:8080"
+  width="75%"
+>}}
