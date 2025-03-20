@@ -370,7 +370,7 @@ $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
 
 The Kairos Factory is also available as a web UI, which is currently under development but you can already preview since version `0.6.0` of [AuroraBoot](auroraboot.md).
 
-To use the web UI, you need to run the AuroraBoot container with the `--web` flag:
+To use the web UI, you need to run the AuroraBoot with the `web` command:
 
 ```bash
 docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
