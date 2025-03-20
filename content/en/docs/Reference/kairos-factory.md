@@ -15,11 +15,9 @@ Kairos is not just an OS, it's also a way to turn an existing OS into a Kairos-r
 
 For the newcomer or someone who simply needs an immutable OS with k3s and edgeVPN, the Kairos OS is the way to go. As long as this components work, you don't need to worry about the changes in the underlying OS. However, if you need to ensure certain packages are present or remain stable in your system, you can use the Kairos Factory to convert your base image into a Kairos-ready image. This is particularly useful if you have special firmware requirements, or if you want to have your own release cadence.
 
-## Before we begin
-
-In order to run the Kairos Factory, you will need docker installed on your system. You can find the installation instructions for both tools in the following links:
-
-- [Docker](https://docs.docker.com/get-docker/)
+{{% alert title="Requirements" color="info" %}}
+In order to run the Kairos Factory, you will need docker installed on your system. You can find the installation instructions [here](https://docs.docker.com/get-docker/).
+{{% /alert %}}
 
 
 ## The Kairos Factory Process
@@ -43,7 +41,7 @@ See the [docker multi-platform docs](https://docs.docker.com/build/building/mult
 {{% /alert %}}
 
 
-### How to use
+## How to use
 
 Create a single Dockerfile:
 
@@ -367,3 +365,39 @@ $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
 2025-02-27T14:55:14Z INF Creating the iso files with xorriso
 2025-02-27T14:55:15Z INF Done building iso at: /output/
 ```
+
+## Web UI
+
+The Kairos Factory is also available as a web UI, which is currently under development but you can already preview since version `0.6.0` of [AuroraBoot](auroraboot.md).
+
+To use the web UI, you need to run the AuroraBoot with the `web` command:
+
+```bash
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+           --privileged \
+           -v $PWD/build/:/output \
+           -p 8080:8080 \
+           quay.io/kairos/auroraboot:{{< auroraBootVersion >}} web
+```
+
+If the process is successful, you will see the following output:
+
+```
+   ____    __
+  / __/___/ /  ___
+ / _// __/ _ \/ _ \
+/___/\__/_//_/\___/ v4.13.3
+High performance, minimalist Go web framework
+https://echo.labstack.com
+____________________________________O/_______
+                                    O\
+⇨ http server started on [::]:8080
+```
+
+From there you can access the web UI by visiting `http://localhost:8080` in your browser.
+
+{{< figure
+  src="https://github.com/user-attachments/assets/685e85b4-9559-48c6-973c-221b43883baa"
+  alt="Kairos Web UI running on localhost:8080"
+  width="75%"
+>}}
