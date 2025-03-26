@@ -38,7 +38,7 @@ At first, it was empowering. We could iterate quickly, test changes, and get a K
 
 
 <p align="center">
-  <img src="img_1.png" alt="Kairos Dockerfiles in the wild (Version 2.3.0)">
+  <img src="/images/init-1.png" alt="Kairos Dockerfiles in the wild (Version 2.3.0)">
   <br>
   <em>Kairos Dockerfiles in the wild (Version 2.3.0)</em>
 </p>
@@ -67,7 +67,7 @@ With Earthly, we gained:
 It was a massive improvement. Kairos became easier to scale, easier to extend, and more robust in CI/CD pipelines. We could merge several Dockerfiles into a single one for that given Flavor and make earthly trigger the right steps based on the target architecture or version.
 
 <p align="center">
-  <img src="img_2.png" alt="Less lines is always better, right? (Version 3.3.1)">
+  <img src="/images/init-2.png" alt="Less lines is always better, right? (Version 3.3.1)">
   <br>
   <em>Less lines is always better, right? (Version 3.3.1)</em>
 </p>
@@ -81,7 +81,7 @@ As our use cases expanded — with more devices, more customization, more flavor
 
 
 <p align="center">
-  <img src="img_3.png" alt="The Earthly pipeline grows instead (Version 3.3.1)">
+  <img src="/images/init-3.png" alt="The Earthly pipeline grows instead (Version 3.3.1)">
   <br>
   <em>The Earthly pipeline grows instead (Version 3.3.1)</em>
 </p>
