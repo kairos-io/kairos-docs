@@ -9,6 +9,10 @@ This feature is experimental and has only been tested on local setups. Run in pr
 Feedback and bug reports are welcome, as we are improving the p2p aspects of Kairos.
 {{% /alert %}}
 
+{{% alert title="Join an EdgeVPN network" color="warning" %}}
+Make sure that you join an existing EdgeVPN network with other machines (not necessarily Kubernetes nodes) otherwise the single-node cluster will never get an EdgeVPN IP and therefore won't be configurable.
+{{% /alert %}}
+
 Installing Kairos with P2P support on a single-node cluster requires a few specific steps. To begin, it's important to note that in a single-node scenario, the role must be enforced to a specific role. In a non-HA (high availability) setup, that role can be either `master` or `worker`. In a single-node cluster, there will be only one master node that needs to be configured explicitly.
 
 To set up a single-node cluster over P2P, consider the following example, which uses cloud-config to automatically configure the cluster:
@@ -19,6 +23,9 @@ To set up a single-node cluster over P2P, consider the following example, which 
 hostname: kairoslab-{{ trunc 4 .MachineID }}
 users:
 - name: kairos
+  passwd: kairos
+  groups:
+    - admin
   ssh_authorized_keys:
   # Add your github user here!
   - github:mudler
