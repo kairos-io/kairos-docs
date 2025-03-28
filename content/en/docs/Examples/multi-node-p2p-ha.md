@@ -1,6 +1,6 @@
 ---
-title: "P2P Multi-Node Cluster with High Availability"
-linkTitle: "P2P multi-node cluster HA"
+title: "Self-coordinating P2P Multi-Node Cluster with High Availability"
+linkTitle: "Self-coordinating P2P multi-node cluster HA"
 description: Kairos makes it easy to configure automatic High Availability (HA) in your cluster by using cloud-config. With just a few simple steps, you can have a fully-functioning HA setup in your cluster.
 ---
 

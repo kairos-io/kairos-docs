@@ -1,19 +1,27 @@
 ---
-title: "High Availability K3s deployments"
-linkTitle: "HA with K3s"
+title: "Manual Multi-Node High Availability Cluster"
+linkTitle: "Manual multi-node HA cluster"
 description: This section contains instructions how to deploy Kairos with a High Available control-plane for K3s 
 ---
 
+{{% alert title="K3s" color="info" %}}
 Please refer to the [k3s HA](https://docs.k3s.io/installation/ha-embedded) documentation. 
+{{% /alert %}}
 
-This document describes how to configure Kairos with `k3s` by following the same documentation outline, to show how to apply `k3s` configuration to `Kairos`. It is implied that you are using a Kairos version with `k3s` included.
+{{% alert title="K0s" color="info" %}}
+Please refer to the [k0s multi-node manual install](https://docs.k0sproject.io/stable/k0s-multi-node/) documentation.
+{{% /alert %}}
+
+This document describes how to configure Kairos with either `k3s` or `k0s` by following the same documentation outline. It is implied that you are using a Kairos version with either k3s or k0s included in the standard images.
 
 ## New cluster
 
-To run Kairos and k3s in this mode, you must have an odd number of server nodes. K3s documentation recommends starting with three nodes.
+To run Kairos in this mode, you must have an odd number of server nodes.
 
-To get started, first launch a server node with the cluster-init flag added in `k3s.args` to enable clustering. A token here can be specified, and will be used as a shared secret to join additional servers to the cluster. Note, if you don't provide one, a token will be generated automatically on your behalf and available at `/var/lib/rancher/k3s/server/node-token`.
+The first control plane node that we will launch is considered the cluster initializer.
 
+{{< tabpane text=true right=true  >}}
+{{% tab header="k3s" %}}
 ```yaml
 #cloud-config
 
@@ -36,9 +44,30 @@ k3s:
   env:
     K3S_TOKEN: "TOKEN_GOES_HERE"
 ```
+{{% /tab %}}
+{{% tab header="k0s" %}}
+```yaml
+#cloud-config
 
-After launching the first server, join the other servers to the cluster using the shared secret (`K3S_TOKEN`):
+hostname: metal-{{ trunc 4 .MachineID }}
+users:
+- name: kairos # Change to your own user
+  passwd: kairos # Change to your own password
+  groups:
+    - admin # This user needs to be part of the admin group
+  ssh_authorized_keys:
+    - github:<YOUR_GITHUB_USER> # replace with your github user
 
+k0s:
+  enabled: true
+```
+{{% /tab %}}
+{{< /tabpane >}}
+
+After launching the first control plane, join the others
+
+{{< tabpane text=true right=true  >}}
+{{% tab header="k3s" %}}
 ```yaml
 #cloud-config
 
@@ -60,15 +89,42 @@ k3s:
   env:
     K3S_TOKEN: "TOKEN_GOES_HERE"
 ```
+{{% /tab %}}
+{{% tab header="k0s" %}}
+```yaml
+#cloud-config
 
-Now you have a highly available control plane. Any successfully clustered server can be used in the `--server` argument to join additional server and worker nodes. 
+hostname: metal-{{ trunc 4 .MachineID }}
+users:
+- name: kairos # Change to your own user
+  passwd: kairos # Change to your own password
+  groups:
+    - admin # This user needs to be part of the admin group
+  ssh_authorized_keys:
+    - github:<YOUR_GITHUB_USER> # replace with your github user
+
+k0s-worker:
+  enabled: true
+  args:
+    - --token-file /etc/k0s/token
+
+write_files:
+  - path: /etc/k0s/token
+    permissions: 0644
+    content: |
+      <TOKEN> # generate it on your cluster init node by running `k0s token create --role=controller`
+```
+{{% /tab %}}
+{{< /tabpane >}}
+
+Now you have a highly available control plane.
 
 ### Joining a worker
 
-Joining additional worker nodes to the cluster follows the same procedure as a single server cluster.
+Joining additional worker nodes to the cluster follows the same procedure as a single-node cluster.
 
-To join a worker when deploying a Kairos node, use the `k3s-agent` block:
-
+{{< tabpane text=true right=true  >}}
+{{% tab header="k3s" %}}
 ```yaml
 #cloud-config
 
@@ -89,8 +145,39 @@ k3s-agent:
     K3S_TOKEN: "TOKEN_GOES_HERE"
     K3S_URL: "https://<ip or hostname of server1>:6443"
 ```
+{{% /tab %}}
+{{% tab header="k0s" %}}
+```yaml
+#cloud-config
+
+hostname: metal-{{ trunc 4 .MachineID }}
+users:
+- name: kairos # Change to your own user
+  passwd: kairos # Change to your own password
+  groups:
+    - admin # This user needs to be part of the admin group
+  ssh_authorized_keys:
+    - github:<YOUR_GITHUB_USER> # replace with your github user
+
+k0s-worker:
+  enabled: true
+  args:
+    - --token-file /etc/k0s/token
+
+write_files:
+  - path: /etc/k0s/token
+    permissions: 0644
+    content: |
+      <TOKEN> # generate it on your master node by running `k0s token create --role=worker`
+```
+{{% /tab %}}
+{{< /tabpane >}}
 
 ## External DB
+
+{{% alert title="K0s" color="warning" %}}
+This section hasn't been reworked to be used with the k0s distribution yet.
+{{% /alert %}}
 
 K3s requires two or more server nodes for this HA configuration. See the [K3s requirements guide](https://docs.k3s.io/installation/requirements) for minimum machine requirements.
 

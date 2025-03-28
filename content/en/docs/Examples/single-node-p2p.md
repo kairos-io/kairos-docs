@@ -1,6 +1,6 @@
 ---
-title: "P2P single-node cluster"
-linkTitle: "P2P single-node cluster"
+title: "Self-configured P2P Single-Node Cluster"
+linkTitle: "Self-configured P2P single-node cluster"
 description: This documentation page provides instructions on how to install Kairos with P2P support on a single-node cluster
 ---
 

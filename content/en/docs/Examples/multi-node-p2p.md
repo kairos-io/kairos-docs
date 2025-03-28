@@ -1,6 +1,6 @@
 ---
-title: "P2P multi-node cluster"
-linkTitle: "P2P multi-node cluster"
+title: "Self-coordinating P2P multi-node cluster"
+linkTitle: "Self-coordinating P2P multi-node cluster"
 description: Install Kairos with p2p support, on a multi-node cluster
 ---
 

@@ -1,6 +1,6 @@
 ---
-title: "Single-Node cluster"
-linkTitle: "Single-node cluster"
+title: "Manual Single-Node Cluster"
+linkTitle: "Manual single-node cluster"
 description: This section describe examples on how to deploy Kairos single-node cluster
 ---
 
