@@ -14,7 +14,7 @@ That is... until now.
 
 ## Enter k0s: The Zero Friction Kubernetes
 
-A few months back, William Rizzo—a CNCF and Linkerd Ambassador—approached us with a pull request and a mission: bring `k0s` to Kairos with the same first-class integration as `k3s`.
+A few months back, [William Rizzo](https://www.linkedin.com/in/william-rizzo/)—a CNCF and Linkerd Ambassador—approached us with a pull request and a mission: bring `k0s` to Kairos with the same first-class integration as `k3s`.
 
 For those unfamiliar, [k0s](https://docs.k0sproject.io/stable/) is a lightweight, CNCF-certified Kubernetes distribution that bundles everything into a single binary. No OS dependencies. No frills. Just Kubernetes, as it should be—simple to run, easy to maintain, and friendly across bare metal, cloud, edge, and IoT. It supports containerd, Kube-Router by default (with optional Calico), and can run anywhere Linux does. It’s perfect for Kairos.
 
