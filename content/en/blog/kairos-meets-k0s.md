@@ -32,7 +32,7 @@ We’re not just a Linux meta-distribution anymore. We’re taking our first rea
 
 So meta.
 
-![Always has been]()  
+![Always has been](https://github.com/user-attachments/assets/5fe0fe0c-7962-4dad-9c27-cf6aab23af11)  
 <sub><sup>“Wait… Kairos is also a Kubernetes meta-distribution now?” — “Always has been.”</sup></sub>
 
 From now on, users don’t have to choose between clean, declarative setups and their preferred Kubernetes flavor. The Kairos provider now supports both `k3s` *and* `k0s` natively. Want to try it? We’ve added examples to our repository showing both side-by-side so you can pick the flavor that suits your use case best.
