@@ -37,7 +37,7 @@ So meta.
   caption="“Wait… Kairos is also a Kubernetes meta-distribution now?” — “Always has been.”"
 >}}
 
-From now on, users don’t have to choose between clean, declarative setups and their preferred Kubernetes flavor. The Kairos provider now supports both `k3s` *and* `k0s` natively. Want to try it? We’ve added examples to our repository showing both side-by-side so you can pick the flavor that suits your use case best.
+From now on, users don’t have to choose between clean, declarative setups and their preferred Kubernetes flavor. The Kairos provider now supports both `k3s` *and* `k0s` natively. Want to try it? We’ve added [examples](https://kairos.io/docs/examples/) to our repository showing both side-by-side so you can pick the flavor that suits your use case best.
 
 And it doesn’t stop there. As noted in the recent [CNCF blog post](https://www.cncf.io/blog/2025/03/25/building-secure-kubernetes-edge-images-with-kairos-and-k0s/), combining `k0s`’s single-binary simplicity with Kairos’s secure, immutable images is a huge win for edge computing. Together, we’re making it easier to build secure-by-default, production-ready clusters from the ground up.
 
