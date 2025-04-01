@@ -1,6 +1,6 @@
 ---
 title: "Kairos Meets k0s: A Meta-Distribution for Kubernetes is Born"
-date: 2025-04-01T10:53:13+01:00
+date: 2025-04-02T08:53:13+01:00
 author: Mauro Morales ([LinkedIn](https://www.linkedin.com/in/mauromorales/)) ([GitHub](https://github.com/mauromorales))
 ---
 
