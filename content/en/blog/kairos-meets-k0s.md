@@ -1,12 +1,10 @@
 ---
-title: ""
-date: 2025-04-02T10:53:13+01:00
+title: "Kairos Meets k0s: A Meta-Distribution for Kubernetes is Born"
+date: 2025-04-01T10:53:13+01:00
 author: Mauro Morales ([LinkedIn](https://www.linkedin.com/in/mauromorales/)) ([GitHub](https://github.com/mauromorales))
 ---
 
-# Kairos Meets k0s: A Meta-Distribution for Kubernetes is Born
-
-Up until now, Kairos has shipped with first-class support for [k3s](https://k3s.io) out of the box. If you wanted something else? You had to rely on community-powered providers. And let’s be honest—while amazing in their own right, they’ve been... fragmented.
+Up until now, Kairos has shipped with first-class support for k3s out of the box. If you wanted something else? You had to rely on community-powered providers. And let’s be honest—while amazing in their own right, they’ve been... fragmented.
 
 We’ve seen providers emerge for `kubeadm`, `nodeadm`, `microk8s`, and even another flavor of `k3s`. Each one added the ability to run Kubernetes on Kairos, but they were often self-contained efforts. Most didn’t plug into our cloud-init-style configuration, which meant you had to know your way around their specific setup to get them running. Power users and contributors made them work, but new users? Not so much.
 
@@ -32,8 +30,12 @@ We’re not just a Linux meta-distribution anymore. We’re taking our first rea
 
 So meta.
 
-![Always has been](https://github.com/user-attachments/assets/5fe0fe0c-7962-4dad-9c27-cf6aab23af11)  
-<sub><sup>“Wait… Kairos is also a Kubernetes meta-distribution now?” — “Always has been.”</sup></sub>
+{{< figure
+  src="https://github.com/user-attachments/assets/5fe0fe0c-7962-4dad-9c27-cf6aab23af11"
+  alt="Always has been"
+  width="50%"
+  caption="“Wait… Kairos is also a Kubernetes meta-distribution now?” — “Always has been.”"
+>}}
 
 From now on, users don’t have to choose between clean, declarative setups and their preferred Kubernetes flavor. The Kairos provider now supports both `k3s` *and* `k0s` natively. Want to try it? We’ve added examples to our repository showing both side-by-side so you can pick the flavor that suits your use case best.
 
@@ -41,7 +43,7 @@ And it doesn’t stop there. As noted in the recent [CNCF blog post](https://www
 
 ## Try it Today
 
-The `k0s` integration will be fully stable in Kairos `v3.4`, but you don’t have to wait. It’s already available in our [nightly images](https://kairos.io/docs/#nightly-images), or you can [build your own with AuroraBoot](https://kairos.io/docs/advanced/build/#auroraboot).
+The `k0s` integration will be fully stable in Kairos `v3.4`, but you don’t have to wait. It’s already available in our beta or nightly images for [Ubuntu](https://quay.io/repository/kairos/ubuntu), [Rockylinux](https://quay.io/repository/kairos/rockylinux) and [openSUSE](https://quay.io/repository/kairos/opensuse) , or you can [build your own with AuroraBoot](https://kairos.io/docs/advanced/build/#auroraboot).
 
 To get started:
 
