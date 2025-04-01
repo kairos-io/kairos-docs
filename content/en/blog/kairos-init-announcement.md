@@ -30,7 +30,8 @@ Need Kairos on Ubuntu? There was a Dockerfile for that. OpenSUSE? Another one. W
 This worked — until it didn’t.
 
 At first, it was empowering. We could iterate quickly, test changes, and get a Kairos image up and running in no time. Each Dockerfile acted like a scriptable recipe for image creation. But as we started expanding support for more:
-- 🧱 **Distributions** (Ubuntu, OpenSUSE, Alpine, Rocky, Fedora…)
+- 🧱 **Distributions** (Ubuntu 24.04, 22.04, 20.04, OpenSUSE, Alpine, Rocky, Fedora…)
+- 📦 **Releases** (LTS, rolling, and experimental flavors across versions)
 - ⚙️ **Architectures** (x86_64, ARM64)
 - 📦 **Boards and platforms** (Raspberry Pi, NVIDIA Jetson, cloud providers…)
 
@@ -105,6 +106,12 @@ Our internal complexity had quietly outpaced the benefits of our tooling.
 That’s when we stopped and asked: *What if we could start fresh?*
 
 The answer was `kairos-init`.
+
+## 🛠️ We Tried Other Tools First
+
+Before diving into `kairos-init`, we explored other tools and frameworks hoping to find a better fit. But none of them quite matched the specific constraints of our ecosystem — building across multiple distros, versions, and architectures in a consistent, maintainable way.
+
+So, we did what every developer dreams of: we built our own.
 
 ## ✨ The Breakthrough: `kairos-init` and Yip
 
