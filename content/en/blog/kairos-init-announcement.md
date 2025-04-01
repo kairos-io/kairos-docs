@@ -4,8 +4,6 @@ date: 2025-03-26T10:53:13+01:00
 author: Itxaka Serrano (([GitHub](https://github.com/itxaka))
 ---
 
-# How We Rebuilt Kairos building From the Ground Up
-
 ## 🧱 Introduction
 
 Building Kairos has always been about more than assembling images — it's about shaping a flexible, powerful OS tailored for the edge. Over the past couple of years, we've learned a lot while navigating how to build and maintain Kairos across a growing list of base distributions, architectures, and board-specific targets.
