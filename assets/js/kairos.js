@@ -45,12 +45,12 @@ function replaceVariables(content, distroInfo) {
 // therefore it is better to replace the images individually to avoid changing an image that hasn't been created on the scarf.sh registry yet.
 function replaceRepositories(content, state) {
     if (state === 'on') {
-        return content.replace(/quay.io\/kairos\/auroraboot/g, 'kairos.docker.scarf.sh/auroraboot')
+        return content.replace(/quay.io\/kairos\/auroraboot/g, 'kairos.docker.scarf.sh/kairos/auroraboot')
                       .replace(/quay.io\/kairos\/community-bundles/g, 'kairos.docker.scarf.sh/community-bundles')
                       .replace(/quay.io\/kairos\/framework/g, 'kairos.docker.scarf.sh/framework')
                       .replace(/quay.io\/kairos\/packages/g, 'kairos.docker.scarf.sh/packages');
     } else {
-        return content.replace(/kairos.docker.scarf.sh\/auroraboot/g, 'quay.io/kairos/auroraboot')
+        return content.replace(/kairos.docker.scarf.sh\/kairos\/auroraboot/g, 'quay.io/kairos/auroraboot')
                       .replace(/kairos.docker.scarf.sh\/community-bundles/g, 'quay.io/kairos/community-bundles')
                       .replace(/kairos.docker.scarf.sh\/framework/g, 'quay.io/kairos/framework')
                       .replace(/kairos.docker.scarf.sh\/packages/g, 'quay.io/kairos/packages');
