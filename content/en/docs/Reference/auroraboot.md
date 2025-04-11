@@ -605,7 +605,7 @@ This method differs from the ones documented in the [Build raw images with QEMU]
 Consider the following example:
 
 ```bash
-docker run -P -v /var/run/docker.sock:/var/run/docker.sock \
+docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock \
   -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot \
   --debug \
   --set "disable_http_server=true" \
@@ -624,7 +624,7 @@ To generate GCE and VHD images set `disk.gce=true` or `disk.vhd=true` respective
 
 ```bash
 # Build a GCE-compatible image
-docker run -P -v /var/run/docker.sock:/var/run/docker.sock \
+docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock \
   -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot \
   --debug \
   --set "disable_http_server=true" \
@@ -639,7 +639,7 @@ or for VHD images:
 
 ```bash
 # Build a VHD image compatible with Azure
-docker run -P -v /var/run/docker.sock:/var/run/docker.sock \
+docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock \
   -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot \
   --debug \
   --set "disable_http_server=true" \
@@ -650,6 +650,11 @@ docker run -P -v /var/run/docker.sock:/var/run/docker.sock \
   --set "state_dir=/aurora"
 ```
 
+
+{{% alert title="Note" color="warning" %}}
+Note that for creating raw images, the `--privileged` flag is used as the process creates loop devices, which
+ requires elevated privileges. This is not needed for the other methods of using AuroraBoot.
+{{% /alert %}}
 
 ### Use the config file
 
