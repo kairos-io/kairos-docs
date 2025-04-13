@@ -18,6 +18,8 @@ cat <<'EOF' > config.yaml
 users:
 - name: "kairos"
   passwd: "kairos"
+  groups:
+    - admin
   ssh_authorized_keys:
   - github:mudler
 EOF
