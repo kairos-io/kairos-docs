@@ -164,7 +164,7 @@ We need to prepare the partitions from the container image we want to boot, in o
 
 ```bash
 cd Linux_for_Tegra
-docker run --privileged -e container_image=$IMAGE -v $PWD/bootloader:/bootloader --entrypoint /prepare_arm_images.sh -ti --rm quay.io/kairos/auroraboot:{{< auroraBootVersion >}}
+docker run --privileged -e container_image=$IMAGE -v $PWD/bootloader:/bootloader --entrypoint /prepare_nvidia_orin_images.sh -ti --rm quay.io/kairos/auroraboot:{{< auroraBootVersion >}}
 ```
 
 This command should create `efi.img`, `oem.img`, `persistent.img`, `recovery_partition.img`, `state_partition.img` in the `bootloader` directory
