@@ -20,7 +20,7 @@ There are two points in time when the bundles may be installed:
   Kubernetes starts.
 
 The first type of installation can be used to create [systemd-sysext extensions](https://www.freedesktop.org/software/systemd/man/devel/systemd-sysext.html).
-You can read more [here](/docs/advanced/livelayering/).
+You can read more [here]({{< relref "sys-extensions" >}}).
 
 The second type of installation can be used to make changes to the installed system.
 E.g. create kubernetes resource files in `/var/lib/rancher/k3s/server/manifests/`
@@ -104,7 +104,7 @@ kairos-agent install-bundle run://quay.io/kairos/community-bundles:cert-manager_
 
 ## Bundle types
 
-Bundles can carry also binaries that can be overlayed in the rootfs, either while [building images]({{< relref "build" >}}) or with [Live layering]({{< relref "livelayering" >}}).
+Bundles can carry also binaries that can be overlayed in the rootfs while [building images]({{< relref "build" >}}).
 
 Kairos supports three types of bundles:
 
