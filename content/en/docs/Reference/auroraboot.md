@@ -390,7 +390,11 @@ cloud_config: |
 | `iso.data`            | Defines a path to be embedded into the resulting iso. When booting, the files will be accessible at `/run/initramfs/live`                                                                                                                                         |
 | `netboot.cmdline`     | Override the automatically generated cmdline with a custom one to use during netboot. `config_url` and `rootfs`  are automatically constructed. A reasonable value can be `netboot.cmdline=rd.neednet=1 ip=dhcp rd.cos.disable netboot install-mode console=tty0` |
 | `disk.state_size`     | Set the minimum size (in MB) for the state partition in raw disk images. By default, the state partition is sized to 3 times the size of the current image plus some additional space for system files. Use this option to override the default size if you need to accommodate larger future images. |
-
+| `disk.efi`            | Generate an EFI-compatible raw disk image (suitable for AWS and QEMU). When set to `true`, the image will be created with EFI boot support. |
+| `disk.size`           | Set the final size (in MB) of the generated disk image. By default, the image size is calculated based on the actual data size. Use this option to create a larger disk image (e.g. `disk.size=16000` will create a 16GB image). |
+| `disk.bios`           | Generate a BIOS-compatible raw disk image. When set to `true`, the image will be created with legacy BIOS boot support instead of EFI. |
+| `disk.vhd`            | Generate an Azure-compatible VHD image. When set to `true`, the image will be created in VHD format suitable for Azure cloud platform. |
+| `disk.gce`            | Generate a Google Cloud Engine (GCE) compatible image. When set to `true`, the image will be created in a format suitable for Google Cloud Platform. |
 To use the configuration file with AuroraBoot, run AuroraBoot specifying the file or URL of the config as first argument:
 
 ```bash

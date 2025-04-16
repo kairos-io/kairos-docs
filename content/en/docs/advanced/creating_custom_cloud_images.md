@@ -33,7 +33,7 @@ Here's a basic example of creating a base image:
 docker build -t my-custom-image - <<EOF
 ARG BASE_IMAGE=ubuntu:24.04
 
-FROM quay.io/kairos/kairos-init:v0.4.3 AS kairos-init
+FROM quay.io/kairos/kairos-init:{{< kairosInitVersion >}} AS kairos-init
 
 FROM ${BASE_IMAGE} AS base-kairos
 ARG VARIANT=core
@@ -70,7 +70,7 @@ After creating and customizing your base image, you can use AuroraBoot to create
 ```bash
 docker run -v "$PWD"/build:/tmp/auroraboot \
              -v /var/run/docker.sock:/var/run/docker.sock \
-             --rm -ti quay.io/kairos/auroraboot \
+             --rm -ti quay.io/kairos/auroraboot:{{< auroraBootVersion >}} \
              --set container_image=my-custom-image \
              --set "disable_http_server=true" \
              --set "disable_netboot=true" \
@@ -84,7 +84,7 @@ For more details about AuroraBoot options and configurations, see the [AuroraBoo
 
 ### State Partition Sizing
 
-When creating cloud images, it's important to consider the size of the state partition. The state partition is created at image build time and cannot be resized later. This partition needs to accommodate all images (passive, active, and recovery) that might be used with the system.
+When creating cloud images, it's important to consider the size of the state partition. The state partition is created at image build time and cannot be resized later. This partition needs to accommodate all images (passive, active, and transition image for upgrades) that might be used with the system.
 
 By default, AuroraBoot sets the state partition size to 3 times the size of the current image plus some additional space for system files. This is usually sufficient for most use cases, but if you need to ensure the state partition can accommodate larger future images, you can override this with the `disk.state_size` option:
 
@@ -100,7 +100,7 @@ docker run -v "$PWD"/build:/tmp/auroraboot \
              --set "state_dir=/tmp/auroraboot"
 ```
 
-The value is specified in megabytes (MB). When setting a custom size, make sure it's at least 3 times the size of the largest image you plan to use, plus some additional space for system files. This ensures there's enough space for the passive, active, and recovery images, plus some overhead for future updates.
+The value is specified in megabytes (MB). When setting a custom size, make sure it's at least 3 times the size of the largest image you plan to use, plus some additional space for system files. This ensures there's enough space for the passive, active, and transition images, plus some overhead for future updates.
 
 ## Step 4: Cloud Configuration
 
