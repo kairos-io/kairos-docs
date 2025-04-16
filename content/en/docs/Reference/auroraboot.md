@@ -1,10 +1,13 @@
 ---
 title: "AuroraBoot"
 linkTitle: "AuroraBoot"
-weight: 8
-date: 2023-02-08
-description: Automatically provision machines with Kairos and AuroraBoot.
+weight: 1
+description: Reference documentation for AuroraBoot, a tool for generating bootable images
 ---
+
+{{% alert title="Note" color="info" %}}
+This is the reference documentation for AuroraBoot. For a complete guide on creating custom cloud images, including how to use AuroraBoot in the context of a full workflow, see [Creating Custom Cloud Images]({{< ref "/docs/advanced/creating_custom_cloud_images" >}}).
+{{% /alert %}}
 
 **AuroraBoot** is a tool designed to make the process of bootstrapping Kairos machines quick, simple and efficient. It is specifically designed for the Kairos operating system and provides a comprehensive solution for downloading required artifacts and provisioning a machine, both from network or manually via flashing to USB stick. 
 
@@ -386,7 +389,12 @@ cloud_config: |
 | `cloud_config`        | Cloud config path to use for the machines. A URL can be specified, use `-` to pass-by the cloud-config from _STDIN_                                                                                                                                               |
 | `iso.data`            | Defines a path to be embedded into the resulting iso. When booting, the files will be accessible at `/run/initramfs/live`                                                                                                                                         |
 | `netboot.cmdline`     | Override the automatically generated cmdline with a custom one to use during netboot. `config_url` and `rootfs`  are automatically constructed. A reasonable value can be `netboot.cmdline=rd.neednet=1 ip=dhcp rd.cos.disable netboot install-mode console=tty0` |
-
+| `disk.state_size`     | Set the minimum size (in MB) for the state partition in raw disk images. By default, the state partition is sized to 3 times the size of the current image plus some additional space for system files. Use this option to override the default size if you need to accommodate larger future images. |
+| `disk.efi`            | Generate an EFI-compatible raw disk image (suitable for AWS and QEMU). When set to `true`, the image will be created with EFI boot support. |
+| `disk.size`           | Set the final size (in MB) of the generated disk image. By default, the image size is calculated based on the actual data size. Use this option to create a larger disk image (e.g. `disk.size=16000` will create a 16GB image). |
+| `disk.bios`           | Generate a BIOS-compatible raw disk image. When set to `true`, the image will be created with legacy BIOS boot support instead of EFI. |
+| `disk.vhd`            | Generate an Azure-compatible VHD image. When set to `true`, the image will be created in VHD format suitable for Azure cloud platform. |
+| `disk.gce`            | Generate a Google Cloud Engine (GCE) compatible image. When set to `true`, the image will be created in a format suitable for Google Cloud Platform. |
 To use the configuration file with AuroraBoot, run AuroraBoot specifying the file or URL of the config as first argument:
 
 ```bash
@@ -615,8 +623,21 @@ docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock \
   --set "state_dir=/aurora"
 ```
 
-The raw disk image will be available in the current directory with the `.raw` image extension
+The raw disk image will be available in the current directory with the `.raw` image extension. By default, the state partition will be sized to 3 times the size of the current image plus some additional space for system files.
 
+If you need to ensure the state partition can accommodate larger future images, you can override the default size with `disk.state_size`:
+
+```bash
+docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock \
+  -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot \
+  --debug \
+  --set "disable_http_server=true" \
+  --set "disable_netboot=true" \
+  --set "disk.efi=true" \
+  --set "disk.state_size=6000" \
+  --set "container_image={{<oci variant="standard">}}" \
+  --set "state_dir=/aurora"
+```
 
 To generate a BIOS raw image just change `disk.efi=true` for `disk.bios=true`
 

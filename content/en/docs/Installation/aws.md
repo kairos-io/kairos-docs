@@ -24,6 +24,18 @@ If you want to build a custom image, you can follow the instructions in the [Bui
 1. Select the AMI you want to use (e.g. `kairos-ubuntu-24.04-standard-amd64-generic-v3.3.0-k3sv1.32.0-k3s1.raw`).
 1. From the top menu, click on `Launch instance from AMI`.
 
+## Verify the AMI
+
+To ensure you're using a genuine Kairos AMI, check the AMI owner ID. The AMI should be owned by the Kairos team's AWS account. You can find this information in the AMI details.  Look for the Owner Account ID. It should be `171987620676` (The Kairos account ID).
+
+You can also verify the AMI using the AWS CLI:
+
+```bash
+aws ec2 describe-images --region <AMI_REGION> --image-ids <AMI_ID> --query 'Images[0].[OwnerId,Name,Description]'
+```
+
+Replace `<AMI_ID>` with the ID of the AMI you want to verify and the <AMI_REGION> with the region of that AMI. The output will show you the owner ID, name, and description of the AMI.
+
 ## Launch the instance
 
 In this page you get to select the instance type, configure the instance, and add storage. Make sure you give the instance enough resources to run Kairos and your desired workloads (e.g. make sure the disk is at least 3 times the size of your image to allow for active, passive and recovery images).
