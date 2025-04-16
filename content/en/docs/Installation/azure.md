@@ -19,6 +19,15 @@ If you want to build a custom image, you can follow the instructions in the [Bui
 Visit the [Community Images page](https://portal.azure.com/#browse/Microsoft.Compute%2Flocations%2FcommunityGalleries%2Fimages) in the Azure portal and search for "kairos" in the search box. Multiple results will be returned matching multiple different regions. Click on the result matching the region you intend to use for the Virtual Machine. Find the version you want to use and click on "Create VM".
 
 {{% alert title="Note" color="warning" %}}
+To ensure you're using a genuine Kairos image in Azure, you should ensure that the image belongs to the Azure compute gallery `kairos.io`. You can inspect the image in the Web UI or you can use the Azure CLI:
+
+```bash
+az sig image-version show --gallery-name kairos.io --gallery-image-definition kairos --resource-group kairos-cloud-images --gallery-image-version <KAIROS_IMAGE_VERSION> --query 'name'
+```
+Replace `<KAIROS_IMAGE_VERSION>` with the version of the image (e.g. `3.3.5`).
+{{% /alert %}}
+
+{{% alert title="Note" color="warning" %}}
 As described below, it is possible to reset to any desired image on first boot. That's the reason only one Kairos flavor is published in Google Cloud (Ubuntu 24.04). This allows us to save costs and time by not pushing unnecessary artifacts.
 {{% /alert %}}
 

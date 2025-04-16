@@ -25,6 +25,22 @@ Unfortunately Google Cloud [doesn't allow users to search among public images in
 As described below, it is possible to reset to any desired image on first boot. That's the reason only one Kairos flavor is published in Google Cloud (Ubuntu 24.04). This allows us to save costs and time by not pushing unnecessary artifacts.
 {{% /alert %}}
 
+## Verify the Image
+
+To ensure you're using a genuine Kairos image in Google Cloud, make sure the image you are going to use is in the Kairos team's Google Cloud project (`palette-kairos`).
+
+You can verify the image using the Google Cloud CLI:
+
+```bash
+gcloud compute images describe <IMAGE_NAME> --project palette-kairos --format="table(name,description,status)"
+```
+
+Replace `<IMAGE_NAME>` with the name of the image. The output will show you the name, description, and status of the image. If the image doesn't belong to the Kairos project, no image will be found.
+
+{{% alert title="Note" color="warning" %}}
+As described below, it is possible to reset to any desired image on first boot. That's the reason only one Kairos flavor is published in Google Cloud (Ubuntu 24.04). This allows us to save costs and time by not pushing unnecessary artifacts.
+{{% /alert %}}
+
 
 ```bash {class="only-flavors=Ubuntu+24.04"}
 gcloud --project  <your_project_here> compute instances create kairos-vm-test \
