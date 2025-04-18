@@ -115,6 +115,6 @@ This example is also available in the [AuroraBoot repository](https://github.com
 ## See also
 
 - [Customize the OS image]({{< relref "../advanced/customizing" >}})
-- [Live layer bundles]({{< relref "../advanced/livelayering" >}})
 - [Create ISOs with Kubernetes]({{< relref "../installation/automated#kubernetes" >}})
 - [Bundles reference]({{< relref "../advanced/bundles" >}})
+- [System extensions]({{< relref "../advanced/sys-extensions" >}})
