@@ -114,6 +114,40 @@ config.yaml  kairos.iso  kairos.iso.sha256  netboot  temp-rootfs
 ```
 
 
+
+## Why the Version Matters
+
+When using kairos-init, the --version argument you set isn't just cosmetic — it defines the version metadata for the image you're building. This version is embedded into /etc/kairos-release inside the image, and it becomes critical for:
+
+ - Upgrade management: Kairos upgrade tooling checks versions to decide when and how to upgrade systems safely.
+
+ - Tracking changes: It helps users, automation, and debugging processes know exactly what version of a system they are running.
+
+  - Compatibility validation: Different components, like trusted boot artifacts or upgrade servers, rely on accurate versioning to operate properly.
+
+{{% alert title="Important!" color="warning" %}}
+Kairos Factory prepares base artifacts. It’s the responsibility of the derivative project or user (you!) to define, manage, and increment the versioning of your images.
+Kairos does not impose a versioning cadence or scheme — but Semantic Versioning (semver.org) conventions are expected so upgrades and compatibility checks work predictably.
+{{% /alert %}}
+
+Different users may adopt different strategies:
+
+ - A project building nightly or weekly Kairos images might automatically bump the patch or minor version each time, pulling in the latest OS package updates and security fixes.
+
+ - Another team might maintain stable, long-lived releases, only issuing a new version every six months after extensive testing, validation, and certification.
+
+Both are perfectly valid.
+What matters is that you track and manage your own version history, ensuring each new artifact has a clear and correct version that reflects its expected upgrade and compatibility behavior.
+
+If you don't set a meaningful version when running kairos-init, you risk confusing upgrade flows, making troubleshooting harder, and potentially breaking compatibility guarantees for users and automated systems.
+
+
+
+{{% alert title="Kairos releases" color="info" %}}
+Kairos releases its own artifacts with our own cadence, as we are also consumers of kairos-init. We use the same recommendations as above for our own "vanilla" Kairos releases.
+{{% /alert %}}
+
+
 ## Configuration
 
 kairos-init can generate both core and standard images, and standard images can be bundled with either k3s or k0s and any version of the software that you want.
