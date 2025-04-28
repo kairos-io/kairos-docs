@@ -123,7 +123,7 @@ When using kairos-init, the --version argument you set isn't just cosmetic — i
 
  - Tracking changes: It helps users, automation, and debugging processes know exactly what version of a system they are running.
 
-  - Compatibility validation: Different components, like trusted boot artifacts or upgrade servers, rely on accurate versioning to operate properly.
+ - Compatibility validation: Different components, like trusted boot artifacts or upgrade servers, rely on accurate versioning to operate properly.
 
 {{% alert title="Important!" color="warning" %}}
 Kairos Factory prepares base artifacts. It’s the responsibility of the derivative project or user (you!) to define, manage, and increment the versioning of your images.
