@@ -126,8 +126,7 @@ When using kairos-init, the --version argument you set isn't just cosmetic — i
  - Compatibility validation: Different components, like trusted boot artifacts or upgrade servers, rely on accurate versioning to operate properly.
 
 {{% alert title="Important!" color="warning" %}}
-Kairos Factory prepares base artifacts. It’s the responsibility of the derivative project or user (you!) to define, manage, and increment the versioning of your images.
-Kairos does not impose a versioning cadence or scheme — but Semantic Versioning (semver.org) conventions are expected so upgrades and compatibility checks work predictably.
+Kairos Factory prepares base artifacts. It's the responsibility of the derivative project or user (you!) to define and manage the versioning of your images. The only requirement is that versions must follow Semantic Versioning (semver.org) conventions to ensure upgrades and compatibility checks work predictably.
 {{% /alert %}}
 
 Different users may adopt different strategies:
