@@ -97,7 +97,6 @@ github_branch = "main"
 offlineSearch = true
 
 latest_version = "v3.4.2"
-development = true
 
 [params.softwareVersions]
 # renovate: datasource=github-releases depName=kairos-io/provider-kairos
