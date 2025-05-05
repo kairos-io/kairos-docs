@@ -96,7 +96,7 @@ github_branch = "main"
 # Enable Lunr.js offline search
 offlineSearch = true
 
-latest_version = "v3.3.1"
+latest_version = "v3.4.2"
 development = true
 
 [params.softwareVersions]
@@ -197,6 +197,10 @@ no = 'Oh snap! Sorry to hear that. Please <a href="https://github.com/kairos-io/
 [[params.versions]]
   version = "dev"
   url = "/docs"
+
+[[params.versions]]
+  version = "v3.4.2"
+  url = "/v3.4.2/docs"
 
 [[params.versions]]
   version = "v3.3.1"
