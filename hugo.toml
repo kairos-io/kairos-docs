@@ -103,7 +103,7 @@ github_branch = "main"
 offlineSearch = true
 
 archived_version = true
-url_latest_version = "https://kairos.io/v3.3.1/docs"
+url_latest_version = "https://kairos.io/v3.4.2/docs"
 
 [params.softwareVersions]
 # renovate: datasource=github-releases depName=kairos-io/provider-kairos
