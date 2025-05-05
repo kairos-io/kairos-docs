@@ -1,13 +1,13 @@
 {{ $color := "warning" }}
-{{ $latest_version := .Site.Params.url_latest_version }}
+{{ $baseURL := .Site.BaseURL }}
+{{ $latest_version := .Site.Params.latest_version }}
+{{ $url_latest_version := printf "%s%s/docs" $baseURL $latest_version }}
 <!-- Check the variable that indicates whether this is an archived doc set.
   If yes, display a banner. -->
   {{ if .Site.Params.development }}
   <div class="pageinfo pageinfo-{{ $color }}">
     <p>You are viewing the development docs which are in progress. For the latest stable documentation, click 
-      {{ with $latest_version }} 
-        <a href="{{ $latest_version | safeURL }}" target="_blank">here</a>.</p>
-      {{ end }}
+      <a href="{{ $url_latest_version | safeURL }}" target="_blank">here</a>.</p>
   </div>
 {{ end }}
 <!-- Check the variable that indicates whether this is an archived doc set.
@@ -15,10 +15,8 @@
   {{ if .Site.Params.archived_version }}
   {{ $current_version := .Site.Params.softwareVersions.kairos_version }}
   <div class="pageinfo pageinfo-{{ $color }}">
-    {{ with $current_version }}<p>You are viewing documentation for the Kairos release {{ . | markdownify }}.
-      {{ with $latest_version }} For the latest release, click
-        <a href="{{ $latest_version | safeURL }}" target="_blank">here</a>.</p>
-      {{ end }}
-    {{ end }}
+    <p>You are viewing documentation for the Kairos release {{ $current_version | markdownify }}.
+      For the latest release, click
+      <a href="{{ $url_latest_version | safeURL }}" target="_blank">here</a>.</p>
   </div>
 {{ end }}
