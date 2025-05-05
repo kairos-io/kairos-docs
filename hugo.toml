@@ -110,7 +110,7 @@ osbuilder_version = "v0.401.0"
 # renovate: datasource=github-releases depName=kairos-io/AuroraBoot
 auroraboot_version = "v0.6.4"
 # renovate: datasource=github-releases depName=kairos-io/kairos-init
-kairos_init_version = "v0.4.4"
+kairos_init_version = "v0.4.7"
 flavor = "debian"
 registryURL = "quay.io/kairos"
 defaultFamily = "ubuntu"
