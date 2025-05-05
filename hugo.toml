@@ -96,7 +96,7 @@ github_branch = "main"
 # Enable Lunr.js offline search
 offlineSearch = true
 
-url_latest_version = "https://kairos.io/v3.3.1/docs"
+latest_version = "v3.3.1"
 development = true
 
 [params.softwareVersions]
