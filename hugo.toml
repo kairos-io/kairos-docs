@@ -86,7 +86,7 @@ prism_syntax_highlighting = true
 
 # Menu title if your navbar has a versions selector to access old versions of your site.
 # This menu appears only if you have at least one [params.versions] set.
-version_menu = "v3.3.1"
+version_menu = "v3.3.6"
 
 # Repository configuration (URLs for in-page links to opening issues and suggesting changes)
 github_repo = "https://github.com/kairos-io/kairos-docs"
@@ -108,7 +108,7 @@ provider_version = "v2.9.2"
 # renovate: datasource=github-releases depName=k3s-io/k3s
 k3s_version = "v1.32.1+k3s1"
 # renovate: datasource=github-releases depName=kairos-io/kairos
-kairos_version = "v3.3.1"
+kairos_version = "v3.3.6"
 # renovate: datasource=github-releases depName=kairos-io/osbuilder
 osbuilder_version = "v0.401.0"
 # renovate: datasource=github-releases depName=kairos-io/AuroraBoot
