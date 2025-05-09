@@ -41,6 +41,8 @@ k3s:
 users:
     - name: kairos
       passwd: kairos
+      groups:
+          - admin
 ```
 
 The bundle is making some changes on the host's filesystem (installs a customized containerd binary among other things) and a restart of the node is needed in order for the changes to be applied fully.

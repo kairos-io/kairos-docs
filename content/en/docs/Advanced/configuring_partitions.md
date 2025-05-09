@@ -4,13 +4,6 @@ linkTitle: "Configuring partitions"
 weight: 1
 ---
 
-{{% alert title="Note" color="warning" %}}
-
-This feature will be available in Kairos version `2.4.0` and in all future releases.
-
-{{% /alert %}}
-
-
 Kairos configuration mechanism for partitions is based on the [cloud-config]({{< relref "../Reference/configuration" >}}) file 
 given during installation to override the default values set by the installer.
 

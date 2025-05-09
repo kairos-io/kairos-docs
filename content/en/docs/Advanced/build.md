@@ -1,15 +1,19 @@
 ---
 title: "Build Kairos appliances"
 linkTitle: "Build"
-weight: 5
+weight: 3
+description: Learn how to build Kairos images from scratch
 ---
 
-{{% alert title="Note" %}}
+{{% alert title="Warning" color="warning" %}}
 
 This page is a work in progress!
 The feature is experimental and API is likely going to be subject to changes, don't rely on it yet!
 {{% /alert %}}
 
+{{% alert title="Note" color="info" %}}
+This guide provides detailed information about building Kairos images. For a complete guide on creating custom cloud images, including when and how to use these build methods, see [Creating Custom Cloud Images]({{< ref "/docs/advanced/creating_custom_cloud_images" >}}).
+{{% /alert %}}
 
 This documentation section describes how the Kairos Kubernetes Native API extensions can be used to build custom appliances or booting medium for Kairos.
 
@@ -244,6 +248,8 @@ aws ec2 import-snapshot --description "Kairos custom image" --disk-container fil
 ```
 
 Follow the procedure described in [AWS docs](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-ebs.html#creating-launching-ami-from-snapshot) to register an AMI from snapshot. Use all default settings except for the firmware, set to force to UEFI boot.
+
+Since release v3.3.0, Kairos release pipeline is pushing a public image to AWS, which you can use. Read how to deploy Kairos using an AMI (the released or a custom one), in the [relevant page]({{< relref "../installation/aws" >}}).
 
 ### Use the Image in OpenStack
 

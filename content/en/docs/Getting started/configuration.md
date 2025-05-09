@@ -6,7 +6,7 @@ description: |
   Learn the basics of configuring an immutable OS like Kairos
 ---
 
-{{% alert title="Objective" %}}
+{{% alert title="Objective" color="success" %}}
 This guide will teach you the basics about immutability and configuration in Kairos. We will achieve this by configuring the hostname of your Kairos node.
 {{% /alert %}}
 
@@ -78,7 +78,7 @@ stages:
                 name: kairos
                 passwd: kairos
                 ssh_authorized_keys:
-                    - github:mauromorales
+                    - github:YOUR_GITHUB_USERNAME
 ```
 
 The name of the file is not important, but the extension and the location are. You must add your configuration files to `/oem/` and they must have a `.yaml` extension. Finally, the first line of the file must be `#cloud-config` to be recognized by the system.
@@ -113,7 +113,7 @@ stages:
                 name: kairos
                 passwd: kairos
                 ssh_authorized_keys:
-                    - github:mauromorales
+                    - github:YOUR_GITHUB_USERNAME
 ```
 
 Save the file and reboot the node. After the reboot, you should see the new hostname on the prompt.
@@ -142,7 +142,7 @@ stages:
                 name: kairos
                 passwd: kairos
                 ssh_authorized_keys:
-                    - github:mauromorales
+                    - github:YOUR_GITHUB_USERNAME
 ```
 
 {{% alert color="info" %}}

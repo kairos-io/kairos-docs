@@ -1,7 +1,6 @@
 ---
 title: "Bundles"
 linkTitle: "Bundles"
-weight: 4
 description: This section describe examples on how to use a Kairos bundle to deploy MetalLB on top of K3s
 ---
 
@@ -30,6 +29,8 @@ users:
 - name: kairos
   # Change to your pass here
   passwd: kairos
+  groups:
+  - admin
   ssh_authorized_keys:
   # Replace with your github user and un-comment the line below:
   # - github:mudler

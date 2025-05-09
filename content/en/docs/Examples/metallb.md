@@ -1,7 +1,6 @@
 ---
 title: "MetalLB"
 linkTitle: "MetalLB"
-weight: 4
 description: This section describe examples on how to deploy Kairos with k3s and MetalLB
 ---
 
@@ -27,6 +26,8 @@ users:
 - name: kairos
   # Change to your pass here
   passwd: kairos
+  groups:
+  - admin
   ssh_authorized_keys:
   # Add your github user here!
   - github:mudler

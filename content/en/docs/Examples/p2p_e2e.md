@@ -1,25 +1,17 @@
 ---
-title: "P2P multi-node cluster with AuroraBoot"
-linkTitle: "P2P multi-node cluster with AuroraBoot"
-weight: 6
-date: 2023-02-15
+title: "P2P Multi-Node Cluster Provisioned via Netboot"
+linkTitle: "P2P multi-node cluster netboot"
 description: Full end to end example to bootstrap a self-coordinated cluster with Kairos and AuroraBoot
 ---
 
-{{% alert title="Note" %}}
-
-The p2p feature of Kairos is crazy and experimental! Do not run in production servers.
+{{% alert title="Network" color="warning" %}}
+This feature is experimental and has only been tested on local setups. Run in production servers at your own risk.
 Feedback and bug reports are welcome, as we are improving the p2p aspects of Kairos.
-
 {{% /alert %}}
 
 Deploying Kubernetes at the Edge can be a complex and time-consuming process, especially when it comes to setting up and managing multiple clusters. To make this process easier, Kairos leverages peer-to-peer technology to automatically coordinate and create Kubernetes clusters without the need of a control management interface.
 
 To leverage p2p self-coordination capabilities of Kairos, you will need to configure the `network_token` under the `p2p` configuration block in your cloud-config file. Once you have set this, Kairos will handle the configuration of each node.
-
-{{% alert title="Note" %}}
-You can see this example live in the [Kairos and libp2p video]({{< relref "Media#how-kairos-uses-libp2p" >}} "Media") in the [Media Section]({{< relref "Media" >}} "Media")
-{{% /alert %}}
 
 ## Description
 
@@ -39,6 +31,8 @@ hostname: kairoslab-{{ trunc 4 .MachineID }}
 users:
 - name: kairos
   passwd: kairos
+  groups:
+  - admin
   ssh_authorized_keys:
   # Replace with your github user and un-comment the line below:
   - github:mudler
@@ -80,6 +74,8 @@ hostname: kairoslab-{{ trunc 4 .MachineID }}
 users:
 - name: kairos
   passwd: kairos
+  groups:
+  - admin
   ssh_authorized_keys:
   - github:mudler
   - github:mauromorales
@@ -120,6 +116,8 @@ hostname: kairoslab-{{ trunc 4 .MachineID }}
 users:
 - name: kairos
   passwd: kairos
+  groups:
+  - admin
   ssh_authorized_keys:
   - github:mudler
   - github:mauromorales

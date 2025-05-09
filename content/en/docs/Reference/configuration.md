@@ -93,7 +93,7 @@ install:
   # partitions are not already present within the disk.
   no-format: false
 
-  # if no-format is used and elemental is running over an existing deployment
+  # if no-format is used and Kairos is running over an existing deployment
   # force can be used to force installation.
   force: false
 
@@ -344,7 +344,7 @@ stages:
           - 8.8.8.8
 ```
 
-{{% alert title="Note" %}}
+{{% alert title="Note" color="success" %}}
 
 Kairos does not use [cloud-init](https://cloud-init.io/). [yip](https://github.com/mudler/yip) was created with the goal of being distro agnostic, and does not use Bash at all (with the exception of systemd configurations, which are assumed to be available). This makes it possible to run yip on minimal Linux distros that have been built from scratch.
 
@@ -400,7 +400,7 @@ INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.after'
 
 ### Validate Your Cloud Config
 
-{{% alert title="Note" %}}
+{{% alert title="Note" color="success" %}}
 
 Validation of configuration is available on Kairos [v1.6.0-rc1](https://github.com/kairos-io/kairos/releases/tag/v1.6.0-rc1) and later. If you're interested in the validation rules or want to build a tool based on it, you can access them online via `https://kairos.io/RELEASE/cloud-config.json` e.g. [v1.6.0 cloud-config.json](https://kairos.io/v1.6.0/cloud-config.json)
 
@@ -588,7 +588,7 @@ Usually secret gists are used to share such config files.
 
 Kairos comes with the `kairos` user pre-configured, however, it is possible to configure additional users to the system via the cloud-init config mechanism
 
-### Add a user during first-install
+### Add a user
 
 Consider the following example cloud-config, containing the default `kairos` user (which always has sudo access) and adds the `testuser` user to the system with admin access:
 
@@ -612,9 +612,11 @@ users:
   - "admin"
 ```
 
-### Add a user to an existing install
+The above cloud config will be respected on every boot. Adding a user in the config at any point will be reflected on the next boot.
+The top level `users:` key is mapped automatically to a [`boot` stage](https://github.com/mudler/yip/blob/4fd77a2709e0d98c25c14925530f74f55d704ac6/pkg/schema/loader_cloudinit.go#L96).
 
-To add an user to an existing installation you can simply add a `/oem` file for the new user. For instance, consider the following:
+For this reason, the above snippet is equivalent to adding the user by explicitly defining the stage. E.g. by creating this file inside `/oem`:
+
 ```yaml
 stages:
    initramfs:
@@ -644,6 +646,62 @@ localhost:~$ whoami
 testuser
 localhost:~$
 ```
+
+## k3s configuration
+
+This section allows you to configure the k3s server instances.
+
+### `k3s.enabled`
+
+Enables the k3s server instance. Accepted: `true`, `false`.
+
+### `k3s.env`
+
+Additional environment variables for the k3s server instance.
+
+### `k3s.args`
+
+Additional arguments for the k3s server instance.
+
+### `k3s.replace_env`
+
+Replaces all environment variables otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the environment variables you need.
+
+### `k3s.replace_args`
+
+Replaces all arguments otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the arguments you need.
+
+### `k3s.embedded_registry`
+
+Enables the embedded registry in k3s. Accepted: `true`, `false`.
+
+## k3s-agent configuration
+
+This section allows you to configure the k3s agent instances.
+
+### `k3s-agent.enabled`
+
+Enables the k3s agent instance. Accepted: `true`, `false`.
+
+### `k3s-agent.env`
+
+Additional environment variables for the k3s agent instance.
+
+### `k3s-agent.args`
+
+Additional arguments for the k3s agent instance.
+
+### `k3s-agent.replace_env`
+
+Replaces all environment variables otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the environment variables you need.
+
+### `k3s-agent.replace_args`
+
+Replaces all arguments otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the arguments you need.
+
+### `k3s-agent.embedded_registry`
+
+Enables the embedded registry in k3s. Accepted: `true`, `false`.
 
 ## P2P configuration
 

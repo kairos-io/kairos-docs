@@ -33,7 +33,7 @@ Due to the design choice to not boot into a second stage, this is being refered 
 
 ### Building process
 
-For Trusted boot it is required to build a specific installable ISO file medium that contains the UKI files and a container image used for upgrades. Every time to upgrade a system it is required to re-generate the assets with the same keys and use the generated container image for the upgrades.
+Trusted Boot requires you to create a specific installable ISO file that includes the UKI files and a container image used for upgrades. Each time you upgrade a system, you must regenerate these assets using the same keys and then use the newly generated container image for the upgrade process.
 
 The UKI files are generated from container images as usual.
 

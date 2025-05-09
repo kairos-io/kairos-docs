@@ -1,13 +1,12 @@
 ---
 title: "How to Create an Airgap K3s Installation with Kairos"
-linkTitle: "Airgapped ISO with AuroraBoot"
-weight: 4
+linkTitle: "Airgapped ISO"
 description: This section describe examples on how to use AuroraBoot and Kairos bundles to create ISOs for airgapped installs
 ---
 
 If you want to create an [airgap K3s installation](https://docs.k3s.io/installation/airgap), Kairos provides a convenient way to do so using AuroraBoot. In this guide, we will go through the process of creating a custom ISO of Kairos that contains a configuration file and a [bundle]({{< relref "../advanced/bundles" >}}) that executes preparatory steps after installation. The bundle will overlay new files in the system and prepare the node for having an airgapped K3s installation.
 
-{{% alert title="Note" %}}
+{{% alert title="Note" color="success" %}}
 If you already have a Kubernetes cluster, you can use the osbuilder controller to generate container images with your additional files already inside.
 {{% /alert %}}
 
@@ -116,6 +115,6 @@ This example is also available in the [AuroraBoot repository](https://github.com
 ## See also
 
 - [Customize the OS image]({{< relref "../advanced/customizing" >}})
-- [Live layer bundles]({{< relref "../advanced/livelayering" >}})
 - [Create ISOs with Kubernetes]({{< relref "../installation/automated#kubernetes" >}})
 - [Bundles reference]({{< relref "../advanced/bundles" >}})
+- [System extensions]({{< relref "../advanced/sys-extensions" >}})

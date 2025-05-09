@@ -1,7 +1,6 @@
 ---
-title: "Configuring wifi via cloud-config"
-linkTitle: "Configuring wifi via cloud-config"
-weight: 1
+title: "Configuring WiFi via Cloud-Config"
+linkTitle: "WiFi"
 description: This section describe examples on how to deploy Kairos with WiFi
 ---
 

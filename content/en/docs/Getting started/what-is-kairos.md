@@ -69,7 +69,7 @@ Kairos is distro-agnostic, and embraces openness: The user can provide their own
 
 ## Contribute
 
-Kairos is an open source project, and any contribution is more than welcome! The project is big and narrows to various degrees of complexity and problem space. Feel free to join our chat, discuss in our forums and join us in the Office hours. Check out the [contribution guidelines](https://github.com/kairos-io/kairos/contribute) to see how to get started and our [governance](https://github.com/kairos-io/kairos/blob/master/GOVERNANCE.md).
+Kairos is an open source project, and any contribution is more than welcome! The project is big and narrows to various degrees of complexity and problem space. Feel free to join our chat, discuss in our forums and join us in the Office hours. Check out the [contribution guidelines](https://github.com/kairos-io/kairos/contribute) to see how to get started and our [governance](https://github.com/kairos-io/community/blob/main/GOVERNANCE.md).
 
 We have an open roadmap, so you can always have a look on what's going on, and actively contribute to it.
 
@@ -106,7 +106,7 @@ However, Kairos have different goals and takes completely unique approaches to t
 
 ### Building Kairos
 
-Requirements: [Docker](https://www.docker.com/) and [Earthly](https://earthly.dev/).
+Requirements: [Docker](https://www.docker.com/)
 
 First we need to clone the repository
 
@@ -115,18 +115,21 @@ git clone https://github.com/kairos-io/kairos.git
 cd kairos
 ```
 
+Then we can build an OCI artifact which is the base of all things Kairos. Our ISOs, cloud images, upgrade artifacts are all OCI artifacts and they are managed like a normal OCI artifact. They can be pushed, tagged, labelled, build on top by using it as FROM in a Dockerfile, etc..
+
+To build the base artifact we can do:
+```bash
+docker build -t myBaseKairos:v1.0.0 --build-arg VERSION=v1.0.0 --build-arg BASE_IMAGE=@baseImage -f images/Dockerfile .
+```
+
 Then we can build the ISO with the following command for a Kairos core image based on {{<flavorCode >}}:
 
 ```bash
-earthly +iso \
-  --FAMILY=@family \
-  --FLAVOR=@flavor \
-  --FLAVOR_RELEASE=@flavorRelease \
-  --BASE_IMAGE=@baseImage \
-  --MODEL=generic \
-  --VARIANT=core
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $PWD/build/:/output \
+  quay.io/kairos/auroraboot:v0.5.0 build-iso --output /output/ docker:myBaseKairos:v1.0.0 
 ```
 
+That will generate an ISO file under the build dir that you can use.
 
 ## What's next?
 

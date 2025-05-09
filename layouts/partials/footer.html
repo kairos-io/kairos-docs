@@ -1,24 +1,24 @@
-<footer>
+<footer class="row d-print-none">
+    {{ if hugo.IsProduction }}
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=051a8a26-af2c-4a22-a7d6-dba22bef829f" />
+    {{ end }}
     <div id="footer-content">
         <div>
             <div class="footer-logo">
-                {{ $sclogo := resources.Get "/img/spectrocloud.svg" }}
+                {{ $sclogo := resources.Get "/img/spectrocloud-dark.svg" }}
                 <img src="/index/footer-logo.png" alt="Kairos Logo" loading="lazy">
                 <div class="footer-text">Project supported by <a href="https://spectrocloud.com" target="_blank"> <img src="{{ $sclogo.RelPermalink }}" class="sclogo" loading="lazy" width="192" height="51" alt="Spectro-Cloud-logo"> </a></div>
             </div>
             <div class="footer-follow-us">Follow us
                 <div>
-                    <a href="https://x.com/Kairos_OSS" target="_blank">
-                        <i class="fa-brands fa-x-twitter"></i>
+                    <a href="https://www.linkedin.com/company/kairos-oss/" target="_blank">
+                        <i class="fa-brands fa-linkedin"></i>
                     </a>
                     <a href="https://github.com/kairos-io/kairos" target="_blank">
                         <i class="fa-brands fa-github"></i>
                     </a>
                     <a href="https://www.youtube.com/@Kairos-IO" target="_blank">
                         <i class="fa-brands fa-youtube"></i>
-                    </a>
-                    <a rel="me" href="https://fosstodon.org/@kairos_OSS" target="_blank">
-                        <i class="fa-brands fa-mastodon"></i>
                     </a>
                 </div>
             </div>

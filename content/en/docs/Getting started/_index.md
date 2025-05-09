@@ -8,7 +8,7 @@ description: |
     Step-by-step guide to deploying Kairos, the best immutable Linux distribution for edge Kubernetes clusters.
 ---
 
-{{% alert title="Objective" %}}
+{{% alert title="Objective" color="success" %}}
 This guide will teach you how easy it is to deploy a Kubernetes cluster using Kairos. To make this guide quick and effective we will make some decisions for you. We will do a traditional, interactive installation, of a single node cluster on a virtual machine (VM) on x86_64 architecture. At the end of the guide we will provide you with links to do many other different setups.
 {{% /alert %}}
 

@@ -58,7 +58,7 @@ To upgrade the "recovery" image instead of the active one, just pass `--recovery
 
 To check all the available versions, see the [images](https://quay.io/repository/kairos/opensuse?tab=tags) available on the container registry, corresponding to the flavor/version selected.
 
-{{% alert title="Note" %}}
+{{% alert title="Note" color="success" %}}
 
 Several upgrade strategies can be used with `system-upgrade-controller` which are not illustrated here in this example. For instance, it can be specified in the number of hosts which are running the upgrades, filtering by labels, and more. [Refer to the project documentation](https://github.com/rancher/system-upgrade-controller) on how to create efficient strategies to roll upgrades on the nodes. In the example above, the upgrades are applied to every host of the cluster, one-by-one in sequence.
 
@@ -131,6 +131,8 @@ bundles:
 users:
 - name: kairos
   passwd: kairos
+  groups:
+  - admin
 
 k3s:
  enabled: true

@@ -7,7 +7,7 @@ description: Learn how to upgrade a Kairos node with Trusted Boot enabled
 ---
 
 
-{{% alert title="Warning" %}}
+{{% alert title="Warning" color="warning" %}}
 This section is still a work in progress and only available in Kairos v3.x releases and alphas.
 {{% /alert %}}
 
@@ -19,7 +19,7 @@ See the [Trusted Boot Installation]({{< relref "../installation/trustedboot" >}}
 
 In order to upgrade a node to a new version of the OS, you need to generate again the installable medium with the same keys used in the steps before.
 
-{{% alert title="Note" %}}
+{{% alert title="Note" color="success" %}}
 The resulting container image can be used for upgrades with `kairos-agent`.
 {{% /alert %}}
 
@@ -27,7 +27,7 @@ The process will generate an EFI file which we will pack into a container image 
 
 First we need to extract the EFI file from the ISO file generated with what explained in the [Trusted Boot Installation documentation]({{< relref "../installation/trustedboot" >}}):
 
-{{% alert title="Warning" %}}
+{{% alert title="Warning" color="warning" %}}
 This step is required until [#2171](https://github.com/kairos-io/kairos/issues/2171) is implemented.
 {{% /alert %}}
 
@@ -65,7 +65,7 @@ docker push <IMAGE_NAME>
 
 #### Upgrade with kairos-agent
 
-{{% alert title="Warning" %}}
+{{% alert title="Warning" color="warning" %}}
 For upgrading use the image that has been loaded with `docker load` in the step earlier. That contains the EFI files for the upgrade process. **Do not use** the container image used (`$CONTAINER_IMAGE` in the example above) used as input!
 {{% /alert %}}
 
@@ -142,7 +142,7 @@ spec:
     args: ["/run/system-upgrade/secrets/upgrade/upgrade.sh"]
 ```
 
-{{% alert title="Note" %}}
+{{% alert title="Note" color="success" %}}
 To understand more on how this works, see the [example here](https://github.com/rancher/system-upgrade-controller/blob/master/examples/ubuntu/bionic.yaml) regarding
 the system upgrade controller and the [`suc-upgrade.sh` script](https://github.com/kairos-io/packages/blob/821de2dded0c2f590b539261002c5d257fb8ea07/packages/system/suc-upgrade/suc-upgrade.sh#L13-L15)
 which is used for regular (non trusted boot) upgrades.

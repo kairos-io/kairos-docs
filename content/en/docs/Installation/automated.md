@@ -69,6 +69,12 @@ $ mkisofs -output ci.iso -volid cidata -joliet -rock user-data meta-data
 
 Once the ISO is created, you can attach it to your machine and boot up as usual, along with the Kairos ISO.
 
+{{% alert title="Warning" color="warning" %}}
+For security reasons, when Kairos is installed in [trusted boot mode]({{< relref "../Installation/trustedboot.md" >}}), datasources are not parsed after installation. This prevents someone from plugging a usb stick on an edge device, applying arbitrary configuration to the system post-installation. To force parsing of the datasources after installation, you can set add the `kairos.pull_datasources` option to the cmdline. This requires extending the cmdline when building the installation medium with AuroraBoot ([read more]({{< relref "../Installation/trustedboot.md#additional-efi-entries" >}})).
+
+This security feature is only enabled when the system boots in trusted boot mode and only after installation (they are parsed in "live" mode). On "plain" boot mode, datasources are always parsed.
+{{% /alert %}}
+
 ## Via config URL
 
 Another way to supply your Kairos configuration file is to specify a URL as a boot argument during startup. To do this, add `config_url=<URL>` as a boot argument. This will allow the machine to download your configuration from the specified URL and perform the installation using the provided settings.
@@ -87,7 +93,7 @@ To create a custom ISO, you will need Docker installed on your machine.
 
 Here's an example of how you might do this:
 
-{{% alert title="Warning" %}}
+{{% alert title="Warning" color="warning" %}}
 The image passed to the auroraboot image, needs to have one of the accepted schemes: `docker`, `oci`, `file`, `dir` or `channel`.
 
 If you don't pass one, we will make an attempt to read it as a web URL but depending on your URL this might throw an error.
@@ -142,7 +148,7 @@ $ docker run -v $PWD:/cOS -v /var/run/docker.sock:/var/run/docker.sock -i --rm q
 {{% /tab %}}
 {{< /tabpane >}}
 
-{{% alert title="Cloud config" %}}
+{{% alert title="Cloud config" color="success" %}}
 In the case of Auroraboot, make sure that the cloud config that you are mounting in the container (`-v $PWD/cloud_init.yaml:/cloud_init.yaml`) exists. Otherwise docker will create an empty directory to mount it on the container without any warnings and you will end up with an empty cloud config.
 {{% /alert %}}
 

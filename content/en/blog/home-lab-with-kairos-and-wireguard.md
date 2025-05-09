@@ -155,7 +155,9 @@ If you prefer to not have the keys stored on your Kairos host filesystem, you ca
 
 users:
 - name: kairos
-passwd: kairos
+  passwd: kairos
+  groups:
+  - admin
 
 stages:
 after-install-chroot:

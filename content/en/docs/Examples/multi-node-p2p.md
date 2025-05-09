@@ -1,16 +1,12 @@
 ---
-title: "P2P multi-node cluster"
-linkTitle: "P2P multi-node cluster"
-weight: 6
-date: 2022-11-13
+title: "Self-coordinating P2P multi-node cluster"
+linkTitle: "Self-coordinating P2P multi-node cluster"
 description: Install Kairos with p2p support, on a multi-node cluster
 ---
 
-{{% alert title="Note" %}}
-
-This feature is crazy and experimental! Do not run in production servers. 
+{{% alert title="Network" color="warning" %}}
+This feature is experimental and has only been tested on local setups. Run in production servers at your own risk.
 Feedback and bug reports are welcome, as we are improving the p2p aspects of Kairos.
-
 {{% /alert %}}
 
 A multi-node scenario with non-HA is the default peer-to-peer (P2P) configuration in Kairos. To set this up, you will need to configure the `network_token` under the `p2p` configuration in your cloud-config file. Once you have set this, Kairos will handle the configuration of each node.
@@ -24,6 +20,9 @@ Consider the following example, which uses cloud-config to automatically configu
 hostname: kairoslab-{{ trunc 4 .MachineID }}
 users:
 - name: kairos
+  passwd: kairos
+  groups:
+    - admin
   ssh_authorized_keys:
   # Replace with your github user and un-comment the line below:
   # - github:mudler

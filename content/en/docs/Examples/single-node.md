@@ -1,65 +1,112 @@
 ---
-title: "Single Node k3s cluster"
-linkTitle: "Single node k3s cluster"
-weight: 1
-description: This section describe examples on how to deploy Kairos with k3s as a single-node cluster
+title: "Manual Single-Node Cluster"
+linkTitle: "Manual single-node cluster"
+description: This section describe examples on how to deploy Kairos single-node cluster
 ---
 
-In the example below we will use a bare metal host to provision a Kairos node in the local network with K3s.
+In the example below we will use a bare metal host to provision a Kairos node in the local network using a single machine.
 
 ## Installation
 
-Use the standard images which contain `k3s`.
+For this example we will use a standard image which contains a Kubernetes distribution. You can choose between `k0s` and `k3s` as the distribution to use. Follow the [Installation]({{< relref "../installation" >}}) documentation with the configurations provided on this page. Make sure to choose the one that matches the image you are using.
 
-Follow the [Installation]({{< relref "../installation/" >}}) documentation, and use the following cloud config file with Kairos:
+## Configuration
 
+We will deploy a `kairos` user with the password `kairos` and the `admin` group. We will also add the public keys of the users that will be allowed to access the nodes. We will enable the Kubernetes distribution and configure it. And also include a manifest with a simple Nginx deployment that will be installed on the cluster automatically. See [docs]({{< relref "../reference/configuration#kubernetes-manifests" >}}) for more information. You can change the manifest to the one of your own application or remove it if you don't need it.
+
+{{< tabpane text=true right=true  >}}
+{{% tab header="k3s" %}}
 ```yaml
 #cloud-config
 
-hostname: metal-{{ trunc 4 .MachineID }}
 users:
-- name: kairos
-  # Change to your pass here
-  passwd: kairos
+- name: kairos # Change to your own user
+  passwd: kairos # Change to your own password
+  groups:
+    - admin # This user needs to be part of the admin group
   ssh_authorized_keys:
-  # Replace with your github user and un-comment the line below:
-  # - github:mudler
+    - github:<YOUR_GITHUB_USER> # replace with your github user
 
 k3s:
   enabled: true
-  args:
-  - --node-label "nodetype=small"
 
 write_files:
-- path: /var/lib/rancher/k3s/server/manifests/myapp.yaml
+- path: /var/lib/rancher/k3s/server/manifests/nginx.yaml
   permissions: "0644"
   content: |
     apiVersion: v1
     kind: Namespace
     metadata:
-      name: myapp
+      name: nginx
     ---
-    apiVersion: v1
-    kind: ConfigMap
+    apiVersion: apps/v1
+    kind: Deployment
     metadata:
-      name: foobar
-      namespace: myapp
-    data:
-      foo: bar
+      name: nginx-deployment
+      namespace: nginx
+    spec:
+      selector:
+        matchLabels:
+          app: nginx
+      replicas: 3
+      template:
+        metadata:
+          labels:
+            app: nginx
+        spec:
+          containers:
+          - name: nginx
+            image: nginx:latest
+            ports:
+            - containerPort: 80
 ```
+{{% /tab %}}
+{{% tab header="k0s" %}}
+```yaml
+#cloud-config
 
-Notably:
+users:
+- name: kairos # Change to your own user
+  passwd: kairos # Change to your own password
+  groups:
+    - admin # This user needs to be part of the admin group
+  ssh_authorized_keys:
+    - github:<YOUR_GITHUB_USER> # replace with your github user
 
-- We use the `k3s` block to set the node label
-- In a single-node setup, you may wish to use a non-generated node name. This can be achieved with these options:
-  ```
-  k3s:
-    enabled: true
-    replace_args: true
+k0s:
     args:
-    - --node-name=my-node
-  ```
-  {{% alert title="Note" %}}
-  `replace_args` replaces all arguments otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the arguments you need.
-  {{% /alert %}}
-- We use `write_files` to write manifests to the default `k3s` manifest directory (`/var/lib/rancher/k3s/server/manifests/`) see [docs]({{< relref "../reference/configuration#kubernetes-manifests" >}}) to create a Namespace and ConfigMap.
+        - --single
+    enabled: true
+
+write_files:
+- path: /var/lib/k0s/manifests/my-nginx/my-nginx.yaml
+  permissions: "0644"
+  content: |
+    apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: nginx
+    ---
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: nginx-deployment
+      namespace: nginx
+    spec:
+      selector:
+        matchLabels:
+          app: nginx
+      replicas: 3
+      template:
+        metadata:
+          labels:
+            app: nginx
+        spec:
+          containers:
+          - name: nginx
+            image: nginx:latest
+            ports:
+            - containerPort: 80
+```
+{{% /tab %}}
+{{< /tabpane >}}

@@ -2,7 +2,12 @@
 title: "Customizing the system image"
 linkTitle: "Customization"
 weight: 2
+description: Learn how to customize Kairos images to suit your needs
 ---
+
+{{% alert title="Note" color="info" %}}
+This guide focuses on customizing Kairos images. For a complete guide on creating custom cloud images from scratch, including when and how to apply these customizations, see [Creating Custom Cloud Images]({{< ref "/docs/advanced/creating_custom_cloud_images" >}}).
+{{% /alert %}}
 
 Kairos is an open source, container-based operating system. To modify Kairos and add a package, you'll need to build a container image from the [Kairos images]({{< relref "../reference/image_matrix" >}}). Here's an example with Docker which adds `figlet`:
 
@@ -131,6 +136,18 @@ install:
 ...
 ```
 
+To do this after installation, simply add a cloud config file in the `/oem` folder, for instance, to make `/var/lib/docker` persistent:
+
+```yaml
+#cloud-config
+
+stages:
+  rootfs:
+  - name: "user_custom_mount"
+    environment_file: "/run/cos/custom-layout.env"
+    environment:
+       CUSTOM_BIND_MOUNTS: "/var/lib/docker"
+```
 
 ### Ephemeral mounts
 

@@ -7,11 +7,9 @@ description: Inter-connecting Kubernetes clusters without the need of exposing a
  
 ---
 
-{{% alert title="Note" %}}
-
-This feature is crazy and experimental! Do not run in production servers. 
+{{% alert title="Network" color="warning" %}}
+This feature is experimental and has only been tested on local setups. Run in production servers at your own risk.
 Feedback and bug reports are welcome, as we are improving the p2p aspects of Kairos.
-
 {{% /alert %}}
 
 Kairos has two Kubernetes Native extensions ( [entangle](https://github.com/kairos-io/entangle) and [entangle-proxy](https://github.com/kairos-io/entangle-proxy) ) that allows to interconnect services between different clusters via P2P with a shared secret.

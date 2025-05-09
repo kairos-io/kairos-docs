@@ -411,12 +411,12 @@ You can also set custom partitions within the `kairos-install.pre.before` stage.
 custom partition in disk `/dev/vda`.
 
 
-{{% alert title="Warning" %}}
+{{% alert title="Warning" color="warning" %}}
 You're responsible to make sure the sizes of the partitions fit properly within the disk. Issues of space will be highlighted by
 the agent, but they will not fail the installation process unless you pass the `--strict` flag.
 {{% /alert %}}
 
-{{% alert title="Warning" %}}
+{{% alert title="Warning" color="warning" %}}
 In the case of multiple devices, make sure you don't choose `auto` to determine on which device to install but instead to point
 the installation to the device where you are creating the custom partitions.
 {{% /alert %}}

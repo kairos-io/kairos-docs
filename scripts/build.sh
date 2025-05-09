@@ -8,6 +8,10 @@ root_dir="${ROOT_DIR:-$(pwd)}"
 binpath="${root_dir}/bin"
 publicpath="${root_dir}/public"
 current_commit="${COMMIT_REF:-$(git rev-parse --abbrev-ref HEAD)}"
+
+# Output the result
+echo "Branch: $BRANCH"
+echo "Environment: $environment"
 export PATH=$PATH:$binpath
 
 if [ -z "$(type -P hugo)" ];
@@ -27,7 +31,20 @@ npm install --save-dev autoprefixer postcss-cli postcss
 # list all branches to debug
 git fetch --no-recurse-submodules origin '+refs/heads/v*:refs/remotes/origin/*'
 # get all release branches
-releases=$(git branch -r | sed -n '/origin\/v[0-9]\+\(\.[0-9]\+\)\{2\}/p')
+releases=$(git branch -r | awk '/origin\/v[0-9]+\.[0-9]+\.[0-9]+/ {print $1}' | \
+    sort -V | \
+    awk -F'/' '{
+        version=$2
+        split(version, parts, ".")
+        minor_ver = parts[1]"."parts[2]
+        if (!latest[minor_ver] || parts[3] > latest_patch[minor_ver]) {
+            latest_patch[minor_ver] = parts[3]
+            latest[minor_ver] = $0
+        }
+    } END {
+        for (v in latest) print latest[v]
+    }' | sort -V
+)
 # build each release branch under public/vX.Y.Z
 for release in $releases; do
     # remove the release_ prefix
@@ -36,7 +53,7 @@ for release in $releases; do
     git checkout $release
     hugo mod get
     hugo mod graph
-    HUGO_ENV="production" hugo --buildFuture --gc -b "${BASE_URL}/$version" -d "${publicpath}/$version"
+    HUGO_ENV="${CONTEXT}" hugo --buildFuture --gc -b "${BASE_URL}/$version" -d "${publicpath}/$version"
 done
 
 git checkout go.sum go.mod package.json package-lock.json
@@ -44,7 +61,8 @@ git checkout go.sum go.mod package.json package-lock.json
 git checkout $current_commit
 hugo mod get
 hugo mod graph
-HUGO_ENV="production" hugo --buildFuture --minify --gc -b "${BASE_URL}" -d "${publicpath}"
+# CONTEXT is set by netlify
+HUGO_ENV="${CONTEXT}" hugo --buildFuture --minify --gc -b "${BASE_URL}" -d "${publicpath}"
 
 cp -rf CNAME "${publicpath}"
 

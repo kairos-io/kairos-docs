@@ -10,7 +10,7 @@ Upgrades can be run manually from the terminal.
 
 Kairos images are released on [quay.io](https://quay.io/organization/kairos).
 
-{{% alert title="Note" %}}
+{{% alert title="Note" color="success" %}}
 Looking to upgrade from a private registry OCI image? Check the [Private registry auth]({{< relref "../Advanced/private_registry_auth" >}}) page.
 {{% /alert %}}
 

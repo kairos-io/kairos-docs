@@ -6,23 +6,21 @@ weight: 3
 
 
 {{% alert title="Warning" color="warning" %}}
-This feature is in preview state and only available in Kairos v3.1.x releases and alphas.
+This feature is in preview state and only available in Kairos v3.4.x releases and alphas.
 Please check the section "Known issues" at the bottom for more information.
 {{% /alert %}}
 
 
-{{% alert title="Warning" color="warning" %}}
-This feature is only available for Trusted Boot images. See the [Trusted Boot documentation]({{%relref "/docs/Architecture/trustedboot" %}}) for more information.
-{{% /alert %}}
-
-{{% alert title="Signing keys for system extensions" color="info" %}}
-Sysexts need to be signed with the same key/cert as the ones used to sign the EFI files. As those are part of the system and available in the EFI firmware, we can extract the public part and verify the sysexts locally. Any of the PK, KEK or DB keys can be used to sign sysexts.
+{{% alert title="Signing keys for system extensions under Trusted Boot" color="info" %}}
+Sysexts need to be signed with the same key/cert as the ones used to sign the EFI files. As those are part of the system and available in the EFI firmware, we can extract the public part and verify the sysexts locally. Any of the PK, KEK or DB keys can be used to sign sysexts. This only affects Trusted Boot.
 {{% /alert %}}
 
 ### Introduction
 
 System extensions are a way to extend the system with additional files and directories that are mounted at boot time. System extension images may – dynamically at runtime — extend the /usr/ directory hierarchies with additional files. This is particularly useful on immutable system images where a /usr/ hierarchy residing on a read-only file system shall be extended temporarily at runtime without making any persistent modifications.
-Or on a Trusted Boot system where the system is booted from a read-only EFI and cannot be exteded easily without breaking the signature.
+Or on a Trusted Boot system where the system is booted from a read-only EFI and cannot be extended easily without breaking the signature.
+
+This feature works on both Trusted Boot and normal Kairos installations, the only difference is the signature verification of the system extension images. On Trusted Boot, the system extension images are verified against the public keys stored in the firmware. This is done to ensure that only trusted extensions are loaded into the system.
 
 For more information on system extensions, please refer to the [System extensions documentation](https://www.freedesktop.org/software/systemd/man/latest/systemd-sysext.html).
 
@@ -57,7 +55,7 @@ Then you can use the `systemd-repart` tool to create the sysext image:
 $ systemd-repart -S -s SOURCE_DIR NAME.sysext.raw --private-key=PRIVATE_KEY --certificate=CERTIFICATE
 ```
 
-{{% alert title="Warning" %}}
+{{% alert title="Warning" color="warning" %}}
 Note that the extensions MUST have a `/usr/lib/extension-release.d/extension-release.NAME` file in which the NAME needs to match the sysext NAME (extension is ignored). This is an enforcement by systemd to ensure the sysext is correctly identified and some sanity checks are done with the info in that file.
 {{% /alert %}}
 
@@ -174,40 +172,168 @@ ro root-verity-sig bdb3ee65-ed86-480c-a750-93015254f1a7 root-x86-64-verity-sig v
 ```
 
 
-### Adding system extensions to build medium
-
-Check the _Bundling system extensions during the installable medium build_ section in the [Trusted Boot Installations]({{%relref "/docs/Installation/trustedboot#bundling-system-extensions-during-the-installable-medium-build" %}}) for more information on how to add system extensions to the build medium.
+# Managing System Extensions in Kairos
 
 
-### Adding system extensions to the installed system
+## 📂 Where Extensions Live
 
-It's possible to add system extensions once the system is installed or as part of the installation process without having to bundle them directly on the install media. This is done by copying the sysexts directly into the EFI partition in the proper place.
+All system extensions are stored in:
 
-Sysextensions are applied per EFI file. So if you have multiple EFI files in the EFI partition, you can have different sysexts for each one.
-You would need to copy each extensions that you want applied to the system to the proper directory in the EFI partition.
+```
+/var/lib/kairos/extensions/
+```
 
-The paths to copy the sysexts are:
-- `EFI/kairos/active.efi.extra.d/` for the sysexts that will be loaded when choosing the active boot entry.
-- `EFI/kairos/passive.efi.extra.d/` for the sysexts that will be loaded when choosing the passive boot entry.
+From there, they’re symlinked into directories based on the system’s boot profile:
 
-For any other entries, the sysexts can be added to the `EFI/kairos/$EFI_ENTRY_NAME.extra.d/` directory directly. So if we had a custom entry in which the EFI file is called `customentry.efi` the path to add the sysexts would be `EFI/kairos/customentry.efi.extra.d/`.
+| Directory     | Behavior                                                                |
+|---------------|-------------------------------------------------------------------------|
+| `active/`     | Loaded when booting into the *active* profile                            |
+| `passive/`    | Loaded during *passive* boot                                             |
+| `recovery/`   | Loaded in *recovery mode*                                                |
+| `common/`     | **Always loaded**, regardless of boot mode                               |
 
-This can be done either manually once installation is finished, by mounting the EFI partition, creating the dirs and copying the sysexts, or by adding a step to the install configuration that will do this automatically (`after-install` stage).
+> 💡 These directories contain only **symlinks**—the actual disk image is stored once. This ensures there’s no duplication or leftover state between boots.
 
-We recommend bundling the sysexts during the build process, but this is an alternative for those cases where the sysexts are not known at build time or need to be added later to an existing system.
+---
 
-This is also a good choice for testing sysexts before bundling them into the install media as they can be added to just one entry in the system and tested without affecting other entries.
+## 🛠️ CLI Usage
+
+Manage extensions using `kairos-agent sysext` commands.
+
+
+> 📝 **Tip:** For enable, disable and remove commands, the extension name supports **regex matching**. You don’t need to type the full filename.
+> For example, to match `k3sv1.32.1.k3s0.sysext.raw`, you can simply use `k3s`.
+
+
+## Subcommands
+
+---
+
+### 📥 `download`
+
+Downloads a system extension and stores it on the node.
+
+```
+kairos-agent sysext download <URI>
+```
+
+**Supported URI formats:**
+
+- `https://` – Download a raw disk image from a remote server
+- `http://` – Same as above, unencrypted
+- `file://` – Load a local disk image file
+- `oci://` – Download from an OCI-compatible container registry
+
+> ⚠️ **Important Notes:**
+> - `http(s)` and `file://` URIs must point directly to a raw disk image file.
+> - `oci://` support is **alpha-stage** and may change.
+> - When using `oci://`, the disk image must be **embedded inside the OCI image layer**.
+
+---
+
+### ✅ `enable`
+
+Enable an extension for a specific boot profile:
+
+```
+kairos-agent sysext enable --active my-extension
+```
+
+**Supported profile flags:**
+- `--active`
+- `--passive`
+- `--recovery`
+- `--common`
+
+#### 🔄 Use `--now` for Immediate Activation
+
+```
+kairos-agent sysext enable --active --now my-extension
+```
+
+If the current boot mode matches, this also:
+- Creates a link in `/run/extensions/`
+- Reloads `systemd-sysext` so the extension is active *immediately*
+
+---
+
+### 🚫 `disable`
+
+Remove the symlink from the specified profile:
+
+```
+kairos-agent sysext disable --common my-extension
+```
+
+Add `--now` to also unload the extension if it's currently live:
+
+```
+kairos-agent sysext disable --common --now my-extension
+```
+
+---
+
+### 🧹 `remove`
+
+Deletes the extension completely—including **all symlinks** from any profile.
+
+```
+kairos-agent sysext remove my-extension
+```
+
+Use `--now` to deactivate it immediately as well:
+
+```
+kairos-agent sysext remove --now my-extension
+```
+
+> ⚠️ This is a **permanent wipe**. The extension will no longer be available for any boot profile.
+
+---
+
+### 📋 `list`
+
+- Without flags: lists all installed extensions
+- With a profile flag: lists extensions enabled for that boot profile
+
+```
+kairos-agent sysext list
+kairos-agent sysext list --recovery
+```
+
+---
+
+## 🧪 Example Workflow
+
+```bash
+# Download a disk image over HTTPS
+kairos-agent sysext download https://example.org/extensions/k3sv1.32.1.raw
+
+# Enable for the active profile and activate it live
+kairos-agent sysext enable --active --now k3s
+
+# See what’s currently enabled for active
+kairos-agent sysext list --active
+
+# Fully remove it and clean up live state
+kairos-agent sysext remove --now k3s
+```
+
+---
+
+## 🧼 Designed for Clean State Management
+
+- No duplication: all symlinks point to a single image
+- Reversible: simply unlink or remove to disable
+- `--now` lets you test and roll out changes live
+- All state reset at boot via ephemeral `/run/extensions`
 
 
 ### Boot workflow
 
-During boot, systemd-stub will copy and measure the system extensions from the proper directory according to the loaded EFI file (`/EFI/kairos/$EFI_FILE.efi.extra.d/`) and copy them into the initrd `/.extra/sysext` directory.
-[Immucore](https://github.com/kairos-io/immucore/) then will extract the public keys from the firmware and save them under `/run/verity.d` so the systemd extensions can be veried against those.
-Immucore will then verify those sysexts to see if they are signed and verity protected. If they are, they will be copied under `/run/extensions` and during the `initramfs` yip stage the `systemd-sysext` service will be run and they will be mounted in their proper directories.
+During boot, Immucore will identify under which boot state is running (active, passive, recovery) and will link the found extensions to the /run/extensions dir during initramfs. Then it will enable the systemd-sysext service so they are loaded correctly.
 
-The enablement of the system extensions service is done at the last step in the `initramfs` stage to not collide with anything in those stages writing to the directories under `/usr/local` (mounted from persistent partition), as some dirs get mounted as read only, they could collide with the stages writing to those dirs.
-
-So, if using binaries from the system extensions is needed during boot, make sure they are done after the `initramfs` stage. Otherwise, they wont be available in earlier stages.
+Under Trusted Boot, the extensions signature will be verified and if they dont match they will be ignored and a warning emitted under the logs at /run/immucore/.
 
 
 ### Known issues
@@ -216,9 +342,7 @@ So, if using binaries from the system extensions is needed during boot, make sur
 - Any folder that is mounted as a system extension will be mounted as read-only. So if your sysext is mounting `/usr/local/bin` to add binaries, it will be mounted as read-only. Other sysexts can be added and they will be merged correctly, but the final dir will be read-only. This is a limitation of the current systemd version (lower than 256) and will be addressed in future releases.
 - Only `/usr` can be extended. This is a design choice and might change in the future to allow other directories to be extended.
 - System extensions provided binaries are only available after the `initramfs` stage.
-- Any extensions bundled on the install media will be available in the `active` and `passive` boot entries. Any other custom entries will need to have the sysexts copied manually to the proper directory in the EFI partition.
-- `recovery` and `autoreset` boot entries have no extensions nor are planned to have. This is a Kairos design choice to keep the recovery environment as minimal as possible without anything that could break it.
-- Currently only signed+verity sysexts are supported.
+- Currently only signed+verity sysexts are supported under Trusted Boot (UKI). For non-uki Kairos, the signature is not enforced yet.
 - Sysexts need to be signed with the same key/cert as the ones used to sign the EFI files. As those are part of the system and available in the EFI firmware, we can extract the public part and verify the sysexts locally. Any of the PK, KEK or DB keys can be used to sign sysexts. This is planned to be expanded in the future to allow signing them with a different key/cert and provide the public keys as part of the install configuration so they can be verified.
 - Sysexts are mounted by the name order by trying to parse the name as a version and comparing it to others. This is done directly by systemd so be aware of the naming of your extensions and try to keep them in a versioned format. And example from systemd source code is provided as a guide:
 ```text

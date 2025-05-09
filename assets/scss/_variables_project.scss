@@ -6,6 +6,11 @@ Add styles or override variables from the theme here.
 
 $primary: #03153A;
 $secondary: #e1e5ee;
+$orange: #EE5007;
+$softer-orange: #FF7442;
+$softest-orange: #FB9E70;
+$white: #ffffff;
+$gray: #E2E7EB;
 $enable-gradients: true;
 $enable-rounded: false;
 $enable-shadows: true;
@@ -20,26 +25,21 @@ a {
 }
 
 a:hover {
-    color: #03153a;
-}
-
-// Disables text "Kairos" in the menu. Logo contains it already
-.td-navbar .navbar-brand__name {
-    display: none;
+    color: $primary;
 }
 
 .download-card-wrap i {
-    color: #EE5007;
+    color: $orange;
     margin-left: auto;
     font-size: 1rem;
 }
 
 .press-cards i {
-    color: #EE5007;
+    color: $orange;
     margin-left: 1rem;
     font-size: 0.7rem;
 }
 
 #basics-blade a {
-    color: #EE5007;
+    color: $orange;
 }

@@ -61,7 +61,7 @@ Below there is a detailed list of the stages available that can be used in the c
 | **Stage**                  | **Description**                                                                                                                                                                                                                                                                     |
 |----------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | _rootfs_                   | This is the earliest stage, running before switching root, just right after the root is mounted in /sysroot and before applying the immutable rootfs configuration. This stage is executed over initrd root, no chroot is applied.                                                  |
-| _initramfs_                | This is still an early stage, running before switching root. Here you can apply radical changes to the booting setup of Elemental. Despite this is executed before switching root this execution runs chrooted into the target root after the immutable rootfs is set up and ready. |
+| _initramfs_                | This is still an early stage, running before switching root. Here you can apply radical changes to the booting setup of Kairos. Despite this is executed before switching root this execution runs chrooted into the target root after the immutable rootfs is set up and ready. |
 | _boot_                     | This stage is executed after initramfs has switched root, during the systemd bootup process.                                                                                                                                                                                        |
 | _fs_                       | This stage is executed when fs is mounted and is guaranteed to have access to the state and persistent partitions ( `COS_STATE`  and  `COS_PERSISTENT` respectively).                                                                                                               |
 | _network_                  | This stage is executed when network is available                                                                                                                                                                                                                                    |
@@ -118,7 +118,7 @@ stages:
         - systemctl stop qemu-guest-agent
 ```
 
-Notice how we set the stage to be `boot.after`. That will run immediately after the `boot` stage has run, so we dont have to know where it will run and play with trying to disable it in the same stage and run into race problems, we cna just use that substage to make sure that our configs runs after the default system ones.
+Notice how we set the stage to be `boot.after`. That will run immediately after the `boot` stage has run, so we dont have to know where it will run and play with trying to disable it in the same stage and run into race problems, we can just use that substage to make sure that our configs runs after the default system ones.
 
 All the mentioned stages (`rootfs`, `initramfs`, `boot`, `fs`, `reconcile` and `network`) have `STAGE.before` and `STAGE.after` substages.
 
