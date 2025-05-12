@@ -49,7 +49,7 @@
                         <img src="{{ $logo.RelPermalink }}" alt="kairos alpine logo" loading="lazy"/>
                     </div>
                     <div>
-                        <a href="https://github.com/kairos-io/kairos/releases/download/{{$latestVersion}}/kairos-alpine-3.19-standard-amd64-generic-{{$latestVersion}}-k3s{{$k3sVersion}}.iso" target="_self" class="unclickable">
+                        <a href="https://github.com/kairos-io/kairos/releases/download/{{$latestVersion}}/kairos-alpine-3.21-standard-amd64-generic-{{$latestVersion}}-k3s{{$k3sVersion}}.iso" target="_self" class="unclickable">
                             <span>X86</span><span> version</span>
                             <i class="fa-solid fa-download"></i>
                         </a>
@@ -59,7 +59,7 @@
                         </a>
                         <dialog id="alpine-modal">
                             <div class="copied-alpine">Copied</div>
-                            <p>Please use the following docker command: </p><pre class="code-alpine">docker pull quay.io/kairos/alpine:3.19-standard-arm64-rpi4-{{$latestVersion}}-k3s{{$tagK3sVersion}}-img</pre><p></p>
+                            <p>Please use the following docker command: </p><pre class="code-alpine">docker pull quay.io/kairos/alpine:3.21-standard-arm64-rpi4-{{$latestVersion}}-k3s{{$tagK3sVersion}}-img</pre><p></p>
                             <p>You can find more information: <a href="https://kairos.io/docs/reference/image_matrix/#image-flavors" target="_blank">here</a></p>
                             <div class="modal-buttons">
                                 <button class="copy-to-clipboard-alpine plausible-event-name=Docker+Pull plausible-event-flavor=alpine plausible-event-flavor_release=3.19 plausible-event-version={{$latestVersion}}-k3s{{$tagK3sVersion}} plausible-event-arch=arm64 plausible-event-variant=standard plausible-event-model=rpi4">Copy Command</button>
