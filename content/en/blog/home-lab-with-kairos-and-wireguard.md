@@ -6,7 +6,7 @@ author: Dimitris Karakasilis([Personal page](https://dimitris.karakasilis.me)) (
 
 ## The problem
 
-You got yourself a Rabserry Pi (or more), and you want to put them to good use.
+You got yourself a Raspberry Pi (or more), and you want to put them to good use.
 You decide to make a Kubernetes cluster out of them, so that you can utilise the resources better, use familiar tools and implement infrastructure-as-code.
 
 Up to this point, kudos to you for demanding no less than a real cloud from your home infra.
