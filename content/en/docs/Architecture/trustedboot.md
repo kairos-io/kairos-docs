@@ -78,11 +78,16 @@ The keys are used to sign the UKI file, and to generate a PCR policy keypair req
 
 Check the relevant documentation on how to [extend the system with system extensions]({{%relref "/docs/advanced/sys-extensions" %}})
 
+### Trusted Boot - Boot Assessment
+
+See the [Trusted Boot - Boot Assessment]({{%relref "/docs/examples/boot_assessment_trusted_boot" %}}) documentation for more information on how to enable automatic boot assessment with Trusted Boot and how to make your own services participate in the boot assessment process.
+
 ### Considerations
 
 #### Booting command lines
 
 UKI file's signatures are including also the kernel command line, so any change to the kernel command line will require a new UKI file to be generated and the installer image to be rebuilt. This implies that you cannot change the booting options once the system is installed (and the system won't be able to access the encrypted data)
+
 
 ### References
 
