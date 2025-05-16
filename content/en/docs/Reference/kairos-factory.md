@@ -434,3 +434,15 @@ From there you can access the web UI by visiting `http://localhost:8080` in your
   alt="Kairos Web UI running on localhost:8080"
   width="75%"
 >}}
+
+## Factory API
+
+The Kairos Factory exposes a REST API that allows you to programmatically interact with the factory. The API documentation is available through a [ReDoc](https://github.com/Redocly/redoc) page that is served alongside the web UI.
+
+To access the API documentation, simply visit `http://localhost:8080/redoc.html` in your browser after starting the web server. The ReDoc page provides detailed information about:
+
+- Available API endpoints
+- Request/response formats
+- Example requests and responses
+
+This documentation is automatically generated from the OpenAPI/Swagger specifications and is kept up-to-date with the latest API changes.
