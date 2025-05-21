@@ -1,12 +1,12 @@
 {{ $color := "warning" }}
 {{ $baseURL := .Site.BaseURL }}
 {{ $latest_version := .Site.Params.latest_version }}
-{{ $url_latest_version := printf "%s%s/docs" $baseURL $latest_version }}
+{{ $url_latest_version := printf "%s/%s/docs" $baseURL $latest_version }}
 <!-- Check the variable that indicates whether this is an archived doc set.
   If yes, display a banner. -->
   {{ if .Site.Params.development }}
   <div class="pageinfo pageinfo-{{ $color }}">
-    <p>You are viewing the development docs which are in progress. For the latest stable documentation, click 
+    <p>You are viewing the development docs which are in progress. For the latest stable documentation, click
       <a href="{{ $url_latest_version | safeURL }}" target="_blank">here</a>.</p>
   </div>
 {{ end }}
