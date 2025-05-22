@@ -28,23 +28,12 @@ rm -rf "${publicpath}" || true
 
 npm install --save-dev autoprefixer postcss-cli postcss
 
-# list all branches to debug
-git fetch --no-recurse-submodules origin '+refs/heads/v*:refs/remotes/origin/*'
-# get all release branches
-releases=$(git branch -r | awk '/origin\/v[0-9]+\.[0-9]+\.[0-9]+/ {print $1}' | \
-    sort -V | \
-    awk -F'/' '{
-        version=$2
-        split(version, parts, ".")
-        minor_ver = parts[1]"."parts[2]
-        if (!latest[minor_ver] || parts[3] > latest_patch[minor_ver]) {
-            latest_patch[minor_ver] = parts[3]
-            latest[minor_ver] = $0
-        }
-    } END {
-        for (v in latest) print latest[v]
-    }' | sort -V
-)
+# Source the utils file
+source "${root_dir}/scripts/utils.sh"
+
+# Get all release branches
+releases=$(fetch_latest_releases)
+
 # build each release branch under public/vX.Y.Z
 for release in $releases; do
     # remove the release_ prefix
