@@ -36,8 +36,8 @@ releases=$(fetch_latest_releases)
 
 # build each release branch under public/vX.Y.Z
 for release in $releases; do
-    # remove the release_ prefix
-    version=$(echo $release | sed 's/origin\///')
+    # remove the prefix
+    version=$(echo $release | sed 's/origin\/release\///')
     git checkout go.sum go.mod package.json package-lock.json
     git checkout $release
     hugo mod get
