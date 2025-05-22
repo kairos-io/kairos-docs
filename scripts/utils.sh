@@ -7,7 +7,7 @@ fetch_all_releases() {
     git fetch --no-recurse-submodules origin '+refs/heads/v*:refs/remotes/origin/*'
     
     # Get all release branches
-    git branch -r | awk '/origin\/v[0-9]+\.[0-9]+\.[0-9]+/ {print $1}' | sort -V
+    git branch -r | awk '/origin\/release\/v[0-9]+\.[0-9]+\.[0-9]+/ {print $1}' | sort -V
 }
 
 # Function to fetch and process release branches
