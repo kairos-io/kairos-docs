@@ -9,6 +9,29 @@ binpath="${root_dir}/bin"
 publicpath="${root_dir}/public"
 current_commit="${COMMIT_REF:-$(git rev-parse --abbrev-ref HEAD)}"
 
+# Function to update the menu
+update_menu() {
+    echo "Updating hugo.toml menu..."
+    # check if the script exist locally otherwise download it from automate-release
+    if [ ! -f "${root_dir}/scripts/build-menu.sh" ]; then
+        echo "build-menu.sh not found locally, fetching from automate-release"
+        git fetch --no-recurse-submodules origin automate-release
+        git show origin/automate-release:scripts/build-menu.sh > "${root_dir}/scripts/build-menu.sh"
+        chmod +x "${root_dir}/scripts/build-menu.sh"
+    fi
+
+    # check if utils.sh exists locally and if not, fetch from automate-release
+    if [ ! -f "${root_dir}/scripts/utils.sh" ]; then
+        echo "utils.sh not found locally, fetching from automate-release"
+        git fetch --no-recurse-submodules origin automate-release
+        git show origin/automate-release:scripts/utils.sh > "${root_dir}/scripts/utils.sh"
+        chmod +x "${root_dir}/scripts/utils.sh"
+    fi
+
+    # run the script
+    "${root_dir}/scripts/build-menu.sh"
+}
+
 # Output the result
 echo "Branch: $BRANCH"
 echo "Environment: $environment"
@@ -31,26 +54,39 @@ npm install --save-dev autoprefixer postcss-cli postcss
 # Source the utils file
 source "${root_dir}/scripts/utils.sh"
 
-# Get all release branches
-releases=$(fetch_latest_releases)
+# Get latest release branches and sort them from newest to oldest
+echo "Fetching releases..."
+releases=$(fetch_latest_releases | sort -Vr)
+echo "Found releases: $releases"
 
 # build each release branch under public/vX.Y.Z
 for release in $releases; do
     # remove the prefix
     version=$(echo $release | sed 's/origin\/release\///')
+    echo "Building version: $version"
+    if [[ -n $(git ls-files --others --exclude-standard "${root_dir}/scripts") ]]; then
+        git clean -fd -- "${root_dir}/scripts"
+    fi
     git checkout go.sum go.mod package.json package-lock.json
     git checkout $release
     hugo mod get
     hugo mod graph
-    HUGO_ENV="${CONTEXT}" hugo --buildFuture --gc -b "${BASE_URL}/$version" -d "${publicpath}/$version"
+    update_menu
+    HUGO_ENV="${CONTEXT}" hugo --buildFuture --minify --gc -b "${BASE_URL}/$version" -d "${publicpath}/$version"
+    # Update menu after each release build
+    git restore hugo.toml
 done
 
+if [[ -n $(git ls-files --others --exclude-standard "${root_dir}/scripts") ]]; then
+    git clean -fd -- "${root_dir}/scripts"
+fi
 git checkout go.sum go.mod package.json package-lock.json
 # build the main branch under public
 git checkout $current_commit
 hugo mod get
 hugo mod graph
 # CONTEXT is set by netlify
+update_menu
 HUGO_ENV="${CONTEXT}" hugo --buildFuture --minify --gc -b "${BASE_URL}" -d "${publicpath}"
 
 cp -rf CNAME "${publicpath}"

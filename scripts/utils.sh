@@ -16,7 +16,7 @@ fetch_latest_releases() {
     # Get all releases and process them to keep only latest patch per minor version
     fetch_all_releases | \
     awk -F'/' '{
-        version=$2
+        version=$3
         split(version, parts, ".")
         minor_ver = parts[1]"."parts[2]
         if (!latest[minor_ver] || parts[3] > latest_patch[minor_ver]) {
