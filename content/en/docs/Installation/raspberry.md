@@ -15,7 +15,7 @@ Model 5 is currently not supported because of how we use U-boot to boot the devi
 {{% /alert %}}
 
 
-If you are not familiar with the process, it is suggested to follow the [quickstart]({{< relref "../../quick-start/" >}}) first to see how Kairos works.
+If you are not familiar with the process, it is suggested to follow the [quickstart]({{< ref "getting-started" >}}) first to see how Kairos works.
 
 ## Prerequisites
 
