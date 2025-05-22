@@ -1,6 +1,7 @@
 ---
 title: "Build a Kairos Image and Upgrade Your Cluster"
 linkTitle: "Building & Upgrading"
+versionBanner: "false"
 weight: 3
 description: |
     Kairos is an immutable OS so we cannot install new packages on a running system. Instead, adding packages is achieved by building a container image and upgrading the node with it.
@@ -115,18 +116,18 @@ Yes you can! Boot into the passive (fallback) system, and apply an upgrade with 
 
 Check other ways to upgrade Kairos
 
-<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "../upgrade/" >}}">
+<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "../docs/upgrade/" >}}">
     Upgrade Guide
 </a>
 
 Create your own Kairos Flavor
 
-<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "../reference/build-from-scratch/" >}}">
+<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "../docs/reference/build-from-scratch/" >}}">
     Build from Scratch Guide
 </a>
 
 Got stuck?
 
-<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "../reference/troubleshooting/" >}}">
+<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "../docs/reference/troubleshooting/" >}}">
     Troubleshooting Guide
 </a>

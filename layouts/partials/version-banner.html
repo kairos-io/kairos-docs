@@ -1,3 +1,4 @@
+{{ if not (eq .Page.Params.versionBanner "false") }}
 {{ $color := "warning" }}
 {{ $baseURL := .Site.BaseURL }}
 {{ $latest_version := .Site.Params.latest_version }}
@@ -19,4 +20,5 @@
       For the latest release, click
       <a href="{{ $url_latest_version | safeURL }}" target="_blank">here</a>.</p>
   </div>
+{{ end }}
 {{ end }}

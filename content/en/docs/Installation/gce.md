@@ -7,7 +7,7 @@ description: Install Kairos on Google Cloud
 ---
 
 This page describes how to install Kairos on Google Cloud after you have created a disk image. Since release v3.3.1, Kairos pipeline is pushing a public OS image to Google Cloud which you can use.
-If you want to build a custom image, you can follow the instructions in the [Build Kairos appliances]({{< relref "../advanced/build" >}}) page.
+If you want to build a custom image, you can follow the instructions in the [Build Kairos appliances]({{< ref "build" >}}) page.
 
 ## Prerequisites
 
@@ -59,7 +59,7 @@ gcloud compute connect-to-serial-port kairos-vm-test
 
 [(disconnect with `<Enter>~.`)](https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console#disconnecting_from_the_serial_console)
 
-By passing a file to `--metadata-from-file=user-data=<your_file_here>` you can pass a cloud config to Kairos. You should at least specify a user and a password (or SSH key) if you need to SSH to the instance (Check the [Getting started]({{< relref "../Getting started/" >}}) page for some examples).
+By passing a file to `--metadata-from-file=user-data=<your_file_here>` you can pass a cloud config to Kairos. You should at least specify a user and a password (or SSH key) if you need to SSH to the instance (Check the [Getting started]({{< ref "getting-started" >}}) page for some examples).
 
 When the instance boots for the first time, it boots into "auto-reset mode" by default. This means, that Kairos will "install" itself on the first boot and then reboot.
 You can specify a different image to be installed using a block like the following in the cloud config:

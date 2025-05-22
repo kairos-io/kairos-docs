@@ -8,7 +8,7 @@ description: |
 
 ## Installation media
 
-Download the Kairos ISO of your choice. See the [Getting Started guide]({{< relref "../Getting started/" >}}) for more information.
+Download the Kairos ISO of your choice. See the [Getting Started guide]({{< ref "getting-started" >}}) for more information.
 
 When deploying on a bare metal server, directly flash the image into a USB stick. There are multiple ways to do this:
 

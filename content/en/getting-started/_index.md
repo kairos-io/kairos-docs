@@ -1,9 +1,13 @@
 ---
-title: "Getting Started with Kairos: Deploy Immutable Linux for Edge Kubernetes"
+title: "Getting Started"
 linkTitle: "Getting Started"
-weight: 1
+versionBanner: "false"
 icon: fa-regular fa-flag-checkered
+weight: 1
 no_list: true
+menu:
+  main:
+    weight: 10
 description: |
     Step-by-step guide to deploying Kairos, the best immutable Linux distribution for edge Kubernetes clusters.
 ---
@@ -137,7 +141,7 @@ Congratulations :tada: You have successfully deployed a Kubernetes cluster using
 
 **How do I configure the system?**
 
-You can configure the system by editing the cloud-config file. The cloud-config file is located at `/oem/90_custom.yaml`. You can edit this file to add users, SSH keys, and other configurations. See the [Cloud Config documentation]({{< relref "../reference/configuration" >}}) for more information.
+You can configure the system by editing the cloud-config file. The cloud-config file is located at `/oem/90_custom.yaml`. You can edit this file to add users, SSH keys, and other configurations. See the [Cloud Config documentation]({{< relref "../docs/reference/configuration" >}}) for more information.
 
 **What is a Kairos flavor?**
 
@@ -200,6 +204,6 @@ Find out about the features in Kairos, the goals that drive our project and how 
 
 Want to install on bare-metal? A Raspberry Pi? A cloud provider? Check out our other installation guides.
 
-<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "../installation" >}}">
+<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "../docs/installation" >}}">
     Other ways to install Kairos
 </a>

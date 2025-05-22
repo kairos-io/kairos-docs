@@ -103,7 +103,7 @@ development = true
 # renovate: datasource=github-releases depName=kairos-io/provider-kairos
 provider_version = "v2.10.3"
 # renovate: datasource=github-releases depName=k3s-io/k3s
-k3s_version = "v1.32.1+k3s1"
+k3s_version = "v1.32.3+k3s1"
 kairos_version = "master"
 # renovate: datasource=github-releases depName=kairos-io/osbuilder
 osbuilder_version = "v0.401.0"
