@@ -1,6 +1,7 @@
 ---
 title: "Configuring your newly deployed Kairos cluster"
 linkTitle: "Configuration"
+versionBanner: "false"
 weight: 2
 description: |
   Learn the basics of configuring an immutable OS like Kairos
@@ -216,12 +217,12 @@ Ok, but how do I add a package?
 
 What other configuration options are available?
 
-<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "../Reference/configuration" >}}">
+<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "../docs/Reference/configuration" >}}">
     Configuration Reference
 </a>
 
 Learn more about the immutable architecture of Kairos
 
-<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "../Architecture/immutable" >}}">
+<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "../docs/Architecture/immutable" >}}">
     Immutable OS
 </a>

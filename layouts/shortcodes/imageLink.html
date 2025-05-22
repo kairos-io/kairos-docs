@@ -1,5 +1,11 @@
 <div class="meta-distro">
-    <a href="https://github.com/kairos-io/kairos/releases/download/{{- $.Page.Site.Params.softwareVersions.kairos_version -}}/kairos-@flavor-@flavorRelease-
+    <!-- if the current version == master then use the latest_version -->
+    {{ $kairosVersion := $.Page.Site.Params.softwareVersions.kairos_version }}
+    {{ if eq $kairosVersion "master" }}
+        {{ $kairosVersion = $.Page.Site.Params.latest_version }}
+    {{ end }}
+    {{ $kairosVersion = $kairosVersion | safeHTML }}
+    <a href="https://github.com/kairos-io/kairos/releases/download/{{- $kairosVersion -}}/kairos-@flavor-@flavorRelease-
 {{- with .Get "variant" -}}{{- . -}}{{- end -}}
 -
 {{- if eq (.Get "arch") "" -}}
@@ -14,7 +20,7 @@
     {{- .Get "model" -}}
 {{- end -}}
 -
-{{- $.Page.Site.Params.softwareVersions.kairos_version -}}
+{{- $kairosVersion -}}
 {{- if eq (.Get "variant") "standard" -}}
     -k3s{{$.Page.Site.Params.softwareVersions.k3s_version | safeHTML }}
 {{- end -}}
@@ -35,7 +41,7 @@
     {{- .Get "model" -}}
 {{- end -}}
 -
-{{- $.Page.Site.Params.softwareVersions.kairos_version -}}
+{{- $kairosVersion -}}
 {{- if eq (.Get "variant") "standard" -}}
     -k3s{{$.Page.Site.Params.softwareVersions.k3s_version | safeHTML }}
 {{- end -}}

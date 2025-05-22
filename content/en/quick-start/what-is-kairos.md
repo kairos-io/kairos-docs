@@ -1,6 +1,7 @@
 ---
 title: "What is Kairos?"
 linkTitle: "What is Kairos?"
+versionBanner: "false"
 weight: 2
 description: |
     Find out about the features in Kairos, the goals that drive our project and how to join our community.
@@ -37,10 +38,10 @@ Try Kairos today and experience the benefits of a unified, cloud-native approach
 Our key features include are
 
 - [Immutability]({{< ref "immutable" >}}): ensure your infrastructure stays consistent with atomic upgrades
-- [Trusted Boot]({{< relref "../architecture/trustedboot" >}}): stay safe by limiting the operating systems allowed to boot on your systems
-- [Container-based]({{< relref "../architecture/container" >}}): manage your nodes as apps in containers for maximum flexibility and portability
-- [P2P Mesh]({{< relref "../architecture/network" >}}): self-coordinated, automated, no interaction Kubernetes deployments with Peer-2-Peer technology
-- [Meta-Distribution]({{< relref "../architecture/meta" >}}): choose your preferred Linux distribution. If we don't have it, you can probably build it yourself!
+- [Trusted Boot]({{< relref "../docs/architecture/trustedboot" >}}): stay safe by limiting the operating systems allowed to boot on your systems
+- [Container-based]({{< relref "../docs/architecture/container" >}}): manage your nodes as apps in containers for maximum flexibility and portability
+- [P2P Mesh]({{< relref "../docs/architecture/network" >}}): self-coordinated, automated, no interaction Kubernetes deployments with Peer-2-Peer technology
+- [Meta-Distribution]({{< relref "../docs/architecture/meta" >}}): choose your preferred Linux distribution. If we don't have it, you can probably build it yourself!
 
 More features
 
@@ -133,5 +134,5 @@ That will generate an ISO file under the build dir that you can use.
 
 ## What's next?
 
-- [Different ways to install Kairos]({{< relref "../installation" >}})
-- [Upgrading]({{< relref "../upgrade" >}})
+- [Different ways to install Kairos]({{< relref "../docs/installation" >}})
+- [Upgrading]({{< relref "../docs/upgrade" >}})

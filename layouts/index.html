@@ -53,7 +53,7 @@
     </header>
 
 
-    {{ partial "content.html" . }}
+    {{ partial "homepage-content.html" . }}
     {{ partial "footer.html" . }}
     {{ $built := resources.Get "js/index.js" | js.Build (dict "minify" "true" "params" (dict "kairosVersion" $.Page.Site.Params.softwareVersions.kairos_version "k3sVersion" $.Page.Site.Params.softwareVersions.k3s_version)) | resources.Fingerprint "sha512" }}
     <script type="module" src="{{ $built.RelPermalink }}" integrity="{{ $built.Data.Integrity }}" defer></script>
