@@ -75,6 +75,18 @@ for release in $releases; do
     # remove the blog and community directories
     rm -rf "content/en/blog"
     rm -rf "content/en/community"
+    # append the main blog and community links to hugo.toml
+    echo "[[menu.main]]" >> "hugo.toml"
+    echo "  name = \"Community\"" >> "hugo.toml"
+    echo "  weight = 40" >> "hugo.toml"
+    echo "  url = \"/community/\"" >> "hugo.toml"
+    echo "" >> "hugo.toml"
+    echo "[[menu.main]]" >> "hugo.toml"
+    echo "  name = \"Blog\"" >> "hugo.toml"
+    echo "  weight = 50" >> "hugo.toml"
+    echo "  url = \"/blog/\"" >> "hugo.toml"
+    echo "" >> "hugo.toml"
+
     HUGO_ENV="${CONTEXT}" hugo --buildFuture --minify --gc -b "${BASE_URL}/$version" -d "${publicpath}/$version"
     # Update menu after each release build
     git restore hugo.toml
@@ -83,7 +95,7 @@ done
 if [[ -n $(git ls-files --others --exclude-standard "${root_dir}/scripts") ]]; then
     git clean -fd -- "${root_dir}/scripts"
 fi
-git checkout go.sum go.mod package.json package-lock.json
+git checkout go.sum go.mod package.json package-lock.json content/en/blog content/en/community
 # build the main branch under public
 git checkout $current_commit
 hugo mod get
