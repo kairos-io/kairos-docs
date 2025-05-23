@@ -72,6 +72,9 @@ for release in $releases; do
     hugo mod get
     hugo mod graph
     update_menu
+    # remove the blog and community directories
+    rm -rf "content/en/blog"
+    rm -rf "content/en/community"
     HUGO_ENV="${CONTEXT}" hugo --buildFuture --minify --gc -b "${BASE_URL}/$version" -d "${publicpath}/$version"
     # Update menu after each release build
     git restore hugo.toml
