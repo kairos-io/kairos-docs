@@ -12,19 +12,19 @@ current_commit="${COMMIT_REF:-$(git rev-parse --abbrev-ref HEAD)}"
 # Function to update the menu
 update_menu() {
     echo "Updating hugo.toml menu..."
-    # check if the script exist locally otherwise download it from automate-release
+    # check if the script exist locally otherwise download it from main
     if [ ! -f "${root_dir}/scripts/build-menu.sh" ]; then
-        echo "build-menu.sh not found locally, fetching from automate-release"
-        git fetch --no-recurse-submodules origin automate-release
-        git show origin/automate-release:scripts/build-menu.sh > "${root_dir}/scripts/build-menu.sh"
+        echo "build-menu.sh not found locally, fetching from main"
+        git fetch --no-recurse-submodules origin main
+        git show origin/main:scripts/build-menu.sh > "${root_dir}/scripts/build-menu.sh"
         chmod +x "${root_dir}/scripts/build-menu.sh"
     fi
 
-    # check if utils.sh exists locally and if not, fetch from automate-release
+    # check if utils.sh exists locally and if not, fetch from main
     if [ ! -f "${root_dir}/scripts/utils.sh" ]; then
-        echo "utils.sh not found locally, fetching from automate-release"
-        git fetch --no-recurse-submodules origin automate-release
-        git show origin/automate-release:scripts/utils.sh > "${root_dir}/scripts/utils.sh"
+        echo "utils.sh not found locally, fetching from main"
+        git fetch --no-recurse-submodules origin main
+        git show origin/main:scripts/utils.sh > "${root_dir}/scripts/utils.sh"
         chmod +x "${root_dir}/scripts/utils.sh"
     fi
 
