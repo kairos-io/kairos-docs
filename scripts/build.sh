@@ -75,6 +75,7 @@ for release in $releases; do
     # remove the blog and community directories
     rm -rf "content/en/blog"
     rm -rf "content/en/community"
+    rm -rf "content/en/getting-started"
     # append the main getting started, blog and community links to hugo.toml
     echo "[[menu.main]]" >> "hugo.toml"
     echo "  name = \"Getting Started\"" >> "hugo.toml"
@@ -93,14 +94,15 @@ for release in $releases; do
     echo "" >> "hugo.toml"
 
     HUGO_ENV="${CONTEXT}" hugo --buildFuture --minify --gc -b "${BASE_URL}/$version" -d "${publicpath}/$version"
-    # Update menu after each release build
-    git restore hugo.toml content/en/blog content/en/community
+    
+    # restore files, and do not fail if the files are not found
+    git restore go.sum go.mod package.json package-lock.json hugo.toml content/en/blog content/en/community
+    git restore content/en/getting-started || true
 done
 
 if [[ -n $(git ls-files --others --exclude-standard "${root_dir}/scripts") ]]; then
     git clean -fd -- "${root_dir}/scripts"
 fi
-git checkout go.sum go.mod package.json package-lock.json
 # build the main branch under public
 git checkout $current_commit
 hugo mod get
