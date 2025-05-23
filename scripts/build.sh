@@ -75,7 +75,12 @@ for release in $releases; do
     # remove the blog and community directories
     rm -rf "content/en/blog"
     rm -rf "content/en/community"
-    # append the main blog and community links to hugo.toml
+    # append the main getting started, blog and community links to hugo.toml
+    echo "[[menu.main]]" >> "hugo.toml"
+    echo "  name = \"Getting Started\"" >> "hugo.toml"
+    echo "  weight = 10" >> "hugo.toml"
+    echo "  url = \"https://kairos.io/getting-started/\"" >> "hugo.toml"
+    echo "" >> "hugo.toml"
     echo "[[menu.main]]" >> "hugo.toml"
     echo "  name = \"Community\"" >> "hugo.toml"
     echo "  weight = 40" >> "hugo.toml"
