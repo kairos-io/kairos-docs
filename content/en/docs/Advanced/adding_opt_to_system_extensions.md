@@ -20,11 +20,11 @@ This can be done by configuring the environment variable `SYSTEMD_SYSEXT_HIERARC
 
 > ⚠️ **Caution:** Once `/opt` is included in the sysext overlay, the directory becomes read-only as soon as any system extension mounts a `/opt` subtree. This can break applications or scripts expecting to write to `/opt`.
 >
-> As of systemd 257, there is no way to mark overlay hierarchies as mutable. However, upstream efforts are underway to address this in systemd 258 and beyond, allowing finer control over the mutability of sysext mount points.
+> As of systemd 255, there is no way to mark overlay hierarchies as mutable. However, upstream efforts are underway to address this in systemd 256 and beyond, allowing finer control over the mutability of sysext mount points.
 
 ---
 
-## Enabling `/opt` in sysext: Cloud-Init Configuration
+## Enabling `/opt` in System Extensions: Cloud-Init Configuration
 
 To allow system extensions to provide content under `/opt`, you can modify the `systemd-sysext` configuration using Kairos cloud config.
 
