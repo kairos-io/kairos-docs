@@ -706,3 +706,72 @@ And then run:
 ```bash
 docker run -v "$PWD"/aurora.yaml:/aurora.yaml --rm -ti --net host quay.io/kairos/auroraboot /aurora.yaml
 ```
+
+
+## Booting with UKI and Secure Boot via EFI Key Enrollment
+
+AuroraBoot now supports booting **Unified Kernel Images (UKI)** with **Secure Boot**. This process relies on enrolling platform keys at boot time via a helper binary (`efi-key-enroller`) and involves a two-stage PXE boot process. This feature is useful for environments enforcing Secure Boot, allowing boot and installation of Kairos from a signed UKI ISO.
+
+> **Note**: Currently, only PXE boot has been tested and validated for this setup. HTTP boot support exists but has not been thoroughly tested.
+
+## How it Works
+
+> **Note**: To use this feature, the machine needs to start in "setup" mode, which means secure boot is disabled and there are no keys enrolled in the firmware. Otherwise the machine won't boot the UKI ISO, as it will not be able to enroll the keys.
+
+### Stage 1: PXE Boot and Key Enrollment
+
+1. The machine boots via PXE and executes `efi-key-enroller`.
+2. The enroller:
+    - Enrolls the provided `PK`, `KEK`, and `db` EFI keys (in `.auth` format).
+    - Creates an EFI boot entry pointing to the Kairos UKI ISO. Sets its priority to ensure it boots first.
+    - Sets two EFI variables:
+        - One marking this as a PXE boot (`kairos.pxe=1`).
+        - One storing the ISO URL for use by the agent.
+
+3. The machine reboots and boots into the UKI ISO.
+
+### Stage 2: Kairos Agent Installation
+
+4. The system boots fully from the UKI ISO into memory.
+5. The Kairos agent:
+    - Reads the EFI variables to detect PXE context.
+    - Re-downloads the ISO to perform the installation.
+    - Upon success, it cleans up:
+        - Removes the temporary EFI variables.
+        - Deletes the EFI boot entry.
+
+> ⚠️ **Memory Requirements**: The ISO is downloaded **twice** (once for booting, once for installation). Ensure sufficient memory is available to hold the ISO and run Kairos from memory simultaneously.
+
+---
+
+## Preparing the Boot Environment
+
+You must provide:
+
+- A **UKI-formatted Kairos ISO**
+- A directory of EFI keys (`PK`, `KEK`, `db`) in `.auth` format
+
+Example directory structure:
+
+```text
+keys/
+├── db.auth
+├── kek.auth
+└── pk.auth
+```
+
+Start AuroraBoot with:
+
+```bash
+uki-pxe --key-dir $KEY_DIR --iso-file $TRUSTED_BOOT_ISO
+```
+
+This serves both the `efi-key-enroller` and the ISO over HTTP.
+
+---
+
+## Resources
+
+- [kairos-agent PR #791](https://github.com/kairos-io/kairos-agent/pull/791)
+- [AuroraBoot PR #276](https://github.com/kairos-io/AuroraBoot/pull/276)
+- [efi-key-enroller repo](https://github.com/kairos-io/efi-key-enroller)
