@@ -714,20 +714,16 @@ AuroraBoot now supports booting **Unified Kernel Images (UKI)** with **Secure Bo
 
 > **Note**: Currently, only PXE boot has been tested and validated for this setup. HTTP boot support exists but has not been thoroughly tested.
 
-<p align="center">
-  <img src="/images/uki-secure-boot-flow.png" alt="PXE UKI Secure Boot Flow" style="max-width: 50%; height: auto;">
-  <br>
-  <em>PXE UKI Workflow</em>
-</p>
-
 ## How it Works
+
+> **Note**: To use  this feature, the machine needs to start in "setup" mode, which means secure boot is disabled and there is no keys in the firmware. Otherwise the machine wont boot the UKI ISO, as it will not be able to enroll the keys.
 
 ### Stage 1: PXE Boot and Key Enrollment
 
 1. The machine boots via PXE and executes `efi-key-enroller`.
 2. The enroller:
     - Enrolls the provided `PK`, `KEK`, and `db` EFI keys (in `.auth` format).
-    - Creates an EFI boot entry pointing to the Kairos UKI ISO.
+    - Creates an EFI boot entry pointing to the Kairos UKI ISO. Sets its priority to ensure it boots first.
     - Sets two EFI variables:
         - One marking this as a PXE boot (`kairos.pxe=1`).
         - One storing the ISO URL for use by the agent.
