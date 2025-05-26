@@ -76,7 +76,7 @@ The keys are used to sign the UKI file, and to generate a PCR policy keypair req
 
 ### Expanding the system with system extensions
 
-Check the relevant documentation on how to [extend the system with system extensions]({{%relref "/docs/advanced/sys-extensions" %}})
+Check the relevant documentation on how to [extend the system with system extensions]({{%relref "/docs/advanced/sys-extensions" %}}) and how to [use /opt with system extensions]({{%relref "/docs/advanced/adding_opt_to_system_extensions" %}}).
 
 ### Trusted Boot - Boot Assessment
 
