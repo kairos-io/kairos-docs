@@ -45,7 +45,7 @@ Our key features include are
 
 More features
 
-- Easily create multi-node Kubernetes clusters with [K3s](https://k3s.io), and enjoy all of [K3s](https://k3s.io)'s features
+- Easily create multi-node Kubernetes clusters with [K3s](https://k3s.io), or [k0s](https://k0sproject.io/)
 - Upgrade manually via CLI or with Kubernetes, and use container registries for distribution upgrades
 - Enjoy the benefits of an immutable distribution that stays configured to your needs
 - Configure nodes with a single cloud-init config file for added simplicity
@@ -83,15 +83,14 @@ Useful links:
 
 You can find us at:
 
-- [#Kairos-io at matrix.org](https://matrix.to/#/#kairos-io:matrix.org)
-- [IRC #kairos in libera.chat](https://web.libera.chat/#kairos)
 - [GitHub Discussions](https://github.com/kairos-io/kairos/discussions)
+- [CNCF Slack #kairos channel](https://slack.cncf.io/#kairos)
 
 ### Project Office Hours
 
 Project Office Hours is an opportunity for attendees to meet the maintainers of the project, learn more about the project, ask questions, learn about new features and upcoming updates.
 
-Office hours are happening weekly on Monday - 15:30 – 16:00pm UTC. [Meeting link](https://meet.jit.si/kairos-community-meetings-362341)
+Office hours are happening weekly on Monday - 15:30 – 16:30pm UTC. [Meeting link](https://meet.google.com/qvg-bbve-tgj)
 
 ## Alternatives
 

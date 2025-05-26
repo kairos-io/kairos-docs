@@ -27,12 +27,27 @@ As we saw in the previous section on how to configure Kairos, it is not possible
 Start by creating a file called `Dockerfile` with the following content
 
 ```
-FROM quay.io/kairos/ubuntu:24.04-standard-amd64-generic-v3.1.2-k3sv1.30.4-k3s1 
+ARG BASE_IMAGE=ruby:3.4.4-bookworm # The ruby image is based on Debian bookworm, you can do the same with any of your images as long as they use a supported distro
 
-RUN apt-get update && apt-get install -y ruby
+FROM quay.io/kairos/kairos-init:v0.4.8 AS kairos-init
+
+FROM ${BASE_IMAGE} AS base-kairos
+ARG VARIANT=standard          # we want kubernetes, otherwise core
+ARG MODEL=generic             # we will run as an amd64 VM
+ARG TRUSTED_BOOT=false
+ARG KUBERNETES_DISTRO=k3s     # alternatively k0s
+ARG KUBERNETES_VERSION=latest
+ARG FRAMEWORK_VERSION=v2.22.0 # https://github.com/kairos-io/kairos-framework
+ARG VERSION=v1.0.0
+
+COPY --from=kairos-init /kairos-init /kairos-init
+RUN /kairos-init -f "${FRAMEWORK_VERSION}" -l debug -s install -m "${MODEL}" -v "${VARIANT}" -t "${TRUSTED_BOOT}" -k "${KUBERNETES_DISTRO}" --k8sversion "${KUBERNETES_VERSION}" --version "${VERSION}"
+RUN /kairos-init -f "${FRAMEWORK_VERSION}" -l debug -s init -m "${MODEL}" -v "${VARIANT}" -t "${TRUSTED_BOOT}" -k "${KUBERNETES_DISTRO}" --k8sversion "${KUBERNETES_VERSION}" --version "${VERSION}"
+RUN /kairos-init -f "${FRAMEWORK_VERSION}" -l debug --validate -m "${MODEL}" -v "${VARIANT}" -t "${TRUSTED_BOOT}" -k "${KUBERNETES_DISTRO}" --k8sversion "${KUBERNETES_VERSION}" --version "${VERSION}"
+RUN rm /kairos-init
 ```
 
-We base our own image on the Kairos image, then we proceed to install the `ruby` package. This would be done differently depending on the package manager of the flavor of your choosing.
+The Dockerfile above creates a Kairos image by using a multi-stage build. It starts with the kairos-init container which provides the initialization tools, then uses your chosen base distribution (in this example, a Ruby image based on Debian Bookworm) and configures it with Kairos components. You can specify various build arguments to customize the image, such as which Kubernetes distribution to use (k3s or k0s), whether to include Kubernetes at all (standard vs core variant), the model (e.g. generic for amd64 VMs), trusted boot settings, and which version of the Kairos framework to use. The build process involves three steps using kairos-init: installation, initialization, and validation.
 
 Now we build the image
 
@@ -73,7 +88,7 @@ The answer to this will depend on your setup but here are two things to keep in 
 
 **What if I don't want to base my image on the Kairos released artifacts?**
 
-No problem, just [build your image from scratch](/reference/build-from-scratch/)
+No problem, just [build your image from scratch](/reference/kairos-factory/)
 
 **Can I easily rollback an upgrade?**
 
