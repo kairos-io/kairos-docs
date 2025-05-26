@@ -716,7 +716,7 @@ AuroraBoot now supports booting **Unified Kernel Images (UKI)** with **Secure Bo
 
 ## How it Works
 
-> **Note**: To use  this feature, the machine needs to start in "setup" mode, which means secure boot is disabled and there are no keys enrolled in the firmware. Otherwise the machine wont boot the UKI ISO, as it will not be able to enroll the keys.
+> **Note**: To use this feature, the machine needs to start in "setup" mode, which means secure boot is disabled and there are no keys enrolled in the firmware. Otherwise the machine won't boot the UKI ISO, as it will not be able to enroll the keys.
 
 ### Stage 1: PXE Boot and Key Enrollment
 
