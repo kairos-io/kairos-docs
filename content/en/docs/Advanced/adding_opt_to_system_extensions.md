@@ -28,7 +28,7 @@ As of systemd 255, there is no way to mark overlay hierarchies as mutable. Howev
 
 To allow system extensions to provide content under `/opt`, you can modify the `systemd-sysext` configuration using Kairos cloud config.
 
-Below is an example cloud-init YAML you can embed in your OEM configuration or custom image. It ensures that `/opt` is registered as a sysext hierarchy both in normal and Tusted Boot installations. In here we are overriding the existing files to include the `/opt` directory in the `SYSTEMD_SYSEXT_HIERARCHIES` environment variable that Kairos sets by default.
+Below is an example cloud-init YAML you can embed in your OEM configuration or custom image. It ensures that `/opt` is registered as a sysext hierarchy both in normal and Trusted Boot installations. In here we are overriding the existing files to include the `/opt` directory in the `SYSTEMD_SYSEXT_HIERARCHIES` environment variable that Kairos sets by default.
 
 ```yaml
 name: "sysext using /opt"
