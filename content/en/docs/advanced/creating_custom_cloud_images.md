@@ -61,7 +61,7 @@ Once you have a base image, you can customize it by:
 3. Adding custom services
 4. Including additional files
 
-See the [Customizing Images]({{< ref "/docs/advanced/customizing" >}}) guide for detailed instructions.
+See the [Customizing Images]({{< ref "customizing.md" >}}) guide for detailed instructions.
 
 ## Step 3: Building Bootable Images with AuroraBoot
 
@@ -79,7 +79,7 @@ docker run -v "$PWD"/build:/tmp/auroraboot \
 ```
 
 {{% alert title="Note" color="info" %}}
-For more details about AuroraBoot options and configurations, see the [AuroraBoot documentation]({{< ref "/docs/reference/auroraboot" >}}).
+For more details about AuroraBoot options and configurations, see the [AuroraBoot documentation]({{< ref "auroraboot.md" >}}).
 {{% /alert %}}
 
 ### State Partition Sizing
@@ -129,13 +129,13 @@ As explained in the section above, sizing the state partition properly is import
 ## Step 5: Building for Specific Platforms
 
 ### AWS
-To install on AWS, follow the [AWS Guide]({{< ref "/docs/installation/aws" >}}).
+To install on AWS, follow the [AWS Guide]({{< ref "aws.md" >}}).
 
 ### Google Cloud
-To install on Google Cloud, follow the [Google Cloud Installation Guide]({{< ref "/docs/installation/gce" >}}).
+To install on Google Cloud, follow the [Google Cloud Installation Guide]({{< ref "gce.md" >}}).
 
 ### Microsoft Azure
-For Azure deployments, see the [Azure Installation Guide]({{< ref "/docs/installation/azure" >}}).
+For Azure deployments, see the [Azure Installation Guide]({{< ref "azure.md" >}}).
 
 ## Troubleshooting
 
@@ -146,6 +146,6 @@ Common issues and solutions:
 
 ## Next Steps
 
-- [Customizing Images]({{< ref "/docs/advanced/customizing" >}})
-- [AuroraBoot Reference]({{< ref "/docs/reference/auroraboot" >}})
-- [Cloud Configuration Reference]({{< ref "/docs/reference/configuration" >}}) 
+- [Customizing Images]({{< ref "customizing.md" >}})
+- [AuroraBoot Reference]({{< ref "auroraboot.md" >}})
+- [Cloud Configuration Reference]({{< ref "configuration.md" >}}) 

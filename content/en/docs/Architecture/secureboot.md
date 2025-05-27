@@ -1,6 +1,7 @@
 ---
 title: "SecureBoot support"
 linkTitle: "SecureBoot support"
+description: Learn how Kairos supports Secure Boot using signed artifacts to ensure system integrity across distributions.
 weight: 3
 date: 2024-01-29
 ---

@@ -4,7 +4,7 @@ linkTitle: "What is Kairos?"
 versionBanner: "false"
 weight: 2
 description: |
-    Find out about the features in Kairos, the goals that drive our project and how to join our community.
+    Discover Kairos’ core features, guiding principles, and how to get involved with the project.
 ---
 
 Kairos is a cloud-native Linux meta-distribution for running Kubernetes. It brings the power of the public cloud to your on-premises environment. With Kairos, you can build your own cloud with complete control and no vendor lock-in.

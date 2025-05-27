@@ -6,7 +6,7 @@ description: Learn how to customize Kairos images to suit your needs
 ---
 
 {{% alert title="Note" color="info" %}}
-This guide focuses on customizing Kairos images. For a complete guide on creating custom cloud images from scratch, including when and how to apply these customizations, see [Creating Custom Cloud Images]({{< ref "/docs/advanced/creating_custom_cloud_images" >}}).
+This guide focuses on customizing Kairos images. For a complete guide on creating custom cloud images from scratch, including when and how to apply these customizations, see [Creating Custom Cloud Images]({{< ref "creating_custom_cloud_images.md" >}}).
 {{% /alert %}}
 
 Kairos is an open source, container-based operating system. To modify Kairos and add a package, you'll need to build a container image from the [Kairos images]({{< relref "../reference/image_matrix" >}}). Here's an example with Docker which adds `figlet`:

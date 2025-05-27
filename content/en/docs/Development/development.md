@@ -3,7 +3,7 @@ title: "Development notes"
 linkTitle: "Development"
 weight: 1
 date: 2022-11-13
-description: Guidelines when developing Kairos
+description: Learn how to contribute to Kairos by exploring its development practices, debugging tools, and supported hardware.
 ---
 
 Here you can find development notes intended for maintainers and guidance for new contributors.

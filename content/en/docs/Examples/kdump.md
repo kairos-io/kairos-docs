@@ -32,7 +32,7 @@ This is why we need a clean initramfs that disables most of the modules and moun
 
 ### Building the custom derivative
 
-We will keep this short as there is more docs about building your own derivatives than what we can go in this tutorial like the [Customizing page]({{%relref "/docs/advanced/customizing" %}})
+We will keep this short as there is more docs about building your own derivatives than what we can go in this tutorial like the [Customizing page]({{< ref "customizing.md" >}})
 
 The main step is to build a clean initrd that has the kdump module and can mount persistent to store the kernel dump.
 
@@ -84,7 +84,7 @@ $ docker build -t kdump-kairos .
 
 ### Build an iso from that artifact
 
-Again, this tutorial does not cover this part deeply as there are docs providing a deep insight onto this like the [AuroraBoot page]({{%relref "/docs/reference/auroraboot" %}})
+Again, this tutorial does not cover this part deeply as there are docs providing a deep insight onto this like the [AuroraBoot page]({{< ref "auroraboot.md" >}})
 
 ```bash
 $ docker run -v "$PWD"/build-iso:/tmp/auroraboot -v /var/run/docker.sock:/var/run/docker.sock --rm -ti quay.io/kairos/auroraboot --set container_image="docker://kdump-kairos" --set "disable_http_server=true" --set "disable_netboot=true" --set "state_dir=/tmp/auroraboot"
@@ -99,7 +99,7 @@ Then we burn the resulting ISO to a dvd or usb stick and boot it normally.
 
 **In order to have kdump working properly, we need to reserve a chunk of memory from the system so it can dump correctly**. Several tools exist for this like `kdumptool` which will give us some approximated values to reserve if running on the machine. A safe value might be `512M high` and `72M low`
 
-This values need to be passed to the kernel in the cmdline so kdump knows what memory it has to work with. The easiest way is to set the `install.grub_options.extra_cmdline` value in the [cloud-config]({{%relref "/docs/reference/configuration" %}}) during install.
+This values need to be passed to the kernel in the cmdline so kdump knows what memory it has to work with. The easiest way is to set the `install.grub_options.extra_cmdline` value in the [cloud-config]({{< ref "configuration.md" >}}) during install.
 
 ```yaml
 #cloud-config

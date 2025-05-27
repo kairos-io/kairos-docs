@@ -4,7 +4,7 @@ linkTitle: "Examples"
 icon: fa-regular fa-file
 weight: 5
 description: |
-    Here, you will find a variety of examples that demonstrate how to use Kairos to create and manage Kubernetes clusters on bare metal.
+    Explore hands-on examples that show how to deploy Kairos clusters using K3s, bundles, VPNs, airgapped environments, and more.
 ---
 
 ## Troubleshooting

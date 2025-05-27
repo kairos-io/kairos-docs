@@ -4,5 +4,5 @@ linkTitle: "Reference"
 icon: fa-regular fa-book
 weight: 6
 description: |
-    Everything you need to operate your Kairos nodes and a bit more!
+    Access essential reference materials for configuring, building, and troubleshooting Kairos nodes and images.
 ---

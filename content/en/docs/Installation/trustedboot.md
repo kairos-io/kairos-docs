@@ -1,6 +1,7 @@
 ---
 title: "Trusted Boot Installations"
 linkTitle: "Trusted Boot"
+description: Learn how to enable Trusted Boot with Secure Boot, full disk encryption, and measured boot to protect systems from tampering.
 weight: 6
 date: 2022-11-13
 ---

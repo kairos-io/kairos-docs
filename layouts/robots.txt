@@ -1,0 +1,11 @@
+User-agent: *
+Sitemap: {{ "sitemap.xml" | absURL }}
+{{ range where .Pages "Params.sitemap_exclude" "eq" true }}
+Disallow: {{ .RelPermalink }}{{ end }}
+
+{{/* LLMS */}}
+{{- $llmsGoTXT := resources.Get "llms.go.txt" -}}
+{{- if and $llmsGoTXT .Site.Params.robots.llmsTXT -}}
+  {{- $llmsTXT := $llmsGoTXT | resources.ExecuteAsTemplate "llms.txt" . -}}
+  llms-txt: {{ $llmsTXT.Permalink }}
+{{- end -}} 

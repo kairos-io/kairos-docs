@@ -9,7 +9,7 @@ menu:
   main:
     weight: 10
 description: |
-    Step-by-step guide to deploying Kairos, the best immutable Linux distribution for edge Kubernetes clusters.
+    Learn how to deploy Kairos, the immutable Linux distribution designed for secure and resilient Kubernetes clusters at the edge.
 ---
 
 {{% alert title="Objective" color="success" %}}
@@ -192,7 +192,7 @@ Kairos uses providers to install Kubernetes distributions. The Kairos provider i
 
 Ready to configure your newly deployed Kairos node?
 
-<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "./configuration" >}}">
+<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< ref "initial-configuration.md" >}}">
     Quick configuration guide
 </a>
 
