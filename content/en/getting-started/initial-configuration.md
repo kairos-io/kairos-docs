@@ -4,7 +4,7 @@ linkTitle: "Configuration"
 versionBanner: "false"
 weight: 2
 description: |
-  Learn the basics of configuring an immutable OS like Kairos
+    Learn how to configure a fresh Kairos deployment with essential settings for secure and effective operation.
 ---
 
 {{% alert title="Objective" color="success" %}}

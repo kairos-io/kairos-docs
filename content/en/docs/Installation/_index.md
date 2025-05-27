@@ -4,6 +4,6 @@ linkTitle: "Installation"
 icon: fa-regular fa-computer
 weight: 2
 description: |
-    There are many ways to install Kairos on a system. This section will teach you about each of them.
+    Discover multiple ways to install Kairos across cloud, bare metal, and virtualized environments.
 ---
 

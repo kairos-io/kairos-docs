@@ -3,7 +3,7 @@ title: "Architecture"
 linkTitle: "Architecture"
 weight: 1
 date: 2022-11-13
-description: Kairos internal architecture
+description: Explore the internal design of Kairos and how its modular, container-based approach supports secure, reproducible infrastructure.
 ---
 
 This section contains refrences to how Kairos works internally.

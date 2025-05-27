@@ -7,12 +7,12 @@ description: Install Kairos on Google Cloud
 ---
 
 This page describes how to install Kairos on Google Cloud after you have created a disk image. Since release v3.3.1, Kairos pipeline is pushing a public OS image to Google Cloud which you can use.
-If you want to build a custom image, you can follow the instructions in the [Build Kairos appliances]({{< ref "build" >}}) page.
+If you want to build a custom image, you can follow the instructions in the [Creating Custom Cloud Images]({{< ref "creating_custom_cloud_images.md" >}}) page.
 
 ## Prerequisites
 
 - A Google Cloud account with permissions to create VMs.
-- A Google Cloud compatible image of Kairos. You can use the public image provided by Kairos (see below) or [build your own image]({{< ref "/docs/Reference/auroraboot.md#generate-raw-disk-images" >}}) and upload it to your google project ([check how the Kairos CI does it](https://github.com/kairos-io/kairos/blob/48d5c2bc8fc5555263f799db8a3388d7d46cd559/.github/workflows/upload-cloud-images.yaml#L36-L89)).
+- A Google Cloud compatible image of Kairos. You can use the public image provided by Kairos (see below) or [build your own image]({{< ref "auroraboot.md" >}}) and upload it to your google project ([check how the Kairos CI does it](https://github.com/kairos-io/kairos/blob/48d5c2bc8fc5555263f799db8a3388d7d46cd559/.github/workflows/upload-cloud-images.yaml#L36-L89)).
 
 ## Deploy a VM
 

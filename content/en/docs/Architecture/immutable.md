@@ -1,6 +1,7 @@
 ---
 title: "Immutable"
 linkTitle: "Immutable"
+description: "Learn about Kairos' immutable architecture design, where the system boots in a restricted, permissionless mode with read-only paths. Discover how this approach enhances security, simplifies maintenance, and enables predictable upgrades across your infrastructure."
 weight: 1
 date: 2022-11-13
 ---
@@ -55,9 +56,9 @@ Kairos after installation will create the following partitions:
 
 The persistent partition is mounted during boot on `/usr/local`, and additional paths are mount-bind to it. Those configuration aspects are defined in a [cloud-config](https://github.com/kairos-io/packages/blob/9b49d6aacd554cd990c87b63de1221328bbcdb81/packages/static/kairos-overlay-files/files/system/oem/00_rootfs.yaml#L18) file. It is possible to override such configuration, via a custom cloud-config, during installation.
 
-The Recovery system allows to perform emergency tasks, in case of failure from the active and passive images. Furthermore a fallback mechanism will take place, so that in case of failures the booting sequence will be as follows: “A -> B -> Recovery”.
+The Recovery system allows to perform emergency tasks, in case of failure from the active and passive images. Furthermore a fallback mechanism will take place, so that in case of failures the booting sequence will be as follows: "A -> B -> Recovery".
 
-The upgrade happens in a transition image and takes place only after all the necessary steps are completed. An upgrade of the ‘A/B’ partitions can be done [with Kubernetes](/docs/upgrade/kubernetes) or [manually](/docs/upgrade/manual). The upgrade will create a new pristine image, that will be selected as active for the next reboot, the old one will be flagged as passive. If we are performing the same from the passive system, only the active is subject to changes.
+The upgrade happens in a transition image and takes place only after all the necessary steps are completed. An upgrade of the 'A/B' partitions can be done [with Kubernetes](/docs/upgrade/kubernetes) or [manually](/docs/upgrade/manual). The upgrade will create a new pristine image, that will be selected as active for the next reboot, the old one will be flagged as passive. If we are performing the same from the passive system, only the active is subject to changes.
 
 ### Kernel and Initrd
 

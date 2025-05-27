@@ -1,6 +1,7 @@
 ---
 title: "kairosctl"
 linkTitle: "kairosctl"
+description: Learn how to use kairosctl to register nodes, generate tokens, and manage VPN connections securely and efficiently.
 weight: 3
 date: 2022-11-13
 ---

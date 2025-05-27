@@ -7,12 +7,12 @@ description: Install Kairos on Microsoft Azure
 ---
 
 This page describes how to install Kairos on [Microsoft Azure](https://azure.microsoft.com/) after you have created a disk image. Since release v3.3.5, Kairos pipeline is pushing a public OS image to Azure which you can use.
-If you want to build a custom image, you can follow the instructions in the [Build Kairos appliances]({{< relref "../advanced/build" >}}) page.
+If you want to build a custom image, you can follow the instructions in the [Creating Custom Cloud Images]({{< ref "creating_custom_cloud_images.md" >}}) page.
 
 ## Prerequisites
 
 - An Azure account with permissions to create VMs.
-- An Azure compatible image of Kairos. You can use the public image provided by Kairos (see below) or [build your own image]({{< ref "/docs/Reference/auroraboot.md#generate-raw-disk-images" >}}) (for Azure, that would be the `.vhd` format) and upload it to your Azure resource group ([check how the Kairos CI does it](https://github.com/kairos-io/kairos/blob/cbc6e033cda624e61b2050439b1a95c04fbe78de/.github/workflows/upload-cloud-images.yaml#L158-L241)).
+- An Azure compatible image of Kairos. You can use the public image provided by Kairos (see below) or [build your own image]({{< ref "auroraboot.md" >}}#generate-raw-disk-images) (for Azure, that would be the `.vhd` format) and upload it to your Azure resource group ([check how the Kairos CI does it](https://github.com/kairos-io/kairos/blob/cbc6e033cda624e61b2050439b1a95c04fbe78de/.github/workflows/upload-cloud-images.yaml#L158-L241)).
 
 ## Deploy a VM
 
@@ -38,7 +38,7 @@ There are multiple options to select for your VM. We suggest you choose a size t
 - An OS disk size of 30Gb or more (3 times the image size + some more for persistent storage). Don't go with the "Image default" because the disk needs to be large enough to accommodate for active, passive and recovery system.
 - Public inbound port for SSH (if you intend to SSH to the machine later).
 
-Under the "Advanced" tab, click on "Enable user data". In the field that is opened, you can put your [Kairos configuration]({{< ref "/docs/Reference/configuration.md" >}}).
+Under the "Advanced" tab, click on "Enable user data". In the field that is opened, you can put your [Kairos configuration]({{< ref "configuration.md" >}}).
 
 When the instance boots for the first time, it will boot into "auto-reset mode" by default. This means, that Kairos will "install" itself on the first boot and then reboot.
 You can specify a different image to be installed using a block like the following in the cloud config section:

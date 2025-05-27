@@ -1,6 +1,7 @@
 ---
 title: "Stage modules"
 linkTitle: "Stage modules"
+description: Explore built-in modules for DNS, users, files, and services that help you customize Kairos via cloud-init during boot stages.
 weight: 3
 date: 2024-09-19
 ---
