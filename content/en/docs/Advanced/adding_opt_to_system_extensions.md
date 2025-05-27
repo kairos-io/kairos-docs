@@ -1,12 +1,12 @@
 ---
-title: "Using `/opt` with System Extensions"
-linkTitle: "Using `/opt` with System Extensions"
+title: "Using /opt with System Extensions"
+linkTitle: "Using /opt with System Extensions"
 weight: 3
 ---
 
-## Using `/opt` with System Extensions
+## Using /opt with System Extensions
 
-By default, Kairos does not include `/opt` as a system extension (`sysext`) overlay hierarchy. This is because in normal runtime, `/opt` is writable and bind-mounted to the persistent partition—allowing users and applications to freely write data that persists across reboots.
+By default, Kairos does not include `/opt` as a system extension (`sysext`) overlay hierarchy. This is because in normal runtime, `/opt` is writable and bind-mounted to the persistent partition, allowing users and applications to freely write data that persists across reboots.
 
 However, when a system extension is loaded that includes a `/opt` hierarchy, the behavior of that directory changes: it becomes **read-only**, overridden by the overlay from the system extension image. This is a consequence of how `systemd-sysext` currently operates and reflects a known upstream limitation.
 
@@ -16,11 +16,11 @@ If your use case includes deploying system extensions that provide optional soft
 
 This can be done by configuring the environment variable `SYSTEMD_SYSEXT_HIERARCHIES` to include `/opt`, and ensuring that the `systemd-sysext` service uses this setting both at runtime and in the initramfs phase.
 
-### Important Caveat
+{{% alert title="⚠️" color="warning" %}}
+Once `/opt` is included in the sysext overlay, the directory becomes read-only as soon as any system extension mounts a `/opt` subtree. This can break applications or scripts expecting to write to `/opt`.
 
-> ⚠️ **Caution:** Once `/opt` is included in the sysext overlay, the directory becomes read-only as soon as any system extension mounts a `/opt` subtree. This can break applications or scripts expecting to write to `/opt`.
->
-> As of systemd 255, there is no way to mark overlay hierarchies as mutable. However, upstream efforts are underway to address this in systemd 256 and beyond, allowing finer control over the mutability of sysext mount points.
+As of systemd 255, there is no way to mark overlay hierarchies as mutable. However, upstream efforts are underway to address this in [systemd 256](https://www.freedesktop.org/software/systemd/man/latest/systemd-sysext.html#Mutability) and beyond, allowing finer control over the mutability of sysext mount points.
+{{% /alert %}}
 
 ---
 
@@ -28,7 +28,7 @@ This can be done by configuring the environment variable `SYSTEMD_SYSEXT_HIERARC
 
 To allow system extensions to provide content under `/opt`, you can modify the `systemd-sysext` configuration using Kairos cloud config.
 
-Below is an example cloud-init YAML you can embed in your OEM configuration or custom image. It ensures that `/opt` is registered as a sysext hierarchy both in normal and Trusted Boot installations. In here we are overriding the existing files to include the `/opt` directory in the `SYSTEMD_SYSEXT_HIERARCHIES` environment variable that Kairos sets by default.
+Below is an example cloud-init YAML you can embed in your OEM configuration or custom image. It ensures that `/opt` is registered as a sysext hierarchy both in normal and Tusted Boot installations. In here we are overriding the existing files to include the `/opt` directory in the `SYSTEMD_SYSEXT_HIERARCHIES` environment variable that Kairos sets by default.
 
 ```yaml
 name: "sysext using /opt"
