@@ -69,7 +69,7 @@ for release in $releases; do
     fi
     git checkout go.sum go.mod package.json package-lock.json
     git checkout $release
-    hugo mod get
+    hugo mod tidy
     hugo mod graph
     update_menu
     # remove the blog and community directories
@@ -105,7 +105,7 @@ if [[ -n $(git ls-files --others --exclude-standard "${root_dir}/scripts") ]]; t
 fi
 # build the main branch under public
 git checkout $current_commit
-hugo mod get
+hugo mod tidy
 hugo mod graph
 # CONTEXT is set by netlify
 update_menu
