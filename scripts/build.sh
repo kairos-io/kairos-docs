@@ -110,7 +110,16 @@ hugo mod graph
 # CONTEXT is set by netlify
 update_menu
 HUGO_ENV="${CONTEXT}" hugo --buildFuture --minify --gc -b "${BASE_URL}" -d "${publicpath}"
+# print the contents of the llms.txt file inside the public directory
+if [ -f "${publicpath}/llms.txt" ]; then
+    echo "Contents of llms.txt:"
+    cat "${publicpath}/llms.txt"
+else
+    echo "llms.txt not found in public directory."
+fi
 
+echo "Copying CNAME file to public directory"
+cat CNAME
 cp -rf CNAME "${publicpath}"
 
 # print the contents of the llms.txt file inside the public directory
