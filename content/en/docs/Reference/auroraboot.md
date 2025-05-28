@@ -706,39 +706,22 @@ docker run -v "$PWD"/aurora.yaml:/aurora.yaml --rm -ti --net host quay.io/kairos
 ```
 
 
-## Booting with UKI and Secure Boot via EFI Key Enrollment
+## Booting with UKI and Secure Boot via HTTP Boot
 
-AuroraBoot now supports booting **Unified Kernel Images (UKI)** with **Secure Boot**. This process relies on enrolling platform keys at boot time via a helper binary (`efi-key-enroller`) and involves a two-stage PXE boot process. This feature is useful for environments enforcing Secure Boot, allowing boot and installation of Kairos from a signed UKI ISO.
+AuroraBoot now supports booting **Unified Kernel Images (UKI)** with **Secure Boot**. This process relies on using HTTP Boot to enroll the necessary keys and boot the UKI ISO directly as a UEFI 2.5 feature.
 
-> **Note**: Currently, only PXE boot has been tested and validated for this setup. HTTP boot support exists but has not been thoroughly tested.
+> **Note**: This is available on AuroraBoot v0.8.1 and later, and requires Kairos version 3.5.X or higher.
+> Currently, only HTTP boot has been tested and validated for this setup. PXE booting with UKI and Secure Boot is not yet supported and probably wont be.
 
 ## How it Works
 
 > **Note**: To use this feature, the machine needs to start in "setup" mode, which means secure boot is disabled and there are no keys enrolled in the firmware. Otherwise the machine won't boot the UKI ISO, as it will not be able to enroll the keys.
 
-### Stage 1: PXE Boot and Key Enrollment
-
-1. The machine boots via PXE and executes `efi-key-enroller`.
-2. The enroller:
-    - Enrolls the provided `PK`, `KEK`, and `db` EFI keys (in `.auth` format).
-    - Creates an EFI boot entry pointing to the Kairos UKI ISO. Sets its priority to ensure it boots first.
-    - Sets two EFI variables:
-        - One marking this as a PXE boot (`kairos.pxe=1`).
-        - One storing the ISO URL for use by the agent.
-
-3. The machine reboots and boots into the UKI ISO.
-
-### Stage 2: Kairos Agent Installation
-
+1. The machine boots HTTP Boot and loads the ISO.
+2. The ISO is loaded on memory and booted and systemd-boot enrolls the keys from the ISO into the firmware, allowing the UKI to boot and enabling Secure Boot.
+3. The machine reboots and HTTP boots the UKI ISO again, this time with Secure Boot enabled.
 4. The system boots fully from the UKI ISO into memory.
-5. The Kairos agent:
-    - Reads the EFI variables to detect PXE context.
-    - Re-downloads the ISO to perform the installation.
-    - Upon success, it cleans up:
-        - Removes the temporary EFI variables.
-        - Deletes the EFI boot entry.
-
-> ⚠️ **Memory Requirements**: The ISO is downloaded **twice** (once for booting, once for installation). Ensure sufficient memory is available to hold the ISO and run Kairos from memory simultaneously.
+5. The Kernel maps the ISO from the memory and presents it to the OS like any other media, allowing the OS to use it as an install source like if we booted from a USB stick or a CD-ROM.
 
 ---
 
@@ -746,25 +729,13 @@ AuroraBoot now supports booting **Unified Kernel Images (UKI)** with **Secure Bo
 
 You must provide:
 
-- A **UKI-formatted Kairos ISO**
-- A directory of EFI keys (`PK`, `KEK`, `db`) in `.auth` format
+- A **Trusted Boot Kairos ISO**
 
-Example directory structure:
-
-```text
-keys/
-├── db.auth
-├── kek.auth
-└── pk.auth
-```
-
-Start AuroraBoot with:
+For example if your ISO is at `/opt/images/kairos-uki.iso`, start AuroraBoot with:
 
 ```bash
-uki-pxe --key-dir $KEY_DIR --iso-file $TRUSTED_BOOT_ISO
+docker run --privileged -v /opt/images/:/aurora --rm -ti quay.io/kairos/auroraboot uki-pxe /aurora/kairos-uki.iso
 ```
-
-This serves both the `efi-key-enroller` and the ISO over HTTP.
 
 ---
 
