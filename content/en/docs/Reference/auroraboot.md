@@ -708,14 +708,19 @@ docker run -v "$PWD"/aurora.yaml:/aurora.yaml --rm -ti --net host quay.io/kairos
 
 ## Booting with UKI and Secure Boot via HTTP Boot
 
-AuroraBoot now supports booting **Unified Kernel Images (UKI)** with **Secure Boot**. This process relies on using HTTP Boot to enroll the necessary keys and boot the UKI ISO directly as a UEFI 2.5 feature.
+{{% alert title="Version support" color="warning" %}}
+This feature is available on AuroraBoot v0.8.1 and later, and requires Kairos version 3.5.x or higher.
+Currently, only HTTP boot has been tested and validated for this setup. PXE booting with UKI and Secure Boot is not yet supported and probably wont be.
+{{% /alert %}}
 
-> **Note**: This is available on AuroraBoot v0.8.1 and later, and requires Kairos version 3.5.X or higher.
-> Currently, only HTTP boot has been tested and validated for this setup. PXE booting with UKI and Secure Boot is not yet supported and probably wont be.
+AuroraBoot supports netbooting **Trusted Boot Images (UKI)**. This process relies on using HTTP Boot to enroll the necessary keys and boot the UKI ISO directly as a virtual CDROM which is a UEFI 2.5 feature.
+
 
 ## How it Works
 
-> **Note**: To use this feature, the machine needs to start in "setup" mode, which means secure boot is disabled and there are no keys enrolled in the firmware. Otherwise the machine won't boot the UKI ISO, as it will not be able to enroll the keys.
+{{% alert title="Info" color="info" %}}
+To use this feature, the machine needs to start in "setup" mode, which means secure boot is disabled and there are no keys enrolled in the firmware. Otherwise the machine won't boot the UKI ISO, as it will not be able to enroll the keys.
+{{% /alert %}}
 
 1. The machine boots HTTP Boot and loads the ISO.
 2. The ISO is loaded on memory and booted and systemd-boot enrolls the keys from the ISO into the firmware, allowing the UKI to boot and enabling Secure Boot.
