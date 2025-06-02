@@ -8,7 +8,7 @@ description: Install Kairos on RaspberryPi 3 and 4
 
 Kairos supports Raspberry Pi model 3 and 4 with 64bit architecture.
 
-If you are not familiar with the process, it is suggested to follow the [quickstart]({{< relref "../Getting started" >}}) first to see how Kairos works.
+If you are not familiar with the process, it is suggested to follow the [quickstart](/getting-started/) first to see how Kairos works.
 
 ## Prerequisites
 
