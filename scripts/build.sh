@@ -76,6 +76,7 @@ for release in $releases; do
     rm -rf "content/en/blog"
     rm -rf "content/en/community"
     rm -rf "content/en/getting-started"
+    rm -rf "content/en/docs/Getting started"
     # append the main getting started, blog and community links to hugo.toml
     echo "[[menu.main]]" >> "hugo.toml"
     echo "  name = \"Getting Started\"" >> "hugo.toml"
@@ -98,6 +99,7 @@ for release in $releases; do
     # restore files, and do not fail if the files are not found
     git restore go.sum go.mod package.json package-lock.json hugo.toml content/en/blog content/en/community
     git restore content/en/getting-started || true
+    git restore content/en/docs/Getting\ started || true
 done
 
 if [[ -n $(git ls-files --others --exclude-standard "${root_dir}/scripts") ]]; then
