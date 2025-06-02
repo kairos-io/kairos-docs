@@ -6,9 +6,11 @@ date: 2022-11-13
 description: Install Kairos with p2p support
 ---
 
-{{% alert title="Network" color="warning" %}}
-This feature is experimental and has only been tested on local setups. Run in production servers at your own risk.
+{{% alert title="Note" %}}
+
+This feature is crazy and experimental! Do not run in production servers. 
 Feedback and bug reports are welcome, as we are improving the p2p aspects of Kairos.
+
 {{% /alert %}}
 
 Deploying Kubernetes at the Edge can be a complex and time-consuming process, especially when it comes to setting up and managing multiple clusters. To make this process easier, Kairos leverages peer-to-peer technology to automatically coordinate and create Kubernetes clusters without the need of a control management interface.
@@ -24,7 +26,7 @@ You can find full examples in our [examples section]({{< relref "../examples" >}
 - [Multi-node, HA setup]({{< relref "../examples/multi-node-p2p-ha" >}})
 - [Single-node setup]({{< relref "../examples/single-node-p2p" >}})
 
-This feature is currently experimental and can be optionally enabled by adding the following configuration to the node deployment file. If you are not familiar with the installation process, it is suggested to follow the [quickstart]({{< relref "../Getting started" >}}):
+This feature is currently experimental and can be optionally enabled by adding the following configuration to the node deployment file. If you are not familiar with the installation process, it is suggested to follow the [quickstart](/getting-started/):
 
 ```yaml
 p2p:
@@ -71,7 +73,7 @@ p2p:
 
 The `p2p` block is used to configure settings related to the mesh functionalities. The minimum required argument is the `network_token` and there is no need to configure `k3s` manually with the `k3s` block as it is already implied.
 
-{{% alert title="Note" color="success" %}}
+{{% alert title="Note" %}}
 
 The `k3s` block can still be used to override other `k3s` settings, e.g. `args`.
 
