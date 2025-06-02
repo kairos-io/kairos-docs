@@ -1,6 +1,7 @@
 ---
 title: "Reset a node"
 linkTitle: "Reset"
+description: Discover how to reset a Kairos node using boot options, Kubernetes integration, or recovery tools while preserving config data.
 weight: 4
 date: 2022-11-13
 ---

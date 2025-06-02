@@ -69,7 +69,7 @@ for release in $releases; do
     fi
     git checkout go.sum go.mod package.json package-lock.json
     git checkout $release
-    hugo mod get
+    hugo mod tidy
     hugo mod graph
     update_menu
     # remove the blog and community directories
@@ -105,12 +105,31 @@ if [[ -n $(git ls-files --others --exclude-standard "${root_dir}/scripts") ]]; t
 fi
 # build the main branch under public
 git checkout $current_commit
-hugo mod get
+hugo mod tidy
 hugo mod graph
 # CONTEXT is set by netlify
 update_menu
+# remove llms.txt from public directory if it exists
+rm -rf "${publicpath}/llms.txt"
 HUGO_ENV="${CONTEXT}" hugo --buildFuture --minify --gc -b "${BASE_URL}" -d "${publicpath}"
+# print the contents of the llms.txt file inside the public directory
+if [ -f "${publicpath}/llms.txt" ]; then
+    echo "Contents of llms.txt:"
+    cat "${publicpath}/llms.txt"
+else
+    echo "llms.txt not found in public directory."
+fi
 
+echo "Copying CNAME file to public directory"
+cat CNAME
 cp -rf CNAME "${publicpath}"
+
+# print the contents of the llms.txt file inside the public directory
+if [ -f "${publicpath}/llms.txt" ]; then
+    echo "Contents of llms.txt:"
+    cat "${publicpath}/llms.txt"
+else
+    echo "llms.txt not found in public directory."
+fi
 
 set +x

@@ -1,6 +1,7 @@
 ---
 title: "Takeover"
 linkTitle: "Takeover"
+description: Learn how to enable Trusted Boot support in Kairos, which combines FDE, Secure Boot, and Measured Boot to protect your system from tampering and cold attacks.
 weight: 7
 date: 2022-11-13
 ---

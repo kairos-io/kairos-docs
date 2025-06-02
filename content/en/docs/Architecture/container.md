@@ -1,6 +1,7 @@
 ---
 title: "Container based"
 linkTitle: "Container"
+description: Discover how Kairos delivers its entire OS as a container image, enabling predictable upgrades and simple version control.
 weight: 2
 date: 2022-11-13
 ---

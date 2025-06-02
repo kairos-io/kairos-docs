@@ -12,7 +12,7 @@ The feature is experimental and API is likely going to be subject to changes, do
 {{% /alert %}}
 
 {{% alert title="Note" color="info" %}}
-This guide provides detailed information about building Kairos images. For a complete guide on creating custom cloud images, including when and how to use these build methods, see [Creating Custom Cloud Images]({{< ref "/docs/advanced/creating_custom_cloud_images" >}}).
+This guide provides detailed information about building Kairos images. For a complete guide on creating custom cloud images, including when and how to use these build methods, see [Creating Custom Cloud Images]({{< ref "creating_custom_cloud_images.md" >}}).
 {{% /alert %}}
 
 This documentation section describes how the Kairos Kubernetes Native API extensions can be used to build custom appliances or booting medium for Kairos.

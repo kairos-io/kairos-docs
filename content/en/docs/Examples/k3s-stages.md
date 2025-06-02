@@ -26,7 +26,7 @@ Some use cases require a stage to run after the K3s servers are up, such as appl
 
 ### Building the custom derivative
 
-We will keep this short as there are more docs that go more in-depth into building your derivatives than this tutorial such as the [Customizing page]({{%relref "/docs/advanced/customizing" %}}).
+We will keep this short as there are more docs that go more in-depth into building your derivatives than this tutorial such as the [Customizing page]({{< ref "customizing.md" >}}).
 
 The main step is to create an image that has the systemd units we need to run our stages.
 
@@ -77,7 +77,7 @@ $ docker build -t k3s-stage-kairos .
 
 ### Build an iso from that artifact
 
-Again, this tutorial does not cover this part deeply as there already are docs that provide a deep insight into custom images such as the the [AuroraBoot page]({{%relref "/docs/reference/auroraboot" %}}).
+Again, this tutorial does not cover this part deeply as there already are docs that provide a deep insight into custom images such as the the [AuroraBoot page]({{< ref "auroraboot.md" >}}).
 
 ```bash
 $ docker run -v "$PWD"/build-iso:/tmp/auroraboot -v /var/run/docker.sock:/var/run/docker.sock --rm -ti quay.io/kairos/auroraboot --set container_image="docker://k3s-stage-kairos" --set "disable_http_server=true" --set "disable_netboot=true" --set "state_dir=/tmp/auroraboot"

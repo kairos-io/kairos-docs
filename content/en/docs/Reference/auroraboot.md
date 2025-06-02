@@ -6,7 +6,7 @@ description: Reference documentation for AuroraBoot, a tool for generating boota
 ---
 
 {{% alert title="Note" color="info" %}}
-This is the reference documentation for AuroraBoot. For a complete guide on creating custom cloud images, including how to use AuroraBoot in the context of a full workflow, see [Creating Custom Cloud Images]({{< ref "/docs/advanced/creating_custom_cloud_images" >}}).
+This is the reference documentation for AuroraBoot. For a complete guide on creating custom cloud images, including how to use AuroraBoot in the context of a full workflow, see [Creating Custom Cloud Images]({{< ref "creating_custom_cloud_images.md" >}}).
 {{% /alert %}}
 
 **AuroraBoot** is a tool designed to make the process of bootstrapping Kairos machines quick, simple and efficient. It is specifically designed for the Kairos operating system and provides a comprehensive solution for downloading required artifacts and provisioning a machine, both from network or manually via flashing to USB stick. 
@@ -604,10 +604,8 @@ docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos
 
 ### Generate RAW disk images
 
-AuroraBoot can generate raw disk images (BIOS/EFI) that can be used as cloud images (for example as AWS AMI images) or QEMU.
-
 {{% alert title="Note" color="success" %}}
-This method differs from the ones documented in the [Build raw images with QEMU]({{< ref "/docs/Reference/build_raw_images_with_qemu" >}}). The raw disk images created with AuroraBoot don't run any installation steps and are ready to use. If you need to run installation steps in order to customize your installation flow, please use the [QEMU example]({{< ref "/docs/Reference/build_raw_images_with_qemu" >}}).
+This method differs from the ones documented in the [Build raw images with QEMU]({{< ref "build_raw_images_with_qemu.md" >}}) section: this method is suitable if you need to create appliances that have to run a full-installation. AuroraBoot will create instead images pre-installed which will skip the usual Kairos installation process in runtime
 {{% /alert %}}
 
 Consider the following example:

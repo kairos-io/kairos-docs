@@ -4,6 +4,7 @@ linkTitle: "Announcements"
 icon: fa-solid fa-bullhorn
 weight: 2
 description: "A single stop to learn about Known Issues, Deprecation Warnings and/or Remarkable Changes in this release"
+sitemap_exclude: true
 ---
 
 {{% alert title="Enki" color="warning" %}}
