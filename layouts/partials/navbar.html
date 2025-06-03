@@ -1,0 +1,177 @@
+{{ $cover := and
+    (.HasShortcode "blocks/cover")
+    (not .Site.Params.ui.navbar_translucent_over_cover_disable)
+-}}
+{{ $baseURL := urls.Parse $.Site.Params.Baseurl -}}
+
+<nav class="td-navbar js-navbar-scroll
+            {{- if $cover }} td-navbar-cover {{- end }}" data-bs-theme="dark">
+<div class="container-fluid flex-column flex-md-row">
+  <a class="navbar-brand" href="{{ .Site.Home.RelPermalink }}">
+    {{- /**/ -}}
+    <span class="navbar-brand__logo navbar-logo">
+      {{- if ne .Site.Params.ui.navbar_logo false -}}
+        {{ with resources.Get "icons/logo.svg" -}}
+          {{ ( . | minify).Content | safeHTML -}}
+        {{ end -}}
+      {{ end -}}
+    </span>
+    {{- /**/ -}}
+    <span class="navbar-brand__name">
+      {{- .Site.Title -}}
+    </span>
+    {{- /**/ -}}
+  </a>
+  <!-- Burger menu button for small screens -->
+  <button class="navbar-burger d-lg-none ms-auto" id="navbar-burger" aria-label="Toggle navigation" type="button" style="background:none;border:none;outline:none;">
+    <span style="display:block;width:30px;height:3px;background:#fff;margin:4px 0;"></span>
+    <span style="display:block;width:30px;height:3px;background:#fff;margin:4px 0;"></span>
+    <span style="display:block;width:30px;height:3px;background:#fff;margin:4px 0;"></span>
+  </button>
+  <!-- Navbar links -->
+  <div class="td-navbar-nav-scroll ms-md-auto" id="main_navbar">
+    <ul class="navbar-nav" id="navbar-links">
+      {{ $p := . -}}
+      {{ range .Site.Menus.main -}}
+      <li class="nav-item">
+        {{ $active := or ($p.IsMenuCurrent "main" .) ($p.HasMenuCurrent "main" .) -}}
+        {{ $href := "" -}}
+        {{ with .Page -}}
+          {{ $active = or $active ( $.IsDescendant .) -}}
+          {{ $href = .RelPermalink -}}
+        {{ else -}}
+          {{ $href = .URL | relLangURL -}}
+        {{ end -}}
+        {{ $isExternal := ne $baseURL.Host (urls.Parse .URL).Host -}}
+        <a {{/**/ -}}
+          class="nav-link {{- if $active }} active {{- end }}" {{/**/ -}}
+          href="{{ $href }}"
+          {{- if $isExternal }} target="_blank" rel="noopener" {{- end -}}
+        >
+            {{- .Pre -}}
+            <span>{{ .Name }}</span>
+            {{- .Post -}}
+        </a>
+      </li>
+      {{ end -}}
+      {{ if .Site.Params.versions -}}
+      <li class="nav-item dropdown">
+        {{ partial "navbar-version-selector.html" . -}}
+      </li>
+      {{ end -}}
+      {{ if (gt (len .Site.Home.Translations) 0) -}}
+      <li class="nav-item dropdown d-none d-lg-block">
+        {{ partial "navbar-lang-selector.html" . -}}
+      </li>
+      {{ end -}}
+      <li class="nav-item dropdown">
+        {{ partial "navbar-flavor-selector.html" . }}
+      </li>
+      <!-- GitHub stars: only show on large screens -->
+      <li class="nav-item mr-4 mb-2 mb-lg-0 mt-lg-2 d-none d-lg-block">
+        {{ partial "navbar-github-button.html" . }}
+      </li>
+      {{ if .Site.Params.ui.showLightDarkModeMenu -}}
+      <li class="td-light-dark-menu nav-item dropdown">
+        {{ partial "theme-toggler" . }}
+      </li>
+      {{ end -}}
+      <li class="td-light-dark-menu nav-item dropdown">
+        {{ partial "navbar-analytics-toggle.html" . }}
+      </li>
+    </ul>
+  </div>
+  <div class="d-none d-lg-block">
+    {{ partial "search-input.html" . }}
+  </div>
+</div>
+</nav>
+
+<!-- Responsive Navbar Script and Styles -->
+<style>
+  /* Hide navbar links on small screens by default */
+  @media (max-width: 991.98px) {
+    /* Burger menu button: top right, always above */
+    .navbar-burger {
+      position: fixed;
+      top: 12px;
+      right: 16px;
+      z-index: 3000;
+      background: none;
+      border: none;
+      outline: none;
+      padding: 0;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    #main_navbar {
+      display: none;
+    }
+    #main_navbar.show-mobile-menu {
+      display: block;
+      position: fixed;
+      top: 60px; /* Adjust if your navbar is taller/shorter */
+      left: 0;
+      width: 100vw;
+      height: calc(100vh - 60px); /* Fill the rest of the screen */
+      background: #03153A;
+      z-index: 2000;
+      overflow-y: auto;
+      transition: all 0.3s;
+    }
+    #navbar-links {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 2rem 1.5rem;
+      width: 100%;
+      height: 100%;
+    }
+    #navbar-links .nav-item {
+      margin-bottom: 1.5rem;
+      width: 100%;
+    }
+    #navbar-links .nav-link {
+      width: 100%;
+      font-size: 1.25rem;
+    }
+    /* Ensure dropdowns appear below their toggler in mobile menu */
+    .td-navbar-nav-scroll .dropdown-menu {
+      position: absolute !important;
+      left: 0 !important;
+      right: auto !important;
+      top: 100% !important;
+      bottom: auto !important;
+      min-width: 200px;
+      margin-top: 0.5rem !important; /* Standardize for all dropdowns */
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .td-navbar-nav-scroll .nav-item.dropdown {
+      position: relative !important;
+    }
+    .td-navbar-nav-scroll .nav-item.dropdown > .nav-link,
+    .td-navbar-nav-scroll .nav-item.dropdown > a {
+      margin-bottom: 0 !important;
+      padding-bottom: 0 !important;
+    }
+  }
+  /* Show navbar links when toggled */
+  @media (max-width: 991.98px) {
+    #main_navbar.show-mobile-menu { display: block; }
+  }
+</style>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var burger = document.getElementById('navbar-burger');
+    var navbar = document.getElementById('main_navbar');
+    if (burger && navbar) {
+      burger.addEventListener('click', function() {
+        navbar.classList.toggle('show-mobile-menu');
+      });
+    }
+  });
+</script>
