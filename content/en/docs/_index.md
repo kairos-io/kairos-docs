@@ -3,9 +3,6 @@ title: "Documentation"
 linkTitle: "Documentation"
 description: "Explore the official documentation for Kairos and discover how it simplifies lifecycle management across edge, cloud, and bare metal environments."
 weight: 20
-menu:
-  main:
-    weight: 20
 ---
 
 Welcome to the Kairos {{< kairosVersion >}} Documentation
