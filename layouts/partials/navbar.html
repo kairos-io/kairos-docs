@@ -48,7 +48,7 @@
       </li>
       {{ end -}}
       {{ if .Site.Params.versions -}}
-      <li class="nav-item dropdown d-none d-lg-block">
+      <li class="nav-item dropdown">
         {{ partial "navbar-version-selector.html" . -}}
       </li>
       {{ end -}}
@@ -57,17 +57,19 @@
         {{ partial "navbar-lang-selector.html" . -}}
       </li>
       {{ end -}}
+      <li class="nav-item dropdown">
+        {{ partial "navbar-flavor-selector.html" . }}
+      </li>
+      <li class="nav-item mr-4 mb-2 mb-lg-0 mt-lg-2">
+        {{ partial "navbar-github-button.html" . }}
+      </li>
       {{ if .Site.Params.ui.showLightDarkModeMenu -}}
       <li class="td-light-dark-menu nav-item dropdown">
         {{ partial "theme-toggler" . }}
       </li>
       {{ end -}}
-      <li class="nav-item">
-        <ul class="navbar-nav mt-2 mt-lg-0">
-            {{ partial "navbar-flavor-selector.html" . }}
-            {{ partial "navbar-github-button.html" . }}
-            {{ partial "navbar-analytics-toggle.html" . }}
-        </ul>
+      <li class="td-light-dark-menu nav-item dropdown">
+        {{ partial "navbar-analytics-toggle.html" . }}
       </li>
     </ul>
   </div>
