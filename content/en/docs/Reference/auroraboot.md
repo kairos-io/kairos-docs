@@ -205,8 +205,10 @@ install:
 
 # Define the user accounts on the node.
 users:
-- name: "kairos"                       # The username for the user.
-  passwd: "kairos"                      # The password for the user.
+- name: kairos                       # The username for the user.
+  passwd: kairos                      # The password for the user.
+  groups:
+  - admin
   ssh_authorized_keys:                  # A list of SSH keys to add to the user's authorized keys.
   # - github:mudler                       # A key from the user's GitHub account.
   # - "ssh-rsa AAA..."                    # A raw SSH key.
@@ -433,6 +435,8 @@ install:
 users:
 - name: "kairos"                       # The username for the user.
   passwd: "[[.kairos.password]]"                      # The password for the user.
+  groups:
+  - admin
   ssh_authorized_keys:                  # A list of SSH keys to add to the user's authorized keys.
   - github:[[.github.user]]
 ```
@@ -692,8 +696,10 @@ cloud_config: |
 
     # Define the user accounts on the node.
     users:
-    - name: "kairos"                       # The username for the user.
-    passwd: "kairos"                      # The password for the user.
+    - name: kairos                       # The username for the user.
+      passwd: kairos                      # The password for the user.
+      groups:
+      - admin
     ssh_authorized_keys:                  # A list of SSH keys to add to the user's authorized keys.
     # - github:mudler                       # A key from the user's GitHub account.
     # - "ssh-rsa AAA..."                    # A raw SSH key.
