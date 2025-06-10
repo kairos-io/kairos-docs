@@ -41,7 +41,7 @@ We recommend using the latest cosign version, at the time of writing, 2.5.0
 {{% /alert %}}
 
 
-Then we verify that the sha256 checksums haven't been tampered with (substitute $VERSION with the exact Kairos version you are verifying as teh certificate identity is the release job that signs it):
+Then we verify that the sha256 checksums haven't been tampered with (substitute $VERSION with the exact Kairos version you are verifying as the certificate identity is the release job that signs it):
 
 ```bash
 $ cosign verify-blob --cert {{<image variant="core" suffix=".iso.sha256.pem">}} --signature {{<image variant="core" suffix=".iso.sha256.sig">}} --certificate-identity https://github.com/kairos-io/kairos/.github/workflows/reusable-release.yaml@refs/tags/$VERSION --certificate-oidc-issuer https://token.actions.githubusercontent.com {{<image variant="core" suffix=".iso.sha256">}} 
