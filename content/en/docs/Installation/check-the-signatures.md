@@ -37,7 +37,7 @@ $ ls
 ```
 
 {{% alert title="Cosign version Step" color="primary" %}}
-We recommend uing the latest cosign version, at the time of writing, 2.5.0
+We recommend using the latest cosign version, at the time of writing, 2.5.0
 {{% /alert %}}
 
 
