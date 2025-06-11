@@ -93,7 +93,7 @@ for release in $releases; do
     echo "  url = \"https://kairos.io/blog/\"" >> "hugo.toml"
     echo "" >> "hugo.toml"
 
-    HUGO_ENV="${CONTEXT}" hugo --buildFuture --minify --gc -b "${BASE_URL}/$version" -d "${publicpath}/$version"
+    HUGO_ENV="${CONTEXT}" hugo --ignoreCache --buildFuture --minify --gc -b "${BASE_URL}/$version" -d "${publicpath}/$version"
     
     # restore files, and do not fail if the files are not found
     git restore go.sum go.mod package.json package-lock.json hugo.toml content/en/blog content/en/community
@@ -111,7 +111,7 @@ hugo mod graph
 update_menu
 # remove llms.txt from public directory if it exists
 rm -rf "${publicpath}/llms.txt"
-HUGO_ENV="${CONTEXT}" hugo --buildFuture --minify --gc -b "${BASE_URL}" -d "${publicpath}"
+HUGO_ENV="${CONTEXT}" hugo --ignoreCache --buildFuture --minify --gc -b "${BASE_URL}" -d "${publicpath}"
 # print the contents of the llms.txt file inside the public directory
 if [ -f "${publicpath}/llms.txt" ]; then
     echo "Contents of llms.txt:"

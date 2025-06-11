@@ -1,4 +1,4 @@
-export HUGO_VERSION?=0.120.1
+export HUGO_VERSION?=0.147.8
 export HUGO_PLATFORM?=Linux-64bit
 
 export ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
