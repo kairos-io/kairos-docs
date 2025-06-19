@@ -505,6 +505,31 @@ k3s-agent:
 The K3s args are only applied when the K3s service is created, which is during installation. Changing the `args` key after installation won't have any effect.
 {{% /alert %}}
 
+In order to override an existing k3s install arguments, you need to override the default service ones.
+
+For Alpine services, the trick is to write via cloud config the `/etc/rancher/k3s/k3s.env` file to set the proper `command_args` like so:
+```
+stages:
+  initramfs:
+    - name: "Override k3s environment"
+      environment_file: /etc/rancher/k3s/k3s.env
+      environment:
+        command_args: server --verbose
+```
+
+For SystemD services, the usual override methods from systemD itself are available to override any services config, so we can lean on the yip plugin for systemD:
+```
+stages:
+  initramfs:
+    - name: "Expand k3s modules load"
+      systemctl:
+        overrides:
+          - service: k3s.service
+            content: |
+              [Service]
+              ExecStartPre=-/sbin/modprobe nfs
+```
+
 For more examples of how to configure K3s manually, see the [examples]({{< relref "../examples" >}}) section or [HA]({{< relref "../examples/ha" >}}).
 
 ### Grub options
