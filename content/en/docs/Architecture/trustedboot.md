@@ -106,4 +106,6 @@ For more information about the immutable nature of Kairos, see the [Immutable Ar
 
 For more information about system extensions, see the [System Extensions]({{< ref "sys-extensions.md" >}}) guide.
 
+For more informations about revoking certificates, see [Revoking secure boot access]({{< ref "../advanced/revoking-secureboot-access.md" >}})
+
 For a complete example of boot assessment with Trusted Boot, see the [Boot Assessment with Trusted Boot]({{< ref "boot_assessment_trusted_boot.md" >}}) guide.
