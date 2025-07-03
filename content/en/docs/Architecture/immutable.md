@@ -25,7 +25,7 @@ A running Linux-based OS system will have the following paths:
 
 ## Default persistent paths
 
-Other that the `/usr/local` path, Kairos will also mount bind the following paths to the persistent partition under `/usr/local/.state` to make them persistant and Read/Write:
+Other than the `/usr/local` path, Kairos will also bind mount the following paths to the persistent partition under `/usr/local/.state` to make them persistent and read/write:
 
 ```yaml
 /etc/cni
