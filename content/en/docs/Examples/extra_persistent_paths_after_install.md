@@ -1,7 +1,7 @@
 ---
 title: "Adding persistent paths after install"
 linkTitle: "Adding persistent paths after install"
-description: This section describe examples on how to add persistent paths after install
+description: This section describes examples on how to add persistent paths after install
 ---
 
 Drop a file under `/oem/91_paths.yaml` with the following content:
