@@ -220,7 +220,7 @@ stages:
       - echo "Hello"
 ```
 
-Notice the after directive in the second file, that allows to run the command after the first stage has been executed, even if they are in the same stage. And fully guarantees that the second stage will run after the first one, even if they are in the same stage and layer.
+Notice the after directive in the second file, that allows running the command after the first stage has been executed, even if they are in the same stage. And fully guarantees that the second stage will run after the first one, even if they are in the same stage and layer.
 
 The name of the stage to override is the full name of the stage, which is a combination of the file path and the stage name, in this case `/oem/01_first.yaml.First stage`.
 
