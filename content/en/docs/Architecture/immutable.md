@@ -15,15 +15,67 @@ A running Linux-based OS system will have the following paths:
 ```
 /usr/local - persistent ( partition label COS_PERSISTENT)
 /oem - persistent ( partition label COS_OEM)
+/var - ephemeral
 /etc - ephemeral
-/usr - read only
+/srv - ephemeral
 / immutable
 ```
 
 `/usr/local` will contain all the persistent data which will be carried over in-between upgrades, unlike the changes made to `/etc` which will be discarded.
 
+## Default persistent paths
+
+Other than the `/usr/local` path, Kairos will also bind mount the following paths to the persistent partition under `/usr/local/.state` to make them persistent and read/write:
+
+```yaml
+/etc/cni
+/etc/init.d
+/etc/iscsi
+/etc/k0s
+/etc/kubernetes
+/etc/modprobe.d
+/etc/pwx
+/etc/rancher
+/etc/runlevels
+/etc/ssh
+/etc/ssl/certs
+/etc/sysconfig
+/etc/systemd
+/etc/zfs
+/home
+/opt
+/root
+/usr/libexec
+/var/cores
+/var/lib/ca-certificates
+/var/lib/cni
+/var/lib/containerd
+/var/lib/calico
+/var/lib/dbus
+/var/lib/etcd
+/var/lib/extensions
+/var/lib/k0s
+/var/lib/kubelet
+/var/lib/longhorn
+/var/lib/osd
+/var/lib/rancher
+/var/lib/rook
+/var/lib/tailscale
+/var/lib/wicked
+/var/lib/kairos
+/var/log
+```
+
+Some specific distros have additional paths, for example:
+
+- For Ubuntu/Debian, `/snap`, `/var/snap` and `/var/lib/snapd`
+- For Red Hat/Fedora/Rockylinux/Almalinux `/usr/share/pki/trust` and `/usr/share/pki/trust/anchors` 
+
+
+For the most up-to-date list of paths, please refer to the [default rootfs configuration](https://github.com/kairos-io/kairos-init/blob/main/pkg/bundled/cloudconfigs/00_rootfs.yaml#L13) and the [extra bind mounts configuration](https://github.com/kairos-io/kairos-init/blob/main/pkg/bundled/cloudconfigs/01_extra_binds.yaml) files.
+
 {{% alert color="info" %}}
-The persistent data live in directories that are bind mounted to `/usr/local/.state` (check the [bind_mounts configuration option]({{< relref "../reference/configuration" >}})).  `/usr/local` is mounted during boot with the first partition found labeled `COS_PERSISTENT`. 
+You can add additional paths to the persistent partition by using the [bind_mounts configuration option]({{< relref "../reference/configuration" >}}). This is useful for storing additional data that you want to persist across reboots or upgrades.
 {{% /alert %}}
 
 ## Benefits of using an Immutable System
