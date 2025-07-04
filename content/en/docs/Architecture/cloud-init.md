@@ -196,7 +196,7 @@ stages:
         - name: "FULL NAME OF THE STAGE TO OVERRIDE"
 ```
 
-This would ensure that your custom sysctl setting is applied after the default sysctl configuration provided by Kairos, even if they are in the same stage and step, yip will move it into a different layer to assure that its run after.
+This would ensure that your custom sysctl setting is applied after the default sysctl configuration provided by Kairos, even if they are in the same stage and step, yip will move it into a different layer to assure that it is run after.
 
 For a practical example:
 
