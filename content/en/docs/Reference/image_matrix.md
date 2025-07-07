@@ -60,7 +60,7 @@ The artifacts can be found in the `build` directory.
 Unfortunately we don't have the resources and capacity to build every possible artifact in our matrix. Thankfully, you can still build those images manually on your local machine, all you need is [git](https://git-scm.com/) and [docker](https://www.docker.com/). Here's an example how to build an Almalinux ARM RPI4 container image.
 
 ```bash
-git checkout https://github.com/kairos-io/kairos.git
+git clone https://github.com/kairos-io/kairos.git
 cd kairos
 docker build --platform linux/arm64 --build-arg BASE_IMG=almalinux:9 --build-arg MODEL=rpi4 --build-arg VERSION=1.0.0 -f images/Dockerfile -t mycustomimage:1.0.0 .
 ```
