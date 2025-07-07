@@ -27,6 +27,27 @@ Another option that can be enabled is immucore debug logs with `rd.immucore.debu
 After booting, you can find the logs from immucore under `/run/immucore/` (whether you enabled debug output or not).
 Check the [immucore README](https://github.com/kairos-io/immucore/) for more configuration parameters.
 
+In order to gather the logs, you can use the `kairos-agent logs` command:
+
+
+```bash
+localhost:~# kairos-agent logs
+2025-07-07T10:14:09Z INF Kairos Agent version=v0.0.1
+2025-07-07T10:14:09Z INF creating a runtime
+2025-07-07T10:14:09Z INF detecting boot state
+2025-07-07T10:14:09Z INF Boot Mode boot_mode=active_boot
+2025-07-07T10:14:09Z INF Boot in uki mode result=false
+2025-07-07T10:14:09Z INF Kairos Agent version=v0.0.1
+2025-07-07T10:14:09Z INF creating a runtime
+2025-07-07T10:14:09Z INF detecting boot state
+2025-07-07T10:14:09Z INF Boot Mode boot_mode=active_boot
+2025-07-07T10:14:09Z INF Boot in uki mode result=false
+2025-07-07T10:14:09Z INF [2814] systemd not available, skipping journal log collection
+2025-07-07T10:14:09Z INF [2814] Logs collected successfully to ./kairos-logs.tar.gz
+```
+
+This command will collect logs from various components of the system and package them into a tarball named `kairos-logs.tar.gz`. You can then attach this file when reporting issues.
+
 ## Initramfs breakpoints
 
 Initramfs can be instructed to drop a shell in various phases of the boot process. For instance:
