@@ -76,7 +76,7 @@ The keys are used to sign the UKI file, and to generate a PCR policy keypair req
 
 ### Expanding the system with system extensions
 
-Check the relevant documentation on how to [extend the system with system extensions]({{< ref "sys-extensions.md" >}})
+Check the relevant documentation on how to [extend the system with system extensions]({{< ref "sys-extensions.md" >}}) and how to [use /opt with system extensions]({{< ref "adding_opt_to_system_extensions.md" >}}).
 
 ### Trusted Boot - Boot Assessment
 
@@ -105,5 +105,7 @@ For more information about customizing Kairos images, see the [Customizing Image
 For more information about the immutable nature of Kairos, see the [Immutable Architecture]({{< ref "immutable.md" >}}) guide.
 
 For more information about system extensions, see the [System Extensions]({{< ref "sys-extensions.md" >}}) guide.
+
+For more informations about revoking certificates, see [Revoking secure boot access]({{< ref "../advanced/revoking-secureboot-access.md" >}})
 
 For a complete example of boot assessment with Trusted Boot, see the [Boot Assessment with Trusted Boot]({{< ref "boot_assessment_trusted_boot.md" >}}) guide.

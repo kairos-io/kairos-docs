@@ -50,10 +50,6 @@ weight = 1
 description = "Kairos is an open-source Linux-based operating system designed for securely running Kubernetes at the edge. It provides immutable, declarative infrastructure with features like P2P clustering, trusted boot, and A/B upgrades."
 images = [ "images/Kairos_800x419.png" ]
 
-# language not really in use just a hack to trigger the navbar-lang-selector which at the moment is used for distro selector
-[languages.es]
-languageName ="Es"
-
 [params.social]
 twitter = "Kairos_OSS"
 
@@ -80,7 +76,7 @@ prism_syntax_highlighting = false
 
 # Menu title if your navbar has a versions selector to access old versions of your site.
 # This menu appears only if you have at least one [params.versions] set.
-version_menu = "dev"
+version_menu = "Documentation"
 
 # Repository configuration (URLs for in-page links to opening issues and suggesting changes)
 github_repo = "https://github.com/kairos-io/kairos-docs"
@@ -104,16 +100,15 @@ development = true
 
 [params.softwareVersions]
 # renovate: datasource=github-releases depName=kairos-io/provider-kairos
-provider_version = "v2.10.3"
-# renovate: datasource=github-releases depName=k3s-io/k3s
+provider_version = "v2.13.1"
 k3s_version = "v1.32.3+k3s1"
 kairos_version = "master"
 # renovate: datasource=github-releases depName=kairos-io/osbuilder
 osbuilder_version = "v0.401.0"
 # renovate: datasource=github-releases depName=kairos-io/AuroraBoot
-auroraboot_version = "v0.7.1"
+auroraboot_version = "v0.8.6"
 # renovate: datasource=github-releases depName=kairos-io/kairos-init
-kairos_init_version = "v0.4.7"
+kairos_init_version = "v0.5.1"
 flavor = "debian"
 registryURL = "quay.io/kairos"
 defaultFamily = "ubuntu"
@@ -195,3 +190,4 @@ no = 'Oh snap! Sorry to hear that. Please <a href="https://github.com/kairos-io/
   [[module.imports]]
     path = "github.com/google/docsy/dependencies"
     disable = false
+    

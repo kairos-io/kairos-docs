@@ -7,7 +7,7 @@
   If yes, display a banner. -->
   {{ if .Site.Params.development }}
   <div class="pageinfo pageinfo-{{ $color }}">
-    <p>You are viewing the development docs which are in progress. For the latest stable documentation, click
+    <p>You are viewing the development docs which are in progress. There is no guarantee that the development documentation will be accurate, including instructions, links, and other information. For the latest stable documentation, click
       <a href="{{ $url_latest_version | safeURL }}" target="_blank">here</a>.</p>
   </div>
 {{ end }}

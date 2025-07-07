@@ -46,7 +46,7 @@ See the [docker multi-platform docs](https://docs.docker.com/build/building/mult
 Create a single Dockerfile:
 
 ```Dockerfile
-FROM quay.io/kairos/kairos-init:v0.2.6 AS kairos-init
+FROM quay.io/kairos/kairos-init:{{< kairosInitVersion >}} AS kairos-init
 
 FROM ubuntu:24.04
 ARG VERSION=1.0.0
@@ -60,28 +60,22 @@ The only required argument for kairos-init is the version, which will be set und
 Then you can just build it like any other Dockerfile ever:
 ```bash
 $ docker build -t ubuntu-kairos:24.04 .
-[+] Building 92.1s (10/10) FINISHED                                                      docker:default
+[+] Building 69.9s (10/10) FINISHED                                                      docker:default
  => [internal] load build definition from Dockerfile                                               0.0s
- => => transferring dockerfile: 249B                                                               0.0s
- => [internal] load metadata for docker.io/library/ubuntu:24.04                                    0.4s
- => [internal] load metadata for quay.io/kairos/kairos-init:v0.2.6                                 0.3s
+ => => transferring dockerfile: 240B                                                               0.0s
+ => [internal] load metadata for docker.io/library/ubuntu:24.04                                    0.0s
+ => [internal] load metadata for quay.io/kairos/kairos-init:v0.5.0                                 0.4s
  => [internal] load .dockerignore                                                                  0.0s
  => => transferring context: 2B                                                                    0.0s
- => CACHED [kairos-init 1/1] FROM quay.io/kairos/kairos-init:v0.2.6@sha256:35f581dbc480385b21f7a2  0.0s
- => [stage-1 1/4] FROM docker.io/library/ubuntu:24.04@sha256:72297848456d5d37d1262630108ab308d3e9  1.2s
- => => resolve docker.io/library/ubuntu:24.04@sha256:72297848456d5d37d1262630108ab308d3e9ec7ed1c3  0.0s
- => => sha256:72297848456d5d37d1262630108ab308d3e9ec7ed1c3286a32fe09856619a782 6.69kB / 6.69kB     0.0s
- => => sha256:3afff29dffbc200d202546dc6c4f614edc3b109691e7ab4aa23d02b42ba86790 424B / 424B         0.0s
- => => sha256:a04dc4851cbcbb42b54d1f52a41f5f9eca6a5fd03748c3f6eb2cbeb238ca99bd 2.30kB / 2.30kB     0.0s
- => => sha256:5a7813e071bfadf18aaa6ca8318be4824a9b6297b3240f2cc84c1db6f4113040 29.75MB / 29.75MB   0.6s
- => => extracting sha256:5a7813e071bfadf18aaa6ca8318be4824a9b6297b3240f2cc84c1db6f4113040          0.5s
- => [stage-1 2/4] COPY --from=kairos-init /kairos-init /kairos-init                                0.0s
- => [stage-1 3/4] RUN /kairos-init -l debug --version "1.0.0"                                     87.9s
+ => CACHED [kairos-init 1/1] FROM quay.io/kairos/kairos-init:v0.5.0@sha256:8d6a0000b6dfcf905eceeb  0.0s
+ => [stage-1 1/4] FROM docker.io/library/ubuntu:24.04                                              0.0s
+ => CACHED [stage-1 2/4] COPY --from=kairos-init /kairos-init /kairos-init                         0.0s
+ => [stage-1 3/4] RUN /kairos-init --version "1.0.0"                                              66.7s
  => [stage-1 4/4] RUN rm /kairos-init                                                              0.1s
- => exporting to image                                                                             2.4s 
- => => exporting layers                                                                            2.4s 
- => => writing image sha256:316c2db8ce9e0a2fe4a60acaa417257a4c813d3cd5afec7f77ed2fbf4d96637b       0.0s 
- => => naming to docker.io/library/ubuntu-kairos:24.04
+ => exporting to image                                                                             2.6s 
+ => => exporting layers                                                                            2.6s 
+ => => writing image sha256:78d8ba90a19bfa472438f207002a0ba2178917ab4c5190c3b2146f1964bac6dc       0.0s 
+ => => naming to docker.io/library/ubuntu-kairos:24.04                                             0.0s 
 ```
 
 That will give you a nice local image tagged `ubuntu-kairos:24.04` that can be feed to [auroraboot.md](auroraboot.md) to generate an ISO, Trusted Boot artifacts or Cloud Images.
@@ -90,7 +84,7 @@ For example:
 
 ```bash
 $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $PWD/build/:/output \
-  quay.io/kairos/auroraboot:v0.5.0 build-iso --output /output/ docker:ubuntu-kairos:24.04
+  quay.io/kairos/auroraboot:{{< auroraBootVersion >}} build-iso --output /output/ docker:ubuntu-kairos:24.04
 2025-02-27T13:33:42Z INF Copying ubuntu-kairos:24.04 source to /output/temp-rootfs
 2025-02-27T13:33:47Z INF Finished copying ubuntu-kairos:24.04 into /output/temp-rootfs
 2025-02-27T13:33:47Z INF Preparing squashfs root...
@@ -157,60 +151,39 @@ It can also prepare OCI artifacts for [Trusted Boot](../Architecture/trustedboot
 
 Here is a list of flags, explanation and what are the possible and default values
 
-| Flag         | Explanation                                              | Possible values             | Default value   |
-|--------------|----------------------------------------------------------|-----------------------------|-----------------|
-| --version    | Set version of the artifact that we are building         | Any                         | None (REQUIRED) |
-| -l           | Sets the log level                                       | info,warn,debug,trace       | info            |
-| -s           | Sets the stage to run                                    | install, init, all          | all             |
-| -m           | Sets the model                                           | generic, rpi3, rpi4         | generic         |
-| -v           | Sets the variant                                         | core, standard              | core            |
-| -k           | Sets the Kubernetes provider                             | k3s,k0s                     | k3s             |
-| -r           | Sets registry and org (Checks this repo when upgrading)  | Any valid registry and org  | quay.io/kairos  |
-| -t           | Sets Trusted Boot on                                     | true,false                  | false           |
-| -f           | Sets the framework version to use                        | Any valid framework version | latest          |
-| --fips       | Use FIPS framework for FIPS 140-2 compliance images      | true,false                  | false           |
-| --k8sversion | Sets the provider version to use                         | Any valid provider version  | latest          |
-| --validate   | Sets the run to validate which only validates the system | true,false                  | true            |
+| Flag         | Explanation                                              | Possible values            | Default value   |
+|--------------|----------------------------------------------------------|----------------------------|-----------------|
+| -v           | Set version of the artifact that we are building         | Any                        | None (REQUIRED) |
+| -l           | Sets the log level                                       | info,warn,debug,trace      | info            |
+| -s           | Sets the stage to run                                    | install, init, all         | all             |
+| -m           | Sets the model                                           | generic, rpi3, rpi4        | generic         |
+| -k           | Sets the Kubernetes provider                             | k3s,k0s                    | None            |
+| --k8sversion | Set the Kubernetes version to use for the given provider | Any valid provider version | Latest          |
+| -t           | Sets Trusted Boot on                                     | true,false                 | false           |
+| --fips       | Use FIPS framework for FIPS 140-2 compliance images      | bool                       | false           |
+| -x           | Enable the loading of stage extensions                   | bool                       | false           |
+| --skip-steps | Skip the given steps during the image build              | Steps or Stages            | None            |
 
 
 You can provide a generic Dockerfile that gets all this values and passes them down into kairos-init like we do under Kairos:
 
-```Dockerfile
-ARG BASE_IMAGE=ubuntu:20.04
+{{< getRemoteSource "https://raw.githubusercontent.com/kairos-io/kairos/refs/heads/master/images/Dockerfile" >}}
 
-FROM quay.io/kairos/kairos-init:v0.2.6 AS kairos-init
 
-FROM ${BASE_IMAGE} AS base-kairos
-ARG VARIANT=core
-ARG MODEL=generic
-ARG TRUSTED_BOOT=false
-ARG KUBERNETES_DISTRO=k3s
-ARG KUBERNETES_VERSION=latest
-ARG VERSION
-
-COPY --from=kairos-init /kairos-init /kairos-init
-RUN /kairos-init -l debug -s install -m "${MODEL}" -v "${VARIANT}" -t "${TRUSTED_BOOT}" -k "${KUBERNETES_DISTRO}" --k8sversion "${KUBERNETES_VERSION}" --version "${VERSION}"
-RUN /kairos-init -l debug -s init -m "${MODEL}" -v "${VARIANT}" -t "${TRUSTED_BOOT}" -k "${KUBERNETES_DISTRO}" --k8sversion "${KUBERNETES_VERSION}" --version "${VERSION}"
-RUN /kairos-init -l debug --validate -m "${MODEL}" -v "${VARIANT}" -t "${TRUSTED_BOOT}" -k "${KUBERNETES_DISTRO}" --k8sversion "${KUBERNETES_VERSION}" --version "${VERSION}"
-RUN rm /kairos-init
-```
-
-{{% alert title="Variant" color="note" %}}
-
-When selecting the `standard` variant, the produced image will contain the default kubernetes provider (k3s) with the latest published version of k3s, the Kairos provider for kubernetes and some extra k8s utils like k9s or kube-vip.
-
-If you want to override those see the flags `-k` and `--k8sversion`
-
+{{% alert title="K8s versions" color="info" %}}
+When selecting a k8s provider, the produced image will contain the latest published version of that provider, the Kairos provider for kubernetes and some extra k8s utils like k9s.
+If you want to override the version installed see the flag `--k8sversion`
 {{% /alert %}}
 
 ## Phases
 
-kairos-init is divided in 2 phases, one its the install phase which install all nedeed packages and binaries and the other is the init phase, which gets the system ready. This are the main parts of each phase:
+kairos-init is divided in 2 phases, one its the install phase which install all needed packages and binaries and the other is the init phase, which gets the system ready. This are the main parts of each phase:
 
 Install:
  - Install required packages via system package manager
- - Install [kairos-framework](https://github.com/kairos-io/kairos-framework) into the system
- - Install the Kairos' provider, including a k8s distribution and tools if it's a standard image
+ - Install the Kairos binaries, like the agent or immucore
+ - Install the Kairos configurations, like oem yip configs, initrd configs, etc..
+ - Install the Kairos' provider, including a k8s distribution and tools if requested
 
 Init:
  - Fill the /etc/kairos-release data (needed for upgrades, grub booting, kernel cmdline, etc...)
@@ -230,30 +203,99 @@ Extra services can be either added or made required, etc..
 
 The separation it's also very useful for caching, as once the install phase has been cached by docker we can modify the following steps to fix any issues before the init phase is run, without removing the cache. This is particularly useful under cross platform builds where speed can take a big impact depending on your setup. 
 
+## Skipping steps and stages
+
+We recognize that one size does not fit all, and sometimes you may want to skip certain steps or stages during the image build process. To accommodate this, kairos-init provides the `--skip-steps` flag. 
+
+This is useful if you want to customize the image yourself and find that some steps collide with your customization. You can choose between `install` and `init` to skip those full stages or go into specific steps.
+
+Run `kairos-init steps-info` to see the available steps and their descriptions. You can pass more than one step, separated by comma, to skip multiple steps, for example: `--skip-steps installPackages,kernel`.
+
+
+## Extending stages with custom actions
+
+This allows to load stage extensions from a dir in the filesystem to expand the default stages with custom logic.
+
+You can enable this feature by using the `-x` flag
+
+The structure is as follows:
+
+We got a base dir which is `/etc/kairos-init/stage-extensions` (this is the default, but you can override it using the `KAIROS_INIT_STAGE_EXTENSIONS_DIR` env var)
+
+You can drop your custom [yip files](https://github.com/mudler/yip) and as usual, they will be loaded and executed in lexicographic order.
+
+So for example, if we have:
+- /etc/kairos-init/stage-extensions/10-foo.yaml
+- /etc/kairos-init/stage-extensions/20-bar.yaml
+- /etc/kairos-init/stage-extensions/30-baz.yaml
+
+The files will be loaded in the following order:
+- 10-foo.yaml
+- 20-bar.yaml
+- 30-baz.yaml
+
+The files are loaded using the yip library, so you can use all the features of [yip](https://github.com/mudler/yip) to expand the stages.
+
+The current stages available are:
+- before-install: Good for adding extra repos and such.
+- install: Good for installing packages and such.
+- after-install: Do some cleanup of packages, add extra packages, add different kernels and remove the kairos default one, etc.
+- before-init: Good for adding some dracut modules for example to be added to the initramfs.
+- init: Anything that configures the system, security hardening for example.
+- after-init: Good for rebuilding the initramfs, or adding a different initramfs like a kdump one, add grub configs or branding, etc.
+
+So for example, if we were to add an extra repo for zfs and install the package we could do the following:
+
+`/etc/kairos-init/stage-extensions/10-zfs.yaml`
+```yaml
+stages:
+  after-install:
+    - files:
+        - path: /etc/apt/sources.list.d/zfs.list
+          permissions: 0644
+          owner: 0
+          group: 0
+          content: |
+            deb http://deb.debian.org/debian bookworm-backports main contrib
+            deb-src http://deb.debian.org/debian bookworm-backports main contrib
+    - packages:
+        install:
+          - "zfs-dkms"
+          - "zfsutils-linux"
+        refresh: true
+```
+
+This would run the `before-install` and `install` stages as normal, but then on the `after-install` stage it would add the zfs repo and install the zfs packages.
+
+
+## Validation
+
+You can validate the image you built using the `kairos-init validate` command inside the image. This will check if the image is valid and if it has all the necessary components to run Kairos.
+
+
+## Building RHEL images
+
+Before running `kairos-init`, you need to register the system with the subscription manager and attach a subscription to it. You can do this by modifying the Dockerfile to register the system before running `kairos-init`:
+
+```Dockerfile
+FROM quay.io/kairos/kairos-init:latest AS kairos-init
+
+FROM redhat/ubi9
+RUN subscription-manager register --username <your-username> --password <your-password>
+COPY --from=kairos-init /kairos-init /kairos-init
+RUN /kairos-init
+RUN rm /kairos-init
+```
+
+
 ## Examples
 
 All the examples are using the [kairos default dockerfile](https://github.com/kairos-io/kairos/blob/master/images/Dockerfile) as the base Dockerfile and its reproduced below:
 
-```Dockerfile
-ARG BASE_IMAGE=ubuntu:20.04
+{{< getRemoteSource "https://raw.githubusercontent.com/kairos-io/kairos/refs/heads/master/images/Dockerfile" >}}
 
-FROM quay.io/kairos/kairos-init:v0.2.6 AS kairos-init
 
-FROM ${BASE_IMAGE} AS base-kairos
-ARG VARIANT=core
-ARG MODEL=generic
-ARG TRUSTED_BOOT=false
-ARG KUBERNETES_DISTRO=k3s
-ARG KUBERNETES_VERSION=latest
-ARG FRAMEWORK_VERSION=v2.16.1
-ARG VERSION
-
-COPY --from=kairos-init /kairos-init /kairos-init
-RUN /kairos-init -f "${FRAMEWORK_VERSION}" -l debug -s install -m "${MODEL}" -v "${VARIANT}" -t "${TRUSTED_BOOT}" -k "${KUBERNETES_DISTRO}" --k8sversion "${KUBERNETES_VERSION}" --version "${VERSION}"
-RUN /kairos-init -f "${FRAMEWORK_VERSION}" -l debug -s init -m "${MODEL}" -v "${VARIANT}" -t "${TRUSTED_BOOT}" -k "${KUBERNETES_DISTRO}" --k8sversion "${KUBERNETES_VERSION}" --version "${VERSION}"
-RUN /kairos-init -f "${FRAMEWORK_VERSION}" -l debug --validate -m "${MODEL}" -v "${VARIANT}" -t "${TRUSTED_BOOT}" -k "${KUBERNETES_DISTRO}" --k8sversion "${KUBERNETES_VERSION}" --version "${VERSION}"
-RUN rm /kairos-init
-```
+You can see more examples in the [Kairos repo](https://github.com/kairos-io/kairos/tree/master/examples).
 
 ### Build rpi4 k3s oci artifacts (arm64 platform)
 
@@ -273,7 +315,7 @@ $ docker build --platform=arm64 -t ubuntu-rpi:22.04 --build-arg MODEL=rpi4 --bui
 ### Add a specific kernel to ubuntu 24.04 (amd64 platform)
 
 ```Dockerfile
-FROM quay.io/kairos/kairos-init:v0.2.6 AS kairos-init
+FROM quay.io/kairos/kairos-init:{{< kairosInitVersion >}} AS kairos-init
 
 FROM ubuntu:24.04
 COPY --from=kairos-init /kairos-init /kairos-init
@@ -284,35 +326,31 @@ RUN apt-get remove -y linux-base linux-image-generic-hwe-24.04 && apt-get autore
 RUN apt-get install -y linux-image-virtual
 # Run the init phase as normal, it will find the new kernel and link it + generate initrd
 RUN /kairos-init -l debug -s init --version "v0.0.1"
-RUN /kairos-init -l debug --validate --version "v0.0.1"
 RUN rm /kairos-init
 ```
 
 ```bash
 $ docker build -t ubuntu-kairos-virtual:24.04 .
-[+] Building 0.7s (14/14) FINISHED                                                       docker:default
+[+] Building 106.1s (13/13) FINISHED                                                     docker:default
  => [internal] load build definition from Dockerfile                                               0.0s
- => => transferring dockerfile: 478B                                                               0.0s
- => [internal] load metadata for docker.io/library/ubuntu:24.04                                    0.4s
- => [internal] load metadata for quay.io/kairos/kairos-init:v0.2.6                                 0.7s
+ => => transferring dockerfile: 629B                                                               0.0s
+ => [internal] load metadata for docker.io/library/ubuntu:24.04                                    0.0s
+ => [internal] load metadata for quay.io/kairos/kairos-init:v0.5.0                                 0.2s
  => [internal] load .dockerignore                                                                  0.0s
  => => transferring context: 2B                                                                    0.0s
- => [kairos-init 1/1] FROM quay.io/kairos/kairos-init:v0.2.6@sha256:35f581dbc480385b21f7a22317fc5  0.0s
- => [stage-1 1/8] FROM docker.io/library/ubuntu:24.04@sha256:72297848456d5d37d1262630108ab308d3e9  0.0s
- => CACHED [stage-1 2/8] COPY --from=kairos-init /kairos-init /kairos-init                         0.0s
- => CACHED [stage-1 3/8] RUN /kairos-init -l debug -s install --version "v0.0.1"                   0.0s
- => [stage-1 4/8] RUN apt-get remove -y linux-base linux-image-generic-hwe-24.04 && apt-ge         2.0s
- => [stage-1 5/8] RUN apt-get install -y linux-image-virtual                                      10.0s
- => [stage-1 6/8] RUN /kairos-init -l debug -s init --version "v0.0.1"                            21.0s
- => [stage-1 7/8] RUN /kairos-init -l debug --validate --version "v0.0.1"                          0.0s
- => [stage-1 8/8] RUN rm /kairos-init                                                              0.1s
- => exporting to image                                                                             0.0s
- => => exporting layers                                                                            0.8s
- => => writing image sha256:f695a8c45e2cab01c834d4dc3a1f130750d7863955c5be812c96015eafc19753       0.8s
- => => naming to docker.io/library/ubuntu-kairos-virtual:24.04                                     0.8s
+ => CACHED [kairos-init 1/1] FROM quay.io/kairos/kairos-init:v0.5.0@sha256:8d6a0000b6dfcf905eceeb  0.0s
+ => [stage-1 1/7] FROM docker.io/library/ubuntu:24.04                                              0.0s
+ => CACHED [stage-1 2/7] COPY --from=kairos-init /kairos-init /kairos-init                         0.0s
+ => [stage-1 3/7] RUN /kairos-init -l debug -s install --version "v0.0.1"                         74.8s
+ => [stage-1 4/7] RUN apt-get remove -y linux-base linux-image-generic-hwe-24.04 && apt-get autor  2.3s 
+ => [stage-1 5/7] RUN apt-get install -y linux-image-virtual                                       8.3s 
+ => [stage-1 6/7] RUN /kairos-init -l debug -s init --version "v0.0.1"                            17.9s 
+ => [stage-1 7/7] RUN rm /kairos-init                                                              0.1s 
+ => exporting to image                                                                             2.6s 
+ => => exporting layers                                                                            2.6s 
+ => => writing image sha256:94a792dad87629860094820860d68e8d0587bd758d537835d9c5ae7c476af71c       0.0s 
+ => => naming to docker.io/library/ubuntu-kairos-virtual:24.04
 ```
-
-As you can see, most of the steps were already cached, so we gained that. If we wanted we could now go back and change it further but take advantage of the cached layers.
 
 
 ## Build Trusted Boot images (core and standard)
@@ -321,49 +359,48 @@ Core:
 
 ```bash
 $ docker build -t ubuntu-kairos-trusted-core:24.04 --build-arg BASE_IMAGE=ubuntu:24.04 --build-arg TRUSTED_BOOT=true --build-arg VERSION=v1.0.0 .
-[+] Building 61.6s (13/13) FINISHED                                                      docker:default
+[+] Building 64.0s (12/12) FINISHED                                                      docker:default
  => [internal] load build definition from Dockerfile                                               0.0s
- => => transferring dockerfile: 981B                                                               0.0s
- => [internal] load metadata for docker.io/library/ubuntu:24.04                                    0.7s
- => [internal] load metadata for quay.io/kairos/kairos-init:v0.2.6                                 0.5s
- => [auth] library/ubuntu:pull token for registry-1.docker.io                                      0.0s
+ => => transferring dockerfile: 717B                                                               0.0s
+ => [internal] load metadata for docker.io/library/ubuntu:24.04                                    0.0s
+ => [internal] load metadata for quay.io/kairos/kairos-init:v0.5.0                                 0.6s
  => [internal] load .dockerignore                                                                  0.0s
  => => transferring context: 2B                                                                    0.0s
- => [kairos-init 1/1] FROM quay.io/kairos/kairos-init:v0.2.6@sha256:35f581dbc480385b21f7a22317fc5  0.0s
- => [base-kairos 1/6] FROM docker.io/library/ubuntu:24.04@sha256:72297848456d5d37d1262630108ab308  0.0s
+ => CACHED [kairos-init 1/1] FROM quay.io/kairos/kairos-init:v0.5.0@sha256:8d6a0000b6dfcf905eceeb  0.0s
+ => [base-kairos 1/6] FROM docker.io/library/ubuntu:24.04                                          0.0s
  => CACHED [base-kairos 2/6] COPY --from=kairos-init /kairos-init /kairos-init                     0.0s
- => [base-kairos 3/6] RUN /kairos-init -f "v2.16.1" -l debug -s install -m "generic" -v "core" -  57.7s
- => [base-kairos 4/6] RUN /kairos-init -f "v2.16.1" -l debug -s init -m "generic" -v "core" -t "t  1.8s
- => [base-kairos 5/6] RUN /kairos-init -f "v2.16.1" -l debug --validate -m "generic" -v "core" -t  0.1s
- => [base-kairos 6/6] RUN rm /kairos-init                                                          0.1s
- => exporting to image                                                                             1.2s 
- => => exporting layers                                                                            1.2s 
- => => writing image sha256:2cfdfaddf5d59375209d76d2c019fa42c5d56e410c3fc401e0b7fd820ffcf0d6       0.0s 
- => => naming to docker.io/library/ubuntu-kairos-trusted-core:24.04      
+ => [base-kairos 3/6] RUN /kairos-init -l debug -s install -m "generic" -t "true" -k "${KUBERNET  58.3s
+ => [base-kairos 4/6] RUN /kairos-init -l debug -s init -m "generic" -t "true" -k "${KUBERNETES_D  2.5s 
+ => [base-kairos 5/6] RUN /kairos-init validate -t "true"                                          0.2s 
+ => [base-kairos 6/6] RUN rm /kairos-init                                                          0.1s 
+ => exporting to image                                                                             2.3s 
+ => => exporting layers                                                                            2.3s 
+ => => writing image sha256:5ca83ab1eaa4b16210e243f6f9b30e7721e2be0d55b47ae4bd178939e5a44d0f       0.0s 
+ => => naming to docker.io/library/ubuntu-kairos-trusted-core:24.04                                0.0s
 ```
 
 Standard, default latest k3s:
 
 ```bash
-$ docker build -t ubuntu-kairos-trusted-standard:24.04 --build-arg BASE_IMAGE=ubuntu:24.04 --build-arg TRUSTED_BOOT=true --build-arg VERSION=v1.0.0 --build-arg VARIANT=standard .
-[+] Building 78.3s (12/12) FINISHED                                                      docker:default
+$ docker build -t ubuntu-kairos-trusted-standard:24.04 --build-arg BASE_IMAGE=ubuntu:24.04 --build-arg TRUSTED_BOOT=true --build-arg VERSION=v1.0.0 --build-arg KUBERNETES_DISTRO=k3s .
+[+] Building 51.4s (12/12) FINISHED                                                      docker:default
  => [internal] load build definition from Dockerfile                                               0.0s
- => => transferring dockerfile: 981B                                                               0.0s
- => [internal] load metadata for docker.io/library/ubuntu:24.04                                    0.4s
- => [internal] load metadata for quay.io/kairos/kairos-init:v0.2.6                                 0.3s
+ => => transferring dockerfile: 717B                                                               0.0s
+ => [internal] load metadata for docker.io/library/ubuntu:24.04                                    0.0s
+ => [internal] load metadata for quay.io/kairos/kairos-init:v0.5.0                                 0.4s
  => [internal] load .dockerignore                                                                  0.0s
  => => transferring context: 2B                                                                    0.0s
- => [kairos-init 1/1] FROM quay.io/kairos/kairos-init:v0.2.6@sha256:35f581dbc480385b21f7a22317fc5  0.0s
- => [base-kairos 1/6] FROM docker.io/library/ubuntu:24.04@sha256:72297848456d5d37d1262630108ab308  0.0s
+ => CACHED [kairos-init 1/1] FROM quay.io/kairos/kairos-init:v0.5.0@sha256:8d6a0000b6dfcf905eceeb  0.0s
+ => [base-kairos 1/6] FROM docker.io/library/ubuntu:24.04                                          0.0s
  => CACHED [base-kairos 2/6] COPY --from=kairos-init /kairos-init /kairos-init                     0.0s
- => [base-kairos 3/6] RUN /kairos-init -f "v2.16.1" -l debug -s install -m "generic" -v "standar  74.5s
- => [base-kairos 4/6] RUN /kairos-init -f "v2.16.1" -l debug -s init -m "generic" -v "standard" -  1.7s
- => [base-kairos 5/6] RUN /kairos-init -f "v2.16.1" -l debug --validate -m "generic" -v "standard  0.1s
- => [base-kairos 6/6] RUN rm /kairos-init                                                          0.1s
- => exporting to image                                                                             1.4s 
- => => exporting layers                                                                            1.4s 
- => => writing image sha256:74dbec2d7a9ad2b8e8aa4893c349633803172ab9a180b463219c128bdd4d51e4       0.0s 
- => => naming to docker.io/library/ubuntu-kairos-trusted-standard:24.04      
+ => [base-kairos 3/6] RUN /kairos-init -l debug -s install -m "generic" -t "true" -k "k3s" --k8s  45.0s
+ => [base-kairos 4/6] RUN /kairos-init -l debug -s init -m "generic" -t "true" -k "k3s" --k8svers  3.1s 
+ => [base-kairos 5/6] RUN /kairos-init validate -t "true"                                          0.2s 
+ => [base-kairos 6/6] RUN rm /kairos-init                                                          0.1s 
+ => exporting to image                                                                             2.5s 
+ => => exporting layers                                                                            2.5s 
+ => => writing image sha256:019237bde8a0a8b5cccf328c86aa2e4090525dadc4037ab6397272454dfd5e55       0.0s 
+ => => naming to docker.io/library/ubuntu-kairos-trusted-standard:24.04                            0.0s
 ```
 
 
@@ -374,7 +411,7 @@ Note that for Trusted Boot builds we need to pass the keys dir, please refer to 
 $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
   -v $PWD/e2e/assets/keys:/keys \
   -v $PWD/build/:/output \
-  quay.io/kairos/auroraboot:v0.5.0 build-uki --output-dir /output/ -k /keys --output-type iso \
+  quay.io/kairos/auroraboot:{{< auroraBootVersion >}} build-uki --output-dir /output/ -k /keys --output-type iso \
   docker:ubuntu-kairos-trusted-standard:24.04                       
 2025-02-27T14:54:41Z INF Extracting image to a temporary directory
 2025-02-27T14:54:41Z INF Copying ubuntu-kairos-trusted-standard:24.04 source to /tmp/auroraboot-build-uki-1771870410
