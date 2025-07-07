@@ -45,8 +45,7 @@ You can specify a different image to be installed using a block like the followi
 
 ```yaml
 reset:
-  system:
-    uri: "quay.io/kairos/opensuse:leap-15.6-standard-amd64-generic-{{< kairosVersion >}}-{{< k3sVersionOCI >}}"
+  source: "oci:quay.io/kairos/opensuse:leap-15.6-standard-amd64-generic-{{< kairosVersion >}}-{{< k3sVersionOCI >}}"
 ```
 
 Make sure you also 

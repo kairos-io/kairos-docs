@@ -118,11 +118,10 @@ users:
   - admin
 
 reset:
-  system:
-    uri: "quay.io/kairos/opensuse:leap-15.6-standard-amd64-generic-master-k3sv1.32.1-rc2-k3s1"
+  source: "oci:quay.io/kairos/opensuse:leap-15.6-standard-amd64-generic-master-k3sv1.32.1-rc2-k3s1"
 ```
 
-In the example above, we are specifying a custom image that will be used during the first boot to reset the system. When you launch an instance, Kairos will boot into "auto-reset mode" by default. This means that Kairos will "install" itself on the first boot and then reboot. The `reset.system.uri` field in the cloud-config specifies which image will be installed during this process.
+In the example above, we are specifying a custom image that will be used during the first boot to reset the system. When you launch an instance, Kairos will boot into "auto-reset mode" by default. This means that Kairos will "install" itself on the first boot and then reboot. The `reset.source` field in the cloud-config specifies which image will be installed during this process.
 
 As explained in the section above, sizing the state partition properly is important when using this option.
 

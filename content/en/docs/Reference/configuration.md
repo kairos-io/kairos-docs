@@ -121,7 +121,7 @@ install:
   # passive.size: 4096
   # recovery-system.size: 5000
   
-  # Use a different container image for the installation
+  # Use a different source for the installation
   source: "docker:.."
   # Add bundles in runtime
   bundles:
@@ -154,6 +154,9 @@ reset:
   # Power off after reset
   poweroff: true
 
+  # Use a different source for the reset
+  source: "docker:.."
+
   # Override the grub entry name
   grub-entry-name: Kairos
 
@@ -178,6 +181,9 @@ upgrade:
   # Power off after upgrade
   poweroff: true
 
+  # Use a different source for the upgrade
+  source: "docker:.."
+  
   # Override the grub entry name
   grub-entry-name: Kairos
 
