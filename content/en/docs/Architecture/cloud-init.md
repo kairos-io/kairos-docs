@@ -152,7 +152,7 @@ You can check the default configs in the [kairos-init repository](https://github
 
 ## Overriding default configs
 
-You can override the default configs by creating a new file in `/oem` and adding your custom configuration. For example, if you want to override the [default sysctl configuration](https://github.com/kairos-io/kairos-init/blob/main/pkg/bundled/cloudconfigs/09_systemd_services.yaml#L7) provided by Kairos on the `boot` stage you would create a file under /oem with the following content:
+You can override the default configs by creating a new file in `/oem` and adding your custom configuration. For example, if you want to override the [default sysctl configuration](https://github.com/kairos-io/kairos-init/blob/e23d3947934c5af3de4069eff3ed650f0c5f8e6d/pkg/bundled/cloudconfigs/09_systemd_services.yaml#L7) provided by Kairos on the `boot` stage you would create a file under /oem with the following content:
 
 ```yaml
 name: "Override"
@@ -183,7 +183,7 @@ For example, you have a default stage that runs in the `boot.after` stage, and y
 
 In this case, running them would not guarantee that your configuration is applied after the default one, as both configurations are in the same stage.
 
-For this case [yip]() provides an `after` directive that allows you to run your configuration after the default one, even if they are in the same stage.
+For this case [yip](https://github.com/mudler/yip) provides an `after` directive that allows you to run your configuration after the default one, even if they are in the same stage.
 
 ```yaml
 name: "Override"
