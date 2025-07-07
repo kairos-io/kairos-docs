@@ -61,7 +61,10 @@ Once the image is flashed, there is no need to carry out any other installation 
 
 ### Boot
 
-Use the SD Card to boot - the first time will boot into recovery, create `COS_STATE` and `COS_PERSISTENT` volumes and reboot, which will take a few minutes depending on the size and speed of the storage. The default username/password is `kairos`/`kairos`.
+Use the SD Card to boot the device.
+During the first boot, the system will enter recovery mode and create the `COS_STATE` and `COS_PERSISTENT` volumes.
+After creating the volumes, the system will automatically reboot. This process may take a few minutes depending on the size and speed of the storage.
+The default username/password for the system is `kairos`/`kairos`.
 To configure your access or disable password change the `/oem/90_custom.yaml` accordingly.
 
 ### Configure your node
