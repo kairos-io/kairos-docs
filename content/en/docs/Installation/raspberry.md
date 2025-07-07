@@ -40,7 +40,7 @@ docker run --rm --privileged -v /var/run/docker.sock:/var/run/docker.sock \
 Once complete, use Etcher or `dd` to flash the image to an SD card:
 
 ```bash {class="only-flavors=openSUSE+Leap-15.6,openSUSE+Tumbleweed,Ubuntu+20.04,Ubuntu+22.04,Alpine+3.19"}
-sudo dd if=build/{{<image variant="standard" model="rpi4" arch="arm64" suffix=".raw">}} of=<device> oflag=sync status=progress bs=10MB
+sudo dd if=build/{{<image variant="standard" model="rpi4" arch="arm64" suffix=".raw">}} of=<device> oflag=sync status=progress bs=10M
 ```
 
 ## Install using images
