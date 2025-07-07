@@ -50,9 +50,7 @@ FROM quay.io/kairos/kairos-init:{{< kairosInitVersion >}} AS kairos-init
 
 FROM ubuntu:24.04
 ARG VERSION=1.0.0
-COPY --from=kairos-init /kairos-init /kairos-init
-RUN /kairos-init --version "${VERSION}"
-RUN rm /kairos-init
+RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init /kairos-init --version "${VERSION}"
 ```
 
 The only required argument for kairos-init is the version, which will be set under the `/etc/kairos-release` values to track the artifacts version so you can upgrade to those and track changes.
@@ -106,6 +104,11 @@ $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $PWD/build/:/o
 $ ls build      
 config.yaml  kairos.iso  kairos.iso.sha256  netboot  temp-rootfs
 ```
+
+{{% alert title="Bind mount the binary instead of copy?" color="warning" %}}
+
+As you will see over the examples, we do not copy the kairos-init binary into the image, but rather we bind mount it from the kairos-init image. This is in order to save space due to how docker works with layers and caching. If you want to copy the binary instead, you can use the `COPY --from=kairos-init /kairos-init /kairos-init` command instead of the `RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init /kairos-init` command, the output will be the same but the end image will be a bit larger.
+{{% /alert %}}
 
 
 
@@ -350,13 +353,11 @@ $ docker build --platform=arm64 -t ubuntu-rpi:22.04 --build-arg MODEL=rpi4 --bui
 FROM quay.io/kairos/kairos-init:{{< kairosInitVersion >}} AS kairos-init
 
 FROM ubuntu:24.04
-COPY --from=kairos-init /kairos-init /kairos-init
-RUN /kairos-init -l debug -s install --version "v0.0.1" --skip-steps installKernel
+RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init /kairos-init -l debug -s install --version "v0.0.1" --skip-steps installKernel
 # Install Smaller virtual kernel, useful for testing things in VMS
 RUN apt-get install -y linux-image-virtual
 # Run the init phase as normal, it will find the new kernel and link it + generate initrd
-RUN /kairos-init -l debug -s init --version "v0.0.1"
-RUN rm /kairos-init
+RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init /kairos-init -l debug -s init --version "v0.0.1"
 ```
 
 ```bash
