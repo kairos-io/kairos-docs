@@ -143,6 +143,153 @@ When a Kairos boots it creates sentinel files in order to allow to execute cloud
 To execute a block using the sentinel files you can specify: `if: '[ -f "/run/cos/..." ]'`, for instance:
 
 
+## Default Kairos configs
+
+We have a set of default cloud-init configs that are shipped with the base image, and can be found in `/system/oem/`. These configs are executed during the various boot stages and can be overridden by user-provided configs in `/oem` or `/usr/local/cloud-config`.
+
+You can check the default configs in the [kairos-init repository](https://github.com/kairos-io/kairos-init/tree/main/pkg/bundled/cloudconfigs).
+
+
+## Overriding default configs
+
+You can override the default configs by creating a new file in `/oem` and adding your custom configuration. For example, if you want to override the [default sysctl configuration](https://github.com/kairos-io/kairos-init/blob/e23d3947934c5af3de4069eff3ed650f0c5f8e6d/pkg/bundled/cloudconfigs/09_systemd_services.yaml#L7) provided by Kairos on the `boot` stage you would create a file under /oem with the following content:
+
+```yaml
+name: "Override"
+stages:
+  boot:
+    - name: "modify sysctl settings"
+      sysctl:
+        fs.inotify.max_user_instances: 123192
+```
+
+Now, we need to make sure that the file is run _after_ the default sysctl configuration is applied, so we can use the `boot.after` stage to ensure that our custom configuration is applied after the default one:
+
+```yaml
+name: "Override"
+stages:
+  boot.after:
+    - name: "modify sysctl settings"
+      sysctl:
+        fs.inotify.max_user_instances: 123192
+```
+
+This would ensure that our custom sysctl setting is applied after the default sysctl configuration provided by Kairos.
+
+
+**What about overriding stages that are in the same stage? Or making sure they run after our wanted step**
+
+For example, you have a default stage that runs in the `boot.after` stage, and you want to override it with your own configuration.
+
+In this case, running them would not guarantee that your configuration is applied after the default one, as both configurations are in the same stage.
+
+For this case [yip](https://github.com/mudler/yip) provides an `after` directive that allows you to run your configuration after the default one, even if they are in the same stage.
+
+```yaml
+name: "Override"
+stages:
+  boot:
+    - name: "modify sysctl settings"
+      sysctl:
+        fs.inotify.max_user_instances: 123192
+      after:
+        - name: "FULL NAME OF THE STAGE TO OVERRIDE"
+```
+
+This would ensure that your custom sysctl setting is applied after the default sysctl configuration provided by Kairos, even if they are in the same stage and step, yip will move it into a different layer to assure that it is run after.
+
+For a practical example:
+
+/oem/01_first.yaml
+```yaml
+stages:
+  test:
+  - name: "First stage"
+    commands:
+      - echo "Hello"
+```
+
+/oem/02_second.yaml
+```yaml
+stages:
+  test:
+  - name: "after stage"
+    after:
+      - name: "/oem/01_first.yaml.First stage"
+    commands:
+      - echo "Hello"
+```
+
+Notice the after directive in the second file, that allows running the command after the first stage has been executed, even if they are in the same stage. And fully guarantees that the second stage will run after the first one, even if they are in the same stage and layer.
+
+The name of the stage to override is the full name of the stage, which is a combination of the file path and the stage name, in this case `/oem/01_first.yaml.First stage`.
+
+If you are not sure of the name of the stage to override, you can run `kairos-agent run-stage -a STAGE` to see the final DAG of the stage, which will include the full name of the stage, and you can use that to override it. Notice that if the yaml file has a root name, that will be used instead of the file name.
+
+Here is a real example of the output of `kairos-agent run-stage -a boot`:
+
+```bash
+1.
+ <init> (background: false) (weak: false)
+2.
+ <Start agent.0> (background: false) (weak: true)
+ <Start recovery on tty1.Recovery> (background: false) (weak: true)
+ <Start installer on tty1..0> (background: false) (weak: true)
+ <Default config.Default sysctl settings> (background: false) (weak: true)
+ <Enable QEMU tools.Enable QEMU.0> (background: false) (weak: true)
+3.
+ <Enable QEMU tools.Enable QEMU.1> (background: false) (weak: true)
+ <Start installer on tty1..1> (background: false) (weak: true)
+4.
+ <Enable QEMU tools.Enable VBOX.2> (background: false) (weak: true)
+5.
+ <Enable QEMU tools.Enable VBOX.3> (background: false) (weak: true)
+2025-07-04T07:18:12Z DBG [2994] Generating op for stage '/oem/91_sysctl.yaml.first step'
+2025-07-04T07:18:12Z DBG [2994] Generating op for stage '/oem/92_another.yaml.0'
+1.
+ <init> (background: false) (weak: false)
+2.
+ </oem/91_sysctl.yaml.first step> (background: false) (weak: true)
+3.
+ </oem/92_another.yaml.0> (background: false) (weak: true)
+
+```
+
+
+ - `Start agent.0` -> The file has a root name `Start agent` and the step doesn't have a set name so it gets the step number
+```yaml
+name: "Start agent"
+stages:
+  boot:
+    - if: '[ ! -f "/run/cos/recovery_mode" ]'
+      only_service_manager: "systemd"
+      files:
+        - path: /etc/systemd/system/kairos-agent.service
+...
+```
+ - `Start recovery on tty1.Recovery` -> The file has a root name `Start recovery on tty1` and the step has a name `Recovery`
+```yaml
+name: "Start recovery on tty1"
+stages:
+  boot:
+    - name: "Recovery"
+      if: '[ -f "/run/cos/recovery_mode" ]'
+      hostname: "cos-recovery"
+      commands:
+...
+```
+ - `/oem/91_sysctl.yaml.first step` -> The file has no root name and the step has a name `first step`, so it gets the file name plus step name.
+```yaml
+stages:
+  boot:
+    - name: first step
+```
+ - `/oem/92_another.yaml.0` -> The file has no root name and the step has no name, so it gets the file name plus step number.
+```yaml
+stages:
+  boot:
+    - commands:
+```
 
 
 [^1]: Steps executed at the `chroot` stage are running inside the new OS as chroot, allowing to write persisting changes to the image, for example by downloading and installing additional software.
