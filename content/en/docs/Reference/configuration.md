@@ -155,7 +155,7 @@ reset:
   poweroff: true
 
   # Use a different source for the reset
-  source: "docker:.."
+  source: "oci:.."
 
   # Override the grub entry name
   grub-entry-name: Kairos
