@@ -50,9 +50,7 @@ FROM quay.io/kairos/kairos-init:{{< kairosInitVersion >}} AS kairos-init
 
 FROM ubuntu:24.04
 ARG VERSION=1.0.0
-COPY --from=kairos-init /kairos-init /kairos-init
-RUN /kairos-init --version "${VERSION}"
-RUN rm /kairos-init
+RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init /kairos-init --version "${VERSION}"
 ```
 
 The only required argument for kairos-init is the version, which will be set under the `/etc/kairos-release` values to track the artifacts version so you can upgrade to those and track changes.
@@ -106,6 +104,11 @@ $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $PWD/build/:/o
 $ ls build      
 config.yaml  kairos.iso  kairos.iso.sha256  netboot  temp-rootfs
 ```
+
+{{% alert title="Bind mount the binary instead of copying?" color="warning" %}}
+
+As you will see over the examples, we do not copy the kairos-init binary into the image, but rather we bind mount it from the kairos-init image. This is in order to save space due to how docker works with layers and caching. If you want to copy the binary instead, you can use the `COPY --from=kairos-init /kairos-init /kairos-init` command instead of the `RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init /kairos-init` command, the output will be the same but the end image will be a bit larger.
+{{% /alert %}}
 
 
 
@@ -181,6 +184,7 @@ kairos-init is divided in 2 phases, one its the install phase which install all 
 
 Install:
  - Install required packages via system package manager
+ - Install the kernel
  - Install the Kairos binaries, like the agent or immucore
  - Install the Kairos configurations, like oem yip configs, initrd configs, etc..
  - Install the Kairos' provider, including a k8s distribution and tools if requested
@@ -210,6 +214,39 @@ We recognize that one size does not fit all, and sometimes you may want to skip 
 This is useful if you want to customize the image yourself and find that some steps collide with your customization. You can choose between `install` and `init` to skip those full stages or go into specific steps.
 
 Run `kairos-init steps-info` to see the available steps and their descriptions. You can pass more than one step, separated by comma, to skip multiple steps, for example: `--skip-steps installPackages,kernel`.
+
+This is an example output of the stages and steps available. We recommend you run `kairos-init steps-info` to see the updated list of steps and stages available, as this is subject to change:
+
+```dockerfile
+FROM quay.io/kairos/kairos-init:{{< kairosInitVersion >}} AS kairos-init
+
+FROM ubuntu:24.04
+RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init /kairos-init steps-info
+```
+
+```bash
+2025-07-07T09:53:05Z INF [7] Starting kairos-init version 59628ad
+2025-07-07T09:53:05Z INF [7] Step name & Description
+2025-07-07T09:53:05Z INF [7] --------------------------------------------------------
+2025-07-07T09:53:05Z INF [7] "branding": applies the branding for the system
+2025-07-07T09:53:05Z INF [7] "cleanup": cleans up the system of unneeded packages and files
+2025-07-07T09:53:05Z INF [7] "cloudconfigs": installs the cloud-configs for the system
+2025-07-07T09:53:05Z INF [7] "grub": configures the grub bootloader
+2025-07-07T09:53:05Z INF [7] "init": The full init stage, which includes kairosRelease, kubernetes, initrd, services, workarounds and cleanup steps
+2025-07-07T09:53:05Z INF [7] "initramfsConfigs": configures the initramfs for the system
+2025-07-07T09:53:05Z INF [7] "initrd": generates the initrd
+2025-07-07T09:53:05Z INF [7] "install": The full install stage, which includes installPackages, kubernetes, cloudconfigs, branding, grub, services, kairosBinaries, providerBinaries, initramfsConfigs and miscellaneous steps
+2025-07-07T09:53:05Z INF [7] "installKernel": installs the kernel packages
+2025-07-07T09:53:05Z INF [7] "installPackages": installs the base system packages
+2025-07-07T09:53:05Z INF [7] "kairosBinaries": installs the kairos binaries
+2025-07-07T09:53:05Z INF [7] "kairosRelease": creates and fills the /etc/kairos-release file
+2025-07-07T09:53:05Z INF [7] "kernel": installs the kernel
+2025-07-07T09:53:05Z INF [7] "kubernetes": installs the kubernetes provider
+2025-07-07T09:53:05Z INF [7] "miscellaneous": applies miscellaneous configurations
+2025-07-07T09:53:05Z INF [7] "providerBinaries": installs the kairos provider binaries for k8s
+2025-07-07T09:53:05Z INF [7] "services": creates and enables required services
+2025-07-07T09:53:05Z INF [7] "workarounds": applies workarounds for known issues
+```
 
 
 ## Extending stages with custom actions
@@ -278,13 +315,11 @@ You can validate the image you built using the `kairos-init validate` command in
 Before running `kairos-init`, you need to register the system with the subscription manager and attach a subscription to it. You can do this by modifying the Dockerfile to register the system before running `kairos-init`:
 
 ```Dockerfile
-FROM quay.io/kairos/kairos-init:latest AS kairos-init
+FROM quay.io/kairos/kairos-init:{{< kairosInitVersion >}} AS kairos-init
 
 FROM redhat/ubi9
 RUN subscription-manager register --username <your-username> --password <your-password>
-COPY --from=kairos-init /kairos-init /kairos-init
-RUN /kairos-init
-RUN rm /kairos-init
+RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init /kairos-init
 ```
 
 
@@ -318,15 +353,11 @@ $ docker build --platform=arm64 -t ubuntu-rpi:22.04 --build-arg MODEL=rpi4 --bui
 FROM quay.io/kairos/kairos-init:{{< kairosInitVersion >}} AS kairos-init
 
 FROM ubuntu:24.04
-COPY --from=kairos-init /kairos-init /kairos-init
-RUN /kairos-init -l debug -s install --version "v0.0.1"
-# Remove default kernel that Kairos-init installs
-RUN apt-get remove -y linux-base linux-image-generic-hwe-24.04 && apt-get autoremove -y
+RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init /kairos-init -l debug -s install --version "v0.0.1" --skip-steps installKernel
 # Install Smaller virtual kernel, useful for testing things in VMS
 RUN apt-get install -y linux-image-virtual
 # Run the init phase as normal, it will find the new kernel and link it + generate initrd
-RUN /kairos-init -l debug -s init --version "v0.0.1"
-RUN rm /kairos-init
+RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init /kairos-init -l debug -s init --version "v0.0.1"
 ```
 
 ```bash
