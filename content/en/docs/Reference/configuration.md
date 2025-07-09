@@ -182,7 +182,7 @@ upgrade:
   poweroff: true
 
   # Use a different source for the upgrade
-  source: "docker:.."
+  source: "oci:.."
   
   # Override the grub entry name
   grub-entry-name: Kairos
