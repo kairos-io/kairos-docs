@@ -105,7 +105,7 @@ $ ls build
 config.yaml  kairos.iso  kairos.iso.sha256  netboot  temp-rootfs
 ```
 
-{{% alert title="Bind mount the binary instead of copy?" color="warning" %}}
+{{% alert title="Bind mount the binary instead of copying?" color="warning" %}}
 
 As you will see over the examples, we do not copy the kairos-init binary into the image, but rather we bind mount it from the kairos-init image. This is in order to save space due to how docker works with layers and caching. If you want to copy the binary instead, you can use the `COPY --from=kairos-init /kairos-init /kairos-init` command instead of the `RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init /kairos-init` command, the output will be the same but the end image will be a bit larger.
 {{% /alert %}}
@@ -319,7 +319,7 @@ FROM quay.io/kairos/kairos-init:{{< kairosInitVersion >}} AS kairos-init
 
 FROM redhat/ubi9
 RUN subscription-manager register --username <your-username> --password <your-password>
-RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init  /kairos-init
+RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init /kairos-init
 ```
 
 
