@@ -122,7 +122,7 @@ install:
   # recovery-system.size: 5000
   
   # Use a different source for the installation
-  source: "docker:.."
+  source: "oci:.."
   # Add bundles in runtime
   bundles:
     - ...
