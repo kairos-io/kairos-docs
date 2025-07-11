@@ -101,7 +101,7 @@ This command can be combined with the `--skip-microsoft-certs-I-KNOW-WHAT-IM-DOI
 
 ## Using a hardware key for signing
 
-You can use something like a [nitrokey](https://www.nitrokey.com/) to sign the UKI files. In order to do so, you need to have the keys generated in the hardware key and then generate a certificate signed by the key like so:
+You can use hardware keys which are compatible with the *PKCS #11* standard,  like for example a [nitrokey](https://www.nitrokey.com/) to sign the UKI files. In order to do so, you need to have the keys generated in the hardware key and then generate a certificate signed by the key like so:
 
 
 Generate your key in the hardware key, for example with a nitrokey:
@@ -141,7 +141,7 @@ Slot 1 (0x1): Nitrokey Nitrokey Start (FSIJ-1.2.19-C5B562D9) 00 00
 ```
 
 
-Now Create you ssl config in order to use the hardware key to sign the certificate:
+Now create your SSL config in order to use the hardware key to sign the certificate:
 ```bash
 $ cat <<EOF > openssl-pkcs11.conf
 openssl_conf = openssl_init
@@ -168,7 +168,7 @@ EOF
 
 Generate a certificate signing request (CSR) with the private key in the hardware key:
 ```bash
-$ OPENSSL_CONF=openssl-pkcs11.conf openssl req -new  -key "pkcs11:slot-id=1;id=%01" \       
+$ OPENSSL_CONF=openssl-pkcs11.conf openssl req -new  -key "pkcs11:slot-id=1;id=%01" \
     -sha256 -out nitrokey.csr.pem -subj "/CN=SecureBoot Key/"
 ```
 
