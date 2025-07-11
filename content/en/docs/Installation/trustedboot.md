@@ -193,7 +193,7 @@ To build the installable medium you need to run the following commands:
 CONTAINER_IMAGE={{<oci variant="core">}}-uki
 docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/auroraboot:{{< auroraBootVersion >}} build-uki -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT $CONTAINER_IMAGE
 # to build an EFI file only
-docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/auroraboot:{{< auroraBootVersion >}} build-uki -t uki -d /result/ -k /keys $CONTAINER_IMAGE
+docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/auroraboot:{{< auroraBootVersion >}} build-uki -t uki -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT $CONTAINER_IMAGE
 ```
 {{% /tab %}}
 {{% tab header="From a directory" %}}
@@ -210,11 +210,15 @@ Lets explain some of the flags used here, especially the ones related to Trusted
 
 - `-t iso` specifies that the output should be an installable medium (ISO file). You can use `-t uki` to generate an EFI file only. Or `-t container` to generate a container image with the UKI files on it, perfect to push to a remote registry for upgrades.\
 - `-d /result/` specifies the output directory where the output type will be saved.
-- `--public-keys /keys` specifies the directory where the public keys are stored. This are the keys that are auto enrolled on first boot. They are 3 (DB,KEK, PK) and are in .auth format.
 - `--tpm-pcr-private-key` specifies the path to the private key used to sign the PCR policies. This is required for the user-data encryption.
 - `--sb-key` specifies the path to the Secure Boot key used to sign the UKI files.
 - `--sb-cert` specifies the path to the Secure Boot certificate used to sign the UKI files.
+- `--public-keys /keys` specifies the directory where the public keys are stored. This are the keys that are auto enrolled on first boot. They are 3 (DB,KEK, PK) and are in .auth format.
 
+
+{{% alert title="Keys format" color="info" %}}
+The .auth format in Secure Boot refers to EFI Signature Lists (ESLs) wrapped in an authentication structure, which allows UEFI firmware to verify and install Secure Boot keys securely. These files are used when manually enrolling Secure Boot keys into a UEFI system, typically through the firmware setup interface. `.auth` files are signed versions of `.esl` files. An `.esl` file is a binary format defined by the UEFI specification that wraps one or more EFI Signature Data entries (usually X.509 certs or SHA256 hashes).
+{{% /alert %}}
 
 For a more secure process you can use a hardware key to generate and sign the certificate and sign the EFI files, so you dont need to keep the private key in the filesystem.
 

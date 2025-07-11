@@ -47,10 +47,10 @@ docker build -t auroraboot .
 ```bash {class="only-flavors=Ubuntu+24.04,Fedora+40"}
 CONTAINER_IMAGE={{<oci variant="core">}}
 
-docker run --rm -v $PWD/keys:/keys -v $PWD:/work -ti auroraboot build-uki -t uki -d /work/upgrade-image -k /keys $CONTAINER_IMAGE
+docker run --rm -v $PWD/keys:/keys -v $PWD:/work -ti auroraboot build-uki -t uki -d /work/upgrade-image --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT $CONTAINER_IMAGE
 
 # Generate container-image for upgrades
-docker run --rm -v $PWD/keys:/keys -v $PWD:/work -ti auroraboo tbuild-uki -t container -d /work/upgrade-image -k /keys $CONTAINER_IMAGE
+docker run --rm -v $PWD/keys:/keys -v $PWD:/work -ti auroraboo tbuild-uki -t container -d /work/upgrade-image --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT $CONTAINER_IMAGE
 ```
 
 3. Push the upgrade image to a registry
