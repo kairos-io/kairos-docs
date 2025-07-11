@@ -211,7 +211,7 @@ Lets explain some of the flags used here, especially the ones related to Trusted
 - `--tpm-pcr-private-key` specifies the path to the private key used to sign the PCR policies. This is required for the user-data encryption.
 - `--sb-key` specifies the path to the Secure Boot key used to sign the UKI files.
 - `--sb-cert` specifies the path to the Secure Boot certificate used to sign the UKI files.
-- `--public-keys /keys` specifies the directory where the public keys are stored. This are the keys that are auto enrolled on first boot. They are 3 (DB,KEK, PK) and are in .auth format.
+- `--public-keys /keys` specifies the directory where the public keys are stored. These are the keys that are auto enrolled on first boot. They are 3 (DB,KEK, PK) and are in .auth format.
 
 
 {{% alert title="Keys format" color="info" %}}
