@@ -181,7 +181,7 @@ $ OPENSSL_CONF=openssl-pkcs11.conf openssl x509 -req -days 3650 -in nitrokey.csr
 ```
 > You can append ;pin-value=<YOUR USER PIN> to the pkcs11 url to not have to write it. If you dont add it, openssl will ask you for it
 
-Now you will can use the hardware key and the cert to sign the UKI files.
+Now you can use the hardware key and certificate to sign the UKI files.
 
 ## Building installable medium
 
