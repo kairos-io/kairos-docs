@@ -25,35 +25,17 @@ The resulting container image can be used for upgrades with `kairos-agent`.
 
 The process will generate an EFI file which we will pack into a container image that will be used to upgrade the node.
 
-First we need to extract the EFI file from the ISO file generated with what explained in the [Trusted Boot Installation documentation]({{< relref "../installation/trustedboot" >}}):
-
-{{% alert title="Warning" color="warning" %}}
-This step is required until [#2171](https://github.com/kairos-io/kairos/issues/2171) is implemented.
-{{% /alert %}}
-
 #### Generate the upgrade image
 
-1. Build the container image used to generate the upgrade image
-
-```bash
-# Build the container image that will be used to generate the keys and installable medium
-git clone https://github.com/kairos-io/AuroraBoot.git auroraboot
-cd auroraboot
-docker build -t auroraboot .
-```
-
-2. Build the Container image used for upgrades
+1. Build the Container image used for upgrades
 
 ```bash {class="only-flavors=Ubuntu+24.04,Fedora+40"}
 CONTAINER_IMAGE={{<oci variant="core">}}
 
-docker run --rm -v $PWD/keys:/keys -v $PWD:/work -ti auroraboot build-uki -t uki -d /work/upgrade-image -k /keys $CONTAINER_IMAGE
-
-# Generate container-image for upgrades
-docker run --rm -v $PWD/keys:/keys -v $PWD:/work -ti auroraboo tbuild-uki -t container -d /work/upgrade-image -k /keys $CONTAINER_IMAGE
+docker run --rm -v $PWD/keys:/keys -v $PWD:/work -ti {{< registryURL >}}/auroraboot:{{< auroraBootVersion >}} build-uki -t container --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT $CONTAINER_IMAGE
 ```
 
-3. Push the upgrade image to a registry
+2. Push the upgrade image to a registry
 
 ```bash
 # Now you can load upgrade_image.tar to a registry and use it with kairos-agent
@@ -66,7 +48,7 @@ docker push <IMAGE_NAME>
 #### Upgrade with kairos-agent
 
 {{% alert title="Warning" color="warning" %}}
-For upgrading use the image that has been loaded with `docker load` in the step earlier. That contains the EFI files for the upgrade process. **Do not use** the container image used (`$CONTAINER_IMAGE` in the example above) used as input!
+For upgrading use the image that has been loaded with `docker load` in the step earlier. That contains the EFI files for the upgrade process. **Do not use** the source/base image used (`$CONTAINER_IMAGE` in the example above) used as input!
 {{% /alert %}}
 
 Let's assume an upgrade image named `acme.com/acme/kairos` has been built and pushed
@@ -147,28 +129,3 @@ To understand more on how this works, see the [example here](https://github.com/
 the system upgrade controller and the [`suc-upgrade.sh` script](https://github.com/kairos-io/packages/blob/821de2dded0c2f590b539261002c5d257fb8ea07/packages/system/suc-upgrade/suc-upgrade.sh#L13-L15)
 which is used for regular (non trusted boot) upgrades.
 {{% /alert %}}
-
-### Reference
-
-
-#### Generate the upgrade image manually
-
-You can also manually generate the container image:
-
-```bash
-
-CONF=$(basename $(ls -1 $PWD/upgrade-image/loader/entries/*.conf))
-# Replace with the version of the OS you are upgrading to (next boot auto selection)
-cat <<EOF > upgrade-image/loader/loader.conf
-default $CONF
-timeout 5
-console-mode max
-editor no
-EOF
-
-## Generate the container image
-docker run --rm -v $PWD:/work --entrypoint /bin/tar -ti auroraboot -C /work/upgrade-image -cf /work/src.tar .
-
-CONTAINER_IMAGE_NAME="ttl.sh/kairos-uki/tests:my-upgrade-image"
-docker run -ti -v $PWD:/work quay.io/luet/base:latest util pack $CONTAINER_IMAGE_NAME /work/src.tar /work/upgrade_image.tar
-```
