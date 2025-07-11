@@ -172,14 +172,12 @@ $ OPENSSL_CONF=openssl-pkcs11.conf openssl req -new  -key "pkcs11:slot-id=1;id=%
     -sha256 -out nitrokey.csr.pem -subj "/CN=SecureBoot Key/"
 ```
 
-> You can append ;pin-value=<YOUR USER PIN> to the pkcs11 url to not have to write it. If you dont add it, openssl will ask you for it
+> You can append ;pin-value=<YOUR USER PIN> to the pkcs11 url to not have to write it. If you don't add it, openssl will ask you for it
 
 Sign the CSR with the private key in the hardware key:
 ```bash
 $ OPENSSL_CONF=openssl-pkcs11.conf openssl x509 -req -days 3650 -in nitrokey.csr.pem \
     -signkey "pkcs11:slot-id=1;id=%01" -out nitrokey.crt.pem
-```
-> You can append ;pin-value=<YOUR USER PIN> to the pkcs11 url to not have to write it. If you dont add it, openssl will ask you for it
 
 Now you can use the hardware key and certificate to sign the UKI files.
 
