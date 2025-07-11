@@ -141,7 +141,7 @@ Slot 1 (0x1): Nitrokey Nitrokey Start (FSIJ-1.2.19-C5B562D9) 00 00
 ```
 
 
-Now Create you ssl config in order to use the hardware key to sign the certificate:
+Now create your SSL config in order to use the hardware key to sign the certificate:
 ```bash
 $ cat <<EOF > openssl-pkcs11.conf
 openssl_conf = openssl_init
