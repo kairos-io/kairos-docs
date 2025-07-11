@@ -168,7 +168,7 @@ EOF
 
 Generate a certificate signing request (CSR) with the private key in the hardware key:
 ```bash
-$ OPENSSL_CONF=openssl-pkcs11.conf openssl req -new  -key "pkcs11:slot-id=1;id=%01" \       
+$ OPENSSL_CONF=openssl-pkcs11.conf openssl req -new  -key "pkcs11:slot-id=1;id=%01" \
     -sha256 -out nitrokey.csr.pem -subj "/CN=SecureBoot Key/"
 ```
 
