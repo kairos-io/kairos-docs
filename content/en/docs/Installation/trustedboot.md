@@ -101,7 +101,7 @@ This command can be combined with the `--skip-microsoft-certs-I-KNOW-WHAT-IM-DOI
 
 ## Using a hardware key for signing
 
-You can use something like a [nitrokey](https://www.nitrokey.com/) to sign the UKI files. In order to do so, you need to have the keys generated in the hardware key and then generate a certificate signed by the key like so:
+You can use hardware keys which are compatible with the *PKCS #11* standard,  like for example a [nitrokey](https://www.nitrokey.com/) to sign the UKI files. In order to do so, you need to have the keys generated in the hardware key and then generate a certificate signed by the key like so:
 
 
 Generate your key in the hardware key, for example with a nitrokey:
