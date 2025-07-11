@@ -204,7 +204,7 @@ docker run -ti --rm -v $PWD/build:/result -v $PWD/rootfs:/rootfs -v $PWD/keys/:/
 {{< /tabpane >}}
 
 
-Lets explain some of the flags used here, especially the ones related to Trusted Boot keys:
+Let's explain some of the flags used here, especially the ones related to Trusted Boot keys:
 
 - `-t iso` specifies that the output should be an installable medium (ISO file). You can use `-t uki` to generate an EFI file only. Or `-t container` to generate a container image with the UKI files on it, perfect to push to a remote registry for upgrades.\
 - `-d /result/` specifies the output directory where the output type will be saved.
