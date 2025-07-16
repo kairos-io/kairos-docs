@@ -807,6 +807,12 @@ stages:
                   info: "Foo!"
                   homedir: "/home/foo"
                   shell: "/bin/bash"
+       datasource:
+        path: "/usr/local/etc"
+        providers:
+          - "digitalocean"
+          - "aws"
+          - "gcp"
 ```
 
 Note multiple stages can be specified, to execute blocks into different stages, consider:
