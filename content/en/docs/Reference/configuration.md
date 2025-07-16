@@ -474,70 +474,6 @@ stages:
 
 This will set the hostname for each machine based on the first 4 characters of the machine ID. For example, if the machine ID for a particular machine is `abcdef123456`, the hostname for that machine will be set to `node-abcd`.
 
-### K3s settings
-
-The `k3s` and `k3s-agent` blocks in the Kairos configuration file allow you to customize the environment and argument settings for K3s.
-
-Here's an example of how to use these blocks in your Kairos configuration:
-
-{{< tabpane text=true right=true  >}}
-{{% tab header="server" %}}
-```yaml
-k3s:
-  enabled: true
-  # Additional env/args for k3s server instances
-  env:
-    K3S_RESOLV_CONF: ""
-    K3S_DATASTORE_ENDPOINT: ""
-  args:
-    - ...
-```
-{{% /tab %}}
-{{% tab header="agent" %}}
-```yaml
-k3s-agent:
-  enabled: true
-  # Additional env/args for k3s server instances
-  env:
-    K3S_RESOLV_CONF: ""
-    K3S_DATASTORE_ENDPOINT: ""
-  args:
-    -
-```
-{{% /tab %}}
-{{< /tabpane >}}
-
-{{% alert title="Warning" color="warning" %}}
-The K3s args are only applied when the K3s service is created, which is during installation. Changing the `args` key after installation won't have any effect.
-{{% /alert %}}
-
-In order to override an existing k3s install arguments, you need to override the default service ones.
-
-For Alpine services, the trick is to write via cloud config the `/etc/rancher/k3s/k3s.env` file to set the proper `command_args` like so:
-```
-stages:
-  initramfs:
-    - name: "Override k3s environment"
-      environment_file: /etc/rancher/k3s/k3s.env
-      environment:
-        command_args: server --verbose
-```
-
-For SystemD services, the usual override methods from systemD itself are available to override any services config, so we can lean on the yip plugin for systemD:
-```
-stages:
-  initramfs:
-    - name: "Expand k3s modules load"
-      systemctl:
-        overrides:
-          - service: k3s.service
-            content: |
-              [Service]
-              ExecStartPre=-/sbin/modprobe nfs
-```
-
-For more examples of how to configure K3s manually, see the [examples]({{< relref "../examples" >}}) section or [HA]({{< relref "../examples/ha" >}}).
-
 ### Grub options
 
 The `install.grub_options` field in the Kairos configuration file allows you to set key/value pairs for GRUB options that will be set in the GRUB environment after installation.
@@ -678,109 +614,120 @@ testuser
 localhost:~$
 ```
 
-## k3s configuration
 
-This section allows you to configure the k3s server instances.
+## Provider configs
 
-### `k3s.enabled`
 
-Enables the k3s server instance. Accepted: `true`, `false`.
+Providers are small binaries that can be used to extend the capabilities of Kairos. They are typically used to provide additional functionality or to integrate with external systems like k3s, k0s, rke2, or other Kubernetes distributions or even to provide additional functionality like p2p networking.
 
-### `k3s.env`
+This allows to use the same configuration file to install different Kubernetes distributions or to enable additional features like p2p networking.
 
-Additional environment variables for the k3s server instance.
+Below is a list of the configurations available for the current providers.
 
-### `k3s.args`
+Note that there is currently more providers available but some are community maintained. You should refer to the provider documentation for more information on how to use them.
 
-Additional arguments for the k3s server instance.
+{{< tabpane text=true right=true  >}}
+{{% tab header="k3s" %}}
 
-### `k3s.replace_env`
+| Key                     | Description                                                                                                                                               |
+|-------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `k3s.enabled`           | Enables the k3s server instance. Accepted: `true`, `false`.                                                                                               |
+| `k3s.env`               | Additional environment variables for the k3s server instance.                                                                                             |
+| `k3s.args`              | Additional arguments for the k3s server instance.                                                                                                         |
+| `k3s.replace_env`       | Replaces all environment variables otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the environment variables you need. |
+| `k3s.replace_args`      | Replaces all arguments otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the arguments you need.                         |
+| `k3s.embedded_registry` | Enables the embedded registry in k3s. Accepted: `true`, `false`.                                                                                          |
 
-Replaces all environment variables otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the environment variables you need.
 
-### `k3s.replace_args`
+WARNING: The K3s args are only applied when the K3s service is created, which is during installation. Changing the `args` key after installation won't have any effect.
 
-Replaces all arguments otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the arguments you need.
+In order to override an existing k3s install arguments, you need to override the default service ones.
 
-### `k3s.embedded_registry`
-
-Enables the embedded registry in k3s. Accepted: `true`, `false`.
-
-## k3s-agent configuration
-
-This section allows you to configure the k3s agent instances.
-
-### `k3s-agent.enabled`
-
-Enables the k3s agent instance. Accepted: `true`, `false`.
-
-### `k3s-agent.env`
-
-Additional environment variables for the k3s agent instance.
-
-### `k3s-agent.args`
-
-Additional arguments for the k3s agent instance.
-
-### `k3s-agent.replace_env`
-
-Replaces all environment variables otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the environment variables you need.
-
-### `k3s-agent.replace_args`
-
-Replaces all arguments otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the arguments you need.
-
-### `k3s-agent.embedded_registry`
-
-Enables the embedded registry in k3s. Accepted: `true`, `false`.
-
-## P2P configuration
-
-P2P functionalities are experimental Kairos features and disabled by default. In order to enable them, just use the `p2p` configuration block.
-
-### `p2p.network_token`
-
-This defines the network token used by peers to join the p2p virtual private network. You can generate it with the Kairos CLI with `kairos generate-token`. Check out [the P2P section]({{< relref "../installation/p2p" >}}) for more instructions.
-
-### `p2p.role`
-
-Define a role for the node. Accepted: `worker`, `master`. Currently only one master is supported.
-
-### `p2p.network_id`
-
-Define a custom ID for the Kubernetes cluster. This can be used to create multiple clusters in the same network segment by specifying the same id across nodes with the same network token. Accepted: any string.
-
-### `p2p.dns`
-
-When the `p2p.dns` is set to `true` the embedded DNS is configured on the node. This allows to propagate custom records to the nodes by using the blockchain DNS server. For example, this is assuming `kairosctl bridge` is running in a separate terminal:
-
-```bash
-curl -X POST http://localhost:8080/api/dns --header "Content-Type: application/json" -d '{ "Regex": "foo.bar", "Records": { "A": "2.2.2.2" } }'
-```
-
-It will add the `foo.bar` domain with `2.2.2.2` as `A` response.
-
-Every node with DNS enabled will be able to resolve the domain after the domain is correctly announced.
-
-You can check out the DNS in the [DNS page in the API](http://localhost:8080/dns.html), see also the [EdgeVPN docs](https://mudler.github.io/edgevpn/docs/concepts/overview/dns/).
-
-Furthermore, it is possible to tweak the DNS server which are used to forward requests for domain listed outside, and as well, it's possible to lock down resolving only to nodes in the blockchain, by customizing the configuration file:
-
+For Alpine services, the trick is to write via cloud config the `/etc/rancher/k3s/k3s.env` file to set the proper `command_args` like so:
 ```yaml
-#cloud-config
-p2p:
-  network_token: "...."
-  # Enable embedded DNS See also: https://mudler.github.io/edgevpn/docs/concepts/overview/dns/
-  dns: true
-  vpn:
-    env:
-      # Disable DNS forwarding
-      DNSFORWARD: "false"
-      # Set cache size
-      DNSCACHESIZE: "200"
-      # Set DNS forward server
-      DNSFORWARDSERVER: "8.8.8.8:53"
+stages:
+  initramfs:
+    - name: "Override k3s environment"
+      environment_file: /etc/rancher/k3s/k3s.env
+      environment:
+        command_args: server --verbose
 ```
+
+For SystemD services, the usual override methods from systemD itself are available to override any services config, so we can lean on the yip plugin for systemD:
+```yaml
+stages:
+  initramfs:
+    - name: "Expand k3s modules load"
+      systemctl:
+        overrides:
+          - service: k3s.service
+            content: |
+              [Service]
+              ExecStartPre=-/sbin/modprobe nfs
+```
+
+
+{{% /tab %}}
+{{% tab header="k3s-agent" %}}
+| Key                     | Description                                                                                                                                               |
+|-------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `k3s-agent.enabled`           | Enables the k3s agent instance. Accepted: `true`, `false`.                                                                                               |
+| `k3s-agent.env`               | Additional environment variables for the k3s server instance.                                                                                             |
+| `k3s-agent.args`              | Additional arguments for the k3s server instance.                                                                                                         |
+| `k3s-agent.replace_env`       | Replaces all environment variables otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the environment variables you need. |
+| `k3s-agent.replace_args`      | Replaces all arguments otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the arguments you need.                         |
+| `k3s-agent.embedded_registry` | Enables the embedded registry in k3s. Accepted: `true`, `false`.                                                                                          |
+
+{{% /tab %}}
+{{% tab header="k0s" %}}
+| Key                     | Description                                                                                                                                               |
+|-------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `k0s.enabled`           | Enables the k0s server instance. Accepted: `true`, `false`.                                                                                               |
+| `k0s.env`               | Additional environment variables for the k0s server instance.                                                                                             |
+| `k0s.args`              | Additional arguments for the k0s server instance.                                                                                                         |
+| `k0s.replace_env`       | Replaces all environment variables otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the environment variables you need. |
+| `k0s.replace_args`      | Replaces all arguments otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the arguments you need.                         |
+
+{{% /tab %}}
+{{% tab header="k0s-worker" %}}
+| Key                     | Description|
+|-------------------------|-------------|
+| `k0s-worker.enabled`           | Enables the k0s worker instance. Accepted: `true`, `false`.     |
+| `k0s-worker.env`               | Additional environment variables for the k0s worker instance.      |
+| `k0s-worker.args`              | Additional arguments for the k0s worker instance.      |
+| `k0s-worker.replace_env`       | Replaces all environment variables otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the environment variables you need. |
+| `k0s-worker.replace_args`      | Replaces all arguments otherwise passed to k0s by Kairos with those supplied here. Make sure you pass all the arguments you need.   |
+
+{{% /tab %}}
+{{% tab header="kubevip" %}}
+| Key                     | Description      |
+|-------------------------|--------------------------|
+|`kubevip.enable`         | Enables kubevip. Accepted: `true`, `false`.  |
+|`kubevip.eip`            | VIP address to use |
+|`kubevip.manifest_url`   | Download and use the manifest from that url. You can see the default used otherwise [here](https://github.com/kairos-io/provider-kairos/blob/main/internal/assets/static/kube_vip_rbac.yaml)|
+|`kubevip.interface`      | Interface to use for the Kubevip EIP to attach to |
+|`kubevip.static_pod`     | Use a pod deployment for Kubevip instead of a daemonset. Accepted: `true`, `false` |
+|`kubevip.version`        | Set the specific Kubevip version to use |
+
+{{% /tab %}}
+{{% tab header="kubeadm" %}}
+
+| Key                           | Description                                                                                                  |
+|-------------------------------|--------------------------------------------------------------------------------------------------------------|
+| `cluster.cluster_token`       | Unique string that can be used to distinguish different clusters on networks with multiple clusters.         |
+| `cluster.control_plane_host`  | Host that all nodes can resolve and use for node registration.                                               |
+| `cluster.role`                | The role of the node in the cluster. Accepted values are `master`, `worker`, and `none`. Defaults to `none`. |
+| `cluster.config`              | The configuration for the cluster.                                                                           |
+| `cluster.env`                 | List of environment variables to be set on the cluster.                                                      |
+| `cluster.local_images_path`   | Path to the local archive images to import.                                                                  |
+
+{{% /tab %}}
+{{% tab header="p2p" %}}
+
+As P2P is a very complex topic, we have a dedicated [P2P documentation page]({{< relref "../installation/p2p.md" >}}) that explains how to use it with deep details.
+
+{{% /tab %}}
+{{< /tabpane >}}
 
 ## Stages
 
@@ -860,12 +807,6 @@ stages:
                   info: "Foo!"
                   homedir: "/home/foo"
                   shell: "/bin/bash"
-      datasource:
-        providers:
-          - "digitalocean"
-          - "aws"
-          - "gcp"
-        path: "/usr/local/etc"
 ```
 
 Note multiple stages can be specified, to execute blocks into different stages, consider:
