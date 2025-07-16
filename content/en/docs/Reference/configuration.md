@@ -653,7 +653,7 @@ stages:
         command_args: server --verbose
 ```
 
-For SystemD services, the usual override methods from systemD itself are available to override any services config, so we can lean on the yip plugin for systemD:
+For systemd services, the usual override methods from systemd itself are available to override any services config, so we can lean on the yip plugin for systemd:
 ```yaml
 stages:
   initramfs:
