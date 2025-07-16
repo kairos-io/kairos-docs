@@ -162,6 +162,39 @@ In the YAML configuration example, there are several important keywords that con
 | `p2p.auto.ha.master_nodes` | The number of additional HA master nodes expected in the cluster. |
 | `p2p.auto.ha.external_db` | The external database used for high availability |
 
+
+## DNS
+
+When the `p2p.dns` is set to `true` the embedded DNS is configured on the node. This allows to propagate custom records to the nodes by using the blockchain DNS server. For example, this is assuming `kairosctl bridge` is running in a separate terminal:
+
+```bash
+curl -X POST http://localhost:8080/api/dns --header "Content-Type: application/json" -d '{ "Regex": "foo.bar", "Records": { "A": "2.2.2.2" } }'
+```
+
+It will add the `foo.bar` domain with `2.2.2.2` as `A` response.
+Every node with DNS enabled will be able to resolve the domain after the domain is correctly announced.
+
+You can check out the DNS in the [DNS page in the API](http://localhost:8080/dns.html), see also the [EdgeVPN docs](https://mudler.github.io/edgevpn/docs/concepts/overview/dns/).
+
+Furthermore, it is possible to tweak the DNS server which are used to forward requests for domain listed outside, and as well, it's possible to lock down resolving only to nodes in the blockchain, by customizing the configuration file:
+
+```yaml
+#cloud-config
+
+p2p:
+  network_token: "...."
+  # Enable embedded DNS See also: https://mudler.github.io/edgevpn/docs/concepts/overview/dns/
+  dns: true
+  vpn:
+    env:
+      # Disable DNS forwarding
+      DNSFORWARD: "false"
+      # Set cache size
+      DNSCACHESIZE: "200"
+      # Set DNS forward server
+      DNSFORWARDSERVER: "8.8.8.8:53"
+```
+
 ## Elastic IP
 
 If deploying a cluster in a Local network, it might be preferable to disable the VPN functionalities.
