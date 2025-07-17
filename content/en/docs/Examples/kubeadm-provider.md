@@ -13,7 +13,7 @@ This guide is focused on a simple use case: booting a **single-node Kubernetes c
 
 ## 🧱 What Is `provider-kubeadm`?
 
-The `provider-kubeadm` is an [init provider](https://kairos.io/docs/reference/init-providers/) for Kairos that integrates with Kubernetes' `kubeadm` bootstrap process. It translates the familiar `kubeadm` configuration into a Kairos-compatible cloud-init YAML, wrapping everything in a reproducible and declarative boot process.
+The [provider-kubeadm](https://github.com/kairos-io/provider-kubeadm) is a binary for Kairos that integrates with Kubernetes' `kubeadm` bootstrap process. It translates the familiar `kubeadm` configuration into a Kairos-compatible cloud-init YAML, wrapping everything in a reproducible and declarative boot process.
 
 With this provider, we can fully define Kubernetes cluster parameters—including API server args, scheduler, networking, and etcd configuration—right inside a Kairos `#cloud-config` block.
 
@@ -21,7 +21,7 @@ With this provider, we can fully define Kubernetes cluster parameters—includin
 
 ## 🔧 Building the Image
 
-We start with a Kairos base image—here, Ubuntu 24.04 Core—and layer on everything `kubeadm` needs: containerd, kubelet, kubectl, and the kubeadm binary. Also we get the agent-provide-kubeadm to handle the `kubeadm` configuration.
+We start with a Kairos base image—here, Ubuntu 24.04 Core—and layer on everything `kubeadm` needs: containerd, kubelet, kubectl, and the kubeadm binary. Also we will download and set the agent-provide-kubeadm to handle the `kubeadm` configuration.
 
 Here's the Dockerfile used to construct the image:
 
@@ -45,6 +45,31 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Copy the provider into place
 RUN mkdir -p /system/providers && curl -L https://github.com/kairos-io/provider-kubeadm/releases/download/v4.7.0-rc.4/agent-provider-kubeadm-v4.7.0-rc.4-linux-amd64.tar.gz | tar -xz -C /system/providers/
 ```
+
+Or with the modern [Kairos Factory]({{< ref "kairos-factory.md" >}}) method:
+
+```Dockerfile
+FROM quay.io/kairos/kairos-init:{{< kairosInitVersion >}} AS kairos-init
+
+FROM ubuntu:24.04
+ARG VERSION=1.0.0
+RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init /kairos-init --version "${VERSION}"
+RUN curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+RUN echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /' | tee /etc/apt/sources.list.d/kubernetes.list
+
+# Install required packages
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    socat \
+    conntrack \
+    containerd \
+    runc \
+    kubelet \
+    kubeadm \
+    kubectl \
+ && apt-get clean && rm -rf /var/lib/apt/lists/* 
+RUN mkdir -p /system/providers && curl -L https://github.com/kairos-io/provider-kubeadm/releases/download/v4.7.0-rc.4/agent-provider-kubeadm-v4.7.0-rc.4-linux-amd64.tar.gz | tar -xz -C /system/providers/
+```
+
 ---
 
 ## ☁️ The Cloud-Config
