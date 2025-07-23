@@ -25,7 +25,6 @@ A configuration file like the following should be used (see the `bundles` sectio
 #cloud-config
 bundles:
     - targets:
-        - run://quay.io/kairos/community-bundles:system-upgrade-controller_latest
         - run://quay.io/kairos/community-bundles:cert-manager_latest
         - run://quay.io/kairos/community-bundles:kairos_latest
         - run://quay.io/kairos/community-bundles:coco_latest

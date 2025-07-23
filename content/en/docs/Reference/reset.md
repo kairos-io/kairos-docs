@@ -8,7 +8,7 @@ date: 2022-11-13
 
 Kairos has a recovery mechanism built-in which can be leveraged to restore the system to a known point. At installation time, the recovery partition is created from the installation medium and can be used to restore the system from scratch, leaving configuration intact and cleaning any persistent data accumulated by usage in the host (e.g. Kubernetes images, persistent volumes, etc. ).
 
-The reset action will regenerate the bootloader configuration and the images in the state partition (labeled `COS_STATE`) by using the recovery image generated at install time, cleaning up the host. 
+The reset action will regenerate the bootloader configuration and the images in the state partition (labeled `COS_STATE`) by using the recovery image generated at install time, cleaning up the host.
 
 The configuration files in `/oem` are kept intact, the node on the next reboot after a reset will perform the same boot sequence (again) of a first-boot installation.
 
@@ -58,76 +58,81 @@ $ reboot
 
 ## From Kubernetes
 
-`system-upgrade-controller` can be used to apply a plan to the nodes to use Kubernetes to schedule the reset on the nodes itself, similarly on how upgrades are applied. 
+The [Kairos operator]({{< relref "../Upgrade/kairos-operator" >}}) can be used to apply a NodeOp to the nodes to use Kubernetes to schedule the reset on the nodes itself, similarly on how upgrades are applied.
 
 Consider the following example which resets a machine by changing the config file used during installation:
 
 {{< tabpane text=true  >}}
 {{% tab header="Kairos v3.0.0 and upwards" %}}
 ```yaml
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: custom-script
-  namespace: system-upgrade
-type: Opaque
-stringData:
-  config.yaml: |
-    #cloud-config
-    hostname: testcluster-{{ trunc 4 .MachineID }}
-    k3s:
-      enabled: true
-    users:
-    - name: kairos
-      passwd: kairos
-      groups:
-      - admin
-      ssh_authorized_keys:
-      - github:mudler
-  add-config-file.sh: |
-    #!/bin/sh
-    set -e
-    if diff /host/run/system-upgrade/secrets/custom-script/config.yaml /host/oem/90_custom.yaml >/dev/null; then
-        echo config present
-        exit 0
-    fi
-    # we can't cp, that's a symlink!
-    cat /host/run/system-upgrade/secrets/custom-script/config.yaml > /host/oem/90_custom.yaml
-    grub2-editenv /host/oem/grubenv set next_entry=statereset
-    sync
-
-    mount --rbind /host/dev /dev
-    mount --rbind /host/run /run
-    nsenter -i -m -t 1 -- reboot
-    exit 1
----
-apiVersion: upgrade.cattle.io/v1
-kind: Plan
+apiVersion: operator.kairos.io/v1alpha1
+kind: NodeOp
 metadata:
   name: reset-and-reconfig
-  namespace: system-upgrade
+  namespace: default
 spec:
-  concurrency: 2
-  # This is the version (tag) of the image.
-  version: "{{<ociTag variant=\"standard\" >}}"
+  # NodeSelector to target specific nodes
   nodeSelector:
-    matchExpressions:
-      - { key: kubernetes.io/hostname, operator: Exists }
-  serviceAccountName: system-upgrade
-  cordon: false
-  upgrade:
-    # Here goes the image which is tied to the flavor being used.
-    # Currently can pick between opensuse and alpine
-    image: {{< registryURL >}}/@flavor
-    command:
-      - "/bin/bash"
-      - "-c"
-    args:
-      - bash /host/run/system-upgrade/secrets/custom-script/add-config-file.sh
-  secrets:
-    - name: custom-script
-      path: /host/run/system-upgrade/secrets/custom-script
+    matchLabels:
+      kairos.io/managed: "true"
+
+  # The container image to use
+  image: {{< registryURL >}}/@flavor
+
+  # Custom command to execute
+  command:
+    - sh
+    - -c
+    - |
+      set -e
+
+      # Create new configuration
+      cat > /host/oem/90_custom.yaml << 'EOF'
+      #cloud-config
+      hostname: testcluster-{{ trunc 4 .MachineID }}
+      k3s:
+        enabled: true
+      users:
+      - name: kairos
+        passwd: kairos
+        groups:
+        - admin
+        ssh_authorized_keys:
+        - github:mudler
+      EOF
+
+      # Set next boot to reset state
+      grub2-editenv /host/oem/grubenv set next_entry=statereset
+      sync
+
+      # Reboot the node
+      mount --rbind /host/dev /dev
+      mount --rbind /host/run /run
+      nsenter -i -m -t 1 -- reboot
+
+  # Path where the node's root filesystem will be mounted
+  hostMountPath: /host
+
+  # Whether to cordon the node before running the operation
+  cordon: true
+
+  # Drain options for pod eviction
+  drainOptions:
+    enabled: true
+    force: false
+    gracePeriodSeconds: 30
+    ignoreDaemonSets: true
+    deleteEmptyDirData: false
+    timeoutSeconds: 300
+
+  # Whether to reboot the node after successful operation
+  rebootOnSuccess: true
+
+  # Maximum number of nodes that can run the operation simultaneously
+  concurrency: 2
+
+  # Whether to stop creating new jobs when a job fails
+  stopOnFailure: true
 ```
 {{% /tab %}}
 {{% tab header="Kairos before v3.0.0" %}}

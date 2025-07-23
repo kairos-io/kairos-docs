@@ -1,12 +1,16 @@
 ---
-title: "Installing system-upgrade-controller"
-linkTitle: "System Upgrade Controller"
+title: "Installing system-upgrade-controller (Deprecated)"
+linkTitle: "System Upgrade Controller (Deprecated)"
 weight: 4
 date: 2024-10-02
-description: Install the system-upgrade-controller
+description: Install the system-upgrade-controller (deprecated - use Kairos operator instead)
 ---
 
-To upgrade Kairos with Kubernetes, it is necessary to have [system-upgrade-controller](https://github.com/rancher/system-upgrade-controller) deployed on the target cluster.
+{{% alert title="Deprecated" color="warning" %}}
+The system-upgrade-controller approach is deprecated. We recommend using the [Kairos operator]({{< relref "./kairos-operator" >}}) instead, which provides a more integrated and Kairos-specific way to manage upgrades and operations.
+{{% /alert %}}
+
+To upgrade Kairos with Kubernetes using the legacy approach, it is necessary to have [system-upgrade-controller](https://github.com/rancher/system-upgrade-controller) deployed on the target cluster.
 
 [The upstream documentation](https://github.com/rancher/system-upgrade-controller#deploying) on how to install the system-upgrade-controller, is this command:
 

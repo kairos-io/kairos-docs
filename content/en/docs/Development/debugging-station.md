@@ -26,7 +26,7 @@ bundles:
   - run://quay.io/kairos/community-bundles:kairos_latest
 ```
 
-We also need to enable entangle by setting `kairos.entangle.enable: true`. 
+We also need to enable entangle by setting `kairos.entangle.enable: true`.
 
 Next, we generate a new token that we will use to connect to the cluster later.
 
@@ -123,7 +123,6 @@ k3s:
 # Specify the bundle to use
 bundles:
 - targets:
-  - run://quay.io/kairos/community-bundles:system-upgrade-controller_latest
   - run://quay.io/kairos/community-bundles:cert-manager_latest
   - run://quay.io/kairos/community-bundles:kairos_latest
 
@@ -191,7 +190,6 @@ k3s:
 # Specify the bundle to use
 bundles:
 - targets:
-  - run://quay.io/kairos/community-bundles:system-upgrade-controller_latest
   - run://quay.io/kairos/community-bundles:cert-manager_latest
   - run://quay.io/kairos/community-bundles:kairos_latest
 

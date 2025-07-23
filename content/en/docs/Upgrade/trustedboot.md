@@ -61,11 +61,11 @@ kairos-agent upgrade --source oci:acme.com/acme/kairos
 
 #### Upgrades with Kubernetes
 
-To upgrade Kairos with Kubernetes, system-upgrade-controller needs to be deployed on the target cluster. [Read the instructions here]({{< relref "./system-upgrade-controller" >}}).
+To upgrade Kairos with Kubernetes, the Kairos operator needs to be deployed on the target cluster. [Read the instructions here]({{< relref "./kairos-operator" >}}).
 
-A "Plan" resource needs to be created which will use the image generated in the step above.
+A `NodeOp` resource needs to be created which will use the image generated in the step above.
 Since that image only contains the EFI files for the upgrade and in order to be able use any ImagePullSecrets
-defined on the cluster, we will create and image that can be used to start a Pod and also contains
+defined on the cluster, we will create an image that can be used to start a Pod and also contains
 the efi and conf files for the upgrade.
 
 Assuming an upgrade image named `acme.com/acme/kairosUpgradeImage` was built using a Kairos
@@ -79,53 +79,60 @@ COPY --from=upgradeImage / /trusted-boot
 ```
 (Let's call the image built with this dockerfile `planImage:vx.y.z`)
 
-The following plan can now be deployed on the cluster:
+The following NodeOp can now be deployed on the cluster:
 
 ```yaml
----
-apiVersion: v1
-kind: Secret
+apiVersion: operator.kairos.io/v1alpha1
+kind: NodeOp
 metadata:
-  name: upgrade
-  namespace: system-upgrade
-type: Opaque
-stringData:
-  upgrade.sh: |
-    #!/bin/sh
-    rm -rf /host/usr/local/trusted-boot
-    mkdir -p /host/usr/local/trusted-boot
-    mount --rbind /trusted-boot /host/usr/local/trusted-boot
-    chroot /host kairos-agent --debug upgrade --source dir:/usr/local/trusted-boot
----
-apiVersion: upgrade.cattle.io/v1
-kind: Plan
-metadata:
-  name: os-upgrade
-  namespace: system-upgrade
-  labels:
-    k3s-upgrade: server
+  name: trusted-boot-upgrade
+  namespace: default
 spec:
-  concurrency: 1
-  version: "vx.y.z" # The tag of the "upgrade.image" below
+  # NodeSelector to target specific nodes
   nodeSelector:
-    matchExpressions:
-      - {key: kubernetes.io/hostname, operator: Exists}
-  serviceAccountName: system-upgrade
-  secrets:
-    - name: upgrade
-      path: /host/run/system-upgrade/secrets/upgrade
-  cordon: false
-  drain:
+    matchLabels:
+      kairos.io/managed: "true"
+
+  # The container image containing the upgrade files
+  image: "planImage"
+
+  # Custom command to execute the trusted boot upgrade
+  command:
+    - sh
+    - -c
+    - |
+      set -e
+      rm -rf /host/usr/local/trusted-boot
+      mkdir -p /host/usr/local/trusted-boot
+      mount --rbind /trusted-boot /host/usr/local/trusted-boot
+      chroot /host kairos-agent --debug upgrade --source dir:/usr/local/trusted-boot
+
+  # Path where the node's root filesystem will be mounted
+  hostMountPath: /host
+
+  # Whether to cordon the node before running the operation
+  cordon: true
+
+  # Drain options for pod eviction
+  drainOptions:
+    enabled: true
     force: false
-    disableEviction: true
-  upgrade:
-    image: "planImage"
-    command: ["sh"]
-    args: ["/run/system-upgrade/secrets/upgrade/upgrade.sh"]
+    gracePeriodSeconds: 30
+    ignoreDaemonSets: true
+    deleteEmptyDirData: false
+    timeoutSeconds: 300
+
+  # Whether to reboot the node after successful operation
+  rebootOnSuccess: true
+
+  # Maximum number of nodes that can run the operation simultaneously
+  concurrency: 1
+
+  # Whether to stop creating new jobs when a job fails
+  stopOnFailure: true
 ```
 
 {{% alert title="Note" color="success" %}}
-To understand more on how this works, see the [example here](https://github.com/rancher/system-upgrade-controller/blob/master/examples/ubuntu/bionic.yaml) regarding
-the system upgrade controller and the [`suc-upgrade.sh` script](https://github.com/kairos-io/packages/blob/821de2dded0c2f590b539261002c5d257fb8ea07/packages/system/suc-upgrade/suc-upgrade.sh#L13-L15)
+To understand more on how this works, see the [Kairos operator documentation]({{< relref "./kairos-operator" >}}) for general information about the operator and the [`suc-upgrade.sh` script](https://github.com/kairos-io/packages/blob/821de2dded0c2f590b539261002c5d257fb8ea07/packages/system/suc-upgrade/suc-upgrade.sh#L13-L15)
 which is used for regular (non trusted boot) upgrades.
 {{% /alert %}}
