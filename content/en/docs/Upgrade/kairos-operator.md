@@ -2,7 +2,7 @@
 title: "Installing Kairos Operator"
 linkTitle: "Kairos Operator"
 weight: 4
-date: 2024-10-02
+date: 2025-07-25
 description: Install the Kairos operator for managing upgrades and operations
 ---
 

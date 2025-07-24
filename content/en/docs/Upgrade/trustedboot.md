@@ -133,6 +133,5 @@ spec:
 ```
 
 {{% alert title="Note" color="success" %}}
-To understand more on how this works, see the [Kairos operator documentation]({{< relref "./kairos-operator" >}}) for general information about the operator and the [`suc-upgrade.sh` script](https://github.com/kairos-io/packages/blob/821de2dded0c2f590b539261002c5d257fb8ea07/packages/system/suc-upgrade/suc-upgrade.sh#L13-L15)
-which is used for regular (non trusted boot) upgrades.
+To understand more on how this works, see the [Kairos operator documentation]({{< relref "./kairos-operator" >}}) for general information about the operator and the [regular upgrade process]({{< relref "./kubernetes" >}}) for non-trusted boot upgrades.
 {{% /alert %}}

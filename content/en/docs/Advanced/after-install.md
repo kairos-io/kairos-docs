@@ -79,11 +79,7 @@ spec:
       EOF
 
       sync
-
-      # Reboot the node
-      mount --rbind /host/dev /dev
-      mount --rbind /host/run /run
-      nsenter -i -m -t 1 -- reboot
+      # Note: The reboot is handled automatically by the operator when rebootOnSuccess: true
 
   # Path where the node's root filesystem will be mounted
   hostMountPath: /host

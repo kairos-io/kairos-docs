@@ -73,14 +73,13 @@ The Kairos operator provides several upgrade strategies that can be configured t
 Jobs will be created for each node that needs to be upgraded. You can monitor the progress:
 
 ```bash
-$ kubectl get jobs -A
-NAMESPACE   NAME                                    COMPLETIONS   DURATION   AGE
-default     kairos-upgrade-nodeop-node1             0/1          0s         10s
-default     kairos-upgrade-nodeop-node2             0/1          0s         5s
+$ kubectl  get jobs -A
+NAMESPACE         NAME                             STATUS     COMPLETIONS   DURATION   AGE
+default           kairos-upgrade-localhost-wr26f   Running    0/1           24s        24s
 
-$ kubectl get nodeopupgrades
-NAME            PHASE       MESSAGE
-kairos-upgrade  Running     Upgrading nodes: 1/3 completed
+$ kubectl  get nodeopupgrades
+NAME             AGE
+kairos-upgrade   5s
 ```
 
 Done! We should have all the basics to get our first cluster rolling, but there is much more we can do.
@@ -182,7 +181,9 @@ spec:
       sed -i 's/something/to/g' /host/oem/99_custom.yaml
 
       # Run the upgrade
-      /usr/sbin/suc-upgrade
+      mount --rbind /host/dev /dev
+      mount --rbind /host/run /run
+      kairos-agent upgrade --source dir:/
 
       # Custom post-upgrade commands
       echo "Running post-upgrade tasks..."
@@ -242,7 +243,9 @@ spec:
       # Replace c3os with kairos in configuration
       sed -i 's/c3os/kairos/g' /host/oem/99_custom.yaml
       # Run the upgrade
-      /usr/sbin/suc-upgrade
+      mount --rbind /host/dev /dev
+      mount --rbind /host/run /run
+      kairos-agent upgrade --source dir:/
 
   # Path where the node's root filesystem will be mounted
   hostMountPath: /host
