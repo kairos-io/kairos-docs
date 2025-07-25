@@ -24,6 +24,20 @@ users:
 
 # enable debug logging
 debug: true
+
+# Logs configuration for collecting diagnostic information
+# Note: The following are examples of additional services and files to collect.
+# The system already includes comprehensive defaults for Kairos services.
+logs:
+  # Additional systemd journal services to collect logs from
+  journal:
+    - "my-custom-service"
+    - "my-app"
+  # Additional log files to collect (supports glob patterns)
+  files:
+    - "/var/log/myapp/*.log"
+    - "/var/log/custom/*.log"
+
 # Additional paths for look for cloud-init files
 cloud-init-paths:
   - "/some/path"
@@ -830,6 +844,48 @@ stages:
    - commands:
      - echo "so much wow, /foo/bar bar exists!"
      if: "[ -e /foo/bar ]"
+```
+
+## Logs Configuration
+
+The `logs` configuration allows you to specify additional systemd journal services and log files to collect when using the `kairos-agent logs` command. This is useful for debugging and issue reporting.
+
+The system already includes comprehensive defaults for Kairos services and common log files. You only need to specify additional services or files that are not covered by the defaults.
+
+### Default Services
+
+The following services are automatically included:
+- `kairos-agent`, `kairos-installer`, `kairos-webui`
+- `cos-setup-boot`, `cos-setup-fs`, `cos-setup-network`, `cos-setup-reconcile`
+- `k3s`, `k3s-agent`, `k0scontroller`, `k0sworker`
+
+### Default Files
+
+The following log file patterns are automatically included:
+- `/var/log/kairos/*.log`
+- `/var/log/*.log`
+- `/run/immucore/*.log`
+
+### `journal`
+
+A list of additional systemd journal service names to collect logs from. Only specify services that are not already included in the defaults.
+
+### `files`
+
+A list of additional log file paths to collect. Supports glob patterns for matching multiple files. Only specify files that are not already covered by the default patterns.
+
+Example configuration for adding custom services and files:
+
+```yaml
+#cloud-config
+
+logs:
+  journal:
+    - "my-custom-service"
+    - "my-app"
+  files:
+    - "/var/log/myapp/*.log"
+    - "/var/log/custom/*.log"
 ```
 
 Below you can find a list of all the supported fields. Mind to replace with the appropriate stage you want to hook into.
