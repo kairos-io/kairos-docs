@@ -12,11 +12,11 @@ author: Kairos Team ([GitHub](https://github.com/kairos-io))
 <br>
 </h1>
 
-# Kairos 3.5.0: A Milestone for the Kairos Ecosystem
+# 🚀 Kairos 3.5.0: A Milestone for the Kairos Ecosystem
 
 We're excited to announce the release of Kairos 3.5.0! This release represents a significant milestone for the broader Kairos ecosystem, marking the completion of several key features across multiple projects that work together to improve the overall Kairos experience.
 
-## Meet the Kairos Operator
+## ⚙️ Meet the Kairos Operator
 
 The biggest addition to the Kairos ecosystem is the **Kairos operator** - a standalone Kubernetes operator that provides a native way to manage upgrades and operations on Kairos nodes. While this operator can work with previous Kairos versions, 3.5.0 marks the point where we consider it mature enough to be the recommended approach for Kubernetes-based management.
 
@@ -63,19 +63,39 @@ The Kairos operator opens up new possibilities for node management. You can now:
 
 The operator provides fine-grained control over deployment strategies, allowing you to implement canary deployments, rolling updates, or bulk operations depending on your needs.
 
-## Enhanced AuroraBoot Experience
+## 🔧 Enhanced AuroraBoot Experience
 
-Another significant milestone is the completion of the API-based workflow in [AuroraBoot](https://github.com/kairos-io/AuroraBoot), our tool for building bootable images. While AuroraBoot has long provided a WebUI for easy image building, the new API-based flow enables automation of these operations. This means you can now integrate image building into your CI/CD pipelines and infrastructure automation workflows.
+Another significant milestone is the completion of the API-based workflow in [AuroraBoot](https://github.com/kairos-io/AuroraBoot), our tool for building bootable images. AuroraBoot provides a comprehensive solution for creating custom bootable images, with both a user-friendly WebUI and powerful automation capabilities.
+
+### Introducing AuroraBoot WebUI
+
+AuroraBoot includes a web-based interface that makes image building accessible to everyone. The WebUI provides an intuitive way to configure and build custom Kairos images without needing to remember complex command-line parameters. You can easily specify container images, cloud configurations, and various build options through a clean, modern interface.
+
+To get started with the AuroraBoot WebUI, simply run:
+
+```bash
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+           --privileged \
+           -v $PWD/build/:/output \
+           -p 8080:8080 \
+           quay.io/kairos/auroraboot web
+```
+
+Then visit `http://localhost:8080` in your browser to access the interface. For more details on using the WebUI, check out our [AuroraBoot documentation](/docs/reference/auroraboot/).
+
+### API-Based Automation
+
+The new API-based workflow in AuroraBoot enables automation of image building operations. This means you can now integrate image building into your CI/CD pipelines and infrastructure automation workflows. The API provides programmatic access to all AuroraBoot features, allowing you to build images as part of your automated deployment processes.
 
 The API workflow complements the existing WebUI, giving you both the ease of use for manual operations and the power of automation for production environments.
 
-## Configuration Path Migration Reminder
+## 📁 Configuration Path Migration Reminder
 
 While [the configuration path change](https://github.com/kairos-io/kairos/issues/2233) from `/etc/elemental/config.yaml` to `/etc/kairos/config.yaml` has been moved to v4.0.0, we want to remind users to start migrating their configurations now. This change will align our configuration paths with the Kairos branding and provide a cleaner, more consistent experience.
 
 If you're using the old path, we recommend updating your configurations to use the new location (`/etc/kairos/config.yaml`) to prepare for deprecation. The old path will continue to work for now, but migrating early will ensure a smooth transition.
 
-## What's Next
+## 🔮 What's Next
 
 The completion of these ecosystem features represents a significant step toward more integrated and automated Kairos workflows. We're excited to see how the community uses these new capabilities to build more sophisticated deployment and management workflows.
 
