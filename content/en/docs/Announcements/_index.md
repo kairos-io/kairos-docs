@@ -17,7 +17,7 @@ Enki has been deprecated in favor of [AuroraBoot](https://github.com/kairos-io/a
 {{% /alert %}}
 
 {{% alert title="Deprecation Warnings" color="primary" %}}
-Starting on v3.5.0, reading of `/etc/elemental/config.yaml` will be deprecated. Use `/etc/kairos/config.yaml` instead. [#2233](https://github.com/kairos-io/kairos/issues/2233)
+Reading of `/etc/elemental/config.yaml` will be deprecated in favor of `/etc/kairos/config.yaml` in a future release. Use `/etc/kairos/config.yaml` instead. [#2233](https://github.com/kairos-io/kairos/issues/2233)
 {{% /alert %}}
 
 {{% alert title="Config dirs read ordering" color="primary" %}}
