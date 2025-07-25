@@ -71,6 +71,10 @@ Another significant milestone is the completion of the API-based workflow in [Au
 
 AuroraBoot includes a web-based interface that makes image building accessible to everyone. The WebUI provides an intuitive way to configure and build custom Kairos images without needing to remember complex command-line parameters. You can easily specify container images, cloud configurations, and various build options through a clean, modern interface.
 
+{{% alert title="Experimental Feature" color="warning" %}}
+The AuroraBoot WebUI is currently under heavy development and should be considered experimental. While functional, it may have limitations and could undergo significant changes in future releases. For production use, we recommend using the command-line interface.
+{{% /alert %}}
+
 To get started with the AuroraBoot WebUI, simply run:
 
 ```bash
