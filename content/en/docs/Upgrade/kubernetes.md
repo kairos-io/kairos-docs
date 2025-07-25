@@ -6,70 +6,80 @@ date: 2022-11-13
 description: Learn how to upgrade Kairos using Kubernetes
 ---
 
-Kairos upgrades can be performed either manually or via Kubernetes if the cluster is composed of Kairos nodes. In order to trigger upgrades, it is required to apply a `Plan` spec to the target cluster for the upgrade.
+Kairos upgrades can be performed either manually or via Kubernetes if the cluster is composed of Kairos nodes. The recommended approach is to use the Kairos operator, which provides a more integrated and Kairos-specific way to manage upgrades.
 
 ## Prerequisites
 
-system-upgrade-controller needs to be deployed on the target cluster. [Read the instructions here]({{< relref "./system-upgrade-controller" >}})
+The Kairos operator needs to be deployed on the target cluster. [Read the instructions here]({{< relref "./kairos-operator" >}})
 
 ### Upgrading from version X to version Y with Kubernetes
 
-To trigger an upgrade, create a plan for `system-upgrade-controller` which refers to the image version that we want to upgrade.
+To trigger an upgrade, create a `NodeOpUpgrade` resource which refers to the image version that you want to upgrade to. This is the recommended approach for upgrading Kairos nodes.
 
 ```bash
 cat <<'EOF' | kubectl apply -f -
 ---
-apiVersion: upgrade.cattle.io/v1
-kind: Plan
+apiVersion: operator.kairos.io/v1alpha1
+kind: NodeOpUpgrade
 metadata:
-  name: os-upgrade
-  namespace: system-upgrade
-  labels:
-    k3s-upgrade: server
+  name: kairos-upgrade
+  namespace: default
 spec:
-  concurrency: 1
-  # This is the version (tag) of the image to upgrade to.
-  version: "{{<ociTag variant=\"standard\" >}}"
+  # The container image containing the new Kairos version
+  image: {{< registryURL >}}/@flavor
+  # Example: quay.io/kairos/debian
+
+  # NodeSelector to target specific nodes (optional)
   nodeSelector:
-    matchExpressions:
-      - {key: kubernetes.io/hostname, operator: Exists}
-  serviceAccountName: system-upgrade
-  cordon: false
-  drain:
-    force: false
-    disableEviction: true
-  upgrade:
-    # Here goes the image which is tied to the flavor being used.
-    # You can also specify your custom image stored in a public registry.
-    image: {{< registryURL >}}/@flavor
-    command:
-    - "/usr/sbin/suc-upgrade"
+    matchLabels:
+      kairos.io/managed: "true"
+
+  # Maximum number of nodes that can run the upgrade simultaneously
+  # 0 means run on all nodes at once
+  concurrency: 1
+
+  # Whether to stop creating new jobs when a job fails
+  # Useful for canary deployments
+  stopOnFailure: true
+
+  # Whether to upgrade the active partition (defaults to true)
+  upgradeActive: true
+
+  # Whether to upgrade the recovery partition (defaults to false)
+  upgradeRecovery: false
+
+  # Whether to force the upgrade without version checks
+  force: false
 EOF
 ```
 
-To upgrade the "recovery" image instead of the active one, just pass `--recovery` to the `suc-upgrade script:
+To upgrade the "recovery" partition instead of the active one, set `upgradeRecovery: true` and `upgradeActive: false`:
 
-```
-...
-    command:
-    - "/usr/sbin/suc-upgrade"
-    - "--recovery"
+```yaml
+spec:
+  # ... other fields ...
+  upgradeActive: false
+  upgradeRecovery: true
 ```
 
 To check all the available versions, see the [images](https://quay.io/repository/kairos/opensuse?tab=tags) available on the container registry, corresponding to the flavor/version selected.
 
 {{% alert title="Note" color="success" %}}
 
-Several upgrade strategies can be used with `system-upgrade-controller` which are not illustrated here in this example. For instance, it can be specified in the number of hosts which are running the upgrades, filtering by labels, and more. [Refer to the project documentation](https://github.com/rancher/system-upgrade-controller) on how to create efficient strategies to roll upgrades on the nodes. In the example above, the upgrades are applied to every host of the cluster, one-by-one in sequence.
+The Kairos operator provides several upgrade strategies that can be configured through the `NodeOpUpgrade` resource. You can control concurrency, node selection, and failure handling. The example above shows a "canary upgrade" approach where nodes are upgraded one-by-one with failure detection.
 
 {{% /alert %}}
 
-A pod should appear right after which carries on the upgrade and automatically reboots the node:
+Jobs will be created for each node that needs to be upgraded. You can monitor the progress:
 
-```
-$ kubectl get pods -A
-...
-system-upgrade   apply-os-upgrade-on-kairos-with-1a1a24bcf897bd275730bdd8548-h7ffd   0/1     Creating   0          40s
+```bash
+$ kubectl  get jobs -A
+NAMESPACE         NAME                             STATUS     COMPLETIONS   DURATION   AGE
+default           kairos-upgrade-localhost-wr26f   Running    0/1           24s        24s
+
+$ kubectl  get nodeopupgrades
+NAME             AGE
+kairos-upgrade   5s
 ```
 
 Done! We should have all the basics to get our first cluster rolling, but there is much more we can do.
@@ -124,7 +134,6 @@ hostname: kyverno-{{ trunc 4 .MachineID }}
 # Specify the bundle to use
 bundles:
 - targets:
-  - run://quay.io/kairos/community-bundles:system-upgrade-controller_latest
   - run://quay.io/kairos/community-bundles:cert-manager_latest
   - run://quay.io/kairos/community-bundles:kyverno_latest
 
@@ -138,105 +147,129 @@ k3s:
  enabled: true
 ```
 
-This configuration file prepare the system with the `cert-manager`, `system-upgrade-controller` and the `kyverno` bundle, enabling `k3s`.
+This configuration file prepares the system with the `cert-manager` and `kyverno` bundles, enabling `k3s`. The Kairos operator can be deployed separately using the instructions in the [Kairos Operator documentation]({{< relref "./kairos-operator" >}}).
 
-## Customize the upgrade plan
+## Customize the upgrade process
 
-It is possible to run additional commands before the upgrade takes place into the node, consider the following example:
+For advanced customization, you can use a `NodeOp` resource directly instead of `NodeOpUpgrade`. This gives you full control over the upgrade process and allows you to run custom commands before or after the upgrade:
 
 ```yaml
----
-apiVersion: v1
-kind: Secret
+apiVersion: operator.kairos.io/v1alpha1
+kind: NodeOp
 metadata:
-  name: custom-script
-  namespace: system-upgrade
-type: Opaque
-stringData:
-  upgrade.sh: |
-    #!/bin/sh
-    set -e
-
-    # custom command, for example, that injects or modifies a configuration option
-    sed -i 's/something/to/g' /host/oem/99_custom.yaml
-    # run the upgrade script
-    /usr/sbin/suc-upgrade
----
-apiVersion: upgrade.cattle.io/v1
-kind: Plan
-metadata:
-  name: custom-os-upgrade
-  namespace: system-upgrade
+  name: custom-kairos-upgrade
+  namespace: default
 spec:
-  concurrency: 1
-  # This is the version (tag) of the image.
-  version: "{{<ociTag variant="standard">}}"
+  # NodeSelector to target specific nodes
   nodeSelector:
-    matchExpressions:
-      - { key: kubernetes.io/hostname, operator: Exists }
-  serviceAccountName: system-upgrade
-  cordon: false
-  drain:
+    matchLabels:
+      kairos.io/managed: "true"
+
+  # The container image containing the new Kairos version
+  image: {{< registryURL >}}/@flavor
+  # Example: quay.io/kairos/debian
+
+  # Custom command to execute
+  command:
+    - sh
+    - -c
+    - |
+      set -e
+
+      # Custom pre-upgrade commands
+      echo "Running pre-upgrade tasks..."
+      sed -i 's/something/to/g' /host/oem/99_custom.yaml
+
+      # Run the upgrade
+      mount --rbind /host/dev /dev
+      mount --rbind /host/run /run
+      kairos-agent upgrade --source dir:/
+
+      # Custom post-upgrade commands
+      echo "Running post-upgrade tasks..."
+      # Add any post-upgrade logic here
+
+  # Path where the node's root filesystem will be mounted
+  hostMountPath: /host
+
+  # Whether to cordon the node before running the operation
+  cordon: true
+
+  # Drain options for pod eviction
+  drainOptions:
+    enabled: true
     force: false
-    disableEviction: true
-  upgrade:
-    image: {{< registryURL >}}/@flavor
-    command:
-      - "/bin/bash"
-      - "-c"
-    args:
-      - bash /host/run/system-upgrade/secrets/custom-script/upgrade.sh
-  secrets:
-    - name: custom-script
-      path: /host/run/system-upgrade/secrets/custom-script
+    gracePeriodSeconds: 30
+    ignoreDaemonSets: true
+    deleteEmptyDirData: false
+    timeoutSeconds: 300
+
+  # Whether to reboot the node after successful operation
+  rebootOnSuccess: true
+
+  # Maximum number of nodes that can run the operation simultaneously
+  concurrency: 1
+
+  # Whether to stop creating new jobs when a job fails
+  stopOnFailure: true
 ```
 
 ## Upgrade from c3os to Kairos
 
-If you already have a `c3os` deployment, upgrading to Kairos requires changing every instance of `c3os` to `kairos` in the configuration file. This can be either done manually or with Kubernetes before rolling the upgrade.  Consider customizing the upgrade plan, for instance:
+If you already have a `c3os` deployment, upgrading to Kairos requires changing every instance of `c3os` to `kairos` in the configuration file. This can be done using a custom `NodeOp` resource:
 
 ```yaml
----
-apiVersion: v1
-kind: Secret
+apiVersion: operator.kairos.io/v1alpha1
+kind: NodeOp
 metadata:
-  name: custom-script
-  namespace: system-upgrade
-type: Opaque
-stringData:
-  upgrade.sh: |
-    #!/bin/sh
-    set -e
-    sed -i 's/c3os/kairos/g' /host/oem/99_custom.yaml
-    /usr/sbin/suc-upgrade
----
-apiVersion: upgrade.cattle.io/v1
-kind: Plan
-metadata:
-  name: custom-os-upgrade
-  namespace: system-upgrade
+  name: c3os-to-kairos-upgrade
+  namespace: default
 spec:
-  concurrency: 1
-  # This is the version (tag) of the image.
-  version: "{{<ociTag variant="standard">}}"
+  # NodeSelector to target specific nodes
   nodeSelector:
-    matchExpressions:
-      - { key: kubernetes.io/hostname, operator: Exists }
-  serviceAccountName: system-upgrade
-  cordon: false
-  drain:
+    matchLabels:
+      kairos.io/managed: "true"
+
+  # The container image containing the new Kairos version
+  image: {{< registryURL >}}/@flavor
+  # Example: quay.io/kairos/debian
+
+  # Custom command to execute
+  command:
+    - sh
+    - -c
+    - |
+      set -e
+      # Replace c3os with kairos in configuration
+      sed -i 's/c3os/kairos/g' /host/oem/99_custom.yaml
+      # Run the upgrade
+      mount --rbind /host/dev /dev
+      mount --rbind /host/run /run
+      kairos-agent upgrade --source dir:/
+
+  # Path where the node's root filesystem will be mounted
+  hostMountPath: /host
+
+  # Whether to cordon the node before running the operation
+  cordon: true
+
+  # Drain options for pod eviction
+  drainOptions:
+    enabled: true
     force: false
-    disableEviction: true
-  upgrade:
-    image: {{< registryURL >}}/@flavor
-    command:
-      - "/bin/bash"
-      - "-c"
-    args:
-      - bash /host/run/system-upgrade/secrets/custom-script/upgrade.sh
-  secrets:
-    - name: custom-script
-      path: /host/run/system-upgrade/secrets/custom-script
+    gracePeriodSeconds: 30
+    ignoreDaemonSets: true
+    deleteEmptyDirData: false
+    timeoutSeconds: 300
+
+  # Whether to reboot the node after successful operation
+  rebootOnSuccess: true
+
+  # Maximum number of nodes that can run the operation simultaneously
+  concurrency: 1
+
+  # Whether to stop creating new jobs when a job fails
+  stopOnFailure: true
 ```
 
 ## What's next?

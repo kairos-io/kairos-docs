@@ -10,7 +10,7 @@ By default, `kairos` reads in lexicographic order YAML cloud-config files in the
 
 This mechanism can be used to set and enable persistent configuration on boot after node deployment.
 
-We are going to see how to do that manually or with Kubernetes by using the 
+We are going to see how to do that manually or with Kubernetes by using the [Kairos operator]({{< relref "../Upgrade/kairos-operator" >}}).
 
 ## Manually
 
@@ -31,85 +31,77 @@ name: "zfs setup"
 
 ## With Kubernetes
 
-To push configurations to a node, it is necessary [system-upgrade-controller](https://github.com/rancher/system-upgrade-controller) to be deployed in the target cluster which executes plan to the cluster nodes. In the example below, we use a plan to push a swapfile of 3gb enabled during boot, and restart the node afterward.
-
-To install [system-upgrade-controller](https://github.com/rancher/system-upgrade-controller), use kubectl:
-
-```bash
-kubectl apply -f https://github.com/rancher/system-upgrade-controller/releases/download/{{< system-upgrade-controller-version >}}/system-upgrade-controller.yaml
-```
+To push configurations to a node, it is recommended to use the [Kairos operator]({{< relref "../Upgrade/kairos-operator" >}}) which provides a more integrated approach for managing Kairos nodes. In the example below, we use a NodeOp to push a swapfile configuration and restart the node afterward.
 
 {{% alert title="Note" color="success" %}}
 
-Several roll-out strategies can be used with `system-upgrade-controller` which are not illustrated here in this example. For instance, it can be specified in the number of hosts which are running the upgrades, filtering by labels, and more. [Refer to the project documentation](https://github.com/rancher/system-upgrade-controller) on how to create efficient strategies to roll plans on the nodes. In the example above, the plans are applied to every host of the cluster, one-by-one in sequence.
+The Kairos operator provides several deployment strategies that can be configured through the NodeOp resource. You can control concurrency, node selection, and failure handling. The example below shows a simple approach where the operation is applied to every host of the cluster, one-by-one in sequence.
 
 {{% /alert %}}
 
 The following pushes a new cloud config over the `/oem` directory and reboots the node:
 
-```bash
-cat <<'EOF' | kubectl apply -f -
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: custom-script
-  namespace: system-upgrade
-type: Opaque
-stringData:
-  swapfile.yaml: |
-   stages:
-    boot:
-      - name: "Setup swapfile"
-        if: "[ ! -e /usr/local/swapfile ]"
-        commands:
-        - dd if=/dev/zero of=/usr/local/swapfile bs=1M count=3K
-        - mkswap /usr/local/swapfile
-      - name: "Enable swapfile"
-        if: "[ -e /usr/local/swapfile ]"
-        commands:
-        - swapon /usr/local/swapfile
-  add-oem-file.sh: |
-    #!/bin/sh
-    set -e
-    if diff /host/run/system-upgrade/secrets/custom-script/swapfile.yaml /host/oem/10_swapfile.yaml >/dev/null; then
-        echo Swapfile present
-        exit 0
-    fi
-    # Note: this is a symlink. We can also cp -L, but be aware that standard cp doesn't work.
-    cat /host/run/system-upgrade/secrets/custom-script/swapfile.yaml > /host/oem/10_swapfile.yaml
-    sync
-
-    mount --rbind /host/dev /dev
-    mount --rbind /host/run /run
-    nsenter -i -m -t 1 -- reboot
-    exit 1
----
-apiVersion: upgrade.cattle.io/v1
-kind: Plan
+```yaml
+apiVersion: operator.kairos.io/v1alpha1
+kind: NodeOp
 metadata:
   name: add-swapfile
-  namespace: system-upgrade
+  namespace: default
 spec:
-  concurrency: 1
-  # This is the version (tag) of the image.
-  version: "{{<ociTag variant="standard">}}"
+  # NodeSelector to target specific nodes
   nodeSelector:
-    matchExpressions:
-      - { key: kubernetes.io/hostname, operator: Exists }
-  serviceAccountName: system-upgrade
-  cordon: false
-  upgrade:
-    # Here goes the image which is tied to the flavor being used.
-    # Currently can pick between opensuse and alpine
-    image: {{< registryURL >}}/@flavor
-    command:
-      - "/bin/bash"
-      - "-c"
-    args:
-      - bash /host/run/system-upgrade/secrets/custom-script/add-oem-file.sh
-  secrets:
-    - name: custom-script
-      path: /host/run/system-upgrade/secrets/custom-script
-EOF
+    matchLabels:
+      kairos.io/managed: "true"
+
+  # The container image to use
+  image: {{< registryURL >}}/@flavor
+
+  # Custom command to execute
+  command:
+    - sh
+    - -c
+    - |
+      set -e
+
+      # Create swapfile configuration
+      cat > /host/oem/10_swapfile.yaml << 'EOF'
+      stages:
+       boot:
+         - name: "Setup swapfile"
+           if: "[ ! -e /usr/local/swapfile ]"
+           commands:
+           - dd if=/dev/zero of=/usr/local/swapfile bs=1M count=3K
+           - mkswap /usr/local/swapfile
+         - name: "Enable swapfile"
+           if: "[ -e /usr/local/swapfile ]"
+           commands:
+           - swapon /usr/local/swapfile
+      EOF
+
+      sync
+      # Note: The reboot is handled automatically by the operator when rebootOnSuccess: true
+
+  # Path where the node's root filesystem will be mounted
+  hostMountPath: /host
+
+  # Whether to cordon the node before running the operation
+  cordon: true
+
+  # Drain options for pod eviction
+  drainOptions:
+    enabled: true
+    force: false
+    gracePeriodSeconds: 30
+    ignoreDaemonSets: true
+    deleteEmptyDirData: false
+    timeoutSeconds: 300
+
+  # Whether to reboot the node after successful operation
+  rebootOnSuccess: true
+
+  # Maximum number of nodes that can run the operation simultaneously
+  concurrency: 1
+
+  # Whether to stop creating new jobs when a job fails
+  stopOnFailure: true
 ```

@@ -9,9 +9,9 @@ description: Reference documentation for AuroraBoot, a tool for generating boota
 This is the reference documentation for AuroraBoot. For a complete guide on creating custom cloud images, including how to use AuroraBoot in the context of a full workflow, see [Creating Custom Cloud Images]({{< ref "creating_custom_cloud_images.md" >}}).
 {{% /alert %}}
 
-**AuroraBoot** is a tool designed to make the process of bootstrapping Kairos machines quick, simple and efficient. It is specifically designed for the Kairos operating system and provides a comprehensive solution for downloading required artifacts and provisioning a machine, both from network or manually via flashing to USB stick. 
+**AuroraBoot** is a tool designed to make the process of bootstrapping Kairos machines quick, simple and efficient. It is specifically designed for the Kairos operating system and provides a comprehensive solution for downloading required artifacts and provisioning a machine, both from network or manually via flashing to USB stick.
 
-With AuroraBoot, you can prepare the environment for network-based bootstrapping, download the necessary release assets, and also customize the installation media for USB-based mass-installations. Whether you're looking to install Kairos on a single machine or multiple machines, AuroraBoot makes it easy and efficient. 
+With AuroraBoot, you can prepare the environment for network-based bootstrapping, download the necessary release assets, and also customize the installation media for USB-based mass-installations. Whether you're looking to install Kairos on a single machine or multiple machines, AuroraBoot makes it easy and efficient.
 
 AuroraBoot can be useful to:
 
@@ -49,7 +49,7 @@ Unfortunately for macOS systems we cannot run the netboot through docker as it's
 Building ISOs still works as long as you mount the container `/tmp` disk to a local dir so its exported there like so:
 
 ```bash
-docker run --rm -ti -v "$PWD"/config.yaml:/config.yaml -v ${PWD}:/tmp quay.io/kairos/auroraboot \ 
+docker run --rm -ti -v "$PWD"/config.yaml:/config.yaml -v ${PWD}:/tmp quay.io/kairos/auroraboot \
                     --set "artifact_version={{< kairosVersion >}}" \
                     --set "release_version={{< kairosVersion >}}" \
                     --set "flavor=@flavor" \
@@ -103,7 +103,7 @@ There are only 3 steps involved in the process:
 
 #### 1. Selecting a release
 
-AuroraBoot can bootstrap container images or released assets from our GitHub release process. 
+AuroraBoot can bootstrap container images or released assets from our GitHub release process.
 
 To use GitHub releases set a release version with `--set release_version` (the GitHub release), an artifact version with `--set artifact_version` (the artifact version) a flavor with `--set flavor` and a repository with `--set repository`.
 Kairos has releases with (standard) and without (core) k3s both can be downloaded in the [release page at kairos](https://github.com/kairos-io/kairos/releases).
@@ -161,18 +161,18 @@ To specify a cloud config, you can set it with `--cloud-config`. See the section
 
 #### 3. Start nodes
 
-Generic hardware based netbooting is out of scope for this document. 
+Generic hardware based netbooting is out of scope for this document.
 
 Nodes need to be configured to boot over network, and after AuroraBoot is started should be ready to accept a connection, a typical output of a successfull run is:
 
-```bash                                                                                                                                                                      
+```bash
 2023/02/08 14:27:30 DHCP: Offering to boot 08:00:27:54:1a:d1
 2023/02/08 14:27:30 TFTP: Sent "08:00:27:54:1a:d1/4" to 192.168.68.113:6489
 2023/02/08 14:27:36 DHCP: Offering to boot 08:00:27:54:1a:d1
-2023/02/08 14:27:36 HTTP: Sending ipxe boot script to 192.168.68.113:45435                               
-2023/02/08 14:27:36 HTTP: Sent file "kernel" to 192.168.68.113:45435                                     
+2023/02/08 14:27:36 HTTP: Sending ipxe boot script to 192.168.68.113:45435
+2023/02/08 14:27:36 HTTP: Sent file "kernel" to 192.168.68.113:45435
 2023/02/08 14:27:36 HTTP: Sent file "initrd-0" to 192.168.68.113:45435
-2023/02/08 14:27:49 HTTP: Sent file "other-0" to 192.168.68.113:43044 
+2023/02/08 14:27:49 HTTP: Sent file "other-0" to 192.168.68.113:43044
 ```
 
 If trying on a VM, for instance on VirtualBox or QEMU, a typical setup might be:
@@ -225,7 +225,7 @@ Run AuroraBoot with a cloud-config to create an ISO with the embedded configurat
 
 Check we have the cloud config file:
 ```bash
-ls 
+ls
 # config.yaml
 ```
 
@@ -258,7 +258,7 @@ sudo ls -liah build/iso
 
 Check we have the cloud config file:
 ```bash
-ls 
+ls
 # config.yaml
 ```
 
@@ -494,7 +494,6 @@ k3s:
 # Specify the bundle to use
 bundles:
 - targets:
-  - run://quay.io/kairos/community-bundles:system-upgrade-controller_latest
   - run://quay.io/kairos/community-bundles:cert-manager_latest
   - run://quay.io/kairos/community-bundles:kairos_latest
 
@@ -507,10 +506,10 @@ EOF
 ## Examples
 
 {{% alert title="Note" color="success" %}}
-The example below are implying a `config.yaml` cloud config file to be present in the current directory. 
+The example below are implying a `config.yaml` cloud config file to be present in the current directory.
 {{% /alert %}}
 
-### Offline ISO build from local container image 
+### Offline ISO build from local container image
 
 First make sure we have the image locally with:
 
