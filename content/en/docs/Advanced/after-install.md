@@ -10,7 +10,7 @@ By default, `kairos` reads in lexicographic order YAML cloud-config files in the
 
 This mechanism can be used to set and enable persistent configuration on boot after node deployment.
 
-We are going to see how to do that manually or with Kubernetes by using the
+We are going to see how to do that manually or with Kubernetes by using the [Kairos operator]({{< relref "../Upgrade/kairos-operator" >}}).
 
 ## Manually
 
