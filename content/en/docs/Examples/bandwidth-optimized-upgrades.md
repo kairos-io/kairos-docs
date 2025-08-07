@@ -174,18 +174,106 @@ spec:
 3. **Worker Node Upgrades**: Worker nodes fetch the image from the local registry, avoiding duplicate downloads
 4. **Bandwidth Efficiency**: Only one node downloads the image from remote, others use the local cache
 
-## Future Solutions
+## K0s with Spegel
 
-{{% alert title="Coming Soon" color="warning" %}}
-Additional bandwidth optimization solutions are being explored and will be documented here as they become available.
-{{% /alert %}}
+K0s can be configured with Spegel for distributed image caching, following the [official Spegel documentation for k0s](https://spegel.dev/docs/getting-started/#k0s). This setup requires specific containerd configuration that must be explicitly created in the cloud-config.
 
-### Planned Solutions
+### Manual Setup
 
-- **Standalone Spegel Deployment**: Using the Helm chart to deploy Spegel independently of k3s
-- **Local OCI Registry Service**: A service to pull upgrade images and serve them as a local OCI registry
-- **Cluster Cache**: A cache for the cluster for pulling images remotely
-- **Alternative Solutions**: Integration with [Kraken](https://github.com/uber/kraken) or [Dragonfly](https://github.com/dragonflyoss/dragonfly)
+#### Master Node Configuration
+
+```yaml
+#cloud-config
+
+hostname: metal-{{ trunc 4 .MachineID }}
+users:
+- name: kairos # Change to your own user
+  passwd: kairos # Change to your own password
+  groups:
+    - admin # This user needs to be part of the admin group
+
+k0s:
+  enabled: true
+```
+
+#### Worker Node Configuration
+
+```yaml
+#cloud-config
+
+hostname: metal-{{ trunc 4 .MachineID }}
+users:
+- name: kairos # Change to your own user
+  passwd: kairos # Change to your own password
+  groups:
+    - admin # This user needs to be part of the admin group
+
+k0s-worker:
+  enabled: true
+  args:
+    - --token-file /etc/k0s/token
+
+write_files:
+  - path: /etc/k0s/token
+    permissions: 0644
+    content: |
+      <TOKEN> # generate it on your master node by running `k0s token create --role=worker`
+  - path: /etc/k0s/containerd.d/spegel.toml
+    permissions: 0644
+    content: |
+      [plugins."io.containerd.grpc.v1.cri".registry]
+        config_path = "/etc/containerd/certs.d"
+      [plugins."io.containerd.grpc.v1.cri".containerd]
+        discard_unpacked_layers = false
+```
+
+**Important Notes:**
+- Replace `<TOKEN>` with the actual token from your master node (generate it by running `k0s token create --role=worker`)
+- The containerd configuration file `/etc/k0s/containerd.d/spegel.toml` must be explicitly created to enable Spegel compatibility
+- This configuration follows the [official Spegel k0s documentation](https://spegel.dev/docs/getting-started/#k0s)
+
+### Installing Spegel
+
+After your k0s cluster is running, install Spegel using the Helm chart with k0s-specific paths:
+
+```bash
+helm upgrade --create-namespace --namespace spegel --install spegel oci://ghcr.io/spegel-org/helm-charts/spegel \
+  --set spegel.containerdSock=/run/k0s/containerd.sock \
+  --set spegel.containerdContentPath=/var/lib/k0s/containerd/io.containerd.content.v1.content
+```
+
+### Upgrade Process
+
+```yaml
+apiVersion: operator.kairos.io/v1alpha1
+kind: NodeOpUpgrade
+metadata:
+  name: kairos-upgrade
+  namespace: default
+spec:
+  # The container image containing the new Kairos version
+  image: quay.io/kairos/opensuse:leap-15.6-standard-amd64-generic-v3.5.0-k0s-v1.33.3-k0s.0
+
+  # NodeSelector to target specific nodes (optional)
+  nodeSelector:
+    matchLabels:
+      kairos.io/managed: "true"
+
+  # Maximum number of nodes that can run the upgrade simultaneously
+  # 0 means run on all nodes at once
+  concurrency: 1
+
+  # Whether to stop creating new jobs when a job fails
+  # Useful for canary deployments
+  stopOnFailure: true
+```
+
+#### Upgrade Process Flow
+
+1. **First Node Upgrade**: The first node pulls the upgrade image from the remote registry
+2. **Spegel Caching**: The image is automatically cached in the Spegel distributed registry
+3. **Subsequent Node Upgrades**: When the second and subsequent nodes start their upgrade, they fetch the image from the local Spegel registry instead of pulling from remote
+4. **Bandwidth Efficiency**: Only the first node downloads the image from remote, others use the local cache
 
 # Related Documentation
 
