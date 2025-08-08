@@ -31,7 +31,7 @@ Being in the CNCF means more than a logo or badge—it means Kairos is on a clea
 
 ### 2. **Professional Support Options**
 
-Even with the best community and codebase, some organizations simply need a support contract to move forward—especially in regulated industries, large enterprises, or mission-critical edge environments.
+Even with the best community and codebase, some organizations simply need a support contract to move forward, especially in regulated industries, large enterprises, or mission-critical edge environments.
 
 Until now, our community has relied on best-effort support through GitHub, Slack, and community contributions. That's still available and thriving.
 
