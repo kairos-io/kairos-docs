@@ -1,6 +1,6 @@
 ---
 title: "Growing Stronger: Introducing Commercial Support for Kairos"
-date: 2025-08-08T12:53:13+01:00
+date: 2025-08-08T09:53:13+01:00
 author: Mauro Morales ([LinkedIn](https://www.linkedin.com/in/mauromorales/)) ([GitHub](https://github.com/mauromorales))
 ---
 
@@ -50,6 +50,13 @@ This support offering is tailored for different levels of need:
 
 This isn't about transforming Kairos into an enterprise product. **Kairos is already in production at scale.** This move simply creates a bridge—so more people and teams can adopt Kairos with confidence, whatever their internal requirements may be.
 
+
+<div class="buttons astro-7XAARZHW">
+    <a id="quickstart" href="https://www.spectrocloud.com/solutions/kairos-support" class="astro-7XAARZHW">
+        Learn more
+    </a>
+</div>
+
 ---
 
 ## Why This Matters (Even If You Don't Need Support)
@@ -87,12 +94,16 @@ Let’s continue building Kairos as an open, shared foundation—one that scales
 
 ---
 
-## Try It. Talk to Us. Grow With Us.
+## Try Kairos — and Get Help When You Need It
 
-If you're curious about Kairos support—or if you just want to understand how it fits into your stack—we encourage you to explore the offering [here](https://www.spectrocloud.com/solutions/kairos-support), or reach out to the team at Spectro Cloud directly.
+If you're exploring Kairos or already using it in production, we're here to support you, both as a community and through professional channels.
 
-As always, we remain deeply committed to Kairos as a **community-led, open-source project**. That will never change.
+Kairos now has **official enterprise-grade support partners**, for those who need additional help beyond the community. [Spectro Cloud](https://www.spectrocloud.com/solutions/kairos-support), the original creator and a key maintainer of the project, is the first company to offer commercial support for Kairos.
 
-Thank you to everyone who's helped bring Kairos this far. We can't wait to see where you take it next.
+We expect more organizations to join as support providers as adoption continues to grow.
+
+As always, you can get involved with Kairos via [GitHub](https://github.com/kairos-io), our [Slack community](https://kairos.io/community), and other open channels. We welcome contributors, feedback, and discussion.
+
+Thanks to everyone who’s helped bring Kairos this far—we're excited to keep improving it with you.
 
 🧡 The Kairos Maintainers
