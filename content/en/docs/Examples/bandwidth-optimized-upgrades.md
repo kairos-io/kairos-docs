@@ -23,6 +23,10 @@ This documentation explores solutions to optimize bandwidth usage during upgrade
 
 # Solutions
 
+{{% alert title="Note" color="info" %}}
+Currently the solutions described here focus on "standard" Kairos images — images that include a Kubernetes distribution (e.g., K3s or K0s).
+{{% /alert %}}
+
 ## K3s with Embedded Registry (Spegel)
 
 K3s integrates with [Spegel](https://github.com/k3s-io/spegel), a distributed registry that enables efficient image caching across your cluster. This integration allows nodes to share container images locally, reducing bandwidth usage and improving deployment speed.
