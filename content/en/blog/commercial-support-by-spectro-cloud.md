@@ -4,8 +4,6 @@ date: 2025-08-08T12:53:13+01:00
 author: Mauro Morales ([LinkedIn](https://www.linkedin.com/in/mauromorales/)) ([GitHub](https://github.com/mauromorales))
 ---
 
-# Growing Stronger: Introducing Commercial Support for Kairos
-
 Kairos has always been more than just a Linux distro—it's a bold idea: bring the power and flexibility of Kubernetes to the edge, with a truly immutable, secure, and cloud-native operating system anyone can use, contribute to, and trust.
 
 Over the past few years, we've seen Kairos go from idea to implementation, and from experimentation to production. Today, it's running in large-scale, real-world deployments across diverse edge use cases. But more importantly—it's been growing as a community.
