@@ -76,11 +76,12 @@ So we’re putting out a call:
 
 🔔 If you’re a company invested in Kairos, there are two key ways you can help:
 
-Contribute Maintainers
-If you're already using Kairos in your products or infrastructure, chances are you're making improvements, tooling, or fixes internally. Why not share that value with the broader community? We invite you to become a maintainer, help guide the roadmap, and collaborate with us to shape the future of edge Linux together.
+1. Contribute Maintainers
+    If you're already using Kairos in your products or infrastructure, chances are you're making improvements, tooling, or fixes internally. Why not share that value with the broader community? We invite you to become a maintainer, help guide the roadmap, and collaborate with us to shape the future of edge Linux together.
+2. Become a Support Partner
+    If you’re recommending Kairos to your customers and helping them succeed with it, we’d love to recognize your role. Let’s work together to include your organization in our list of Kairos support partners—making it clear that help is available from more than one source, and encouraging adoption from companies that want a trusted hand.
 
-Become a Support Partner
-If you’re recommending Kairos to your customers and helping them succeed with it, we’d love to recognize your role. Let’s work together to include your organization in our list of Kairos support partners—making it clear that help is available from more than one source, and encouraging adoption from companies that want a trusted hand.
+📩 Interested? Reach out to us at members@kairos.io to start the conversation.
 
 Let’s continue building Kairos as an open, shared foundation—one that scales with our collective ambition.
 
@@ -94,5 +95,4 @@ As always, we remain deeply committed to Kairos as a **community-led, open-sourc
 
 Thank you to everyone who's helped bring Kairos this far. We can't wait to see where you take it next.
 
-🧡 The Kairos Community
-
+🧡 The Kairos Maintainers
