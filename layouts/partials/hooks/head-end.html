@@ -1,3 +1,5 @@
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
 <script defer data-domain="kairos.io" src="https://plausible.io/js/script.outbound-links.tagged-events.js"></script>
 <script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
 {{ $built := resources.Get "js/kairos.js" | js.Build (dict "minify" "true" "params" (dict "defaultFamily" $.Page.Site.Params.softwareVersions.defaultFamily "defaultFlavor" $.Page.Site.Params.softwareVersions.defaultFlavor "defaultFlavorRelease" $.Page.Site.Params.softwareVersions.defaultFlavorRelease)) | resources.Fingerprint "sha512" }}
