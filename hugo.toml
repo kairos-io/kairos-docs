@@ -101,7 +101,7 @@ development = true
 [params.softwareVersions]
 # renovate: datasource=github-releases depName=kairos-io/provider-kairos
 provider_version = "v2.13.2"
-k3s_version = "v1.32.3+k3s1"
+k3s_version = "v1.33.2+k3s1"
 kairos_version = "master"
 # renovate: datasource=github-releases depName=kairos-io/osbuilder
 osbuilder_version = "v0.401.0"
