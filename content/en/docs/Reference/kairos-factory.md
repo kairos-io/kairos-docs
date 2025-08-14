@@ -467,6 +467,50 @@ $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
 2025-02-27T14:55:15Z INF Done building iso at: /output/
 ```
 
+## GitHub Actions Integration
+
+For users who prefer to automate their Kairos image builds using GitHub Actions, the [Kairos Factory Action](https://github.com/kairos-io/kairos-factory-action) provides a reusable workflow that simplifies the build process.
+
+### What is the Kairos Factory Action?
+
+The Kairos Factory Action is a GitHub Actions reusable workflow that automates the entire Kairos image building process. It handles:
+
+- **Multi-platform builds**: Support for `amd64` and `arm64` architectures
+- **Multiple base images**: Ubuntu, OpenSUSE, and other distributions
+- **Kubernetes integration**: Built-in support for K3s and K0s distributions
+- **Artifact generation**: Create ISO and RAW disk images
+- **Security scanning**: Integrated Grype and Trivy vulnerability scanning
+- **Digital signing**: Cosign integration for artifact signing
+- **Trusted boot**: Support for UKI/USI (Unified Kernel/System Image) builds
+- **Registry publishing**: Push to any container registry
+
+### Basic Usage Example
+
+```yaml
+jobs:
+  build:
+    uses: kairos-io/kairos-factory-action/.github/workflows/reusable-factory.yaml@main
+    with:
+      version: "v1.0.0"
+      base_image: "ubuntu:24.04"
+      model: "generic"
+      kubernetes_distro: "k3s"
+      iso: true
+      summary_artifacts: true
+```
+
+This example builds a Kairos image based on Ubuntu 24.04 with K3s, generates an ISO artifact, and provides a rich build summary with artifact links.
+
+### Key Features
+
+- **Flexible versioning**: Automatic git-based versioning or manual semver
+- **Security-focused**: Optional vulnerability scanning and digital signing
+- **Custom naming**: Flexible tag and artifact naming formats
+- **Cloud config support**: Integration with cloud-init configurations
+- **GitHub integration**: Rich build summaries and optional release creation
+
+For complete documentation, configuration options, and advanced examples, visit the [Kairos Factory Action repository](https://github.com/kairos-io/kairos-factory-action).
+
 ## Web UI
 
 The Kairos Factory is also available as a web UI, which is currently under development but you can already preview since version `0.6.0` of [AuroraBoot](auroraboot.md).
