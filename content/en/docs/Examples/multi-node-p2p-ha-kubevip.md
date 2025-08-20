@@ -27,6 +27,7 @@ In order to deploy this setup you need to configure the cloud-config file. You c
 hostname: kairoslab-{{ trunc 4 .MachineID }}
 users:
 - name: kairos
+  groups: [ "admin" ]
   ssh_authorized_keys:
   # Replace with your github user and un-comment the line below:
   # - github:mudler
