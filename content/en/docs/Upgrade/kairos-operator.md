@@ -1,5 +1,5 @@
 ---
-title: "Kairos Operator for "
+title: "Installing Kairos Operator"
 linkTitle: "Kairos Operator"
 weight: 4
 date: 2025-07-25
