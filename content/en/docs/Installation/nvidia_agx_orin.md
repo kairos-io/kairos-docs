@@ -216,6 +216,7 @@ To flash the images to the Orin board
 2. Run: 
 
 ```
+sudo ./tools/l4t_flash_prerequisites.sh # Install missing dependencies and fix file permissions 
 sudo ./flash.sh jetson-agx-orin-devkit internal
 ```
 
