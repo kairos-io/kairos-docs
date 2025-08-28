@@ -83,7 +83,7 @@ mv bootloader/build/*.img bootloader
 If you are customizing the image, or either modifying the default partition sizes you can build the images by running:
 ```bash
 IMAGE=quay.io/kairos/ubuntu:22.04-core-arm64-nvidia-jetson-agx-orin-{{< kairosVersion >}}
-docker run --privileged \
+docker run --privileged --platform=linux/arm64 \
         -e container_image=$IMAGE \
         -e STATE_SIZE="25500" \
         -e RECOVERY_SIZE="21000" \
@@ -97,7 +97,7 @@ docker run --privileged \
 If you have instead the rootfs as a directory, you can create the required partitions with:
 ```bash
 ROOTFS=/rootfs/path
-docker run --privileged \
+docker run --privileged --platform=linux/arm64 \
         -e directory=/rootfs \
         -e STATE_SIZE="25500" \
         -e RECOVERY_SIZE="21000" \
