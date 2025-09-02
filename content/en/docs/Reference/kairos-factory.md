@@ -337,13 +337,13 @@ You can see more examples in the [Kairos repo](https://github.com/kairos-io/kair
 Based on Alpine 3.19:
 
 ```bash
-$ docker build --platform=arm64 -t alpine-rpi:3.19 --build-arg MODEL=rpi4 --build-arg BASE_IMAGE=alpine:3.19 --build-arg VERSION=v1.0.0 .
+$ docker build --platform=linux/arm64 -t alpine-rpi:3.19 --build-arg MODEL=rpi4 --build-arg BASE_IMAGE=alpine:3.19 --build-arg VERSION=v1.0.0 .
 ```
 
 Based on Ubuntu 22.04:
 
 ```bash
-$ docker build --platform=arm64 -t ubuntu-rpi:22.04 --build-arg MODEL=rpi4 --build-arg BASE_IMAGE=ubuntu:22.04 --build-arg VERSION=v1.0.0 .
+$ docker build --platform=linux/arm64 -t ubuntu-rpi:22.04 --build-arg MODEL=rpi4 --build-arg BASE_IMAGE=ubuntu:22.04 --build-arg VERSION=v1.0.0 .
 ```
 
 
