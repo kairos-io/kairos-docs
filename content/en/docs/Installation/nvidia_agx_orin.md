@@ -62,22 +62,10 @@ echo "" > rootfs/boot/extlinux/extlinux.conf
 
 ### Prepare the images
 
-You can either download pre-built Kairos images, or build your own from a container image. You can find Kairos core ubuntu images based on Ubuntu `22.04` here: https://quay.io/repository/kairos/ubuntu
+You can find Kairos core ubuntu images based on Ubuntu `22.04` here: https://quay.io/repository/kairos/ubuntu
 (search for `nvidia` in the tags)
 
 {{< tabpane text=true  >}}
-{{% tab header="Download pre-built partition images from a container image" %}}
-
-We will download pre-built images from a container image. Pre-built images are using https://quay.io/repository/kairos/ubuntu and contains `.img` files that can be used for flashing. Img files are pushed automatically by the Kairos CI in https://quay.io/repository/kairos/ubuntu (search for tags with `nvidia`).
-
-```bash
-KAIROS_VERSION={{< kairosVersion >}}
-IMAGE=quay.io/kairos/ubuntu:22.04-core-arm64-nvidia-jetson-agx-orin-$KAIROS_VERSION-img
-docker run -ti --rm -v $PWD/bootloader:/rootfs quay.io/luet/base util unpack "$IMAGE" /rootfs
-mv bootloader/build/*.img bootloader
-```
-
-{{% /tab %}}
 {{% tab header="Build partition images from a container image" %}}
 
 If you are customizing the image, or either modifying the default partition sizes you can build the images by running:
