@@ -174,7 +174,7 @@ You can provide a generic Dockerfile that gets all this values and passes them d
 
 
 {{% alert title="K8s versions" color="info" %}}
-When selecting a k8s provider, the produced image will contain the latest published version of that provider, the Kairos provider for kubernetes and some extra k8s utils like k9s.
+When selecting a k8s provider, the produced image will contain the latest published version of that provider and the Kairos provider for kubernetes.
 If you want to override the version installed see the flag `--k8sversion`
 {{% /alert %}}
 
@@ -337,13 +337,13 @@ You can see more examples in the [Kairos repo](https://github.com/kairos-io/kair
 Based on Alpine 3.19:
 
 ```bash
-$ docker build --platform=arm64 -t alpine-rpi:3.19 --build-arg MODEL=rpi4 --build-arg BASE_IMAGE=alpine:3.19 --build-arg VERSION=v1.0.0 .
+$ docker build --platform=linux/arm64 -t alpine-rpi:3.19 --build-arg MODEL=rpi4 --build-arg BASE_IMAGE=alpine:3.19 --build-arg VERSION=v1.0.0 .
 ```
 
 Based on Ubuntu 22.04:
 
 ```bash
-$ docker build --platform=arm64 -t ubuntu-rpi:22.04 --build-arg MODEL=rpi4 --build-arg BASE_IMAGE=ubuntu:22.04 --build-arg VERSION=v1.0.0 .
+$ docker build --platform=linux/arm64 -t ubuntu-rpi:22.04 --build-arg MODEL=rpi4 --build-arg BASE_IMAGE=ubuntu:22.04 --build-arg VERSION=v1.0.0 .
 ```
 
 
