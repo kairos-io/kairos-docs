@@ -69,6 +69,7 @@ We’ll craft a tiny OCI image that contains just the firmware files under `/usr
 
 ```dockerfile
 # Dockerfile.firmware
+# Use the slim Kairos Ubuntu base so everything matches
 FROM kairos-ubuntu:1.0.0
 RUN apt-get update && \
     apt-get install -y --no-install-recommends linux-firmware && \
@@ -99,12 +100,45 @@ docker run --rm -ti \
   firmware-ubuntu-2404 firmware:ubuntu-24.04
 
 # Result: firmware-ubuntu-2404.sysext.raw
+2025-09-04T12:23:05Z INF [1] 🚀 Start sysext creation
+2025-09-04T12:23:05Z DBG creating directory dir=/tmp/auroraboot-sysext-3867492028
+2025-09-04T12:23:05Z INF [1] 💿 Getting image info
+2025-09-04T12:23:05Z INF [1] 📤 Extracting archives from image layer
+2025-09-04T12:23:17Z INF 📦 Packing sysext into raw image
+2025-09-04T12:23:18Z INF 🎉 Done sysext creation output=/build/firmware-ubuntu-2404.sysext.raw
+
 ```
 
 3) (Optional) Inspect the result:
 
 ```bash
 sudo systemd-dissect firmware-ubuntu-2404.sysext.raw
+ File Name: firmware-ubuntu-2404.sysext.raw
+      Size: 519.9M
+ Sec. Size: 512
+     Arch.: x86-64
+
+Image Name: firmware-ubuntu-2404
+Image UUID: 60f29b0d-f685-4878-b529-4ef35c3f1196
+ sysext R.: ID=_any
+            ARCHITECTURE=x86-64
+
+    Use As: ✗ bootable system for UEFI
+            ✗ bootable system for container
+            ✗ portable service
+            ✗ initrd
+            ✓ sysext for system
+            ✓ sysext for portable service
+            ✗ sysext for initrd
+            ✗ confext for system
+            ✗ confext for portable service
+            ✗ confext for initrd
+
+RW DESIGNATOR      PARTITION UUID                       PARTITION LABEL        FSTYPE                AR>
+ro root            12492769-aef0-605b-0df7-b48fa9d8fab8 root-x86-64            erofs                 x8>
+ro root-verity     645436ca-6eb4-af91-25b0-e93b3601607b root-x86-64-verity     DM_verity_hash        x8>
+ro root-verity-sig ba282899-118d-4b1c-ba8c-5e1af8e37c81 root-x86-64-verity-sig verity_hash_signature x8>
+
 ```
 
 ---
