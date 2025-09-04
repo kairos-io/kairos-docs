@@ -15,6 +15,9 @@ This hands‑on example shows how to keep your Ubuntu‑based Kairos image slim 
 > • **Stay verifiable**: sysexts can be signed and verified under Trusted Boot.
 >
 > • **Swap/iterate fast**: update firmware by swapping the sysext without rebuilding the whole OS.
+> 
+
+For more info on Kairos sysexts, see the [sysext documentation]({{< relref "../advanced/sys-extensions" >}}).
 
 ---
 
@@ -148,14 +151,14 @@ ro root-verity-sig ba282899-118d-4b1c-ba8c-5e1af8e37c81 root-x86-64-verity-sig v
 Via **kairos-agent** after the install has been done and we have booted to the system:
 
 ```bash
-$ kairos-agent sysext download https://example.org/firmware-ubuntu-2404.sysext.raw
+$ kairos-agent sysext install https://example.org/firmware-ubuntu-2404.sysext.raw
 $ kairos-agent sysext enable --common --now firmware-ubuntu-2404
 ```
 
 You can also scp the file onto the node and enable it locally.
 
 ```bash
-$ kairos-agent sysext download /tmp/firmware-ubuntu-2404.sysext.raw
+$ kairos-agent sysext install file:/tmp/firmware-ubuntu-2404.sysext.raw
 $ kairos-agent sysext enable --common --now firmware-ubuntu-2404
 ```
 
@@ -197,7 +200,7 @@ dmesg | grep -i firmware
 Ship a new `.sysext.raw` and enable it atomically:
 
 ```bash
-kairos-agent sysext download https://example.org/firmware-ubuntu-2404-2025.09.01.sysext.raw
+kairos-agent sysext install https://example.org/firmware-ubuntu-2404-2025.09.01.sysext.raw
 kairos-agent sysext enable --common --now firmware-ubuntu-2404-2025.09.01
 # Optionally remove the old image after a soak period
 kairos-agent sysext remove firmware-ubuntu-2404-2025.06.01
