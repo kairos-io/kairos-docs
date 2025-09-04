@@ -112,8 +112,6 @@ registryURL = "quay.io/kairos"
 defaultFamily = "ubuntu"
 defaultFlavor = "ubuntu"
 defaultFlavorRelease = "24.04"
-# renovate: datasource=github-releases depName=kairos-io/kairos-operator
-system_upgrade_controller = "v0.0.3"
 # User interface configuration
 [params.ui]
 # Enable to show the side bar menu in its compact state.

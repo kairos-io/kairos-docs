@@ -136,8 +136,6 @@ quay.io/kairos/framework:<version>[-fips]
 
 ### Examples
 
-- `quay.io/kairos/framework:{{< defaultFrameworkRelease >}}`
-- `quay.io/kairos/framework:{{< defaultFrameworkRelease >}}-fips`
 - `quay.io/kairos/framework:main`
 - `quay.io/kairos/framework:main-fips`
 - `quay.io/kairos/framework:latest`
