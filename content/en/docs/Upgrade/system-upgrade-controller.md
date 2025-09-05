@@ -34,7 +34,7 @@ spec:
       containers:
         - name: git
           image: alpine/git
-          command: ["git", "clone", "--branch", "{{< system-upgrade-controller-version >}}", "https://github.com/rancher/system-upgrade-controller", "/homedir/system-upgrade-controller"]
+          command: ["git", "clone", "--branch", "v0.14.1", "https://github.com/rancher/system-upgrade-controller", "/homedir/system-upgrade-controller"]
           volumeMounts:
             - name: homedir
               mountPath: /homedir
