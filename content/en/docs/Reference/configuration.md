@@ -515,6 +515,25 @@ The table below lists all the available options for the `install.grub_options` f
 | extra_cmdline          | Set additional boot commands for all entries            |
 | default_fallback       | Sets default fallback logic                             |
 
+
+The order of the cmdline parameters is as follows:
+1. Existing cmdline parameters, shipped with Kairos by default and non-modifiable
+2.`extra_cmdline`
+3.`extra_active_cmdline` or `extra_passive_cmdline` or `extra_recovery_cmdline` depending on the entry being booted
+
+Note that usually parameters for dracut and such are overridable, as they use the latest specified value in the cmdline.
+
+For example, the `rd.neednet=0` parameter is shipped with Kairos by default, but if you set `rd.neednet=1` in `extra_cmdline`, it will override the default value and enable networking during the initramfs stage.
+
+Also note that the `grub_options` for cmdline are only applied during installation. Changing them after installation won't have any effect.
+If you want to change the GRUB options after installation, you can do so by setting those values under the `/oem/grubenv` file as follows:
+
+```bash
+grub2-editenv /oem/grubenv set extra_cmdline="rd.neednet=1"
+```
+
+As a final note, just a reminder that during GRUB menu selection, you can press `e` to edit the cmdline for that boot only, which is useful for testing purposes. That allows to test extra cmdline parameters during a single boot before making them permanent.
+
 ## Kubernetes manifests
 
 The `k3s` distribution of Kubernetes allows you to automatically deploy Helm charts or Kubernetes resources after deployment.
