@@ -73,7 +73,7 @@ The answer to this will depend on your setup but here are two things to keep in 
 
 **What if I don't want to base my image on the Kairos released artifacts?**
 
-No problem, just [build your image from scratch](/reference/build-from-scratch/)
+No problem, just [build your image from scratch](/docs/reference/build-from-scratch/)
 
 **Can I easily rollback an upgrade?**
 
