@@ -62,7 +62,7 @@ KAIROS_VERSION_ID="{{< kairosVersion >}}"
 KAIROS_PRETTY_NAME="kairos-core-@flavor {{< kairosVersion >}}"
 KAIROS_BUG_REPORT_URL="https://github.com/kairos-io/kairos/issues"
 KAIROS_HOME_URL="https://github.com/kairos-io/kairos"
-KAIROS_IMAGE_REPO="{{<oci variant="core" >}}
+KAIROS_IMAGE_REPO="{{<oci variant="core" >}}"
 KAIROS_IMAGE_LABEL="latest"
 KAIROS_GITHUB_REPO="kairos-io/kairos"
 KAIROS_VARIANT="core"
