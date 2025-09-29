@@ -24,6 +24,7 @@ This feature works on both Trusted Boot and normal Kairos installations, the onl
 
 For more information on system extensions, please refer to the [System extensions documentation](https://www.freedesktop.org/software/systemd/man/latest/systemd-sysext.html).
 
+**Requirement**: Base image of the OS needs to have at least systemd 252 or newer ( for example ubuntu >=23.10 or fedora >=38 )
 
 ### Building system extensions manually
 
