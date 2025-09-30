@@ -1,6 +1,6 @@
 # :book: Kairos documentation
 
-The Kairos documentation uses [docsy](https://docsy.dev).
+The Kairos documentation uses [docsy](https://docsy.dev) a hugo theme for documentation. And is deployed using [Netlify](https://app.netlify.com/projects/kairos-io/deploys).
 
 ## Prerequisites
 
