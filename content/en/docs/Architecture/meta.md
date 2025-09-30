@@ -40,7 +40,7 @@ Internal:
 - [kairos](https://github.com/kairos-io/kairos) is the main repository, building the `kairos-agent` and containing the image definitions which runs on our CI pipelines.
 - [immucore](https://github.com/kairos-io/immucore) is the immutability management interface.
 - [kairos-agent](https://github.com/kairos-io/kairos-agent) manages the installation, reset, and upgrade of the Kairos nodes.
-- [system packages](https://github.com/kairos-io/packages) contains additional packages, cross-distro, partly used in framework images
+- [system packages](https://github.com/kairos-io/packages) contains additional packages, cross-distro
 - [kcrypt](https://github.com/kairos-io/kcrypt) is the component responsible for encryption and decryption of data at rest
 - [kcrypt-challenger](https://github.com/kairos-io/kcrypt-challenger) is the `kairos` plugin that works with the TPM chip to unlock LUKS partitions
 

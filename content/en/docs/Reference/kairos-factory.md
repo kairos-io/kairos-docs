@@ -163,7 +163,7 @@ Here is a list of flags, explanation and what are the possible and default value
 | -k           | Sets the Kubernetes provider                             | k3s,k0s                    | None            |
 | --k8sversion | Set the Kubernetes version to use for the given provider | Any valid provider version | Latest          |
 | -t           | Sets Trusted Boot on                                     | true,false                 | false           |
-| --fips       | Use FIPS framework for FIPS 140-2 compliance images      | bool                       | false           |
+| --fips       | Use FIPS 140-2 compliance packages for images            | bool                       | false           |
 | -x           | Enable the loading of stage extensions                   | bool                       | false           |
 | --skip-steps | Skip the given steps during the image build              | Steps or Stages            | None            |
 
