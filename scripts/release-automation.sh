@@ -103,8 +103,8 @@ update_hugo_toml() {
     # Create backup
     cp hugo.toml hugo.toml.backup
     
-    # Update latest_version
-    sed -i "s/^latest_version = \".*\"/latest_version = \"$version\"/" hugo.toml
+    # Update kairos_version
+    sed -i "s/^kairos_version = \".*\"/kairos_version = \"$version\"/" hugo.toml
     
     # Update kairos_init_version
     sed -i "s/^kairos_init_version = \".*\"/kairos_init_version = \"$kairos_init_version\"/" hugo.toml
