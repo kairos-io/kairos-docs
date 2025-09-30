@@ -228,7 +228,7 @@ process_version() {
     # Get component versions
     log "INFO" "Fetching component versions from kairos-init $kairos_init_version"
     local component_versions
-    component_versions=$(get_component_versions "$kairos_init_version")
+    component_versions=$(get_component_versions "$kairos_init_version" "$version")
     
     if [ $? -ne 0 ]; then
         log "ERROR" "Failed to get component versions for kairos-init $kairos_init_version"

@@ -70,12 +70,53 @@ get_kairos_init_version() {
     echo "$kairos_init_version"
 }
 
-# Function to extract component versions from kairos-init Makefile
+# Function to extract K3s version from GitHub release artifacts
+# Arguments:
+#   $1: kairos_version (e.g., v3.5.3)
+# Returns: K3s version (e.g., v1.33.4) or empty string on error
+get_k3s_version_from_release() {
+    local kairos_version="$1"
+    local api_url="https://api.github.com/repos/kairos-io/kairos/releases/tags/$kairos_version"
+    local response
+    
+    response=$(curl -s -H "Accept: application/vnd.github.v3+json" "$api_url")
+    
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to fetch release data for version $kairos_version" >&2
+        return 1
+    fi
+    
+    # Extract artifact names that contain "+k3s"
+    local k3s_versions=$(echo "$response" | jq -r '.assets[] | select(.name | contains("+k3s")) | .name' 2>/dev/null)
+    
+    if [ -z "$k3s_versions" ]; then
+        echo "Error: No K3s artifacts found in release $kairos_version" >&2
+        return 1
+    fi
+    
+    # Extract K3s versions from artifact names
+    # Pattern: extract v1.31.12 from "kairos-alpine-3.21-standard-amd64-generic-v3.5.3-k3sv1.31.12+k3s1.iso"
+    local extracted_versions=$(echo "$k3s_versions" | grep -oE 'k3sv[0-9]+\.[0-9]+\.[0-9]+' | sed 's/k3s//' | sort -u)
+    
+    if [ -z "$extracted_versions" ]; then
+        echo "Error: Could not extract K3s versions from artifact names" >&2
+        return 1
+    fi
+    
+    # Get the highest semantic version
+    local highest_version=$(echo "$extracted_versions" | sort -V | tail -n1)
+    
+    echo "$highest_version"
+}
+
+# Function to fetch subcomponent versions from kairos-init Makefile and kairos release
 # Arguments:
 #   $1: kairos_init_version (e.g., v0.5.20)
+#   $2: kairos_version (e.g., v3.5.3)
 # Returns: JSON object with component versions
 get_component_versions() {
     local kairos_init_version="$1"
+    local kairos_version="${2:-}"
     local makefile_url="https://raw.githubusercontent.com/kairos-io/kairos-init/refs/tags/$kairos_init_version/Makefile"
     local response
     
@@ -91,7 +132,19 @@ get_component_versions() {
     local immucore_version=$(echo "$response" | grep -E '^IMMUCORE_VERSION\s*:?=' | sed 's/.*:=\s*//' | tr -d '\r\n')
     local provider_version=$(echo "$response" | grep -E '^PROVIDER_KAIROS_VERSION\s*:?=' | sed 's/.*:=\s*//' | tr -d '\r\n')
     local auroraboot_version=$(echo "$response" | grep -E '^AURORABOOT_VERSION\s*:?=' | sed 's/.*:=\s*//' | tr -d '\r\n')
-    local k3s_version=$(echo "$response" | grep -E '^K3S_VERSION\s*:?=' | sed 's/.*:=\s*//' | tr -d '\r\n')
+    
+    # Get K3s version from GitHub release artifacts if kairos_version is provided
+    local k3s_version=""
+    if [ -n "$kairos_version" ]; then
+        k3s_version=$(get_k3s_version_from_release "$kairos_version")
+        if [ $? -ne 0 ]; then
+            echo "Error: Failed to get K3s version from release for version $kairos_version" >&2
+            return 1
+        fi
+    else
+        echo "Error: kairos_version is required to extract K3s version from release" >&2
+        return 1
+    fi
     
     # Create JSON object
     cat << EOF
