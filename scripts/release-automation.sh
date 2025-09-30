@@ -12,6 +12,7 @@ source "${SCRIPT_DIR}/utils.sh"
 DRY_RUN=false
 SPECIFIC_VERSION=""
 VERBOSE=false
+PUSH_CHANGES=true
 
 # Function to display usage
 usage() {
@@ -21,6 +22,7 @@ Usage: $0 [OPTIONS]
 Options:
     --version VERSION    Process a specific version (e.g., v3.5.3)
     --dry-run           Show what would be done without making changes
+    --push=false        Don't push changes to remote (local testing only)
     --verbose           Enable verbose output
     --help              Show this help message
 
@@ -29,6 +31,7 @@ Examples:
     $0 --version v3.5.3         # Process specific version
     $0 --dry-run                # Show what would be done
     $0 --version v3.5.3 --dry-run  # Test specific version processing
+    $0 --version v3.5.3 --push=false  # Test locally without pushing
 
 EOF
 }
@@ -42,6 +45,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --dry-run)
             DRY_RUN=true
+            shift
+            ;;
+        --push=false)
+            PUSH_CHANGES=false
             shift
             ;;
         --verbose)
@@ -164,7 +171,11 @@ create_release_branch() {
     if [ "$DRY_RUN" = true ]; then
         log "INFO" "[DRY RUN] Would create branch: $branch_name"
         log "INFO" "[DRY RUN] Would commit changes to hugo.toml"
-        log "INFO" "[DRY RUN] Would push branch to origin"
+        if [ "$PUSH_CHANGES" = true ]; then
+            log "INFO" "[DRY RUN] Would push branch to origin"
+        else
+            log "INFO" "[DRY RUN] Would skip pushing (--push=false)"
+        fi
         return 0
     fi
     
@@ -175,10 +186,13 @@ create_release_branch() {
     git add hugo.toml
     git commit -m "chore: update versions for release $version"
     
-    # Push branch to origin
-    git push -u origin "$branch_name"
-    
-    log "INFO" "Successfully created and pushed release branch: $branch_name"
+    # Push branch to origin only if PUSH_CHANGES is true
+    if [ "$PUSH_CHANGES" = true ]; then
+        git push -u origin "$branch_name"
+        log "INFO" "Successfully created and pushed release branch: $branch_name"
+    else
+        log "INFO" "Successfully created release branch: $branch_name (not pushed - use --push=false to test locally)"
+    fi
 }
 
 # Function to process a specific version
@@ -271,6 +285,7 @@ check_for_new_releases() {
 main() {
     log "INFO" "Starting release automation"
     log "INFO" "Dry run mode: $DRY_RUN"
+    log "INFO" "Push changes: $PUSH_CHANGES"
     log "INFO" "Verbose mode: $VERBOSE"
     
     # Change to repository root
