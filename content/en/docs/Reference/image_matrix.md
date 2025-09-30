@@ -72,14 +72,6 @@ See the [kairos-factory.md](kairos-factory.md) page for more info.
 {{% /alert %}}
 
 
-## Framework images
-
-Kairos releases contains also the __framework__ assets that can be used to [build Kairos images from Scratch]({{< relref "../reference/build-from-scratch" >}}).
-
-Framework images can be found in quay at: https://quay.io/repository/kairos/framework.
-
-Each tag follow the convention: `<version>[-fips]`.
-
 ## Versioning policy
 
 Kairos follows [Semantic Versioning](https://semver.org/) and our releases signal changes to Kairos components, rather than changes to the underlying OS and package versions. Flavors are pinned to specific upstream OS branches (e.g. `opensuse` to `leap 15.4`) and major version bumps will be reflected through new flavors in our build matrix or through specific releases to follow upstream with regard to minor version bumps (e.g. `leap 15.3` and `leap 15.4`).
