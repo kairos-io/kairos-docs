@@ -30,7 +30,7 @@ Create `build` directory and add `cloud-config.yaml`, then run:
 ```bash
 docker run --rm --privileged -v /var/run/docker.sock:/var/run/docker.sock \
                 --platform linux/arm64 -v $PWD/build/:/output \
-                kairos.docker.scarf.sh/kairos/auroraboot:latest \
+                quay.io/kairos/auroraboot:latest \
                 --debug --set "disable_http_server=true" --set "disable_netboot=true" \
                 --set "state_dir=/output" --set "disk.raw=true" \
                 --cloud-config /output/cloud-config.yaml \
