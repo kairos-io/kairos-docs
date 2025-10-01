@@ -95,8 +95,8 @@ get_k3s_version_from_release() {
     fi
     
     # Extract K3s versions from artifact names
-    # Pattern: extract v1.31.12 from "kairos-alpine-3.21-standard-amd64-generic-v3.5.3-k3sv1.31.12+k3s1.iso"
-    local extracted_versions=$(echo "$k3s_versions" | grep -oE 'k3sv[0-9]+\.[0-9]+\.[0-9]+' | sed 's/k3s//' | sort -u)
+    # Pattern: extract v1.31.12+k3s1 from "kairos-alpine-3.21-standard-amd64-generic-v3.5.3-k3sv1.31.12+k3s1.iso"
+    local extracted_versions=$(echo "$k3s_versions" | grep -oE 'k3sv[0-9]+\.[0-9]+\.[0-9]+\+k3s[0-9]+' | sed 's/k3s//' | sort -u)
     
     if [ -z "$extracted_versions" ]; then
         echo "Error: Could not extract K3s versions from artifact names" >&2
