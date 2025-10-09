@@ -28,7 +28,7 @@ RUN wget https://github.com/k3s-io/k3s/releases/download/v1.23.16%2Bk3s1/k3s-air
 
 FROM scratch
 COPY ./run.sh /
-COPY --from=alpine /build/k3s-airgap-images-amd64.tar.gz /assets
+COPY --from=alpine /build/k3s-airgap-images-amd64.tar.gz /assets/
 ```
 3. Create a new file called `run.sh` inside the `images-bundle` directory, and paste the following code:
 
@@ -36,7 +36,7 @@ COPY --from=alpine /build/k3s-airgap-images-amd64.tar.gz /assets
 #!/bin/bash
 
 mkdir -p /usr/local/.state/var-lib-rancher.bind/k3s/agent/images/
-cp -rfv ./k3s-airgap-images-amd64.tar.gz /usr/local/.state/var-lib-rancher.bind/k3s/agent/images/
+cp -rfv assets/k3s-airgap-images-amd64.tar.gz /usr/local/.state/var-lib-rancher.bind/k3s/agent/images/
 ```
 4. Make the `run.sh` file executable by running the following command: 
 ```bash
@@ -75,6 +75,8 @@ install:
  - targets:
    - run:///run/initramfs/live/bundle.tar
    local_file: true
+
+fail_on_bundles_errors: true
 
 # Define the user accounts on the node.
 users:
