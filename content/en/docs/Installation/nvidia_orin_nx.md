@@ -121,7 +121,7 @@ wget 'https://kairos.io/examples/board-configs/flash_l4t_t234_nvme.xml' -O ./boo
 
 If you are editing the partition sizes and generating the images manually, use the example config file as a baseline and edit the `size` accordingly to the corresponding partitions (find the respective `filename` and compare the file size, see the notes below).
 
-{{% alert title="Note on editing the parition layout manually" color="success" %}}
+{{% alert title="Note on editing the partition layout manually" color="success" %}}
 
 If you want to use the original file, identify the `nvme` section ( e.g. `<device type="nvme" instance="4" sector_size="512" num_sectors="INT_NUM_SECTORS" >` ), inside there is an "APP" partition ( `<partition name="APP" id="1" type="data">` ), remove it , and add the following instead:
 
