@@ -241,7 +241,7 @@ The Orin board now should boot. If you are connected over the serial you can log
 
 ## Notes
 
-## USB Timeout error
+### USB Timeout error
 
 It is possible that during flashing on certain kernel versions to see an error message:
 
