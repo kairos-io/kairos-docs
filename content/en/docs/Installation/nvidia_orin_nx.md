@@ -20,7 +20,9 @@ This page describes how to install Kairos on an [Nvidia Orin NX](https://www.nvi
 - A Linux host used to flash the Nvidia Orin NX board
 - Jetson linux SDK [download](https://developer.nvidia.com/embedded/jetson-linux)
 
-You can find debugging information here: https://developer.ridgerun.com/wiki/index.php/NVIDIA_Jetson_Orin/In_Board/Getting_in_Board/Serial_Console
+{{% alert title="Debugging" color="info" %}}
+You can find debugging information [here](https://developer.ridgerun.com/wiki/index.php/NVIDIA_Jetson_Orin/In_Board/Getting_in_Board/Serial_Console)
+{{% /alert %}}
 
 ## Flashing
 
