@@ -26,14 +26,14 @@ You can find debugging information [here](https://developer.ridgerun.com/wiki/in
 
 ## Flashing
 
-We are going to write the partitions to the eMMC. In order to do this we will use the Nvidia SDK configured with a custom partitioning layout.
+We are going to write the partitions to the NVMe. In order to do this we will use the Nvidia SDK configured with a custom partitioning layout.
 
 The partitions are:
 - OEM for storing cloud config files (`/oem`)
 - COS_STATE for storing the active/passive images to boot the system
 - EFI for storing the efi shell and grub to boot the system
 - RECOVERY - to store the recovery system
-- PERSISTENT - this is an optional partition to store the persistent data of the system. you can either write this in the eMMC or, for instance, to an external storage. It is enough to create a partition and label it as `COS_PERSISTENT`. There can be only one partition with such label, the first that matches wins.
+- PERSISTENT - this is an optional partition to store the persistent data of the system. you can either write this in the NVMe or, for instance, to an external storage. It is enough to create a partition and label it as `COS_PERSISTENT`. There can be only one partition with such label, the first that matches wins.
 
 ### Prepare the SDK
 
