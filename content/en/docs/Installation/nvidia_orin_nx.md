@@ -16,7 +16,7 @@ This page describes how to install Kairos on an [Nvidia Orin NX](https://www.nvi
 ## Prerequisites
 
 - [Nvidia Orin NX](https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/jetson-orin/)
-- An USB type-C cable
+- A USB type-C cable
 - A Linux host used to flash the Nvidia Orin NX board
 - Jetson linux SDK [download](https://developer.nvidia.com/embedded/jetson-linux)
 
