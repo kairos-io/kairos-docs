@@ -64,7 +64,7 @@ echo "" > rootfs/boot/extlinux/extlinux.conf
 
 ### Prepare the images
 
-You can find Kairos core ubuntu images based on Ubuntu `22.04` here: https://quay.io/repository/kairos/ubuntu
+You can find Kairos core ubuntu images based on Ubuntu `22.04` [here](https://quay.io/repository/kairos/ubuntu)
 (search for `nvidia` in the tags)
 
 {{< tabpane text=true  >}}
