@@ -179,7 +179,7 @@ Be mindful also to change the esp partition or add it if required:
 
 
 {{% alert title="Note" color="success" %}}
-If modifiying the parition sizes, you need to replace the size inside the `<size></size>` tags of each partition in the XML:
+If modifying the partition sizes, you need to replace the size inside the `<size></size>` tags of each partition in the XML:
 
 ```
 stat -c %s bootloader/efi.img
