@@ -7,7 +7,7 @@ description: Install Kairos on Nvidia Orin NX
 ---
 
 {{% alert title="Warning" color="warning" %}}
-Depending on the JetPack version you choose, the Orin NX will work with certain Ubuntu versions (see (https://developer.nvidia.com/embedded/jetpack-archive)[here]).
+Depending on the JetPack version you choose, the Orin NX will work with certain Ubuntu versions (see [here](https://developer.nvidia.com/embedded/jetpack-archive)).
 {{% /alert %}}
 
 This page describes how to install Kairos on [Nvidia Orin NX](https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/jetson-orin/) in the NVMe.
