@@ -1,5 +1,7 @@
 .hugo_build.lock
 node_modules/
 public/
+public_test/
+bin/
 .vscode/
 resources/
