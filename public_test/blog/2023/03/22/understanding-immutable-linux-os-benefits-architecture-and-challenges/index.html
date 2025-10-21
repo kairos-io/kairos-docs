@@ -1,0 +1,754 @@
+<!doctype html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+
+
+<link rel="shortcut icon" href="/favicons/favicon.ico" >
+<link rel="apple-touch-icon" href="/favicons/apple-touch-icon-180x180.png" sizes="180x180">
+<link rel="icon" type="image/png" href="/favicons/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/favicons/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/favicons/android-36x36.png" sizes="36x36">
+<link rel="icon" type="image/png" href="/favicons/android-48x48.png" sizes="48x48">
+<link rel="icon" type="image/png" href="/favicons/android-72x72.png" sizes="72x72">
+<link rel="icon" type="image/png" href="/favicons/android-96x96.png" sizes="96x96">
+<link rel="icon" type="image/png" href="/favicons/android-144x144.png" sizes="144x144">
+<link rel="icon" type="image/png" href="/favicons/android-192x192.png" sizes="192x192">
+
+<title>Understanding Immutable Linux OS: Benefits, Architecture, and Challenges | Kairos</title>
+<meta name="description" content="In this post we are trying to answer some of the typical questions that help understanding Immutable OSes principles and we will dive a bit in what solutions are out there, and what are the challenges in the field">
+<meta property="og:url" content="https://kairos.io/blog/2023/03/22/understanding-immutable-linux-os-benefits-architecture-and-challenges/">
+  <meta property="og:site_name" content="Kairos">
+  <meta property="og:title" content="Understanding Immutable Linux OS: Benefits, Architecture, and Challenges">
+  <meta property="og:description" content="In this post we are trying to answer some of the typical questions that help understanding Immutable OSes principles and we will dive a bit in what solutions are out there, and what are the challenges in the field">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="blog">
+    <meta property="article:published_time" content="2023-03-22T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-10-20T08:48:34+03:00">
+    <meta property="og:image" content="https://kairos.io/images/Kairos_800x419.png">
+
+  <meta itemprop="name" content="Understanding Immutable Linux OS: Benefits, Architecture, and Challenges">
+  <meta itemprop="description" content="In this post we are trying to answer some of the typical questions that help understanding Immutable OSes principles and we will dive a bit in what solutions are out there, and what are the challenges in the field">
+  <meta itemprop="datePublished" content="2023-03-22T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-10-20T08:48:34+03:00">
+  <meta itemprop="wordCount" content="2767">
+  <meta itemprop="image" content="https://kairos.io/images/Kairos_800x419.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://kairos.io/images/Kairos_800x419.png">
+  <meta name="twitter:title" content="Understanding Immutable Linux OS: Benefits, Architecture, and Challenges">
+  <meta name="twitter:description" content="In this post we are trying to answer some of the typical questions that help understanding Immutable OSes principles and we will dive a bit in what solutions are out there, and what are the challenges in the field">
+      <meta name="twitter:site" content="@Kairos_OSS">
+<link rel="preload" href="/scss/main.scss" as="style" integrity="" crossorigin="anonymous">
+<link href="/scss/main.scss" rel="stylesheet">
+<script
+  src="https://code.jquery.com/jquery-3.7.1.min.js"
+  integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+  crossorigin="anonymous"></script>
+<script defer
+  src="https://unpkg.com/lunr@2.3.9/lunr.min.js"
+  integrity="sha384-203J0SNzyqHby3iU6hzvzltrWi/M41wOP5Gu+BiJMz5nwKykbkUx8Kp7iti0Lpli"
+  crossorigin="anonymous"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+<script defer data-domain="kairos.io" src="https://plausible.io/js/script.outbound-links.tagged-events.js"></script>
+<script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
+
+<script type="module" src="/js/kairos.9086b05855f0beebae6a1adfe52a8db6351e5ad523c65f8ebdad68dcf69ccd751e3d4dd95553ca3ae13ebc022f180f2d00bda9e0402704807a6d02fb14ca0381.js" integrity="sha512-kIawWFXwvuuuahrf5SqNtjUeWtUjxl&#43;Ova1o3PaczXUePU3ZVVPKOuE&#43;vAIvGA8tAL2p4EAnBIB6bQL7FMoDgQ==" defer></script>
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  </head>
+  <body class="td-page td-blog">
+    <header>
+      <nav class="td-navbar js-navbar-scroll" data-bs-theme="dark">
+<div class="container-fluid flex-column flex-md-row">
+  <a class="navbar-brand" href="/"><span class="navbar-brand__logo navbar-logo"><svg width="30" height="30" viewBox="0 0 137 137" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="24.8171" height="24.8171" transform="matrix(-0.86601 0.500028 -3.18907e-05 1 68.502 18.8594)" fill="#EE5007"/><rect width="24.8171" height="24.8171" transform="matrix(-0.86601 -0.500028 3.18907e-05 1 47.0088 31.2695)" fill="#FF7442"/><rect width="24.8171" height="24.8171" transform="matrix(-0.866041 0.499972 0.866041 0.499972 47.0088 6.45312)" fill="#FB9E70"/><rect width="24.8171" height="24.8171" transform="matrix(3.19859e-05 1 0.86601 0.500028 25.5139 43.6797)" fill="#FF7442"/><rect width="24.8171" height="24.8171" transform="matrix(-0.866041 0.499973 0.866041 0.499972 25.5139 68.4922)" fill="#FB9E70"/><rect width="24.8171" height="24.8171" transform="matrix(-3.17834e-05 1 0.866009 -0.500028 4.02271 56.0898)" fill="#EE5007"/><rect width="24.8171" height="24.8171" transform="matrix(-0.86601 0.500028 -3.19781e-05 1 68.5042 93.3125)" fill="#EE5007"/><rect width="24.8171" height="24.8171" transform="matrix(-0.866009 -0.500028 3.18033e-05 1 47.011 105.723)" fill="#FF7442"/><rect width="24.8171" height="24.8171" transform="matrix(-0.866041 0.499972 0.866041 0.499973 47.011 80.9062)" fill="#FB9E70"/><rect width="24.8171" height="24.8171" transform="matrix(0.86601 -0.500028 3.18907e-05 -1 68.4985 118.141)" fill="#EE5007"/><rect width="24.8171" height="24.8171" transform="matrix(0.86601 0.500028 -3.18907e-05 -1 89.9917 105.73)" fill="#FF7442"/><rect width="24.8171" height="24.8171" transform="matrix(0.866041 -0.499972 -0.866041 -0.499972 89.9917 130.547)" fill="#FB9E70"/><rect width="24.8171" height="24.8171" transform="matrix(-0.86601 0.500028 -3.19781e-05 1 132.979 56.0859)" fill="#EE5007"/><rect width="24.8171" height="24.8171" transform="matrix(-0.866009 -0.500028 3.18033e-05 1 111.486 68.4961)" fill="#FF7442"/><rect width="24.8171" height="24.8171" transform="matrix(-0.866041 0.499972 0.866041 0.499973 111.486 43.6797)" fill="#FB9E70"/><rect width="24.8171" height="24.8171" transform="matrix(0.86601 -0.500028 3.18907e-05 -1 68.5002 43.6875)" fill="#EE5007"/><rect width="24.8171" height="24.8171" transform="matrix(0.86601 0.500028 -3.18907e-05 -1 89.9934 31.2773)" fill="#FF7442"/><rect width="24.8171" height="24.8171" transform="matrix(0.866041 -0.499972 -0.866041 -0.499972 89.9934 56.0938)" fill="#FB9E70"/></svg></span><span class="navbar-brand__name">Kairos</span></a>
+  
+  <button class="navbar-burger d-lg-none ms-auto" id="navbar-burger" aria-label="Toggle navigation" type="button" style="background:none;border:none;outline:none;">
+    <span style="display:block;width:30px;height:3px;background:#fff;margin:4px 0;"></span>
+    <span style="display:block;width:30px;height:3px;background:#fff;margin:4px 0;"></span>
+    <span style="display:block;width:30px;height:3px;background:#fff;margin:4px 0;"></span>
+  </button>
+  
+  <div class="td-navbar-nav-scroll ms-md-auto" id="main_navbar">
+    <ul class="navbar-nav" id="navbar-links">
+      <li class="nav-item">
+        <a class="nav-link" href="/getting-started/"><span>Getting Started</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/community/"><span>Community</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" href="/blog/"><span>Blog</span></a>
+      </li>
+      <li class="nav-item dropdown">
+        <button class="btn btn-link nav-link dropdown-toggle d-flex align-items-center" id="distro-select" type="button" aria-expanded="false" data-bs-toggle="dropdown" data-bs-display="static" data-distro="rhel;roskylinux;9" aria-label="Toggle Flavor">
+    Rockylinux 9
+</button>
+<ul class="dropdown-menu" aria-labelledby="bd-flavor-text">
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="alpine;alpine;3.19" aria-pressed="false">
+        Alpine 3.19
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="debian;debian;bookworm" aria-pressed="false">
+        Debian Bookworm
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="debian;debian;testing" aria-pressed="false">
+        Debian Testing
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="rhel;fedora;40" aria-pressed="false">
+        Fedora 40
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="opensuse;opensuse;leap-15.6" aria-pressed="false">
+        openSUSE Leap-15.6
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="opensuse;opensuse;tumbleweed" aria-pressed="false">
+        openSUSE Tumbleweed
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="rhel;rockylinux;9" aria-pressed="true">
+        Rockylinux 9
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="ubuntu;ubuntu;24.10" aria-pressed="false">
+        Ubuntu 24.10
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="ubuntu;ubuntu;24.04" aria-pressed="false">
+        Ubuntu 24.04
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="ubuntu;ubuntu;22.04" aria-pressed="false">
+        Ubuntu 22.04
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="ubuntu;ubuntu;20.04" aria-pressed="false">
+        Ubuntu 20.04
+        </button>
+    </li>
+</ul> 
+      </li>
+      
+      <li class="nav-item mr-4 mb-2 mb-lg-0 mt-lg-2 d-none d-lg-block">
+        <li class="nav-item mr-4 mb-2 mb-lg-0 mt-lg-2">
+    <a class="github-button" href="https://github.com/kairos-io/kairos" data-size="large" data-show-count="true" aria-label="Star kairos-io/kairos on GitHub">Star</a>
+</li> 
+      </li>
+      <li class="td-light-dark-menu nav-item dropdown">
+        <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+  <symbol id="check2" viewBox="0 0 16 16">
+    <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+  </symbol>
+  <symbol id="circle-half" viewBox="0 0 16 16">
+    <path d="M8 15A7 7 0 1 0 8 1v14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"/>
+  </symbol>
+  <symbol id="moon-stars-fill" viewBox="0 0 16 16">
+    <path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"/>
+    <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z"/>
+  </symbol>
+  <symbol id="sun-fill" viewBox="0 0 16 16">
+    <path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/>
+  </symbol>
+</svg>
+
+<button class="btn btn-link nav-link dropdown-toggle d-flex align-items-center"
+        id="bd-theme"
+        type="button"
+        aria-expanded="false"
+        data-bs-toggle="dropdown"
+        data-bs-display="static"
+        aria-label="Toggle theme (auto)">
+  <svg class="bi my-1 theme-icon-active"><use href="#circle-half"></use></svg>
+</button>
+<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-theme-text">
+  <li>
+    <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" aria-pressed="false">
+      <svg class="bi me-2 opacity-50"><use href="#sun-fill"></use></svg>
+      Light
+      <svg class="bi ms-auto d-none"><use href="#check2"></use></svg>
+    </button>
+  </li>
+  <li>
+    <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark" aria-pressed="false">
+      <svg class="bi me-2 opacity-50"><use href="#moon-stars-fill"></use></svg>
+      Dark
+      <svg class="bi ms-auto d-none"><use href="#check2"></use></svg>
+    </button>
+  </li>
+  <li>
+    <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="auto" aria-pressed="true">
+      <svg class="bi me-2 opacity-50"><use href="#circle-half"></use></svg>
+      Auto
+      <svg class="bi ms-auto d-none"><use href="#check2"></use></svg>
+    </button>
+  </li>
+</ul>
+
+      </li>
+      </ul>
+  </div>
+  <div class="d-none d-lg-block">
+    <div class="td-search td-search--offline">
+  <div class="td-search__icon"></div>
+  <input
+    type="search"
+    class="td-search__input form-control"
+    placeholder="Search this site…"
+    aria-label="Search this site…"
+    autocomplete="off"
+    
+    data-offline-search-index-json-src="/offline-search-index.2cd40d81f421519107d8c788686e9696.json"
+    data-offline-search-base-href="/"
+    data-offline-search-max-results="10"
+  >
+</div>
+  </div>
+</div>
+</nav>
+
+
+<style>
+   
+  @media (max-width: 991.98px) {
+     
+    .navbar-burger {
+      position: fixed;
+      top: 12px;
+      right: 16px;
+      z-index: 3000;
+      background: none;
+      border: none;
+      outline: none;
+      padding: 0;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    #main_navbar {
+      display: none;
+    }
+    #main_navbar.show-mobile-menu {
+      display: block;
+      position: fixed;
+      top: 60px;  
+      left: 0;
+      width: 100vw;
+      height: calc(100vh - 60px);  
+      background: #03153A;
+      z-index: 2000;
+      overflow-y: auto;
+      transition: all 0.3s;
+    }
+    #navbar-links {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 2rem 1.5rem;
+      width: 100%;
+      height: 100%;
+    }
+    #navbar-links .nav-item {
+      margin-bottom: 1.5rem;
+      width: 100%;
+    }
+    #navbar-links .nav-link {
+      width: 100%;
+      font-size: 1.25rem;
+    }
+     
+    .td-navbar-nav-scroll .dropdown-menu {
+      position: absolute !important;
+      left: 0 !important;
+      right: auto !important;
+      top: 100% !important;
+      bottom: auto !important;
+      min-width: 200px;
+      margin-top: 0.5rem !important;  
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .td-navbar-nav-scroll .nav-item.dropdown {
+      position: relative !important;
+    }
+    .td-navbar-nav-scroll .nav-item.dropdown > .nav-link,
+    .td-navbar-nav-scroll .nav-item.dropdown > a {
+      margin-bottom: 0 !important;
+      padding-bottom: 0 !important;
+    }
+  }
+   
+  @media (max-width: 991.98px) {
+    #main_navbar.show-mobile-menu { display: block; }
+  }
+</style>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var burger = document.getElementById('navbar-burger');
+    var navbar = document.getElementById('main_navbar');
+    if (burger && navbar) {
+      burger.addEventListener('click', function() {
+        navbar.classList.toggle('show-mobile-menu');
+      });
+    }
+  });
+</script>
+    </header>
+    <div class="container-fluid td-outer">
+      <div class="td-main">
+        <div class="row flex-xl-nowrap">
+          <aside class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
+            <div id="td-sidebar-menu" class="td-sidebar__inner">
+  <div id="content-mobile">
+  <form class="td-sidebar__search d-flex align-items-center">
+    <div class="td-search td-search--offline">
+  <div class="td-search__icon"></div>
+  <input
+    type="search"
+    class="td-search__input form-control"
+    placeholder="Search this site…"
+    aria-label="Search this site…"
+    autocomplete="off"
+    
+    data-offline-search-index-json-src="/offline-search-index.2cd40d81f421519107d8c788686e9696.json"
+    data-offline-search-base-href="/"
+    data-offline-search-max-results="10"
+  >
+</div>
+    <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ms-3 fas fa-bars" type="button" data-bs-toggle="collapse" data-bs-target="#td-section-nav" aria-controls="td-section-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    </button>
+  </form>
+  </div>
+  <div id="content-desktop"></div>
+  <nav class="td-sidebar-nav collapse td-sidebar-nav--search-disabled" id="td-section-nav">
+    <ul class="td-sidebar-nav__section pe-md-3 ul-0">
+      <li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-blog-li">
+  <a href="/blog/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section tree-root" id="m-blog"><span class="">Blog</span></a>
+  <ul class="ul-1">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20250808growing-stronger-introducing-commercial-support-for-kairos-li">
+  <a href="/blog/2025/08/08/growing-stronger-introducing-commercial-support-for-kairos/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20250808growing-stronger-introducing-commercial-support-for-kairos"><span class="">Growing Stronger: Introducing Commercial Support for Kairos</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20250725kairos-release-v350-li">
+  <a href="/blog/2025/07/25/kairos-release-v3.5.0/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20250725kairos-release-v350"><span class="">Kairos release v3.5.0</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20250424kairos-release-v340-li">
+  <a href="/blog/2025/04/24/kairos-release-v3.4.0/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20250424kairos-release-v340"><span class="">Kairos release v3.4.0</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20250415system-extensions-simplified-live-customization-with-kairos-li">
+  <a href="/blog/2025/04/15/system-extensions-simplified-live-customization-with-kairos/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20250415system-extensions-simplified-live-customization-with-kairos"><span class="">System Extensions, Simplified: Live Customization with Kairos</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20250402kairos-meets-k0s-a-meta-distribution-for-kubernetes-is-born-li">
+  <a href="/blog/2025/04/02/kairos-meets-k0s-a-meta-distribution-for-kubernetes-is-born/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20250402kairos-meets-k0s-a-meta-distribution-for-kubernetes-is-born"><span class="">Kairos Meets k0s: A Meta-Distribution for Kubernetes is Born</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20250326how-we-rebuilt-kairos-building-from-the-ground-up-li">
+  <a href="/blog/2025/03/26/how-we-rebuilt-kairos-building-from-the-ground-up/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20250326how-we-rebuilt-kairos-building-from-the-ground-up"><span class="">How We Rebuilt Kairos building From the Ground Up</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20250318how-i-automated-my-doorbell-with-kairos-and-you-can-too-li">
+  <a href="/blog/2025/03/18/how-i-automated-my-doorbell-with-kairos-and-you-can-too/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20250318how-i-automated-my-doorbell-with-kairos-and-you-can-too"><span class="">How I Automated My Doorbell with Kairos (and You Can Too)</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20241008kairos-joins-the-cncf-as-a-sandbox-project-li">
+  <a href="/blog/2024/10/08/kairos-joins-the-cncf-as-a-sandbox-project/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20241008kairos-joins-the-cncf-as-a-sandbox-project"><span class="">Kairos Joins the CNCF as a Sandbox Project</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20241007hacktoberfest-2024-li">
+  <a href="/blog/2024/10/07/hacktoberfest-2024/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20241007hacktoberfest-2024"><span class="">Hacktoberfest 2024</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20240814enhancing-kairos-documentation-with-a-customizable-flavor-menu-li">
+  <a href="/blog/2024/08/14/enhancing-kairos-documentation-with-a-customizable-flavor-menu/" title="Enhancing Kairos Documentation with a Customizable Flavor Menu" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20240814enhancing-kairos-documentation-with-a-customizable-flavor-menu"><span class="">Customizable Flavor Menu</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20240813our-first-hackweek-li">
+  <a href="/blog/2024/08/13/our-first-hackweek/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20240813our-first-hackweek"><span class="">Our First Hackweek</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20240801adding-analytics-to-kairosio-li">
+  <a href="/blog/2024/08/01/adding-analytics-to-kairos.io/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20240801adding-analytics-to-kairosio"><span class="">Adding Analytics to Kairos.io</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20240722the-importance-of-resilient-infrastructure-how-kairos-could-have-mitigated-the-crowdstrike-outage-li">
+  <a href="/blog/2024/07/22/the-importance-of-resilient-infrastructure-how-kairos-could-have-mitigated-the-crowdstrike-outage/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20240722the-importance-of-resilient-infrastructure-how-kairos-could-have-mitigated-the-crowdstrike-outage"><span class="">The Importance of Resilient Infrastructure: How Kairos Could Have Mitigated the CrowdStrike Outage</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20240719kairos-release-v311-li">
+  <a href="/blog/2024/07/19/kairos-release-v3.1.1/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20240719kairos-release-v311"><span class="">Kairos release v3.1.1</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20240711kairos-release-v31-li">
+  <a href="/blog/2024/07/11/kairos-release-v3.1/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20240711kairos-release-v31"><span class="">Kairos release v3.1</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20240410unlocking-the-mysteries-of-trusted-boot-a-deep-dive-into-secure-system-boot-processes-li">
+  <a href="/blog/2024/04/10/unlocking-the-mysteries-of-trusted-boot-a-deep-dive-into-secure-system-boot-processes/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20240410unlocking-the-mysteries-of-trusted-boot-a-deep-dive-into-secure-system-boot-processes"><span class="">Unlocking the Mysteries of Trusted Boot: A Deep Dive into Secure System Boot Processes</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20240402xz-utils-backdoor-li">
+  <a href="/blog/2024/04/02/xz-utils-backdoor/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20240402xz-utils-backdoor"><span class="">xz Utils Backdoor</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20240326spos-panel-at-kubecon-paris-2024-li">
+  <a href="/blog/2024/03/26/spos-panel-at-kubecon-paris-2024/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20240326spos-panel-at-kubecon-paris-2024"><span class="">SPOS Panel at KubeCon Paris 2024</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20240308kairos-release-v3-li">
+  <a href="/blog/2024/03/08/kairos-release-v3/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20240308kairos-release-v3"><span class="">Kairos release v3</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20240206kairos-at-fosdem-2024-li">
+  <a href="/blog/2024/02/06/kairos-at-fosdem-2024/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20240206kairos-at-fosdem-2024"><span class="">Kairos at FOSDEM 2024</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20240111kairos-release-v25-li">
+  <a href="/blog/2024/01/11/kairos-release-v2.5/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20240111kairos-release-v25"><span class="">Kairos release v2.5</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20231114kairos-release-v242-li">
+  <a href="/blog/2023/11/14/kairos-release-v2.4.2/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20231114kairos-release-v242"><span class="">Kairos release v2.4.2</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20230926hacktoberfest-2023-li">
+  <a href="/blog/2023/09/26/hacktoberfest-2023/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20230926hacktoberfest-2023"><span class="">Hacktoberfest 2023</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20230919kairos-release-v24-li">
+  <a href="/blog/2023/09/19/kairos-release-v2.4/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20230919kairos-release-v24"><span class="">Kairos release v2.4</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20230710unveiling-kairos-v23-fips-compliance-and-more-li">
+  <a href="/blog/2023/07/10/unveiling-kairos-v2.3-fips-compliance-and-more/" title="Unveiling Kairos v2.3 - FIPS Compliance and More!" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20230710unveiling-kairos-v23-fips-compliance-and-more"><span class="">Unveiling Kairos v2.3</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20230615kairos-release-v22-li">
+  <a href="/blog/2023/06/15/kairos-release-v2.2/" title="Kairos release v2.2" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20230615kairos-release-v22"><span class="">Announcing v2.2 Kairos release</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20230418kairos-is-now-part-of-the-secure-edge-native-architecture-by-spectro-cloud-and-intel-li">
+  <a href="/blog/2023/04/18/kairos-is-now-part-of-the-secure-edge-native-architecture-by-spectro-cloud-and-intel/" title="Kairos is now part of the Secure Edge-Native Architecture by Spectro Cloud and Intel" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20230418kairos-is-now-part-of-the-secure-edge-native-architecture-by-spectro-cloud-and-intel"><span class="">The Secure Edge-Native Architecture</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20230413kairos-release-v20-li">
+  <a href="/blog/2023/04/13/kairos-release-v2.0/" title="Kairos release v2.0" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20230413kairos-release-v20"><span class="">Announcing v2.0 Kairos release</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20230329access-your-home-lab-kairos-cluster-over-a-wireguard-vpn-li">
+  <a href="/blog/2023/03/29/access-your-home-lab-kairos-cluster-over-a-wireguard-vpn/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20230329access-your-home-lab-kairos-cluster-over-a-wireguard-vpn"><span class="">Access your home-lab Kairos cluster over a Wireguard VPN</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id="m-blog20230322understanding-immutable-linux-os-benefits-architecture-and-challenges-li">
+  <a href="/blog/2023/03/22/understanding-immutable-linux-os-benefits-architecture-and-challenges/" class="align-left ps-0 active td-sidebar-link td-sidebar-link__page" id="m-blog20230322understanding-immutable-linux-os-benefits-architecture-and-challenges"><span class="td-sidebar-nav-active-item">Understanding Immutable Linux OS: Benefits, Architecture, and Challenges</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20230313kairos-spectrocloud-and-canonical-collaborate-to-deliver-revolutionary-telco-radio-edge-solution-li">
+  <a href="/blog/2023/03/13/kairos-spectrocloud-and-canonical-collaborate-to-deliver-revolutionary-telco-radio-edge-solution/" title="Kairos, SpectroCloud, and Canonical Collaborate to Deliver Revolutionary Telco Radio Edge Solution" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20230313kairos-spectrocloud-and-canonical-collaborate-to-deliver-revolutionary-telco-radio-edge-solution"><span class="">Kairos, SpectroCloud, and Canonical Collaboration at MWC</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20230309kairos-at-the-kcd-amsterdam-and-paris-2023-li">
+  <a href="/blog/2023/03/09/kairos-at-the-kcd-amsterdam-and-paris-2023/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20230309kairos-at-the-kcd-amsterdam-and-paris-2023"><span class="">Kairos at the KCD Amsterdam and Paris 2023</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20230226kairos-release-v16-li">
+  <a href="/blog/2023/02/26/kairos-release-v1.6/" title="Kairos release v1.6" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20230226kairos-release-v16"><span class="">Announcing v1.6 Kairos release</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20230207kairos-at-fosdem-2023-li">
+  <a href="/blog/2023/02/07/kairos-at-fosdem-2023/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20230207kairos-at-fosdem-2023"><span class="">Kairos at FOSDEM 2023</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20230127kairos-release-v15-li">
+  <a href="/blog/2023/01/27/kairos-release-v1.5/" title="Kairos release v1.5" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20230127kairos-release-v15"><span class="">Announcing v1.5 Kairos release</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20230104media-section-li">
+  <a href="/blog/2023/01/04/media-section/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20230104media-section"><span class="">Media Section</span></a>
+</li>
+  </ul>
+</li>
+    </ul>
+  </nav>
+</div>
+
+          </aside>
+          <aside class="d-none d-xl-block col-xl-2 td-sidebar-toc d-print-none">
+            <div class="td-page-meta ms-2 pb-1 pt-2 mb-0">
+<a href="https://github.com/kairos-io/kairos-docs/tree/main/content/en/blog/understanding-immutability.md" class="td-page-meta--view td-page-meta__view" target="_blank" rel="noopener"><i class="fa-solid fa-file-lines fa-fw"></i> View page source</a>
+  <a href="https://github.com/kairos-io/kairos-docs/edit/main/content/en/blog/understanding-immutability.md" class="td-page-meta--edit td-page-meta__edit" target="_blank" rel="noopener"><i class="fa-solid fa-pen-to-square fa-fw"></i> Edit this page</a>
+  <a href="https://github.com/kairos-io/kairos-docs/new/main/content/en/blog?filename=change-me.md&amp;value=---%0Atitle%3A&#43;%22Long&#43;Page&#43;Title%22%0AlinkTitle%3A&#43;%22Short&#43;Nav&#43;Title%22%0Aweight%3A&#43;100%0Adescription%3A&#43;%3E-%0A&#43;&#43;&#43;&#43;&#43;Page&#43;description&#43;for&#43;heading&#43;and&#43;indexes.%0A---%0A%0A%23%23&#43;Heading%0A%0AEdit&#43;this&#43;template&#43;to&#43;create&#43;your&#43;new&#43;page.%0A%0A%2A&#43;Give&#43;it&#43;a&#43;good&#43;name%2C&#43;ending&#43;in&#43;%60.md%60&#43;-&#43;e.g.&#43;%60getting-started.md%60%0A%2A&#43;Edit&#43;the&#43;%22front&#43;matter%22&#43;section&#43;at&#43;the&#43;top&#43;of&#43;the&#43;page&#43;%28weight&#43;controls&#43;how&#43;its&#43;ordered&#43;amongst&#43;other&#43;pages&#43;in&#43;the&#43;same&#43;directory%3B&#43;lowest&#43;number&#43;first%29.%0A%2A&#43;Add&#43;a&#43;good&#43;commit&#43;message&#43;at&#43;the&#43;bottom&#43;of&#43;the&#43;page&#43;%28%3C80&#43;characters%3B&#43;use&#43;the&#43;extended&#43;description&#43;field&#43;for&#43;more&#43;detail%29.%0A%2A&#43;Create&#43;a&#43;new&#43;branch&#43;so&#43;you&#43;can&#43;preview&#43;your&#43;new&#43;file&#43;and&#43;request&#43;a&#43;review&#43;via&#43;Pull&#43;Request.%0A" class="td-page-meta--child td-page-meta__child" target="_blank" rel="noopener"><i class="fa-solid fa-pen-to-square fa-fw"></i> Create child page</a>
+  <a href="https://github.com/kairos-io/kairos-docs/issues/new?title=Understanding%20Immutable%20Linux%20OS:%20Benefits,%20Architecture,%20and%20Challenges" class="td-page-meta--issue td-page-meta__issue" target="_blank" rel="noopener"><i class="fa-solid fa-list-check fa-fw"></i> Create documentation issue</a>
+  <a href="https://github.com/kairos-io/kairos/issues/new" class="td-page-meta--project td-page-meta__project-issue" target="_blank" rel="noopener"><i class="fa-solid fa-list-check fa-fw"></i> Create project issue</a>
+  
+</div>
+
+            <div class="td-toc">
+        <nav id="TableOfContents">
+  <ul>
+    <li><a href="#what-is-an-immutable-linux-os">What is an Immutable Linux OS?</a></li>
+    <li><a href="#challenges-at-scale">Challenges at scale</a></li>
+    <li><a href="#immutable-os-a-look-at-the-current-landscape">Immutable OS: a look at the current landscape</a></li>
+    <li><a href="#how-kairos-fits-in-the-ecosystem">How Kairos fits in the ecosystem</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
+    <li><a href="#footnotes">Footnotes</a></li>
+  </ul>
+</nav>
+      </div>
+    
+            
+
+          </aside>
+          <main class="col-12 col-md-9 col-xl-8 ps-md-5 pe-md-4" role="main">
+            <a class="td-rss-button" title="RSS" href="/blog/index.xml" target="_blank" rel="noopener">
+              <i class="fa-solid fa-rss" aria-hidden="true"></i>
+            </a>
+            
+<div class="td-content">
+	<h1>Understanding Immutable Linux OS: Benefits, Architecture, and Challenges</h1>
+	<div class="lead">In this post we are trying to answer some of the typical questions that help understanding Immutable OSes principles and we will dive a bit in what solutions are out there, and what are the challenges in the field</div>
+	<div class="td-byline mb-4">
+		By <b>Ettore Di Giacinto (<a href="https://x.com/mudler_it">X</a>) (<a href="https://github.com/mudler">GitHub</a>)</b> |
+		<time datetime="2023-03-22" class="text-body-secondary">Wednesday, March 22, 2023</time>
+	</div>
+	<header class="article-meta">
+		
+</header>
+	
+
+<div class="alert alert-info" role="alert">
+<h4 class="alert-heading">Updates</h4>
+
+    <ul>
+<li>2025-01-10: Added project status for each solution in the comparison table</li>
+</ul>
+
+
+</div>
+
+<p>For years, the traditional Linux operating system has been a top pick for its flexibility and ability to be customized. But as great as it is, there are use cases in which stricter security rules and higher reliability standards are needed. That&rsquo;s where immutable Linux operating systems come in - offering a more secure and reliable option, especially in settings where security is paramount.</p>
+<div class="td-card card border me-4">
+<div class="card-header">
+      <img src="https://user-images.githubusercontent.com/2420543/226939911-6801ecab-d023-4357-92f2-b782ae086462.png" alt="castle">
+    </div>
+<div class="card-body">
+    <h6 class="card-title ms-2 text-body-secondary">
+        <em>An illustration of a fortress surrounded by a moat and guarded by armored knights, with a banner flying the Linux penguin logo, medieval, fortified, secure, trending on Artstation.</em> Author: <em>Midjourney AI</em></h6>
+    <p class="card-text">
+        
+</p>
+      </div>
+  </div>
+
+<p>In this post, we&rsquo;ll be addressing some common questions to help you understand the principles behind immutable operating systems. We&rsquo;ll also be exploring the various solutions available and the challenges faced in this field. So, get ready to dive in!</p>
+<h2 id="what-is-an-immutable-linux-os">What is an Immutable Linux OS?</h2>
+<p>Explaining the concept of an immutable Linux OS to a newcomer can often turn into a detailed discussion on system internals. However, we&rsquo;ll simplify it here as much as possible, even for those unfamiliar with the concepts.</p>
+<p>Formally defined, an immutable Linux OS (also known as Immutable Infrastructure or Immutable Deployment) is an operating system designed to be unchangeable and read-only. This means that once the operating system has been installed, the system files and directories cannot be modified. Any changes made to the system are temporary and lost when the system is rebooted. Think of it as a snapshot of a standard Linux system that cannot be changed. Any updates or changes are made by creating a new instance of the OS, deploying it, and switching over to the new instance. You can also find a very good writeup by Adrian Hornsby <a href="https://medium.com/the-cloud-architect/immutable-infrastructure-21f6613e7a23">here</a>.</p>
+<p>If you&rsquo;re already a Linux user, you&rsquo;ll know that as <code>root</code> (Administrator), you can write anywhere in the filesystem, potentially corrupting the OS portion responsible for booting or management. In an immutable OS, however, any command that attempts to modify the system files will fail, as those files are only accessible for reading.</p>
+<p>Immutable systems are particularly useful in environments where security is a top priority, such as cloud computing, embedded systems, kiosks, and container execution. Essentially, any environment that needs to scale can benefit from the security and reliability of an immutable OS.</p>
+
+
+<div class="alert alert-info" role="alert">
+
+
+    <em>&ldquo;But what does that really mean? And what problem are Immutable systems trying to solve?&rdquo;</em>
+
+</div>
+
+<p>There are several advantages to using immutable Linux systems over traditional Linux systems. Firstly, there is an additional layer of <strong>security</strong> as it&rsquo;s not possible to tamper with the runtime OS. Changes, if accepted, are discarded on the next reboot. This means that if a hacker or a malicious actor gains access to the system, they cannot make permanent changes that could compromise the system&rsquo;s security.</p>
+<p>Secondly, <strong>maintenance</strong> of immutable systems is easier because they do not require regular updates or patches at the atomic package level. Instead, the entire OS is updated, similar to how updates are handled on Android phones.</p>
+<p>Finally, because the system is read-only, it is more <strong>reliable</strong> and less prone to failure. A declarative configuration model is usually tied to it, simplifying the configuration of the OS when orchestrated with other tools such as Ansible, Terraform, or similar.</p>
+
+
+<div class="alert alert-info" role="alert">
+
+
+    <em>&ldquo;Right, but how do I manage upgrades?&rdquo;</em>
+
+</div>
+
+<p>Instead of upgrading the system in place, upgrades are typically handled by creating a new, updated image of the operating system and replacing the existing image, in an atomic operation. This process is commonly referred to as &ldquo;image-based upgrade&rdquo;. The image can also be delivered to the end system, but this differs depending on the implementation, and there is no building on the node side.</p>
+<p><img src="https://user-images.githubusercontent.com/2420543/224147132-50d6808e-0a1c-48d0-8f44-627bd0dfa9f2.png" alt="Upgrade"></p>
+<p>In contrast, standard Linux systems typically use package managers such as <code>apt</code> or <code>yum</code> to upgrade software packages in place. This can be a more complex process because the package manager must ensure that all dependencies are satisfied and that there are no conflicts between different software packages. Additionally, upgrades in standard Linux systems can sometimes cause issues if there are conflicts between different versions of software packages or if the upgrade process is interrupted.</p>
+<h2 id="challenges-at-scale">Challenges at scale</h2>
+<p>In standard Linux systems, the package manager has a lot of responsibilities and interacts directly with the system to apply changes. It can install packages, upgrade packages, merge configurations, and generate additional data required for the package. This makes installing software, upgrading, and running a system easy as a couple of interactions away with the package manager.</p>
+<p>When it comes to upgrading an installed system, the package manager should take care of many aspects, such as: correctly ordering dependencies (which may require a solver), verifying which packages are installed or not, which new packages will be installed, and handling file transmission securely. However, as the complexity of the stack grows, conflicts between packages can arise, and the package manager may prompt the user to solve them. This is not ideal for scaling out deployments, upgrades, and cutting operational costs since it exposes the infrastructure to drift.</p>
+<div class="td-card card border me-4">
+<div class="card-header">
+      <img src="https://user-images.githubusercontent.com/2420543/224106950-7d652652-c8e0-4ee4-980d-b057e4af903f.png" alt="Screenshot from 2023-03-09 18-25-17">
+    </div>
+<div class="card-body">
+    <p class="card-text">
+        
+ _Huh, didn't we get rid of package conflicts already? ([screenshot](https://www.reddit.com/r/openSUSE/comments/z4ld75/this_seems_to_be_common_in_opensuse_should_i_wait/))_
+</p>
+      </div>
+  </div>
+
+<p>Tools like Ansible, Salt, Puppet, or Chef can manage and control standard systems upgrade mechanisms without requiring any interaction with each system during high-scale upgrades. In the standard model, clients handle certain portions of upgrades and installations, such as updating configuration files, or regenerating the initramfs. However, these actions could eventually raise the infrastructure drift level, causing a configuration merging to block everything or cause damage to your infrastructure and interrupt services. To avoid such issues, preparing fallback or switching services connections after an upgrade has been rolled out is one way to approach it.</p>
+<p>Transactional upgrades, are a step toward making standard mutable Linux systems, act more similarly to image-based upgrades in immutable Linux systems. In a transactional upgrade, the new software packages are prepared, usually into a separate partition, and applied after the first boot, similar to how an image-based upgrade works. However, unlike an immutable system, the existing system files can still be modified during the upgrade process.</p>
+<p>On the other hand, immutable OSes simplify managing the OS stack by not exposing the node to complexities during upgrades or installation. The image is built ahead of time, using a well-tested, reproducible recipe that does not modify the system itself. The package manager is responsible for preparing a new, pristine environment that the real system will boot into afterward. For instance, immutable Linux OSes that use A/B partitioning create a new image of the operating system with the updated software packages or configuration changes. The new image is deployed to a transitive partition, which then becomes the new active partition. If the upgrade fails, the system can simply boot on the passive partition.</p>
+<h2 id="immutable-os-a-look-at-the-current-landscape">Immutable OS: a look at the current landscape</h2>
+<p>Here are some popular Immutable OS solutions, although this list is not exhaustive. There are much better and updated ones you can find <a href="https://github.com/castrojo/awesome-immutable">on Github</a>. Each of the solutions was created to tackle its own set of challenges, and they differ in their implementation details depending on their target environments.</p>
+<p>The following are some of the most popular Immutable OS solutions:</p>
+<ul>
+<li><strong>CoreOS</strong>: A Linux-based operating system designed for containers and cloud computing, which uses an immutable file system called &ldquo;Container Linux&rdquo;. CoreOS has now merged with Red Hat Enterprise Linux.</li>
+<li><strong>Project Atomic</strong>: A CentOS-based Linux distribution, that focuses on container deployment and management, using a layered approach that allows for easy rollbacks.</li>
+<li><strong>Ubuntu Core</strong>: Ubuntu Core is a version of the Ubuntu operating system designed and <a href="https://ubuntu.com/core/services/guide/intro-ubuntu-core">engineered for IoT and embedded systems</a>. It uses snap packages exclusively to create a confined and transaction-based system. It also updates itself and its applications automatically.</li>
+<li><strong>RancherOS</strong>: - A Linux-based operating system that is designed to be minimal, lightweight, and optimized for running containers. RancherOS uses Docker for all system processes, and its file system is mounted read-only, making it immutable.</li>
+<li><strong>Talos</strong>: An open-source Linux distribution designed to run Kubernetes, K3s, or other container orchestration systems. It features a highly secure, API-managed infrastructure with automated and scalable operations and is suitable for cloud, containers, and general-purpose environments.</li>
+<li><strong>K3OS</strong>: A minimal Linux distribution designed specifically for running Kubernetes clusters. k3os is built around k3s, a lightweight Kubernetes distribution, and uses the immutable Container Linux file system with an A/B update model to ensure smooth and reliable updates. It is suitable for cloud and container environments.</li>
+<li><strong>Flatcar</strong>: A Linux-based operating system that is based on CoreOS and is designed for use in containerized environments. Like CoreOS, Flatcar Container Linux uses an immutable file system to provide stability and security.</li>
+<li><strong>Fedora Silverblue</strong>: A Fedora-based Linux distribution, that uses an immutable file system and a transactional update model, to provide a stable and secure environment. Fedora Silverblue is designed for use in desktop and containerized environments. A nice overview can be found <a href="https://www.lifeintech.com/2021/11/19/immutable-os/">here</a> or <a href="https://www.redhat.com/sysadmin/immutability-silverblue">here</a></li>
+<li><strong>Photon OS</strong>: A Linux-based operating system developed by VMware, which is designed to run containerized workloads. Photon OS uses a minimal package set and an immutable file system for enhanced security and manageability.</li>
+<li><strong>openSUSE MicroOS</strong>: An openSUSE-based Linux distributions with transaction-update and is designed to host container workloads with automated administration and patching. Install MicroOS to get a quick, small environment for deploying Containers, or any other workload that benefits from Transactional Updates. As a rolling release distribution, the software is always up-to-date. Server and Desktop have different naming like openSUSE MicroOS Desktop GNOME is Aeon and openSUSE MicroOS Desktop Plasma is Kalpa. Information about MicroOS can be found <a href="https://microos.opensuse.org/">here</a> and the iso can be downloaded <a href="https://get.opensuse.org/microos/">here</a></li>
+</ul>
+<p>To simplify the comparison between the different Immutable OS solutions, the following table highlights their key differences and the environments they are targeted for:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Solution</th>
+          <th>Based on</th>
+          <th>Update Model</th>
+          <th>Target Environment</th>
+          <th>Project Status</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>CoreOS</td>
+          <td>Gentoo</td>
+          <td>Transactional Updates</td>
+          <td>Cloud</td>
+          <td>Actively Maintained</td>
+      </tr>
+      <tr>
+          <td>Talos</td>
+          <td>Nothing</td>
+          <td>Container image update</td>
+          <td>Cloud, Containers, General purpose</td>
+          <td>Actively Maintained</td>
+      </tr>
+      <tr>
+          <td>K3OS</td>
+          <td>Alpine</td>
+          <td>A/B</td>
+          <td>Cloud, Containers</td>
+          <td>Discontinued</td>
+      </tr>
+      <tr>
+          <td>Project Atomic</td>
+          <td>CentOS</td>
+          <td>Layered Packages</td>
+          <td>Containers</td>
+          <td>Discontinued</td>
+      </tr>
+      <tr>
+          <td>Ubuntu Core</td>
+          <td>Ubuntu</td>
+          <td>Transactional Updates</td>
+          <td>IoT, Embedded Systems</td>
+          <td>Actively Maintained</td>
+      </tr>
+      <tr>
+          <td>RancherOS</td>
+          <td>Linux</td>
+          <td>Docker for System Processes</td>
+          <td>Containers</td>
+          <td>Discontinued</td>
+      </tr>
+      <tr>
+          <td>Flatcar</td>
+          <td>CoreOS</td>
+          <td>Transactional Updates</td>
+          <td>Cloud</td>
+          <td>Actively Maintained &amp; a CNCF Project</td>
+      </tr>
+      <tr>
+          <td>Red Hat Atomic Host</td>
+          <td>Red Hat</td>
+          <td>Transactional Updates</td>
+          <td>Cloud, optimized for running containers</td>
+          <td>Discontinued</td>
+      </tr>
+      <tr>
+          <td>SLE Micro</td>
+          <td>SUSE</td>
+          <td>Transactional Updates</td>
+          <td>Containers, Cloud, Edge, General purpose</td>
+          <td>Actively Maintained</td>
+      </tr>
+      <tr>
+          <td>MicroOS</td>
+          <td>openSUSE</td>
+          <td>Transactional Updates</td>
+          <td>Desktop, Containers, Cloud, Edge, General purpose</td>
+          <td>Actively Maintained</td>
+      </tr>
+      <tr>
+          <td>Fedora Silverblue</td>
+          <td>Fedora</td>
+          <td>Transactional Updates</td>
+          <td>Desktop, Containers</td>
+          <td>Actively Maintained</td>
+      </tr>
+      <tr>
+          <td>Photon OS</td>
+          <td>Linux</td>
+          <td>Immutable File System</td>
+          <td>Cloud</td>
+          <td>Actively Maintained</td>
+      </tr>
+      <tr>
+          <td>Kairos</td>
+          <td>Any Linux distribution</td>
+          <td>Immutable File System</td>
+          <td>Cloud, Edge, General purpose</td>
+          <td>Actively Maintained &amp; a CNCF Project</td>
+      </tr>
+  </tbody>
+</table>
+
+
+<div class="alert alert-info" role="alert">
+
+
+    <em>&ldquo;So, what&rsquo;s Kairos? What&rsquo;s the challenges that Kairos tries to overcome?&rdquo;</em>
+
+</div>
+
+<h2 id="how-kairos-fits-in-the-ecosystem">How Kairos fits in the ecosystem</h2>
+<p>Kairos is a great fit when you want to deploy a Linux system on real hardware at the Edge<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> or in a datacenter, whether it&rsquo;s in your cloud on-premises or in the Edge. Specifically, if you&rsquo;re looking for:</p>
+<ul>
+<li>Zero-touch configuration and high-scalable deployments. <a href="/docs/installation/automated/">See how to perform automated installs</a> or <a href="/docs/advanced/build/">how to create custom appliances</a></li>
+<li>A single distribution center of upgrades across your infrastructure using container registries. <a href="/docs/architecture/container/#benefits">See docs</a></li>
+<li>Strong security posture, including <a href="/docs/advanced/partition_encryption/">online data encryption at-rest via TPM</a>, Supply chain verification and Service bill of material</li>
+<li>Good hardware support</li>
+<li>Simplified Kubernetes deployment with <a href="/docs/installation/p2p/">self-coordinated K3s</a></li>
+<li><a href="/docs/advanced/customizing/">Flexibility in customization</a>, including fine-grained control over the OS layer (packages installed, versions), and complete support maintenance level by <a href="/docs/reference/build-from-scratch/">building images from scratch</a></li>
+<li>Complete control over your infrastructure</li>
+<li>A <a href="/community/">community-driven</a>, <a href="https://github.com/orgs/kairos-io/projects/2">open roadmap</a>, office hours, and the opportunity to get involved</li>
+</ul>
+<p><strong>Maintenance</strong> - One thing you may have noticed when comparing Kairos to other alternatives, is that it doesn&rsquo;t tie you to a specific OS. Instead, Kairos is flexible and portable, supporting all the popular Linux distributions, such as Ubuntu, Debian, and Fedora, among others. This, unties you from typical vendor lock-in strategies, forcing you to choose a specific distribution only for the immutability aspect.</p>
+<p>The design shines also for its support for <strong>long-term maintenance</strong>. Each framework image released by Kairos allows the conversion of any OS to the given Kairos version, which could potentially enable maintenance for as long as the base OS support model allows. <a href="/docs/reference/build-from-scratch/">You can learn more about it here</a>.</p>
+<p><strong>Container based</strong> - Kairos treats every operating system (OS) as a set of packages and represents the OS with a standard container image that can be executed with tools such as <code>podman</code>, <code>docker</code>, and so on. <a href="/docs/architecture/container/">This container image</a> includes all the necessary components for booting. Kairos components manage all node lifecycle operations, such as upgrading, installing, and resetting. These components are packaged within the <a href="/docs/reference/image_matrix/#framework-images">framework images</a>, which can be overlaid while creating a standard container image. Unlike traditional Linux distributions, the kairos-agent handles upgrades by pulling new container images as systems to boot, instead of relying on the OS package manager.</p>
+<p>All installation and upgrades are delivered exclusively through container images, which are overlaid at boot time, eliminating the need for a container engine at runtime. The container image used for booting includes the kernel, initrd, and all other required pieces. This allows for customization directly within a Dockerfile. The container being booted is the image itself, and there is no actual container runtime running the image. The container is used to construct an image internally, which is then used to boot the system in an A/B fashion, without adding any overhead.</p>
+<p>This approach offers several benefits, including the ability to verify the image with security scans and treat it similarly to a standard application that can be distributed via a container registry.</p>
+<p><strong>Separation of concerns</strong> - The separation of concerns between the OS and the management interface is clear in Kairos. The OS is responsible for providing the booting components and packages necessary for its operation, while Kairos provides the framework for managing the node&rsquo;s lifecycle and immutability interface. The relationship between the image and Kairos is governed by a <a href="/docs/reference/build-from-scratch/">contract</a>, which enables package handling without vendor lock-in.</p>
+<p>This separation of concerns simplifies the delegation of package maintenance, CVE monitoring, and security fixes to the OS layer. Upgrades to container images can be achieved by chaining Dockerfiles or manually committing changes to the image.</p>
+<p><strong>Automatic deployments</strong> - To further <a href="/docs/installation/automated/">automate</a> custom deployment models, the Kairos Kubernetes Native Extensions can be used to create customized configurations either directly from Kubernetes or via the command line interface (CLI).</p>
+<p><strong>Self co-ordinated</strong>: <a href="/docs/installation/p2p/">Configuring multiple nodes</a> at the Edge to form a single cluster can present challenges at various levels, from the network stack (such as assigning IPs to machines) to the configuration of the cluster topology (such as determining which machine will be the master). However, Kairos enables completely self-coordinated deployments, including for high availability (HA), eliminating the need for any configuration templating mechanism or specific role assignments for nodes.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>In conclusion, an immutable Linux OS, provides a more secure and reliable environment than a standard Linux system. However, it may not be suitable for all use cases, such as those that require frequent updates or modifications to the system. Upgrades in immutable systems are handled differently from standard Linux systems, using an image-based approach rather than package-based upgrades. While transactional upgrades in standard mutable Linux systems offer some benefits over traditional package-based upgrades, they still do not provide the same level of security and reliability as image-based upgrades in immutable Linux systems. Overall, the decision to use an immutable Linux system should be based on the specific requirements of the use case, and the benefits and limitations should be carefully considered, something that we can&rsquo;t just let ChatGPT decide &#x1f609;</p>
+<p>Immutable Linux OSes offer a higher degree of reliability, security, and fault tolerance compared to traditional Linux systems. By using read-only file systems, separate update partitions and A/B partitioning, Immutable Linux OSes provide a safe, reliable way to update the system without downtime or the risk of breaking the system. Immutable Linux OSes are particularly well-suited for critical systems such as cloud container platforms, embedded systems, or IoT devices, where stability, security and scalability are of the utmost importance.</p>
+<h2 id="footnotes">Footnotes</h2>
+<p>To put it simply, Kairos can be deployed on bare-metal hardware, and it provides robust support for hardware deployment.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>(Author note) As I dislike marketing buzzwords, I prefer to describe the Edge as the last-mile of computing. It involves a dedicated hardware that needs to be controlled by the Cloud in some way, such as a small server running Kubernetes, performing measurements and communicating with the Cloud. The term &ldquo;Edge&rdquo; is a broad, generic term that encompasses various computing scenarios, such as near-edge and far-edge computing, each with its own specialized deployment solution.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+	<ul class="list-unstyled d-flex justify-content-between align-items-center mb-0 pt-5">
+  <li>
+    <a href="/blog/2023/03/13/kairos-spectrocloud-and-canonical-collaborate-to-deliver-revolutionary-telco-radio-edge-solution/" aria-label="Previous - Kairos, SpectroCloud, and Canonical Collaborate to Deliver Revolutionary Telco Radio Edge Solution" class="btn btn-primary"><span class="me-1">←</span>Previous</a>
+  </li>
+  <li>
+    <a href="/blog/2023/03/29/access-your-home-lab-kairos-cluster-over-a-wireguard-vpn/" aria-label="Next - Access your home-lab Kairos cluster over a Wireguard VPN" class="btn btn-primary">Next<span class="ms-1">→</span></a>
+  </li>
+</ul>
+
+	<div class="td-page-meta__lastmod">
+  Last modified October 20, 2025: <a href="https://github.com/kairos-io/kairos-docs/commit/666b69577ba312ec0edb951f4a1e5633c9755c5a">Fix missing closing code-block (666b695)</a>
+</div>
+</div>
+
+
+          </main>
+        </div>
+      </div>
+      <footer class="row d-print-none">
+    <div id="footer-content">
+        <div>
+            <div class="footer-logo">
+                
+                <img src="/index/footer-logo.png" alt="Kairos Logo" loading="lazy">
+                <div class="footer-text">Project supported by <a href="https://spectrocloud.com" target="_blank"> <img src="/img/spectrocloud-dark.svg" class="sclogo" loading="lazy" width="192" height="51" alt="Spectro-Cloud-logo"> </a></div>
+            </div>
+            <div class="footer-follow-us">Follow us
+                <div>
+                    <a href="https://www.linkedin.com/company/kairos-oss/" target="_blank">
+                        <i class="fa-brands fa-linkedin"></i>
+                    </a>
+                    <a href="https://github.com/kairos-io/kairos" target="_blank">
+                        <i class="fa-brands fa-github"></i>
+                    </a>
+                    <a href="https://www.youtube.com/@Kairos-IO" target="_blank">
+                        <i class="fa-brands fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    </div>
+    <script src="/js/main.min.bf0cab613e991fc11bc28a4a07b0aedef47c7c7c2595703ac3adf962fd6a8099.js" integrity="sha256-vwyrYT6ZH8EbwopKB7Cu3vR8fHwllXA6w635Yv1qgJk=" crossorigin="anonymous"></script>
+<script defer src="/js/click-to-copy.min.73478a7d4807698aed7e355eb23f9890ca18fea3158604c8471746d046702bad.js" integrity="sha256-c0eKfUgHaYrtfjVesj&#43;YkMoY/qMVhgTIRxdG0EZwK60=" crossorigin="anonymous"></script>
+<script src='/js/tabpane-persist.js'></script>
+
+  </body>
+</html>

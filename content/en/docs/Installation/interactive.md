@@ -26,7 +26,7 @@ The interactive installer supports customization options that allow you to modif
 
 ### Color Scheme Customization
 
-You can customize the color scheme of the interactive installer by creating a file at `/etc/kairos/branding/interactive_install_colors`. This file should contain environment variable definitions for the colors you want to override.
+You can customize the color scheme of the interactive installer by creating a file at `/etc/kairos/branding/interactive_install_colors`. This file should contain environment variable definitions for the colors you want to override. You can specify any, all, or none of these variables - they will override the corresponding default colors.
 
 The available color variables are:
 
@@ -38,19 +38,33 @@ The available color variables are:
 - `KAIROS_BORDER` - Border color
 - `CHECK_MARK` - Check mark character/symbol
 
-Example color configuration file:
+#### Color Format
+
+Colors can be specified in two formats depending on your terminal capabilities:
+
+**For full color terminals (24-bit/true color)**: Use hex triplet format in RGB:
 ```bash
 # /etc/kairos/branding/interactive_install_colors
-KAIROS_BG="235"
-KAIROS_TEXT="252"
-KAIROS_HIGHLIGHT="33"
-KAIROS_HIGHLIGHT2="39"
-KAIROS_ACCENT="208"
-KAIROS_BORDER="9"
+KAIROS_BG="#03153a"        # Deep blue background
+KAIROS_TEXT="#ffffff"      # White text
+KAIROS_HIGHLIGHT="#e56a44" # Orange highlight
+KAIROS_ACCENT="#ee5007"    # Accent orange
 CHECK_MARK="✓"
 ```
 
-Colors can be specified using terminal color codes (0-255) or color names supported by your terminal.
+**For simple/dumb terminals (16 colors)**: Use numbers 0-9 for basic colors:
+```bash
+# /etc/kairos/branding/interactive_install_colors
+KAIROS_BG="0"        # Black background
+KAIROS_TEXT="7"      # White text
+KAIROS_HIGHLIGHT="9" # Bright red highlight
+KAIROS_BORDER="9"    # Bright red border
+CHECK_MARK="*"
+```
+
+{{% alert title="Note" color="info" %}}
+If you set values to 0-9, those simple colors will be used even on 256-color terminals. For the best experience on modern terminals, use hex triplet format.
+{{% /alert %}}
 
 ### Disabling Advanced Options
 

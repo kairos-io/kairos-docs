@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Examples on Kairos</title>
+    <link>https://kairos.io/docs/examples/</link>
+    <description>Recent content in Examples on Kairos</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <atom:link href="https://kairos.io/docs/examples/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Enabling Automatic Boot Assessment with Trusted Boot</title>
+      <link>https://kairos.io/docs/examples/boot_assessment_trusted_boot/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://kairos.io/docs/examples/boot_assessment_trusted_boot/</guid>
+      <description>&lt;h2 id=&#34;boot-assessment-in-kairos-introduction-and-extensions&#34;&gt;Boot Assessment in Kairos: Introduction and Extensions&lt;/h2&gt;&#xA;&lt;p&gt;Kairos provides a robust mechanism for assessing the success or failure of boot entries through integration with &lt;code&gt;systemd-boot&lt;/code&gt;. This document is divided into two parts:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&lt;strong&gt;Kairos Default Boot Assessment Strategy&lt;/strong&gt;: Explains how boot assessment is managed in a standard Kairos installation.&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Extending the Default Boot Assessment&lt;/strong&gt;: Shows how to customize and extend Kairos boot assessment by integrating additional systemd services and adding automatic reboot mechanisms.&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;part-1-kairos-default-boot-assessment-strategy&#34;&gt;Part 1: Kairos Default Boot Assessment Strategy&lt;/h2&gt;&#xA;&lt;p&gt;Kairos uses &lt;code&gt;systemd-boot&lt;/code&gt; to manage boot entries and determine their health based on runtime behavior. The current boot assessment strategy in Kairos works as follows:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>A Minimal Single-Node Kubernetes with Kubeadm</title>
+      <link>https://kairos.io/docs/examples/kubeadm-provider/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://kairos.io/docs/examples/kubeadm-provider/</guid>
+      <description>&lt;p&gt;Kairos is all about giving you the power to customize your operating system just the way you need it—declaratively, reproducibly, and predictably. Today, we&amp;rsquo;re walking through how to build and boot a Kairos image using the &lt;a href=&#34;https://github.com/kairos-io/provider-kubeadm&#34;&gt;provider-kubeadm&lt;/a&gt; to set up a Kubernetes cluster with &lt;code&gt;kubeadm&lt;/code&gt;.&lt;/p&gt;&#xA;&lt;p&gt;This guide is focused on a simple use case: booting a &lt;strong&gt;single-node Kubernetes cluster&lt;/strong&gt; with role &lt;code&gt;init&lt;/code&gt;, version &lt;code&gt;v1.30.0&lt;/code&gt;.&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;-what-is-provider-kubeadm&#34;&gt;🧱 What Is &lt;code&gt;provider-kubeadm&lt;/code&gt;?&lt;/h2&gt;&#xA;&lt;p&gt;The &lt;a href=&#34;https://github.com/kairos-io/provider-kubeadm&#34;&gt;provider-kubeadm&lt;/a&gt; is a binary for Kairos that integrates with Kubernetes&amp;rsquo; &lt;code&gt;kubeadm&lt;/code&gt; bootstrap process. It translates the familiar &lt;code&gt;kubeadm&lt;/code&gt; configuration into a Kairos-compatible cloud-init YAML, wrapping everything in a reproducible and declarative boot process.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Adding persistent paths after install</title>
+      <link>https://kairos.io/docs/examples/extra_persistent_paths_after_install/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://kairos.io/docs/examples/extra_persistent_paths_after_install/</guid>
+      <description>&lt;p&gt;Drop a file under &lt;code&gt;/oem/91_paths.yaml&lt;/code&gt; with the following content:&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nt&#34;&gt;stages&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;rootfs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Custom mounts&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;environment_file&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;/run/cos/cos-layout.env&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;environment&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;CUSTOM_BIND_MOUNTS&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;/var/lib/path1 /var/lib/path2 /var/lib/path3&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This will indicate to Kairos to bind mount the paths &lt;code&gt;/var/lib/path1&lt;/code&gt;, &lt;code&gt;/var/lib/path2&lt;/code&gt;, and &lt;code&gt;/var/lib/path3&lt;/code&gt; to the persistent partition under &lt;code&gt;/usr/local/.state&lt;/code&gt; after the next reboot.&lt;/p&gt;&#xA;&#xA;&#xA;&lt;div class=&#34;alert alert-info&#34; role=&#34;alert&#34;&gt;&#xA;&lt;h4 class=&#34;alert-heading&#34;&gt;Note&lt;/h4&gt;&#xA;&#xA;    The example mentions &lt;code&gt;/oem/91_paths.yaml&lt;/code&gt;, but you can use any file name as long as it is under &lt;code&gt;/oem/&lt;/code&gt; and has a &lt;code&gt;.yaml&lt;/code&gt; extension. The file will be processed by Kairos during the next boot.&#xA;&#xA;&lt;/div&gt;</description>
+    </item>
+    <item>
+      <title>How to Create an Airgap K3s Installation with Kairos</title>
+      <link>https://kairos.io/docs/examples/airgap/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://kairos.io/docs/examples/airgap/</guid>
+      <description>&lt;p&gt;If you want to create an &lt;a href=&#34;https://docs.k3s.io/installation/airgap&#34;&gt;airgap K3s installation&lt;/a&gt;, Kairos provides a convenient way to do so using AuroraBoot. In this guide, we will go through the process of creating a custom ISO of Kairos that contains a configuration file and a &lt;a href=&#34;https://kairos.io/docs/advanced/bundles/&#34;&gt;bundle&lt;/a&gt; that executes preparatory steps after installation. The bundle will overlay new files in the system and prepare the node for having an airgapped K3s installation.&lt;/p&gt;&#xA;&#xA;&#xA;&lt;div class=&#34;alert alert-success&#34; role=&#34;alert&#34;&gt;&#xA;&lt;h4 class=&#34;alert-heading&#34;&gt;Note&lt;/h4&gt;&#xA;&#xA;    If you already have a Kubernetes cluster, you can use the osbuilder controller to generate container images with your additional files already inside.&#xA;&#xA;&lt;/div&gt;&#xA;&#xA;&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;&#xA;&lt;p&gt;Docker running in the host&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Bandwidth Optimized Upgrades</title>
+      <link>https://kairos.io/docs/examples/bandwidth-optimized-upgrades/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://kairos.io/docs/examples/bandwidth-optimized-upgrades/</guid>
+      <description>&lt;div class=&#34;alert alert-info&#34; role=&#34;alert&#34;&gt;&#xA;&lt;h4 class=&#34;alert-heading&#34;&gt;Info&lt;/h4&gt;&#xA;&#xA;    This tutorial demonstrates how to optimize bandwidth usage during OS upgrades using distributed caching solutions like embedded registries.&#xA;&#xA;&lt;/div&gt;&#xA;&#xA;&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;&#xA;&lt;p&gt;Nodes in edge clusters often have poor networking capabilities, and Kairos users may create custom images that are significantly larger (e.g., by including many kernel drivers). The current issue is that during upgrades, each node in the cluster must re-download the entire image from scratch before applying the upgrade.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Bundles</title>
+      <link>https://kairos.io/docs/examples/bundles/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://kairos.io/docs/examples/bundles/</guid>
+      <description>&lt;p&gt;Welcome to the guide on setting up MetalLB on a Kairos cluster with K3s! This tutorial will walk you through the steps of using a Kairos &lt;a href=&#34;https://kairos.io/docs/advanced/bundles/&#34;&gt;bundle&lt;/a&gt; to automatically configure MetalLB on your local network with an IP range of &lt;code&gt;192.168.1.10-192.168.1.20&lt;/code&gt;. Check out the &lt;a href=&#34;https://kairos.io/docs/examples/metallb/&#34;&gt;MetalLB&lt;/a&gt; example to configure it without a &lt;a href=&#34;https://kairos.io/docs/advanced/bundles/&#34;&gt;bundle&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;For those unfamiliar with &lt;a href=&#34;https://metallb.universe.tf/&#34;&gt;MetalLB&lt;/a&gt;, it is an open-source load balancer implementation for bare metal Kubernetes clusters that utilizes standard routing protocols. When used with K3s on Kairos, it provides load balancing capabilities and helps manage IP addresses within a cluster.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Deploying kernel firmware via sysext on Trusted Boot</title>
+      <link>https://kairos.io/docs/examples/trusted-boot-firmware-sysext/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://kairos.io/docs/examples/trusted-boot-firmware-sysext/</guid>
+      <description>&lt;h1 id=&#34;deploying-ubuntu-kernel-firmware-via-systemdsysext-under-trusted-boot-kairos&#34;&gt;Deploying Ubuntu kernel firmware via &lt;strong&gt;systemd‑sysext&lt;/strong&gt; under &lt;strong&gt;Trusted Boot&lt;/strong&gt; (Kairos)&lt;/h1&gt;&#xA;&lt;p&gt;This hands‑on example shows how to keep your Ubuntu‑based Kairos image slim by removing firmware from the base OS, packaging the firmware as a &lt;strong&gt;signed system extension (sysext)&lt;/strong&gt;, and loading it under &lt;strong&gt;Trusted Boot (UKI)&lt;/strong&gt;—with notes on early‑boot firmware availability.&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;Why this pattern?&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;• &lt;strong&gt;Avoid oversized UKIs&lt;/strong&gt;: firmware blobs can bloat the UKI and even trigger allocation errors on certain platforms.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Enabling kdump</title>
+      <link>https://kairos.io/docs/examples/kdump/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://kairos.io/docs/examples/kdump/</guid>
+      <description>&lt;div class=&#34;alert alert-info&#34; role=&#34;alert&#34;&gt;&#xA;&lt;h4 class=&#34;alert-heading&#34;&gt;Info&lt;/h4&gt;&#xA;&#xA;    This tutorial is based on Opensuse Leap. Kdump configs vary over distributions and we are not able to test them all but they should be easily adaptable from this tutorial.&#xA;&#xA;&lt;/div&gt;&#xA;&#xA;&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;&#xA;&lt;p&gt;kdump is a feature of the Linux kernel that creates crash dumps in the event of a kernel crash. When triggered, kdump exports a memory image (also known as vmcore) that can be analyzed for the purposes of debugging and determining the cause of a crash.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Intel Open AMT Registration</title>
+      <link>https://kairos.io/docs/examples/openamt/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://kairos.io/docs/examples/openamt/</guid>
+      <description>&lt;p&gt;If Kairos is installed on a device with an Intel AMT device, the device can be automatically registered with an MPS server.&#xA;The registration will only run during installation. Devices with Kairos already installed will not be affected.&lt;/p&gt;&#xA;&lt;h2 id=&#34;configuration&#34;&gt;Configuration&lt;/h2&gt;&#xA;&lt;p&gt;To configure this bundle, it must be referenced in the install bundles section.  Additional configuration can be included&#xA;under the amt section. To see all configuration options see the &lt;a href=&#34;https://github.com/kairos-io/openamt&#34;&gt;openamt repository&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c&#34;&gt;#cloud-config&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;install&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;bundles&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;run://quay.io/kairos/community-bundles:openamt_latest&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;amt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;server_address&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;wss://mps.contoso.com/activate&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;profile&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;myprofile&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+    </item>
+    <item>
+      <title>Keylime agent</title>
+      <link>https://kairos.io/docs/examples/keylime/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://kairos.io/docs/examples/keylime/</guid>
+      <description>&lt;p&gt;This example how to use Keylime with Kairos in order to provide verified measurement for runtime binaries or files in a Kairos system. This, for instance involve having measurements for specific files in the persistent portion of the disk, or the configuration directories.&lt;/p&gt;&#xA;&lt;p&gt;Most of the steps are already covered in the &lt;a href=&#34;https://keylime-docs.readthedocs.io/en/latest/&#34;&gt;Keylime documentation&lt;/a&gt;. Here we will cover the steps that are specific to Kairos.&lt;/p&gt;&#xA;&lt;h2 id=&#34;extend-kairos&#34;&gt;Extend Kairos&lt;/h2&gt;&#xA;&lt;p&gt;First of all we need to create a Kairos derivative with the keylime agent, in order to do this we use the &lt;a href=&#34;https://kairos.io/docs/reference/kairos-factory/&#34;&gt;Kairos factory process&lt;/a&gt; where we will build our own OS derivative to bundle keylime-agent:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>LocalAI</title>
+      <link>https://kairos.io/docs/examples/localai/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://kairos.io/docs/examples/localai/</guid>
+      <description>&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;&#xA;&lt;h4 class=&#34;alert-heading&#34;&gt;Warning&lt;/h4&gt;&#xA;&#xA;    &lt;p&gt;This tutorial will download an AI model which is around 4Gib.&lt;/p&gt;&#xA;&lt;p&gt;Keep in mind that AI models are performance hungry. Performance on a VM can be poor depending on your host CPU. To get the best performance, use a bare-metal machine.&lt;/p&gt;&#xA;&#xA;&#xA;&lt;/div&gt;&#xA;&#xA;&lt;p&gt;Welcome to the guide on using LocalAI with Kairos and K3s on your nodes!&lt;/p&gt;&#xA;&lt;p&gt;But first, what is &lt;a href=&#34;https://github.com/go-skynet/LocalAI&#34;&gt;LocalAI&lt;/a&gt;?&lt;/p&gt;&#xA;&lt;p&gt;LocalAI is a self-hosted, community-driven simple local OpenAI-compatible API written in go. Can be used as a drop-in replacement for OpenAI, running on CPU with consumer-grade hardware. Supports ggml compatible models, for instance: LLaMA, alpaca, gpt4all, vicuna, koala, gpt4all-j, cerebras.&#xA;This means that you can have the power of an AI model in your Edge-Kubernetes cluster, and it can all be easily done thanks to GPT4ALL models, LocalAI and Kairos!&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Manual Multi-Node Cluster</title>
+      <link>https://kairos.io/docs/examples/multi-node/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://kairos.io/docs/examples/multi-node/</guid>
+      <description>&lt;p&gt;In the example below we will use a bare metal host to provision a Kairos cluster in the local network using one master node and one worker node.&lt;/p&gt;&#xA;&lt;h2 id=&#34;installation&#34;&gt;Installation&lt;/h2&gt;&#xA;&lt;p&gt;For this example we will use a standard image which contains a Kubernetes distribution. You can choose between &lt;code&gt;k0s&lt;/code&gt; and &lt;code&gt;k3s&lt;/code&gt; as the distribution to use. Follow the &lt;a href=&#34;https://kairos.io/docs/installation/&#34;&gt;Installation&lt;/a&gt; documentation with the configurations provided on this page. Make sure to choose the one that matches the image you are using.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Manual Multi-Node High Availability Cluster</title>
+      <link>https://kairos.io/docs/examples/ha/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://kairos.io/docs/examples/ha/</guid>
+      <description>&lt;div class=&#34;alert alert-info&#34; role=&#34;alert&#34;&gt;&#xA;&lt;h4 class=&#34;alert-heading&#34;&gt;K3s&lt;/h4&gt;&#xA;&#xA;    Please refer to the &lt;a href=&#34;https://docs.k3s.io/installation/ha-embedded&#34;&gt;k3s HA&lt;/a&gt; documentation.&#xA;&#xA;&lt;/div&gt;&#xA;&#xA;&#xA;&#xA;&lt;div class=&#34;alert alert-info&#34; role=&#34;alert&#34;&gt;&#xA;&lt;h4 class=&#34;alert-heading&#34;&gt;K0s&lt;/h4&gt;&#xA;&#xA;    Please refer to the &lt;a href=&#34;https://docs.k0sproject.io/stable/k0s-multi-node/&#34;&gt;k0s multi-node manual install&lt;/a&gt; documentation.&#xA;&#xA;&lt;/div&gt;&#xA;&#xA;&#xA;&#xA;&lt;div class=&#34;alert alert-info&#34; role=&#34;alert&#34;&gt;&#xA;&lt;h4 class=&#34;alert-heading&#34;&gt;Production Considerations&lt;/h4&gt;&#xA;&#xA;    This example is for learning purposes. In production environments, it&amp;rsquo;s recommended to use a load balancer in front of the highly available control plane nodes rather than exposing all control plane nodes directly. For a production-ready setup with a load balancer, see our &lt;a href=&#34;https://kairos.io/docs/examples/multi-node-p2p-ha-kubevip/&#34;&gt;Self-coordinating P2P Multi-Node Cluster with High Availability and KubeVIP&lt;/a&gt; example.&#xA;&#xA;&lt;/div&gt;&#xA;&#xA;&lt;p&gt;This document describes how to configure Kairos with either &lt;code&gt;k3s&lt;/code&gt; or &lt;code&gt;k0s&lt;/code&gt; by following the same documentation outline. It is implied that you are using a Kairos version with either k3s or k0s included in the standard images.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Manual Single-Node Cluster</title>
+      <link>https://kairos.io/docs/examples/single-node/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://kairos.io/docs/examples/single-node/</guid>
+      <description>&lt;p&gt;In the example below we will use a bare metal host to provision a Kairos node in the local network using a single machine.&lt;/p&gt;&#xA;&lt;h2 id=&#34;installation&#34;&gt;Installation&lt;/h2&gt;&#xA;&lt;p&gt;For this example we will use a standard image which contains a Kubernetes distribution. You can choose between &lt;code&gt;k0s&lt;/code&gt; and &lt;code&gt;k3s&lt;/code&gt; as the distribution to use. Follow the &lt;a href=&#34;https://kairos.io/docs/installation/&#34;&gt;Installation&lt;/a&gt; documentation with the configurations provided on this page. Make sure to choose the one that matches the image you are using.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>MetalLB</title>
+      <link>https://kairos.io/docs/examples/metallb/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://kairos.io/docs/examples/metallb/</guid>
+      <description>&lt;p&gt;Welcome to the guide on using MetalLB with Kairos and K3s on a bare metal host!&lt;/p&gt;&#xA;&lt;p&gt;In this tutorial, we&amp;rsquo;ll walk through the steps of setting up a Kairos node on your local network using the &lt;code&gt;192.168.1.10-192.168.1.20&lt;/code&gt; IP range, with MetalLB and K3s.&lt;/p&gt;&#xA;&lt;p&gt;But first, let&amp;rsquo;s talk a little bit about what &lt;a href=&#34;https://metallb.universe.tf/&#34;&gt;MetalLB&lt;/a&gt; and &lt;a href=&#34;https://k3s.io/&#34;&gt;K3s&lt;/a&gt; are. MetalLB is a load balancer implementation for bare metal Kubernetes clusters that uses standard routing protocols. It&amp;rsquo;s particularly useful when used with K3s in Kairos, as it provides load balancing for bare metal clusters and helps manage IP addresses within the cluster. K3s is a lightweight Kubernetes distribution that is easy to install and maintain.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>P2P Multi-Node Cluster Provisioned via Netboot</title>
+      <link>https://kairos.io/docs/examples/p2p_e2e/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://kairos.io/docs/examples/p2p_e2e/</guid>
+      <description>&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;&#xA;&lt;h4 class=&#34;alert-heading&#34;&gt;Network&lt;/h4&gt;&#xA;&#xA;    This feature is experimental and has only been tested on local setups. Run in production servers at your own risk.&#xA;Feedback and bug reports are welcome, as we are improving the p2p aspects of Kairos.&#xA;&#xA;&lt;/div&gt;&#xA;&#xA;&lt;p&gt;Deploying Kubernetes at the Edge can be a complex and time-consuming process, especially when it comes to setting up and managing multiple clusters. To make this process easier, Kairos leverages peer-to-peer technology to automatically coordinate and create Kubernetes clusters without the need of a control management interface.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Run stages along with K3s</title>
+      <link>https://kairos.io/docs/examples/k3s-stages/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://kairos.io/docs/examples/k3s-stages/</guid>
+      <description>&lt;div class=&#34;alert alert-info&#34; role=&#34;alert&#34;&gt;&#xA;&lt;h4 class=&#34;alert-heading&#34;&gt;Info&lt;/h4&gt;&#xA;&#xA;    This tutorial is based on Debian Bookworm. Unit file configurations vary across distributions, and we are not able to test them all, but they should be easily adaptable from this tutorial.&#xA;&#xA;&lt;/div&gt;&#xA;&#xA;&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;&#xA;&lt;p&gt;Some use cases require a stage to run after the K3s servers are up, such as applying manifests to the Kubernetes cluster, sending health checks, or any other use case. Using systemd units, we are able to run a stage once a service is started, which can be used for K3s and K3s-server to run steps after the K3s server is up and ready to accept requests.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Self-configured P2P Single-Node Cluster</title>
+      <link>https://kairos.io/docs/examples/single-node-p2p/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://kairos.io/docs/examples/single-node-p2p/</guid>
+      <description>&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;&#xA;&lt;h4 class=&#34;alert-heading&#34;&gt;Network&lt;/h4&gt;&#xA;&#xA;    This feature is experimental and has only been tested on local setups. Run in production servers at your own risk.&#xA;Feedback and bug reports are welcome, as we are improving the p2p aspects of Kairos.&#xA;&#xA;&lt;/div&gt;&#xA;&#xA;&#xA;&#xA;&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;&#xA;&lt;h4 class=&#34;alert-heading&#34;&gt;Join an EdgeVPN network&lt;/h4&gt;&#xA;&#xA;    Make sure that you join an existing EdgeVPN network with other machines (not necessarily Kubernetes nodes) otherwise the single-node cluster will never get an EdgeVPN IP and therefore won&amp;rsquo;t be configurable.&#xA;&#xA;&lt;/div&gt;&#xA;&#xA;&lt;p&gt;Installing Kairos with P2P support on a single-node cluster requires a few specific steps. To begin, it&amp;rsquo;s important to note that in a single-node scenario, the role must be enforced to a specific role. In a non-HA (high availability) setup, that role can be either &lt;code&gt;master&lt;/code&gt; or &lt;code&gt;worker&lt;/code&gt;. In a single-node cluster, there will be only one master node that needs to be configured explicitly.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Self-coordinating P2P multi-node cluster</title>
+      <link>https://kairos.io/docs/examples/multi-node-p2p/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://kairos.io/docs/examples/multi-node-p2p/</guid>
+      <description>&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;&#xA;&lt;h4 class=&#34;alert-heading&#34;&gt;Network&lt;/h4&gt;&#xA;&#xA;    This feature is experimental and has only been tested on local setups. Run in production servers at your own risk.&#xA;Feedback and bug reports are welcome, as we are improving the p2p aspects of Kairos.&#xA;&#xA;&lt;/div&gt;&#xA;&#xA;&lt;p&gt;A multi-node scenario with non-HA is the default peer-to-peer (P2P) configuration in Kairos. To set this up, you will need to configure the &lt;code&gt;network_token&lt;/code&gt; under the &lt;code&gt;p2p&lt;/code&gt; configuration in your cloud-config file. Once you have set this, Kairos will handle the configuration of each node.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Self-coordinating P2P Multi-Node Cluster with High Availability</title>
+      <link>https://kairos.io/docs/examples/multi-node-p2p-ha/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://kairos.io/docs/examples/multi-node-p2p-ha/</guid>
+      <description>&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;&#xA;&lt;h4 class=&#34;alert-heading&#34;&gt;Network&lt;/h4&gt;&#xA;&#xA;    This feature is experimental and has only been tested on local setups. Run in production servers at your own risk.&#xA;Feedback and bug reports are welcome, as we are improving the p2p aspects of Kairos.&#xA;&#xA;&lt;/div&gt;&#xA;&#xA;&#xA;&#xA;&lt;div class=&#34;alert alert-info&#34; role=&#34;alert&#34;&gt;&#xA;&lt;h4 class=&#34;alert-heading&#34;&gt;Production Considerations&lt;/h4&gt;&#xA;&#xA;    This example is for learning purposes. In production environments, it&amp;rsquo;s recommended to use a load balancer in front of the highly available control plane nodes rather than exposing all control plane nodes directly. For a production-ready setup with a load balancer, see our &lt;a href=&#34;https://kairos.io/docs/examples/multi-node-p2p-ha-kubevip/&#34;&gt;Self-coordinating P2P Multi-Node Cluster with High Availability and KubeVIP&lt;/a&gt; example.&#xA;&#xA;&lt;/div&gt;&#xA;&#xA;&lt;p&gt;To enable automatic HA rollout, enable the &lt;code&gt;p2p.auto.ha.enable&lt;/code&gt; option in your cloud-config, and set up a number of &lt;code&gt;master_nodes&lt;/code&gt;. The number of &lt;code&gt;master_nodes&lt;/code&gt; is the number of additional masters in addition to the initial HA role. There will always be a minimum of 1 master, which is already taken into account. For example, setting up &lt;code&gt;master_nodes&lt;/code&gt; to two will result in a total of 3 master nodes in your cluster.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Self-coordinating P2P Multi-Node Cluster with High Availability and KubeVIP</title>
+      <link>https://kairos.io/docs/examples/multi-node-p2p-ha-kubevip/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://kairos.io/docs/examples/multi-node-p2p-ha-kubevip/</guid>
+      <description>&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;&#xA;&lt;h4 class=&#34;alert-heading&#34;&gt;Network&lt;/h4&gt;&#xA;&#xA;    This feature is experimental and has only been tested on local setups. Run in production servers at your own risk.&#xA;Feedback and bug reports are welcome, as we are improving the p2p aspects of Kairos.&#xA;&#xA;&lt;/div&gt;&#xA;&#xA;&#xA;&#xA;&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;&#xA;&lt;h4 class=&#34;alert-heading&#34;&gt;K8s Distribution&lt;/h4&gt;&#xA;&#xA;    This feature is only working with the k3s distribution.&#xA;&#xA;&lt;/div&gt;&#xA;&#xA;&lt;p&gt;K3s is a lightweight Kubernetes distribution that is easy to install and operate. It&amp;rsquo;s a great choice for small and edge deployments, but it can also be used to create a high-availability (HA) cluster with the help of &lt;a href=&#34;https://kube-vip.io/&#34;&gt;KubeVIP&lt;/a&gt;. In this guide, we&amp;rsquo;ll walk through the process of deploying a highly-available k3s cluster with KubeVIP, which provides a high available ip for the control plane.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Kairos&#39; Trusted Boot in Virtual Box</title>
+      <link>https://kairos.io/docs/examples/virtual-box/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://kairos.io/docs/examples/virtual-box/</guid>
+      <description>&lt;p&gt;To install Kairos in &lt;a href=&#34;https://kairos.io/docs/architecture/trustedboot/&#34;&gt;&amp;ldquo;Trusted Boot Mode&amp;rdquo;&lt;/a&gt; the machine needs to meet the following requirements:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Must have a tpm v2.0 chip&lt;/li&gt;&#xA;&lt;li&gt;Must be able to boot in EFI mode (not &amp;ldquo;legacy BIOS&amp;rdquo;)&lt;/li&gt;&#xA;&lt;li&gt;Must have 1Gb of RAM or more&lt;/li&gt;&#xA;&lt;li&gt;Must have 40Gb of disk or more&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;The following steps describe how to create a virtual machine suitable for Kairos&#xA;trusted boot setup, using &lt;a href=&#34;https://www.virtualbox.org/&#34;&gt;VirtualBox&lt;/a&gt;.&#xA;As an example workload, &lt;a href=&#34;https://localai.io/&#34;&gt;LocalAI&lt;/a&gt; will be used.&lt;/p&gt;&#xA;&lt;h2 id=&#34;create-an-iso&#34;&gt;Create an ISO&lt;/h2&gt;&#xA;&lt;p&gt;If you don&amp;rsquo;t already have an ISO to boot, you can create one using the following script:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Using Kairos Core Images as an Installer</title>
+      <link>https://kairos.io/docs/examples/core/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://kairos.io/docs/examples/core/</guid>
+      <description>&lt;p&gt;Kairos is a powerful, open-source meta-distribution that allows you to easily deploy and manage nodes on your Immutable infrastructure.&lt;/p&gt;&#xA;&lt;p&gt;One key feature of Kairos is the use of its core images, which are released as part of the &lt;a href=&#34;https://github.com/kairos-io/kairos&#34;&gt;kairos-io/kairos&lt;/a&gt; repository and can be found in the releases section. These core images serve as the foundation for creating &lt;a href=&#34;https://kairos.io/docs/advanced/customizing/&#34;&gt;downstream images&lt;/a&gt; or as an installer for deploying other images during the installation process. In this guide, we&amp;rsquo;ll take a closer look at using Kairos core images as an installer to deploy other container images.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Configuring WiFi via Cloud-Config</title>
+      <link>https://kairos.io/docs/examples/wifi/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://kairos.io/docs/examples/wifi/</guid>
+      <description>&lt;p&gt;This example is valid with Alpine.&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;#cloud-config&#xA;&#xA;hostname: metal-{{ trunc 4 .MachineID }}&#xA;users:&#xA;  - name: kairos&#xA;    # Change to your pass here&#xA;    passwd: kairos&#xA;    ssh_authorized_keys:&#xA;    # Replace with your github user and un-comment the line below:&#xA;    # - github:mudler&#xA;&#xA;stages:&#xA;  initramfs:&#xA;    - name: Setup wireless&#xA;      files:&#xA;        # See https://man.archlinux.org/man/connman-service.config.5&#xA;        - path: /var/lib/connman/home_wifi.config&#xA;          permissions: 0600&#xA;          content: |&#xA;            [service_home_wifi]&#xA;            Type = wifi&#xA;            Name = your_ssid&#xA;            Passphrase = your_wifi_password&#xA;            IPv4 = dhcp&#xA;  boot:&#xA;    - name: Enable wireless&#xA;      commands:&#xA;        - connmanctl enable wifi&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;This example is valid with openSUSE on a Raspberry Pi.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

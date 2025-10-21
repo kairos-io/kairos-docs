@@ -1,0 +1,1200 @@
+<!doctype html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+
+
+<link rel="shortcut icon" href="/favicons/favicon.ico" >
+<link rel="apple-touch-icon" href="/favicons/apple-touch-icon-180x180.png" sizes="180x180">
+<link rel="icon" type="image/png" href="/favicons/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/favicons/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/favicons/android-36x36.png" sizes="36x36">
+<link rel="icon" type="image/png" href="/favicons/android-48x48.png" sizes="48x48">
+<link rel="icon" type="image/png" href="/favicons/android-72x72.png" sizes="72x72">
+<link rel="icon" type="image/png" href="/favicons/android-96x96.png" sizes="96x96">
+<link rel="icon" type="image/png" href="/favicons/android-144x144.png" sizes="144x144">
+<link rel="icon" type="image/png" href="/favicons/android-192x192.png" sizes="192x192">
+
+<title>Trusted Boot Installations | Kairos</title>
+<meta name="description" content="Learn how to enable Trusted Boot with Secure Boot, full disk encryption, and measured boot to protect systems from tampering.">
+<meta property="og:url" content="https://kairos.io/docs/installation/trustedboot/">
+  <meta property="og:site_name" content="Kairos">
+  <meta property="og:title" content="Trusted Boot Installations">
+  <meta property="og:description" content="Learn how to enable Trusted Boot with Secure Boot, full disk encryption, and measured boot to protect systems from tampering.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="docs">
+    <meta property="article:published_time" content="2022-11-13T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-10-20T08:48:34+03:00">
+    <meta property="og:image" content="https://kairos.io/images/Kairos_800x419.png">
+
+  <meta itemprop="name" content="Trusted Boot Installations">
+  <meta itemprop="description" content="Learn how to enable Trusted Boot with Secure Boot, full disk encryption, and measured boot to protect systems from tampering.">
+  <meta itemprop="datePublished" content="2022-11-13T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-10-20T08:48:34+03:00">
+  <meta itemprop="wordCount" content="3697">
+  <meta itemprop="image" content="https://kairos.io/images/Kairos_800x419.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://kairos.io/images/Kairos_800x419.png">
+  <meta name="twitter:title" content="Trusted Boot Installations">
+  <meta name="twitter:description" content="Learn how to enable Trusted Boot with Secure Boot, full disk encryption, and measured boot to protect systems from tampering.">
+      <meta name="twitter:site" content="@Kairos_OSS">
+<link rel="preload" href="/scss/main.scss" as="style" integrity="" crossorigin="anonymous">
+<link href="/scss/main.scss" rel="stylesheet">
+<script
+  src="https://code.jquery.com/jquery-3.7.1.min.js"
+  integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+  crossorigin="anonymous"></script>
+<script defer
+  src="https://unpkg.com/lunr@2.3.9/lunr.min.js"
+  integrity="sha384-203J0SNzyqHby3iU6hzvzltrWi/M41wOP5Gu+BiJMz5nwKykbkUx8Kp7iti0Lpli"
+  crossorigin="anonymous"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+<script defer data-domain="kairos.io" src="https://plausible.io/js/script.outbound-links.tagged-events.js"></script>
+<script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
+
+<script type="module" src="/js/kairos.9086b05855f0beebae6a1adfe52a8db6351e5ad523c65f8ebdad68dcf69ccd751e3d4dd95553ca3ae13ebc022f180f2d00bda9e0402704807a6d02fb14ca0381.js" integrity="sha512-kIawWFXwvuuuahrf5SqNtjUeWtUjxl&#43;Ova1o3PaczXUePU3ZVVPKOuE&#43;vAIvGA8tAL2p4EAnBIB6bQL7FMoDgQ==" defer></script>
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  </head>
+  <body class="td-page">
+    <header>
+      <nav class="td-navbar js-navbar-scroll" data-bs-theme="dark">
+<div class="container-fluid flex-column flex-md-row">
+  <a class="navbar-brand" href="/"><span class="navbar-brand__logo navbar-logo"><svg width="30" height="30" viewBox="0 0 137 137" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="24.8171" height="24.8171" transform="matrix(-0.86601 0.500028 -3.18907e-05 1 68.502 18.8594)" fill="#EE5007"/><rect width="24.8171" height="24.8171" transform="matrix(-0.86601 -0.500028 3.18907e-05 1 47.0088 31.2695)" fill="#FF7442"/><rect width="24.8171" height="24.8171" transform="matrix(-0.866041 0.499972 0.866041 0.499972 47.0088 6.45312)" fill="#FB9E70"/><rect width="24.8171" height="24.8171" transform="matrix(3.19859e-05 1 0.86601 0.500028 25.5139 43.6797)" fill="#FF7442"/><rect width="24.8171" height="24.8171" transform="matrix(-0.866041 0.499973 0.866041 0.499972 25.5139 68.4922)" fill="#FB9E70"/><rect width="24.8171" height="24.8171" transform="matrix(-3.17834e-05 1 0.866009 -0.500028 4.02271 56.0898)" fill="#EE5007"/><rect width="24.8171" height="24.8171" transform="matrix(-0.86601 0.500028 -3.19781e-05 1 68.5042 93.3125)" fill="#EE5007"/><rect width="24.8171" height="24.8171" transform="matrix(-0.866009 -0.500028 3.18033e-05 1 47.011 105.723)" fill="#FF7442"/><rect width="24.8171" height="24.8171" transform="matrix(-0.866041 0.499972 0.866041 0.499973 47.011 80.9062)" fill="#FB9E70"/><rect width="24.8171" height="24.8171" transform="matrix(0.86601 -0.500028 3.18907e-05 -1 68.4985 118.141)" fill="#EE5007"/><rect width="24.8171" height="24.8171" transform="matrix(0.86601 0.500028 -3.18907e-05 -1 89.9917 105.73)" fill="#FF7442"/><rect width="24.8171" height="24.8171" transform="matrix(0.866041 -0.499972 -0.866041 -0.499972 89.9917 130.547)" fill="#FB9E70"/><rect width="24.8171" height="24.8171" transform="matrix(-0.86601 0.500028 -3.19781e-05 1 132.979 56.0859)" fill="#EE5007"/><rect width="24.8171" height="24.8171" transform="matrix(-0.866009 -0.500028 3.18033e-05 1 111.486 68.4961)" fill="#FF7442"/><rect width="24.8171" height="24.8171" transform="matrix(-0.866041 0.499972 0.866041 0.499973 111.486 43.6797)" fill="#FB9E70"/><rect width="24.8171" height="24.8171" transform="matrix(0.86601 -0.500028 3.18907e-05 -1 68.5002 43.6875)" fill="#EE5007"/><rect width="24.8171" height="24.8171" transform="matrix(0.86601 0.500028 -3.18907e-05 -1 89.9934 31.2773)" fill="#FF7442"/><rect width="24.8171" height="24.8171" transform="matrix(0.866041 -0.499972 -0.866041 -0.499972 89.9934 56.0938)" fill="#FB9E70"/></svg></span><span class="navbar-brand__name">Kairos</span></a>
+  
+  <button class="navbar-burger d-lg-none ms-auto" id="navbar-burger" aria-label="Toggle navigation" type="button" style="background:none;border:none;outline:none;">
+    <span style="display:block;width:30px;height:3px;background:#fff;margin:4px 0;"></span>
+    <span style="display:block;width:30px;height:3px;background:#fff;margin:4px 0;"></span>
+    <span style="display:block;width:30px;height:3px;background:#fff;margin:4px 0;"></span>
+  </button>
+  
+  <div class="td-navbar-nav-scroll ms-md-auto" id="main_navbar">
+    <ul class="navbar-nav" id="navbar-links">
+      <li class="nav-item">
+        <a class="nav-link" href="/getting-started/"><span>Getting Started</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/community/"><span>Community</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/blog/"><span>Blog</span></a>
+      </li>
+      <li class="nav-item dropdown">
+        <button class="btn btn-link nav-link dropdown-toggle d-flex align-items-center" id="distro-select" type="button" aria-expanded="false" data-bs-toggle="dropdown" data-bs-display="static" data-distro="rhel;roskylinux;9" aria-label="Toggle Flavor">
+    Rockylinux 9
+</button>
+<ul class="dropdown-menu" aria-labelledby="bd-flavor-text">
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="alpine;alpine;3.19" aria-pressed="false">
+        Alpine 3.19
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="debian;debian;bookworm" aria-pressed="false">
+        Debian Bookworm
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="debian;debian;testing" aria-pressed="false">
+        Debian Testing
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="rhel;fedora;40" aria-pressed="false">
+        Fedora 40
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="opensuse;opensuse;leap-15.6" aria-pressed="false">
+        openSUSE Leap-15.6
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="opensuse;opensuse;tumbleweed" aria-pressed="false">
+        openSUSE Tumbleweed
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="rhel;rockylinux;9" aria-pressed="true">
+        Rockylinux 9
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="ubuntu;ubuntu;24.10" aria-pressed="false">
+        Ubuntu 24.10
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="ubuntu;ubuntu;24.04" aria-pressed="false">
+        Ubuntu 24.04
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="ubuntu;ubuntu;22.04" aria-pressed="false">
+        Ubuntu 22.04
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="ubuntu;ubuntu;20.04" aria-pressed="false">
+        Ubuntu 20.04
+        </button>
+    </li>
+</ul> 
+      </li>
+      
+      <li class="nav-item mr-4 mb-2 mb-lg-0 mt-lg-2 d-none d-lg-block">
+        <li class="nav-item mr-4 mb-2 mb-lg-0 mt-lg-2">
+    <a class="github-button" href="https://github.com/kairos-io/kairos" data-size="large" data-show-count="true" aria-label="Star kairos-io/kairos on GitHub">Star</a>
+</li> 
+      </li>
+      <li class="td-light-dark-menu nav-item dropdown">
+        <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+  <symbol id="check2" viewBox="0 0 16 16">
+    <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+  </symbol>
+  <symbol id="circle-half" viewBox="0 0 16 16">
+    <path d="M8 15A7 7 0 1 0 8 1v14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"/>
+  </symbol>
+  <symbol id="moon-stars-fill" viewBox="0 0 16 16">
+    <path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"/>
+    <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z"/>
+  </symbol>
+  <symbol id="sun-fill" viewBox="0 0 16 16">
+    <path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/>
+  </symbol>
+</svg>
+
+<button class="btn btn-link nav-link dropdown-toggle d-flex align-items-center"
+        id="bd-theme"
+        type="button"
+        aria-expanded="false"
+        data-bs-toggle="dropdown"
+        data-bs-display="static"
+        aria-label="Toggle theme (auto)">
+  <svg class="bi my-1 theme-icon-active"><use href="#circle-half"></use></svg>
+</button>
+<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-theme-text">
+  <li>
+    <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" aria-pressed="false">
+      <svg class="bi me-2 opacity-50"><use href="#sun-fill"></use></svg>
+      Light
+      <svg class="bi ms-auto d-none"><use href="#check2"></use></svg>
+    </button>
+  </li>
+  <li>
+    <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark" aria-pressed="false">
+      <svg class="bi me-2 opacity-50"><use href="#moon-stars-fill"></use></svg>
+      Dark
+      <svg class="bi ms-auto d-none"><use href="#check2"></use></svg>
+    </button>
+  </li>
+  <li>
+    <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="auto" aria-pressed="true">
+      <svg class="bi me-2 opacity-50"><use href="#circle-half"></use></svg>
+      Auto
+      <svg class="bi ms-auto d-none"><use href="#check2"></use></svg>
+    </button>
+  </li>
+</ul>
+
+      </li>
+      </ul>
+  </div>
+  <div class="d-none d-lg-block">
+    <div class="td-search td-search--offline">
+  <div class="td-search__icon"></div>
+  <input
+    type="search"
+    class="td-search__input form-control"
+    placeholder="Search this site…"
+    aria-label="Search this site…"
+    autocomplete="off"
+    
+    data-offline-search-index-json-src="/offline-search-index.2cd40d81f421519107d8c788686e9696.json"
+    data-offline-search-base-href="/"
+    data-offline-search-max-results="10"
+  >
+</div>
+  </div>
+</div>
+</nav>
+
+
+<style>
+   
+  @media (max-width: 991.98px) {
+     
+    .navbar-burger {
+      position: fixed;
+      top: 12px;
+      right: 16px;
+      z-index: 3000;
+      background: none;
+      border: none;
+      outline: none;
+      padding: 0;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    #main_navbar {
+      display: none;
+    }
+    #main_navbar.show-mobile-menu {
+      display: block;
+      position: fixed;
+      top: 60px;  
+      left: 0;
+      width: 100vw;
+      height: calc(100vh - 60px);  
+      background: #03153A;
+      z-index: 2000;
+      overflow-y: auto;
+      transition: all 0.3s;
+    }
+    #navbar-links {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 2rem 1.5rem;
+      width: 100%;
+      height: 100%;
+    }
+    #navbar-links .nav-item {
+      margin-bottom: 1.5rem;
+      width: 100%;
+    }
+    #navbar-links .nav-link {
+      width: 100%;
+      font-size: 1.25rem;
+    }
+     
+    .td-navbar-nav-scroll .dropdown-menu {
+      position: absolute !important;
+      left: 0 !important;
+      right: auto !important;
+      top: 100% !important;
+      bottom: auto !important;
+      min-width: 200px;
+      margin-top: 0.5rem !important;  
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .td-navbar-nav-scroll .nav-item.dropdown {
+      position: relative !important;
+    }
+    .td-navbar-nav-scroll .nav-item.dropdown > .nav-link,
+    .td-navbar-nav-scroll .nav-item.dropdown > a {
+      margin-bottom: 0 !important;
+      padding-bottom: 0 !important;
+    }
+  }
+   
+  @media (max-width: 991.98px) {
+    #main_navbar.show-mobile-menu { display: block; }
+  }
+</style>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var burger = document.getElementById('navbar-burger');
+    var navbar = document.getElementById('main_navbar');
+    if (burger && navbar) {
+      burger.addEventListener('click', function() {
+        navbar.classList.toggle('show-mobile-menu');
+      });
+    }
+  });
+</script>
+    </header>
+    <div class="container-fluid td-outer">
+      <div class="td-main">
+        <div class="row flex-xl-nowrap">
+          <aside class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
+            <div id="td-sidebar-menu" class="td-sidebar__inner">
+  <div id="content-mobile">
+  <form class="td-sidebar__search d-flex align-items-center">
+    <div class="td-search td-search--offline">
+  <div class="td-search__icon"></div>
+  <input
+    type="search"
+    class="td-search__input form-control"
+    placeholder="Search this site…"
+    aria-label="Search this site…"
+    autocomplete="off"
+    
+    data-offline-search-index-json-src="/offline-search-index.2cd40d81f421519107d8c788686e9696.json"
+    data-offline-search-base-href="/"
+    data-offline-search-max-results="10"
+  >
+</div>
+    <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ms-3 fas fa-bars" type="button" data-bs-toggle="collapse" data-bs-target="#td-section-nav" aria-controls="td-section-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    </button>
+  </form>
+  </div>
+  <div id="content-desktop"></div>
+  <nav class="td-sidebar-nav collapse td-sidebar-nav--search-disabled" id="td-section-nav">
+    <ul class="td-sidebar-nav__section pe-md-3 ul-0">
+      <li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-docs-li">
+  <a href="/docs/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section tree-root" id="m-docs"><span class="">Documentation</span></a>
+  <ul class="ul-1">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsannouncements-li">
+  <a href="/docs/announcements/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id="m-docsannouncements"><i class="fa-solid fa-bullhorn"></i><span class="">Announcements</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-docsinstallation-li">
+  <a href="/docs/installation/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id="m-docsinstallation"><i class="fa-regular fa-computer"></i><span class="">Installation</span></a>
+  <ul class="ul-2 foldable">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsinstallationcheck-the-signatures-li">
+  <a href="/docs/installation/check-the-signatures/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsinstallationcheck-the-signatures"><span class="">Check the Signatures</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsinstallationaws-li">
+  <a href="/docs/installation/aws/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsinstallationaws"><span class="">Installation on AWS</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsinstallationinteractive-li">
+  <a href="/docs/installation/interactive/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsinstallationinteractive"><span class="">Interactive</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsinstallationmanual-li">
+  <a href="/docs/installation/manual/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsinstallationmanual"><span class="">Manual installation</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsinstallationqrcode-li">
+  <a href="/docs/installation/qrcode/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsinstallationqrcode"><span class="">QR Code</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsinstallationwebui-li">
+  <a href="/docs/installation/webui/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsinstallationwebui"><span class="">WebUI</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsinstallationazure-li">
+  <a href="/docs/installation/azure/" title="Installation on Microsoft Azure" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsinstallationazure"><span class="">Installation on Azure</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsinstallationgce-li">
+  <a href="/docs/installation/gce/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsinstallationgce"><span class="">Installation on Google Cloud</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsinstallationautomated-li">
+  <a href="/docs/installation/automated/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsinstallationautomated"><span class="">Automated</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsinstallationbare-metal-li">
+  <a href="/docs/installation/bare-metal/" title="Installing on Bare-Metal" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsinstallationbare-metal"><span class="">Bare-Metal</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsinstallationnvidia_agx_orin-li">
+  <a href="/docs/installation/nvidia_agx_orin/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsinstallationnvidia_agx_orin"><span class="">Nvidia AGX Orin</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsinstallationraspberry-li">
+  <a href="/docs/installation/raspberry/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsinstallationraspberry"><span class="">RaspberryPi</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsinstallationnetboot-li">
+  <a href="/docs/installation/netboot/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsinstallationnetboot"><span class="">Network booting</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsinstallationp2p-li">
+  <a href="/docs/installation/p2p/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsinstallationp2p"><span class="">P2P support</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id="m-docsinstallationtrustedboot-li">
+  <a href="/docs/installation/trustedboot/" title="Trusted Boot Installations" class="align-left ps-0 active td-sidebar-link td-sidebar-link__page" id="m-docsinstallationtrustedboot"><span class="td-sidebar-nav-active-item">Trusted Boot</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsinstallationtakeover-li">
+  <a href="/docs/installation/takeover/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsinstallationtakeover"><span class="">Takeover</span></a>
+</li>
+  </ul>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-docsupgrade-li">
+  <a href="/docs/upgrade/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id="m-docsupgrade"><i class="fa-regular fa-cloud-arrow-up"></i><span class="">Upgrade</span></a>
+  <ul class="ul-2 foldable">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsupgrademanual-li">
+  <a href="/docs/upgrade/manual/" title="Manual Upgrades" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsupgrademanual"><span class="">Manual</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsupgradekubernetes-li">
+  <a href="/docs/upgrade/kubernetes/" title="Upgrading from Kubernetes" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsupgradekubernetes"><span class="">From Kubernetes</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsupgradekairos-operator-li">
+  <a href="/docs/upgrade/kairos-operator/" title="Installing Kairos Operator" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsupgradekairos-operator"><span class="">Kairos Operator</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsupgradesystem-upgrade-controller-li">
+  <a href="/docs/upgrade/system-upgrade-controller/" title="Installing system-upgrade-controller (Deprecated)" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsupgradesystem-upgrade-controller"><span class="">System Upgrade Controller (Deprecated)</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsupgradetrustedboot-li">
+  <a href="/docs/upgrade/trustedboot/" title="Trusted Boot Upgrades" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsupgradetrustedboot"><span class="">Trusted Boot</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsupgradeboot_assessment-li">
+  <a href="/docs/upgrade/boot_assessment/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsupgradeboot_assessment"><span class="">Boot assessment</span></a>
+</li>
+  </ul>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-docsarchitecture-li">
+  <a href="/docs/architecture/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id="m-docsarchitecture"><i class="fa-regular fa-diagram-project"></i><span class="">Architecture</span></a>
+  <ul class="ul-2 foldable">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsarchitectureimmutable-li">
+  <a href="/docs/architecture/immutable/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsarchitectureimmutable"><span class="">Immutable</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsarchitecturecontainer-li">
+  <a href="/docs/architecture/container/" title="Container based" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsarchitecturecontainer"><span class="">Container</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsarchitecturesecureboot-li">
+  <a href="/docs/architecture/secureboot/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsarchitecturesecureboot"><span class="">SecureBoot support</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsarchitecturecloud-init-li">
+  <a href="/docs/architecture/cloud-init/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsarchitecturecloud-init"><span class="">Cloud init based</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsarchitecturemeta-li">
+  <a href="/docs/architecture/meta/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsarchitecturemeta"><span class="">Meta-Distribution</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsarchitecturenetwork-li">
+  <a href="/docs/architecture/network/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsarchitecturenetwork"><span class="">P2P Network</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsarchitecturetrustedboot-li">
+  <a href="/docs/architecture/trustedboot/" title="Trusted Boot Architecture" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsarchitecturetrustedboot"><span class="">Trusted Boot</span></a>
+</li>
+  </ul>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-docsadvanced-li">
+  <a href="/docs/advanced/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id="m-docsadvanced"><i class="fa-regular fa-gear"></i><span class="">Advanced</span></a>
+  <ul class="ul-2 foldable">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsadvancedafter-install-li">
+  <a href="/docs/advanced/after-install/" title="Pushing configuration to a node after installation" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsadvancedafter-install"><span class="">After install</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsadvancedconfiguring_partitions-li">
+  <a href="/docs/advanced/configuring_partitions/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsadvancedconfiguring_partitions"><span class="">Configuring partitions</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsadvancedcreating_custom_cloud_images-li">
+  <a href="/docs/advanced/creating_custom_cloud_images/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsadvancedcreating_custom_cloud_images"><span class="">Creating Custom Cloud Images</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsadvancedprivate_registry_auth-li">
+  <a href="/docs/advanced/private_registry_auth/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsadvancedprivate_registry_auth"><span class="">Private registries authentication</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsadvancedcustomizing-li">
+  <a href="/docs/advanced/customizing/" title="Customizing the system image" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsadvancedcustomizing"><span class="">Customization</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsadvancedbuild-li">
+  <a href="/docs/advanced/build/" title="Build Kairos appliances" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsadvancedbuild"><span class="">Build</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsadvancedsys-extensions-li">
+  <a href="/docs/advanced/sys-extensions/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsadvancedsys-extensions"><span class="">Extending the system with systemd extensions</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsadvancednetworking-li">
+  <a href="/docs/advanced/networking/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsadvancednetworking"><span class="">Networking</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsadvancedadding_opt_to_system_extensions-li">
+  <a href="/docs/advanced/adding_opt_to_system_extensions/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsadvancedadding_opt_to_system_extensions"><span class="">Using /opt with System Extensions</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsadvancedbundles-li">
+  <a href="/docs/advanced/bundles/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsadvancedbundles"><span class="">Bundles</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsadvancedpartition_encryption-li">
+  <a href="/docs/advanced/partition_encryption/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsadvancedpartition_encryption"><span class="">Encrypting User Data with Kairos</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsadvancedcoco-li">
+  <a href="/docs/advanced/coco/" title="Confidential computing setup" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsadvancedcoco"><span class="">Confidential Computing</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsadvancedrevoking-secureboot-access-li">
+  <a href="/docs/advanced/revoking-secureboot-access/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsadvancedrevoking-secureboot-access"><span class="">Revoking secure boot access</span></a>
+</li>
+  </ul>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-docsexamples-li">
+  <a href="/docs/examples/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id="m-docsexamples"><i class="fa-regular fa-file"></i><span class="">Examples</span></a>
+  <ul class="ul-2 foldable">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplesboot_assessment_trusted_boot-li">
+  <a href="/docs/examples/boot_assessment_trusted_boot/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplesboot_assessment_trusted_boot"><span class="">Enabling Automatic Boot Assessment with Trusted Boot</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexampleskubeadm-provider-li">
+  <a href="/docs/examples/kubeadm-provider/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexampleskubeadm-provider"><span class="">A Minimal Single-Node Kubernetes with Kubeadm</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplesextra_persistent_paths_after_install-li">
+  <a href="/docs/examples/extra_persistent_paths_after_install/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplesextra_persistent_paths_after_install"><span class="">Adding persistent paths after install</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplesairgap-li">
+  <a href="/docs/examples/airgap/" title="How to Create an Airgap K3s Installation with Kairos" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplesairgap"><span class="">Airgapped ISO</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplesbandwidth-optimized-upgrades-li">
+  <a href="/docs/examples/bandwidth-optimized-upgrades/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplesbandwidth-optimized-upgrades"><span class="">Bandwidth Optimized Upgrades</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplesbundles-li">
+  <a href="/docs/examples/bundles/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplesbundles"><span class="">Bundles</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplestrusted-boot-firmware-sysext-li">
+  <a href="/docs/examples/trusted-boot-firmware-sysext/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplestrusted-boot-firmware-sysext"><span class="">Deploying kernel firmware via sysext on Trusted Boot</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexampleskdump-li">
+  <a href="/docs/examples/kdump/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexampleskdump"><span class="">Enabling kdump</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplesopenamt-li">
+  <a href="/docs/examples/openamt/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplesopenamt"><span class="">Intel Open AMT Registration</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexampleskeylime-li">
+  <a href="/docs/examples/keylime/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexampleskeylime"><span class="">Keylime agent</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexampleslocalai-li">
+  <a href="/docs/examples/localai/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexampleslocalai"><span class="">LocalAI</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplesmulti-node-li">
+  <a href="/docs/examples/multi-node/" title="Manual Multi-Node Cluster" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplesmulti-node"><span class="">Manual multi-node cluster</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplesha-li">
+  <a href="/docs/examples/ha/" title="Manual Multi-Node High Availability Cluster" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplesha"><span class="">Manual multi-node HA cluster</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplessingle-node-li">
+  <a href="/docs/examples/single-node/" title="Manual Single-Node Cluster" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplessingle-node"><span class="">Manual single-node cluster</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplesmetallb-li">
+  <a href="/docs/examples/metallb/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplesmetallb"><span class="">MetalLB</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplesp2p_e2e-li">
+  <a href="/docs/examples/p2p_e2e/" title="P2P Multi-Node Cluster Provisioned via Netboot" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplesp2p_e2e"><span class="">P2P multi-node cluster netboot</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplesk3s-stages-li">
+  <a href="/docs/examples/k3s-stages/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplesk3s-stages"><span class="">Run stages along with K3s</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplessingle-node-p2p-li">
+  <a href="/docs/examples/single-node-p2p/" title="Self-configured P2P Single-Node Cluster" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplessingle-node-p2p"><span class="">Self-configured P2P single-node cluster</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplesmulti-node-p2p-li">
+  <a href="/docs/examples/multi-node-p2p/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplesmulti-node-p2p"><span class="">Self-coordinating P2P multi-node cluster</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplesmulti-node-p2p-ha-li">
+  <a href="/docs/examples/multi-node-p2p-ha/" title="Self-coordinating P2P Multi-Node Cluster with High Availability" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplesmulti-node-p2p-ha"><span class="">Self-coordinating P2P multi-node cluster HA</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplesmulti-node-p2p-ha-kubevip-li">
+  <a href="/docs/examples/multi-node-p2p-ha-kubevip/" title="Self-coordinating P2P Multi-Node Cluster with High Availability and KubeVIP" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplesmulti-node-p2p-ha-kubevip"><span class="">Self-coordinating P2P multi-node cluster HA with KubeVIP</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplesvirtual-box-li">
+  <a href="/docs/examples/virtual-box/" title="Kairos&#39; Trusted Boot in Virtual Box" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplesvirtual-box"><span class="">Trusted Boot in Virtual Box</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplescore-li">
+  <a href="/docs/examples/core/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplescore"><span class="">Using Kairos Core Images as an Installer</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexampleswifi-li">
+  <a href="/docs/examples/wifi/" title="Configuring WiFi via Cloud-Config" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexampleswifi"><span class="">WiFi</span></a>
+</li>
+  </ul>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-docsreference-li">
+  <a href="/docs/reference/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id="m-docsreference"><i class="fa-regular fa-book"></i><span class="">Reference</span></a>
+  <ul class="ul-2 foldable">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsreferenceartifacts-li">
+  <a href="/docs/reference/artifacts/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsreferenceartifacts"><span class="">Artifact Naming Convention</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsreferencearchitecture-li">
+  <a href="/docs/reference/architecture/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsreferencearchitecture"><span class="">Architecture</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsreferenceauroraboot-li">
+  <a href="/docs/reference/auroraboot/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsreferenceauroraboot"><span class="">AuroraBoot</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsreferenceconfiguration-li">
+  <a href="/docs/reference/configuration/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsreferenceconfiguration"><span class="">Configuration</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsreferencestage_modules-li">
+  <a href="/docs/reference/stage_modules/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsreferencestage_modules"><span class="">Stage modules</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsreferencekairosctl-li">
+  <a href="/docs/reference/kairosctl/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsreferencekairosctl"><span class="">kairosctl</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsreferencereset-li">
+  <a href="/docs/reference/reset/" title="Reset a node" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsreferencereset"><span class="">Reset</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsreferencekairos-factory-li">
+  <a href="/docs/reference/kairos-factory/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsreferencekairos-factory"><span class="">The Kairos Factory</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsreferenceimage_matrix-li">
+  <a href="/docs/reference/image_matrix/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsreferenceimage_matrix"><span class="">Image support matrix</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsreferencebuild-from-scratch-li">
+  <a href="/docs/reference/build-from-scratch/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsreferencebuild-from-scratch"><span class="">Build Kairos from scratch</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsreferencebuild_raw_images_with_qemu-li">
+  <a href="/docs/reference/build_raw_images_with_qemu/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsreferencebuild_raw_images_with_qemu"><span class="">Build Raw images with QEMU</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsreferencetroubleshooting-li">
+  <a href="/docs/reference/troubleshooting/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsreferencetroubleshooting"><span class="">Troubleshooting</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsreferencerecovery_mode-li">
+  <a href="/docs/reference/recovery_mode/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsreferencerecovery_mode"><span class="">Recovery mode</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsreferenceentangle-li">
+  <a href="/docs/reference/entangle/" title="Entangle CRDs" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsreferenceentangle"><span class="">Entangle</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsreferencefaq-li">
+  <a href="/docs/reference/faq/" title="FAQ" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsreferencefaq"><span class="">Frequently asked questions</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsreferencealerts-li">
+  <a href="/docs/reference/alerts/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsreferencealerts"><span class="">Alerts Styling</span></a>
+</li>
+  </ul>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-docsdevelopment-li">
+  <a href="/docs/development/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id="m-docsdevelopment"><i class="fa-regular fa-terminal"></i><span class="">Development</span></a>
+  <ul class="ul-2 foldable">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsdevelopmentdevelopment-li">
+  <a href="/docs/development/development/" title="Development notes" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsdevelopmentdevelopment"><span class="">Development</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsdevelopmentdebugging-station-li">
+  <a href="/docs/development/debugging-station/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsdevelopmentdebugging-station"><span class="">Debugging station</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsdevelopmentnvidia-li">
+  <a href="/docs/development/nvidia/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsdevelopmentnvidia"><span class="">Booting Kairos on Nvidia Jetson ARM</span></a>
+</li>
+  </ul>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsmedia-li">
+  <a href="/docs/media/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id="m-docsmedia"><i class="fa-regular fa-circle-play"></i><span class="">Media</span></a>
+</li>
+  </ul>
+</li>
+    </ul>
+  </nav>
+</div>
+
+          </aside>
+          <aside class="d-none d-xl-block col-xl-2 td-sidebar-toc d-print-none">
+            <div class="td-page-meta ms-2 pb-1 pt-2 mb-0">
+<a href="https://github.com/kairos-io/kairos-docs/tree/main/content/en/docs/Installation/trustedboot.md" class="td-page-meta--view td-page-meta__view" target="_blank" rel="noopener"><i class="fa-solid fa-file-lines fa-fw"></i> View page source</a>
+  <a href="https://github.com/kairos-io/kairos-docs/edit/main/content/en/docs/Installation/trustedboot.md" class="td-page-meta--edit td-page-meta__edit" target="_blank" rel="noopener"><i class="fa-solid fa-pen-to-square fa-fw"></i> Edit this page</a>
+  <a href="https://github.com/kairos-io/kairos-docs/new/main/content/en/docs/Installation?filename=change-me.md&amp;value=---%0Atitle%3A&#43;%22Long&#43;Page&#43;Title%22%0AlinkTitle%3A&#43;%22Short&#43;Nav&#43;Title%22%0Aweight%3A&#43;100%0Adescription%3A&#43;%3E-%0A&#43;&#43;&#43;&#43;&#43;Page&#43;description&#43;for&#43;heading&#43;and&#43;indexes.%0A---%0A%0A%23%23&#43;Heading%0A%0AEdit&#43;this&#43;template&#43;to&#43;create&#43;your&#43;new&#43;page.%0A%0A%2A&#43;Give&#43;it&#43;a&#43;good&#43;name%2C&#43;ending&#43;in&#43;%60.md%60&#43;-&#43;e.g.&#43;%60getting-started.md%60%0A%2A&#43;Edit&#43;the&#43;%22front&#43;matter%22&#43;section&#43;at&#43;the&#43;top&#43;of&#43;the&#43;page&#43;%28weight&#43;controls&#43;how&#43;its&#43;ordered&#43;amongst&#43;other&#43;pages&#43;in&#43;the&#43;same&#43;directory%3B&#43;lowest&#43;number&#43;first%29.%0A%2A&#43;Add&#43;a&#43;good&#43;commit&#43;message&#43;at&#43;the&#43;bottom&#43;of&#43;the&#43;page&#43;%28%3C80&#43;characters%3B&#43;use&#43;the&#43;extended&#43;description&#43;field&#43;for&#43;more&#43;detail%29.%0A%2A&#43;Create&#43;a&#43;new&#43;branch&#43;so&#43;you&#43;can&#43;preview&#43;your&#43;new&#43;file&#43;and&#43;request&#43;a&#43;review&#43;via&#43;Pull&#43;Request.%0A" class="td-page-meta--child td-page-meta__child" target="_blank" rel="noopener"><i class="fa-solid fa-pen-to-square fa-fw"></i> Create child page</a>
+  <a href="https://github.com/kairos-io/kairos-docs/issues/new?title=Trusted%20Boot%20Installations" class="td-page-meta--issue td-page-meta__issue" target="_blank" rel="noopener"><i class="fa-solid fa-list-check fa-fw"></i> Create documentation issue</a>
+  <a href="https://github.com/kairos-io/kairos/issues/new" class="td-page-meta--project td-page-meta__project-issue" target="_blank" rel="noopener"><i class="fa-solid fa-list-check fa-fw"></i> Create project issue</a>
+  
+</div>
+
+            <div class="td-toc">
+        <nav id="TableOfContents">
+  <ul>
+    <li><a href="#requirements">Requirements</a></li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#key-generation">Key generation</a>
+      <ul>
+        <li><a href="#custom-certificates-by-skipping-microsoft-certificate-keys">Custom certificates by skipping Microsoft certificate keys</a></li>
+        <li><a href="#exporting-keys-from-biosuefi-and-using-them">Exporting keys from BIOS/UEFI and using them</a></li>
+      </ul>
+    </li>
+    <li><a href="#using-a-hardware-key-for-signing">Using a hardware key for signing</a></li>
+    <li><a href="#building-installable-medium">Building installable medium</a></li>
+    <li><a href="#bundling-system-extensions-during-the-installable-medium-build">Bundling system extensions during the installable medium build</a>
+      <ul>
+        <li><a href="#config-files">Config files</a></li>
+        <li><a href="#branding">Branding</a></li>
+        <li><a href="#version-and-cmdline-in-the-config-files">Version and cmdline in the config files</a></li>
+      </ul>
+    </li>
+    <li><a href="#installation">Installation</a>
+      <ul>
+        <li><a href="#enroll-the-keys-in-secure-boot">Enroll the keys in Secure Boot</a></li>
+      </ul>
+    </li>
+    <li><a href="#upgrades">Upgrades</a></li>
+    <li><a href="#testing-the-images-locally">Testing the images locally</a></li>
+    <li><a href="#data-encryption">Data Encryption</a>
+      <ul>
+        <li><a href="#additional-partitions">Additional partitions</a></li>
+      </ul>
+    </li>
+    <li><a href="#notes">Notes</a>
+      <ul>
+        <li><a href="#install-additional-files-from-the-installer-iso-to-the-encrypted-portions">Install additional files from the Installer ISO to the encrypted portions</a></li>
+        <li><a href="#mount-partitions-after-install">Mount partitions after install</a></li>
+        <li><a href="#force-certificates-auto-enrollments">Force certificates auto-enrollments</a></li>
+        <li><a href="#additional-efi-entries">Additional efi entries</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+      </div>
+    
+            
+
+          </aside>
+          <main class="col-12 col-md-9 col-xl-8 ps-md-5" role="main">
+            
+
+
+
+
+
+  
+  <div class="pageinfo pageinfo-warning">
+    <p>You are viewing the development docs which are in progress. There is no guarantee that the development documentation will be accurate, including instructions, links, and other information. For the latest stable documentation, click
+      <a href="https://kairos.io//v3.5.2/docs" target="_blank">here</a>.</p>
+  </div>
+
+
+  
+
+
+            <nav aria-label="breadcrumb" class="td-breadcrumbs">
+  <ol class="breadcrumb">
+  <li class="breadcrumb-item">
+    <a href="/docs/">Documentation</a></li>
+  <li class="breadcrumb-item">
+    <a href="/docs/installation/">Installation</a></li>
+  <li class="breadcrumb-item active" aria-current="page">
+    Trusted Boot</li>
+  </ol>
+</nav>
+            
+<div class="td-content">
+	<h1>Trusted Boot Installations</h1>
+	<div class="lead">Learn how to enable Trusted Boot with Secure Boot, full disk encryption, and measured boot to protect systems from tampering.</div>
+	<header class="article-meta">
+		
+</header>
+	<p>&ldquo;Trusted Boot&rdquo; is a combination of technologies that allows us to guarantee that a system was not tampered with, and the user-data is protected by cold attacks, it is composed by FDE, Secure Boot and Measured Boot.</p>
+<p>If you want to learn more on what Trusted Boot is and how it works, see the <a href="/docs/architecture/trustedboot/">Trusted Boot Architecture</a> page. This page describes how to enable Trusted Boot support in Kairos.</p>
+<p>Kairos supports Trusted boot by generating specific installable medium. This feature is optional and works alongside how Kairos works.</p>
+<h2 id="requirements">Requirements</h2>
+<p>The Hardware that will run Kairos needs to have the following requirements:</p>
+<ul>
+<li>Secure boot available in the system</li>
+<li>The Hardware should have a TPM chip or fTPM enabled</li>
+<li>Fast boot disabled at BIOS level ( See also <a href="https://github.com/kairos-io/kairos/issues/2579">https://github.com/kairos-io/kairos/issues/2579</a> )</li>
+<li>The Hardware should be capable of booting large EFI files (&gt;32MB)</li>
+<li>Base image of the OS needs to have at least systemd 252 or newer ( for example ubuntu &gt;=23.10 or fedora &gt;=38 )</li>
+</ul>
+<p>To build the installable medium you need the following installed in the system you use to build the installable medium:</p>
+<ul>
+<li>Docker</li>
+<li>Git</li>
+<li>A Linux machine with KVM (for testing the images locally)</li>
+</ul>
+<h2 id="usage">Usage</h2>
+<p>In order to boot into UKI mode, you need to build a special ISO file with the UKI files. To build this medium you have to generate a set of keypairs first: one for the Secure boot and one for the PCR policies required to encrypt the user-data.</p>
+<p>Any change, or upgrade of the node to a new version of the OS requires those assets to be regenerated with these keypairs, including the installer ISO, and the EFI files used for upgrading. The keys are used to <em>sign</em> and <em>verify</em> the EFI files, and the PCR policies are used to <em>encrypt</em> and <em>decrypt</em> the user-data, and thus are required to be the same for the whole lifecycle of the node.</p>
+<p>The steps below will guide you into generating the installable assets, and how to re-generate the assets to upgrade the node to a new version of the OS.</p>
+<h2 id="key-generation">Key generation</h2>
+<p>Keys can be generated from scratch, or the Microsoft certificates can be used, alternatively, if you can export the keys from your BIOS/UEFI you can use the same PK keys.</p>
+<p>By default keys are generated including the Microsoft ones, but you can skip them if you know what you are doing (see below).</p>
+<p>To generate the Secure boot certificates and keys along with the Microsoft keys run the following commands:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">MY_ORG</span><span class="o">=</span><span class="s2">&#34;Acme Corp&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Generate the keys</span>
+</span></span><span class="line"><span class="cl">docker run -v <span class="nv">$PWD</span>/keys:/work/keys -ti --rm quay.io/kairos/auroraboot:v0.13.0 genkey --expiration-in-days <span class="m">365</span> -o /work/keys <span class="s2">&#34;</span><span class="nv">$MY_ORG</span><span class="s2">&#34;</span>
+</span></span></code></pre></div>
+
+<div class="alert alert-warning" role="alert">
+<h4 class="alert-heading">Warning</h4>
+
+    Substitute <code>$MY_ORG</code> for your own string, this can be anything but it help identifying the Keys. The keys duration can specified with <code>--expiration-in-days</code>. It is not possible to create keys that do not expire, but it is possible to specify an extremely large value (e.g. 200 years, etc.)
+
+</div>
+
+
+
+<div class="alert alert-warning" role="alert">
+<h4 class="alert-heading">Warning</h4>
+
+    It is very important to preserve the keys generated in this process in a safe place. Loosing the keys will prevent you to generate new images that can be used for upgrades.
+
+</div>
+
+<h3 id="custom-certificates-by-skipping-microsoft-certificate-keys">Custom certificates by skipping Microsoft certificate keys</h3>
+
+
+<div class="alert alert-warning" role="alert">
+<h4 class="alert-heading">Warning</h4>
+
+    Some firmware is signed and verified with Microsoft&rsquo;s or other vendor keys when secure boot is enabled. Removing those keys could brick them. It is preferable to not use the Microsoft certificates for precaution and security reasons, however as this might be potentially a dangerous action, only do this if you know what you are doing. To check if your firmware is signed with Microsoft&rsquo;s keys, you can check <a href="https://github.com/Foxboron/sbctl/wiki/FAQ#option-rom">https://github.com/Foxboron/sbctl/wiki/FAQ#option-rom</a>. See also: <a href="https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot#Enrolling_Option_ROM_digests">https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot#Enrolling_Option_ROM_digests</a>.
+
+</div>
+
+<p>If your hardware supports booting with custom Secure Boot keys, you can optionally create keys from scratch and skip the Microsoft certificate keys. To do so, run the following command:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">MY_ORG</span><span class="o">=</span><span class="s2">&#34;Acme Corp&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Generate the keys</span>
+</span></span><span class="line"><span class="cl">docker run -v <span class="nv">$PWD</span>/keys:/work/keys -ti --rm quay.io/kairos/auroraboot:v0.13.0 genkey --skip-microsoft-certs-I-KNOW-WHAT-IM-DOING --expiration-in-days <span class="m">365</span> -o /work/keys <span class="s2">&#34;</span><span class="nv">$MY_ORG</span><span class="s2">&#34;</span>
+</span></span></code></pre></div><h3 id="exporting-keys-from-biosuefi-and-using-them">Exporting keys from BIOS/UEFI and using them</h3>
+<p>This is useful if you want to handle mass-installations where you don&rsquo;t want to enroll the generated keys manually in your bios/uefi.</p>
+<p>Some hardware might require additional vendor keys, that could be e.g. used to sign additional firmware. In order to re-use the same set of keys in the machine, you can export the keys from the BIOS/UEFI and use them to generate the UKI files.</p>
+<p>Some BIOS/UEFI allows to export the keys to USB stick directly from the BIOS/UEFI setup menu (for example <a href="https://techlibrary.hpe.com/docs/iss/proliant-gen10-uefi/GUID-26E9F167-8061-4D85-9A0A-B610D00DFA3B.html">HPE</a>). If you have the keys in a USB stick, you can copy in a directory and use them to generate the UKI files.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">MY_ORG</span><span class="o">=</span><span class="s2">&#34;Acme Corp&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">MACHINE_CERTS</span><span class="o">=</span><span class="s2">&#34;</span><span class="nv">$PWD</span><span class="s2">/path/to/machine-certs&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ~$ tree $MACHINE_CERTS</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># /path/to/machine-certs/</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ├── db</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ├── dbx</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ├── KEK</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># └── PK</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Generate the keys</span>
+</span></span><span class="line"><span class="cl">docker run -v <span class="nv">$MACHINE_CERTS</span>:/work/machine-keys -v <span class="nv">$PWD</span>/keys:/work/keys -ti --rm quay.io/kairos/auroraboot:v0.13.0 genkey --custom-cert-dir /work/machine-keys --expiration-in-days <span class="m">365</span> -o /work/keys <span class="s2">&#34;</span><span class="nv">$MY_ORG</span><span class="s2">&#34;</span>
+</span></span></code></pre></div>
+
+<div class="alert alert-warning" role="alert">
+<h4 class="alert-heading">Warning</h4>
+
+    This command can be combined with the <code>--skip-microsoft-certs-I-KNOW-WHAT-IM-DOING</code> flag to avoid auto-enrolling the Microsoft keys if not needed (or already present in the &ldquo;custom certs&rdquo;)
+
+</div>
+
+<h2 id="using-a-hardware-key-for-signing">Using a hardware key for signing</h2>
+<p>You can use hardware keys which are compatible with the <em>PKCS #11</em> standard,  like for example a <a href="https://www.nitrokey.com/">nitrokey</a> to sign the UKI files. In order to do so, you need to have the keys generated in the hardware key and then generate a certificate signed by the key like so:</p>
+<p>Generate your key in the hardware key, for example with a nitrokey:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">gpg --card-edit
+</span></span><span class="line"><span class="cl"><span class="c1"># In the gpg console, run the following commands:</span>
+</span></span><span class="line"><span class="cl">admin
+</span></span><span class="line"><span class="cl">generate
+</span></span><span class="line"><span class="cl"><span class="c1"># Follow the instructions to generate the key, you can use the default values</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># After the key is generated, you can run the following command to list the keys:</span>
+</span></span><span class="line"><span class="cl">$ pkcs11-tool --module opensc-pkcs11.so -L
+</span></span><span class="line"><span class="cl">Available slots:
+</span></span><span class="line"><span class="cl">Slot <span class="m">0</span> <span class="o">(</span>0x0<span class="o">)</span>: Nitrokey Nitrokey Start <span class="o">(</span>FSIJ-1.2.19-C5B562D9<span class="o">)</span> <span class="m">00</span> <span class="m">00</span>
+</span></span><span class="line"><span class="cl">  token label        : OpenPGP card <span class="o">(</span>User PIN<span class="o">)</span>
+</span></span><span class="line"><span class="cl">  token manufacturer : OpenPGP project
+</span></span><span class="line"><span class="cl">  token model        : PKCS#15 emulated
+</span></span><span class="line"><span class="cl">  token flags        : login required, rng, token initialized, PIN initialized
+</span></span><span class="line"><span class="cl">  hardware version   : 2.0
+</span></span><span class="line"><span class="cl">  firmware version   : 2.0
+</span></span><span class="line"><span class="cl">  serial num         : fffec5b562d9
+</span></span><span class="line"><span class="cl">  pin min/max        : 6/127
+</span></span><span class="line"><span class="cl">  uri                : pkcs11:model<span class="o">=</span>PKCS%2315%20emulated<span class="p">;</span><span class="nv">manufacturer</span><span class="o">=</span>OpenPGP%20project<span class="p">;</span><span class="nv">serial</span><span class="o">=</span>fffec5b562d9<span class="p">;</span><span class="nv">token</span><span class="o">=</span>OpenPGP%20card%20%28User%20PIN%29
+</span></span><span class="line"><span class="cl">Slot <span class="m">1</span> <span class="o">(</span>0x1<span class="o">)</span>: Nitrokey Nitrokey Start <span class="o">(</span>FSIJ-1.2.19-C5B562D9<span class="o">)</span> <span class="m">00</span> <span class="m">00</span>
+</span></span><span class="line"><span class="cl">  token label        : OpenPGP card <span class="o">(</span>User PIN <span class="o">(</span>sig<span class="o">))</span>
+</span></span><span class="line"><span class="cl">  token manufacturer : OpenPGP project
+</span></span><span class="line"><span class="cl">  token model        : PKCS#15 emulated
+</span></span><span class="line"><span class="cl">  token flags        : login required, rng, token initialized, PIN initialized
+</span></span><span class="line"><span class="cl">  hardware version   : 2.0
+</span></span><span class="line"><span class="cl">  firmware version   : 2.0
+</span></span><span class="line"><span class="cl">  serial num         : fffec5b562d9
+</span></span><span class="line"><span class="cl">  pin min/max        : 6/127
+</span></span><span class="line"><span class="cl">  uri                : pkcs11:model<span class="o">=</span>PKCS%2315%20emulated<span class="p">;</span><span class="nv">manufacturer</span><span class="o">=</span>OpenPGP%20project<span class="p">;</span><span class="nv">serial</span><span class="o">=</span>fffec5b562d9<span class="p">;</span><span class="nv">token</span><span class="o">=</span>OpenPGP%20card%20%28User%20PIN%20%28sig%29%29
+</span></span><span class="line"><span class="cl"><span class="c1"># You can use the slot-id and id to refer to the key in the hardware key</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># For example, to refer to the key in slot 1, you can use the following pkcs11 url:</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># pkcs11:slot-id=1;id=%01</span>
+</span></span></code></pre></div><p>Now create your SSL config in order to use the hardware key to sign the certificate:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ cat <span class="s">&lt;&lt;EOF &gt; openssl-pkcs11.conf
+</span></span></span><span class="line"><span class="cl"><span class="s">openssl_conf = openssl_init
+</span></span></span><span class="line"><span class="cl"><span class="s">
+</span></span></span><span class="line"><span class="cl"><span class="s">[openssl_init]
+</span></span></span><span class="line"><span class="cl"><span class="s">providers = provider_sect
+</span></span></span><span class="line"><span class="cl"><span class="s">
+</span></span></span><span class="line"><span class="cl"><span class="s">[provider_sect]
+</span></span></span><span class="line"><span class="cl"><span class="s">default = default_sect
+</span></span></span><span class="line"><span class="cl"><span class="s">base = base_sect
+</span></span></span><span class="line"><span class="cl"><span class="s">pkcs11 = pkcs11_sect
+</span></span></span><span class="line"><span class="cl"><span class="s">
+</span></span></span><span class="line"><span class="cl"><span class="s">[default_sect]
+</span></span></span><span class="line"><span class="cl"><span class="s">activate = 1
+</span></span></span><span class="line"><span class="cl"><span class="s">
+</span></span></span><span class="line"><span class="cl"><span class="s">[base_sect]
+</span></span></span><span class="line"><span class="cl"><span class="s">activate = 1
+</span></span></span><span class="line"><span class="cl"><span class="s">
+</span></span></span><span class="line"><span class="cl"><span class="s">[pkcs11_sect]
+</span></span></span><span class="line"><span class="cl"><span class="s">activate = 1
+</span></span></span><span class="line"><span class="cl"><span class="s">pkcs11-module-path = /usr/lib/pkcs11/opensc-pkcs11.so # Change to the path of yours, can differ by OS
+</span></span></span><span class="line"><span class="cl"><span class="s">EOF</span>
+</span></span></code></pre></div><p>Generate a certificate signing request (CSR) with the private key in the hardware key:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ <span class="nv">OPENSSL_CONF</span><span class="o">=</span>openssl-pkcs11.conf openssl req -new  -key <span class="s2">&#34;pkcs11:slot-id=1;id=%01&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    -sha256 -out nitrokey.csr.pem -subj <span class="s2">&#34;/CN=SecureBoot Key/&#34;</span>
+</span></span></code></pre></div><blockquote>
+<p>You can append ;pin-value=<YOUR USER PIN> to the pkcs11 url to not have to write it. If you don&rsquo;t add it, openssl will ask you for it</p></blockquote>
+<p>Sign the CSR with the private key in the hardware key:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ <span class="nv">OPENSSL_CONF</span><span class="o">=</span>openssl-pkcs11.conf openssl x509 -req -days <span class="m">3650</span> -in nitrokey.csr.pem <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    -signkey <span class="s2">&#34;pkcs11:slot-id=1;id=%01&#34;</span> -out nitrokey.crt.pem
+</span></span></code></pre></div><p>Now you can use the hardware key and certificate to sign the UKI files.</p>
+<h2 id="building-installable-medium">Building installable medium</h2>
+<p>To build the installable medium you need to run the following commands:</p>
+
+
+
+<ul class="nav nav-tabs" id="tabs-10" role="tablist">
+  <li class="nav-item">
+      <button class="nav-link active"
+          id="tabs-10-00-tab" data-bs-toggle="tab" data-bs-target="#tabs-10-00" role="tab"
+          data-td-tp-persist="from a container image" aria-controls="tabs-10-00" aria-selected="true">
+        From a container image
+      </button>
+    </li><li class="nav-item">
+      <button class="nav-link"
+          id="tabs-10-01-tab" data-bs-toggle="tab" data-bs-target="#tabs-10-01" role="tab"
+          data-td-tp-persist="from a directory" aria-controls="tabs-10-01" aria-selected="false">
+        From a directory
+      </button>
+    </li>
+</ul>
+
+<div class="tab-content" id="tabs-10-content">
+    <div class="tab-body tab-pane fade show active"
+        id="tabs-10-00" role="tabpanel" aria-labelled-by="tabs-10-00-tab" tabindex="10">
+        <div class="highlight only-flavors=Ubuntu+24.04,Fedora+40"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">CONTAINER_IMAGE</span><span class="o">=</span>quay.io/kairos/@flavor:@flavorRelease-core-amd64-generic-master-uki
+</span></span><span class="line"><span class="cl">docker run -ti --rm -v <span class="nv">$PWD</span>/build:/result -v <span class="nv">$PWD</span>/keys/:/keys quay.io/kairos/auroraboot:v0.13.0 build-uki -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key <span class="nv">$PATH_TO_TPM_KEY</span> --sb-key <span class="nv">$PATH_TO_SB_KEY</span> --sb-cert <span class="nv">$PATH_TO_SB_CERT</span> <span class="nv">$CONTAINER_IMAGE</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># to build an EFI file only</span>
+</span></span><span class="line"><span class="cl">docker run -ti --rm -v <span class="nv">$PWD</span>/build:/result -v <span class="nv">$PWD</span>/keys/:/keys quay.io/kairos/auroraboot:v0.13.0 build-uki -t uki -d /result/ --public-keys /keys --tpm-pcr-private-key <span class="nv">$PATH_TO_TPM_KEY</span> --sb-key <span class="nv">$PATH_TO_SB_KEY</span> --sb-cert <span class="nv">$PATH_TO_SB_CERT</span> <span class="nv">$CONTAINER_IMAGE</span>
+</span></span></code></pre></div>
+    </div>
+    <div class="tab-body tab-pane fade"
+        id="tabs-10-01" role="tabpanel" aria-labelled-by="tabs-10-01-tab" tabindex="10">
+        <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># Assuming you have a &#34;rootfs&#34; directory with the content of the OS</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># If the image is in a directory ($PWD/rootfs) you can use the following command</span>
+</span></span><span class="line"><span class="cl">docker run -ti --rm -v <span class="nv">$PWD</span>/build:/result -v <span class="nv">$PWD</span>/rootfs:/rootfs -v <span class="nv">$PWD</span>/keys/:/keys quay.io/kairos/auroraboot:v0.13.0 build-uki -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key <span class="nv">$PATH_TO_TPM_KEY</span> --sb-key <span class="nv">$PATH_TO_SB_KEY</span> --sb-cert <span class="nv">$PATH_TO_SB_CERT</span> dir:/rootfs/
+</span></span></code></pre></div>
+    </div>
+</div>
+
+<p>Let&rsquo;s explain some of the flags used here, especially the ones related to Trusted Boot keys:</p>
+<ul>
+<li><code>-t iso</code> specifies that the output should be an installable medium (ISO file). You can use <code>-t uki</code> to generate an EFI file only. Or <code>-t container</code> to generate a container image with the UKI files on it, perfect to push to a remote registry for upgrades.\</li>
+<li><code>-d /result/</code> specifies the output directory where the output type will be saved.</li>
+<li><code>--tpm-pcr-private-key</code> specifies the path to the private key used to sign the PCR policies. This is required for the user-data encryption.</li>
+<li><code>--sb-key</code> specifies the path to the Secure Boot key used to sign the UKI files.</li>
+<li><code>--sb-cert</code> specifies the path to the Secure Boot certificate used to sign the UKI files.</li>
+<li><code>--public-keys /keys</code> specifies the directory where the public keys are stored. These are the keys that are auto enrolled on first boot. They are 3 (DB,KEK, PK) and are in .auth format.</li>
+</ul>
+
+
+<div class="alert alert-info" role="alert">
+<h4 class="alert-heading">Keys format</h4>
+
+    The .auth format in Secure Boot refers to EFI Signature Lists (ESLs) wrapped in an authentication structure, which allows UEFI firmware to verify and install Secure Boot keys securely. These files are used when manually enrolling Secure Boot keys into a UEFI system, typically through the firmware setup interface. <code>.auth</code> files are signed versions of <code>.esl</code> files. An <code>.esl</code> file is a binary format defined by the UEFI specification that wraps one or more EFI Signature Data entries (usually X.509 certs or SHA256 hashes).
+
+</div>
+
+<p>For a more secure process you can use a hardware key to generate and sign the certificate and sign the EFI files, so you dont need to keep the private key in the filesystem.</p>
+<p>To do so, <code>--sb-key</code> accepts a pkcs11 url, for example:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">docker run -ti --rm -v /run/pcscd:/run/pcscd -v <span class="nv">$PWD</span>/build:/result -v <span class="nv">$PWD</span>/keys/:/keys quay.io/kairos/auroraboot:v0.13.0 build-uki -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key <span class="nv">$PATH_TO_TPM_KEY</span> --sb-key <span class="s2">&#34;pkcs11:slot-id=1;id=%01&#34;</span> --sb-cert <span class="nv">$PATH_TO_SB_CERT</span> <span class="nv">$CONTAINER_IMAGE</span>
+</span></span></code></pre></div>
+
+<div class="alert alert-warning" role="alert">
+<h4 class="alert-heading">Warning</h4>
+
+    Notice that for this to work you need to have the <code>pcscd</code> service running in your system, and the hardware key must be connected to the system.
+The command mounts the <code>/run/pcscd</code> directory to the container, so that the container can access the hardware key.
+
+</div>
+
+<p>For more info about pkcs11 urls, see the <a href="https://www.rfc-editor.org/rfc/rfc7512.html">RFC 7512</a> which describes the format of the pkcs11 urls.</p>
+<h2 id="bundling-system-extensions-during-the-installable-medium-build">Bundling system extensions during the installable medium build</h2>
+<p>System extensions can be bundled in the installable medium. To bundle system extensions, you need to create a new image with the extensions you want to add. System extensions are bundled in the root on the media install. When building your Trusted Boot image, you can add the system extensions to the iso by using the <code>--overlay-iso</code> flag and pointing it to the directory containing the system extensions.</p>
+
+
+
+<ul class="nav nav-tabs" id="tabs-14" role="tablist">
+  <li class="nav-item">
+      <button class="nav-link active"
+          id="tabs-14-00-tab" data-bs-toggle="tab" data-bs-target="#tabs-14-00" role="tab"
+          data-td-tp-persist="from a container image" aria-controls="tabs-14-00" aria-selected="true">
+        From a container image
+      </button>
+    </li><li class="nav-item">
+      <button class="nav-link"
+          id="tabs-14-01-tab" data-bs-toggle="tab" data-bs-target="#tabs-14-01" role="tab"
+          data-td-tp-persist="from a directory" aria-controls="tabs-14-01" aria-selected="false">
+        From a directory
+      </button>
+    </li>
+</ul>
+
+<div class="tab-content" id="tabs-14-content">
+    <div class="tab-body tab-pane fade show active"
+        id="tabs-14-00" role="tabpanel" aria-labelled-by="tabs-14-00-tab" tabindex="14">
+        <div class="highlight only-flavors=Ubuntu+24.04,Fedora+40"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># Assuming your system extensions are stored on $PWD/system-extensions</span>
+</span></span><span class="line"><span class="cl"><span class="nv">CONTAINER_IMAGE</span><span class="o">=</span>quay.io/kairos/@flavor:@flavorRelease-core-amd64-generic-master-uki
+</span></span><span class="line"><span class="cl">docker run -ti --rm -v <span class="nv">$PWD</span>/system-extensions:/system-extensions -v <span class="nv">$PWD</span>/build:/result -v <span class="nv">$PWD</span>/keys/:/keys quay.io/kairos/auroraboot:v0.13.0 build-uki -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key <span class="nv">$PATH_TO_TPM_KEY</span> --sb-key <span class="nv">$PATH_TO_SB_KEY</span> --sb-cert <span class="nv">$PATH_TO_SB_CERT</span> --overlay-iso /system-extensions <span class="nv">$CONTAINER_IMAGE</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># to build an EFI file only</span>
+</span></span><span class="line"><span class="cl">docker run -ti --rm -v <span class="nv">$PWD</span>/build:/result -v <span class="nv">$PWD</span>/keys/:/keys quay.io/kairos/auroraboot:v0.13.0 build-uki -t uki -d /result/ --public-keys /keys --tpm-pcr-private-key <span class="nv">$PATH_TO_TPM_KEY</span> --sb-key <span class="nv">$PATH_TO_SB_KEY</span> --sb-cert <span class="nv">$PATH_TO_SB_CERT</span> <span class="nv">$CONTAINER_IMAGE</span>
+</span></span></code></pre></div>
+    </div>
+    <div class="tab-body tab-pane fade"
+        id="tabs-14-01" role="tabpanel" aria-labelled-by="tabs-14-01-tab" tabindex="14">
+        <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># Assuming you have a &#34;rootfs&#34; directory with the content of the OS</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># If the image is in a directory ($PWD/rootfs) you can use the following command</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Assuming your system extensions are stored on $PWD/system-extensions</span>
+</span></span><span class="line"><span class="cl">docker run -ti --rm -v <span class="nv">$PWD</span>/system-extensions:/system-extensions -v <span class="nv">$PWD</span>/build:/result -v <span class="nv">$PWD</span>/rootfs:/rootfs -v <span class="nv">$PWD</span>/keys/:/keys quay.io/kairos/auroraboot:v0.13.0 build-uki -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key <span class="nv">$PATH_TO_TPM_KEY</span> --sb-key <span class="nv">$PATH_TO_SB_KEY</span> --sb-cert <span class="nv">$PATH_TO_SB_CERT</span> --overlay-iso /system-extensions dir:/rootfs/
+</span></span></code></pre></div>
+    </div>
+</div>
+
+<h3 id="config-files">Config files</h3>
+<p>Included in the artifact will be a configuration file. On the installation/upgrade media, it is called <code>norole.conf</code> but once it has been installed it will be named <code>active.conf</code>, <code>passive.conf</code> or <code>recovery.conf</code> which represents the configuration for the &ldquo;cos&rdquo;, &ldquo;fallback&rdquo; and &ldquo;recovery&rdquo; images respectively.</p>
+<p>This configuration file includes the &ldquo;title&rdquo; of the artifact in the boot menu and the location of the &ldquo;efi&rdquo; file to boot. Here&rsquo;s an example:</p>
+<pre tabindex="0"><code># cat /efi/loader/entries/active.conf
+efi /EFI/kairos/active.efi
+title Kairos
+</code></pre><h3 id="branding">Branding</h3>
+<p>You can overwrite the default &ldquo;Kairos&rdquo; title if you pass the <code>--boot-branding</code> flag to auroraboot.</p>
+<div class="highlight only-flavors=Ubuntu+24.04,Fedora+40"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">CONTAINER_IMAGE</span><span class="o">=</span>quay.io/kairos/@flavor:@flavorRelease-core-amd64-generic-master-uki
+</span></span><span class="line"><span class="cl">docker run -ti --rm -v <span class="nv">$PWD</span>/build:/result -v <span class="nv">$PWD</span>/keys/:/keys quay.io/kairos/auroraboot:v0.13.0 build-uki -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key <span class="nv">$PATH_TO_TPM_KEY</span> --sb-key <span class="nv">$PATH_TO_SB_KEY</span> --sb-cert <span class="nv">$PATH_TO_SB_CERT</span> --boot-branding <span class="s2">&#34;My Awesome OS&#34;</span> <span class="nv">$CONTAINER_IMAGE</span>
+</span></span></code></pre></div><p>Your config file should look now like this:</p>
+<pre tabindex="0"><code># cat /efi/loader/entries/active.conf
+efi /EFI/kairos/active.efi
+title My Awesome OS
+</code></pre><p>You can use a custom boot splash screen by specifying the  <code>--splash</code> flag when calling auroraboot.</p>
+<div class="highlight only-flavors=Ubuntu+24.04,Fedora+40"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">CONTAINER_IMAGE</span><span class="o">=</span>quay.io/kairos/@flavor:@flavorRelease-core-amd64-generic-master-uki
+</span></span><span class="line"><span class="cl">docker run -ti --rm -v <span class="nv">$PWD</span>/build:/result -v <span class="nv">$PWD</span>/keys/:/keys -v <span class="nv">$PWD</span>/splash/:/splash quay.io/kairos/auroraboot:v0.13.0 build-uki -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key <span class="nv">$PATH_TO_TPM_KEY</span> --sb-key <span class="nv">$PATH_TO_SB_KEY</span> --sb-cert <span class="nv">$PATH_TO_SB_CERT</span> --boot-branding <span class="s2">&#34;My Awesome OS&#34;</span> --splash /splash/my-awesome-splash.bmp <span class="nv">$CONTAINER_IMAGE</span>
+</span></span></code></pre></div>
+
+<div class="alert alert-success" role="alert">
+<h4 class="alert-heading">Info</h4>
+
+    Splash images must be provided in 32 bit BMP format, no other image formats besides BMP are supported.
+
+</div>
+
+
+
+<div class="alert alert-warning" role="alert">
+<h4 class="alert-heading">Warning</h4>
+
+    Remember when you build upgrade mediums, to also add your branding, otherwise the new active image will be named differently than your fallback and recovery ones.
+
+</div>
+
+<h3 id="version-and-cmdline-in-the-config-files">Version and cmdline in the config files</h3>
+<p>In addition to having the &ldquo;title&rdquo; and &ldquo;efi&rdquo; attributes, you can include in the config files the OS &ldquo;version&rdquo; and &ldquo;cmdline&rdquo;. To do so, pass <code>--include-version-in-config</code> or <code>--include-cmdline-in-config</code> flags to auroraboot.</p>
+
+
+<div class="alert alert-success" role="alert">
+<h4 class="alert-heading">Info</h4>
+
+    The cmdline, will only show what is different between the default cmdline and the currently used cmdline. If you pass <code>--include-cmdline-in-config</code> to a default installation, the attribute cmdline will be empty.
+
+</div>
+
+<pre tabindex="0"><code>cmdline awesome=true
+title Awesome OS
+efi /EFI/kairos/active.efi
+version master
+</code></pre><h2 id="installation">Installation</h2>
+<p>The installation process is performed as usual and the <a href="/docs/installation/">Installation instructions</a> can be followed, however the difference is that user-data will be automatically encrypted (both the OEM and the persistent partition) by using the TPM chip and the Trusted Boot mechanism.</p>
+<h3 id="enroll-the-keys-in-secure-boot">Enroll the keys in Secure Boot</h3>
+<p>If your machine is in UEFI setup mode Secure Boot keys will be automatically enrolled. To enter UEFI Setup mode you need to clear the Secure Boot keys (PKs) from the BIOS/UEFI.</p>
+<p>If UEFI setup mode is not available, you need to enroll the keys manually in the BIOS/UEFI.</p>
+<p>This process can vary depending on the vendor, but in general you need to enter the BIOS/UEFI setup during early boot and import the keys, for an example outline you can check the steps for <a href="https://techlibrary.hpe.com/docs/iss/proliant-gen10-uefi/GUID-E4427875-D123-4BBF-9056-342168478A02.html">HPE Hardware</a>.</p>
+<p>A video of the process of importing keys in QEMU is available <a href="https://github.com/kairos-io/kairos/assets/2420543/e45f6a08-ec74-4cfd-bdf0-aeb7b23ac9bc">here</a>.</p>
+<h2 id="upgrades">Upgrades</h2>
+<p>See the <a href="/docs/upgrade/trustedboot/">Trusted Boot Upgrade</a> page.</p>
+<h2 id="testing-the-images-locally">Testing the images locally</h2>
+<p>To test the ISO file locally QEMU can be used. In order to test Secure Boot components you need an ed2k firmware with secureboot in QEMU. If you don&rsquo;t have QEMU locally and/or you don&rsquo;t have the correct dependencies you can follow the steps below that build a container image with QEMU and the needed dependencies and use that container to run the ISO file in a VM with Docker.</p>
+<ol>
+<li>Build the container image with the QEMU/Secure Boot dependencies (note to replace disk size/cpu/ram not needed):</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">docker build -t fedora-qemu -<span class="s">&lt;&lt;DOCKER
+</span></span></span><span class="line"><span class="cl"><span class="s">FROM fedora
+</span></span></span><span class="line"><span class="cl"><span class="s">RUN dnf install -y dnf-plugins-core
+</span></span></span><span class="line"><span class="cl"><span class="s">RUN dnf config-manager --add-repo http://www.kraxel.org/repos/firmware.repo
+</span></span></span><span class="line"><span class="cl"><span class="s">RUN dnf install -y edk2.git-ovmf-x64 qemu
+</span></span></span><span class="line"><span class="cl"><span class="s">RUN dnf install -y swtpm wget
+</span></span></span><span class="line"><span class="cl"><span class="s">WORKDIR /
+</span></span></span><span class="line"><span class="cl"><span class="s">RUN wget -q https://github.com/mudler/cos-demo-labs/raw/tests/efivars.fd -O /efivars.fd
+</span></span></span><span class="line"><span class="cl"><span class="s">WORKDIR /work
+</span></span></span><span class="line"><span class="cl"><span class="s">
+</span></span></span><span class="line"><span class="cl"><span class="s">RUN &lt;&lt;EOF
+</span></span></span><span class="line"><span class="cl"><span class="s">echo &#34;#!/bin/bash -ex&#34; &gt;&gt; /entrypoint.sh
+</span></span></span><span class="line"><span class="cl"><span class="s">echo &#39;[ ! -e /work/disk.img ] &amp;&amp; qemu-img create -f qcow2 &#34;/work/disk.img&#34; 35G&#39; &gt;&gt; /entrypoint.sh
+</span></span></span><span class="line"><span class="cl"><span class="s">echo &#39;/usr/bin/qemu-system-x86_64 -drive if=pflash,format=raw,unit=0,file=&#34;/usr/share/edk2/ovmf/OVMF_CODE.secboot.fd&#34;,readonly=on -drive if=pflash,unit=1,format=raw,file=&#34;/efivars.fd&#34; -accel kvm -cpu host -m 8096 -drive file=/work/disk.img,if=none,index=0,media=disk,format=qcow2,id=disk1 -device virtio-blk-pci,drive=disk1,bootindex=0 -boot order=dc -vga virtio -cpu host -smp cores=4,threads=1 -machine q35,smm=on -chardev socket,id=chrtpm,path=/tmp/swtpm-sock -tpmdev emulator,id=tpm0,chardev=chrtpm -device tpm-tis,tpmdev=tpm0 \$@&#39; &gt;&gt; /entrypoint.sh
+</span></span></span><span class="line"><span class="cl"><span class="s">EOF
+</span></span></span><span class="line"><span class="cl"><span class="s">RUN chmod +x /entrypoint.sh
+</span></span></span><span class="line"><span class="cl"><span class="s">ENTRYPOINT [ &#34;/entrypoint.sh&#34; ]
+</span></span></span><span class="line"><span class="cl"><span class="s">DOCKER</span>
+</span></span></code></pre></div><ol start="2">
+<li>Start a TPM socket:</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">docker run --privileged --entrypoint swtpm -v <span class="nv">$PWD</span>/tpmstate:/tmp --rm -ti fedora-qemu socket --tpmstate <span class="nv">dir</span><span class="o">=</span>/tmp/ --ctrl <span class="nv">type</span><span class="o">=</span>unixio,path<span class="o">=</span>/tmp/swtpm-sock --log <span class="nv">level</span><span class="o">=</span><span class="m">20</span> --tpm2
+</span></span></code></pre></div><p>Note: you need to keep the TPM container up and running for the VM to boot. Run the commands below in another terminal window.</p>
+<ol start="3">
+<li>Run the container image with the ISO file (replace the iso file name with yours):</li>
+</ol>
+<div class="highlight only-flavors=Ubuntu+24.04,Fedora+40"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># console only</span>
+</span></span><span class="line"><span class="cl">docker run --privileged -v <span class="nv">$PWD</span>/tpmstate:/tmp -v <span class="nv">$PWD</span>:/work -v /dev/kvm:/dev/kvm --rm -ti fedora-qemu -nographic -cdrom kairos-@flavor-@flavorRelease-core-amd64-generic-master.uki.iso
+</span></span></code></pre></div><p>Note: To stop the QEMU container you can use <code>Ctrl-a x</code> or <code>Ctrl-a c</code> to enter the QEMU console and then <code>quit</code> to exit.</p>
+<ol start="4">
+<li>After installation, you can run the container image by booting only with the disk</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># console only</span>
+</span></span><span class="line"><span class="cl">docker run --privileged -v <span class="nv">$PWD</span>/tpmstate:/tmp -v <span class="nv">$PWD</span>:/work -v /dev/kvm:/dev/kvm --rm -ti fedora-qemu -nographic
+</span></span></code></pre></div><p>Note: you need to keep the TPM container up and running for the VM to boot.</p>
+<h2 id="data-encryption">Data Encryption</h2>
+<p>The user-data will be automatically encrypted during installation, along with the OEM and the persistent partition by using the TPM chip and the Trusted Boot mechanism.</p>
+<h3 id="additional-partitions">Additional partitions</h3>
+<p>Additional partitions can be encrypted and specified as part of the cloud-config used during the installation process, for example:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">install</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">extra-partitions</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">second_partition</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="m">100</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">fs</span><span class="p">:</span><span class="w"> </span><span class="l">ext2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l">PARTITION_TWO</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">encrypted_partitions</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">PARTITION_TWO</span><span class="w">
+</span></span></span></code></pre></div><p>A full example can be:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">install</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">device</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;auto&#34;</span><span class="w"> </span><span class="c"># Install to the biggest drive</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">auto</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">    </span><span class="c"># Enables auto installation</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">partitions</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">persistent</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="m">500</span><span class="w"> </span><span class="c"># Set persistent partition to 500MB (otherwise takes the whole disk)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">extra-partitions</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">second_partition</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="m">100</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">fs</span><span class="p">:</span><span class="w"> </span><span class="l">ext2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l">PARTITION_TWO</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">encrypted_partitions</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">PARTITION_TWO</span><span class="w">
+</span></span></span></code></pre></div><h2 id="notes">Notes</h2>
+<h3 id="install-additional-files-from-the-installer-iso-to-the-encrypted-portions">Install additional files from the Installer ISO to the encrypted portions</h3>
+<p>The ISO installer images can be used to install additional content in the encrypted portion of the disk.</p>
+<p>The osbuilder image can overlay additional files into the iso. For example specify <code>--overlay-iso /additional/path</code> to have added the files in the folder inside the ISO. The content can be accessed during installation in <code>/run/initramfs/live</code>.
+For example, to install content of the ISO inside the OEM partition, and to restore those after a reset we can use the following cloud config:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="c">#cloud-config</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">install</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">device</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;/dev/vda&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">auto</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">partitions</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">oem</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="m">4000</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">fs</span><span class="p">:</span><span class="w"> </span><span class="l">ext4</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">users</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;kairos&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">passwd</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;kairos&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">stages</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">after-install</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">commands</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="l">echo &#34;Copying files to oem and persistent&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="l">/usr/lib/systemd/systemd-cryptsetup attach persistent $(findfs PARTLABEL=persistent) - tpm2-device=auto</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="l">/usr/lib/systemd/systemd-cryptsetup attach oem $(findfs PARTLABEL=oem) - tpm2-device=auto</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="l">mount /dev/mapper/persistent /usr/local</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="l">mount /dev/mapper/oem /oem</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="l">mkdir -p /usr/local/.state/opt.bind</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="l">mkdir -p /oem/opt.bind</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="l">cp -rfv /run/initramfs/live/data/* /usr/local/.state/opt.bind</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="l">cp -rfv /run/initramfs/live/data/* /oem/opt.bind</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="l">umount /dev/mapper/persistent</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="l">umount /dev/mapper/oem</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="l">cryptsetup close /dev/mapper/persistent</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="l">cryptsetup close /dev/mapper/oem</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">after-reset</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">commands</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="p">|</span><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">          /bin/bash &lt;&lt;&#39;EOF&#39;
+</span></span></span><span class="line"><span class="cl"><span class="sd">          #!/bin/bash
+</span></span></span><span class="line"><span class="cl"><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">          set -e
+</span></span></span><span class="line"><span class="cl"><span class="sd">          echo &#34;Copying files from oem to persistent&#34;
+</span></span></span><span class="line"><span class="cl"><span class="sd">          # /oem was mounted in my tests. Let&#39;s umount it to be sure.
+</span></span></span><span class="line"><span class="cl"><span class="sd">          umount /oem || true
+</span></span></span><span class="line"><span class="cl"><span class="sd">          # Close all encrypted partitions
+</span></span></span><span class="line"><span class="cl"><span class="sd">          for p in $(ls /dev/mapper/vda*); do cryptsetup close $p; done
+</span></span></span><span class="line"><span class="cl"><span class="sd">          /usr/lib/systemd/systemd-cryptsetup attach persistent $(findfs PARTLABEL=persistent) - tpm2-device=auto
+</span></span></span><span class="line"><span class="cl"><span class="sd">          /usr/lib/systemd/systemd-cryptsetup attach oem $(findfs PARTLABEL=oem) - tpm2-device=auto
+</span></span></span><span class="line"><span class="cl"><span class="sd">          mount /dev/mapper/persistent /usr/local
+</span></span></span><span class="line"><span class="cl"><span class="sd">          mount /dev/mapper/oem /oem
+</span></span></span><span class="line"><span class="cl"><span class="sd">          mkdir -p /usr/local/.state/opt.bind
+</span></span></span><span class="line"><span class="cl"><span class="sd">          cp -rfv /oem/opt.bind/* /usr/local/.state/opt.bind
+</span></span></span><span class="line"><span class="cl"><span class="sd">          umount /dev/mapper/persistent
+</span></span></span><span class="line"><span class="cl"><span class="sd">          umount /dev/mapper/oem
+</span></span></span><span class="line"><span class="cl"><span class="sd">          cryptsetup close /dev/mapper/persistent
+</span></span></span><span class="line"><span class="cl"><span class="sd">          cryptsetup close /dev/mapper/oem
+</span></span></span><span class="line"><span class="cl"><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">          EOF</span><span class="w">
+</span></span></span></code></pre></div><h3 id="mount-partitions-after-install">Mount partitions after install</h3>
+<p><code>/oem</code> and <code>/usr/local</code> can be mounted after installation to prepare content before first-boot.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># Note: replace /dev/vda2 with the oem partition location (see with `blkid`)</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># [root@ ~]# blkid</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># /dev/sr0: BLOCK_SIZE=&#34;2048&#34; UUID=&#34;2024-02-05-17-00-05-00&#34; LABEL=&#34;UKI_ISO_INSTALL&#34; TYPE=&#34;iso9660&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># /dev/vda2: UUID=&#34;8bfa06f9-ca4f-56dc-90c9-49cf20f4f45e&#34; TYPE=&#34;crypto_LUKS&#34; PARTLABEL=&#34;oem&#34; PARTUUID=&#34;63deb673-ec99-46f6-9cb6-8399315e4f19&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># /dev/vda3: UUID=&#34;85c39d0f-4867-5227-8334-f5eec606d9eb&#34; TYPE=&#34;crypto_LUKS&#34; PARTLABEL=&#34;persistent&#34; PARTUUID=&#34;d01d9b51-d61a-4b7e-bb1a-8af5c212a213&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># /dev/vda1: LABEL_FATBOOT=&#34;COS_GRUB&#34; LABEL=&#34;COS_GRUB&#34; UUID=&#34;1C4C-97AA&#34; BLOCK_SIZE=&#34;512&#34; TYPE=&#34;vfat&#34; PARTLABEL=&#34;efi&#34; PARTUUID=&#34;6e42d80e-d67a-462b-b99c-2c1b5dda91cf&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># /dev/mapper/oem: LABEL=&#34;COS_OEM&#34; UUID=&#34;d10fc63d-9387-442c-9db8-a00e081858ec&#34; BLOCK_SIZE=&#34;1024&#34; TYPE=&#34;ext4&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Mount OEM</span>
+</span></span><span class="line"><span class="cl">/usr/lib/systemd/systemd-cryptsetup attach oem <span class="k">$(</span>findfs <span class="nv">PARTLABEL</span><span class="o">=</span>oem<span class="k">)</span> - tpm2-device<span class="o">=</span>auto
+</span></span><span class="line"><span class="cl">mount /dev/mapper/oem /oem
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Mount persistent</span>
+</span></span><span class="line"><span class="cl">/usr/lib/systemd/systemd-cryptsetup attach persistent <span class="k">$(</span>findfs <span class="nv">PARTLABEL</span><span class="o">=</span>persistent<span class="k">)</span> - tpm2-device<span class="o">=</span>auto
+</span></span><span class="line"><span class="cl">mount /dev/mapper/persistent /usr/local
+</span></span></code></pre></div><p>To mount <code>/oem</code> and <code>/usr/local</code> after install you can also manually call <code>kcrypt unlock-all</code>. However this isn&rsquo;t <a href="https://github.com/kairos-io/kairos/issues/2217">supported yet</a>.</p>
+<h3 id="force-certificates-auto-enrollments">Force certificates auto-enrollments</h3>
+
+
+<div class="alert alert-warning" role="alert">
+<h4 class="alert-heading">Warning</h4>
+
+    <p>Don&rsquo;t run auto-enrollments by default! this option is here after you are sure that the certificates generated are correct and after you have verified that manuall enrolling the certificates does not brick your device!</p>
+<p>This is specific for large-scale deployments to generate auto-installing ISOs that are meant to be used on similar hardware multiple times (thus the process only needs to be manually verified once).</p>
+
+
+</div>
+
+<p>If you want to force the auto-enrollment of the certificates in the BIOS/UEFI, you can use the <code>--secure-boot-enroll</code> flag in the <code>build-uki</code> command.</p>
+<div class="highlight only-flavors=Ubuntu+24.04,Fedora+40"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">CONTAINER_IMAGE</span><span class="o">=</span>quay.io/kairos/@flavor:@flavorRelease-core-amd64-generic-master-uki
+</span></span><span class="line"><span class="cl">docker run -ti --rm -v <span class="nv">$PWD</span>/build:/result -v <span class="nv">$PWD</span>/keys/:/keys quay.io/kairos/auroraboot:v0.13.0 build-uki --secure-boot-enroll force -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key <span class="nv">$PATH_TO_TPM_KEY</span> --sb-key <span class="nv">$PATH_TO_SB_KEY</span> --sb-cert <span class="nv">$PATH_TO_SB_CERT</span> <span class="nv">$CONTAINER_IMAGE</span>
+</span></span></code></pre></div><h3 id="additional-efi-entries">Additional efi entries</h3>
+<p>When booting in UKI mode, the cmdline is part of the signed artifact. This means that in order to pass additional options through the cmdline,
+this has to be done at build time. For that reason, <code>auroraboot build-uki</code> supports the following arguments:</p>
+<ul>
+<li><code>--extend-cmdline</code>: Use this option to add cmdline parameters to the default entries (active/passive/recovery/auto-reset). This option will not generate additional entries in the systemd-boot menu.</li>
+<li><code>--extra-cmdline</code>: Use this option to generate additional entries in the systemd-boot menu. For each one of the default entries, a new entry will be created with the specified cmdline (added to the default cmdline).</li>
+<li><code>--single-efi-cmdline</code>: Use this option to generate entries that are not related to default ones. This option will generate a single entry with the provided cmdline (added to the default cmdline). This argument can be used multiple times.</li>
+</ul>
+<p>Examples:</p>
+<p>Building with a command like this:</p>
+<pre tabindex="0"><code>auroraboot build-uki ...more options... --single-efi-cmdline &#34;Lets debug: rd.debug rd.immucore.debug&#34;
+</code></pre><p>Will create a boot menu with the default entries, plus one more: &ldquo;Lets debug&rdquo; which will have the debug parameters set.
+Notice how the title of the entry and the cmdline to be used are split by a colon.</p>
+<p>Building with a command like this:</p>
+<pre tabindex="0"><code>auroraboot build-uki ...more options... --extra-cmdline &#34;rd.debug rd.immucore.debug&#34;
+</code></pre><p>Will create a boot menu with the default entries, plus one more for each of the active/passive/recovery entries. Each of these entries will have the debug parameters set.</p>
+<p>Building with a command like this:</p>
+<pre tabindex="0"><code>auroraboot build-uki ...more options... --extend-cmdline &#34;rd.debug rd.immucore.debug&#34;
+</code></pre><p>Will create a boot menu with just the default entries but this time they will have the debug parameters set.</p>
+<p>NOTE: <code>--boot-branding</code> is applied to <code>--single-efi-cmdline</code> too. For example, this command:</p>
+<pre tabindex="0"><code>auroraboot build-uki ...more options... --boot-branding &#34;My awesome OS&#34; --single-efi-cmdline &#34;Debug logs: rd.debug rd.immucore.debug&#34;
+</code></pre><p>will create this entry:</p>
+<pre tabindex="0"><code>My awesome OS (Debug logs)
+</code></pre><p>with the additional cmdline parameters.</p>
+
+	<div class="td-page-meta__lastmod">
+  Last modified October 20, 2025: <a href="https://github.com/kairos-io/kairos-docs/commit/666b69577ba312ec0edb951f4a1e5633c9755c5a">Fix missing closing code-block (666b695)</a>
+</div>
+
+</div>
+
+
+          </main>
+        </div>
+      </div>
+      <footer class="row d-print-none">
+    <div id="footer-content">
+        <div>
+            <div class="footer-logo">
+                
+                <img src="/index/footer-logo.png" alt="Kairos Logo" loading="lazy">
+                <div class="footer-text">Project supported by <a href="https://spectrocloud.com" target="_blank"> <img src="/img/spectrocloud-dark.svg" class="sclogo" loading="lazy" width="192" height="51" alt="Spectro-Cloud-logo"> </a></div>
+            </div>
+            <div class="footer-follow-us">Follow us
+                <div>
+                    <a href="https://www.linkedin.com/company/kairos-oss/" target="_blank">
+                        <i class="fa-brands fa-linkedin"></i>
+                    </a>
+                    <a href="https://github.com/kairos-io/kairos" target="_blank">
+                        <i class="fa-brands fa-github"></i>
+                    </a>
+                    <a href="https://www.youtube.com/@Kairos-IO" target="_blank">
+                        <i class="fa-brands fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    </div>
+    <script src="/js/main.min.bf0cab613e991fc11bc28a4a07b0aedef47c7c7c2595703ac3adf962fd6a8099.js" integrity="sha256-vwyrYT6ZH8EbwopKB7Cu3vR8fHwllXA6w635Yv1qgJk=" crossorigin="anonymous"></script>
+<script defer src="/js/click-to-copy.min.73478a7d4807698aed7e355eb23f9890ca18fea3158604c8471746d046702bad.js" integrity="sha256-c0eKfUgHaYrtfjVesj&#43;YkMoY/qMVhgTIRxdG0EZwK60=" crossorigin="anonymous"></script>
+<script src='/js/tabpane-persist.js'></script>
+
+  </body>
+</html>

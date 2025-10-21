@@ -1,0 +1,746 @@
+<!doctype html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+
+
+<link rel="shortcut icon" href="/favicons/favicon.ico" >
+<link rel="apple-touch-icon" href="/favicons/apple-touch-icon-180x180.png" sizes="180x180">
+<link rel="icon" type="image/png" href="/favicons/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/favicons/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/favicons/android-36x36.png" sizes="36x36">
+<link rel="icon" type="image/png" href="/favicons/android-48x48.png" sizes="48x48">
+<link rel="icon" type="image/png" href="/favicons/android-72x72.png" sizes="72x72">
+<link rel="icon" type="image/png" href="/favicons/android-96x96.png" sizes="96x96">
+<link rel="icon" type="image/png" href="/favicons/android-144x144.png" sizes="144x144">
+<link rel="icon" type="image/png" href="/favicons/android-192x192.png" sizes="192x192">
+
+<title>Trusted Boot Architecture | Kairos</title>
+<meta name="description" content="Trusted boot is a combination of technologies that allows us to enhance the security posture of a running system. It is composed by FDE, Secure Boot and Measured Boot. Trusted boot is an architectural requirement of SENA (Secure Edge Native Architecture) and is a key component of Kairos.
+You can read more about Trusted Boot in https://0pointer.de/blog/brave-new-trusted-boot-world.html and about SENA here: https://kairos.io/blog/2023/04/18/kairos-is-now-part-of-the-secure-edge-native-architecture-by-spectro-cloud-and-intel/
+By combining Secure Boot, Measured Boot and FDE we can guarantee that a system was not tampered with, and the user-data is protected by cold attacks, we refer to this combination of technologies stacked together with “Trusted Boot” or “Trusted Boot Experience”.">
+<meta property="og:url" content="https://kairos.io/docs/architecture/trustedboot/">
+  <meta property="og:site_name" content="Kairos">
+  <meta property="og:title" content="Trusted Boot Architecture">
+  <meta property="og:description" content="Trusted boot is a combination of technologies that allows us to enhance the security posture of a running system. It is composed by FDE, Secure Boot and Measured Boot. Trusted boot is an architectural requirement of SENA (Secure Edge Native Architecture) and is a key component of Kairos.
+You can read more about Trusted Boot in https://0pointer.de/blog/brave-new-trusted-boot-world.html and about SENA here: https://kairos.io/blog/2023/04/18/kairos-is-now-part-of-the-secure-edge-native-architecture-by-spectro-cloud-and-intel/
+By combining Secure Boot, Measured Boot and FDE we can guarantee that a system was not tampered with, and the user-data is protected by cold attacks, we refer to this combination of technologies stacked together with “Trusted Boot” or “Trusted Boot Experience”.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="docs">
+    <meta property="article:published_time" content="2022-11-13T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-10-20T08:48:34+03:00">
+    <meta property="og:image" content="https://kairos.io/images/Kairos_800x419.png">
+
+  <meta itemprop="name" content="Trusted Boot Architecture">
+  <meta itemprop="description" content="Trusted boot is a combination of technologies that allows us to enhance the security posture of a running system. It is composed by FDE, Secure Boot and Measured Boot. Trusted boot is an architectural requirement of SENA (Secure Edge Native Architecture) and is a key component of Kairos.
+You can read more about Trusted Boot in https://0pointer.de/blog/brave-new-trusted-boot-world.html and about SENA here: https://kairos.io/blog/2023/04/18/kairos-is-now-part-of-the-secure-edge-native-architecture-by-spectro-cloud-and-intel/
+By combining Secure Boot, Measured Boot and FDE we can guarantee that a system was not tampered with, and the user-data is protected by cold attacks, we refer to this combination of technologies stacked together with “Trusted Boot” or “Trusted Boot Experience”.">
+  <meta itemprop="datePublished" content="2022-11-13T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-10-20T08:48:34+03:00">
+  <meta itemprop="wordCount" content="1187">
+  <meta itemprop="image" content="https://kairos.io/images/Kairos_800x419.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://kairos.io/images/Kairos_800x419.png">
+  <meta name="twitter:title" content="Trusted Boot Architecture">
+  <meta name="twitter:description" content="Trusted boot is a combination of technologies that allows us to enhance the security posture of a running system. It is composed by FDE, Secure Boot and Measured Boot. Trusted boot is an architectural requirement of SENA (Secure Edge Native Architecture) and is a key component of Kairos.
+You can read more about Trusted Boot in https://0pointer.de/blog/brave-new-trusted-boot-world.html and about SENA here: https://kairos.io/blog/2023/04/18/kairos-is-now-part-of-the-secure-edge-native-architecture-by-spectro-cloud-and-intel/
+By combining Secure Boot, Measured Boot and FDE we can guarantee that a system was not tampered with, and the user-data is protected by cold attacks, we refer to this combination of technologies stacked together with “Trusted Boot” or “Trusted Boot Experience”.">
+      <meta name="twitter:site" content="@Kairos_OSS">
+<link rel="preload" href="/scss/main.scss" as="style" integrity="" crossorigin="anonymous">
+<link href="/scss/main.scss" rel="stylesheet">
+<script
+  src="https://code.jquery.com/jquery-3.7.1.min.js"
+  integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+  crossorigin="anonymous"></script>
+<script defer
+  src="https://unpkg.com/lunr@2.3.9/lunr.min.js"
+  integrity="sha384-203J0SNzyqHby3iU6hzvzltrWi/M41wOP5Gu+BiJMz5nwKykbkUx8Kp7iti0Lpli"
+  crossorigin="anonymous"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+<script defer data-domain="kairos.io" src="https://plausible.io/js/script.outbound-links.tagged-events.js"></script>
+<script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
+
+<script type="module" src="/js/kairos.9086b05855f0beebae6a1adfe52a8db6351e5ad523c65f8ebdad68dcf69ccd751e3d4dd95553ca3ae13ebc022f180f2d00bda9e0402704807a6d02fb14ca0381.js" integrity="sha512-kIawWFXwvuuuahrf5SqNtjUeWtUjxl&#43;Ova1o3PaczXUePU3ZVVPKOuE&#43;vAIvGA8tAL2p4EAnBIB6bQL7FMoDgQ==" defer></script>
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  </head>
+  <body class="td-page">
+    <header>
+      <nav class="td-navbar js-navbar-scroll" data-bs-theme="dark">
+<div class="container-fluid flex-column flex-md-row">
+  <a class="navbar-brand" href="/"><span class="navbar-brand__logo navbar-logo"><svg width="30" height="30" viewBox="0 0 137 137" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="24.8171" height="24.8171" transform="matrix(-0.86601 0.500028 -3.18907e-05 1 68.502 18.8594)" fill="#EE5007"/><rect width="24.8171" height="24.8171" transform="matrix(-0.86601 -0.500028 3.18907e-05 1 47.0088 31.2695)" fill="#FF7442"/><rect width="24.8171" height="24.8171" transform="matrix(-0.866041 0.499972 0.866041 0.499972 47.0088 6.45312)" fill="#FB9E70"/><rect width="24.8171" height="24.8171" transform="matrix(3.19859e-05 1 0.86601 0.500028 25.5139 43.6797)" fill="#FF7442"/><rect width="24.8171" height="24.8171" transform="matrix(-0.866041 0.499973 0.866041 0.499972 25.5139 68.4922)" fill="#FB9E70"/><rect width="24.8171" height="24.8171" transform="matrix(-3.17834e-05 1 0.866009 -0.500028 4.02271 56.0898)" fill="#EE5007"/><rect width="24.8171" height="24.8171" transform="matrix(-0.86601 0.500028 -3.19781e-05 1 68.5042 93.3125)" fill="#EE5007"/><rect width="24.8171" height="24.8171" transform="matrix(-0.866009 -0.500028 3.18033e-05 1 47.011 105.723)" fill="#FF7442"/><rect width="24.8171" height="24.8171" transform="matrix(-0.866041 0.499972 0.866041 0.499973 47.011 80.9062)" fill="#FB9E70"/><rect width="24.8171" height="24.8171" transform="matrix(0.86601 -0.500028 3.18907e-05 -1 68.4985 118.141)" fill="#EE5007"/><rect width="24.8171" height="24.8171" transform="matrix(0.86601 0.500028 -3.18907e-05 -1 89.9917 105.73)" fill="#FF7442"/><rect width="24.8171" height="24.8171" transform="matrix(0.866041 -0.499972 -0.866041 -0.499972 89.9917 130.547)" fill="#FB9E70"/><rect width="24.8171" height="24.8171" transform="matrix(-0.86601 0.500028 -3.19781e-05 1 132.979 56.0859)" fill="#EE5007"/><rect width="24.8171" height="24.8171" transform="matrix(-0.866009 -0.500028 3.18033e-05 1 111.486 68.4961)" fill="#FF7442"/><rect width="24.8171" height="24.8171" transform="matrix(-0.866041 0.499972 0.866041 0.499973 111.486 43.6797)" fill="#FB9E70"/><rect width="24.8171" height="24.8171" transform="matrix(0.86601 -0.500028 3.18907e-05 -1 68.5002 43.6875)" fill="#EE5007"/><rect width="24.8171" height="24.8171" transform="matrix(0.86601 0.500028 -3.18907e-05 -1 89.9934 31.2773)" fill="#FF7442"/><rect width="24.8171" height="24.8171" transform="matrix(0.866041 -0.499972 -0.866041 -0.499972 89.9934 56.0938)" fill="#FB9E70"/></svg></span><span class="navbar-brand__name">Kairos</span></a>
+  
+  <button class="navbar-burger d-lg-none ms-auto" id="navbar-burger" aria-label="Toggle navigation" type="button" style="background:none;border:none;outline:none;">
+    <span style="display:block;width:30px;height:3px;background:#fff;margin:4px 0;"></span>
+    <span style="display:block;width:30px;height:3px;background:#fff;margin:4px 0;"></span>
+    <span style="display:block;width:30px;height:3px;background:#fff;margin:4px 0;"></span>
+  </button>
+  
+  <div class="td-navbar-nav-scroll ms-md-auto" id="main_navbar">
+    <ul class="navbar-nav" id="navbar-links">
+      <li class="nav-item">
+        <a class="nav-link" href="/getting-started/"><span>Getting Started</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/community/"><span>Community</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/blog/"><span>Blog</span></a>
+      </li>
+      <li class="nav-item dropdown">
+        <button class="btn btn-link nav-link dropdown-toggle d-flex align-items-center" id="distro-select" type="button" aria-expanded="false" data-bs-toggle="dropdown" data-bs-display="static" data-distro="rhel;roskylinux;9" aria-label="Toggle Flavor">
+    Rockylinux 9
+</button>
+<ul class="dropdown-menu" aria-labelledby="bd-flavor-text">
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="alpine;alpine;3.19" aria-pressed="false">
+        Alpine 3.19
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="debian;debian;bookworm" aria-pressed="false">
+        Debian Bookworm
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="debian;debian;testing" aria-pressed="false">
+        Debian Testing
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="rhel;fedora;40" aria-pressed="false">
+        Fedora 40
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="opensuse;opensuse;leap-15.6" aria-pressed="false">
+        openSUSE Leap-15.6
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="opensuse;opensuse;tumbleweed" aria-pressed="false">
+        openSUSE Tumbleweed
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="rhel;rockylinux;9" aria-pressed="true">
+        Rockylinux 9
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="ubuntu;ubuntu;24.10" aria-pressed="false">
+        Ubuntu 24.10
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="ubuntu;ubuntu;24.04" aria-pressed="false">
+        Ubuntu 24.04
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="ubuntu;ubuntu;22.04" aria-pressed="false">
+        Ubuntu 22.04
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="ubuntu;ubuntu;20.04" aria-pressed="false">
+        Ubuntu 20.04
+        </button>
+    </li>
+</ul> 
+      </li>
+      
+      <li class="nav-item mr-4 mb-2 mb-lg-0 mt-lg-2 d-none d-lg-block">
+        <li class="nav-item mr-4 mb-2 mb-lg-0 mt-lg-2">
+    <a class="github-button" href="https://github.com/kairos-io/kairos" data-size="large" data-show-count="true" aria-label="Star kairos-io/kairos on GitHub">Star</a>
+</li> 
+      </li>
+      <li class="td-light-dark-menu nav-item dropdown">
+        <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+  <symbol id="check2" viewBox="0 0 16 16">
+    <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+  </symbol>
+  <symbol id="circle-half" viewBox="0 0 16 16">
+    <path d="M8 15A7 7 0 1 0 8 1v14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"/>
+  </symbol>
+  <symbol id="moon-stars-fill" viewBox="0 0 16 16">
+    <path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"/>
+    <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z"/>
+  </symbol>
+  <symbol id="sun-fill" viewBox="0 0 16 16">
+    <path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/>
+  </symbol>
+</svg>
+
+<button class="btn btn-link nav-link dropdown-toggle d-flex align-items-center"
+        id="bd-theme"
+        type="button"
+        aria-expanded="false"
+        data-bs-toggle="dropdown"
+        data-bs-display="static"
+        aria-label="Toggle theme (auto)">
+  <svg class="bi my-1 theme-icon-active"><use href="#circle-half"></use></svg>
+</button>
+<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-theme-text">
+  <li>
+    <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" aria-pressed="false">
+      <svg class="bi me-2 opacity-50"><use href="#sun-fill"></use></svg>
+      Light
+      <svg class="bi ms-auto d-none"><use href="#check2"></use></svg>
+    </button>
+  </li>
+  <li>
+    <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark" aria-pressed="false">
+      <svg class="bi me-2 opacity-50"><use href="#moon-stars-fill"></use></svg>
+      Dark
+      <svg class="bi ms-auto d-none"><use href="#check2"></use></svg>
+    </button>
+  </li>
+  <li>
+    <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="auto" aria-pressed="true">
+      <svg class="bi me-2 opacity-50"><use href="#circle-half"></use></svg>
+      Auto
+      <svg class="bi ms-auto d-none"><use href="#check2"></use></svg>
+    </button>
+  </li>
+</ul>
+
+      </li>
+      </ul>
+  </div>
+  <div class="d-none d-lg-block">
+    <div class="td-search td-search--offline">
+  <div class="td-search__icon"></div>
+  <input
+    type="search"
+    class="td-search__input form-control"
+    placeholder="Search this site…"
+    aria-label="Search this site…"
+    autocomplete="off"
+    
+    data-offline-search-index-json-src="/offline-search-index.2cd40d81f421519107d8c788686e9696.json"
+    data-offline-search-base-href="/"
+    data-offline-search-max-results="10"
+  >
+</div>
+  </div>
+</div>
+</nav>
+
+
+<style>
+   
+  @media (max-width: 991.98px) {
+     
+    .navbar-burger {
+      position: fixed;
+      top: 12px;
+      right: 16px;
+      z-index: 3000;
+      background: none;
+      border: none;
+      outline: none;
+      padding: 0;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    #main_navbar {
+      display: none;
+    }
+    #main_navbar.show-mobile-menu {
+      display: block;
+      position: fixed;
+      top: 60px;  
+      left: 0;
+      width: 100vw;
+      height: calc(100vh - 60px);  
+      background: #03153A;
+      z-index: 2000;
+      overflow-y: auto;
+      transition: all 0.3s;
+    }
+    #navbar-links {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 2rem 1.5rem;
+      width: 100%;
+      height: 100%;
+    }
+    #navbar-links .nav-item {
+      margin-bottom: 1.5rem;
+      width: 100%;
+    }
+    #navbar-links .nav-link {
+      width: 100%;
+      font-size: 1.25rem;
+    }
+     
+    .td-navbar-nav-scroll .dropdown-menu {
+      position: absolute !important;
+      left: 0 !important;
+      right: auto !important;
+      top: 100% !important;
+      bottom: auto !important;
+      min-width: 200px;
+      margin-top: 0.5rem !important;  
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .td-navbar-nav-scroll .nav-item.dropdown {
+      position: relative !important;
+    }
+    .td-navbar-nav-scroll .nav-item.dropdown > .nav-link,
+    .td-navbar-nav-scroll .nav-item.dropdown > a {
+      margin-bottom: 0 !important;
+      padding-bottom: 0 !important;
+    }
+  }
+   
+  @media (max-width: 991.98px) {
+    #main_navbar.show-mobile-menu { display: block; }
+  }
+</style>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var burger = document.getElementById('navbar-burger');
+    var navbar = document.getElementById('main_navbar');
+    if (burger && navbar) {
+      burger.addEventListener('click', function() {
+        navbar.classList.toggle('show-mobile-menu');
+      });
+    }
+  });
+</script>
+    </header>
+    <div class="container-fluid td-outer">
+      <div class="td-main">
+        <div class="row flex-xl-nowrap">
+          <aside class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
+            <div id="td-sidebar-menu" class="td-sidebar__inner">
+  <div id="content-mobile">
+  <form class="td-sidebar__search d-flex align-items-center">
+    <div class="td-search td-search--offline">
+  <div class="td-search__icon"></div>
+  <input
+    type="search"
+    class="td-search__input form-control"
+    placeholder="Search this site…"
+    aria-label="Search this site…"
+    autocomplete="off"
+    
+    data-offline-search-index-json-src="/offline-search-index.2cd40d81f421519107d8c788686e9696.json"
+    data-offline-search-base-href="/"
+    data-offline-search-max-results="10"
+  >
+</div>
+    <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ms-3 fas fa-bars" type="button" data-bs-toggle="collapse" data-bs-target="#td-section-nav" aria-controls="td-section-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    </button>
+  </form>
+  </div>
+  <div id="content-desktop"></div>
+  <nav class="td-sidebar-nav collapse td-sidebar-nav--search-disabled" id="td-section-nav">
+    <ul class="td-sidebar-nav__section pe-md-3 ul-0">
+      <li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-docs-li">
+  <a href="/docs/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section tree-root" id="m-docs"><span class="">Documentation</span></a>
+  <ul class="ul-1">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsannouncements-li">
+  <a href="/docs/announcements/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id="m-docsannouncements"><i class="fa-solid fa-bullhorn"></i><span class="">Announcements</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-docsinstallation-li">
+  <a href="/docs/installation/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id="m-docsinstallation"><i class="fa-regular fa-computer"></i><span class="">Installation</span></a>
+  <ul class="ul-2 foldable">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsinstallationcheck-the-signatures-li">
+  <a href="/docs/installation/check-the-signatures/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsinstallationcheck-the-signatures"><span class="">Check the Signatures</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsinstallationaws-li">
+  <a href="/docs/installation/aws/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsinstallationaws"><span class="">Installation on AWS</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsinstallationinteractive-li">
+  <a href="/docs/installation/interactive/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsinstallationinteractive"><span class="">Interactive</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsinstallationmanual-li">
+  <a href="/docs/installation/manual/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsinstallationmanual"><span class="">Manual installation</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsinstallationqrcode-li">
+  <a href="/docs/installation/qrcode/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsinstallationqrcode"><span class="">QR Code</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsinstallationwebui-li">
+  <a href="/docs/installation/webui/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsinstallationwebui"><span class="">WebUI</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsinstallationazure-li">
+  <a href="/docs/installation/azure/" title="Installation on Microsoft Azure" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsinstallationazure"><span class="">Installation on Azure</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsinstallationgce-li">
+  <a href="/docs/installation/gce/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsinstallationgce"><span class="">Installation on Google Cloud</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsinstallationautomated-li">
+  <a href="/docs/installation/automated/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsinstallationautomated"><span class="">Automated</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsinstallationbare-metal-li">
+  <a href="/docs/installation/bare-metal/" title="Installing on Bare-Metal" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsinstallationbare-metal"><span class="">Bare-Metal</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsinstallationnvidia_agx_orin-li">
+  <a href="/docs/installation/nvidia_agx_orin/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsinstallationnvidia_agx_orin"><span class="">Nvidia AGX Orin</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsinstallationraspberry-li">
+  <a href="/docs/installation/raspberry/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsinstallationraspberry"><span class="">RaspberryPi</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsinstallationnetboot-li">
+  <a href="/docs/installation/netboot/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsinstallationnetboot"><span class="">Network booting</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsinstallationp2p-li">
+  <a href="/docs/installation/p2p/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsinstallationp2p"><span class="">P2P support</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsinstallationtrustedboot-li">
+  <a href="/docs/installation/trustedboot/" title="Trusted Boot Installations" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsinstallationtrustedboot"><span class="">Trusted Boot</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsinstallationtakeover-li">
+  <a href="/docs/installation/takeover/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsinstallationtakeover"><span class="">Takeover</span></a>
+</li>
+  </ul>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-docsupgrade-li">
+  <a href="/docs/upgrade/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id="m-docsupgrade"><i class="fa-regular fa-cloud-arrow-up"></i><span class="">Upgrade</span></a>
+  <ul class="ul-2 foldable">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsupgrademanual-li">
+  <a href="/docs/upgrade/manual/" title="Manual Upgrades" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsupgrademanual"><span class="">Manual</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsupgradekubernetes-li">
+  <a href="/docs/upgrade/kubernetes/" title="Upgrading from Kubernetes" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsupgradekubernetes"><span class="">From Kubernetes</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsupgradekairos-operator-li">
+  <a href="/docs/upgrade/kairos-operator/" title="Installing Kairos Operator" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsupgradekairos-operator"><span class="">Kairos Operator</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsupgradesystem-upgrade-controller-li">
+  <a href="/docs/upgrade/system-upgrade-controller/" title="Installing system-upgrade-controller (Deprecated)" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsupgradesystem-upgrade-controller"><span class="">System Upgrade Controller (Deprecated)</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsupgradetrustedboot-li">
+  <a href="/docs/upgrade/trustedboot/" title="Trusted Boot Upgrades" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsupgradetrustedboot"><span class="">Trusted Boot</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsupgradeboot_assessment-li">
+  <a href="/docs/upgrade/boot_assessment/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsupgradeboot_assessment"><span class="">Boot assessment</span></a>
+</li>
+  </ul>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-docsarchitecture-li">
+  <a href="/docs/architecture/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id="m-docsarchitecture"><i class="fa-regular fa-diagram-project"></i><span class="">Architecture</span></a>
+  <ul class="ul-2 foldable">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsarchitectureimmutable-li">
+  <a href="/docs/architecture/immutable/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsarchitectureimmutable"><span class="">Immutable</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsarchitecturecontainer-li">
+  <a href="/docs/architecture/container/" title="Container based" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsarchitecturecontainer"><span class="">Container</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsarchitecturesecureboot-li">
+  <a href="/docs/architecture/secureboot/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsarchitecturesecureboot"><span class="">SecureBoot support</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsarchitecturecloud-init-li">
+  <a href="/docs/architecture/cloud-init/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsarchitecturecloud-init"><span class="">Cloud init based</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsarchitecturemeta-li">
+  <a href="/docs/architecture/meta/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsarchitecturemeta"><span class="">Meta-Distribution</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsarchitecturenetwork-li">
+  <a href="/docs/architecture/network/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsarchitecturenetwork"><span class="">P2P Network</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id="m-docsarchitecturetrustedboot-li">
+  <a href="/docs/architecture/trustedboot/" title="Trusted Boot Architecture" class="align-left ps-0 active td-sidebar-link td-sidebar-link__page" id="m-docsarchitecturetrustedboot"><span class="td-sidebar-nav-active-item">Trusted Boot</span></a>
+</li>
+  </ul>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-docsadvanced-li">
+  <a href="/docs/advanced/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id="m-docsadvanced"><i class="fa-regular fa-gear"></i><span class="">Advanced</span></a>
+  <ul class="ul-2 foldable">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsadvancedafter-install-li">
+  <a href="/docs/advanced/after-install/" title="Pushing configuration to a node after installation" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsadvancedafter-install"><span class="">After install</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsadvancedconfiguring_partitions-li">
+  <a href="/docs/advanced/configuring_partitions/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsadvancedconfiguring_partitions"><span class="">Configuring partitions</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsadvancedcreating_custom_cloud_images-li">
+  <a href="/docs/advanced/creating_custom_cloud_images/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsadvancedcreating_custom_cloud_images"><span class="">Creating Custom Cloud Images</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsadvancedprivate_registry_auth-li">
+  <a href="/docs/advanced/private_registry_auth/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsadvancedprivate_registry_auth"><span class="">Private registries authentication</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsadvancedcustomizing-li">
+  <a href="/docs/advanced/customizing/" title="Customizing the system image" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsadvancedcustomizing"><span class="">Customization</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsadvancedbuild-li">
+  <a href="/docs/advanced/build/" title="Build Kairos appliances" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsadvancedbuild"><span class="">Build</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsadvancedsys-extensions-li">
+  <a href="/docs/advanced/sys-extensions/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsadvancedsys-extensions"><span class="">Extending the system with systemd extensions</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsadvancednetworking-li">
+  <a href="/docs/advanced/networking/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsadvancednetworking"><span class="">Networking</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsadvancedadding_opt_to_system_extensions-li">
+  <a href="/docs/advanced/adding_opt_to_system_extensions/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsadvancedadding_opt_to_system_extensions"><span class="">Using /opt with System Extensions</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsadvancedbundles-li">
+  <a href="/docs/advanced/bundles/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsadvancedbundles"><span class="">Bundles</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsadvancedpartition_encryption-li">
+  <a href="/docs/advanced/partition_encryption/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsadvancedpartition_encryption"><span class="">Encrypting User Data with Kairos</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsadvancedcoco-li">
+  <a href="/docs/advanced/coco/" title="Confidential computing setup" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsadvancedcoco"><span class="">Confidential Computing</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsadvancedrevoking-secureboot-access-li">
+  <a href="/docs/advanced/revoking-secureboot-access/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsadvancedrevoking-secureboot-access"><span class="">Revoking secure boot access</span></a>
+</li>
+  </ul>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-docsexamples-li">
+  <a href="/docs/examples/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id="m-docsexamples"><i class="fa-regular fa-file"></i><span class="">Examples</span></a>
+  <ul class="ul-2 foldable">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplesboot_assessment_trusted_boot-li">
+  <a href="/docs/examples/boot_assessment_trusted_boot/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplesboot_assessment_trusted_boot"><span class="">Enabling Automatic Boot Assessment with Trusted Boot</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexampleskubeadm-provider-li">
+  <a href="/docs/examples/kubeadm-provider/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexampleskubeadm-provider"><span class="">A Minimal Single-Node Kubernetes with Kubeadm</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplesextra_persistent_paths_after_install-li">
+  <a href="/docs/examples/extra_persistent_paths_after_install/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplesextra_persistent_paths_after_install"><span class="">Adding persistent paths after install</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplesairgap-li">
+  <a href="/docs/examples/airgap/" title="How to Create an Airgap K3s Installation with Kairos" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplesairgap"><span class="">Airgapped ISO</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplesbandwidth-optimized-upgrades-li">
+  <a href="/docs/examples/bandwidth-optimized-upgrades/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplesbandwidth-optimized-upgrades"><span class="">Bandwidth Optimized Upgrades</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplesbundles-li">
+  <a href="/docs/examples/bundles/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplesbundles"><span class="">Bundles</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplestrusted-boot-firmware-sysext-li">
+  <a href="/docs/examples/trusted-boot-firmware-sysext/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplestrusted-boot-firmware-sysext"><span class="">Deploying kernel firmware via sysext on Trusted Boot</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexampleskdump-li">
+  <a href="/docs/examples/kdump/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexampleskdump"><span class="">Enabling kdump</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplesopenamt-li">
+  <a href="/docs/examples/openamt/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplesopenamt"><span class="">Intel Open AMT Registration</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexampleskeylime-li">
+  <a href="/docs/examples/keylime/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexampleskeylime"><span class="">Keylime agent</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexampleslocalai-li">
+  <a href="/docs/examples/localai/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexampleslocalai"><span class="">LocalAI</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplesmulti-node-li">
+  <a href="/docs/examples/multi-node/" title="Manual Multi-Node Cluster" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplesmulti-node"><span class="">Manual multi-node cluster</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplesha-li">
+  <a href="/docs/examples/ha/" title="Manual Multi-Node High Availability Cluster" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplesha"><span class="">Manual multi-node HA cluster</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplessingle-node-li">
+  <a href="/docs/examples/single-node/" title="Manual Single-Node Cluster" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplessingle-node"><span class="">Manual single-node cluster</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplesmetallb-li">
+  <a href="/docs/examples/metallb/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplesmetallb"><span class="">MetalLB</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplesp2p_e2e-li">
+  <a href="/docs/examples/p2p_e2e/" title="P2P Multi-Node Cluster Provisioned via Netboot" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplesp2p_e2e"><span class="">P2P multi-node cluster netboot</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplesk3s-stages-li">
+  <a href="/docs/examples/k3s-stages/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplesk3s-stages"><span class="">Run stages along with K3s</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplessingle-node-p2p-li">
+  <a href="/docs/examples/single-node-p2p/" title="Self-configured P2P Single-Node Cluster" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplessingle-node-p2p"><span class="">Self-configured P2P single-node cluster</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplesmulti-node-p2p-li">
+  <a href="/docs/examples/multi-node-p2p/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplesmulti-node-p2p"><span class="">Self-coordinating P2P multi-node cluster</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplesmulti-node-p2p-ha-li">
+  <a href="/docs/examples/multi-node-p2p-ha/" title="Self-coordinating P2P Multi-Node Cluster with High Availability" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplesmulti-node-p2p-ha"><span class="">Self-coordinating P2P multi-node cluster HA</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplesmulti-node-p2p-ha-kubevip-li">
+  <a href="/docs/examples/multi-node-p2p-ha-kubevip/" title="Self-coordinating P2P Multi-Node Cluster with High Availability and KubeVIP" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplesmulti-node-p2p-ha-kubevip"><span class="">Self-coordinating P2P multi-node cluster HA with KubeVIP</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplesvirtual-box-li">
+  <a href="/docs/examples/virtual-box/" title="Kairos&#39; Trusted Boot in Virtual Box" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplesvirtual-box"><span class="">Trusted Boot in Virtual Box</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexamplescore-li">
+  <a href="/docs/examples/core/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexamplescore"><span class="">Using Kairos Core Images as an Installer</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsexampleswifi-li">
+  <a href="/docs/examples/wifi/" title="Configuring WiFi via Cloud-Config" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsexampleswifi"><span class="">WiFi</span></a>
+</li>
+  </ul>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-docsreference-li">
+  <a href="/docs/reference/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id="m-docsreference"><i class="fa-regular fa-book"></i><span class="">Reference</span></a>
+  <ul class="ul-2 foldable">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsreferenceartifacts-li">
+  <a href="/docs/reference/artifacts/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsreferenceartifacts"><span class="">Artifact Naming Convention</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsreferencearchitecture-li">
+  <a href="/docs/reference/architecture/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsreferencearchitecture"><span class="">Architecture</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsreferenceauroraboot-li">
+  <a href="/docs/reference/auroraboot/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsreferenceauroraboot"><span class="">AuroraBoot</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsreferenceconfiguration-li">
+  <a href="/docs/reference/configuration/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsreferenceconfiguration"><span class="">Configuration</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsreferencestage_modules-li">
+  <a href="/docs/reference/stage_modules/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsreferencestage_modules"><span class="">Stage modules</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsreferencekairosctl-li">
+  <a href="/docs/reference/kairosctl/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsreferencekairosctl"><span class="">kairosctl</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsreferencereset-li">
+  <a href="/docs/reference/reset/" title="Reset a node" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsreferencereset"><span class="">Reset</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsreferencekairos-factory-li">
+  <a href="/docs/reference/kairos-factory/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsreferencekairos-factory"><span class="">The Kairos Factory</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsreferenceimage_matrix-li">
+  <a href="/docs/reference/image_matrix/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsreferenceimage_matrix"><span class="">Image support matrix</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsreferencebuild-from-scratch-li">
+  <a href="/docs/reference/build-from-scratch/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsreferencebuild-from-scratch"><span class="">Build Kairos from scratch</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsreferencebuild_raw_images_with_qemu-li">
+  <a href="/docs/reference/build_raw_images_with_qemu/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsreferencebuild_raw_images_with_qemu"><span class="">Build Raw images with QEMU</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsreferencetroubleshooting-li">
+  <a href="/docs/reference/troubleshooting/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsreferencetroubleshooting"><span class="">Troubleshooting</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsreferencerecovery_mode-li">
+  <a href="/docs/reference/recovery_mode/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsreferencerecovery_mode"><span class="">Recovery mode</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsreferenceentangle-li">
+  <a href="/docs/reference/entangle/" title="Entangle CRDs" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsreferenceentangle"><span class="">Entangle</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsreferencefaq-li">
+  <a href="/docs/reference/faq/" title="FAQ" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsreferencefaq"><span class="">Frequently asked questions</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsreferencealerts-li">
+  <a href="/docs/reference/alerts/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsreferencealerts"><span class="">Alerts Styling</span></a>
+</li>
+  </ul>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-docsdevelopment-li">
+  <a href="/docs/development/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id="m-docsdevelopment"><i class="fa-regular fa-terminal"></i><span class="">Development</span></a>
+  <ul class="ul-2 foldable">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsdevelopmentdevelopment-li">
+  <a href="/docs/development/development/" title="Development notes" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsdevelopmentdevelopment"><span class="">Development</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsdevelopmentdebugging-station-li">
+  <a href="/docs/development/debugging-station/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsdevelopmentdebugging-station"><span class="">Debugging station</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child collapse" id="m-docsdevelopmentnvidia-li">
+  <a href="/docs/development/nvidia/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsdevelopmentnvidia"><span class="">Booting Kairos on Nvidia Jetson ARM</span></a>
+</li>
+  </ul>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsmedia-li">
+  <a href="/docs/media/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id="m-docsmedia"><i class="fa-regular fa-circle-play"></i><span class="">Media</span></a>
+</li>
+  </ul>
+</li>
+    </ul>
+  </nav>
+</div>
+
+          </aside>
+          <aside class="d-none d-xl-block col-xl-2 td-sidebar-toc d-print-none">
+            <div class="td-page-meta ms-2 pb-1 pt-2 mb-0">
+<a href="https://github.com/kairos-io/kairos-docs/tree/main/content/en/docs/Architecture/trustedboot.md" class="td-page-meta--view td-page-meta__view" target="_blank" rel="noopener"><i class="fa-solid fa-file-lines fa-fw"></i> View page source</a>
+  <a href="https://github.com/kairos-io/kairos-docs/edit/main/content/en/docs/Architecture/trustedboot.md" class="td-page-meta--edit td-page-meta__edit" target="_blank" rel="noopener"><i class="fa-solid fa-pen-to-square fa-fw"></i> Edit this page</a>
+  <a href="https://github.com/kairos-io/kairos-docs/new/main/content/en/docs/Architecture?filename=change-me.md&amp;value=---%0Atitle%3A&#43;%22Long&#43;Page&#43;Title%22%0AlinkTitle%3A&#43;%22Short&#43;Nav&#43;Title%22%0Aweight%3A&#43;100%0Adescription%3A&#43;%3E-%0A&#43;&#43;&#43;&#43;&#43;Page&#43;description&#43;for&#43;heading&#43;and&#43;indexes.%0A---%0A%0A%23%23&#43;Heading%0A%0AEdit&#43;this&#43;template&#43;to&#43;create&#43;your&#43;new&#43;page.%0A%0A%2A&#43;Give&#43;it&#43;a&#43;good&#43;name%2C&#43;ending&#43;in&#43;%60.md%60&#43;-&#43;e.g.&#43;%60getting-started.md%60%0A%2A&#43;Edit&#43;the&#43;%22front&#43;matter%22&#43;section&#43;at&#43;the&#43;top&#43;of&#43;the&#43;page&#43;%28weight&#43;controls&#43;how&#43;its&#43;ordered&#43;amongst&#43;other&#43;pages&#43;in&#43;the&#43;same&#43;directory%3B&#43;lowest&#43;number&#43;first%29.%0A%2A&#43;Add&#43;a&#43;good&#43;commit&#43;message&#43;at&#43;the&#43;bottom&#43;of&#43;the&#43;page&#43;%28%3C80&#43;characters%3B&#43;use&#43;the&#43;extended&#43;description&#43;field&#43;for&#43;more&#43;detail%29.%0A%2A&#43;Create&#43;a&#43;new&#43;branch&#43;so&#43;you&#43;can&#43;preview&#43;your&#43;new&#43;file&#43;and&#43;request&#43;a&#43;review&#43;via&#43;Pull&#43;Request.%0A" class="td-page-meta--child td-page-meta__child" target="_blank" rel="noopener"><i class="fa-solid fa-pen-to-square fa-fw"></i> Create child page</a>
+  <a href="https://github.com/kairos-io/kairos-docs/issues/new?title=Trusted%20Boot%20Architecture" class="td-page-meta--issue td-page-meta__issue" target="_blank" rel="noopener"><i class="fa-solid fa-list-check fa-fw"></i> Create documentation issue</a>
+  <a href="https://github.com/kairos-io/kairos/issues/new" class="td-page-meta--project td-page-meta__project-issue" target="_blank" rel="noopener"><i class="fa-solid fa-list-check fa-fw"></i> Create project issue</a>
+  
+</div>
+
+            <div class="td-toc">
+        <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#uki-and-usi">UKI and USI</a></li>
+        <li><a href="#building-process">Building process</a></li>
+        <li><a href="#booting-process">Booting process</a></li>
+        <li><a href="#booting-system">Booting system</a></li>
+        <li><a href="#user-data-encryption-and-key-generation">User data encryption and key generation</a></li>
+        <li><a href="#expanding-the-system-with-system-extensions">Expanding the system with system extensions</a></li>
+        <li><a href="#trusted-boot---boot-assessment">Trusted Boot - Boot Assessment</a></li>
+        <li><a href="#considerations">Considerations</a></li>
+        <li><a href="#references">References</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+      </div>
+    
+            
+
+          </aside>
+          <main class="col-12 col-md-9 col-xl-8 ps-md-5" role="main">
+            
+
+
+
+
+
+  
+  <div class="pageinfo pageinfo-warning">
+    <p>You are viewing the development docs which are in progress. There is no guarantee that the development documentation will be accurate, including instructions, links, and other information. For the latest stable documentation, click
+      <a href="https://kairos.io//v3.5.2/docs" target="_blank">here</a>.</p>
+  </div>
+
+
+  
+
+
+            <nav aria-label="breadcrumb" class="td-breadcrumbs">
+  <ol class="breadcrumb">
+  <li class="breadcrumb-item">
+    <a href="/docs/">Documentation</a></li>
+  <li class="breadcrumb-item">
+    <a href="/docs/architecture/">Architecture</a></li>
+  <li class="breadcrumb-item active" aria-current="page">
+    Trusted Boot</li>
+  </ol>
+</nav>
+            
+<div class="td-content">
+	<h1>Trusted Boot Architecture</h1>
+	
+	<header class="article-meta">
+		
+</header>
+	<p>Trusted boot is a combination of technologies that allows us to enhance the security posture of a running system. It is composed by FDE, Secure Boot and Measured Boot.
+Trusted boot is an architectural requirement of <a href="https://www.spectrocloud.com/product/sena">SENA (Secure Edge Native Architecture)</a> and is a key component of Kairos.</p>
+<blockquote>
+<p>You can read more about Trusted Boot in <a href="https://0pointer.de/blog/brave-new-trusted-boot-world.html">https://0pointer.de/blog/brave-new-trusted-boot-world.html</a> and about SENA here: <a href="https://kairos.io/blog/2023/04/18/kairos-is-now-part-of-the-secure-edge-native-architecture-by-spectro-cloud-and-intel/">https://kairos.io/blog/2023/04/18/kairos-is-now-part-of-the-secure-edge-native-architecture-by-spectro-cloud-and-intel/</a></p></blockquote>
+<p>By combining Secure Boot, Measured Boot and FDE we can guarantee that a system was not tampered with, and the user-data is protected by cold attacks, we refer to this combination of technologies stacked together with &ldquo;Trusted Boot&rdquo; or &ldquo;Trusted Boot Experience&rdquo;.</p>
+<p><em>FDE</em> stands for Full Disk Encryption. It is a security measure that encrypts the entire contents of a disk drive, including the operating system, system files, and user data. The purpose of FDE is to protect data stored on the disk from unauthorized access in the event of theft or loss of the device.</p>
+<p><em>Secure Boot</em> is a security feature in modern computer systems that ensures only properly signed and authenticated OSes are allowed to run during the boot process. It helps prevent the loading of malicious or unauthorized code at the early stages of the system startup, thus helping in protecting the integrity of the boot process.</p>
+<p><em>Measured Boot</em>, on the other hand, is a security mechanism that goes beyond Secure Boot. It involves creating a record, or &ldquo;measurements,&rdquo; of each step in the boot process and storing these measurements in a specific hardware dedicated to cryptographically secure operations ( trusted platform module, or TPM) or a similar secure storage. This allows the system to verify the integrity of each component of the boot process and detect any unauthorized changes. Measured Boot provides a more comprehensive and continuous security check throughout the boot sequence.</p>
+<h3 id="uki-and-usi">UKI and USI</h3>
+<p><a href="https://uapi-group.org/specifications/specs/unified_kernel_image/">UKI</a> is a specific file format tailored to achieve a tamper-proof system and encryption of user-data bound to the silicon by relying on HW capabilities.</p>
+<blockquote>
+<p>UKI stands for &ldquo;Unified Kernel Images&rdquo;. UKI files are a single, fat binary that encompasses the OS and the needed bits in order to boot the full system with a single, verified file. You can read technical details here: <a href="https://0pointer.de/blog/brave-new-trusted-boot-world.html">Brave New Trusted Boot World</a>.</p></blockquote>
+<p>Trusted Boot in Kairos works by generating UKI images from container images. The UKI file is a single, fat binary that encompasses the OS and the needed bits in order to boot the full system with a single, verified file. This file can be used for upgrades and used as usual in the lifecycle of the Kairos node.</p>
+<p>The UKI file is signed with the Secure Boot keys, and the user-data is encrypted with the PCR policies. The UKI file is then loaded by the firmware and booted directly, without any second stage or system pivoting. This is why the UKI file can grow large, and why it requires a specific firmware that supports booting large EFI files.</p>
+<p>Due to the design choice to not boot into a second stage, this is being refered nowadays as <strong>USI</strong> (Unified System Image) instead of UKI, or more simply &ldquo;Bootstrap Image&rdquo;. The benefits of using Unified system images in opposite of UKIs are that the system can be upgraded without the need of a second stage, and that the entire system is verified and signed.</p>
+<h3 id="building-process">Building process</h3>
+<p>Trusted Boot requires you to create a specific installable ISO file that includes the UKI files and a container image used for upgrades. Each time you upgrade a system, you must regenerate these assets using the same keys and then use the newly generated container image for the upgrade process.</p>
+<p>The UKI files are generated from container images as usual.</p>
+<p><img src="https://github.com/kairos-io/kairos-docs/assets/2420543/2f49d592-9ae3-43ee-b22b-0313be455bf7" alt="Trusted boot"></p>
+<p>The process to generate the installable medium is described in the <a href="https://kairos.io/docs/architecture/trustedboot/">Trustedboot installation documentation</a>. Internally we rely on the <em>osbuilder</em> tool to generate all the installation artifacts from a single container image.</p>
+<h3 id="booting-process">Booting process</h3>
+<p><img src="https://github.com/kairos-io/kairos-docs/assets/2420543/9c406796-b622-4571-abd5-b8d8fed44591" alt="boot_1"></p>
+<p>The booting process of an installed system with Trusted Boot is different from a standard Kairos installation, and can be split down in 4 steps:</p>
+<ol>
+<li>The Firmware loads the <code>systemd-boot</code> bootloader from the EFI partition</li>
+<li><code>systemd-boot</code> loads the UKI file from the EFI partition (that can be either the Active system, the passive or recovery system)</li>
+<li>The EFI system starts. The kernel and the initrd are loaded from the UKI file, and the kernel is booted with the command line specified in the UKI file.</li>
+<li>The initrd will decrypt the user-data and mount the portions of it in the root filesystem. This includes for instance any changes to <code>/etc</code> (like adding new users and passwords), <code>/usr/local</code>, and all the mount bindpoints specified in the configuration file (see <a href="https://kairos.io/docs/advanced/customizing/#bind-mounts">Bind mount documentation</a> ). There is no second stage loaded and no system pivoting, the system is booted directly from the UKI file.</li>
+</ol>
+<h3 id="booting-system">Booting system</h3>
+<p><img src="https://github.com/kairos-io/kairos-docs/assets/2420543/757870d3-3b40-46ea-9c86-13c4a545f167" alt="Trusted boot"></p>
+<p>There is no difference with a layout of a standard Kairos system (as explained in the <a href="https://kairos.io/docs/architecture/immutable/">Immutable OS</a> page), however in this setup now the partitions containing data are always encrypted:</p>
+<ul>
+<li><a href="https://github.com/kairos-io/packages/blob/528682cddf7191fb52580e7c41a33e73c1ee0001/packages/static/kairos-overlay-files/files/system/oem/00_rootfs_uki.yaml#L18">List of persistent data path overlayed and encrypted</a> (see also <a href="https://kairos.io/docs/advanced/customizing/#bind-mounts">the bind mount documentation</a> to customize it with your own paths).</li>
+<li><code>/oem</code> encrypted</li>
+<li><code>/usr/local</code> encrypted</li>
+<li><code>/etc</code> ephemeral</li>
+<li><code>/usr</code> read only</li>
+<li><code>/</code> immutable</li>
+</ul>
+<h3 id="user-data-encryption-and-key-generation">User data encryption and key generation</h3>
+<p>It is required in order to generate USI images to have a set of keys and certificates. In order to understand why those keys are required, we need to understand how the user-data is encrypted and how the system is booted.</p>
+<p><img src="https://github.com/kairos-io/kairos-docs/assets/2420543/725745a0-0ea6-4330-bea3-e6483f53cc3f" alt="bootingkeys"></p>
+<p>The keys are used to sign the UKI file, and to generate a PCR policy keypair required later on by the system in order to decrypt the encrypted partitions. The keys and certificates are generated with the <code>auroraboot</code> tool, that is available in the <code>auroraboot</code> container image.</p>
+<h3 id="expanding-the-system-with-system-extensions">Expanding the system with system extensions</h3>
+<p>Check the relevant documentation on how to <a href="https://kairos.io/docs/advanced/sys-extensions/">extend the system with system extensions</a> and how to <a href="https://kairos.io/docs/advanced/adding_opt_to_system_extensions/">use /opt with system extensions</a>.</p>
+<h3 id="trusted-boot---boot-assessment">Trusted Boot - Boot Assessment</h3>
+<p>See the <a href="https://kairos.io/docs/examples/boot_assessment_trusted_boot/">Trusted Boot - Boot Assessment</a> documentation for more information on how to enable automatic boot assessment with Trusted Boot and how to make your own services participate in the boot assessment process.</p>
+<h3 id="considerations">Considerations</h3>
+<h4 id="booting-command-lines">Booting command lines</h4>
+<p>UKI file&rsquo;s signatures are including also the kernel command line, so any change to the kernel command line will require a new UKI file to be generated and the installer image to be rebuilt. This implies that you cannot change the booting options once the system is installed (and the system won&rsquo;t be able to access the encrypted data)</p>
+<h3 id="references">References</h3>
+<ul>
+<li><a href="https://uefi.org/sites/default/files/resources/UEFI_Spec_2_8_final.pdf">UEFI specification</a></li>
+<li><a href="https://documentation.suse.com/sled/15-SP5/html/SLED-all/cha-uefi.html">UEFI (SLE documentation)</a></li>
+<li><a href="https://cdrdv2-public.intel.com/671120/a-tour-beyond-bios-implementing-uefi-authenticated-variables-in-smm-with-edkii.pdf">https://cdrdv2-public.intel.com/671120/a-tour-beyond-bios-implementing-uefi-authenticated-variables-in-smm-with-edkii.pdf</a></li>
+<li><a href="https://www.vut.cz/www_base/zav_prace_soubor_verejne.php?file_id=132208">SUPPORT OF SECURE BOOT IN SYSTEMD-BOOT PROJECT</a></li>
+<li><a href="https://uapi-group.org/specifications/specs/unified_kernel_image/#file-format">UKI file format</a></li>
+<li><a href="https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot">Secure Boot</a></li>
+</ul>
+<p>For more information about installing Kairos with Trusted Boot, see the <a href="https://kairos.io/docs/architecture/trustedboot/">Trusted Boot Installation Guide</a>.</p>
+<p>For more information about customizing Kairos images, see the <a href="https://kairos.io/docs/advanced/customizing/">Customizing Images</a> guide.</p>
+<p>For more information about the immutable nature of Kairos, see the <a href="https://kairos.io/docs/architecture/immutable/">Immutable Architecture</a> guide.</p>
+<p>For more information about system extensions, see the <a href="https://kairos.io/docs/advanced/sys-extensions/">System Extensions</a> guide.</p>
+<p>For more informations about revoking certificates, see <a href="https://kairos.io/docs/advanced/revoking-secureboot-access/">Revoking secure boot access</a></p>
+<p>For a complete example of boot assessment with Trusted Boot, see the <a href="https://kairos.io/docs/examples/boot_assessment_trusted_boot/">Boot Assessment with Trusted Boot</a> guide.</p>
+
+	<div class="td-page-meta__lastmod">
+  Last modified October 20, 2025: <a href="https://github.com/kairos-io/kairos-docs/commit/666b69577ba312ec0edb951f4a1e5633c9755c5a">Fix missing closing code-block (666b695)</a>
+</div>
+
+</div>
+
+
+          </main>
+        </div>
+      </div>
+      <footer class="row d-print-none">
+    <div id="footer-content">
+        <div>
+            <div class="footer-logo">
+                
+                <img src="/index/footer-logo.png" alt="Kairos Logo" loading="lazy">
+                <div class="footer-text">Project supported by <a href="https://spectrocloud.com" target="_blank"> <img src="/img/spectrocloud-dark.svg" class="sclogo" loading="lazy" width="192" height="51" alt="Spectro-Cloud-logo"> </a></div>
+            </div>
+            <div class="footer-follow-us">Follow us
+                <div>
+                    <a href="https://www.linkedin.com/company/kairos-oss/" target="_blank">
+                        <i class="fa-brands fa-linkedin"></i>
+                    </a>
+                    <a href="https://github.com/kairos-io/kairos" target="_blank">
+                        <i class="fa-brands fa-github"></i>
+                    </a>
+                    <a href="https://www.youtube.com/@Kairos-IO" target="_blank">
+                        <i class="fa-brands fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    </div>
+    <script src="/js/main.min.bf0cab613e991fc11bc28a4a07b0aedef47c7c7c2595703ac3adf962fd6a8099.js" integrity="sha256-vwyrYT6ZH8EbwopKB7Cu3vR8fHwllXA6w635Yv1qgJk=" crossorigin="anonymous"></script>
+<script defer src="/js/click-to-copy.min.73478a7d4807698aed7e355eb23f9890ca18fea3158604c8471746d046702bad.js" integrity="sha256-c0eKfUgHaYrtfjVesj&#43;YkMoY/qMVhgTIRxdG0EZwK60=" crossorigin="anonymous"></script>
+<script src='/js/tabpane-persist.js'></script>
+
+  </body>
+</html>

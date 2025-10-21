@@ -1,0 +1,760 @@
+<!doctype html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+
+
+<link rel="shortcut icon" href="/favicons/favicon.ico" >
+<link rel="apple-touch-icon" href="/favicons/apple-touch-icon-180x180.png" sizes="180x180">
+<link rel="icon" type="image/png" href="/favicons/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/favicons/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/favicons/android-36x36.png" sizes="36x36">
+<link rel="icon" type="image/png" href="/favicons/android-48x48.png" sizes="48x48">
+<link rel="icon" type="image/png" href="/favicons/android-72x72.png" sizes="72x72">
+<link rel="icon" type="image/png" href="/favicons/android-96x96.png" sizes="96x96">
+<link rel="icon" type="image/png" href="/favicons/android-144x144.png" sizes="144x144">
+<link rel="icon" type="image/png" href="/favicons/android-192x192.png" sizes="192x192">
+
+<title>Access your home-lab Kairos cluster over a Wireguard VPN | Kairos</title>
+<meta name="description" content="The problem You got yourself a Raspberry Pi (or more), and you want to put them to good use. You decide to make a Kubernetes cluster out of them, so that you can utilise the resources better, use familiar tools and implement infrastructure-as-code.
+Up to this point, kudos to you for demanding no less than a real cloud from your home infra.
+Like a smart person you are, you probably used Kairos to create your cluster and it’s now up and running. It’s now time to run some workloads.">
+<meta property="og:url" content="https://kairos.io/blog/2023/03/29/access-your-home-lab-kairos-cluster-over-a-wireguard-vpn/">
+  <meta property="og:site_name" content="Kairos">
+  <meta property="og:title" content="Access your home-lab Kairos cluster over a Wireguard VPN">
+  <meta property="og:description" content="The problem You got yourself a Raspberry Pi (or more), and you want to put them to good use. You decide to make a Kubernetes cluster out of them, so that you can utilise the resources better, use familiar tools and implement infrastructure-as-code.
+Up to this point, kudos to you for demanding no less than a real cloud from your home infra.
+Like a smart person you are, you probably used Kairos to create your cluster and it’s now up and running. It’s now time to run some workloads.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="blog">
+    <meta property="article:published_time" content="2023-03-29T10:53:13+01:00">
+    <meta property="article:modified_time" content="2025-10-20T08:48:34+03:00">
+    <meta property="og:image" content="https://kairos.io/images/Kairos_800x419.png">
+
+  <meta itemprop="name" content="Access your home-lab Kairos cluster over a Wireguard VPN">
+  <meta itemprop="description" content="The problem You got yourself a Raspberry Pi (or more), and you want to put them to good use. You decide to make a Kubernetes cluster out of them, so that you can utilise the resources better, use familiar tools and implement infrastructure-as-code.
+Up to this point, kudos to you for demanding no less than a real cloud from your home infra.
+Like a smart person you are, you probably used Kairos to create your cluster and it’s now up and running. It’s now time to run some workloads.">
+  <meta itemprop="datePublished" content="2023-03-29T10:53:13+01:00">
+  <meta itemprop="dateModified" content="2025-10-20T08:48:34+03:00">
+  <meta itemprop="wordCount" content="1375">
+  <meta itemprop="image" content="https://kairos.io/images/Kairos_800x419.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://kairos.io/images/Kairos_800x419.png">
+  <meta name="twitter:title" content="Access your home-lab Kairos cluster over a Wireguard VPN">
+  <meta name="twitter:description" content="The problem You got yourself a Raspberry Pi (or more), and you want to put them to good use. You decide to make a Kubernetes cluster out of them, so that you can utilise the resources better, use familiar tools and implement infrastructure-as-code.
+Up to this point, kudos to you for demanding no less than a real cloud from your home infra.
+Like a smart person you are, you probably used Kairos to create your cluster and it’s now up and running. It’s now time to run some workloads.">
+      <meta name="twitter:site" content="@Kairos_OSS">
+<link rel="preload" href="/scss/main.scss" as="style" integrity="" crossorigin="anonymous">
+<link href="/scss/main.scss" rel="stylesheet">
+<script
+  src="https://code.jquery.com/jquery-3.7.1.min.js"
+  integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+  crossorigin="anonymous"></script>
+<script defer
+  src="https://unpkg.com/lunr@2.3.9/lunr.min.js"
+  integrity="sha384-203J0SNzyqHby3iU6hzvzltrWi/M41wOP5Gu+BiJMz5nwKykbkUx8Kp7iti0Lpli"
+  crossorigin="anonymous"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+<script defer data-domain="kairos.io" src="https://plausible.io/js/script.outbound-links.tagged-events.js"></script>
+<script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
+
+<script type="module" src="/js/kairos.9086b05855f0beebae6a1adfe52a8db6351e5ad523c65f8ebdad68dcf69ccd751e3d4dd95553ca3ae13ebc022f180f2d00bda9e0402704807a6d02fb14ca0381.js" integrity="sha512-kIawWFXwvuuuahrf5SqNtjUeWtUjxl&#43;Ova1o3PaczXUePU3ZVVPKOuE&#43;vAIvGA8tAL2p4EAnBIB6bQL7FMoDgQ==" defer></script>
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  </head>
+  <body class="td-page td-blog">
+    <header>
+      <nav class="td-navbar js-navbar-scroll" data-bs-theme="dark">
+<div class="container-fluid flex-column flex-md-row">
+  <a class="navbar-brand" href="/"><span class="navbar-brand__logo navbar-logo"><svg width="30" height="30" viewBox="0 0 137 137" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="24.8171" height="24.8171" transform="matrix(-0.86601 0.500028 -3.18907e-05 1 68.502 18.8594)" fill="#EE5007"/><rect width="24.8171" height="24.8171" transform="matrix(-0.86601 -0.500028 3.18907e-05 1 47.0088 31.2695)" fill="#FF7442"/><rect width="24.8171" height="24.8171" transform="matrix(-0.866041 0.499972 0.866041 0.499972 47.0088 6.45312)" fill="#FB9E70"/><rect width="24.8171" height="24.8171" transform="matrix(3.19859e-05 1 0.86601 0.500028 25.5139 43.6797)" fill="#FF7442"/><rect width="24.8171" height="24.8171" transform="matrix(-0.866041 0.499973 0.866041 0.499972 25.5139 68.4922)" fill="#FB9E70"/><rect width="24.8171" height="24.8171" transform="matrix(-3.17834e-05 1 0.866009 -0.500028 4.02271 56.0898)" fill="#EE5007"/><rect width="24.8171" height="24.8171" transform="matrix(-0.86601 0.500028 -3.19781e-05 1 68.5042 93.3125)" fill="#EE5007"/><rect width="24.8171" height="24.8171" transform="matrix(-0.866009 -0.500028 3.18033e-05 1 47.011 105.723)" fill="#FF7442"/><rect width="24.8171" height="24.8171" transform="matrix(-0.866041 0.499972 0.866041 0.499973 47.011 80.9062)" fill="#FB9E70"/><rect width="24.8171" height="24.8171" transform="matrix(0.86601 -0.500028 3.18907e-05 -1 68.4985 118.141)" fill="#EE5007"/><rect width="24.8171" height="24.8171" transform="matrix(0.86601 0.500028 -3.18907e-05 -1 89.9917 105.73)" fill="#FF7442"/><rect width="24.8171" height="24.8171" transform="matrix(0.866041 -0.499972 -0.866041 -0.499972 89.9917 130.547)" fill="#FB9E70"/><rect width="24.8171" height="24.8171" transform="matrix(-0.86601 0.500028 -3.19781e-05 1 132.979 56.0859)" fill="#EE5007"/><rect width="24.8171" height="24.8171" transform="matrix(-0.866009 -0.500028 3.18033e-05 1 111.486 68.4961)" fill="#FF7442"/><rect width="24.8171" height="24.8171" transform="matrix(-0.866041 0.499972 0.866041 0.499973 111.486 43.6797)" fill="#FB9E70"/><rect width="24.8171" height="24.8171" transform="matrix(0.86601 -0.500028 3.18907e-05 -1 68.5002 43.6875)" fill="#EE5007"/><rect width="24.8171" height="24.8171" transform="matrix(0.86601 0.500028 -3.18907e-05 -1 89.9934 31.2773)" fill="#FF7442"/><rect width="24.8171" height="24.8171" transform="matrix(0.866041 -0.499972 -0.866041 -0.499972 89.9934 56.0938)" fill="#FB9E70"/></svg></span><span class="navbar-brand__name">Kairos</span></a>
+  
+  <button class="navbar-burger d-lg-none ms-auto" id="navbar-burger" aria-label="Toggle navigation" type="button" style="background:none;border:none;outline:none;">
+    <span style="display:block;width:30px;height:3px;background:#fff;margin:4px 0;"></span>
+    <span style="display:block;width:30px;height:3px;background:#fff;margin:4px 0;"></span>
+    <span style="display:block;width:30px;height:3px;background:#fff;margin:4px 0;"></span>
+  </button>
+  
+  <div class="td-navbar-nav-scroll ms-md-auto" id="main_navbar">
+    <ul class="navbar-nav" id="navbar-links">
+      <li class="nav-item">
+        <a class="nav-link" href="/getting-started/"><span>Getting Started</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/community/"><span>Community</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" href="/blog/"><span>Blog</span></a>
+      </li>
+      <li class="nav-item dropdown">
+        <button class="btn btn-link nav-link dropdown-toggle d-flex align-items-center" id="distro-select" type="button" aria-expanded="false" data-bs-toggle="dropdown" data-bs-display="static" data-distro="rhel;roskylinux;9" aria-label="Toggle Flavor">
+    Rockylinux 9
+</button>
+<ul class="dropdown-menu" aria-labelledby="bd-flavor-text">
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="alpine;alpine;3.19" aria-pressed="false">
+        Alpine 3.19
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="debian;debian;bookworm" aria-pressed="false">
+        Debian Bookworm
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="debian;debian;testing" aria-pressed="false">
+        Debian Testing
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="rhel;fedora;40" aria-pressed="false">
+        Fedora 40
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="opensuse;opensuse;leap-15.6" aria-pressed="false">
+        openSUSE Leap-15.6
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="opensuse;opensuse;tumbleweed" aria-pressed="false">
+        openSUSE Tumbleweed
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="rhel;rockylinux;9" aria-pressed="true">
+        Rockylinux 9
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="ubuntu;ubuntu;24.10" aria-pressed="false">
+        Ubuntu 24.10
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="ubuntu;ubuntu;24.04" aria-pressed="false">
+        Ubuntu 24.04
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="ubuntu;ubuntu;22.04" aria-pressed="false">
+        Ubuntu 22.04
+        </button>
+    </li>
+    <li>
+        <button type="button" class="dropdown-item d-flex align-items-center distro-option" data-distro="ubuntu;ubuntu;20.04" aria-pressed="false">
+        Ubuntu 20.04
+        </button>
+    </li>
+</ul> 
+      </li>
+      
+      <li class="nav-item mr-4 mb-2 mb-lg-0 mt-lg-2 d-none d-lg-block">
+        <li class="nav-item mr-4 mb-2 mb-lg-0 mt-lg-2">
+    <a class="github-button" href="https://github.com/kairos-io/kairos" data-size="large" data-show-count="true" aria-label="Star kairos-io/kairos on GitHub">Star</a>
+</li> 
+      </li>
+      <li class="td-light-dark-menu nav-item dropdown">
+        <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+  <symbol id="check2" viewBox="0 0 16 16">
+    <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+  </symbol>
+  <symbol id="circle-half" viewBox="0 0 16 16">
+    <path d="M8 15A7 7 0 1 0 8 1v14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"/>
+  </symbol>
+  <symbol id="moon-stars-fill" viewBox="0 0 16 16">
+    <path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"/>
+    <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z"/>
+  </symbol>
+  <symbol id="sun-fill" viewBox="0 0 16 16">
+    <path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/>
+  </symbol>
+</svg>
+
+<button class="btn btn-link nav-link dropdown-toggle d-flex align-items-center"
+        id="bd-theme"
+        type="button"
+        aria-expanded="false"
+        data-bs-toggle="dropdown"
+        data-bs-display="static"
+        aria-label="Toggle theme (auto)">
+  <svg class="bi my-1 theme-icon-active"><use href="#circle-half"></use></svg>
+</button>
+<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-theme-text">
+  <li>
+    <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" aria-pressed="false">
+      <svg class="bi me-2 opacity-50"><use href="#sun-fill"></use></svg>
+      Light
+      <svg class="bi ms-auto d-none"><use href="#check2"></use></svg>
+    </button>
+  </li>
+  <li>
+    <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark" aria-pressed="false">
+      <svg class="bi me-2 opacity-50"><use href="#moon-stars-fill"></use></svg>
+      Dark
+      <svg class="bi ms-auto d-none"><use href="#check2"></use></svg>
+    </button>
+  </li>
+  <li>
+    <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="auto" aria-pressed="true">
+      <svg class="bi me-2 opacity-50"><use href="#circle-half"></use></svg>
+      Auto
+      <svg class="bi ms-auto d-none"><use href="#check2"></use></svg>
+    </button>
+  </li>
+</ul>
+
+      </li>
+      </ul>
+  </div>
+  <div class="d-none d-lg-block">
+    <div class="td-search td-search--offline">
+  <div class="td-search__icon"></div>
+  <input
+    type="search"
+    class="td-search__input form-control"
+    placeholder="Search this site…"
+    aria-label="Search this site…"
+    autocomplete="off"
+    
+    data-offline-search-index-json-src="/offline-search-index.2cd40d81f421519107d8c788686e9696.json"
+    data-offline-search-base-href="/"
+    data-offline-search-max-results="10"
+  >
+</div>
+  </div>
+</div>
+</nav>
+
+
+<style>
+   
+  @media (max-width: 991.98px) {
+     
+    .navbar-burger {
+      position: fixed;
+      top: 12px;
+      right: 16px;
+      z-index: 3000;
+      background: none;
+      border: none;
+      outline: none;
+      padding: 0;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    #main_navbar {
+      display: none;
+    }
+    #main_navbar.show-mobile-menu {
+      display: block;
+      position: fixed;
+      top: 60px;  
+      left: 0;
+      width: 100vw;
+      height: calc(100vh - 60px);  
+      background: #03153A;
+      z-index: 2000;
+      overflow-y: auto;
+      transition: all 0.3s;
+    }
+    #navbar-links {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 2rem 1.5rem;
+      width: 100%;
+      height: 100%;
+    }
+    #navbar-links .nav-item {
+      margin-bottom: 1.5rem;
+      width: 100%;
+    }
+    #navbar-links .nav-link {
+      width: 100%;
+      font-size: 1.25rem;
+    }
+     
+    .td-navbar-nav-scroll .dropdown-menu {
+      position: absolute !important;
+      left: 0 !important;
+      right: auto !important;
+      top: 100% !important;
+      bottom: auto !important;
+      min-width: 200px;
+      margin-top: 0.5rem !important;  
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .td-navbar-nav-scroll .nav-item.dropdown {
+      position: relative !important;
+    }
+    .td-navbar-nav-scroll .nav-item.dropdown > .nav-link,
+    .td-navbar-nav-scroll .nav-item.dropdown > a {
+      margin-bottom: 0 !important;
+      padding-bottom: 0 !important;
+    }
+  }
+   
+  @media (max-width: 991.98px) {
+    #main_navbar.show-mobile-menu { display: block; }
+  }
+</style>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var burger = document.getElementById('navbar-burger');
+    var navbar = document.getElementById('main_navbar');
+    if (burger && navbar) {
+      burger.addEventListener('click', function() {
+        navbar.classList.toggle('show-mobile-menu');
+      });
+    }
+  });
+</script>
+    </header>
+    <div class="container-fluid td-outer">
+      <div class="td-main">
+        <div class="row flex-xl-nowrap">
+          <aside class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
+            <div id="td-sidebar-menu" class="td-sidebar__inner">
+  <div id="content-mobile">
+  <form class="td-sidebar__search d-flex align-items-center">
+    <div class="td-search td-search--offline">
+  <div class="td-search__icon"></div>
+  <input
+    type="search"
+    class="td-search__input form-control"
+    placeholder="Search this site…"
+    aria-label="Search this site…"
+    autocomplete="off"
+    
+    data-offline-search-index-json-src="/offline-search-index.2cd40d81f421519107d8c788686e9696.json"
+    data-offline-search-base-href="/"
+    data-offline-search-max-results="10"
+  >
+</div>
+    <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ms-3 fas fa-bars" type="button" data-bs-toggle="collapse" data-bs-target="#td-section-nav" aria-controls="td-section-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    </button>
+  </form>
+  </div>
+  <div id="content-desktop"></div>
+  <nav class="td-sidebar-nav collapse td-sidebar-nav--search-disabled" id="td-section-nav">
+    <ul class="td-sidebar-nav__section pe-md-3 ul-0">
+      <li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-blog-li">
+  <a href="/blog/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section tree-root" id="m-blog"><span class="">Blog</span></a>
+  <ul class="ul-1">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20250808growing-stronger-introducing-commercial-support-for-kairos-li">
+  <a href="/blog/2025/08/08/growing-stronger-introducing-commercial-support-for-kairos/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20250808growing-stronger-introducing-commercial-support-for-kairos"><span class="">Growing Stronger: Introducing Commercial Support for Kairos</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20250725kairos-release-v350-li">
+  <a href="/blog/2025/07/25/kairos-release-v3.5.0/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20250725kairos-release-v350"><span class="">Kairos release v3.5.0</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20250424kairos-release-v340-li">
+  <a href="/blog/2025/04/24/kairos-release-v3.4.0/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20250424kairos-release-v340"><span class="">Kairos release v3.4.0</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20250415system-extensions-simplified-live-customization-with-kairos-li">
+  <a href="/blog/2025/04/15/system-extensions-simplified-live-customization-with-kairos/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20250415system-extensions-simplified-live-customization-with-kairos"><span class="">System Extensions, Simplified: Live Customization with Kairos</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20250402kairos-meets-k0s-a-meta-distribution-for-kubernetes-is-born-li">
+  <a href="/blog/2025/04/02/kairos-meets-k0s-a-meta-distribution-for-kubernetes-is-born/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20250402kairos-meets-k0s-a-meta-distribution-for-kubernetes-is-born"><span class="">Kairos Meets k0s: A Meta-Distribution for Kubernetes is Born</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20250326how-we-rebuilt-kairos-building-from-the-ground-up-li">
+  <a href="/blog/2025/03/26/how-we-rebuilt-kairos-building-from-the-ground-up/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20250326how-we-rebuilt-kairos-building-from-the-ground-up"><span class="">How We Rebuilt Kairos building From the Ground Up</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20250318how-i-automated-my-doorbell-with-kairos-and-you-can-too-li">
+  <a href="/blog/2025/03/18/how-i-automated-my-doorbell-with-kairos-and-you-can-too/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20250318how-i-automated-my-doorbell-with-kairos-and-you-can-too"><span class="">How I Automated My Doorbell with Kairos (and You Can Too)</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20241008kairos-joins-the-cncf-as-a-sandbox-project-li">
+  <a href="/blog/2024/10/08/kairos-joins-the-cncf-as-a-sandbox-project/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20241008kairos-joins-the-cncf-as-a-sandbox-project"><span class="">Kairos Joins the CNCF as a Sandbox Project</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20241007hacktoberfest-2024-li">
+  <a href="/blog/2024/10/07/hacktoberfest-2024/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20241007hacktoberfest-2024"><span class="">Hacktoberfest 2024</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20240814enhancing-kairos-documentation-with-a-customizable-flavor-menu-li">
+  <a href="/blog/2024/08/14/enhancing-kairos-documentation-with-a-customizable-flavor-menu/" title="Enhancing Kairos Documentation with a Customizable Flavor Menu" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20240814enhancing-kairos-documentation-with-a-customizable-flavor-menu"><span class="">Customizable Flavor Menu</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20240813our-first-hackweek-li">
+  <a href="/blog/2024/08/13/our-first-hackweek/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20240813our-first-hackweek"><span class="">Our First Hackweek</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20240801adding-analytics-to-kairosio-li">
+  <a href="/blog/2024/08/01/adding-analytics-to-kairos.io/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20240801adding-analytics-to-kairosio"><span class="">Adding Analytics to Kairos.io</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20240722the-importance-of-resilient-infrastructure-how-kairos-could-have-mitigated-the-crowdstrike-outage-li">
+  <a href="/blog/2024/07/22/the-importance-of-resilient-infrastructure-how-kairos-could-have-mitigated-the-crowdstrike-outage/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20240722the-importance-of-resilient-infrastructure-how-kairos-could-have-mitigated-the-crowdstrike-outage"><span class="">The Importance of Resilient Infrastructure: How Kairos Could Have Mitigated the CrowdStrike Outage</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20240719kairos-release-v311-li">
+  <a href="/blog/2024/07/19/kairos-release-v3.1.1/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20240719kairos-release-v311"><span class="">Kairos release v3.1.1</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20240711kairos-release-v31-li">
+  <a href="/blog/2024/07/11/kairos-release-v3.1/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20240711kairos-release-v31"><span class="">Kairos release v3.1</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20240410unlocking-the-mysteries-of-trusted-boot-a-deep-dive-into-secure-system-boot-processes-li">
+  <a href="/blog/2024/04/10/unlocking-the-mysteries-of-trusted-boot-a-deep-dive-into-secure-system-boot-processes/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20240410unlocking-the-mysteries-of-trusted-boot-a-deep-dive-into-secure-system-boot-processes"><span class="">Unlocking the Mysteries of Trusted Boot: A Deep Dive into Secure System Boot Processes</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20240402xz-utils-backdoor-li">
+  <a href="/blog/2024/04/02/xz-utils-backdoor/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20240402xz-utils-backdoor"><span class="">xz Utils Backdoor</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20240326spos-panel-at-kubecon-paris-2024-li">
+  <a href="/blog/2024/03/26/spos-panel-at-kubecon-paris-2024/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20240326spos-panel-at-kubecon-paris-2024"><span class="">SPOS Panel at KubeCon Paris 2024</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20240308kairos-release-v3-li">
+  <a href="/blog/2024/03/08/kairos-release-v3/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20240308kairos-release-v3"><span class="">Kairos release v3</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20240206kairos-at-fosdem-2024-li">
+  <a href="/blog/2024/02/06/kairos-at-fosdem-2024/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20240206kairos-at-fosdem-2024"><span class="">Kairos at FOSDEM 2024</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20240111kairos-release-v25-li">
+  <a href="/blog/2024/01/11/kairos-release-v2.5/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20240111kairos-release-v25"><span class="">Kairos release v2.5</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20231114kairos-release-v242-li">
+  <a href="/blog/2023/11/14/kairos-release-v2.4.2/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20231114kairos-release-v242"><span class="">Kairos release v2.4.2</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20230926hacktoberfest-2023-li">
+  <a href="/blog/2023/09/26/hacktoberfest-2023/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20230926hacktoberfest-2023"><span class="">Hacktoberfest 2023</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20230919kairos-release-v24-li">
+  <a href="/blog/2023/09/19/kairos-release-v2.4/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20230919kairos-release-v24"><span class="">Kairos release v2.4</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20230710unveiling-kairos-v23-fips-compliance-and-more-li">
+  <a href="/blog/2023/07/10/unveiling-kairos-v2.3-fips-compliance-and-more/" title="Unveiling Kairos v2.3 - FIPS Compliance and More!" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20230710unveiling-kairos-v23-fips-compliance-and-more"><span class="">Unveiling Kairos v2.3</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20230615kairos-release-v22-li">
+  <a href="/blog/2023/06/15/kairos-release-v2.2/" title="Kairos release v2.2" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20230615kairos-release-v22"><span class="">Announcing v2.2 Kairos release</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20230418kairos-is-now-part-of-the-secure-edge-native-architecture-by-spectro-cloud-and-intel-li">
+  <a href="/blog/2023/04/18/kairos-is-now-part-of-the-secure-edge-native-architecture-by-spectro-cloud-and-intel/" title="Kairos is now part of the Secure Edge-Native Architecture by Spectro Cloud and Intel" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20230418kairos-is-now-part-of-the-secure-edge-native-architecture-by-spectro-cloud-and-intel"><span class="">The Secure Edge-Native Architecture</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20230413kairos-release-v20-li">
+  <a href="/blog/2023/04/13/kairos-release-v2.0/" title="Kairos release v2.0" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20230413kairos-release-v20"><span class="">Announcing v2.0 Kairos release</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id="m-blog20230329access-your-home-lab-kairos-cluster-over-a-wireguard-vpn-li">
+  <a href="/blog/2023/03/29/access-your-home-lab-kairos-cluster-over-a-wireguard-vpn/" class="align-left ps-0 active td-sidebar-link td-sidebar-link__page" id="m-blog20230329access-your-home-lab-kairos-cluster-over-a-wireguard-vpn"><span class="td-sidebar-nav-active-item">Access your home-lab Kairos cluster over a Wireguard VPN</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20230322understanding-immutable-linux-os-benefits-architecture-and-challenges-li">
+  <a href="/blog/2023/03/22/understanding-immutable-linux-os-benefits-architecture-and-challenges/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20230322understanding-immutable-linux-os-benefits-architecture-and-challenges"><span class="">Understanding Immutable Linux OS: Benefits, Architecture, and Challenges</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20230313kairos-spectrocloud-and-canonical-collaborate-to-deliver-revolutionary-telco-radio-edge-solution-li">
+  <a href="/blog/2023/03/13/kairos-spectrocloud-and-canonical-collaborate-to-deliver-revolutionary-telco-radio-edge-solution/" title="Kairos, SpectroCloud, and Canonical Collaborate to Deliver Revolutionary Telco Radio Edge Solution" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20230313kairos-spectrocloud-and-canonical-collaborate-to-deliver-revolutionary-telco-radio-edge-solution"><span class="">Kairos, SpectroCloud, and Canonical Collaboration at MWC</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20230309kairos-at-the-kcd-amsterdam-and-paris-2023-li">
+  <a href="/blog/2023/03/09/kairos-at-the-kcd-amsterdam-and-paris-2023/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20230309kairos-at-the-kcd-amsterdam-and-paris-2023"><span class="">Kairos at the KCD Amsterdam and Paris 2023</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20230226kairos-release-v16-li">
+  <a href="/blog/2023/02/26/kairos-release-v1.6/" title="Kairos release v1.6" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20230226kairos-release-v16"><span class="">Announcing v1.6 Kairos release</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20230207kairos-at-fosdem-2023-li">
+  <a href="/blog/2023/02/07/kairos-at-fosdem-2023/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20230207kairos-at-fosdem-2023"><span class="">Kairos at FOSDEM 2023</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20230127kairos-release-v15-li">
+  <a href="/blog/2023/01/27/kairos-release-v1.5/" title="Kairos release v1.5" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20230127kairos-release-v15"><span class="">Announcing v1.5 Kairos release</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-blog20230104media-section-li">
+  <a href="/blog/2023/01/04/media-section/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-blog20230104media-section"><span class="">Media Section</span></a>
+</li>
+  </ul>
+</li>
+    </ul>
+  </nav>
+</div>
+
+          </aside>
+          <aside class="d-none d-xl-block col-xl-2 td-sidebar-toc d-print-none">
+            <div class="td-page-meta ms-2 pb-1 pt-2 mb-0">
+<a href="https://github.com/kairos-io/kairos-docs/tree/main/content/en/blog/home-lab-with-kairos-and-wireguard.md" class="td-page-meta--view td-page-meta__view" target="_blank" rel="noopener"><i class="fa-solid fa-file-lines fa-fw"></i> View page source</a>
+  <a href="https://github.com/kairos-io/kairos-docs/edit/main/content/en/blog/home-lab-with-kairos-and-wireguard.md" class="td-page-meta--edit td-page-meta__edit" target="_blank" rel="noopener"><i class="fa-solid fa-pen-to-square fa-fw"></i> Edit this page</a>
+  <a href="https://github.com/kairos-io/kairos-docs/new/main/content/en/blog?filename=change-me.md&amp;value=---%0Atitle%3A&#43;%22Long&#43;Page&#43;Title%22%0AlinkTitle%3A&#43;%22Short&#43;Nav&#43;Title%22%0Aweight%3A&#43;100%0Adescription%3A&#43;%3E-%0A&#43;&#43;&#43;&#43;&#43;Page&#43;description&#43;for&#43;heading&#43;and&#43;indexes.%0A---%0A%0A%23%23&#43;Heading%0A%0AEdit&#43;this&#43;template&#43;to&#43;create&#43;your&#43;new&#43;page.%0A%0A%2A&#43;Give&#43;it&#43;a&#43;good&#43;name%2C&#43;ending&#43;in&#43;%60.md%60&#43;-&#43;e.g.&#43;%60getting-started.md%60%0A%2A&#43;Edit&#43;the&#43;%22front&#43;matter%22&#43;section&#43;at&#43;the&#43;top&#43;of&#43;the&#43;page&#43;%28weight&#43;controls&#43;how&#43;its&#43;ordered&#43;amongst&#43;other&#43;pages&#43;in&#43;the&#43;same&#43;directory%3B&#43;lowest&#43;number&#43;first%29.%0A%2A&#43;Add&#43;a&#43;good&#43;commit&#43;message&#43;at&#43;the&#43;bottom&#43;of&#43;the&#43;page&#43;%28%3C80&#43;characters%3B&#43;use&#43;the&#43;extended&#43;description&#43;field&#43;for&#43;more&#43;detail%29.%0A%2A&#43;Create&#43;a&#43;new&#43;branch&#43;so&#43;you&#43;can&#43;preview&#43;your&#43;new&#43;file&#43;and&#43;request&#43;a&#43;review&#43;via&#43;Pull&#43;Request.%0A" class="td-page-meta--child td-page-meta__child" target="_blank" rel="noopener"><i class="fa-solid fa-pen-to-square fa-fw"></i> Create child page</a>
+  <a href="https://github.com/kairos-io/kairos-docs/issues/new?title=Access%20your%20home-lab%20Kairos%20cluster%20over%20a%20Wireguard%20VPN" class="td-page-meta--issue td-page-meta__issue" target="_blank" rel="noopener"><i class="fa-solid fa-list-check fa-fw"></i> Create documentation issue</a>
+  <a href="https://github.com/kairos-io/kairos/issues/new" class="td-page-meta--project td-page-meta__project-issue" target="_blank" rel="noopener"><i class="fa-solid fa-list-check fa-fw"></i> Create project issue</a>
+  
+</div>
+
+            <div class="td-toc">
+        <nav id="TableOfContents">
+  <ul>
+    <li><a href="#the-problem">The problem</a></li>
+    <li><a href="#a-solution">A Solution</a>
+      <ul>
+        <li><a href="#high-level-view">High level view</a></li>
+        <li><a href="#step-by-step">Step by step</a></li>
+        <li><a href="#conclusion">Conclusion</a></li>
+        <li><a href="#useful-links">Useful links</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+      </div>
+    
+            
+
+          </aside>
+          <main class="col-12 col-md-9 col-xl-8 ps-md-5 pe-md-4" role="main">
+            <a class="td-rss-button" title="RSS" href="/blog/index.xml" target="_blank" rel="noopener">
+              <i class="fa-solid fa-rss" aria-hidden="true"></i>
+            </a>
+            
+<div class="td-content">
+	<h1>Access your home-lab Kairos cluster over a Wireguard VPN</h1>
+	
+	<div class="td-byline mb-4">
+		By <b>Dimitris Karakasilis(<a href="https://dimitris.karakasilis.me">Personal page</a>) (<a href="https://github.com/jimmykarily">GitHub</a>) (<a href="https://codeberg.org/dkarakasilis/">Codeberg</a>)</b> |
+		<time datetime="2023-03-29" class="text-body-secondary">Wednesday, March 29, 2023</time>
+	</div>
+	<header class="article-meta">
+		
+</header>
+	<h2 id="the-problem">The problem</h2>
+<p>You got yourself a Raspberry Pi (or more), and you want to put them to good use.
+You decide to make a Kubernetes cluster out of them, so that you can utilise the resources better, use familiar tools and implement infrastructure-as-code.</p>
+<p>Up to this point, kudos to you for demanding no less than a real cloud from your home infra.</p>
+<p>Like a smart person you are, you probably used <a href="https://kairos.io/">Kairos</a> to create your cluster and it&rsquo;s now  up and running.
+It&rsquo;s now time to run some workloads.</p>
+<p>Here is my list if you need some ideas:</p>
+<ul>
+<li>A self-hosted Dropbox alternative (e.g. <a href="https://www.seafile.com/en/home/">Seafile</a>, <a href="https://nextcloud.com/">NextCloud</a> or other)</li>
+<li><a href="https://pi-hole.net/">Pihole</a></li>
+<li>An <a href="https://mqtt.org/">mqtt</a> broker for your IoT projects</li>
+<li>Your own <a href="https://gitea.io/en-us/">Gitea</a> instance</li>
+<li>Your own ChatGPT alternative (e.g. using <a href="https://github.com/go-skynet/llama-cli">lama-cli</a> or <a href="https://github.com/nsarrazin/serge">serge</a>)</li>
+</ul>
+<p>None of these workloads is intended for public access. There are ways to expose the cluster to the world (e.g. like I described <a href="https://dimitris.karakasilis.me/2022/12/26/self-hosted-ci.html">in another post</a>)
+but it would be better if only devices within a VPN would have access to it.</p>
+<p>Once again, there are many VPN solutions out there, but for this blog post, we&rsquo;ll go with <a href="https://www.wireguard.com/">Wireguard</a>.</p>
+<p>So here is the problem in one sentence:</p>
+<blockquote>
+<p>&ldquo;How do we expose our (possibly behind NAT) cluster, to machines inside the same Wireguard VPN?&rdquo;</p></blockquote>
+<p><em>&ldquo;NAT&rdquo; is the main part of the problem because otherwise this would simply be a blog post on how to create a Wireguard VPN. There are many nice tutorials already out there for that.</em></p>
+<h2 id="a-solution">A Solution</h2>
+<p>While trying to solve the problem, I learned 2 things about Wireguard that I didn&rsquo;t know:</p>
+<ol>
+<li>Wireguard doesn&rsquo;t distinguish between a &ldquo;server&rdquo; and a &ldquo;client&rdquo;. All peers are made equal.</li>
+<li>Wireguard doesn&rsquo;t provide a solution for NAT traversal. How you access nodes behind NAT, is up to you.</li>
+</ol>
+<p>So imagine you have your cluster behind your home router (NAT) and your mobile phone on another network (behind NAT too) trying to access a service on the cluster.
+That&rsquo;s not possible, unless there is some public IP address that somehow forwards requests to the cluster.</p>
+<p>And that&rsquo;s the idea this solution is based on.</p>
+<h3 id="high-level-view">High level view</h3>
+<p><img src="/images/kairos-over-wireguard.svg" alt="Image describing the solution"></p>
+<p>The idea is almost similar to the one I described <a href="https://dimitris.karakasilis.me/2022/12/26/self-hosted-ci.html">in another post</a>.
+The only difference is, that this time we expose the cluster only to machines inside the VPN.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>A VM with a public IP address and SSH access (as small as it gets, it&rsquo;s good enough)</li>
+<li><code>kubectl</code> access to the cluster we want to expose (it doesn&rsquo;t have to be Kairos, even <a href="https://k3d.io"><code>k3d</code></a> and <a href="https://kind.sigs.k8s.io/"><code>kind</code></a> will do)</li>
+<li>A machine to test the result (a smartphone where Wireguard can be installed is fine)</li>
+</ul>
+<h3 id="step-by-step">Step by step</h3>
+<p>From this point on, we will use the IP address <code>1.2.3.4</code> as the public IP address of the VM in the cloud.
+Replace it with the one matching your VM. We also assume, that the user with SSH access is <code>root</code>. Replace if necessary.</p>
+<h4 id="setup-the-cloud-vm">Setup the cloud VM</h4>
+<p>SSH to the machine:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ ssh root@1.2.3.4
+</span></span></code></pre></div><p>Create Wireguard keys:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ wg genkey <span class="p">|</span> tee privatekey <span class="p">|</span> wg pubkey &gt; publickey
+</span></span></code></pre></div><p>Create Wireguard config:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ cat <span class="s">&lt;&lt; EOF &gt; /etc/wireguard/wg0.conf
+</span></span></span><span class="line"><span class="cl"><span class="s">[Interface]
+</span></span></span><span class="line"><span class="cl"><span class="s">Address = 192.168.6.1/24
+</span></span></span><span class="line"><span class="cl"><span class="s">PrivateKey = $(cat privatekey)
+</span></span></span><span class="line"><span class="cl"><span class="s">ListenPort = 41194
+</span></span></span><span class="line"><span class="cl"><span class="s">
+</span></span></span><span class="line"><span class="cl"><span class="s"># Mobile client
+</span></span></span><span class="line"><span class="cl"><span class="s">[Peer]
+</span></span></span><span class="line"><span class="cl"><span class="s">PublicKey = &lt;public key from next step&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s">AllowedIPs = 192.168.6.2/32
+</span></span></span><span class="line"><span class="cl"><span class="s">EOF</span>
+</span></span></code></pre></div><p>Start and enable the Wireguard service:</p>
+<pre tabindex="0"><code>$ sudo systemctl enable --now wg-quick@wg0
+</code></pre><p>Allow binding non-loopback interfaces when creating an SSH reverse tunnel
+by setting <code>GatewayPorts clientspecified</code> in <code>/etc/ssh/sshd_config</code>.</p>
+<h4 id="setup-the-test-machine-mobile">Setup the test machine (mobile?)</h4>
+<p>On some computer with <code>wg</code> installed, generate the keys:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ wg genkey <span class="p">|</span> tee privatekey <span class="p">|</span> wg pubkey &gt; publickey
+</span></span></code></pre></div><p>Create the Wireguard configuration. Follow the instructions for your favorite application.
+For Android, you can use this: <a href="https://play.google.com/store/apps/details?id=com.wireguard.android">https://play.google.com/store/apps/details?id=com.wireguard.android</a></p>
+<p>If setting up a Linux machine, you can create the configuration like this:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ cat <span class="s">&lt;&lt; EOF &gt; /etc/wireguard/wg0.conf
+</span></span></span><span class="line"><span class="cl"><span class="s">[Interface]
+</span></span></span><span class="line"><span class="cl"><span class="s">Address = 192.168.6.2/24
+</span></span></span><span class="line"><span class="cl"><span class="s">PrivateKey = $(cat privatekey)
+</span></span></span><span class="line"><span class="cl"><span class="s">
+</span></span></span><span class="line"><span class="cl"><span class="s"># The cloud VM
+</span></span></span><span class="line"><span class="cl"><span class="s">[Peer]
+</span></span></span><span class="line"><span class="cl"><span class="s">PublicKey = &lt;public key from the previous step&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s">AllowedIPs = 192.168.6.1/32
+</span></span></span><span class="line"><span class="cl"><span class="s">Endpoint = 1.2.3.4:41194
+</span></span></span><span class="line"><span class="cl"><span class="s">EOF</span>
+</span></span></code></pre></div><p>Start and enable the Wireguard service. If on a Linux machine, something like this will do:</p>
+<pre tabindex="0"><code>$ sudo systemctl enable --now wg-quick@wg0
+</code></pre><p>On a mobile, follow the instructions of your application.</p>
+<p>After a while, your client should be able to ping the IP address of the VM: <code>192.168.6.1</code>.
+You may find the output of <code>wg show</code> useful, while waiting for the peers to connect.</p>
+<h4 id="setup-the-cluster">Setup the cluster</h4>
+<p>Deploy the helper Pod. We will use an image created <a href="https://codeberg.org/dkarakasilis/self-hosted-ci/src/branch/main/image">with this Dockerfile</a> and
+published <a href="https://quay.io/repository/jimmykarily/nginx-ssh-reverse-proxy">here</a>. The image&rsquo;s entrypoint works with a config
+described <a href="https://codeberg.org/dkarakasilis/self-hosted-ci/src/commit/20d7c6cbf70cd5318309362b0897e6aeb9842b82/image/start.sh#L5-L27">here</a>.
+The image is not multiarch, but there is one suitable for RasberryPi 4 (see the comment in the file).</p>
+<p>If you are are going to create a fresh Kairos cluster, you can use a config like the following to automatically set up the helper Pod (make sure you replace the <code>id_rsa</code> and <code>id_rsa.pub</code> keys).
+If you prefer to not have the keys stored on your Kairos host filesystem, you can simply create the same resources using <code>kubectl apply -f</code> after your cluster is up an running.</p>
+<pre tabindex="0"><code>#cloud-config
+
+users:
+- name: kairos
+  passwd: kairos
+  groups:
+  - admin
+
+stages:
+after-install-chroot:
+    - files:
+        - path: /var/lib/rancher/k3s/server/manifests/rproxy-pod.yaml
+        content: |
+        ---
+        apiVersion: v1
+        data:
+            id_rsa: the_vms_private_key_in_base64
+            id_rsa.pub: the_vms_public_key_in_base64
+        kind: Secret
+        metadata:
+            name: jumpbox-ssh-key
+        type: Opaque
+
+        ---
+        apiVersion: v1
+        kind: ConfigMap
+        metadata:
+            name: proxy-config
+        data:
+            config.json: |
+            {
+                &#34;services&#34;: [
+                    {
+                    &#34;bindIP&#34;: &#34;192.168.6.1&#34;,
+                    &#34;bindPort&#34;: &#34;443&#34;,
+                    &#34;proxyAddress&#34;: &#34;traefik.kube-system.svc&#34;,
+                    &#34;proxyPort&#34;: &#34;443&#34;
+                    },
+                    {
+                    &#34;bindIP&#34;: &#34;192.168.6.1&#34;,
+                    &#34;bindPort&#34;: &#34;80&#34;,
+                    &#34;proxyAddress&#34;: &#34;traefik.kube-system.svc&#34;,
+                    &#34;proxyPort&#34;: &#34;80&#34;
+                    }
+                ],
+                &#34;jumpbox&#34;: {
+                    &#34;url&#34;: &#34;1.2.3.4&#34;,
+                    &#34;user&#34;: &#34;root&#34;,
+                    &#34;sshKeyFile&#34;: &#34;/ssh/id_rsa&#34;
+                }
+            }
+
+        ---
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+            annotations:
+            name: nginx-ssh-reverse-proxy
+        spec:
+            replicas: 1
+            selector:
+            matchLabels:
+                app.kubernetes.io/instance: nginx-ssh-reverse-proxy
+                app.kubernetes.io/name: nginx-ssh-reverse-proxy
+            template:
+            metadata:
+                labels:
+                    app.kubernetes.io/instance: nginx-ssh-reverse-proxy
+                    app.kubernetes.io/name: nginx-ssh-reverse-proxy
+            spec:
+                containers:
+                - name: proxy
+                    # Change to quay.io/jimmykarily/nginx-ssh-reverse-proxy-arm64:latest
+                    # if you are running on a RasberryPi 4
+                    image: quay.io/jimmykarily/nginx-ssh-reverse-proxy:latest
+                    command: [&#34;/start.sh&#34;, &#34;/proxy-config/config.json&#34;]
+                    imagePullPolicy: Always
+                    volumeMounts:
+                    - name: ssh-key
+                    mountPath: /ssh
+                    - name: config-volume
+                    mountPath: /proxy-config/
+                volumes:
+                - name: ssh-key
+                    secret:
+                    secretName: jumpbox-ssh-key
+                    defaultMode: 0400
+                - name: proxy-config
+                - name: config-volume
+                    configMap:
+                    name: proxy-config
+</code></pre><p>In a nutshell, the config above is creating a reverse SSH tunnel from the VM
+to the Pod. Inside the Pod, nginx redirects traffic to the traefik load balancer running
+on the cluster. This has the effect, that any request landing on the VM on ports 80 and 443
+will eventually reach the Traefik instance inside the cluster on ports 80 and 443.
+As a result, you can point any domain you want to the VM and it will reach the corresponding Ingress defined on your cluster.</p>
+
+
+<div class="alert alert-info" role="alert">
+
+
+    <strong>NOTE:</strong> The SSH tunnel will only bind the IP address <code>192.168.6.1</code> on the VM, which means, anyone trying to access the VM using its public IP address, will not be able to access the cluster. Only machines that can talk to <code>192.168.6.1</code> have access, in other words, machines inside the VPN.
+
+</div>
+
+<h4 id="test-the-connection">Test the connection</h4>
+<ul>
+<li>
+<p>Try to access the cluster with the VPN IP address (should work).
+From your test peer, open <code>http://192.168.6.1</code>. You should see a 404 message from Traefik.
+You can also verify it is a response from Traefik in your cluster, by calling curl
+on the <code>https</code> endpoint (on a &ldquo;default&rdquo; k3s installation):</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ curl -k -v https://192.168.6.1 2&gt;<span class="p">&amp;</span><span class="m">1</span> <span class="p">|</span> grep TRAEFIK
+</span></span><span class="line"><span class="cl">*  subject: <span class="nv">CN</span><span class="o">=</span>TRAEFIK DEFAULT CERT
+</span></span><span class="line"><span class="cl">*  issuer: <span class="nv">CN</span><span class="o">=</span>TRAEFIK DEFAULT CERT
+</span></span></code></pre></div></li>
+<li>
+<p>Try to access the cluster with domain pointing to the VPN IP address (should work)
+You can create a wildcard DNS record and point it to the VPN IP address if
+you want to make it easier for people to access the services you are running.
+E.g. by creating an A record like this: <code>*.mydomainhere.org -&gt; 192.168.6.1</code>
+you will be able create Ingresses for your applications like:
+<code>app1.mydomainhere.org</code>, <code>app2.mydomainhere.org</code>.</p>
+</li>
+<li>
+<p>Try to access the cluster using the public IP address (should not work)</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ curl http://1.2.3.4
+</span></span></code></pre></div><p>This command should fail to connect to your cluster</p>
+</li>
+</ul>
+<h3 id="conclusion">Conclusion</h3>
+<p>For non-critical workloads, when 100% uptime is not a hard requirement, the solution we described allows one to use services that would otherwise cost multiple times more by hosting
+those on their own hardware. It does so, without exposing the home network to the public.</p>
+<p>If you liked this solution or if you have comments, questions or recommendations for improvements, please reach out!</p>
+<h3 id="useful-links">Useful links</h3>
+<ul>
+<li><a href="https://kairos.io/docs/">Kairos documentation</a></li>
+<li><a href="https://www.wireguard.com/quickstart/">WireGuard documentation</a></li>
+</ul>
+
+	<ul class="list-unstyled d-flex justify-content-between align-items-center mb-0 pt-5">
+  <li>
+    <a href="/blog/2023/03/22/understanding-immutable-linux-os-benefits-architecture-and-challenges/" aria-label="Previous - Understanding Immutable Linux OS: Benefits, Architecture, and Challenges" class="btn btn-primary"><span class="me-1">←</span>Previous</a>
+  </li>
+  <li>
+    <a href="/blog/2023/04/13/kairos-release-v2.0/" aria-label="Next - Kairos release v2.0" class="btn btn-primary">Next<span class="ms-1">→</span></a>
+  </li>
+</ul>
+
+	<div class="td-page-meta__lastmod">
+  Last modified October 20, 2025: <a href="https://github.com/kairos-io/kairos-docs/commit/666b69577ba312ec0edb951f4a1e5633c9755c5a">Fix missing closing code-block (666b695)</a>
+</div>
+</div>
+
+
+          </main>
+        </div>
+      </div>
+      <footer class="row d-print-none">
+    <div id="footer-content">
+        <div>
+            <div class="footer-logo">
+                
+                <img src="/index/footer-logo.png" alt="Kairos Logo" loading="lazy">
+                <div class="footer-text">Project supported by <a href="https://spectrocloud.com" target="_blank"> <img src="/img/spectrocloud-dark.svg" class="sclogo" loading="lazy" width="192" height="51" alt="Spectro-Cloud-logo"> </a></div>
+            </div>
+            <div class="footer-follow-us">Follow us
+                <div>
+                    <a href="https://www.linkedin.com/company/kairos-oss/" target="_blank">
+                        <i class="fa-brands fa-linkedin"></i>
+                    </a>
+                    <a href="https://github.com/kairos-io/kairos" target="_blank">
+                        <i class="fa-brands fa-github"></i>
+                    </a>
+                    <a href="https://www.youtube.com/@Kairos-IO" target="_blank">
+                        <i class="fa-brands fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    </div>
+    <script src="/js/main.min.bf0cab613e991fc11bc28a4a07b0aedef47c7c7c2595703ac3adf962fd6a8099.js" integrity="sha256-vwyrYT6ZH8EbwopKB7Cu3vR8fHwllXA6w635Yv1qgJk=" crossorigin="anonymous"></script>
+<script defer src="/js/click-to-copy.min.73478a7d4807698aed7e355eb23f9890ca18fea3158604c8471746d046702bad.js" integrity="sha256-c0eKfUgHaYrtfjVesj&#43;YkMoY/qMVhgTIRxdG0EZwK60=" crossorigin="anonymous"></script>
+<script src='/js/tabpane-persist.js'></script>
+
+  </body>
+</html>

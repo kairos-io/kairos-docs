@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Upgrade on Kairos</title>
+    <link>https://kairos.io/docs/upgrade/</link>
+    <description>Recent content in Upgrade on Kairos</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <atom:link href="https://kairos.io/docs/upgrade/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Manual Upgrades</title>
+      <link>https://kairos.io/docs/upgrade/manual/</link>
+      <pubDate>Sun, 13 Nov 2022 00:00:00 +0000</pubDate>
+      <guid>https://kairos.io/docs/upgrade/manual/</guid>
+      <description>&lt;p&gt;Upgrades can be run manually from the terminal.&lt;/p&gt;&#xA;&lt;p&gt;Kairos images are released on &lt;a href=&#34;https://quay.io/organization/kairos&#34;&gt;quay.io&lt;/a&gt;.&lt;/p&gt;&#xA;&#xA;&#xA;&lt;div class=&#34;alert alert-success&#34; role=&#34;alert&#34;&gt;&#xA;&lt;h4 class=&#34;alert-heading&#34;&gt;Note&lt;/h4&gt;&#xA;&#xA;    Looking to upgrade from a private registry OCI image? Check the &lt;a href=&#34;https://kairos.io/docs/advanced/private_registry_auth/&#34;&gt;Private registry auth&lt;/a&gt; page.&#xA;&#xA;&lt;/div&gt;&#xA;&#xA;&lt;h2 id=&#34;listing-available-versions&#34;&gt;Listing available versions&lt;/h2&gt;&#xA;&lt;p&gt;Using the agent, you can list all the available versions to upgrade to.&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ sudo kairos-agent upgrade list-releases&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;v0.57.0&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;v0.57.0-rc2&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;v0.57.0-rc1&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;v0.57.0-alpha2&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;v0.57.0-alpha1&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;upgrading-the-active-system&#34;&gt;Upgrading the active system&lt;/h2&gt;&#xA;&lt;p&gt;To specify an image, use the &lt;code&gt;--source&lt;/code&gt; flag:&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo kairos-agent upgrade --source &amp;lt;type&amp;gt;:&amp;lt;address&amp;gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Where type can be &lt;code&gt;dir&lt;/code&gt; or &lt;code&gt;oci&lt;/code&gt; and address is the path to the directory in the &lt;code&gt;dir&lt;/code&gt; case or the &lt;code&gt;&amp;lt;repo/image:tag&amp;gt;&lt;/code&gt; combination in the &lt;code&gt;oci&lt;/code&gt; case.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Upgrading from Kubernetes</title>
+      <link>https://kairos.io/docs/upgrade/kubernetes/</link>
+      <pubDate>Sun, 13 Nov 2022 00:00:00 +0000</pubDate>
+      <guid>https://kairos.io/docs/upgrade/kubernetes/</guid>
+      <description>&lt;p&gt;Kairos upgrades can be performed either manually or via Kubernetes if the cluster is composed of Kairos nodes. The recommended approach is to use the Kairos operator, which provides a more integrated and Kairos-specific way to manage upgrades.&lt;/p&gt;&#xA;&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;&#xA;&lt;p&gt;The Kairos operator needs to be deployed on the target cluster. &lt;a href=&#34;https://kairos.io/docs/upgrade/kairos-operator/&#34;&gt;Read the instructions here&lt;/a&gt;&lt;/p&gt;&#xA;&lt;h3 id=&#34;upgrading-from-version-x-to-version-y-with-kubernetes&#34;&gt;Upgrading from version X to version Y with Kubernetes&lt;/h3&gt;&#xA;&lt;p&gt;To trigger an upgrade, create a &lt;code&gt;NodeOpUpgrade&lt;/code&gt; resource which refers to the image version that you want to upgrade to. This is the recommended approach for upgrading Kairos nodes.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Installing Kairos Operator</title>
+      <link>https://kairos.io/docs/upgrade/kairos-operator/</link>
+      <pubDate>Fri, 25 Jul 2025 00:00:00 +0000</pubDate>
+      <guid>https://kairos.io/docs/upgrade/kairos-operator/</guid>
+      <description>&lt;p&gt;The Kairos operator is the recommended way to manage upgrades and operations on Kairos nodes in a Kubernetes cluster. It provides a more integrated and Kairos-specific approach compared to the system-upgrade-controller which was used in the past.&lt;/p&gt;&#xA;&lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;&#xA;&lt;p&gt;The Kairos operator provides two custom resources:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;NodeOp&lt;/strong&gt;: For generic operations on Kubernetes nodes (Kairos or not). It allows mounting the host&amp;rsquo;s root filesystem to perform operations or run scripts.&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;NodeOpUpgrade&lt;/strong&gt;: A Kairos-specific custom resource for upgrading Kairos nodes. It automatically creates a NodeOp with the appropriate upgrade script and configuration.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Installing system-upgrade-controller (Deprecated)</title>
+      <link>https://kairos.io/docs/upgrade/system-upgrade-controller/</link>
+      <pubDate>Wed, 02 Oct 2024 00:00:00 +0000</pubDate>
+      <guid>https://kairos.io/docs/upgrade/system-upgrade-controller/</guid>
+      <description>&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;&#xA;&lt;h4 class=&#34;alert-heading&#34;&gt;Deprecated&lt;/h4&gt;&#xA;&#xA;    The system-upgrade-controller approach is deprecated. We recommend using the &lt;a href=&#34;https://kairos.io/docs/upgrade/kairos-operator/&#34;&gt;Kairos operator&lt;/a&gt; instead, which provides a more integrated and Kairos-specific way to manage upgrades and operations.&#xA;&#xA;&lt;/div&gt;&#xA;&#xA;&lt;p&gt;To upgrade Kairos with Kubernetes using the legacy approach, it is necessary to have &lt;a href=&#34;https://github.com/rancher/system-upgrade-controller&#34;&gt;system-upgrade-controller&lt;/a&gt; deployed on the target cluster.&lt;/p&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://github.com/rancher/system-upgrade-controller#deploying&#34;&gt;The upstream documentation&lt;/a&gt; on how to install the system-upgrade-controller, is this command:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;kubectl apply -k github.com/rancher/system-upgrade-controller&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This command requires the &lt;code&gt;git&lt;/code&gt; command to be available in order to clone the remote repository. Kairos images, generally, don&amp;rsquo;t include git. You will need to run this command from a machine which has &lt;code&gt;git&lt;/code&gt; available and access to the cluster with a valid KUBECONFIG file.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Trusted Boot Upgrades</title>
+      <link>https://kairos.io/docs/upgrade/trustedboot/</link>
+      <pubDate>Sun, 13 Nov 2022 00:00:00 +0000</pubDate>
+      <guid>https://kairos.io/docs/upgrade/trustedboot/</guid>
+      <description>&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;&#xA;&lt;h4 class=&#34;alert-heading&#34;&gt;Warning&lt;/h4&gt;&#xA;&#xA;    This section is still a work in progress and only available in Kairos v3.x releases and alphas.&#xA;&#xA;&lt;/div&gt;&#xA;&#xA;&lt;p&gt;This section covers how to upgrade a Kairos node with Trusted Boot enabled.&lt;/p&gt;&#xA;&lt;p&gt;See the &lt;a href=&#34;https://kairos.io/docs/installation/trustedboot/&#34;&gt;Trusted Boot Installation&lt;/a&gt; and &lt;a href=&#34;https://kairos.io/docs/architecture/trustedboot/&#34;&gt;Trusted Boot Architecture&lt;/a&gt; pages for more references.&lt;/p&gt;&#xA;&lt;h3 id=&#34;upgrades&#34;&gt;Upgrades&lt;/h3&gt;&#xA;&lt;p&gt;In order to upgrade a node to a new version of the OS, you need to generate again the installable medium with the same keys used in the steps before.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Boot assessment</title>
+      <link>https://kairos.io/docs/upgrade/boot_assessment/</link>
+      <pubDate>Tue, 17 Sep 2024 00:00:00 +0000</pubDate>
+      <guid>https://kairos.io/docs/upgrade/boot_assessment/</guid>
+      <description>&lt;p&gt;Kairos upgrades are atomic in the sense that the new version of the OS fully&#xA;replaces the old one or it doesn&amp;rsquo;t replace it at all. This allows users to test&#xA;the upgrade in the lab, before they upgrade any of their nodes and be sure that&#xA;the upgrade will work the same way in production.&lt;/p&gt;&#xA;&lt;p&gt;While this is very useful strategy, failed upgrades cannot be completely avoided.&#xA;Some difference in hardware, a network hick-up or even a human error, can result&#xA;in a failed upgrade. For systems in remote locations, upgrading to a non-bootable&#xA;OS is one of the worst scenarios.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
