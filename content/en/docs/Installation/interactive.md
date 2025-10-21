@@ -19,3 +19,7 @@ When loading any Kairos ISOs, a GRUB menu, like the following will be displayed.
 ## Manually
 
 The interactive installer can be also started manually with `kairos-agent interactive-install` from the LiveCD.
+
+## Customization
+
+The interactive installer appearance and behavior can be customized through branding options. For details, see the [Branding](/docs/reference/branding) reference page.
