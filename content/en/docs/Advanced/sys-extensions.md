@@ -210,12 +210,12 @@ Manage extensions using `kairos-agent sysext` commands.
 
 ---
 
-### 📥 `download`
+### 📥 `install`
 
-Downloads a system extension and stores it on the node.
+Downloads/gets a system extension and stores it on the node.
 
 ```
-kairos-agent sysext download <URI>
+kairos-agent sysext install <URI>
 ```
 
 **Supported URI formats:**
@@ -308,7 +308,7 @@ kairos-agent sysext list --recovery
 
 ```bash
 # Download a disk image over HTTPS
-kairos-agent sysext download https://example.org/extensions/k3sv1.32.1.raw
+kairos-agent sysext install https://example.org/extensions/k3sv1.32.1.raw
 
 # Enable for the active profile and activate it live
 kairos-agent sysext enable --active --now k3s
