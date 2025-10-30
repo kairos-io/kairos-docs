@@ -54,6 +54,27 @@ CHECK_MARK="*"
 If you set values to 0-9, those simple colors will be used even on 256-color terminals. For the best experience on modern terminals, use hex triplet format.
 {{% /alert %}}
 
+
+### Border customization
+
+The border feature allows you to add customizable borders to UI components. This enhances visual separation and improves the overall design consistency.
+
+By default the border is set as `normal` which just draws a simple square box around the installer. In dumb terminals (16 color) the `ascii` border is selected for maximum compatibility with all terminals. The following options are supported:
+
+ - `rounded`: A rounded in the corners box, it should be supported by your terminal font.
+ - `double`: Border comprised of two thin strokes
+ - `thick`: Border that's thicker than the normal one
+ - `normal`: The default square border
+ - `ascii`: A border done with only ASCII symbols. The default in 16 color terminals
+ - `off`: No border
+
+As with the colors, the border style can be overriden in the `/etc/kairos/branding/interactive_install_colors` file with the key `BORDER_STYLE`
+
+```bash
+# /etc/kairos/branding/interactive_install_colors
+BORDER_STYLE="off"
+```
+
 ### Disabling Advanced Options
 
 If you want to hide the "Customize Further" option in the interactive installer, you can create an empty file at `/etc/kairos/branding/interactive_install_advanced_disabled`. When this file exists, the installer will only show the "Start Install" option, simplifying the interface for users who don't need advanced customization.
