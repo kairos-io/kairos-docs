@@ -13,8 +13,9 @@ It generates a configuration file, which is later accessible after installation 
 ## From the boot menu
 
 When loading any Kairos ISOs, a GRUB menu, like the following will be displayed. To access the interactive installation, select the third entry (`kairos (interactive install)`).
+![Interactive](https://github.com/user-attachments/assets/46d76220-5375-45f4-a637-89623663fb14)
 
-![interactive](https://user-images.githubusercontent.com/2420543/189219819-6b16d13d-c409-4b9b-889b-12792f800a08.gif)
+
 
 ## Manually
 
