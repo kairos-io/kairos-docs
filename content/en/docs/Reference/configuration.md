@@ -718,7 +718,7 @@ stages:
 | `k0s.enabled`           | Enables the k0s server instance. Accepted: `true`, `false`.                                                                                               |
 | `k0s.env`               | Additional environment variables for the k0s server instance.                                                                                             |
 | `k0s.args`              | Additional arguments for the k0s server instance.                                                                                                         |
-| `k0s.replace_env`       | Replaces all environment variables otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the environment variables you need. |
+| `k0s.replace_env`       | Replaces all environment variables otherwise passed to k0s by Kairos with those supplied here. Make sure you pass all the environment variables you need. |
 | `k0s.replace_args`      | Replaces all arguments otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the arguments you need.                         |
 
 {{% /tab %}}
@@ -728,7 +728,7 @@ stages:
 | `k0s-worker.enabled`           | Enables the k0s worker instance. Accepted: `true`, `false`.     |
 | `k0s-worker.env`               | Additional environment variables for the k0s worker instance.      |
 | `k0s-worker.args`              | Additional arguments for the k0s worker instance.      |
-| `k0s-worker.replace_env`       | Replaces all environment variables otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the environment variables you need. |
+| `k0s-worker.replace_env`       | Replaces all environment variables otherwise passed to k0s by Kairos with those supplied here. Make sure you pass all the environment variables you need. |
 | `k0s-worker.replace_args`      | Replaces all arguments otherwise passed to k0s by Kairos with those supplied here. Make sure you pass all the arguments you need.   |
 
 {{% /tab %}}
