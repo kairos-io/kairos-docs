@@ -42,7 +42,7 @@ install:
   poweroff: false
   auto: true # Required, for automated installations
 
-kairos:
+p2p:
   network_token: ....
 # extra configuration
 ```
