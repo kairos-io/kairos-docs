@@ -80,7 +80,7 @@ $ docker build -t k3s-stage-kairos .
 Again, this tutorial does not cover this part deeply as there already are docs that provide a deep insight into custom images such as the the [AuroraBoot page]({{< ref "auroraboot.md" >}}).
 
 ```bash
-$ docker run -v "$PWD"/build-iso:/tmp/auroraboot -v /var/run/docker.sock:/var/run/docker.sock --rm -ti quay.io/kairos/auroraboot --set container_image="docker://k3s-stage-kairos" --set "disable_http_server=true" --set "disable_netboot=true" --set "state_dir=/tmp/auroraboot"
+$ docker run -v "$PWD"/build-iso:/tmp/auroraboot -v /var/run/docker.sock:/var/run/docker.sock --rm -ti quay.io/kairos/auroraboot --set container_image="oci:k3s-stage-kairos" --set "disable_http_server=true" --set "disable_netboot=true" --set "state_dir=/tmp/auroraboot"
 2:38PM INF Pulling container image 'k3s-stage-kairos' to '/tmp/auroraboot/temp-rootfs' (local: true)
 2:38PM INF Generating iso 'kairos' from '/tmp/auroraboot/temp-rootfs' to '/tmp/auroraboot/build'
 ```

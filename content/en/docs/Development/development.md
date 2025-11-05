@@ -34,7 +34,7 @@ To build a Kairos ISO, you just call AuroraBoot with the generated OCI artifact:
 
 ```bash
 docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $PWD/build/:/output \
-  quay.io/kairos/auroraboot:v0.5.0 build-iso --output /output/ docker:myBaseKairos:v1.0.0 
+  quay.io/kairos/auroraboot:v0.5.0 build-iso --output /output/ oci:myBaseKairos:v1.0.0 
 ```
 
 You can see some example of builds in either the [kairos-init repo](https://github.com/kairos-io/kairos-init/blob/main/.github/workflows/test.yml), which builds a series of OCI containers of different base images, variants and platforms or on the [Kairos repo](https://github.com/kairos-io/kairos/tree/master/.github/workflows) itself which generates not only different types of platforms and variants and base images but also generates different types of artifacts, like ISOs, Trusted Boot ISOs, Trusted Boot upgrade artifacts, raw disk images and so on.
