@@ -220,15 +220,15 @@ kairos-agent sysext install <URI>
 
 **Supported URI formats:**
 
-- `https://` – Download a raw disk image from a remote server
-- `http://` – Same as above, unencrypted
-- `file://` – Load a local disk image file
-- `oci://` – Download from an OCI-compatible container registry
+- `https:` – Download a raw disk image from a remote server
+- `http:` – Same as above, unencrypted
+- `file:` – Load a local disk image file
+- `oci:` – Download from an OCI-compatible container registry
 
 > ⚠️ **Important Notes:**
-> - `http(s)` and `file://` URIs must point directly to a raw disk image file.
-> - `oci://` support is **alpha-stage** and may change.
-> - When using `oci://`, the disk image must be **embedded inside the OCI image layer**.
+> - `http(s)` and `file:` URIs must point directly to a raw disk image file.
+> - `oci:` support is **alpha-stage** and may change.
+> - When using `oci:`, the disk image must be **embedded inside the OCI image layer**.
 
 ---
 

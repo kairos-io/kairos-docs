@@ -105,7 +105,7 @@ buildISO() {
     --boot-branding "KairosAI" \
     --overlay-iso /config \
     --extend-cmdline "rd.immucore.debug rd.debug rd.shell" \
-    oci://kairos-localai
+    oci:kairos-localai
 }
 
 fixPermissions() {

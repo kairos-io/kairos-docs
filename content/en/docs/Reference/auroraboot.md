@@ -131,7 +131,7 @@ docker run --rm -ti --net host quay.io/kairos/auroraboot \
 {{% /tab %}}
 {{% tab header="Container Image, with dockerd" %}}
 
-By indicating a `container_image` prefixed with `docker://`, AuroraBoot will pull the image from the local daemon and start to serve it for network booting.
+By indicating a `container_image` prefixed with `oci:`, AuroraBoot will pull the image from the local daemon and start to serve it for network booting.
 
 This implies that the host has a docker daemon, and we have to give access to its socket with `-v /var/run/docker.sock:/var/run/docker.sock`.
 
@@ -139,7 +139,7 @@ This implies that the host has a docker daemon, and we have to give access to it
 docker pull {{<oci variant="standard">}}
 # This will use the container image from the host's docker daemon
 docker run --rm -ti -v /var/run/docker.sock:/var/run/docker.sock --net host quay.io/kairos/auroraboot \
-                    --set "container_image=docker://{{<oci variant="standard">}}"
+                    --set "container_image=oci:{{<oci variant="standard">}}"
 ```
 {{% /tab %}}
 {{% tab header="Github releases" %}}
@@ -376,27 +376,27 @@ listen_addr: ":8080"
 cloud_config: |
 ```
 
-| Option                | Description                                                                                                                                                                                                                                                       |
-|-----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `artifact_version`    | Corresponding artifact versions from the Kairos release page (e.g. Kubernetes version included).                                                                                                                                                                  |
-| `release_version`     | Version of the release in GitHub.                                                                                                                                                                                                                                 |
-| `flavor`              | The Kairos flavor to use. See [the Kairos support matrix]({{< relref "../reference/image_matrix" >}}) for a list.                                                                                                                                                 |
-| `repository`          | Github repository to use. This can either be `kairos-io/kairos` or `kairos-io/provider-kairos` for images with `k3s` prior to v2.4.0.                                                                                                                             |
-| `container_image`     | Container image. If prefixed with `docker://` it will try to pull from the local docker daemon. If a `container_image` is specified, `artifact_version`, `flavor` and `release_version` are ignored.                                                              |
-| `disable_netboot`     | Disable netboot.                                                                                                                                                                                                                                                  |
-| `disable_http_server` | Disable http server for serving offline generated ISOs.                                                                                                                                                                                                           |
-| `netboot_http_port`   | Specify a netboot HTTP port (defaults to `8090`).                                                                                                                                                                                                                 |
-| `state_dir`           | Specify a directory that will be used by auroraboot to download artifacts and reuse the same to cache artifacts.                                                                                                                                                  |
-| `listen_addr`         | Default http binding port for offline ISO generation.                                                                                                                                                                                                             |
-| `cloud_config`        | Cloud config path to use for the machines. A URL can be specified, use `-` to pass-by the cloud-config from _STDIN_                                                                                                                                               |
-| `iso.data`            | Defines a path to be embedded into the resulting iso. When booting, the files will be accessible at `/run/initramfs/live`                                                                                                                                         |
-| `netboot.cmdline`     | Override the automatically generated cmdline with a custom one to use during netboot. `config_url` and `rootfs`  are automatically constructed. A reasonable value can be `netboot.cmdline=rd.neednet=1 ip=dhcp rd.cos.disable netboot install-mode console=tty0` |
+| Option                | Description                                                                                                                                                                                                                                                                                           |
+|-----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `artifact_version`    | Corresponding artifact versions from the Kairos release page (e.g. Kubernetes version included).                                                                                                                                                                                                      |
+| `release_version`     | Version of the release in GitHub.                                                                                                                                                                                                                                                                     |
+| `flavor`              | The Kairos flavor to use. See [the Kairos support matrix]({{< relref "../reference/image_matrix" >}}) for a list.                                                                                                                                                                                     |
+| `repository`          | Github repository to use. This can either be `kairos-io/kairos` or `kairos-io/provider-kairos` for images with `k3s` prior to v2.4.0.                                                                                                                                                                 |
+| `container_image`     | Container image. It will try to pull from the local docker daemon first and fallback to remote if not found. If a `container_image` is specified, `artifact_version`, `flavor` and `release_version` are ignored.                                                                                     |
+| `disable_netboot`     | Disable netboot.                                                                                                                                                                                                                                                                                      |
+| `disable_http_server` | Disable http server for serving offline generated ISOs.                                                                                                                                                                                                                                               |
+| `netboot_http_port`   | Specify a netboot HTTP port (defaults to `8090`).                                                                                                                                                                                                                                                     |
+| `state_dir`           | Specify a directory that will be used by auroraboot to download artifacts and reuse the same to cache artifacts.                                                                                                                                                                                      |
+| `listen_addr`         | Default http binding port for offline ISO generation.                                                                                                                                                                                                                                                 |
+| `cloud_config`        | Cloud config path to use for the machines. A URL can be specified, use `-` to pass-by the cloud-config from _STDIN_                                                                                                                                                                                   |
+| `iso.data`            | Defines a path to be embedded into the resulting iso. When booting, the files will be accessible at `/run/initramfs/live`                                                                                                                                                                             |
+| `netboot.cmdline`     | Override the automatically generated cmdline with a custom one to use during netboot. `config_url` and `rootfs`  are automatically constructed. A reasonable value can be `netboot.cmdline=rd.neednet=1 ip=dhcp rd.cos.disable netboot install-mode console=tty0`                                     |
 | `disk.state_size`     | Set the minimum size (in MB) for the state partition in raw disk images. By default, the state partition is sized to 3 times the size of the current image plus some additional space for system files. Use this option to override the default size if you need to accommodate larger future images. |
-| `disk.efi`            | Generate an EFI-compatible raw disk image (suitable for AWS and QEMU). When set to `true`, the image will be created with EFI boot support. |
-| `disk.size`           | Set the final size (in MB) of the generated disk image. By default, the image size is calculated based on the actual data size. Use this option to create a larger disk image (e.g. `disk.size=16000` will create a 16GB image). |
-| `disk.bios`           | Generate a BIOS-compatible raw disk image. When set to `true`, the image will be created with legacy BIOS boot support instead of EFI. |
-| `disk.vhd`            | Generate an Azure-compatible VHD image. When set to `true`, the image will be created in VHD format suitable for Azure cloud platform. |
-| `disk.gce`            | Generate a Google Cloud Engine (GCE) compatible image. When set to `true`, the image will be created in a format suitable for Google Cloud Platform. |
+| `disk.efi`            | Generate an EFI-compatible raw disk image (suitable for AWS and QEMU). When set to `true`, the image will be created with EFI boot support.                                                                                                                                                           |
+| `disk.size`           | Set the final size (in MB) of the generated disk image. By default, the image size is calculated based on the actual data size. Use this option to create a larger disk image (e.g. `disk.size=16000` will create a 16GB image).                                                                      |
+| `disk.bios`           | Generate a BIOS-compatible raw disk image. When set to `true`, the image will be created with legacy BIOS boot support instead of EFI.                                                                                                                                                                |
+| `disk.vhd`            | Generate an Azure-compatible VHD image. When set to `true`, the image will be created in VHD format suitable for Azure cloud platform.                                                                                                                                                                |
+| `disk.gce`            | Generate a Google Cloud Engine (GCE) compatible image. When set to `true`, the image will be created in a format suitable for Google Cloud Platform.                                                                                                                                                  |
 To use the configuration file with AuroraBoot, run AuroraBoot specifying the file or URL of the config as first argument:
 
 ```bash
@@ -524,7 +524,7 @@ docker run -v "$PWD"/config.yaml:/config.yaml \
              -v "$PWD"/build:/tmp/auroraboot \
              -v /var/run/docker.sock:/var/run/docker.sock \
              --rm -ti quay.io/kairos/auroraboot \
-             --set container_image=docker://<IMAGE> \
+             --set container_image=oci:<IMAGE> \
              --set "disable_http_server=true" \
              --set "disable_netboot=true" \
              --cloud-config /config.yaml \
@@ -539,7 +539,7 @@ Build the custom ISO with the cloud config:
 docker run -v "$PWD"/config.yaml:/config.yaml \
              -v "$PWD"/build:/tmp/auroraboot \
              --rm -ti quay.io/kairos/auroraboot \
-             --set container_image={{<oci variant="core">}} \
+             --set container_image=oci:{{<oci variant="core">}} \
              --set "disable_http_server=true" \
              --set "disable_netboot=true" \
              --cloud-config /config.yaml \

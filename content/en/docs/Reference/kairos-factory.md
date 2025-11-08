@@ -82,7 +82,7 @@ For example:
 
 ```bash
 $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $PWD/build/:/output \
-  quay.io/kairos/auroraboot:{{< auroraBootVersion >}} build-iso --output /output/ docker:ubuntu-kairos:24.04
+  quay.io/kairos/auroraboot:{{< auroraBootVersion >}} build-iso --output /output/ oci:ubuntu-kairos:24.04
 2025-02-27T13:33:42Z INF Copying ubuntu-kairos:24.04 source to /output/temp-rootfs
 2025-02-27T13:33:47Z INF Finished copying ubuntu-kairos:24.04 into /output/temp-rootfs
 2025-02-27T13:33:47Z INF Preparing squashfs root...
@@ -443,7 +443,7 @@ $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
   -v $PWD/e2e/assets/keys:/keys \
   -v $PWD/build/:/output \
   quay.io/kairos/auroraboot:{{< auroraBootVersion >}} build-uki --output-dir /output/ -k /keys --output-type iso \
-  docker:ubuntu-kairos-trusted-standard:24.04                       
+  oci:ubuntu-kairos-trusted-standard:24.04                       
 2025-02-27T14:54:41Z INF Extracting image to a temporary directory
 2025-02-27T14:54:41Z INF Copying ubuntu-kairos-trusted-standard:24.04 source to /tmp/auroraboot-build-uki-1771870410
 2025-02-27T14:54:44Z INF Finished copying ubuntu-kairos-trusted-standard:24.04 into /tmp/auroraboot-build-uki-1771870410

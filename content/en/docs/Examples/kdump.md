@@ -87,7 +87,7 @@ $ docker build -t kdump-kairos .
 Again, this tutorial does not cover this part deeply as there are docs providing a deep insight onto this like the [AuroraBoot page]({{< ref "auroraboot.md" >}})
 
 ```bash
-$ docker run -v "$PWD"/build-iso:/tmp/auroraboot -v /var/run/docker.sock:/var/run/docker.sock --rm -ti quay.io/kairos/auroraboot --set container_image="docker://kdump-kairos" --set "disable_http_server=true" --set "disable_netboot=true" --set "state_dir=/tmp/auroraboot"
+$ docker run -v "$PWD"/build-iso:/tmp/auroraboot -v /var/run/docker.sock:/var/run/docker.sock --rm -ti quay.io/kairos/auroraboot --set container_image="oci:kdump-kairos" --set "disable_http_server=true" --set "disable_netboot=true" --set "state_dir=/tmp/auroraboot"
 2:38PM INF Pulling container image 'kdump-kairos' to '/tmp/auroraboot/temp-rootfs' (local: true)
 2:38PM INF Generating iso 'kairos' from '/tmp/auroraboot/temp-rootfs' to '/tmp/auroraboot/build'
 ```
