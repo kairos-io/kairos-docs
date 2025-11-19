@@ -93,6 +93,7 @@ github_branch = "main"
 offlineSearch = true
 
 latest_version = "v3.6.0"
+url_latest_version = "https://kairos.io/v3.6.0/docs"
 development = false
 
 [params.robots]
