@@ -176,9 +176,14 @@ validate_semantic_version() {
 # Returns a list of the latest patch version for each minor version
 fetch_latest_releases() {
     # Get all releases and process them to keep only latest patch per minor version
+    # Filter out versions with build numbers (e.g., v2.3.4-rc2)
     fetch_all_releases | \
     awk -F'/' '{
         version=$3
+        # Skip versions that contain a hyphen (build numbers like -rc2, -alpha1, etc.)
+        if (version ~ /-/) {
+            next
+        }
         split(version, parts, ".")
         minor_ver = parts[1]"."parts[2]
         if (!latest[minor_ver] || parts[3] > latest_patch[minor_ver]) {
