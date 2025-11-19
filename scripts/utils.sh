@@ -179,6 +179,10 @@ fetch_latest_releases() {
     fetch_all_releases | \
     awk -F'/' '{
         version=$3
+        # Skip versions that contain a hyphen (build numbers like -rc2, -alpha1, etc.)
+        if (version ~ /-/) {
+            next
+        }
         split(version, parts, ".")
         minor_ver = parts[1]"."parts[2]
         if (!latest[minor_ver] || parts[3] > latest_patch[minor_ver]) {
