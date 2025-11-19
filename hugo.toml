@@ -96,7 +96,7 @@ github_branch = "main"
 # Enable Lunr.js offline search
 offlineSearch = true
 
-latest_version = "v3.4.2"
+latest_version = "v3.6.0"
 
 [params.softwareVersions]
 # renovate: datasource=github-releases depName=kairos-io/provider-kairos
