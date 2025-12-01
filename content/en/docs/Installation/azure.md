@@ -16,7 +16,7 @@ If you want to build a custom image, you can follow the instructions in the [Cre
 
 ## Deploy a VM
 
-Visit the [Community Images page](https://portal.azure.com/#browse/Microsoft.Compute%2Flocations%2FcommunityGalleries%2Fimages) in the Azure portal and search for "kairos" in the search box. Multiple results will be returned matching multiple different regions. Click on the result matching the region you intend to use for the Virtual Machine. Find the version you want to use and click on "Create VM".
+Visit the [Community Images page](https://portal.azure.com/#view/Microsoft_Azure_ComputeHub/ComputeHubMenuBlade/~/communityImagesBrowse) in the Azure portal and search for "kairos" in the search box. Multiple results will be returned matching multiple different regions. Click on the result matching the region you intend to use for the Virtual Machine. Find the version you want to use and click on "Create VM".
 
 {{% alert title="Note" color="warning" %}}
 To ensure you're using a genuine Kairos image in Azure, you should ensure that the image belongs to the Azure compute gallery `kairos.io`. You can inspect the image in the Web UI or you can use the Azure CLI:
