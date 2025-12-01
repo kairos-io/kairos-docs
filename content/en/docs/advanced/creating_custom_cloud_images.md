@@ -39,13 +39,14 @@ FROM ${BASE_IMAGE} AS base-kairos
 ARG VARIANT=core
 ARG MODEL=generic
 ARG TRUSTED_BOOT=false
-ARG KUBERNETES_DISTRO=k3s
-ARG KUBERNETES_VERSION=latest
+ARG PROVIDER_NAME=k3s
+#optionally specify provider version
+ARG PROVIDER_VERSION
 ARG VERSION
 
 COPY --from=kairos-init /kairos-init /kairos-init
-RUN /kairos-init -l debug -s install -m "${MODEL}" -v "${VARIANT}" -t "${TRUSTED_BOOT}" -k "${KUBERNETES_DISTRO}" --k8sversion "${KUBERNETES_VERSION}" --version "${VERSION}"
-RUN /kairos-init -l debug -s init -m "${MODEL}" -v "${VARIANT}" -t "${TRUSTED_BOOT}" -k "${KUBERNETES_DISTRO}" --k8sversion "${KUBERNETES_VERSION}" --version "${VERSION}"
+RUN /kairos-init -l debug -s install -m "${MODEL}" -v "${VARIANT}" -t "${TRUSTED_BOOT}" --provider "${PROVIDER_NAME}" --provider-"${PROVIDER_NAME}"-version "${PROVIDER_VERSION}" --version "${VERSION}"
+RUN /kairos-init -l debug -s init -m "${MODEL}" -v "${VARIANT}" -t "${TRUSTED_BOOT}" --provider "${PROVIDER_NAME}" --provider-"${PROVIDER_NAME}"-version "${PROVIDER_VERSION}" --version "${VERSION}"
 RUN rm /kairos-init
 EOF
 ```
