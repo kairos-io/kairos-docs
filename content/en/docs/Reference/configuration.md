@@ -136,7 +136,8 @@ install:
   # recovery-system.size: 5000
   
   # Use a different source for the installation
-  source: "oci:.."
+  system:
+    source: "oci:.."
   # Add bundles in runtime
   bundles:
     - ...
@@ -169,7 +170,8 @@ reset:
   poweroff: true
 
   # Use a different source for the reset
-  source: "oci:.."
+  system:
+    source: "oci:.."
 
   # Override the grub entry name
   grub-entry-name: Kairos
@@ -196,7 +198,8 @@ upgrade:
   poweroff: true
 
   # Use a different source for the upgrade
-  source: "oci:.."
+  system:
+    source: "oci:.."
   
   # Override the grub entry name
   grub-entry-name: Kairos
