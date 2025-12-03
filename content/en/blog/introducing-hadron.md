@@ -55,7 +55,7 @@ It is critical to understand the relationship:
 
 **Hadron** is the purpose-built, optimal flavor for Kairos, a clean, lean, and predictable base OS.
 
-If you are looking for the smallest, cleanest, most upstream-aligned OS for your cloud-native or edge infrastructure, Hadron is designed for you. You can build your image, extend it using container technologies, or simply use system extensions without ever touching a legacy package manager.
+If you are looking for the smallest, cleanest, most upstream-aligned OS for your cloud-native or edge infrastructure, Hadron is designed for you. You can build your image, extend it using container technologies, or simply use system extensions without ever touching a package manager.
 
 ## Our Invitation to the Community
 
