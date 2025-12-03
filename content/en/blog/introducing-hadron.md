@@ -61,7 +61,7 @@ If you are looking for the smallest, cleanest, most upstream-aligned OS for your
 
 Hadron is mature and production-ready for its core purpose: to be a minimal, predictable base for Kairos. As part of the CNCF project Kairos, Hadron guarantees vendor neutrality and a clear governance model.
 
-We are not trying to "replace" other distributions; we are offering a new, specialized tool for power-users who want ultimate minimalism and control over their base OS.
+Hadron expands the Kairos matrix with a specialized flavor that will become the new default. All existing flavors remain fully supported, and our commitment to a vendor-neutral, lock-in-free ecosystem stays unchanged—giving you the freedom to choose the base OS that best fits your needs.
 
 We invite you to explore Hadron, try the quickstart guide, and join the conversation:
 
