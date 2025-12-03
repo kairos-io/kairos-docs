@@ -126,18 +126,20 @@ install:
   # size in MiB
   system:
     size: 4096
+    # Use a different source for the installation of active system
+    source: "oci:.."
   passive:
     size: 4096
   recovery-system:
     size: 5000
+    # Use a different source for the installation of recovery system
+    source: "oci:.."
   # note: This can also be set with dot notation like the following examples for a more condensed view:
   # system.size: 4096
   # passive.size: 4096
   # recovery-system.size: 5000
   
-  # Use a different source for the installation
-  system:
-    source: "oci:.."
+    
   # Add bundles in runtime
   bundles:
     - ...
@@ -169,7 +171,7 @@ reset:
   # Power off after reset
   poweroff: true
 
-  # Use a different source for the reset
+  # System Image (maps to Active), sets the source to reset to
   system:
     source: "oci:.."
 
@@ -197,9 +199,6 @@ upgrade:
   # Power off after upgrade
   poweroff: true
 
-  # Use a different source for the upgrade
-  system:
-    source: "oci:.."
   
   # Override the grub entry name
   grub-entry-name: Kairos
@@ -214,9 +213,14 @@ upgrade:
   # size in MiB
   # During upgrade only the active or recovery image cna be resized as those are the ones that contain the upgrade
   # passive image is the current system, and that its untouched during the upgrade
+  # System Image (maps to Active)
   system:
+    source: "oci:.."
     size: 4096
+
+  # Recovery System Image (maps to Recovery)  
   recovery-system:
+    source: "oci:.."
     size: 5000
 
   # Creates these dirs in the rootfs during upgrade. As the rootfs is RO from boot, sometimes we find that we
