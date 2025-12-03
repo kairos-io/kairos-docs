@@ -41,11 +41,11 @@ The result is a small footprint, fast boot, while still operating modern operati
 
 | Feature | Hadron | Alpine | Ubuntu | Red Hat families | SUSE families |
 | --- | --- | --- | --- | --- | --- |
-| Package manager | None by design | APK | apt-get | dnf | zypper |
+| Package manager | None by design | APK | apt | dnf | zypper |
 | Libc | musl | musl | glibc | glibc | glibc | 
 | Init system | systemd | openRC | systemd | systemd | systemd |
 | Footprint | Extremely minimal | Fast boot times, smaller images | small-medium | small-medium | small-medium |
-| Lifecycle management | Kairos | APK | Apt-get, Snap | Dnf, or bootc, or Silverblue | Zypper, Elemental |
+| Lifecycle management | Kairos | APK | apt, Snap | Dnf, bootc, rpm-ostree  | Zypper, Elemental |
 
 ## Hadron and Kairos: The Perfect Immutable Stack
 
