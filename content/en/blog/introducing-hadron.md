@@ -16,7 +16,7 @@ Hadron is a brand-new, minimal, and trustworthy Linux distribution engineered fr
 
 ## Why Hadron? The Pursuit of Minimal Predictability
 
-Hadron is not "yet another distro." It is a surgical response to the specific needs of cloud-native and edge deployments, and a modern first system, built on the core goals of **ultimate minimalism**, **upstream alignment**, and **reproducibility**.
+Hadron is not "yet another distro". It is a surgical response to the specific needs of cloud-native and edge deployments, and a modern first system, built on the core goals of **ultimate minimalism**, **upstream alignment**, and **reproducibility**.
 
 | Feature | Hadron's Approach | Benefit for Cloud/Edge |
 | --- | --- | --- |
