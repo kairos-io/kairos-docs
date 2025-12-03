@@ -32,7 +32,7 @@ While Kairos continues to support all major distributions, Hadron exists to serv
 
 ## A Novel Combination: musl + systemd
 
-Hadron is one of the only distributions intentionally combining the musl C library with the systemd init system. This combination is powerful for modern systems:
+Hadron is one of the only distributions intentionally combining the [musl C library](https://www.musl-libc.org/) with the [systemd init system](https://systemd.io/). This combination is powerful for modern systems:
 
 - **musl**: Provides a small, secure, and reproducible foundation, ideal for cloud-native container workloads.
 - **systemd**: Offers predictable boot, rich observability, and broad ecosystem support through standard APIs.
