@@ -6,7 +6,7 @@ description: ""
 author: Ettore Di Giacinto ([X](https://x.com/mudler_it)) ([GitHub](https://github.com/mudler))
 ---
 
-The cloud-native and edge computing world demands systems that are small, reliable, and predictable. For years, the Kairos project has empowered users to convert any mainstream Linux distribution, from Ubuntu to Alpine, Debian to Fedora—into an immutable, image-based OS, delivering secure and atomic A/B updates.
+The cloud-native and edge-computing world demands systems that are small, reliable, and predictable. For years, the Kairos project has empowered users to turn mainstream Linux distributions, such as Ubuntu, Alpine, Debian, Fedora and more, into immutable, image-based operating systems with secure, atomic A/B updates.
 
 That mission remains core to us. But in transforming traditional distributions, we continually encountered friction: the inherited bloat of legacy package managers, sprawling dependency graphs, and downstream patches that increase image size and boot time.
 
