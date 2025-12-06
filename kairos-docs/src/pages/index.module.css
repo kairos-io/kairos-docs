@@ -1,0 +1,302 @@
+/**
+ * Kairos Homepage Styling
+ * CSS modules scoped to the homepage
+ */
+
+/* Hero Section */
+.heroBanner {
+  background-color: var(--kairos-primary);
+  padding: 4rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.heroContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3rem;
+  flex-wrap: wrap;
+}
+
+.heroContent {
+  flex: 1 1 500px;
+  max-width: 600px;
+}
+
+.heroTitle {
+  font-size: 3.5rem;
+  font-weight: 800;
+  line-height: 1.3;
+  color: var(--kairos-white);
+  margin-bottom: 1.5rem;
+}
+
+.heroAccent {
+  color: var(--kairos-softer-orange);
+}
+
+.heroSubtitle {
+  font-size: 1.25rem;
+  color: var(--kairos-white);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.heroButtons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.githubButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.heroImage {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heroImage img {
+  max-width: 100%;
+  height: auto;
+}
+
+@media screen and (max-width: 996px) {
+  .heroBanner {
+    padding: 2rem 1rem;
+  }
+
+  .heroTitle {
+    font-size: 2.5rem;
+  }
+
+  .heroContainer {
+    flex-direction: column-reverse;
+    text-align: center;
+  }
+
+  .heroContent {
+    max-width: 100%;
+  }
+
+  .heroButtons {
+    justify-content: center;
+  }
+}
+
+/* Welcome Section */
+.welcomeSection {
+  padding: 4rem 2rem;
+  background-color: var(--ifm-background-surface-color);
+}
+
+.welcomeContent {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  flex-wrap: wrap;
+}
+
+.welcomeImage {
+  flex: 0 0 auto;
+}
+
+.welcomeImage img {
+  max-width: 250px;
+  height: auto;
+}
+
+.welcomeText {
+  flex: 1 1 500px;
+}
+
+.welcomeText h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: var(--ifm-heading-color);
+}
+
+.welcomeText p {
+  font-size: 1.125rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.videoLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--kairos-orange);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.videoLink:hover {
+  color: var(--kairos-softer-orange);
+}
+
+@media screen and (max-width: 768px) {
+  .welcomeContent {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .welcomeText h2 {
+    font-size: 2rem;
+  }
+}
+
+/* Features Section */
+.featuresSection {
+  padding: 4rem 2rem;
+  background-color: var(--ifm-color-emphasis-100);
+}
+
+.featuresTitle {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+  color: var(--ifm-heading-color);
+}
+
+.featuresTitle .accent {
+  color: var(--kairos-orange);
+}
+
+.featuresGrid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.feature {
+  background: var(--ifm-background-surface-color);
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.feature:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.featureIcon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.feature h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--ifm-heading-color);
+}
+
+.feature p {
+  line-height: 1.6;
+  color: var(--ifm-color-content);
+}
+
+/* CNCF Section */
+.cncfSection {
+  padding: 4rem 2rem;
+  background-color: var(--kairos-primary);
+  color: var(--kairos-white);
+  text-align: center;
+}
+
+.cncfContent {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.cncfContent h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: var(--kairos-white);
+}
+
+.cncfContent img {
+  margin: 2rem 0;
+}
+
+.cncfContent p {
+  font-size: 0.875rem;
+  opacity: 0.8;
+  margin-top: 1.5rem;
+}
+
+.cncfContent a {
+  color: var(--kairos-softer-orange);
+  text-decoration: underline;
+}
+
+/* Community Section */
+.communitySection {
+  padding: 4rem 2rem;
+  background-color: var(--ifm-background-surface-color);
+  text-align: center;
+}
+
+.communitySection h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: var(--ifm-heading-color);
+}
+
+.communityDescription {
+  max-width: 800px;
+  margin: 0 auto 3rem;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: var(--ifm-color-content);
+}
+
+.communityLinks {
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.communityCard {
+  background: var(--ifm-color-emphasis-100);
+  padding: 2rem;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--ifm-color-content);
+  transition: all 0.2s;
+  border: 2px solid transparent;
+}
+
+.communityCard:hover {
+  transform: translateY(-4px);
+  border-color: var(--kairos-orange);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  color: var(--ifm-color-content);
+}
+
+.communityIcon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.communityCard p {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+}

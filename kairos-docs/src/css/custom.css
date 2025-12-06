@@ -1,0 +1,107 @@
+/**
+ * Kairos custom styling
+ * Colors and typography matching the Kairos brand
+ */
+
+/* Import Noto Sans font */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
+
+/* Kairos Color Palette */
+:root {
+  /* Primary colors */
+  --kairos-primary: #03153A;
+  --kairos-secondary: #e1e5ee;
+  --kairos-orange: #EE5007;
+  --kairos-softer-orange: #FF7442;
+  --kairos-softest-orange: #FB9E70;
+  --kairos-white: #ffffff;
+  --kairos-gray: #E2E7EB;
+
+  /* Infima overrides - Light mode */
+  --ifm-color-primary: #03153A;
+  --ifm-color-primary-dark: #020f2a;
+  --ifm-color-primary-darker: #020e27;
+  --ifm-color-primary-darkest: #010b1f;
+  --ifm-color-primary-light: #041b4a;
+  --ifm-color-primary-lighter: #041c4d;
+  --ifm-color-primary-lightest: #052159;
+
+  /* Orange accent for links and CTAs */
+  --ifm-link-color: #009ffd;
+  --ifm-link-hover-color: var(--kairos-primary);
+
+  /* Font family */
+  --ifm-font-family-base: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --ifm-heading-font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+
+  /* Code font */
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+
+  /* Hero background */
+  --ifm-hero-background-color: var(--kairos-primary);
+  --ifm-hero-text-color: var(--kairos-white);
+}
+
+/* Dark mode colors */
+[data-theme='dark'] {
+  --ifm-color-primary: #FF7442;
+  --ifm-color-primary-dark: #ff5f29;
+  --ifm-color-primary-darker: #ff5419;
+  --ifm-color-primary-darkest: #e64000;
+  --ifm-color-primary-light: #ff895b;
+  --ifm-color-primary-lighter: #ff946b;
+  --ifm-color-primary-lightest: #ffb394;
+
+  --ifm-link-color: #FF7442;
+  --ifm-link-hover-color: #ff895b;
+
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  --ifm-background-color: #1a1a1a;
+}
+
+/* Global link styles */
+a {
+  color: var(--ifm-link-color);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--ifm-link-hover-color);
+}
+
+/* Button styles */
+.button--primary {
+  background-color: var(--kairos-orange);
+  border-color: var(--kairos-orange);
+}
+
+.button--primary:hover {
+  background-color: var(--kairos-softer-orange);
+  border-color: var(--kairos-softer-orange);
+}
+
+.button--secondary {
+  color: var(--kairos-orange);
+  border-color: var(--kairos-orange);
+}
+
+.button--secondary:hover {
+  background-color: var(--kairos-orange);
+  color: var(--kairos-white);
+}
+
+/* Navbar styling */
+.navbar {
+  background-color: var(--kairos-white);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+[data-theme='dark'] .navbar {
+  background-color: #1a1a1a;
+}
+
+/* Footer styling */
+.footer--dark {
+  background-color: var(--kairos-primary);
+}

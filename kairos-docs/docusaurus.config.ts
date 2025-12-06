@@ -6,7 +6,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'Kairos',
-  tagline: 'More then an edge OS',
+  tagline: 'Transform your Linux system and preferred Kubernetes distribution into a secure bootable image for your edge devices',
   favicon: 'img/logo.svg',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -15,7 +15,7 @@ const config: Config = {
   },
 
   // Set the production url of your site here
-  url: 'https://your-docusaurus-site.example.com',
+  url: 'https://kairos.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
@@ -70,7 +70,7 @@ const config: Config = {
 
   themeConfig: {
     // Replace with your project's social card
-    image: 'img/kairos-social-card.jpg',
+    image: 'img/Kairos_800x419.png',
     colorMode: {
       respectPrefersColorScheme: true,
     },
@@ -89,6 +89,11 @@ const config: Config = {
         },
         {to: '/blog', label: 'Blog', position: 'left'},
         {
+          label: 'Community',
+          position: 'left',
+          href: 'https://kairos.io/community/',
+        },
+        {
           href: 'https://github.com/kairos-io/kairos',
           label: 'GitHub',
           position: 'right',
@@ -99,11 +104,23 @@ const config: Config = {
       style: 'dark',
       links: [
         {
-          title: 'Docs',
+          title: 'Documentation',
           items: [
             {
-              label: 'Documentation',
-              to: '/docs/intro',
+              label: 'Getting Started',
+              to: '/docs/_index',
+            },
+            {
+              label: 'Installation',
+              to: '/docs/Installation/_index',
+            },
+            {
+              label: 'Architecture',
+              to: '/docs/Architecture/_index',
+            },
+            {
+              label: 'Examples',
+              to: '/docs/Examples/_index',
             },
           ],
         },
@@ -111,16 +128,20 @@ const config: Config = {
           title: 'Community',
           items: [
             {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/kairos',
+              label: 'Slack',
+              href: 'https://slack.cncf.io/#kairos',
             },
             {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/kairos',
+              label: 'GitHub Discussions',
+              href: 'https://github.com/kairos-io/kairos/discussions',
             },
             {
-              label: 'X',
-              href: 'https://x.com/kairos',
+              label: 'LinkedIn',
+              href: 'https://www.linkedin.com/company/kairos-oss/',
+            },
+            {
+              label: 'X (Twitter)',
+              href: 'https://x.com/Kairos_OSS',
             },
           ],
         },
@@ -135,10 +156,14 @@ const config: Config = {
               label: 'GitHub',
               href: 'https://github.com/kairos-io/kairos',
             },
+            {
+              label: 'Commercial Support',
+              href: 'https://www.spectrocloud.com/solutions/kairos-support',
+            },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Kairos authors. The Linux Foundation® (TLF) has registered trademarks and uses trademarks.`,
     },
     prism: {
       theme: prismThemes.github,
