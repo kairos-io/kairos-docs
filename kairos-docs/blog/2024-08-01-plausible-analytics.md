@@ -8,6 +8,8 @@ tags:
 title: Adding Analytics to Kairos.io
 ---
 
+
+
 We recently added analytics to our website. We were hesitant about this before because we are committed to your privacy and didn't like the idea of setting up Google Analytics. Thankfully, we've found a good open-source solution that is designed for privacy. You can find more about them on their website https://plausible.io/about
 
 The main reason for this change is to understand a bit better how our documentation and blog are working for you and the impact that our different efforts have when we share talks, articles and videos.

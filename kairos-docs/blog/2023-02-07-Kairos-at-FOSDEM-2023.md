@@ -7,7 +7,12 @@ tags:
 title: Kairos at FOSDEM 2023
 ---
 
+
+
 I recently had the opportunity to attend FOSDEM 2023 and share a bit about the Kairos project. In this post I want to summarize what I presented and share other interesting presentations I attended, which I believe are relevant for Kairos and our community.
+
+<!--truncate-->
+
 
 ## How we build and maintain Kairos
 

@@ -7,8 +7,12 @@ tags:
 title: Hacktoberfest 2023
 ---
 
+
+
 Hacktoberfest 2023 is here, and we are excited to announce that Kairos is taking part by creating some good first issues
 for new contributors to get started with and also by hosting a Hacktoberfest event on October 19th in Brussels.
+
+<!--truncate-->
 
 ## Why is Hacktoberfest important to us?
 

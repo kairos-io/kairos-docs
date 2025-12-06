@@ -13,7 +13,12 @@ title: Kairos is now part of the Secure Edge-Native Architecture by Spectro Clou
   and Intel
 ---
 
+
+
 The Kairos team is thrilled to announce the release of the Secure Edge-Native Architecture (SENA) whitepaper! You can download it [here](https://github.com/kairos-io/kairos/files/11250843/Secure-Edge-Native-Architecture-white-paper-20240417.3.pdf)
+
+<!--truncate-->
+
 
 ## What is SENA?
 

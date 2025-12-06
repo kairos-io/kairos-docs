@@ -7,7 +7,11 @@ tags:
 title: Kairos at the KCD Amsterdam and Paris 2023
 ---
 
+
+
 We recently had the opportunity to sponsor two Kubernetes events, [KCD Amsterdam][amsterdam] and [KCD Paris][paris]. This blog post, is a summary about my personal experience attending them.
+
+<!--truncate-->
 
 Let me start by saying, that I'm fairly new to Kubernetes and its community :wave:. I know this project is big and that there are many companies building products and services around it, or have an interest in adopting it. So, I was very curious to see what kind of people I was going to meet and understand how Kairos could help them.
 

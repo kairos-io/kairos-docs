@@ -7,7 +7,12 @@ tags:
 title: SPOS Panel at KubeCon Paris 2024
 ---
 
+
+
 I recently had the opportunity to attend KubeCon 2024. You can find my recap at the [Spectro Cloud Blog](https://www.spectrocloud.com/blog/kubecon-paris-edge-ai-and-la-vie-en-cloud-native), but I'd like to add some additional information about the Special Purpose Operating System Panel in which we participated.
+
+<!--truncate-->
+
 
 The panel was scheduled for the last day of KubeCon, which I think probably hurt the attendance since many people had already left. Nevertheless, according to the scheduling tool, 351 people were planning to attend.
 

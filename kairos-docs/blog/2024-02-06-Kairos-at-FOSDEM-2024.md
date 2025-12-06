@@ -7,7 +7,11 @@ tags:
 title: Kairos at FOSDEM 2024
 ---
 
+
+
 Last year [I said](/blog/2023/02/07/kairos-at-fosdem-2023/) you could expect Kairos to engage further during FOSDEM. And I'm quite pleased to say that's exactly what we did! As part of the open-source ecosystem, we recognize the importance of participating in these types of events. We do so, because we understand how critical it is to go where our users are, but this year we went a bit further and we also reached out to other similar projects.
+
+<!--truncate-->
 
 ## From Free-Lunch to Dog-Fooding: A Culinary Journey in Crafting IaC for Kairos Testing and Building
 

@@ -7,6 +7,8 @@ tags:
 title: 'Kairos Meets k0s: A Meta-Distribution for Kubernetes is Born'
 ---
 
+
+
 Up until now, Kairos has shipped with first-class support for k3s out of the box. If you wanted something else? You had to rely on community-powered providers. And let’s be honest, while amazing in their own right, they’ve been... fragmented.
 
 We’ve seen providers emerge for `kubeadm`, `nodeadm`, `microk8s`, and even another flavor of `k3s`. Each one added the ability to run Kubernetes on Kairos, but they were often self-contained efforts. Most didn’t plug into our cloud-init-style configuration, which meant you had to know your way around their specific setup to get them running. Power users and contributors made them work, but new users? Not so much.
@@ -14,6 +16,9 @@ We’ve seen providers emerge for `kubeadm`, `nodeadm`, `microk8s`, and even ano
 Then there’s the [`provider-kairos`](https://github.com/kairos-io/provider-kairos), which offers a consistent configuration layer across setups and makes Kubernetes orchestration a breeze, especially for decentralized, peer-to-peer deployments powered by EdgeVPN. But it had one limitation: it only worked with `k3s`.
 
 That is... until now.
+
+<!--truncate-->
+
 
 ## Enter k0s: The Zero Friction Kubernetes
 

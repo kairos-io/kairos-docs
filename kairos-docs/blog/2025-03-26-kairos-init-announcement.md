@@ -7,6 +7,8 @@ tags:
 title: How We Rebuilt Kairos building From the Ground Up
 ---
 
+
+
 ## 🧱 Introduction
 
 Building Kairos has always been about more than assembling images — it's about shaping a flexible, powerful OS tailored for the edge. Over the past couple of years, we've learned a lot while navigating how to build and maintain Kairos across a growing list of base distributions, architectures, and board-specific targets.
@@ -21,6 +23,9 @@ In this post, we’ll take you behind the scenes:
 - What `kairos-init` changes — and why it matters
 
 This is the story of how we rebuilt the foundation of Kairos, one layer at a time.
+
+<!--truncate-->
+
 
 ## 🐳 The Early Days: Building with Dockerfiles
 

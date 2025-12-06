@@ -9,6 +9,8 @@ tags:
 title: Enhancing Kairos Documentation with a Customizable Flavor Menu
 ---
 
+
+
 Kairos is versatile, supporting various Linux distributions such as openSUSE Leap, Ubuntu 24.04, and [more](/docs/image_matrix). Our primary objective is to empower users to continue working with their preferred Linux distribution seamlessly. However, our previous documentation fell short of this goal. The scripts were tied to a default image, which often led to issues for users who preferred a different flavor.
 
 During our [first Hackweek](/docs/hackweek-2024), we took a significant step forward by updating our documentation to allow users to select their preferred flavor, thereby enhancing the overall experience.

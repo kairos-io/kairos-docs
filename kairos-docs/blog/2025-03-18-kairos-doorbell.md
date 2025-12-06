@@ -7,13 +7,19 @@ tags:
 title: How I Automated My Doorbell with Kairos (and You Can Too)
 ---
 
+
+
 Picture this: You’re deep in focus, coding away, and the doorbell rings. Except… you never hear it. The mailman leaves, and now your package is on an adventure you didn't plan for. That’s exactly what happened to me, so I did what any geek would do—turn my dumb doorbell into a smart one using Kairos.
+
+<!--truncate-->
+
 
 :::warning Disclaimer
 
 The information provided in this post is for educational and informational purposes only. I am not a professional electrician, engineer, or security expert. Any modifications to electrical systems, including doorbells, carry inherent risks, such as damage to property, malfunction, or personal injury. If you choose to follow the steps outlined here, you do so at your own risk. Always take proper safety precautions, consult professionals when necessary, and ensure compliance with local laws and regulations. I cannot be held liable for any consequences resulting from the use or misuse of the information in this post.
 
 :::
+
 
 ## Requirements
 

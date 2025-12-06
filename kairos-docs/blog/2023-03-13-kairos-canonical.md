@@ -15,7 +15,11 @@ title: Kairos, SpectroCloud, and Canonical Collaborate to Deliver Revolutionary 
 
 Hello Kairos community!
 
+
+
 We are thrilled to announce that **Kairos** has been used as a key building block for a revolutionary Telco Radio Edge solution developed in collaboration with [Spectro Cloud](https://www.spectrocloud.com/) and [Canonical](https://canonical.com/). This cutting-edge solution showcases the latest advances in OpenRAN automation and distributed compute management, and took center stage at this year's Mobile World Congress.
+
+<!--truncate-->
 
 The Telco Radio Edge solution leverages the power of Kairos, Ubuntu Pro 22.04 LTS with RT kernel, and MicroK8s CAPI provider to deliver highly distributed edge node onboarding, secure deployment, and substrate provisioning. With this innovative technology stack, we’ve enabled OpenRAN o-DU service orchestration at scale, while optimizing performance, scalability, reliability, and security.
 

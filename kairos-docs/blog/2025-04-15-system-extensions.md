@@ -7,6 +7,8 @@ tags:
 title: 'System Extensions, Simplified: Live Customization with Kairos'
 ---
 
+
+
 # 🔧 System Extensions, Simplified: Live Customization with Kairos
 
 Kairos has always focused on making operating system deployments more predictable, reproducible, and manageable—especially in edge and embedded environments. But for all the benefits of immutability, one challenge has lingered:
@@ -16,6 +18,9 @@ Kairos has always focused on making operating system deployments more predictabl
 Today, we’re introducing a much cleaner answer: **the new system extension management framework**, now available via the Kairos Agent CLI and when Kairos 3.4.x releases.
 
 ---
+
+<!--truncate-->
+
 
 ## 💡 What's New
 

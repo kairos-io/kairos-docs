@@ -7,6 +7,8 @@ tags:
 title: Hacktoberfest 2024
 ---
 
+
+
 ![Kairos' Hacktoberfest](https://github.com/user-attachments/assets/e79ca5ed-97fe-4eaf-b31c-1fd01ff457f0)
 
 I can't believe it's already October. I've been so busy following up on different events where we've brought some of the Kairos love that I forgot about [Hacktoberfest](https://hacktoberfest.com). Thankfully, the month isn't over so let's get our hands dirty!

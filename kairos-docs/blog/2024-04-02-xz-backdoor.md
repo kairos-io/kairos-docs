@@ -7,11 +7,16 @@ tags:
 title: xz Utils Backdoor
 ---
 
+
+
 It's all over the tech news. Someone managed to put a backdoor on xz Utils, a very common package on Linux systems. In this post I want to share with you about what happened, how it impacted Kairos images, and what you should do in case you were affected.
 
 ## TL;DR
 
 A backdoor that can be used to exploit systemd based Linux via ssh was introduced in xz Utils. Only Kairos Tumbleweed v3.0.1 and v3.0.2 were affected. We deleted all related OCI images from our repos and artifacts from our releases. If you installed it and the system was exposed to the internet, you should do a complete re-install. If you hosted security keys in given system, you should rotate them.
+
+<!--truncate-->
+
 
 ## xz Utils Backdoor
 

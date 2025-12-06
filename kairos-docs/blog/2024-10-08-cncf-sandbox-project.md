@@ -7,9 +7,14 @@ tags:
 title: Kairos Joins the CNCF as a Sandbox Project
 ---
 
+
+
 We’re thrilled to announce that since April 2024, Kairos has been officially part of the Cloud Native Computing Foundation (CNCF) as a Sandbox Project. This marks an important milestone for Kairos and, more importantly, for our entire community of users and contributors.
 
 You might be wondering - what does being part of the CNCF mean for you? The CNCF is known for backing the most innovative, reliable, and secure projects in the cloud-native space, and having their support brings a number of crucial benefits. Let’s dive into why this matters.
+
+<!--truncate-->
+
 
 ## Stability and Long-Term Support
 
