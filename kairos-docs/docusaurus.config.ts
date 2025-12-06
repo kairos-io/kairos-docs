@@ -82,6 +82,11 @@ const config: Config = {
       },
       items: [
         {
+          to: '/docs/getting-started',
+          position: 'left',
+          label: 'Getting Started',
+        },
+        {
           type: 'docSidebar',
           sidebarId: 'tutorialSidebar',
           position: 'left',

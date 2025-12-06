@@ -43,7 +43,7 @@
   --ifm-hero-text-color: var(--kairos-white);
 }
 
-/* Dark mode colors */
+/* Dark mode colors - Enhanced for better contrast and aesthetics */
 [data-theme='dark'] {
   --ifm-color-primary: #FF7442;
   --ifm-color-primary-dark: #ff5f29;
@@ -54,10 +54,19 @@
   --ifm-color-primary-lightest: #ffb394;
 
   --ifm-link-color: #FF7442;
-  --ifm-link-hover-color: #ff895b;
+  --ifm-link-hover-color: #FFB394;
 
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
-  --ifm-background-color: #1a1a1a;
+  --docusaurus-highlighted-code-line-bg: rgba(255, 116, 66, 0.1);
+  --ifm-background-color: #0f1419;
+  --ifm-background-surface-color: #1a1f26;
+  --ifm-color-emphasis-800: #d4d4d4;
+  --ifm-heading-color: #ffffff;
+
+  /* Enhanced card backgrounds */
+  --ifm-card-background-color: #1a1f26;
+
+  /* Better code block colors */
+  --ifm-code-background: rgba(255, 116, 66, 0.08);
 }
 
 /* Global link styles */
@@ -91,17 +100,161 @@ a:hover {
   color: var(--kairos-white);
 }
 
-/* Navbar styling */
+/* Navbar styling - Dark to match footer */
 .navbar {
-  background-color: var(--kairos-white);
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+  background-color: var(--kairos-primary);
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.15);
+  border-bottom: 1px solid rgba(255, 116, 66, 0.1);
+  font-size: 1.0625rem;
 }
 
+.navbar__title {
+  color: var(--kairos-white);
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.navbar__link {
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+  transition: color 0.2s ease;
+  font-size: 1.0625rem;
+}
+
+.navbar__link:hover {
+  color: var(--kairos-softer-orange);
+}
+
+.navbar__item {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1.0625rem;
+}
+
+/* Navbar logo - keep original colors */
+.navbar__logo {
+  /* Logo retains original Kairos colors */
+}
+
+/* Color mode toggle - ensure visibility on dark navbar */
+.navbar__items .navbar__item button[class*='colorModeToggle'],
+.navbar__items .navbar__item a[class*='colorModeToggle'],
+html[data-theme='light'] button[class*='toggle'] {
+  color: rgba(255, 255, 255, 0.85);
+  transition: color 0.2s ease;
+}
+
+.navbar__items .navbar__item button[class*='colorModeToggle']:hover,
+html[data-theme='light'] button[class*='toggle']:hover {
+  color: var(--kairos-softer-orange);
+}
+
+/* Make the toggle icon visible */
+.navbar button[class*='toggleButton'] svg {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.navbar button[class*='toggleButton']:hover svg {
+  color: var(--kairos-softer-orange);
+}
+
+/* Dark mode navbar */
 [data-theme='dark'] .navbar {
-  background-color: #1a1a1a;
+  background-color: var(--kairos-primary);
+  border-bottom: 1px solid rgba(255, 116, 66, 0.2);
+}
+
+/* Sidebar styling - Match navbar color scheme */
+.theme-doc-sidebar-container {
+  background-color: var(--kairos-primary) !important;
+  border-right: 1px solid rgba(255, 116, 66, 0.1);
+}
+
+.menu {
+  font-size: 1.0625rem;
+}
+
+.menu__link {
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+}
+
+.menu__link:hover {
+  color: var(--kairos-white);
+  background-color: rgba(255, 116, 66, 0.1);
+}
+
+.menu__link--active {
+  color: var(--kairos-white);
+  background-color: var(--kairos-orange);
+  font-weight: 600;
+}
+
+.menu__link--active:hover {
+  background-color: var(--kairos-softer-orange);
+}
+
+.menu__list-item-collapsible:hover {
+  background-color: rgba(255, 116, 66, 0.05);
+}
+
+.menu__caret::before {
+  background: var(--ifm-menu-link-sublist-icon) 50% / 1.5rem 1.5rem;
+  filter: brightness(0) invert(1);
+}
+
+.theme-doc-sidebar-item-category-level-1 > .menu__list-item-collapsible > .menu__link {
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 600;
+  font-size: 1.125rem;
+}
+
+/* Dark mode sidebar adjustments */
+[data-theme='dark'] .theme-doc-sidebar-container {
+  background-color: var(--kairos-primary) !important;
+  border-right: 1px solid rgba(255, 116, 66, 0.2);
 }
 
 /* Footer styling */
 .footer--dark {
   background-color: var(--kairos-primary);
+  border-top: 1px solid rgba(255, 116, 66, 0.1);
+}
+
+/* Improved button styling */
+.button {
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 8px;
+  text-transform: none;
+  letter-spacing: 0.01em;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Dark mode button adjustments */
+[data-theme='dark'] .button--primary {
+  background-color: var(--kairos-orange);
+  box-shadow: 0 4px 14px rgba(238, 80, 7, 0.25);
+}
+
+[data-theme='dark'] .button--primary:hover {
+  background-color: var(--kairos-softer-orange);
+  box-shadow: 0 6px 20px rgba(238, 80, 7, 0.35);
+}
+
+[data-theme='dark'] .button--secondary {
+  border-color: var(--kairos-orange);
+  color: var(--kairos-orange);
+}
+
+[data-theme='dark'] .button--secondary:hover {
+  background-color: var(--kairos-orange);
+  color: var(--kairos-white);
+  box-shadow: 0 6px 20px rgba(238, 80, 7, 0.25);
 }
