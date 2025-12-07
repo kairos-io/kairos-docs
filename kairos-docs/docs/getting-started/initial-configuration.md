@@ -237,7 +237,7 @@ Cloud init is a standard in the industry and is widely supported. It is also ver
 
 Ok, but how do I add a package?
 
-<a class="btn btn-lg btn-primary me-3 mb-4" href="/building-and-upgrading">
+<a class="btn btn-lg btn-primary me-3 mb-4" href="/kairos-docs/docs/getting-started/building-and-upgrading">
     Building And Upgrading Guide
 </a>
 

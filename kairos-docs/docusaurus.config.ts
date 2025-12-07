@@ -27,6 +27,15 @@ const config: Config = {
 
   onBrokenLinks: 'throw',
 
+  // GitHub buttons script
+  scripts: [
+    {
+      src: 'https://buttons.github.io/buttons.js',
+      async: true,
+      defer: true,
+    },
+  ],
+
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
   // may want to replace "en" with "zh-Hans".
@@ -44,7 +53,26 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/kairos-io/kairos/tree/main/packages/create-kairos/templates/shared/',
+            'https://github.com/kairos-io/kairos-docs/tree/main/',
+          // Show last update time and author
+          showLastUpdateTime: true,
+          showLastUpdateAuthor: true,
+          // Enable versioning
+          lastVersion: '3.6.0',
+          versions: {
+            current: {
+              label: 'Next 🚧',
+              path: 'next',
+            },
+            '3.6.0': {
+              label: '3.6.0 (Latest)',
+              path: '3.6.0',
+            },
+            '3.5.7': {
+              label: '3.5.7',
+              path: '3.5.7',
+            },
+          },
         },
         blog: {
           showReadingTime: true,
@@ -99,9 +127,14 @@ const config: Config = {
           href: 'https://kairos.io/community/',
         },
         {
-          href: 'https://github.com/kairos-io/kairos',
-          label: 'GitHub',
+          type: 'docsVersionDropdown',
           position: 'right',
+          dropdownActiveClassDisabled: true,
+        },
+        {
+          type: 'html',
+          position: 'right',
+          value: '<a class="github-button" href="https://github.com/kairos-io/kairos" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star kairos-io/kairos on GitHub">Star</a>',
         },
       ],
     },
@@ -168,7 +201,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Kairos authors. The Linux Foundation® (TLF) has registered trademarks and uses trademarks.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Kairos authors`,
     },
     prism: {
       theme: prismThemes.github,

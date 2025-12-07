@@ -155,6 +155,73 @@ function CommunitySection() {
   );
 }
 
+function EnterpriseSection() {
+  return (
+    <section className={styles.enterpriseSection}>
+      <div className="container">
+        <Heading as="h2">Enterprise Support</Heading>
+        <p className={styles.enterpriseDescription}>
+          Need a hand? For enterprise support, <strong>get in touch</strong> with companies ready to help you tackle the toughest challenges.
+        </p>
+        <div className={styles.enterpriseCard}>
+          <div className={styles.enterpriseLogoContainer}>
+            <img src="/img/spectrocloud-light.svg" alt="Spectro Cloud Logo" className={styles.enterpriseLogo} />
+          </div>
+          <p>
+            <strong>Spectro Cloud</strong> is the main supporter behind Kairos and provides enterprise-grade Kubernetes management through its platform, Palette, which allows organizations to deploy, manage, and scale Kubernetes across various environments, including public clouds, data centers, bare metal, and edge computing.
+          </p>
+          <Link
+            href="https://www.spectrocloud.com/solutions/kairos-support"
+            className="button button--primary button--lg">
+            Learn more
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function BasicsSection() {
+  const basics = [
+    {
+      title: 'Installation',
+      description: 'See how to get up and running with Kairos, in less than 15 minutes!',
+      icon: '📦',
+      href: '/docs/Installation',
+    },
+    {
+      title: 'Architecture',
+      description: 'Get inside Kairos, from the factory to P2P mesh capabilities.',
+      icon: '🏗️',
+      href: '/docs/Architecture',
+    },
+    {
+      title: 'Examples',
+      description: 'Stretch your wings with best practices of common tasks after installing Kairos.',
+      icon: '🚀',
+      href: '/docs/Examples',
+    },
+  ];
+
+  return (
+    <section className={styles.basicsSection}>
+      <div className="container">
+        <div className={styles.basicsGrid}>
+          {basics.map((item, idx) => (
+            <Link key={idx} href={item.href} className={styles.basicCard}>
+              <div className={styles.basicIcon}>{item.icon}</div>
+              <div>
+                <Heading as="h3">{item.title}</Heading>
+                <p>{item.description}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function Home(): ReactNode {
   const {siteConfig} = useDocusaurusContext();
   return (
@@ -166,6 +233,8 @@ export default function Home(): ReactNode {
         <WelcomeSection />
         <FeaturesSection />
         <CNCFSection />
+        <EnterpriseSection />
+        <BasicsSection />
         <CommunitySection />
       </main>
     </Layout>

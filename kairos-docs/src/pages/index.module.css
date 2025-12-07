@@ -518,3 +518,163 @@
     max-width: 400px;
   }
 }
+
+/* Enterprise Support Section */
+.enterpriseSection {
+  padding: 7rem 2rem;
+  background: linear-gradient(180deg, rgba(225, 229, 238, 0.3) 0%, var(--ifm-background-surface-color) 100%);
+}
+
+[data-theme='dark'] .enterpriseSection {
+  background: linear-gradient(180deg, rgba(26, 31, 38, 0.6) 0%, var(--ifm-background-color) 100%);
+}
+
+.enterpriseSection h2 {
+  text-align: center;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  margin-bottom: 1.5rem;
+  color: var(--ifm-heading-color);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.enterpriseDescription {
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto 3rem;
+  font-size: 1.25rem;
+  line-height: 1.7;
+  color: var(--ifm-color-emphasis-800);
+}
+
+.enterpriseCard {
+  max-width: 800px;
+  margin: 0 auto;
+  background: var(--ifm-background-surface-color);
+  padding: 3rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+[data-theme='dark'] .enterpriseCard {
+  background: var(--ifm-background-surface-color);
+  border: 1px solid rgba(255, 116, 66, 0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.enterpriseCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme='dark'] .enterpriseCard:hover {
+  box-shadow: 0 12px 32px rgba(238, 80, 7, 0.2);
+}
+
+.enterpriseLogoContainer {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.enterpriseLogo {
+  max-width: 250px;
+  height: auto;
+}
+
+.enterpriseCard p {
+  font-size: 1.125rem;
+  line-height: 1.7;
+  margin-bottom: 2rem;
+  color: var(--ifm-color-emphasis-800);
+}
+
+.enterpriseCard .button {
+  display: inline-block;
+}
+
+/* Basics Section */
+.basicsSection {
+  padding: 5rem 2rem;
+  background: linear-gradient(180deg, var(--ifm-background-surface-color) 0%, rgba(225, 229, 238, 0.2) 100%);
+}
+
+[data-theme='dark'] .basicsSection {
+  background: linear-gradient(180deg, var(--ifm-background-color) 0%, rgba(26, 31, 38, 0.5) 100%);
+}
+
+.basicsGrid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+.basicCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  padding: 2rem;
+  background: var(--ifm-background-surface-color);
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--ifm-color-content);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme='dark'] .basicCard {
+  background: var(--ifm-background-surface-color);
+  border: 1px solid rgba(255, 116, 66, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.basicCard:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(238, 80, 7, 0.15);
+  border-color: var(--kairos-orange);
+  color: var(--ifm-color-content);
+}
+
+[data-theme='dark'] .basicCard:hover {
+  box-shadow: 0 8px 20px rgba(238, 80, 7, 0.25);
+  border-color: var(--kairos-orange);
+}
+
+.basicIcon {
+  font-size: 3.5rem;
+  flex-shrink: 0;
+  line-height: 1;
+  transition: transform 0.3s ease;
+}
+
+.basicCard:hover .basicIcon {
+  transform: scale(1.1);
+}
+
+.basicCard h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--ifm-heading-color);
+  font-weight: 700;
+}
+
+.basicCard p {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+  color: var(--ifm-color-emphasis-700);
+}
+
+@media screen and (max-width: 768px) {
+  .basicsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .enterpriseCard {
+    padding: 2rem;
+  }
+}
