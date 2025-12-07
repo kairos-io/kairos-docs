@@ -339,8 +339,8 @@ When deploying on a bare metal server, directly flash the image into a USB stick
 
 </TabItem>
 
-  <!-- Hugo shortcode: tab header="QEMU"  -->
-    
+  <TabItem value="qemu" label="QEMU">
+
 :::warning Warning
 
 Make sure you have KVM enabled, this will improve the performance of your VM significantly!
@@ -348,24 +348,24 @@ Make sure you have KVM enabled, this will improve the performance of your VM sig
 :::
 
 
-    This would be the way to start it via the command line, but you can also use the GUI
+This would be the way to start it via the command line, but you can also use the GUI
 
-    <!-- Hugo shortcode: highlight bash  -->
-      virt-install --name my-first-kairos-vm \
-                  --vcpus 1 \
-                  --memory 1024 \
-                  --cdrom build/kairos.iso.custom.iso \
-                  --disk size=30 \
-                  --os-variant opensuse-factory \
-                  --virt-type kvm
+<!-- Hugo shortcode: highlight bash  -->
+  virt-install --name my-first-kairos-vm \
+              --vcpus 1 \
+              --memory 1024 \
+              --cdrom build/kairos.iso.custom.iso \
+              --disk size=30 \
+              --os-variant opensuse-factory \
+              --virt-type kvm
 
-    <!-- Hugo shortcode: / highlight  -->
-    Immediately after open a viewer so you can interact with the boot menu:
-    <!-- Hugo shortcode: highlight bash  -->
-    virt-viewer my-first-kairos-vm
-    <!-- Hugo shortcode: / highlight  -->
+<!-- Hugo shortcode: / highlight  -->
+Immediately after open a viewer so you can interact with the boot menu:
+<!-- Hugo shortcode: highlight bash  -->
+virt-viewer my-first-kairos-vm
+<!-- Hugo shortcode: / highlight  -->
 
-  <!-- Hugo shortcode: /tab  -->
+</TabItem>
 
 </Tabs>
 
