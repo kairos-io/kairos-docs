@@ -217,7 +217,7 @@ function EnterpriseSection() {
         </p>
         <div className={styles.enterpriseCard}>
           <div className={styles.enterpriseLogoContainer}>
-            <img src="/img/spectrocloud-light.svg" alt="Spectro Cloud Logo" className={styles.enterpriseLogo} />
+            <img src="{useBaseUrl(/img/spectrocloud-light.svg)}" alt="Spectro Cloud Logo" className={styles.enterpriseLogo} />
           </div>
           <p>
             <strong>Spectro Cloud</strong> is the main supporter behind Kairos and provides enterprise-grade Kubernetes management through its platform, Palette, which allows organizations to deploy, manage, and scale Kubernetes across various environments, including public clouds, data centers, bare metal, and edge computing.
