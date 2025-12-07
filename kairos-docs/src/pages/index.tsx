@@ -4,6 +4,8 @@ import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import Heading from '@theme/Heading';
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
 
 import styles from './index.module.css';
 
@@ -34,7 +36,7 @@ function HomepageHeader() {
           </div>
         </div>
         <div className={styles.heroImage}>
-          <img src="/img/armadillo.png" alt="Kairos Logo" width="318" />
+            <img src={useBaseUrl('/img/armadillo.png')} alt="Kairos Logo" width="318" />
         </div>
       </div>
     </header>
@@ -47,7 +49,7 @@ function WelcomeSection() {
       <div className="container">
         <div className={styles.welcomeContent}>
           <div className={styles.welcomeImage}>
-            <img src="/img/armadillo.png" alt="Kairos Armadillo" />
+              <img src={useBaseUrl('/img/wrapped-armadillo.png')} alt="Kairos Logo" width="318" />
           </div>
           <div className={styles.welcomeText}>
             <Heading as="h2">Welcome to Kairos</Heading>
@@ -109,59 +111,109 @@ function FeaturesSection() {
   );
 }
 
+function HotofpressSection() {
+    return (
+        <section className={styles.cncfSection}>
+            <div id="hot-press-blade">
+                <div className="hot-off-press">
+                    <h2>Hot off the press</h2>
+                    <div className="press-cards">
+                        <div>
+                            <p>See how we're collaborating with Intel and Spectro Cloud on the new Secure Edge-Native
+                                Architecture</p>
+                            <div className="press-card-img">
+                                <img src={useBaseUrl('/img/spectro-intel.png')} alt="spectro intel logo" loading="lazy" />                            </div>
+                            <a href="https://www.spectrocloud.com/news/spectro-cloud-launches-the-secure-edge-native-architecture-sena"
+                               target="_blank">
+                                Read more
+                                <i className="fa-solid fa-chevron-right"></i>
+                            </a>
+                        </div>
+                        <div>
+                            <p>Check us out in this The New Stack article by our maintainer, Ettore di Giacinto</p>
+                            <div className="press-card-img">
+                                <img src={useBaseUrl('/img/theNewStack.png')} alt="the New Stack logo" loading="lazy" />                            </div>
+                            <a href="https://thenewstack.io/honey-i-secured-your-boot-edge-trusted-boot-with-kairos/"
+                               target="_blank">
+                                Read more
+                                <i className="fa-solid fa-chevron-right"></i>
+                            </a>
+                        </div>
+                        <div>
+                            <p>Learn how to use the famous OSS project, LocalAI, with Kairos and K3s on your nodes</p>
+                            <div className="press-card-img">
+                                <img src={useBaseUrl('/img/k8s-superpowers.png')} alt="k8sgpt kubernetes superpowers logo" loading="lazy" />                            </div>
+                            <a href="https://thenewstack.io/looking-for-a-k3os-alternative-choosing-a-container-os-for-edge-k8s/"
+                               target="_blank">
+                                Read more
+                                <i className="fa-solid fa-chevron-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+}
+
+
 function CNCFSection() {
-  return (
-    <section className={styles.cncfSection}>
-      <div className="container">
-        <div className={styles.cncfContent}>
-          <Heading as="h2">We are a Cloud Native Computing Foundation sandbox project</Heading>
-          <img
-            src="https://www.cncf.io/wp-content/uploads/2022/07/cncf-white-logo.svg"
-            alt="CNCF Logo"
-            width="300"
-            height="auto"
-          />
-          <p>The Linux Foundation® (TLF) has registered trademarks and uses trademarks. For a list of TLF trademarks, see <a href="https://www.linuxfoundation.org/trademark-usage/" target="_blank">Trademark Usage</a>.</p>
-        </div>
-      </div>
-    </section>
-  );
+    return (
+        <section className={styles.cncfSection}>
+            <div className="container">
+                <div className={styles.cncfContent}>
+                    <Heading as="h2">We are a Cloud Native Computing Foundation sandbox project</Heading>
+                    <img
+                        src="https://www.cncf.io/wp-content/uploads/2022/07/cncf-white-logo.svg"
+                        alt="CNCF Logo"
+                        width="300"
+                        height="auto"
+                    />
+                    <p>The Linux Foundation® (TLF) has registered trademarks and uses trademarks. For a list of TLF
+                        trademarks, see <a href="https://www.linuxfoundation.org/trademark-usage/" target="_blank">Trademark
+                            Usage</a>.</p>
+                </div>
+            </div>
+        </section>
+    );
 }
 
 function CommunitySection() {
-  return (
-    <section className={styles.communitySection}>
-      <div className="container">
-        <Heading as="h2">Join our community</Heading>
-        <p className={styles.communityDescription}>
-          Whether you're a part of a DevOps team, an IT engineer, a hobbyist, or a maker, we welcome you to join us in driving forward our vision of a secure, decentralized, and containerized edge.
-        </p>
-        <div className={styles.communityLinks}>
-          <Link href="https://github.com/kairos-io/kairos" target="_blank" className={styles.communityCard}>
-            <div className={styles.communityIcon}>🐙</div>
-            <p>Contribute on GitHub</p>
-          </Link>
-          <Link href="https://www.linkedin.com/company/kairos-oss/" target="_blank" className={styles.communityCard}>
-            <div className={styles.communityIcon}>💼</div>
-            <p>Follow us on LinkedIn</p>
-          </Link>
-          <Link href="https://slack.cncf.io/#kairos" target="_blank" className={styles.communityCard}>
-            <div className={styles.communityIcon}>💬</div>
-            <p>Join the conversation</p>
-          </Link>
-        </div>
-      </div>
-    </section>
-  );
+    return (
+        <section className={styles.communitySection}>
+            <div className="container">
+                <Heading as="h2">Join our community</Heading>
+                <p className={styles.communityDescription}>
+                    Whether you're a part of a DevOps team, an IT engineer, a hobbyist, or a maker, we welcome you to
+                    join us in driving forward our vision of a secure, decentralized, and containerized edge.
+                </p>
+                <div className={styles.communityLinks}>
+                    <Link href="https://github.com/kairos-io/kairos" target="_blank" className={styles.communityCard}>
+                        <div className={styles.communityIcon}>🐙</div>
+                        <p>Contribute on GitHub</p>
+                    </Link>
+                    <Link href="https://www.linkedin.com/company/kairos-oss/" target="_blank"
+                          className={styles.communityCard}>
+                        <div className={styles.communityIcon}>💼</div>
+                        <p>Follow us on LinkedIn</p>
+                    </Link>
+                    <Link href="https://slack.cncf.io/#kairos" target="_blank" className={styles.communityCard}>
+                        <div className={styles.communityIcon}>💬</div>
+                        <p>Join the conversation</p>
+                    </Link>
+                </div>
+            </div>
+        </section>
+    );
 }
 
 function EnterpriseSection() {
-  return (
-    <section className={styles.enterpriseSection}>
-      <div className="container">
-        <Heading as="h2">Enterprise Support</Heading>
-        <p className={styles.enterpriseDescription}>
-          Need a hand? For enterprise support, <strong>get in touch</strong> with companies ready to help you tackle the toughest challenges.
+    return (
+        <section className={styles.enterpriseSection}>
+            <div className="container">
+                <Heading as="h2">Enterprise Support</Heading>
+                <p className={styles.enterpriseDescription}>
+                    Need a hand? For enterprise support, <strong>get in touch</strong> with companies ready to help you tackle the toughest challenges.
         </p>
         <div className={styles.enterpriseCard}>
           <div className={styles.enterpriseLogoContainer}>
@@ -232,6 +284,7 @@ export default function Home(): ReactNode {
       <main>
         <WelcomeSection />
         <FeaturesSection />
+          <HotofpressSection/>
         <CNCFSection />
         <EnterpriseSection />
         <BasicsSection />
