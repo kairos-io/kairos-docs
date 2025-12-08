@@ -2,7 +2,7 @@
   "label": "Cluster Setup",
   "link": {
     "type": "generated-index",
-    "title": "Cluster Setu",
+    "title": "Cluster Setup",
     "description": "Explore how to setup your kubernetes cluster with Kairos using various methods and configurations."
   },
   "collapsible": true,
