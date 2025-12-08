@@ -294,5 +294,5 @@ spec:
 # Related Documentation
 
 - [K3s Stages](./k3s-stages) - Running stages with k3s
-- [Multi-node Setup](./multi-node) - Setting up multi-node clusters
-- [P2P Examples](./single-node-p2p) - P2P coordination examples 
+- [Multi-node Setup](cluster-setup/multi-node.md) - Setting up multi-node clusters
+- [P2P Examples](cluster-setup/single-node-p2p.md) - P2P coordination examples 
