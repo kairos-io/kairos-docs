@@ -1,0 +1,11 @@
+{
+  "label": "Examples",
+  "position": 9,
+  "link": {
+    "type": "generated-index",
+    "title": "Examples",
+    "description": "Explore hands-on examples that show how to deploy Kairos clusters using K3s, bundles, VPNs, airgapped environments, and more."
+  },
+  "collapsible": true,
+  "collapsed": true
+}

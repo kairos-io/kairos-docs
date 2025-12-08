@@ -2,6 +2,11 @@
   "label": "Upgrade",
   "description": "After your system has been running for a while, you will need to upgrade it to a different version. Check out the following sections to learn the different ways to upgrade Kairos.\n",
   "position": 7,
+  "link": {
+    "type": "generated-index",
+    "title": "Upgrade",
+    "description": "After your system has been running for a while, you will need to upgrade it to a different version. Check out the following sections to learn the different ways to upgrade Kairos.\n"
+  },
   "collapsible": true,
   "collapsed": true
 }
