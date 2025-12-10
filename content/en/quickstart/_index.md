@@ -26,13 +26,11 @@ Here are some alternatives:
 
 - Windows: VMware Workstation Player
 - macOS: VMware Fusion, UTM
-- Linux: KVM (via virt-manager or virsh)
+- Linux: KVM (via [Virt Manager](https://virt-manager.org/) or virsh), Proxmox
 
 ## Do you prefer to watch a video?
 
-TODO: record new video
-
-{{< youtube id="XAIsitP5OII" title="Getting Started with Kairos" >}}
+{{< youtube id="wEjN42hFpOo" title="Hadron Quickstart" >}}
 
 ## Download an ISO
 
@@ -46,8 +44,7 @@ For production setups, you can either use one of the other Kairos flavors or wai
 Kairos offers multiple flavors — different Linux distributions that power the immutable OS. Hadron is the default, engineered for image-based workflows, but you can also use Alpine, Debian, Fedora, Rocky, Ubuntu, and many more. In this quickstart, we’ll be using Hadron.
 {{% /alert %}}
 
-Click the following link to download: [kairos-hadron-0.1.0-beta-standard-amd64-generic-v3.6.0-k3sv1.33.5+k3s1.iso
-](https://drive.google.com/file/d/1M4H5_pEkCNwTcd5X1obDfANr2rrjMPAi/view?usp=sharing)
+Click the following link to download: [kairos-hadron-0.1.0-beta-standard-amd64-generic-v3.6.0-k3sv1.33.5+k3s1.iso](https://github.com/kairos-io/kairos/releases/download/v3.6.1-beta1/kairos-hadron-0.0.1-standard-amd64-generic-v3.6.1-beta1-k3sv1.34.2+k3s1.iso)
 
 ## Create a Virtual Machine (VM)
 
@@ -67,38 +64,74 @@ Hadron Single-Node Demo Requirements (with k3s)
 
 {{% /alert %}}
 
-This step will vary depending on the Virtualization Software you are using. Here are some general steps to get you started:
+
+{{< tabpane text=true right=true  >}}
+{{% tab header="VirtualBox" %}}
+1. Click on New
+2. Add all information for the VM
+    - **Name:** Hadron
+    - **ISO Image:** /path/to/previously/downloaded/iso/kairos-hadron-0.0.1-standard-amd64-generic-v3.6.1-beta1-k3sv1.34.2+k3s1.iso
+    - **OS:** Linux
+    - **OS Distribution:** Other Linux
+    - **OS Version:** Other Linux (64-bit)
+3. Configure the requirements:
+    - **Base Memory:** 2048 MB (we don't need more for this quickstart but if you want to deploy applications to it, considerr 4 or 8 GB)
+    - **Number of CPUs:** 1 (The more the merrier)
+    - **Disk Size:** 8 GB (there's no need for more space for this quickstart but depending on what you want to deploy on your system consider extending)
+    - **Use EFI:** disabled
+4. You will see the Hadron VM on the list of VMs on the left. Make sure it is selected, and click on Settings.
+5. Go to System and modify the Boot Device Order (BIOS only) to have the Hard Disk at the top and Optical after.
+6. Go to Network and modify the Enabled Network Adapter so
+    - **Attached to:** Bridged Adapter
+7. Click on the Ok button to save.
+8. With the Hadron VM selected, click on Start
+
+{{% /tab %}}
+{{% tab header="Generic Instructions" %}}
 
 1. Create a new VM.
 2. Assign the downloaded ISO to the CDROM and set it as the boot media.
 3. Configure the VM hardware according to the requirements
 5. Start the VM.
 
+{{% /tab %}}
+{{< /tabpane >}}
+
+
 ## Perform an Interactive Installation
 
-The first time you boot the VM, you will be greeted with a GRUB boot menu with multiple options. Select the option that says "Interactive Install" and press Enter.
+1. The first time you boot the VM, you will be greeted with a GRUB boot menu with multiple options. Select the option that says "Interactive Install" and press Enter.
+2. Wait for the system to boot up. You will be greeted with the interactive installation manager. The drive where the installation is going to proceed e.g. `/dev/sda` should already be selected. Denoted by the `>` character on the left.
+3. Hit enter to select that drive
+4. On the next page you will see a message that says: Start Install and on Finish do [nothing, reboot, poweroff]
+5. With the arrows select "poweroff"
+6. Then move down to "Customize further" and hit Enter
+7. Select User & Password and hit Enter
+8. For the user write "kairos" then hit tab and for the password also write "kairos".
+9. Hit Enter to save the changes and you will be redirected to the previous menu
+10. Select "Configure k3s.enabled" and hit Enter
+12. With the arrows select the option "Yes" to enable K3s and hit Enter, which should take you back to the previous menu.
+13. Select "Finish Customization and start Installation" and hit Enter
+14. The Installation Summary should look like this:
+    ```
+    Selected Disk: /dev/sda
 
-Wait for the system to boot up. You will be greeted with a Kairos logo and the interactive installation manager will ask you the following questions:
+    Action to take when Installation is complete: poweroff
 
-- **What's the target install device** (e.g. /dev/vda). Kairos will detect the biggest disk available and suggest it. If you are happy with the suggestion, press Enter. Otherwise erase the suggestion and type the device you want to use, or the question mark. The question mark will show you a list of available devices.
-- **User to setup** (e.g. Kairos). The default user is Kairos but it is also a required user so for now just press Enter and later on we will teach you how to add more users.
-- **Password** this one doesn't have a default, so type a password and press Enter.
-- **SSH access** (e.g. github:mauromorales). This is optional but very useful. Kairos will go and fetch your public key from GitHub or GitLab and add it to the user's authorized keys. If you don't have a key on GitHub or GitLab, you can paste your public key here. If you don't want to add a key, just press Enter.
-- **Do you want to setup a full mesh-support?** (y/n). This step enables P2P support. For now we will not enable it, so just press Enter.
-- **Do you want to enable k3s?** (y/n). This step enables the installation of K3s. Write "y" and press Enter.
-* **Are your settings ok?** (y/n). If you are happy with the settings, write "y" and press Enter. Otherwise write "n" and press Enter to start again.
+    Configuration Summary:
+      - Username: kairos
+      - SSH Keys: not set
 
-The installation will start and you will see the Kairos' agent different steps.
+    Extra options:
 
-{{% alert title="Remember to eject the CD!" color="warning" %}}
-Some VMMs will not eject the CD automatically. Make sure to eject the CD before rebooting.
+    k3s:
+      enabled: true
+    ```
+15. If everything is correct, you can press Enter to install. You should see a progress bar and the VM will poweroff automatically.
+
+{{% alert title="Eject the CD!" color="warning" %}}
+Some Virtualization Software automatically removes the CD after installation. To avoid any confusion make sure you have the right boot order as mentioned in the before section. Otherwise, make sure to eject the CD before rebooting.
 {{% /alert %}}
-
-When the installation is complete you will need to reboot the system. You can do this with the following command:
-
-```bash
-reboot
-```
 
 ## First Boot
 
@@ -109,12 +142,17 @@ After the system finishes booting, you will see a login prompt. Go ahead and log
 ## SSH into the system
 
 
-{{% alert title="Check your VMM Networking configuration" color="warning" %}}
-Accessing your VM via SSH will depend on your VMM networking configuration. Make sure you have the correct network settings to access the VM.
+{{% alert title="VM Network" color="warning" %}}
+Accessing your VM via SSH will depend on your Virtualization Software network configuration. If you followed the configuration above, with a Bridged card, your machine should get an IP within your network allowing you to SSH in.
 {{% /alert %}}
 
+First we need to get the IP, since there are no VirtualBox guest packages for Hadron, we need to do this from the VirtualBox console. But it's just a quick command:
 
-On the VM info you can find the IP associated to it, use it to SSH into the system:
+```bash
+ip a | grep 192
+```
+
+Now use the resulting IP to access the system from your prefered terminal application.
 
 ```bash
 ssh kairos@IP
@@ -128,33 +166,47 @@ Now enter the password you set during the installation.
 
 ## Check Your Running Cluster
 
-{{% alert title="Batteries included" color="info" %}}
-Along with k3s, the standard images come with kubectl and k9s pre-installed. Kubectl is the Kubernetes command-line tool, and k9s is a terminal-based UI to interact with your Kubernetes clusters.
-{{% /alert %}}
-
 After logging in, you can check the status of the cluster with the `kubectl` tool. First switch to the `root` user with the following command:
 
 ```bash
 sudo -i
 ```
 
-If you display the pods within the `kube-system` namespace, you should see the `coredns` and `local-path-provisioner` pods running. E.g.:
+Let's start by displaying the nodes in the system
 
 ```
-root@localhost:~# kubectl get pods -n kube-system
+kubectl get nodes
+```
+
+You should see the k3s control-plane node listed, which is basically this machine we just provisioned.
+
+```
+NAME     STATUS   ROLES           AGE    VERSION
+kairos   Ready    control-plane   164m   v1.34.2+k3s1
+```
+
+If you display the pods within the `kube-system` namespace
+
+```
+kubectl get pods -n kube-system
+```
+
+You should see the `coredns` and `local-path-provisioner` pods running. E.g.:
+
+```
 NAME                                      READY   STATUS      RESTARTS   AGE
-coredns-576bfc4dc7-nc982                  1/1     Running     0          5h9m
-helm-install-traefik-crd-28sfl            0/1     Completed   0          5h9m
-helm-install-traefik-kdxmj                0/1     Completed   1          5h9m
-local-path-provisioner-86f46b7bf7-5fs46   1/1     Running     0          5h9m
-metrics-server-557ff575fb-zmdlf           1/1     Running     0          5h9m
-svclb-traefik-00b7a912-xh4zd              2/2     Running     0          5h8m
-traefik-5fb479b77-mfq7h                   1/1     Running     0          5h8m
+coredns-7f496c8d7d-mjmkp                  1/1     Running     0          170m
+helm-install-traefik-crd-mqdfk            0/1     Completed   0          170m
+helm-install-traefik-sr9b5                0/1     Completed   2          170m
+local-path-provisioner-578895bd58-k667m   1/1     Running     0          170m
+metrics-server-7b9c9c4b9c-kjdfn           1/1     Running     0          170m
+svclb-traefik-fbdc293e-scdm4              2/2     Running     0          170m
+traefik-6f5f87584-kjcdr                   1/1     Running     0          170m
 ```
 
 ## Conclusion
 
-Congratulations :tada: You have successfully deployed a Kubernetes cluster using Kairos :rocket: You can now start deploying your applications and services on your new cluster
+Congratulations :tada: You have successfully deployed a Kubernetes cluster using Kairos Hadron :rocket: You can now start deploying your applications and services on your new cluster
 
 **Please refer to the [K3s](https://rancher.com/docs/k3s/latest/en/) documentation, to learn more about the Kubernetes distribution that Kairos uses in the standard images.**
 
@@ -166,7 +218,7 @@ You can configure the system by editing the cloud-config file. The cloud-config 
 
 **What is a Kairos flavor?**
 
-A Kairos flavor is a specific version of Kairos that is built on top of a specific Linux distribution. For example, the Alpine Kairos flavor is built on top of Alpine Linux. You can choose the flavor that best suits your needs.
+A Kairos flavor is a specific version of Kairos that is built on top of a specific Linux distribution. For example, the Alpine Kairos flavor is built on top of Alpine Linux. You can choose the flavor that best suits your needs. Once Hadron is stable, it will become the default flavor, but all the other flavors continue to be supported.
 
 **Can I use Kairos without Kubernetes?**
 
@@ -174,7 +226,7 @@ Yes, absolutely! You can use Kairos as a standalone Linux distribution without K
 
 **Can I use a different Kubernetes distribution with Kairos?**
 
-Kairos uses providers to install Kubernetes distributions. The Kairos provider is the only one that is built and tested by the Kairos team, but there are other providers by the community and you can build your own!
+Yes, you can download the standard image with k0s. Both k3s and k0s are equaliy supported by the Kairos team.
 
 <script type="application/ld+json">
 {
