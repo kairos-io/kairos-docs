@@ -1,8 +1,5 @@
 ---
-title: "Quickstart"
-menu:
-  main:
-    weight: 10
+title: "Quickstart old"
 weight: 1
 ---
 
@@ -16,28 +13,6 @@ Before building Hadron, ensure you have [Docker Engine](https://docs.docker.com/
 
 Ensure you have `make` installed.
 
-{{< tabpane >}}
-{{< tab header="apt" lang="bash" >}}
-# Debian, Ubuntu
-sudo apt install make
-{{< /tab >}}
-{{< tab header="dnf" lang="bash" >}}
-# Fedora, RHEL derivatives
-sudo dnf install make
-{{< /tab >}}
-{{< tab header="zypper" lang="bash" >}}
-# openSUSE, SUSE
-sudo zypper install make
-{{< /tab >}}
-{{< tab header="apk" lang="bash" >}}
-# Alpine
-apk add make
-{{< /tab >}}
-{{< tab header="pacman" lang="bash" >}}
-# Arch
-sudo pacman -S make
-{{< /tab >}}
-{{< /tabpane >}}
 
 ### Build Command
 
