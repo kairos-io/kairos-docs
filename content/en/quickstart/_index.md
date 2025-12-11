@@ -102,7 +102,7 @@ Hadron Single-Node Demo Requirements (with k3s)
 2. Wait for the system to boot up. You will be greeted with the interactive installation manager. The drive where the installation is going to proceed, for example `/dev/sda`, should already be selected, denoted by the `>` character on the left.
 3. Press Enter to select that drive.
 4. On the next page you will see a message that says: `Start Install and on Finish do [nothing, reboot, poweroff]`.
-5. With the arrows, select `poweroff`.
+5. With the arrows, select `reboot`.
 6. Move down to `Customize further` and press Enter.
 7. Select `User & Password` and press Enter.
 8. For the user, enter `kairos`, then press Tab. For the password, also enter `kairos`.
@@ -115,7 +115,7 @@ Hadron Single-Node Demo Requirements (with k3s)
     ```
     Selected Disk: /dev/sda
 
-    Action to take when Installation is complete: poweroff
+    Action to take when Installation is complete: reboot
 
     Configuration Summary:
       - Username: kairos
@@ -127,7 +127,7 @@ Hadron Single-Node Demo Requirements (with k3s)
       enabled: true
     ```
 
-14. If everything is correct, press Enter to install. You should see a progress bar and the VM will power off automatically.
+14. If everything is correct, press Enter to install. You should see a progress bar and the VM will reboot automatically.
 
 {{% alert title="Eject the CD!" color="warning" %}}
 Some virtualization software automatically removes the CD after installation. To avoid any confusion, make sure you have the right boot order as mentioned in the previous section. Otherwise, make sure to eject the CD before rebooting.
@@ -158,10 +158,6 @@ Now use the resulting IP address to access the system from your preferred termin
 ```bash
 ssh kairos@IP
 ```
-
-{{% alert title="Authorized Keys" color="info" %}}
-If you configured the SSH key during the installation, you will be able to log in without a password.
-{{% /alert %}}
 
 Now enter the password you set during the installation.
 
