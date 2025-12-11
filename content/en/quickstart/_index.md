@@ -268,8 +268,8 @@ Ready to configure and extend your newly deployed Kairos node?
 
 Need a highly secure system with TPM-backed attestation and trusted boot?
 
-<a class="btn btn-lg btn-outline-primary me-3 mb-4" href="{{< relref "../docs/installation/trustedboot" >}}">
-    Trusted Boot installations
+<a class="btn btn-lg btn-outline-primary me-3 mb-4" href="{{< relref "./trusted-boot" >}}">
+    Trusted Boot Quickstart
 </a>
 
 Need something that's not included in the base Kairos image? You can extend it cleanly with systemd extensions.
