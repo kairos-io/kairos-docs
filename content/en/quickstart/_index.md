@@ -264,18 +264,21 @@ Yes, you can download the standard image with k0s. Both k3s and k0s are equally 
 
 ## What's Next?
 
-Ready to configure your newly deployed Kairos node?
+Ready to configure and extend your newly deployed Kairos node?
 
-<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< ref "initial-configuration.md" >}}">
-    Quick configuration guide
+<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "../docs/reference/configuration" >}}">
+    Configuration
 </a>
 
-Find out about the features in Kairos, the goals that drive our project, and how to join our community.
+Need a highly secure system with TPM-backed attestation and trusted boot?
 
-Want to install on bare-metal? A Raspberry Pi? A cloud provider? Check out our other installation guides.
-
-<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "../docs/installation" >}}">
-    Other ways to install Kairos
+<a class="btn btn-lg btn-outline-primary me-3 mb-4" href="{{< relref "../docs/installation/trustedboot" >}}">
+    Trusted Boot installations
 </a>
 
+Need something that's not included in the base Kairos image? You can extend it cleanly with systemd extensions.
+
+<a class="btn btn-lg btn-outline-primary me-3 mb-4" href="{{< ref "sys-extensions.md" >}}">
+    Extending the system with systemd extensions
+</a>
 
