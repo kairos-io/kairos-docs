@@ -20,13 +20,13 @@ Ready to launch your Kubernetes cluster with ease? Hadron by Kairos makes it sim
 
 ## Prerequisites
 
-To run Hadron, you only need virtualization software. For this quickstart, we’ll use [VirtualBox](https://www.virtualbox.org/), which works on all major platforms.
+{{% alert title="Alternatives" color="success" %}}
+This tutorial uses the recommended virtualization tools to keep the instructions simple. Other alternatives should work as well, but they’re not documented here. If you successfully follow the tutorial using different tools, please consider opening a PR so others can benefit from your steps.
+{{% /alert %}}
 
-Here are some alternatives:
+To run Hadron Trusted Boot, you’ll need virtualization software that can run or emulate the amd64 architecture. In this guide, we’ll be using:
 
-- Windows: VMware Workstation Player
-- macOS: VMware Fusion, UTM
-- Linux: KVM (via [Virt Manager](https://virt-manager.org/) or virsh), Proxmox
+- [VirtualBox](https://www.virtualbox.org/)
 
 ## Prefer to watch a video?
 
@@ -266,15 +266,16 @@ Ready to configure and extend your newly deployed Kairos node?
     Configuration
 </a>
 
+Need something that's not included in the base Kairos image?
+
+<a class="btn btn-lg btn-outline-primary me-3 mb-4" href="{{< ref "extending-the-system-dockerfile" >}}">
+    Extending the system with Dockerfiles
+</a>
+
 Need a highly secure system with TPM-backed attestation and trusted boot?
 
 <a class="btn btn-lg btn-outline-primary me-3 mb-4" href="{{< relref "./trusted-boot" >}}">
     Trusted Boot Quickstart
 </a>
 
-Need something that's not included in the base Kairos image? You can extend it cleanly with systemd extensions.
-
-<a class="btn btn-lg btn-outline-primary me-3 mb-4" href="{{< ref "sys-extensions.md" >}}">
-    Extending the system with systemd extensions
-</a>
 

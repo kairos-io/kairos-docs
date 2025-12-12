@@ -13,14 +13,16 @@ Deploy Kairos Hadron with Trusted Boot enabled. You will learn how to generate S
 
 ## Prerequisites
 
-For this quickstart you will need a container engine and virtualization software.
+{{% alert title="Alternatives" color="success" %}}
+This tutorial uses the recommended container and virtualization tools to keep the instructions simple. Other alternatives should work as well, but they’re not documented here. If you successfully follow the tutorial using different tools, please consider opening a PR so others can benefit from your steps.
+{{% /alert %}}
 
-- For container engine, we'll use [Docker](https://docs.docker.com/engine/install/)
-- For virtualization software we’ll use [VirtualBox](https://www.virtualbox.org/)
+To run Hadron Trusted Boot, you’ll need both a container engine and virtualization software that can run or emulate the amd64 architecture. In this guide, we’ll be using:
+
+- [Docker](https://docs.docker.com/engine/install/)
+- [VirtualBox](https://www.virtualbox.org/)
 
 ## Prefer to watch a video?
-
-{{< youtube id="wEjN42hFpOo" title="Hadron Trusted Boot" >}}
 
 ## Generate Your Keys
 
