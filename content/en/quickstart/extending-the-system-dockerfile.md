@@ -79,6 +79,10 @@ To keep this quickstart short, we’ll use the second approach.
 
 As an example, we’ll download and install `bottom` (`btm`) to inspect system resource usage.
 
+{{% alert title="Toolchain" color="info" %}}
+In this example we use the Hadron `hadron-toolchain` image as a build stage. It contains a full build environment (gcc, make, headers, etc.) that is not included in the final production images—useful for build-time tasks, but typically avoided at runtime for security and size reasons.
+{{% /alert %}}
+
 ```dockerfile
 FROM quay.io/kairos/kairos-init:v0.6.4 AS kairos-init
 
