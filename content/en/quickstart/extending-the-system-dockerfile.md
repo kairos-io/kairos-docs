@@ -221,12 +221,12 @@ Ready to configure and extend your newly deployed Kairos node?
 
 Learn how to extend the system with system extensions
 
-<a class="btn btn-lg btn-outline-primary me-3 mb-4" href="{{< ref "sys-extensions.md" >}}">
+<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< ref "sys-extensions.md" >}}">
     Extending the system with systemd extensions
 </a>
 
 Need a highly secure system with TPM-backed attestation and trusted boot?
 
-<a class="btn btn-lg btn-outline-primary me-3 mb-4" href="{{< relref "./trusted-boot" >}}">
+<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "./trusted-boot" >}}">
     Trusted Boot Quickstart
 </a>

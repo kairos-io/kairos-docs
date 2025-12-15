@@ -268,13 +268,13 @@ Ready to configure and extend your newly deployed Kairos node?
 
 Need something that's not included in the base Kairos image?
 
-<a class="btn btn-lg btn-outline-primary me-3 mb-4" href="{{< ref "extending-the-system-dockerfile" >}}">
+<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< ref "extending-the-system-dockerfile" >}}">
     Extending the system with Dockerfiles
 </a>
 
 Need a highly secure system with TPM-backed attestation and trusted boot?
 
-<a class="btn btn-lg btn-outline-primary me-3 mb-4" href="{{< relref "./trusted-boot" >}}">
+<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "./trusted-boot" >}}">
     Trusted Boot Quickstart
 </a>
 
