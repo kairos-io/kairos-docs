@@ -146,7 +146,7 @@ Now enter the password you set during the installation.
 After logging in, you can check the status of the cluster with the `kubectl` tool. First switch to the `root` user with the following command:
 
 ```bash
-sudo su -i
+sudo su -
 ```
 
 Start by displaying the nodes in the system:
