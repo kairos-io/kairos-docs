@@ -12,10 +12,9 @@ By the end of this quickstart, you will be able to:
 - kairosify a Hadron base image with `kairos-init`
 - add an additional tool during build time (we’ll install `btm`)
 - publish your custom image to an OCI registry
-- upgrade a running node to your new image
 {{% /alert %}}
 
-Now that you've launched your first Kubernetes cluster on Hadron, you might want to extend the system.
+Now that you've launched your [first Kubernetes cluster on Hadron]({{< ref "index.md" >}}), you might want to extend the system.
 Kairos supports multiple approaches for this—Dockerfiles, systemd system extensions, and bundles. There isn’t a single “best” option: each has trade-offs, and the right choice depends on your needs. In this quickstart, we’ll extend the system using a Dockerfile.
 
 ## Prerequisites
@@ -100,7 +99,7 @@ RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init \
 COPY --from=bottom /btm /usr/bin/btm
 ```
 
-Now build the image again, but assign a new version. Since we’re using SemVer, bumping the minor version to `0.2.0` is a good next step. This makes it easy to distinguish images and perform upgrades when needed.
+Now build the image again, but assign a new version. Since we’re using SemVer, bumping the minor version to `0.2.0` is a good next step. This makes it easy to distinguish images and perform upgrades.
 
 ```bash
 docker build -t my-hadron:0.2.0 --build-arg=VERSION=0.2.0 .
@@ -114,55 +113,29 @@ docker tag my-hadron:0.2.0 ttl.sh/my-hadron:0.2.0
 docker push ttl.sh/my-hadron:0.2.0
 ```
 
-## Upgrade to our newly generated image
-
-If you followed the [quickstart]({{< ref "index.md" >}}), you can use that system to upgrade to the new image. Make sure the VM is running, then SSH into it:
-
-```bash
-ssh kairos@IP
-```
-
-Run an upgrade using your image:
-
-```bash
-sudo kairos-agent upgrade --source oci:ttl.sh/my-hadron:0.2.0
-```
-
-Reboot the system:
-
-```bash
-sudo reboot
-```
-
-Once the system is back up, SSH in again:
-
-```bash
-ssh kairos@IP
-```
-
-Validate that the new version is running:
-
-```bash
-cat /etc/kairos-release | grep KAIROS_VERSION
-```
-
-You should see the version you assigned during the build, for example:
-
-```
-KAIROS_VERSION="v0.2.0"
-```
-
-Finally, check resource usage with `bottom`:
-
-```bash
-btm
-```
-
-For example, you might see something like `0.9GiB/1.9GiB`.
-
 ## Conclusion
 
-Congratulations—you’ve successfully extended a Hadron image and upgraded your running cluster.
+Congratulations—you’ve successfully extended a Hadron image.
+
+## What's Next?
+
+Ready to configure and extend your newly deployed Kairos node?
+
+<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "../docs/reference/configuration" >}}">
+    Configuration
+</a>
+
+Learn how to extend the system with system extensions
+
+<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< ref "sys-extensions.md" >}}">
+    Extending the system with systemd extensions
+</a>
+
+Need a highly secure system with TPM-backed attestation and trusted boot?
+
+<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "./trusted-boot" >}}">
+    Trusted Boot Quickstart
+</a>
 
 ## Frequently Asked Questions (FAQs)
 
@@ -210,23 +183,3 @@ No problem—remove the `--provider` flag from `kairos-init` and you’ll get a 
   ]
 }
 </script>
-
-## What's Next?
-
-Ready to configure and extend your newly deployed Kairos node?
-
-<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "../docs/reference/configuration" >}}">
-    Configuration
-</a>
-
-Learn how to extend the system with system extensions
-
-<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< ref "sys-extensions.md" >}}">
-    Extending the system with systemd extensions
-</a>
-
-Need a highly secure system with TPM-backed attestation and trusted boot?
-
-<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "./trusted-boot" >}}">
-    Trusted Boot Quickstart
-</a>

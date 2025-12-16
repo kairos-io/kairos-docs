@@ -207,6 +207,26 @@ Congratulations :tada: You have successfully deployed a Kubernetes cluster using
 
 **Please refer to the [K3s](https://rancher.com/docs/k3s/latest/en/) documentation to learn more about the Kubernetes distribution that Kairos uses in the standard images.**
 
+## What's Next?
+
+Ready to configure and extend your newly deployed Kairos node?
+
+<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "../docs/reference/configuration" >}}">
+    Configuration
+</a>
+
+Need something that's not included in the base Kairos image?
+
+<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< ref "extending-the-system-dockerfile" >}}">
+    Extending the system with Dockerfiles
+</a>
+
+Need a highly secure system with TPM-backed attestation and trusted boot?
+
+<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "./trusted-boot" >}}">
+    Trusted Boot Quickstart
+</a>
+
 ## Frequently Asked Questions (FAQs)
 
 **How do I configure the system?**
@@ -257,25 +277,3 @@ Yes, you can download the standard image with k0s. Both k3s and k0s are equally 
   ]
 }
 </script>
-
-## What's Next?
-
-Ready to configure and extend your newly deployed Kairos node?
-
-<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "../docs/reference/configuration" >}}">
-    Configuration
-</a>
-
-Need something that's not included in the base Kairos image?
-
-<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< ref "extending-the-system-dockerfile" >}}">
-    Extending the system with Dockerfiles
-</a>
-
-Need a highly secure system with TPM-backed attestation and trusted boot?
-
-<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "./trusted-boot" >}}">
-    Trusted Boot Quickstart
-</a>
-
-
