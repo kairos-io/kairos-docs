@@ -93,8 +93,8 @@ FROM ghcr.io/kairos-io/hadron:v0.0.1-beta1 AS base
 ARG VERSION
 
 RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init \
-    eval /kairos-init -l debug -s install --model generic --provider k3s --version \"${VERSION}\" && \
-    eval /kairos-init -l debug -s init --model generic --provider k3s --version \"${VERSION}\"
+    eval /kairos-init -l debug -s install --provider k3s --version \"${VERSION}\" && \
+    eval /kairos-init -l debug -s init --provider k3s --version \"${VERSION}\"
 
 COPY --from=bottom /btm /usr/bin/btm
 ```
@@ -143,9 +143,9 @@ Need a highly secure system with TPM-backed attestation and trusted boot?
 
 Hadron builds many packages that are available in the toolchain image but are not included in the final production images. They’re useful for building code from source and other build-time tasks, but you typically avoid shipping them at runtime for security and size reasons.
 
-**How do I downgrade?**
+**Can I have a specific version of Kubernetes?**
 
-Use the same command, but point it to the image tag you want to downgrade to.
+Yes, with the `--provider` flag you can define if you want `k3s` or `k0s` installed, and with the `--provider-k3s-version` and `--provider-k0s-version` respectively, you can define the exact version to install.
 
 **What if I don't need Kubernetes?**
 
@@ -166,10 +166,10 @@ No problem—remove the `--provider` flag from `kairos-init` and you’ll get a 
     },
     {
       "@type": "Question",
-      "name": "How do I downgrade?",
+      "name": "Can I have a specific version of Kubernetes?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Use the same command, but point it to the image tag you want to downgrade to."
+        "text": "Yes, with the `--provider` flag you can define if you want `k3s` or `k0s` installed, and with the `--provider-k3s-version` and `--provider-k0s-version` respectively, you can define the exact version to install."
       }
     },
     {
