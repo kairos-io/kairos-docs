@@ -96,38 +96,23 @@ Hadron Single-Node Demo Requirements (with k3s)
 {{% /tab %}}
 {{< /tabpane >}}
 
-## Perform an Interactive Installation
+## Installing the OS
 
-1. The first time you boot the VM, you will see a GRUB boot menu with multiple options. Select the option that says `Interactive Install` and press Enter.
-2. Wait for the system to boot up. You will be greeted with the interactive installation manager. The drive where the installation is going to proceed, for example `/dev/sda`, should already be selected, denoted by the `>` character on the left.
-3. Press Enter to select that drive.
-4. On the next page you will see a message that says: `Start Install and on Finish do [nothing, reboot, poweroff]`.
-5. With the arrows, select `reboot`.
-6. Move down to `Customize further` and press Enter.
-7. Select `User & Password` and press Enter.
-8. For the user, enter `kairos`, then press Tab. For the password, also enter `kairos`.
-9. Press Enter to save the changes and return to the previous menu.
-10. Select `Configure k3s.enabled` and press Enter.
-11. With the arrows, select `Yes` to enable k3s and press Enter. You should be taken back to the previous menu.
-12. Select `Finish Customization and start Installation` and press Enter.
-13. The Installation Summary should look like this:
+1. After the machine boots, give it a bit until you see the designated machine IP and head to your browser and type http://IP:8080
+2. Add the following configuration to the web installer
 
-    ```
-    Selected Disk: /dev/sda
-
-    Action to take when Installation is complete: reboot
-
-    Configuration Summary:
-      - Username: kairos
-      - SSH Keys: not set
-
-    Extra options:
-
+    ```yaml
+    #cloud-config
+    users:
+    - name: kaiors
+      passwd: kairos
+      groups: [admin]
     k3s:
       enabled: true
     ```
-
-14. If everything is correct, press Enter to install. You should see a progress bar and the VM will reboot automatically.
+3. In the device field, type "auto"
+4. Check on "Restart after installation"
+5. If the installation went correctly, the machine will eventually restart
 
 {{% alert title="Eject the CD!" color="warning" %}}
 Some virtualization software automatically removes the CD after installation. To avoid any confusion, make sure you have the right boot order as mentioned in the previous section. Otherwise, make sure to eject the CD before rebooting.

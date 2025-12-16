@@ -71,9 +71,40 @@ db.auth  db.esl  db.pem    KEK.der  KEK.key  PK.auth  PK.esl  PK.pem
 db.der   db.key  KEK.auth  KEK.esl  KEK.pem  PK.der   PK.key  tpm2-pcr-private.pem
 ```
 
-## Building a bootable ISO
+## Building a Trusted Boot Container Image
 
-Now that we have our keys to sign the image, we can generate a bootable ISO. For the underlying image, we are going to use Hadron built for trusted boot, which has the suffix `-uki` in comparison to the BIOS images, e.g., `quay.io/kairos/hadron:v0.0.1-beta1-core-amd64-generic-v3.6.1-beta1-uki`.
+Now that you know [how to build an image]({{< ref "extending-the-system-dockerfile.md" >}}), you will see that the process of building a Trusted Boot version is not any different, we only have to point to the correct container image for Hadron, and pass the `trusted-boot` flag when initializing (kairosifying) the image.
+
+Start by creating a Dockefile with the following content:
+
+```dockerfile
+FROM quay.io/kairos/kairos-init:v0.6.8 AS kairos-init
+
+FROM ghcr.io/kairos-io/hadron:v0.0.1-beta2 AS base
+ARG VERSION
+
+RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init \
+    eval /kairos-init -l debug -s install --trusted true --provider k3s --version \"${VERSION}\" && \
+    eval /kairos-init -l debug -s init --trusted true --provider k3s --version \"${VERSION}\"
+
+COPY --from=bottom /btm /usr/bin/btm
+
+```
+
+And build it:
+
+```bash
+docker build -t hadron-tb:0.1.0 --build-arg=VERSION=0.1.0 .
+```
+
+And push it to a repository of your choice, I'm going to be using ttl.sh for this demo but keep in mind that anyone can push there at anytime so I'd recommend not to use the same tags as I do in this tutorial.
+
+```bash
+docker tag hadron-tb:0.1.0 ttl.sh/hadron-tb:0.1.0
+docker push ttl.sh/hadron-tb:0.1.0
+```
+
+## Building a Bootable ISO
 
 {{% alert title="SELinux Enabled" color="warning" %}}
 If you've got SELinux Enabled, you will get a "Permission denied" error. To avoid having the problem append a `:Z` to the volume argument i.e `-v ${PWD}/build/:/output:Z` and `-v $PWD/keys:/work/keys:Z`
@@ -116,26 +147,17 @@ kairos-hadron-0.0.1-core-amd64-generic-v3.6.1-beta1-uki.iso
 3. Configure the VM resources:
    - **Base Memory:** 2048 MB (enough for this quickstart; for applications, consider 4 or 8 GB)
    - **Number of CPUs:** 1 (increase if your host has spare capacity)
-   - **Disk Size:** 8 GB (sufficient for this quickstart; increase if you plan to deploy more workloads)
+   - **Disk Size:** 25 GB (there's currently a bug for trusted boot so we need a bit of extra space for this one here)
    - **Use EFI:** enabled
 4. In the VM list, select the Hadron VM and click **Settings**.
-5. Go to **System** and enable **Secure Boot**.
-6. Go to **Network** and configure:
+5. Go to **Network** and configure:
    - **Attached to:** Bridged Adapter
-7. Click **OK** to save your changes.
-8. In a terminal, run the following command:
+6. Click **OK** to save your changes.
+7. In a terminal, run the following command:
         ```
         VBoxManage modifyvm "Hadron-TB" --tpm-type 2.0 --tpm-location /tmp/tpmdata
         ```
-9. With the Hadron VM selected, click **Start**.
-10. A dialog will open with an error finding the DVD, hit **Cancel**
-11. Press any key to enter the Boot Manager Menu
-12. Select **Device Manager**
-13. Select **Secure Boot Configuration**
-14. Select **Reset Secure Boot Keys**
-15. When the dialog opens, select **Yes**
-16. Press **Esc** until you are back in the top menu
-17. Select **Reset**
+8. With the Hadron VM selected, click **Start**.
 
 {{% /tab %}}
 {{% tab header="Generic Instructions" %}}
@@ -151,38 +173,25 @@ kairos-hadron-0.0.1-core-amd64-generic-v3.6.1-beta1-uki.iso
 {{% /tab %}}
 {{< /tabpane >}}
 
-## Perform an Interactive Installation
+## Installing the OS
 
-1. Once the machine boots, initialize the interactive installer
+1. After the machine boots, give it a bit until you see the designated machine IP and head to your browser and type http://IP:8080
+2. Add the following configuration to the web installer
+
+    ```yaml
+    #cloud-config
+    users:
+    - name: kaiors
+      passwd: kairos
+      groups: [admin]
+    k3s:
+      enabled: true
     ```
-    kairos-agent interactive-install
-    ```
-1. The first time you boot the VM, you will see a GRUB boot menu with multiple options. Select the option that says `Interactive Install` and press Enter.
-2. Wait for the system to boot up. You will be greeted with the interactive installation manager. The drive where the installation is going to proceed, for example `/dev/sda`, should already be selected, denoted by the `>` character on the left.
-3. Press Enter to select that drive.
-4. On the next page you will see a message that says: `Start Install and on Finish do [nothing, reboot, poweroff]`.
-5. With the arrows, select `poweroff`.
-6. Move down to `Customize further` and press Enter.
-7. Select `User & Password` and press Enter.
-8. For the user, enter `kairos`, then press Tab. For the password, also enter `kairos`.
-9. Press Enter to save the changes and return to the previous menu.
-10. Select `Finish Customization and start Installation` and press Enter.
-11. The Installation Summary should look like this:
-
-    ```
-    Selected Disk: /dev/sda
-
-    Action to take when Installation is complete: poweroff
-
-    Configuration Summary:
-      - Username: kairos
-      - SSH Keys: not set
-      - Extra Options: not set
-    ```
-
-12. If everything is correct, press Enter to install. You should see a progress bar and the VM will power off automatically.
-13. Open the VM settings again in the **Storage** section and remove the ISO image and press Ok.
-14. **Start** the machine
+3. In the device field, type "auto"
+4. Check on "Power off after installation"
+5. If the installation went correctly, the machine will eventually poweroff
+6. Open the VM settings again in the **Storage** section and remove the ISO image and press Ok.
+7. **Start** the machine
 
 ## First Boot
 
@@ -198,18 +207,11 @@ After the system finishes booting, you will see a login prompt. Log in with the 
 Accessing your VM via SSH will depend on your virtualization software network configuration. If you followed the configuration above, with a bridged card, your machine should get an IP within your network, allowing you to SSH in.
 {{% /alert %}}
 
-First, you need to get the IP address. Since there are no VirtualBox guest packages for Hadron, you need to do this from the VirtualBox console. Run:
-
-```bash
-ip a | grep 192
-```
-
-Now use the resulting IP address to access the system from your preferred terminal application:
+We can use the same IP we used to install the system to ssh in:
 
 ```bash
 ssh kairos@IP
 ```
-
 Now enter the password you set during the installation.
 
 ## Conclusion

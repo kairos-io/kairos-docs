@@ -37,9 +37,9 @@ Hadron by itself is not immutable. To get the full Kairos experience—immutabil
 Create a `Dockerfile` with the following content:
 
 ```dockerfile
-FROM quay.io/kairos/kairos-init:v0.6.4 AS kairos-init
+FROM quay.io/kairos/kairos-init:v0.6.8 AS kairos-init
 
-FROM ghcr.io/kairos-io/hadron:v0.0.1-beta1 AS base
+FROM ghcr.io/kairos-io/hadron:v0.0.1-beta2 AS base
 ARG VERSION
 
 RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init \
