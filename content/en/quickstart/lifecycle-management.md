@@ -4,12 +4,14 @@ linkTitle: "Lifecycle Management"
 versionBanner: "false"
 weight: 3
 description: |
+  Learn how Kairos handles lifecycle management with atomic, image-based upgrades. Upgrade a running node to a newly built OCI image, reboot into it, verify the new version, and confirm your added binary is available—while keeping rollback paths intact.
 ---
 
 {{% alert title="Objective" color="success" %}}
+Upgrade a running Kairos system to a newly built image (atomic upgrade), reboot into it, and validate you’re on the new version and that your added binary is present—while understanding how to recover or roll back if something goes wrong.
 {{% /alert %}}
 
-If you followed the quickstart to [installed your first Kubernetes cluster]({{< ref "index.md" >}}) and [how to extend the system]({{< ref "extending-the-system-dockerfile.md" >}}), the next obvious step is to upgrade from that first system into the new one with our added binary. In traditional Linux systemd, you would normally do this via the package manager. In some cases it's matter of calling a single command like in the case of Ubuntu where `do-release-upgrade` and for fedora `dnf-plugin-system-upgrade` will **transform** your system into a later version of it. Others require that you fidle with doing small changes in the configured repositories giving you a bit more freedom but the experience is very similar, you do an in-place upgrade. Kairos doesn't work like this, instead you do atomic upgrades, which means that you never touch the running system and instead generate an new image and upgrade to it avoiding drift and allowing you to always access your previous system if needed.
+If you followed the quickstart to [install your first Kubernetes cluster]({{< ref "index.md" >}}) and learned [how to extend the system]({{< ref "extending-the-system-dockerfile.md" >}}), the next step is to upgrade from that first system to a new one that includes your added binary. On traditional Linux distributions, you’d typically do this via the package manager. Sometimes it’s a single command—for example, Ubuntu’s `do-release-upgrade` or Fedora’s `dnf-plugin-system-upgrade`—that **transforms** your system into a later version. Other times, you might need to adjust configured repositories, but the experience is still an in-place upgrade. Kairos works differently: upgrades are atomic. You don’t modify the running system; instead, you build a new image and upgrade to it. This avoids drift and ensures you can always get back to the previously running system if needed.
 
 ## Prerequisites
 
@@ -24,16 +26,16 @@ To extend and run Hadron, you’ll need virtualization software that can run (or
 ## Running an upgrade
 
 {{% alert title="Alternatives" color="success" %}}
-One important aspect to keep in mind is that while the command is called upgrade, you can point your system to older images and "upgrade" to them. Don't think of this as incremental growth but simply as upgrading to your next system even if that one happens to be an older one, meaning that you can use this same command to downgrade a system.
+One important thing to keep in mind is that although the command is called `upgrade`, you can point your system to older images and still “upgrade” to them. Don’t think of this as incremental growth; think of it as switching to a target system image—even if that image is older. In other words, you can use the same command to downgrade a system.
 {{% /alert %}}
 
-Access the running system we built during the [first section of this quickstart]({{< ref "index.md" >}})
+Access the running system we built during the [first section of this quickstart]({{< ref "index.md" >}}):
 
 ```bash
 ssh kairos@IP
 ```
 
-Run an upgrade using [the image we built during the second section of this quickstart]({{< ref "extending-the-system-dockerfile.md" >}})
+Run an upgrade using [the image we built during the second section of this quickstart]({{< ref "extending-the-system-dockerfile.md" >}}):
 
 ```bash
 sudo kairos-agent upgrade --source oci:ttl.sh/my-hadron:0.2.0
@@ -63,7 +65,7 @@ You should see the version you assigned during the build, for example:
 KAIROS_VERSION="v0.2.0"
 ```
 
-Finally, lets check that the newly installed `bottom` binary, is running:
+Finally, let's check that the newly installed `bottom` binary is available:
 
 ```bash
 btm
@@ -89,17 +91,17 @@ Need a highly secure system with TPM-backed attestation and trusted boot?
 
 ## Frequently Asked Questions (FAQs)
 
-**Upgrade failed what can I do?**
+**My upgrade failed. What can I do?**
 
-Run the upgrade with the `--debug` flag and you might find out what's causing the issue. If you cannot determine the problem use the output to share it in the community channel. Or contact one of our partner organizations for professional support.
+Run the upgrade with the `--debug` flag to help identify what’s causing the issue. If you still can’t determine the problem, use the output when asking for help in the community channel, or contact one of our partner organizations for professional support.
 
 **How do I downgrade?**
 
 Use the same command, but point it to the image tag you want to downgrade to.
 
-**Upgrade was successful but my image doesn't boot?**
+**My upgrade was successful, but the new image doesn’t boot. What can I do?**
 
-By default, if Kairos doesn't manage to boot your newly upgraded image, it will try to configure your bootloader to boot on the passive system, that is your previously running image. You can use that or the recovery system to mount the active partiion and determine what's going on. Alternatively also check the [troubleshooting guide]({{< ref "troubleshooting.md" >}})
+By default, if Kairos can’t boot your newly upgraded image, it will try to configure your bootloader to boot the passive system (your previously running image). You can use that (or the recovery system) to mount the active partition and determine what’s going on. Alternatively, also check the [troubleshooting guide]({{< ref "troubleshooting.md" >}})
 
 <script type="application/ld+json">
 {
@@ -108,10 +110,10 @@ By default, if Kairos doesn't manage to boot your newly upgraded image, it will 
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "What is the hadron-toolchain container for?",
+      "name": "My upgrade failed. What can I do?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Hadron builds many packages that are available in the toolchain image but are not included in the final production images. They’re useful for building code from source and other build-time tasks, but you typically avoid shipping them at runtime for security and size reasons."
+        "text": "Run the upgrade with the `--debug` flag to help identify what’s causing the issue. If you still can’t determine the problem, use the output when asking for help in the community channel, or contact one of our partner organizations for professional support."
       }
     },
     {
@@ -124,10 +126,10 @@ By default, if Kairos doesn't manage to boot your newly upgraded image, it will 
     },
     {
       "@type": "Question",
-      "name": "What if I don't need Kubernetes?",
+      "name": "My upgrade was successful, but the new image doesn’t boot. What can I do?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No problem—remove the `--provider` flag from `kairos-init` and you’ll get a `core` image without Kubernetes installed."
+        "text": "By default, if Kairos can’t boot your newly upgraded image, it will try to configure your bootloader to boot the passive system (your previously running image). You can use that (or the recovery system) to mount the active partition and determine what’s going on. Alternatively, also check the troubleshooting guide."
       }
     }
   ]
