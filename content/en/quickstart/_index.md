@@ -44,7 +44,8 @@ For production setups, you can either use one of the other Kairos flavors or wai
 Kairos offers multiple flavors — different Linux distributions that power the immutable OS. Hadron is the default, engineered for image-based workflows, but you can also use Alpine, Debian, Fedora, Rocky, Ubuntu, and many more. In this quickstart, we’ll be using Hadron.
 {{% /alert %}}
 
-Click the following link to download: [kairos-hadron-0.1.0-beta-standard-amd64-generic-v3.6.0-k3sv1.33.5+k3s1.iso](https://github.com/kairos-io/kairos/releases/download/v3.6.1-beta1/kairos-hadron-0.0.1-standard-amd64-generic-v3.6.1-beta1-k3sv1.34.2+k3s1.iso)
+
+Click the following link to download: [kairos-hadron-0.0.1-standard-amd64-generic-v3.6.1-beta2-k3sv1.34.2+k3s1.iso](https://github.com/kairos-io/kairos/releases/download/v3.6.1-beta2/kairos-hadron-0.0.1-standard-amd64-generic-v3.6.1-beta2-k3sv1.34.2+k3s1.iso)
 
 ## Create a Virtual Machine (VM)
 
@@ -69,7 +70,7 @@ Hadron Single-Node Demo Requirements (with k3s)
 1. Click **New** to create a virtual machine.
 2. Fill in the VM details:
    - **Name:** Hadron  
-   - **ISO Image:** `/path/to/previously/downloaded/iso/kairos-hadron-0.0.1-standard-amd64-generic-v3.6.1-beta1-k3sv1.34.2+k3s1.iso`
+   - **ISO Image:** `/FULL/PATH/kairos-hadron-0.0.1-standard-amd64-generic-v3.6.1-beta2-k3sv1.34.2+k3s1.iso`
    - **OS:** Linux
    - **OS Distribution:** Other Linux
    - **OS Version:** Other Linux (64-bit)
