@@ -132,13 +132,7 @@ After the system finishes booting, you will see a login prompt. Log in with the 
 Accessing your VM via SSH will depend on your virtualization software network configuration. If you followed the configuration above, with a bridged card, your machine should get an IP within your network, allowing you to SSH in.
 {{% /alert %}}
 
-First you need to get the IP address. Since there are no VirtualBox guest packages for Hadron, you need to do this from the VirtualBox console. Run:
-
-```bash
-ip a | grep 192
-```
-
-Now use the resulting IP address to access the system from your preferred terminal application:
+We can use the same IP we used to install the system to ssh in:
 
 ```bash
 ssh kairos@IP
@@ -151,7 +145,7 @@ Now enter the password you set during the installation.
 After logging in, you can check the status of the cluster with the `kubectl` tool. First switch to the `root` user with the following command:
 
 ```bash
-sudo -i
+sudo su -i
 ```
 
 Start by displaying the nodes in the system:

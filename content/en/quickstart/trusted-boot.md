@@ -212,6 +212,7 @@ We can use the same IP we used to install the system to ssh in:
 ```bash
 ssh kairos@IP
 ```
+
 Now enter the password you set during the installation.
 
 ## Conclusion
