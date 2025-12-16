@@ -241,6 +241,42 @@ Trusted Boot, in the context of Kairos, is an integrated security boot process t
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Deploy Kairos Hadron with Trusted Boot on a VM",
+  "description": "Generate Secure Boot keys, build a signed UKI ISO, configure a VM with Secure Boot and TPM, and install Kairos Hadron with Trusted Boot enabled.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "name": "Generate Secure Boot keys",
+      "text": "Generate a new set of Secure Boot keys using auroraboot."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Build a signed UKI ISO",
+      "text": "Use auroraboot build-uki with your keys to produce a signed ISO."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Prepare a VM with Secure Boot and TPM",
+      "text": "Create a VM, enable EFI/Secure Boot, add a TPM device, and boot from the signed ISO."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Install the OS via the web installer",
+      "text": "Open http://IP:8080, paste the provided cloud-config, set the device to auto, and run the installation."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "First boot and access the system",
+      "text": "Boot the installed system from disk, then SSH in to validate it is running."
+    }
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
     {
@@ -281,21 +317,23 @@ Trusted Boot, in the context of Kairos, is an integrated security boot process t
 
 ## What's Next?
 
-Ready to configure and extend your newly deployed Kairos node?
+### Continue learning (recommended)
+
+After setting up Trusted Boot, the next step is usually to understand the model and then apply day-2 operations and extensions.
 
 <a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "../docs/reference/configuration" >}}">
-    Configuration
+    Cloud-config reference
 </a>
-
-Learn about Trusted Boot
 
 <a class="btn btn-lg btn-outline-primary me-3 mb-4" href="{{< relref "../docs/architecture/trustedboot" >}}">
-    Trusted Boot Architecture
+    Trusted Boot architecture
 </a>
 
-Need something that's not included in the base Kairos image? You can extend it cleanly with systemd extensions.
-
 <a class="btn btn-lg btn-outline-primary me-3 mb-4" href="{{< ref "sys-extensions.md" >}}">
-    Extending the system with systemd extensions
+    Extend with systemd extensions
+</a>
+
+<a class="btn btn-lg btn-outline-primary me-3 mb-4" href="{{< ref "lifecycle-management" >}}">
+    Upgrade & rollback (atomic upgrades)
 </a>
 

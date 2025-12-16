@@ -189,22 +189,28 @@ Congratulations :tada: You have successfully deployed a Kubernetes cluster using
 
 ## What's Next?
 
-Ready to configure and extend your newly deployed Kairos node?
+### Continue the quickstart (recommended)
 
-<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "../docs/reference/configuration" >}}">
-    Configuration
-</a>
-
-Need something that's not included in the base Kairos image?
+If you’re new to Kairos, follow these in order to learn the full workflow: extend the image, upgrade atomically, then harden the system.
 
 <a class="btn btn-lg btn-primary me-3 mb-4" href="{{< ref "extending-the-system-dockerfile" >}}">
-    Extending the system with Dockerfiles
+    Extend Hadron using a Dockerfile
 </a>
 
-Need a highly secure system with TPM-backed attestation and trusted boot?
+<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< ref "lifecycle-management" >}}">
+    Upgrade & rollback (atomic upgrades)
+</a>
 
 <a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "./trusted-boot" >}}">
-    Trusted Boot Quickstart
+    Trusted Boot (Secure Boot + Meassured Boot) quickstart
+</a>
+
+### Deep dive docs
+
+If you’re already comfortable with Kairos and want details, jump straight to the reference docs.
+
+<a class="btn btn-lg btn-outline-primary me-3 mb-4" href="{{< relref "../docs/reference/configuration" >}}">
+    Cloud-config reference
 </a>
 
 ## Frequently Asked Questions (FAQs)
@@ -228,8 +234,57 @@ Yes, you can download the standard image with k0s. Both k3s and k0s are equally 
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Install Kairos Hadron on a VM (single-node Kubernetes with k3s)",
+  "description": "Download the Hadron ISO, create a VM, install via the web installer, then SSH in and verify your k3s cluster is running.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "name": "Download a Hadron ISO",
+      "text": "Download the Hadron amd64 ISO from the releases link on this page."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Create a virtual machine",
+      "text": "Create a VM (for example in VirtualBox), attach the ISO, configure CPU/RAM/disk, and boot the VM."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Install the OS via the web installer",
+      "text": "Open http://IP:8080, paste the provided cloud-config, set the device to auto, and run the installation."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "First boot",
+      "text": "After installation, boot the system from disk and log in with the configured credentials."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "SSH into the system",
+      "text": "SSH to the VM using the same IP address used during installation."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Verify the running cluster",
+      "text": "Switch to root and run kubectl get nodes and kubectl get pods -n kube-system to confirm the cluster is healthy."
+    }
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I configure the system?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You can configure the system by editing the cloud-config file. The cloud-config file is located at /oem/90_custom.yaml. You can edit this file to add users, SSH keys, and other configurations. See the Cloud Config documentation for more information."
+      }
+    },
     {
       "@type": "Question",
       "name": "What is a Kairos flavor?",
@@ -251,7 +306,7 @@ Yes, you can download the standard image with k0s. Both k3s and k0s are equally 
       "name": "Can I use a different Kubernetes distribution with Kairos?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Kairos uses providers to install Kubernetes distributions. The Kairos provider is the only one that is built and tested by the Kairos team, but there are other providers by the community and you can build your own!"
+        "text": "Yes, you can download the standard image with k0s. Both k3s and k0s are equally supported by the Kairos team."
       }
     }
   ]

@@ -119,22 +119,28 @@ Congratulations—you’ve successfully extended a Hadron image.
 
 ## What's Next?
 
-Ready to configure and extend your newly deployed Kairos node?
+### Continue the quickstart (recommended)
 
-<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "../docs/reference/configuration" >}}">
-    Configuration
+If you’re new to Kairos, follow these in order to learn the full workflow: build a custom image, upgrade atomically, then harden the system.
+
+<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< ref "lifecycle-management" >}}">
+    Upgrade & rollback (atomic upgrades)
 </a>
-
-Learn how to extend the system with system extensions
-
-<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< ref "sys-extensions.md" >}}">
-    Extending the system with systemd extensions
-</a>
-
-Need a highly secure system with TPM-backed attestation and trusted boot?
 
 <a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "./trusted-boot" >}}">
-    Trusted Boot Quickstart
+    Trusted Boot (TPM + Secure Boot) quickstart
+</a>
+
+### Deep dive docs
+
+If you’re already comfortable with Kairos and want details, jump straight to the reference docs.
+
+<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "../docs/reference/configuration" >}}">
+    Cloud-config reference
+</a>
+
+<a class="btn btn-lg btn-outline-primary me-3 mb-4" href="{{< ref "sys-extensions.md" >}}">
+    Extend with systemd extensions
 </a>
 
 ## Frequently Asked Questions (FAQs)
@@ -150,6 +156,42 @@ Yes, with the `--provider` flag you can define if you want `k3s` or `k0s` instal
 **What if I don't need Kubernetes?**
 
 No problem—remove the `--provider` flag from `kairos-init` and you’ll get a `core` image without Kubernetes installed.
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Extend Kairos Hadron with a Dockerfile",
+  "description": "Build a custom Hadron image with kairos-init, add an extra binary, and push the resulting image to an OCI registry.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "name": "Create a Dockerfile and kairosify the base image",
+      "text": "Create a Dockerfile that uses kairos-init to initialize (kairosify) a Hadron base image."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Build the custom image",
+      "text": "Build the image with docker build, tagging it with a version you control."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Add an extra binary at build time",
+      "text": "Update the Dockerfile to copy in a prebuilt binary (for example btm) using a build stage."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Rebuild with a new version tag",
+      "text": "Build again with a new tag (for example bumping from 0.1.0 to 0.2.0) so upgrades can target the new image."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Push the image to a registry",
+      "text": "Tag and push the image to an OCI registry you can access (for example ttl.sh or your own registry)."
+    }
+  ]
+}
+</script>
 
 <script type="application/ld+json">
 {

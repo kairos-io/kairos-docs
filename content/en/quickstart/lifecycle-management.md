@@ -77,16 +77,28 @@ Congratulations :tada: You have successfully upgraded your system to a new image
 
 ## What's Next?
 
-Ready to configure and extend your newly deployed Kairos node?
+### Continue the quickstart (recommended)
 
-<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "../docs/reference/configuration" >}}">
-    Configuration
-</a>
-
-Need a highly secure system with TPM-backed attestation and trusted boot?
+If you’re new to Kairos, the next step after atomic upgrades is to harden the system with Trusted Boot.
 
 <a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "./trusted-boot" >}}">
-    Trusted Boot Quickstart
+    Trusted Boot (TPM + Secure Boot) quickstart
+</a>
+
+### Deep dive docs
+
+If you’re already comfortable with Kairos and want details, jump straight to reference docs and troubleshooting.
+
+<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "../docs/reference/configuration" >}}">
+    Cloud-config reference
+</a>
+
+<a class="btn btn-lg btn-outline-primary me-3 mb-4" href="{{< ref "troubleshooting.md" >}}">
+    Troubleshooting guide
+</a>
+
+<a class="btn btn-lg btn-outline-primary me-3 mb-4" href="{{< ref "sys-extensions.md" >}}">
+    Extend with systemd extensions
 </a>
 
 ## Frequently Asked Questions (FAQs)
@@ -102,6 +114,42 @@ Use the same command, but point it to the image tag you want to downgrade to.
 **My upgrade was successful, but the new image doesn’t boot. What can I do?**
 
 By default, if Kairos can’t boot your newly upgraded image, it will try to configure your bootloader to boot the passive system (your previously running image). You can use that (or the recovery system) to mount the active partition and determine what’s going on. Alternatively, also check the [troubleshooting guide]({{< ref "troubleshooting.md" >}})
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Upgrade a Kairos system atomically (image-based upgrade)",
+  "description": "Upgrade a running Kairos node to a new OCI image, reboot into it, and verify the new version is running.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "name": "SSH into the node",
+      "text": "SSH into the running Kairos system."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Run an upgrade to a target OCI image",
+      "text": "Run kairos-agent upgrade pointing at the OCI image you want to switch to."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Reboot into the upgraded system",
+      "text": "Reboot the node so it boots into the upgraded image."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Verify the running version",
+      "text": "SSH in again and confirm the running version via /etc/kairos-release."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Validate your change is present",
+      "text": "Run a command that depends on your new image contents (for example btm) to confirm the upgrade took effect."
+    }
+  ]
+}
+</script>
 
 <script type="application/ld+json">
 {
