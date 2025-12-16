@@ -80,28 +80,18 @@ Start by creating a Dockefile with the following content:
 ```dockerfile
 FROM quay.io/kairos/kairos-init:v0.6.8 AS kairos-init
 
-FROM ghcr.io/kairos-io/hadron:v0.0.1-beta2 AS base
+FROM ghcr.io/kairos-io/hadron-trusted:v0.0.1-beta2 AS base
 ARG VERSION
 
 RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init \
     eval /kairos-init -l debug -s install --trusted true --provider k3s --version \"${VERSION}\" && \
     eval /kairos-init -l debug -s init --trusted true --provider k3s --version \"${VERSION}\"
-
-COPY --from=bottom /btm /usr/bin/btm
-
 ```
 
 And build it:
 
 ```bash
 docker build -t hadron-tb:0.1.0 --build-arg=VERSION=0.1.0 .
-```
-
-And push it to a repository of your choice, I'm going to be using ttl.sh for this demo but keep in mind that anyone can push there at anytime so I'd recommend not to use the same tags as I do in this tutorial.
-
-```bash
-docker tag hadron-tb:0.1.0 ttl.sh/hadron-tb:0.1.0
-docker push ttl.sh/hadron-tb:0.1.0
 ```
 
 ## Building a Bootable ISO
@@ -122,7 +112,7 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock \
  --sb-key /keys/db.key \
  --sb-cert /keys/db.pem \
  --output-type iso \
- quay.io/kairos/hadron:v0.0.1-beta1-core-amd64-generic-v3.6.1-beta1-uki
+ hadron-tb:0.1.0
 ```
 
 This will generate a Trusted Boot ISO image in the `build/` directory.
@@ -181,7 +171,7 @@ kairos-hadron-0.0.1-core-amd64-generic-v3.6.1-beta1-uki.iso
     ```yaml
     #cloud-config
     users:
-    - name: kaiors
+    - name: kairos
       passwd: kairos
       groups: [admin]
     k3s:

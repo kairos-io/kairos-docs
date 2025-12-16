@@ -105,7 +105,7 @@ Hadron Single-Node Demo Requirements (with k3s)
     ```yaml
     #cloud-config
     users:
-    - name: kaiors
+    - name: kairos
       passwd: kairos
       groups: [admin]
     k3s:
