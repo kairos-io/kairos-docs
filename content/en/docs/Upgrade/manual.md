@@ -27,6 +27,8 @@ v0.57.0-alpha2
 v0.57.0-alpha1
 ```
 
+Use the `--registry` flag to specify a custom registry to retrieve the versions from, otherwise it will default to quay.io/kairos.
+
 ## Upgrading the active system
 
 To specify an image, use the `--source` flag:
