@@ -23,6 +23,10 @@ To extend and run Hadron, you’ll need virtualization software that can run (or
 
 - [VirtualBox](https://www.virtualbox.org/)
 
+## Prefer to watch a video?
+
+{{< youtube id="Xd2VfPB0ueM" title="Hadron Quickstart" >}}
+
 ## Running an upgrade
 
 {{% alert title="Alternatives" color="success" %}}

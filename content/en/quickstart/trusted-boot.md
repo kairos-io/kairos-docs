@@ -24,6 +24,8 @@ To run Hadron Trusted Boot, you’ll need both a container engine and virtualiza
 
 ## Prefer to watch a video?
 
+{{< youtube id="2UY4J3VudnU" title="Hadron Quickstart" >}}
+
 ## Generate Your Keys
 
 The whole concept of Trusted Boot relies on a set of keys. These keys are used to sign the images, and they need to be onboarded on the Secure Boot platform of the device that will run the system. In this step, we are going to generate a new set of keys.

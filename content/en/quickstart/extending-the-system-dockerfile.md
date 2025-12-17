@@ -30,6 +30,8 @@ To extend and run Hadron, you’ll need a container engine and virtualization so
 
 ## Prefer to watch a video?
 
+{{< youtube id="EQsVnWqd7Ic" title="Hadron Quickstart" >}}
+
 ## Building
 
 Hadron by itself is not immutable. To get the full Kairos experience—immutability, atomic upgrades, and more—we first need to initialize (often called “kairosify”) the system using `kairos-init`.
