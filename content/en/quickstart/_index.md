@@ -20,17 +20,17 @@ Ready to launch your Kubernetes cluster with ease? Hadron by Kairos makes it sim
 
 ## Prerequisites
 
-To run Hadron, you only need virtualization software. For this quickstart, we’ll use [VirtualBox](https://www.virtualbox.org/), which works on all major platforms.
+{{% alert title="Alternatives" color="success" %}}
+This tutorial uses the recommended virtualization tools to keep the instructions simple. Other alternatives should work as well, but they’re not documented here. If you successfully follow the tutorial using different tools, please consider opening a PR so others can benefit from your steps.
+{{% /alert %}}
 
-Here are some alternatives:
+To run Hadron Trusted Boot, you’ll need virtualization software that can run or emulate the amd64 architecture. In this guide, we’ll be using:
 
-- Windows: VMware Workstation Player
-- macOS: VMware Fusion, UTM
-- Linux: KVM (via [Virt Manager](https://virt-manager.org/) or virsh), Proxmox
+- [VirtualBox](https://www.virtualbox.org/)
 
 ## Prefer to watch a video?
 
-{{< youtube id="wEjN42hFpOo" title="Hadron Quickstart" >}}
+{{< youtube id="0avUNGAjMVw" title="Hadron Quickstart" >}}
 
 ## Download an ISO
 
@@ -44,7 +44,8 @@ For production setups, you can either use one of the other Kairos flavors or wai
 Kairos offers multiple flavors — different Linux distributions that power the immutable OS. Hadron is the default, engineered for image-based workflows, but you can also use Alpine, Debian, Fedora, Rocky, Ubuntu, and many more. In this quickstart, we’ll be using Hadron.
 {{% /alert %}}
 
-Click the following link to download: [kairos-hadron-0.1.0-beta-standard-amd64-generic-v3.6.0-k3sv1.33.5+k3s1.iso](https://github.com/kairos-io/kairos/releases/download/v3.6.1-beta1/kairos-hadron-0.0.1-standard-amd64-generic-v3.6.1-beta1-k3sv1.34.2+k3s1.iso)
+
+Click the following link to download: [kairos-hadron-0.0.1-standard-amd64-generic-v3.6.1-beta2-k3sv1.34.2+k3s1.iso](https://github.com/kairos-io/kairos/releases/download/v3.6.1-beta2/kairos-hadron-0.0.1-standard-amd64-generic-v3.6.1-beta2-k3sv1.34.2+k3s1.iso)
 
 ## Create a Virtual Machine (VM)
 
@@ -69,7 +70,7 @@ Hadron Single-Node Demo Requirements (with k3s)
 1. Click **New** to create a virtual machine.
 2. Fill in the VM details:
    - **Name:** Hadron  
-   - **ISO Image:** `/path/to/previously/downloaded/iso/kairos-hadron-0.0.1-standard-amd64-generic-v3.6.1-beta1-k3sv1.34.2+k3s1.iso`
+   - **ISO Image:** `/FULL/PATH/kairos-hadron-0.0.1-standard-amd64-generic-v3.6.1-beta2-k3sv1.34.2+k3s1.iso`
    - **OS:** Linux
    - **OS Distribution:** Other Linux
    - **OS Version:** Other Linux (64-bit)
@@ -96,38 +97,23 @@ Hadron Single-Node Demo Requirements (with k3s)
 {{% /tab %}}
 {{< /tabpane >}}
 
-## Perform an Interactive Installation
+## Installing the OS
 
-1. The first time you boot the VM, you will see a GRUB boot menu with multiple options. Select the option that says `Interactive Install` and press Enter.
-2. Wait for the system to boot up. You will be greeted with the interactive installation manager. The drive where the installation is going to proceed, for example `/dev/sda`, should already be selected, denoted by the `>` character on the left.
-3. Press Enter to select that drive.
-4. On the next page you will see a message that says: `Start Install and on Finish do [nothing, reboot, poweroff]`.
-5. With the arrows, select `poweroff`.
-6. Move down to `Customize further` and press Enter.
-7. Select `User & Password` and press Enter.
-8. For the user, enter `kairos`, then press Tab. For the password, also enter `kairos`.
-9. Press Enter to save the changes and return to the previous menu.
-10. Select `Configure k3s.enabled` and press Enter.
-11. With the arrows, select `Yes` to enable k3s and press Enter. You should be taken back to the previous menu.
-12. Select `Finish Customization and start Installation` and press Enter.
-13. The Installation Summary should look like this:
+1. After the machine boots, give it a bit until you see the designated machine IP and head to your browser and type http://IP:8080
+2. Add the following configuration to the web installer
 
-    ```
-    Selected Disk: /dev/sda
-
-    Action to take when Installation is complete: poweroff
-
-    Configuration Summary:
-      - Username: kairos
-      - SSH Keys: not set
-
-    Extra options:
-
+    ```yaml
+    #cloud-config
+    users:
+    - name: kairos
+      passwd: kairos
+      groups: [admin]
     k3s:
       enabled: true
     ```
-
-14. If everything is correct, press Enter to install. You should see a progress bar and the VM will power off automatically.
+3. In the device field, type "auto"
+4. Check on "Restart after installation"
+5. If the installation went correctly, the machine will eventually restart
 
 {{% alert title="Eject the CD!" color="warning" %}}
 Some virtualization software automatically removes the CD after installation. To avoid any confusion, make sure you have the right boot order as mentioned in the previous section. Otherwise, make sure to eject the CD before rebooting.
@@ -147,21 +133,11 @@ After the system finishes booting, you will see a login prompt. Log in with the 
 Accessing your VM via SSH will depend on your virtualization software network configuration. If you followed the configuration above, with a bridged card, your machine should get an IP within your network, allowing you to SSH in.
 {{% /alert %}}
 
-First you need to get the IP address. Since there are no VirtualBox guest packages for Hadron, you need to do this from the VirtualBox console. Run:
-
-```bash
-ip a | grep 192
-```
-
-Now use the resulting IP address to access the system from your preferred terminal application:
+We can use the same IP we used to install the system to ssh in:
 
 ```bash
 ssh kairos@IP
 ```
-
-{{% alert title="Authorized Keys" color="info" %}}
-If you configured the SSH key during the installation, you will be able to log in without a password.
-{{% /alert %}}
 
 Now enter the password you set during the installation.
 
@@ -170,7 +146,7 @@ Now enter the password you set during the installation.
 After logging in, you can check the status of the cluster with the `kubectl` tool. First switch to the `root` user with the following command:
 
 ```bash
-sudo -i
+sudo su -
 ```
 
 Start by displaying the nodes in the system:
@@ -211,6 +187,32 @@ Congratulations :tada: You have successfully deployed a Kubernetes cluster using
 
 **Please refer to the [K3s](https://rancher.com/docs/k3s/latest/en/) documentation to learn more about the Kubernetes distribution that Kairos uses in the standard images.**
 
+## What's Next?
+
+### Continue the quickstart (recommended)
+
+If you’re new to Kairos, follow these in order to learn the full workflow: extend the image, upgrade atomically, then harden the system.
+
+<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< ref "extending-the-system-dockerfile" >}}">
+    Extend Hadron using a Dockerfile
+</a>
+
+<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< ref "lifecycle-management" >}}">
+    Upgrade & rollback (atomic upgrades)
+</a>
+
+<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "./trusted-boot" >}}">
+    Trusted Boot (Secure Boot + Meassured Boot) quickstart
+</a>
+
+### Deep dive docs
+
+If you’re already comfortable with Kairos and want details, jump straight to the reference docs.
+
+<a class="btn btn-lg btn-outline-primary me-3 mb-4" href="{{< relref "../docs/reference/configuration" >}}">
+    Cloud-config reference
+</a>
+
 ## Frequently Asked Questions (FAQs)
 
 **How do I configure the system?**
@@ -232,8 +234,57 @@ Yes, you can download the standard image with k0s. Both k3s and k0s are equally 
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Install Kairos Hadron on a VM (single-node Kubernetes with k3s)",
+  "description": "Download the Hadron ISO, create a VM, install via the web installer, then SSH in and verify your k3s cluster is running.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "name": "Download a Hadron ISO",
+      "text": "Download the Hadron amd64 ISO from the releases link on this page."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Create a virtual machine",
+      "text": "Create a VM (for example in VirtualBox), attach the ISO, configure CPU/RAM/disk, and boot the VM."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Install the OS via the web installer",
+      "text": "Open http://IP:8080, paste the provided cloud-config, set the device to auto, and run the installation."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "First boot",
+      "text": "After installation, boot the system from disk and log in with the configured credentials."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "SSH into the system",
+      "text": "SSH to the VM using the same IP address used during installation."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Verify the running cluster",
+      "text": "Switch to root and run kubectl get nodes and kubectl get pods -n kube-system to confirm the cluster is healthy."
+    }
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I configure the system?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You can configure the system by editing the cloud-config file. The cloud-config file is located at /oem/90_custom.yaml. You can edit this file to add users, SSH keys, and other configurations. See the Cloud Config documentation for more information."
+      }
+    },
     {
       "@type": "Question",
       "name": "What is a Kairos flavor?",
@@ -255,30 +306,9 @@ Yes, you can download the standard image with k0s. Both k3s and k0s are equally 
       "name": "Can I use a different Kubernetes distribution with Kairos?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Kairos uses providers to install Kubernetes distributions. The Kairos provider is the only one that is built and tested by the Kairos team, but there are other providers by the community and you can build your own!"
+        "text": "Yes, you can download the standard image with k0s. Both k3s and k0s are equally supported by the Kairos team."
       }
     }
   ]
 }
 </script>
-
-## What's Next?
-
-Ready to configure and extend your newly deployed Kairos node?
-
-<a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "../docs/reference/configuration" >}}">
-    Configuration
-</a>
-
-Need a highly secure system with TPM-backed attestation and trusted boot?
-
-<a class="btn btn-lg btn-outline-primary me-3 mb-4" href="{{< relref "../docs/installation/trustedboot" >}}">
-    Trusted Boot installations
-</a>
-
-Need something that's not included in the base Kairos image? You can extend it cleanly with systemd extensions.
-
-<a class="btn btn-lg btn-outline-primary me-3 mb-4" href="{{< ref "sys-extensions.md" >}}">
-    Extending the system with systemd extensions
-</a>
-
