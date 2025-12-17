@@ -1,6 +1,6 @@
 ---
 title: "Introducing Hadron: The Minimal, Upstream-First Linux Base for Kairos"
-date: 2025-12-08
+date: 2025-12-17
 linkTitle: "Introducing Hadron"
 description: ""
 author: Ettore Di Giacinto ([X](https://x.com/mudler_it)) ([GitHub](https://github.com/mudler))
@@ -66,5 +66,5 @@ Hadron expands the Kairos matrix with a specialized flavor that will become the 
 We invite you to explore Hadron, try the quickstart guide, and join the conversation:
 
 - **View the Code**: The [Hadron repository](https://github.com/kairos-io/hadron) is public on GitHub.
-- **Get Started**: Check out the Hadron documentation [quickstart](tbd).
+- **Get Started**: Check out the Hadron documentation [quickstart](/quickstart/).
 - **Join the Discussion**: Connect with the Kairos and Hadron community on the [CNCF Slack channel](https://slack.cncf.io/#kairos).
