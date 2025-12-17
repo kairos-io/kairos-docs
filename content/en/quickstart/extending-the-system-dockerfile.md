@@ -121,7 +121,13 @@ Congratulations—you’ve successfully extended a Hadron image.
 
 ## What's Next?
 
-### Continue the quickstart (recommended)
+### Other ways to extend the system
+
+<a class="btn btn-lg btn-outline-primary me-3 mb-4" href="{{< ref "sys-extensions.md" >}}">
+    Extend with systemd extensions
+</a>
+
+### Continue the quickstart
 
 If you’re new to Kairos, follow these in order to learn the full workflow: build a custom image, upgrade atomically, then harden the system.
 
@@ -139,10 +145,6 @@ If you’re already comfortable with Kairos and want details, jump straight to t
 
 <a class="btn btn-lg btn-primary me-3 mb-4" href="{{< relref "../docs/reference/configuration" >}}">
     Cloud-config reference
-</a>
-
-<a class="btn btn-lg btn-outline-primary me-3 mb-4" href="{{< ref "sys-extensions.md" >}}">
-    Extend with systemd extensions
 </a>
 
 ## Frequently Asked Questions (FAQs)
