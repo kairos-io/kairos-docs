@@ -66,5 +66,5 @@ Hadron expands the Kairos matrix with a specialized flavor that will become the 
 We invite you to explore Hadron, try the quickstart guide, and join the conversation:
 
 - **View the Code**: The [Hadron repository](https://github.com/kairos-io/hadron) is public on GitHub.
-- **Get Started**: Check out the Hadron documentation [quickstart](/quickstart/).
+- **Get Started**: Check out the Hadron documentation [quickstart](https://kairos.io/quickstart/).
 - **Join the Discussion**: Connect with the Kairos and Hadron community on the [CNCF Slack channel](https://slack.cncf.io/#kairos).
