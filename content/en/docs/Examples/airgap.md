@@ -38,7 +38,7 @@ COPY --from=alpine /build/k3s-airgap-images-amd64.tar.gz /assets/
 mkdir -p /usr/local/.state/var-lib-rancher.bind/k3s/agent/images/
 cp -rfv assets/k3s-airgap-images-amd64.tar.gz /usr/local/.state/var-lib-rancher.bind/k3s/agent/images/
 ```
-4. Make the `run.sh` file executable by running the following command: 
+4. Make the `run.sh` file executable by running the following command:
 ```bash
 chmod +x run.sh
 ```
@@ -49,9 +49,6 @@ docker build -t images-bundle .
 6. Save the bundle:
 
 ```
-$ ls
-images-bundle
-
 # create a directory
 $ mkdir data
 $ docker save images-bundle -o data/bundle.tar
