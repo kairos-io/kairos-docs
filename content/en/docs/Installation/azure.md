@@ -45,10 +45,11 @@ You can specify a different image to be installed using a block like the followi
 
 ```yaml
 reset:
-  source: "oci:quay.io/kairos/opensuse:leap-15.6-standard-amd64-generic-{{< kairosVersion >}}-{{< k3sVersionOCI >}}"
+  system:
+    source: "oci:quay.io/kairos/opensuse:leap-15.6-standard-amd64-generic-{{< kairosVersion >}}-{{< k3sVersionOCI >}}"
 ```
 
-Make sure you also 
+Make sure you also
 
 When you are satisfied with the configuration, click on "Review + create" and then "Create".
 
