@@ -18,7 +18,7 @@
 -
 {{- $.Page.Site.Params.softwareVersions.kairos_version -}}
 {{- if eq (.Get "variant") "standard" -}}
-    -k3s{{- replace $.Page.Site.Params.softwareVersions.k3s_version "+" "-" -}}
+    -k3s-{{- replace $.Page.Site.Params.softwareVersions.k3s_version "+" "-" -}}
 {{- end -}}
 {{- with .Get "suffix" -}}
     -{{- . -}}
