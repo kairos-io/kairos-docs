@@ -59,7 +59,7 @@ install:
 
   # Override the grub entry name
   grub-entry-name: Kairos
-  
+
   # partitions setup
   # setting a partition size key to 0 means that the partition will take over the rest of the free space on the disk
   # after creating the rest of the partitions
@@ -101,7 +101,7 @@ install:
       size: 200
       fs: ext4
       label: TWO_PARTITION
-  
+
   # no-format: true skips any disk partitioning and formatting
   # If set to true installation procedure will error out if expected
   # partitions are not already present within the disk.
@@ -119,7 +119,7 @@ install:
   extra-dirs-rootfs:
     - /data
     - /src
-  
+
   # Override image sizes for active/passive/recovery
   # Note that the active+passive images are stored in the state partition and
   # the recovery in the recovery partition, so they should be big enough to accommodate te images sizes set below
@@ -138,8 +138,8 @@ install:
   # system.size: 4096
   # passive.size: 4096
   # recovery-system.size: 5000
-  
-    
+
+
   # Add bundles in runtime
   bundles:
     - ...
@@ -199,7 +199,7 @@ upgrade:
   # Power off after upgrade
   poweroff: true
 
-  
+
   # Override the grub entry name
   grub-entry-name: Kairos
 
@@ -218,7 +218,7 @@ upgrade:
     source: "oci:.."
     size: 4096
 
-  # Recovery System Image (maps to Recovery)  
+  # Recovery System Image (maps to Recovery)
   recovery-system:
     source: "oci:.."
     size: 5000
@@ -288,7 +288,7 @@ p2p:
    enable: true
    # HA enables automatic HA roles assignment.
    # A master cluster init is always required,
-   # Any additional master_node is configured as part of the 
+   # Any additional master_node is configured as part of the
    # HA control plane.
    # If auto is disabled, HA has no effect.
    ha:
@@ -407,21 +407,21 @@ stages:
 $ docker run -ti -v $PWD:/test --entrypoint /usr/bin/kairos-agent --rm {{<oci variant="core" >}} run-stage --cloud-init-paths /test initramfs
 
 # Output from the run-stage command
-INFO[2023-05-17T11:32:09+02:00] kairos-agent version 0.0.0                   
-INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs.before              
-INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.before'      
-INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs                     
-INFO[2023-05-17T11:32:09+02:00] Processing stage step ''. ( commands: 1, files: 0, ... ) 
-INFO[2023-05-17T11:32:09+02:00] Command output: hello!                       
-INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs'             
-INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs.after               
-INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.after'       
-INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs.before              
-INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.before'      
-INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs                     
-INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs'             
-INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs.after               
-INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.after'          
+INFO[2023-05-17T11:32:09+02:00] kairos-agent version 0.0.0
+INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs.before
+INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.before'
+INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs
+INFO[2023-05-17T11:32:09+02:00] Processing stage step ''. ( commands: 1, files: 0, ... )
+INFO[2023-05-17T11:32:09+02:00] Command output: hello!
+INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs'
+INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs.after
+INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.after'
+INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs.before
+INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.before'
+INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs
+INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs'
+INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs.after
+INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.after'
 
 ```
 

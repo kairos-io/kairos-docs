@@ -50,7 +50,8 @@ You can specify a different image to be installed using a block like the followi
 
 ```yaml
 reset:
-  source: "oci:quay.io/kairos/opensuse:leap-15.6-standard-amd64-generic-master-k3sv1.32.1-rc2-k3s1"
+  system:
+    source: "oci:quay.io/kairos/opensuse:leap-15.6-standard-amd64-generic-master-k3sv1.32.1-rc2-k3s1"
 ```
 
 This will reset to the specified image on the first boot instead of the image booted.
