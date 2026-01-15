@@ -1,6 +1,6 @@
 ---
 title: "Welcome William Rizzo, New Kairos Maintainer"
-date: 2026-01-14
+date: 2026-01-15
 linkTitle: "Welcome William Rizzo"
 description: "Announcing William Rizzo as a new Kairos maintainer."
 author: Mauro Morales ([LinkedIn](https://www.linkedin.com/in/mauromorales/)) ([GitHub](https://github.com/mauromorales))
