@@ -1,0 +1,48 @@
+{{ define "main" }}
+<div class="td-content events-page">
+    <h1>{{ .Title }}</h1>
+    {{ with .Params.description }}<div class="lead">{{ . | markdownify }}</div>{{ end }}
+    <div class="events-list">
+        <div class="events-list-item">
+            <div class="events-list-meta">
+                <span class="events-date">Mar 26</span>
+                <span class="events-location">Amsterdam, NL</span>
+            </div>
+            <div class="events-list-text">
+                <p class="events-title">Cloud Native at the Far(m) Edge: Running Kubernetes and AI on Tractors</p>
+                <p class="events-conference">KubeCon EU</p>
+            </div>
+        </div>
+        <div class="events-list-item">
+            <div class="events-list-meta">
+                <span class="events-date">Feb 04</span>
+                <span class="events-location">Ghent, BE</span>
+            </div>
+            <div class="events-list-text">
+                <p class="events-title">From Zero to Immutable Kubernetes</p>
+                <p class="events-conference">CfgMgmtCamp</p>
+            </div>
+        </div>
+        <div class="events-list-item">
+            <div class="events-list-meta">
+                <span class="events-date">Feb 02</span>
+                <span class="events-location">Ghent, BE</span>
+            </div>
+            <div class="events-list-text">
+                <p class="events-title">Cloud Native at the Far(m) Edge: Running Kubernetes and AI on Tractors</p>
+                <p class="events-conference">CfgMgmtCamp</p>
+            </div>
+        </div>
+        <div class="events-list-item">
+            <div class="events-list-meta">
+                <span class="events-date">Jan 31</span>
+                <span class="events-location">Brussels, BE</span>
+            </div>
+            <div class="events-list-text">
+                <p class="events-title">What Image-Based Systems Taught Us About Linux Distributions</p>
+                <p class="events-conference">FOSDEM</p>
+            </div>
+        </div>
+    </div>
+</div>
+{{ end }}
