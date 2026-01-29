@@ -1054,6 +1054,24 @@ footer {
     letter-spacing: 0.6px;
 }
 
+.events-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: $primary;
+    font-family: Noto Sans;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 140%;
+    text-decoration: none;
+}
+
+.events-link:hover {
+    color: $orange;
+    transition: all 0.3s;
+}
+
 @media screen and (max-width: 720px) {
     .events-list-item {
         flex-direction: column;
