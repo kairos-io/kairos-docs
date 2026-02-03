@@ -101,12 +101,12 @@ development = true
 [params.softwareVersions]
 # renovate: datasource=github-releases depName=kairos-io/provider-kairos
 provider_version = "v2.14.0"
-k3s_version = "v1.33.5+k3s1"
-kairos_version = "master"
+k3s_version = "v1.35.0+k3s1"
+kairos_version = "v3.7.1"
 # renovate: datasource=github-releases depName=kairos-io/AuroraBoot
 auroraboot_version = "v0.14.0"
 # renovate: datasource=github-releases depName=kairos-io/kairos-init
-kairos_init_version = "v0.6.2"
+kairos_init_version = "v0.7.0"
 flavor = "debian"
 registryURL = "quay.io/kairos"
 defaultFamily = "ubuntu"
