@@ -31,7 +31,13 @@ When building locally, only `docker` is required to be installed on the system. 
 
 ### Kubernetes
 
-To build with Kubernetes we need to install the [Kairos Operator](https://github.com/kairos-io/kairos-operator). Follow the instructions on the README of that repository in order to install the Kairos Operator on your cluster.
+To build with Kubernetes we need to install the [Kairos Operator](https://github.com/kairos-io/kairos-operator):
+
+```bash
+kubectl apply -k https://github.com/kairos-io/kairos-operator/config/default
+```
+
+For more details, see the [operator documentation](https://github.com/kairos-io/kairos-operator).
 
 ## Build an ISO
 
