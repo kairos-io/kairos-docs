@@ -131,7 +131,7 @@ spec:
 
 ## Build a Cloud Image
 
-Cloud images are images that automatically boots into recovery mode and can be used to deploy whatever image you want to the VM.
+Cloud images are images that automatically boot into recovery mode and can be used to deploy whatever image you want to the VM.
 Custom user-data from the Cloud provider is automatically retrieved, additionally the CRD allows to embed a custom cloudConfig so that we can use to make configuration permanent also for VM images running outside a cloud provider.
 
 A Cloud Image boots in QEMU and also in AWS, consider:
@@ -160,7 +160,9 @@ spec:
     key: userdata
 ```
 
-Note: The cloud image boots into recovery mode on first boot and automatically partitions the disk and resets into the active system. This is handled internally by AuroraBoot during the build process, so the cloud-config only needs to contain your own configuration (users, etc.). The CRD also allows embedding a custom cloud-config to make configuration permanent for VM images running outside a cloud provider.
+{{% alert title="Note" color="info" %}}
+The cloud image boots into recovery mode on first boot and automatically partitions the disk and resets into the active system. This is handled internally by AuroraBoot during the build process, so the cloud-config only needs to contain your own configuration (users, etc.). The CRD also allows embedding a custom cloud-config to make configuration permanent for VM images running outside a cloud provider.
+{{% /alert %}}
 
 After applying the spec, the controller will create a Kubernetes Job which runs the build process and
 then copy the produced `hello-kairos.raw` file to the nginx server (see above). Alternatively you may configure your own job to copy the content elsewhere. This file is an EFI bootable raw disk, bootable in QEMU and compatible with AWS which automatically provisions the node:
