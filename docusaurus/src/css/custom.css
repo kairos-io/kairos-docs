@@ -141,6 +141,15 @@ a:hover {
   color: rgba(255, 255, 255, 0.85);
 }
 
+.dropdown__menu .dropdown__link {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
 /* Navbar logo - keep original colors */
 .navbar__logo {
   /* Logo retains original Kairos colors */
