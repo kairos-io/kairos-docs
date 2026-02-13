@@ -13,6 +13,10 @@ then
     chmod +x "$binpath"/hugo
 fi
 
-hugo mod get
+hugo mod tidy
 hugo mod graph
+
+# Build the version menu (same as build.sh does for the main branch)
+"${ROOT_DIR}/scripts/build-menu.sh"
+
 hugo --ignoreCache --baseURL="$BASE_URL" -s "$ROOT_DIR" serve
