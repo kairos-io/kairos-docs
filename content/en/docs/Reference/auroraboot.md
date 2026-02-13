@@ -389,7 +389,9 @@ cloud_config: |
 | `state_dir`           | Specify a directory that will be used by auroraboot to download artifacts and reuse the same to cache artifacts.                                                                                                                                                                                      |
 | `listen_addr`         | Default http binding port for offline ISO generation.                                                                                                                                                                                                                                                 |
 | `cloud_config`        | Cloud config path to use for the machines. A URL can be specified, use `-` to pass-by the cloud-config from _STDIN_                                                                                                                                                                                   |
-| `iso.data`            | Defines a path to be embedded into the resulting iso. When booting, the files will be accessible at `/run/initramfs/live`                                                                                                                                                                             |
+| `iso.data`            | **Deprecated.** Use `iso.overlay_iso` instead. If set, its value is automatically migrated to `iso.overlay_iso` and a warning is printed.                                                                                                                                                             |
+| `iso.overlay_iso`     | Path to a directory whose contents will be added to the ISO filesystem root. Files are accessible at `/run/initramfs/live` when booted from the ISO. See [Customizing ISO contents](#customizing-iso-contents).                                                                                       |
+| `iso.overlay_rootfs`  | Path to a directory whose contents will be added to the OS rootfs (squashfs) inside the ISO. These files become part of the installed system. See [Customizing ISO contents](#customizing-iso-contents).                                                                                              |
 | `netboot.cmdline`     | Override the automatically generated cmdline with a custom one to use during netboot. `config_url` and `rootfs`  are automatically constructed. A reasonable value can be `netboot.cmdline=rd.neednet=1 ip=dhcp rd.cos.disable netboot install-mode console=tty0`                                     |
 | `disk.state_size`     | Set the minimum size (in MB) for the state partition in raw disk images. By default, the state partition is sized to 3 times the size of the current image plus some additional space for system files. Use this option to override the default size if you need to accommodate larger future images. |
 | `disk.efi`            | Generate an EFI-compatible raw disk image (suitable for AWS and QEMU). When set to `true`, the image will be created with EFI boot support.                                                                                                                                                           |
@@ -416,6 +418,125 @@ docker run --rm -ti -v "$PWD"/config.yaml:/config.yaml --net host quay.io/kairos
 ```
 
 Both the config file and the cloud-config file can be a URL.
+
+### Customizing ISO contents
+
+AuroraBoot provides several options for adding extra files into the generated ISO artifacts. These fall into two categories: files added to the **ISO filesystem** (accessible only when booted from the live media) and files added to the **OS rootfs** (which become part of the installed system).
+
+#### Comparison
+
+| Option | Where files end up | Accessible at | Part of installed system? | Available in |
+|---|---|---|---|---|
+| `iso.overlay_iso` / `--overlay-iso` | ISO filesystem root | `/run/initramfs/live` during boot | No | Top-level config / `--set`, `build-iso`, `build-uki` |
+| `iso.overlay_rootfs` / `--overlay-rootfs` | OS rootfs (squashfs) | Normal filesystem paths (e.g. `/usr/local/bin/`) | Yes | Top-level config / `--set`, `build-iso`, `build-uki` |
+
+{{% alert title="Deprecation notice" color="warning" %}}
+The `iso.data` option is deprecated and will be removed in a future release. Use `iso.overlay_iso` instead, which provides the same functionality. If `iso.data` is set, its value is automatically migrated to `iso.overlay_iso` and a deprecation warning is printed.
+{{% /alert %}}
+
+#### `--overlay-iso` - Add files to the ISO filesystem
+
+Adds the contents of a directory to the root of the ISO filesystem, just like `iso.data`. Files are accessible at `/run/initramfs/live` during live boot. This option is available as a CLI flag on the `build-iso` and `build-uki` subcommands, and as `iso.overlay_iso` in the top-level YAML configuration.
+
+Use cases include bundling [system extensions for Trusted Boot]({{< relref "../Installation/trustedboot" >}}) images and shipping extra files that are needed during installation but should not be part of the final OS.
+
+{{< tabpane text=true  >}}
+{{% tab header="build-iso" %}}
+
+```bash
+# Prepare extra files to include in the ISO
+mkdir -p files-iso/extra
+cp my-installer-script.sh files-iso/extra/
+
+docker run -v "$PWD"/files-iso:/files-iso \
+             -v "$PWD"/build:/tmp/auroraboot \
+             --rm -ti quay.io/kairos/auroraboot \
+             build-iso --overlay-iso /files-iso \
+             --output /tmp/auroraboot $IMAGE
+```
+
+{{% /tab %}}
+{{% tab header="build-uki" %}}
+
+```bash
+# Bundling system extensions into a Trusted Boot ISO
+docker run -ti --rm \
+             -v $PWD/system-extensions:/system-extensions \
+             -v $PWD/build:/result \
+             -v $PWD/keys/:/keys \
+             quay.io/kairos/auroraboot \
+             build-uki -t iso -d /result/ \
+             --overlay-iso /system-extensions \
+             $CONTAINER_IMAGE
+```
+
+{{% /tab %}}
+{{% tab header="Top-level config" %}}
+
+```yaml
+# aurora.yaml
+container_image: "..."
+iso:
+  overlay_iso: "/path/to/extra-iso-files"
+```
+
+{{% /tab %}}
+{{< /tabpane >}}
+
+{{% alert title="Note" color="info" %}}
+When using `build-uki`, the `--overlay-iso` flag is only supported when building ISO artifacts (`-t iso`).
+{{% /alert %}}
+
+#### `--overlay-rootfs` - Add files to the OS rootfs
+
+Adds the contents of a directory into the OS rootfs. The directory structure is preserved: for example, if your overlay directory contains `usr/local/bin/my-tool`, it will appear at `/usr/local/bin/my-tool` in the final system. These files are included in the squashfs image inside the ISO and **become part of the installed OS**, persisting after installation.
+
+This is the option to use when you need to ship custom binaries, configuration files, or scripts that should be present in the running system.
+
+This option is available as a CLI flag on the `build-iso` and `build-uki` subcommands, and as `iso.overlay_rootfs` in the top-level YAML configuration.
+
+{{< tabpane text=true  >}}
+{{% tab header="build-iso" %}}
+
+```bash
+# Prepare a rootfs overlay with a custom binary
+mkdir -p rootfs-overlay/usr/local/bin
+cp my-custom-tool rootfs-overlay/usr/local/bin/
+
+docker run -v "$PWD"/rootfs-overlay:/rootfs-overlay \
+             -v "$PWD"/build:/tmp/auroraboot \
+             --rm -ti quay.io/kairos/auroraboot \
+             build-iso --overlay-rootfs /rootfs-overlay \
+             --output /tmp/auroraboot $IMAGE
+```
+
+{{% /tab %}}
+{{% tab header="build-uki" %}}
+
+```bash
+# Add custom files to the rootfs of a Trusted Boot image
+docker run -ti --rm \
+             -v $PWD/rootfs-overlay:/rootfs-overlay \
+             -v $PWD/build:/result \
+             -v $PWD/keys/:/keys \
+             quay.io/kairos/auroraboot \
+             build-uki -t iso -d /result/ \
+             --overlay-rootfs /rootfs-overlay \
+             $CONTAINER_IMAGE
+```
+
+{{% /tab %}}
+{{% tab header="Top-level config" %}}
+
+```yaml
+# aurora.yaml
+container_image: "..."
+iso:
+  overlay_rootfs: "/path/to/rootfs-overlay"
+```
+
+{{% /tab %}}
+{{< /tabpane >}}
 
 ### Cloud config
 
@@ -567,7 +688,7 @@ docker run -v "$PWD"/config.yaml:/config.yaml \
              --set "disable_netboot=true" \
              --cloud-config /config.yaml \
              --set "state_dir=/tmp/auroraboot" \
-             --set "iso.data=/tmp/data"
+             --set "iso.overlay_iso=/tmp/data"
 ```
 
 ### Prepare ISO for Airgap installations
