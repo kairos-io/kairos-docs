@@ -18,12 +18,12 @@ const config: Config = {
   url: 'https://kairos.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/kairos-docs/',
+  baseUrl: '/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'jasperdekeuk', // Usually your GitHub org/user name.
-  projectName: 'kairos-docs', // Usually your repo name.
+  // organizationName: 'jasperdekeuk', // Usually your GitHub org/user name.
+  // projectName: 'kairos-docs', // Usually your repo name.
 
   // Make broken links warnings during local builds so the build can complete
   // while we iteratively fix unresolved internal links across many files.
