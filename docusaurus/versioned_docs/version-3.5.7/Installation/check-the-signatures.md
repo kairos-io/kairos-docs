@@ -26,9 +26,9 @@ To validate the whole chain you need:
 1. `sha256sum` which is usually installed by default on most linux distributions.
 2. `cosign` to verify the signatures of the sha256 file. You can install cosign via their [installation docs](https://docs.sigstore.dev/cosign/installation/)
 3. sha256, certificate and signature files that you want to verify
-    - <!-- Hugo shortcode: imageLink variant="standard" suffix=".iso.sha256" -->  
-    - <!-- Hugo shortcode: imageLink variant="standard" suffix=".iso.sha256.pem" -->  
-    - <!-- Hugo shortcode: imageLink variant="standard" suffix=".iso.sha256.sig" -->  
+    - <ImageLink variant="standard" suffix=".iso.sha256" />
+    - <ImageLink variant="standard" suffix=".iso.sha256.pem" />
+    - <ImageLink variant="standard" suffix=".iso.sha256.sig" />
 
 In this example we will use the `latest` version and <!-- Hugo shortcode: flavorCode  --> flavor and <!-- Hugo shortcode: flavorReleaseCode  --> flavor release.
 
@@ -74,4 +74,3 @@ $ sha256sum -c <!-- Hugo shortcode: image variant="core" suffix=".iso.sha256" --
 ```
 
 Once we reached this point, we can be sure that from the ISO hasn't been tampered with since it was created by our release workflow.
-

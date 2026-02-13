@@ -141,6 +141,27 @@ a:hover {
   color: rgba(255, 255, 255, 0.85);
 }
 
+.flavor-selector-control {
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.9);
+  border-radius: 6px;
+  padding: 0.28rem 1.6rem 0.28rem 0.55rem;
+  line-height: 1.2;
+  font-size: 0.9rem;
+  min-width: 180px;
+  cursor: pointer;
+}
+
+.flavor-selector-control option {
+  color: #111111;
+}
+
+.flavor-selector-control:focus {
+  outline: 2px solid var(--kairos-softer-orange);
+  outline-offset: 1px;
+}
+
 /* Navbar logo - keep original colors */
 .navbar__logo {
   /* Logo retains original Kairos colors */
