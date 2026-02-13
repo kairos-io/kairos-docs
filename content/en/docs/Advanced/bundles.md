@@ -104,7 +104,7 @@ kairos-agent install-bundle run://quay.io/kairos/community-bundles:cert-manager_
 
 ## Bundle types
 
-Bundles can carry also binaries that can be overlayed in the rootfs while [building images]({{< relref "build" >}}).
+Bundles can carry also binaries that can be overlayed in the rootfs while [building images]({{< relref "../Operator/osartifact" >}}).
 
 Kairos supports three types of bundles:
 
