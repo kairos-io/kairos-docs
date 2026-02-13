@@ -61,7 +61,7 @@ kairos-agent upgrade --source oci:acme.com/acme/kairos
 
 #### Upgrades with Kubernetes
 
-To upgrade Kairos with Kubernetes, the Kairos operator needs to be deployed on the target cluster. [Read the instructions here]({{< relref "./kairos-operator" >}}).
+To upgrade Kairos with Kubernetes, the Kairos operator needs to be deployed on the target cluster. [Read the installation instructions here]({{< relref "../Operator/installation" >}}).
 
 A `NodeOp` resource needs to be created which will use the image generated in the step above.
 Since that image only contains the EFI files for the upgrade and in order to be able use any ImagePullSecrets
@@ -133,5 +133,5 @@ spec:
 ```
 
 {{% alert title="Note" color="success" %}}
-To understand more on how this works, see the [Kairos operator documentation]({{< relref "./kairos-operator" >}}) for general information about the operator and the [regular upgrade process]({{< relref "./kubernetes" >}}) for non-trusted boot upgrades.
+To understand more on how this works, see the [Kairos operator documentation]({{< relref "../Operator" >}}) for general information about the operator and the [regular upgrade process]({{< relref "./kubernetes" >}}) for non-trusted boot upgrades.
 {{% /alert %}}

@@ -51,7 +51,7 @@ spec:
   stopOnFailure: true
 ```
 
-For more details on using the operator, check out our [Kairos Operator documentation](/docs/upgrade/kairos-operator/).
+For more details on using the operator, check out our [Kairos Operator documentation](/docs/operator/).
 
 The Kairos operator opens up new possibilities for node management. You can now:
 
