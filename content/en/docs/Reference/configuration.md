@@ -232,6 +232,20 @@ upgrade:
     - /data
     - /src
 
+# Various other fields that can be set.
+# They govern various aspects like image verification, compression, and boot settings
+config_url: <string>
+fail_on_bundles_errors: <bool>
+eject-cd: <bool>
+cosign: <bool>
+verify: <bool>
+cosign-key: <string>
+arch: <string>
+squash-compression: <[]string>
+squash-no-compression: <[]string>
+uki-max-entries: <int>
+bind-pcrs: <[]string>
+bind-public-pcrs: <[]string>
 
 k3s:
   # Additional env/args for k3s server instances
