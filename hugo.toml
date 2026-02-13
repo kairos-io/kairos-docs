@@ -104,7 +104,7 @@ provider_version = "v2.14.0"
 k3s_version = "v1.35.0+k3s1"
 kairos_version = "master"
 # renovate: datasource=github-releases depName=kairos-io/AuroraBoot
-auroraboot_version = "v0.14.0"
+auroraboot_version = "v0.19.4"
 # renovate: datasource=github-releases depName=kairos-io/kairos-init
 kairos_init_version = "v0.6.2"
 flavor = "debian"
