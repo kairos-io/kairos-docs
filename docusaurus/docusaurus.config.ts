@@ -63,19 +63,11 @@ const config: Config = {
           showLastUpdateTime: true,
           showLastUpdateAuthor: true,
           // Enable versioning
-          lastVersion: '3.6.0',
+          lastVersion: 'current',
           versions: {
             current: {
               label: 'Next 🚧',
               path: 'next',
-            },
-            '3.6.0': {
-              label: '3.6.0 (Latest)',
-              path: '3.6.0',
-            },
-            '3.5.7': {
-              label: '3.5.7',
-              path: '3.5.7',
             },
           },
         },
