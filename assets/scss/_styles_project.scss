@@ -768,6 +768,35 @@ footer {
     margin-bottom: 64px;
 }
 
+.press-more {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.press-more > a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 14px 28px;
+    background: $orange;
+    color: $white;
+    font-family: Noto Sans;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+    border-radius: 6px;
+    text-decoration: none;
+}
+
+.press-more > a:hover {
+    background: $softer-orange;
+    color: $white;
+    transition: all 0.3s;
+}
+
 .press-cards {
     display: flex;
     flex-flow: row wrap;
@@ -796,7 +825,7 @@ footer {
 
 .press-cards > div > p {
     max-width: 248px;
-    height: 145px;
+    height: 175px;
     color: #041842;
     font-family: Noto Sans;
     font-size: 21px;
@@ -839,6 +868,219 @@ footer {
 }
 .press-card-img > img{
     max-width: 90%;
+}
+
+.press-card-img--light {
+    background: #FFF;
+    border: 1px solid #E2E7EB;
+}
+
+.press-card-img--cncf {
+    background: #0B1B3D;
+}
+
+.press-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 24px 100px;
+}
+
+.events-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 24px 100px;
+}
+
+.press-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 48px;
+}
+
+.press-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 22px 28px;
+    border-radius: 12px;
+    background: #FFF;
+    border: 1px solid #E2E7EB;
+    box-shadow: 0px 18px 40px -18px rgba(6, 17, 77, 0.15);
+}
+
+.press-list-text {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.press-list-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.press-list-meta > time,
+.press-list-meta > span {
+    color: #5A6A85;
+    font-family: Noto Sans;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+.press-list-meta > span::before {
+    content: "•";
+    margin-right: 10px;
+    color: #C3CBD6;
+}
+
+.press-list-text > p {
+    margin-bottom: 0;
+    color: #041842;
+    font-family: Noto Sans;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 140%;
+}
+
+.press-list-item > a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: $primary;
+    font-family: Noto Sans;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 140%;
+    white-space: nowrap;
+}
+
+.press-list-item > a:hover {
+    color: $orange;
+    transition: all 0.3s;
+}
+
+@media screen and (max-width: 720px) {
+    .press-list-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .press-list-item > a {
+        width: 100%;
+        justify-content: flex-start;
+    }
+}
+
+.events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 48px;
+}
+
+.events-list-item {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    padding: 26px 28px;
+    border-radius: 14px;
+    background: #FFF;
+    border: 1px solid #E2E7EB;
+    box-shadow: 0px 18px 40px -18px rgba(6, 17, 77, 0.15);
+}
+
+.events-list-meta {
+    min-width: 160px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.events-date {
+    color: #041842;
+    font-family: Noto Sans;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 120%;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.events-location {
+    color: #5A6A85;
+    font-family: Noto Sans;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+}
+
+.events-list-text {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.events-title {
+    margin: 0;
+    color: #041842;
+    font-family: Noto Sans;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 140%;
+}
+
+.events-conference {
+    margin: 0;
+    color: $orange;
+    font-family: Noto Sans;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 120%;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+.events-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: $primary;
+    font-family: Noto Sans;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 140%;
+    text-decoration: none;
+}
+
+.events-link:hover {
+    color: $orange;
+    transition: all 0.3s;
+}
+
+@media screen and (max-width: 720px) {
+    .events-list-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .events-list-meta {
+        min-width: auto;
+    }
 }
 
 #makes-us-diff-blade{
@@ -1166,6 +1408,66 @@ footer {
     font-weight: 400;
     line-height: 140%;
     letter-spacing: 0.24px;
+}
+
+.events-blade {
+    background: #F7F9FC;
+    padding: 0 20px;
+}
+
+.events-blade-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    padding: 64px 0px 84px 0px;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.events-blade-wrap > h2 {
+    color: $primary;
+    text-align: center;
+    font-family: Noto Sans;
+    font-size: 44px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+}
+
+.events-blade-wrap > p {
+    max-width: 900px;
+    color: #344079;
+    text-align: center;
+    font-family: Noto Sans;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%;
+    letter-spacing: 0.22px;
+}
+
+.events-cta > a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 14px 28px;
+    background: $orange;
+    color: $white;
+    font-family: Noto Sans;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+    border-radius: 6px;
+    text-decoration: none;
+}
+
+.events-cta > a:hover {
+    background: $softer-orange;
+    color: $white;
+    transition: all 0.3s;
 }
 
 .basics {

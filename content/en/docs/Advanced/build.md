@@ -17,8 +17,7 @@ This guide provides detailed information about building Kairos images. For a com
 
 This documentation section describes how the Kairos Kubernetes Native API extensions can be used to build custom appliances or booting medium for Kairos.
 
-While it's possible to just run Kairos from the artifacts provided by our release process, there are specific use-cases which needs extended customization, for example when
-additional kernel modules, or custom, user-defined logic that you might want to embed in the media used for installations.
+While it's possible to just run Kairos from the artifacts provided by our release process, there are specific use-cases which need extended customization, for example when additional kernel modules, or custom, user-defined logic that you might want to embed in the media used for installations.
 
 Note the same can be achieved by using advanced configuration and actually modify the images during installation phase by leveraging the `chroot` stages that takes place in the image - this is discouraged - as it goes in opposite with the "Single Image", "No infrastructure drift" approach of Kairos. The idea here is to create a system from "scratch" and apply that on the nodes - not to run any specific logic on the node itself.
 
@@ -32,26 +31,13 @@ When building locally, only `docker` is required to be installed on the system. 
 
 ### Kubernetes
 
-To build with Kubernetes we need to install the Kairos `osbuilder` controller.
-
-The chart depends on cert-manager. You can install the latest version of cert-manager by running the following commands:
+To build with Kubernetes we need to install the [Kairos Operator](https://github.com/kairos-io/kairos-operator):
 
 ```bash
-kubectl apply -f https://github.com/jetstack/cert-manager/releases/latest/download/cert-manager.yaml
-kubectl wait --for=condition=Available deployment --timeout=2m -n cert-manager --all
+kubectl apply -k https://github.com/kairos-io/kairos-operator/config/default
 ```
 
-Install the Kubernetes charts with `helm`:
-
-```bash
-helm repo add kairos https://kairos-io.github.io/helm-charts
-helm repo update
-helm install kairos-crd kairos/kairos-crds
-helm install kairos-osbuilder kairos/osbuilder
-```
-
-Among the things deployed by the helm chart, is also an nginx server which is used to
-serve the artifact files after they are built. See below for more.
+For more details, see the [operator documentation](https://github.com/kairos-io/kairos-operator).
 
 ## Build an ISO
 
@@ -88,38 +74,48 @@ spec:
     name: cloud-config
     key: userdata
   exporters:
-    - template:
-        spec:
-            restartPolicy: Never
-            containers:
-            - name: upload
-              image: quay.io/curl/curl
-              command:
-              - /bin/sh
-              args:
-              - -c
-              - |
-                  for f in $(ls /artifacts)
-                  do
-                  curl -T /artifacts/$f http://osartifactbuilder-operator-osbuilder-nginx/upload/$f
-                  done
-              volumeMounts:
-              - name: artifacts
-                mountPath: /artifacts
+  - template:
+      spec:
+        restartPolicy: Never
+        containers:
+        - name: upload
+          image: quay.io/curl/curl
+          command: ["sh", "-ec"]
+          args:
+          - |
+            NGINX_URL="${NGINX_URL:-http://kairos-operator-nginx}"
+            for f in /artifacts/*; do
+              [ -f "$f" ] || continue
+              base=$(basename "$f")
+              echo "Uploading $base to $NGINX_URL/$base"
+              curl -fsSL -T "$f" "$NGINX_URL/$base" || exit 1
+            done
+            echo "Upload done"
+          env:
+          - name: NGINX_URL
+            value: "http://kairos-operator-nginx"
+          volumeMounts:
+          - name: artifacts
+            readOnly: true
+            mountPath: /artifacts
 ```
 
 Apply the manifest with `kubectl apply`.
 
 Note, the CRD allows to specify a custom Cloud config file, [check out the full configuration reference]({{< relref "../reference/configuration" >}}).
 
-As mentioned above, there is an nginx server that will serve the built artifacts as soon as they are ready.
-By default, it is exposed with a `NodePort` type of service. Use the following commands
-to get its URL:
-
-The controller will create a pod that builds the ISO ( we can follow the process by tailing to the containers log ) and later makes it accessible to its own dedicated service (nodeport by default):
+The exporter in the example above uploads the built artifacts to an nginx server. The operator includes a ready-to-use nginx kustomization that deploys an nginx server with WebDAV upload support. Deploy it with:
 
 ```bash
-$ PORT=$(kubectl get svc osartifactbuilder-operator-osbuilder-nginx -o json | jq '.spec.ports[0].nodePort')
+kubectl apply -k https://github.com/kairos-io/kairos-operator/config/nginx -n default
+```
+
+This creates a `NodePort` service called `kairos-operator-nginx`. The controller will create a pod that builds the ISO (we can follow the process by tailing the container logs) and the exporter will upload the artifacts to the nginx server as soon as they are ready.
+
+To download the built artifacts, get the nginx service's node port and use it to fetch the ISO:
+
+```bash
+$ PORT=$(kubectl get svc kairos-operator-nginx -o json | jq '.spec.ports[0].nodePort')
 $ curl http://<node-ip>:$PORT/hello-kairos.iso -o output.iso
 ```
 ## Netboot artifacts
@@ -135,13 +131,13 @@ spec:
   netboot: true
   netbootURL: ...
   bundles: ...
-  cloudConfig: ...
+  cloudConfigRef: ...
   exporters: ...
 ```
 
 ## Build a Cloud Image
 
-Cloud images are images that automatically boots into recovery mode and can be used to deploy whatever image you want to the VM. 
+Cloud images are images that automatically boot into recovery mode and can be used to deploy whatever image you want to the VM.
 Custom user-data from the Cloud provider is automatically retrieved, additionally the CRD allows to embed a custom cloudConfig so that we can use to make configuration permanent also for VM images running outside a cloud provider.
 
 A Cloud Image boots in QEMU and also in AWS, consider:
@@ -157,33 +153,8 @@ stringData:
     users:
     - name: "kairos"
       passwd: "kairos"
-    name: "Default deployment"
-    stages:
-      boot:
-      - name: "Repart image"
-        layout:
-          device:
-            label: COS_RECOVERY
-          add_partitions:
-            - fsLabel: COS_STATE
-              size: 16240 # At least 16gb
-              pLabel: state
-      - name: "Repart image"
-        layout:
-          device:
-            label: COS_RECOVERY
-          add_partitions:
-            - fsLabel: COS_PERSISTENT
-              pLabel: persistent
-              size: 0 # all space
-      - if: '[ -f "/run/cos/recovery_mode" ] && [ ! -e /usr/local/.deployed ]'
-        name: "Deploy kairos"
-        commands:
-          - kairos-agent --debug reset --unattended
-          - touch /usr/local/.deployed
-          - reboot
 ---
-apiVersion: build.kairos.io/v1alpha1
+apiVersion: build.kairos.io/v1alpha2
 kind: OSArtifact
 metadata:
   name: hello-kairos
@@ -195,21 +166,22 @@ spec:
     key: userdata
 ```
 
-Note: Since the image come with only the `recovery` system populated, we need to apply a cloud-config similar to this one which tells which container image we want to deploy.
-The first steps when the machine boots into is to actually create the partitions needed to boot the active and the passive images, and its populated during the first boot.
+{{% alert title="Note" color="info" %}}
+The cloud image boots into recovery mode on first boot and automatically partitions the disk and resets into the active system. This is handled internally by AuroraBoot during the build process, so the cloud-config only needs to contain your own configuration (users, etc.). The CRD also allows embedding a custom cloud-config to make configuration permanent for VM images running outside a cloud provider.
+{{% /alert %}}
 
 After applying the spec, the controller will create a Kubernetes Job which runs the build process and
 then copy the produced `hello-kairos.raw` file to the nginx server (see above). Alternatively you may configure your own job to copy the content elsewhere. This file is an EFI bootable raw disk, bootable in QEMU and compatible with AWS which automatically provisions the node:
 
 ```bash
-$ PORT=$(kubectl get svc osartifactbuilder-operator-osbuilder-nginx -o json | jq '.spec.ports[0].nodePort')
+$ PORT=$(kubectl get svc kairos-operator-nginx -o json | jq '.spec.ports[0].nodePort')
 $ curl http://<node-ip>:$PORT/hello-kairos.raw -o output.raw
 ```
 
 Note, in order to use the image with QEMU, we need to resize the disk at least to 32GB, this can be done with the CRD by setting `diskSize: 32000` or by truncating the file after downloading:
 
 ```bash
-truncate -s "+$((32000*1024*1024))" hello-kairos.raw 
+truncate -s "+$((32000*1024*1024))" hello-kairos.raw
 ```
 
 This is not required if running the image in the Cloud as providers usually resize the disk during import or creation of new instances.
@@ -255,7 +227,7 @@ Since release v3.3.0, Kairos release pipeline is pushing a public image to AWS, 
 
 First get the generated image:
 ```bash
-$ PORT=$(kubectl get svc osartifactbuilder-operator-osbuilder-nginx -o json | jq '.spec.ports[0].nodePort')
+$ PORT=$(kubectl get svc kairos-operator-nginx -o json | jq '.spec.ports[0].nodePort')
 $ curl http://<node-ip>:$PORT/hello-kairos.raw -o output.raw
 ```
 
@@ -280,7 +252,7 @@ Booting from hard drive...
 Similarly we can build images for Azure, consider:
 
 ```yaml
-apiVersion: build.kairos.io/v1alpha1
+apiVersion: build.kairos.io/v1alpha2
 kind: OSArtifact
 metadata:
   name: hello-kairos
@@ -293,7 +265,7 @@ spec:
 Will generate a compressed disk `hello-kairos-azure.vhd` ready to be used in Azure.
 
 ```bash
-$ PORT=$(kubectl get svc osartifactbuilder-operator-osbuilder-nginx -o json | jq '.spec.ports[0].nodePort')
+$ PORT=$(kubectl get svc kairos-operator-nginx -o json | jq '.spec.ports[0].nodePort')
 $ curl http://<node-ip>:$PORT/hello-kairos-azure.vhd -o output.vhd
 ```
 
@@ -319,7 +291,7 @@ Note:  There is currently no way of altering the boot disk of an Azure VM via GU
 Similarly we can build images for GCE, consider:
 
 ```yaml
-apiVersion: build.kairos.io/v1alpha1
+apiVersion: build.kairos.io/v1alpha2
 kind: OSArtifact
 metadata:
   name: hello-kairos
@@ -332,7 +304,7 @@ spec:
 Will generate a compressed disk `hello-kairos.gce.raw.tar.gz` ready to be used in GCE.
 
 ```bash
-$ PORT=$(kubectl get svc osartifactbuilder-operator-osbuilder-nginx -o json | jq '.spec.ports[0].nodePort')
+$ PORT=$(kubectl get svc kairos-operator-nginx -o json | jq '.spec.ports[0].nodePort')
 $ curl http://<node-ip>:$PORT/hello-kairos.gce.raw.tar.gz -o output.gce.raw.tar.gz
 ```
 

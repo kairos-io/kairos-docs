@@ -24,6 +24,7 @@ This feature works on both Trusted Boot and normal Kairos installations, the onl
 
 For more information on system extensions, please refer to the [System extensions documentation](https://www.freedesktop.org/software/systemd/man/latest/systemd-sysext.html).
 
+**Requirement**: Base image of the OS needs to have at least systemd 252 or newer ( for example ubuntu >=23.10 or fedora >=38 )
 
 ### Building system extensions manually
 
@@ -209,25 +210,25 @@ Manage extensions using `kairos-agent sysext` commands.
 
 ---
 
-### 📥 `download`
+### 📥 `install`
 
-Downloads a system extension and stores it on the node.
+Downloads/gets a system extension and stores it on the node.
 
 ```
-kairos-agent sysext download <URI>
+kairos-agent sysext install <URI>
 ```
 
 **Supported URI formats:**
 
-- `https://` – Download a raw disk image from a remote server
-- `http://` – Same as above, unencrypted
-- `file://` – Load a local disk image file
-- `oci://` – Download from an OCI-compatible container registry
+- `https:` – Download a raw disk image from a remote server
+- `http:` – Same as above, unencrypted
+- `file:` – Load a local disk image file
+- `oci:` – Download from an OCI-compatible container registry
 
 > ⚠️ **Important Notes:**
-> - `http(s)` and `file://` URIs must point directly to a raw disk image file.
-> - `oci://` support is **alpha-stage** and may change.
-> - When using `oci://`, the disk image must be **embedded inside the OCI image layer**.
+> - `http(s)` and `file:` URIs must point directly to a raw disk image file.
+> - `oci:` support is **alpha-stage** and may change.
+> - When using `oci:`, the disk image must be **embedded inside the OCI image layer**.
 
 ---
 
@@ -307,7 +308,7 @@ kairos-agent sysext list --recovery
 
 ```bash
 # Download a disk image over HTTPS
-kairos-agent sysext download https://example.org/extensions/k3sv1.32.1.raw
+kairos-agent sysext install https://example.org/extensions/k3sv1.32.1.raw
 
 # Enable for the active profile and activate it live
 kairos-agent sysext enable --active --now k3s

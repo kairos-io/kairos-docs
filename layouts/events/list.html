@@ -1,0 +1,78 @@
+{{ define "main" }}
+<div class="td-content events-page">
+    <h1>{{ .Title }}</h1>
+    {{ with .Params.description }}<div class="lead">{{ . | markdownify }}</div>{{ end }}
+    <div class="events-list">
+        <div class="events-list-item">
+            <div class="events-list-meta">
+                <span class="events-date">Mar 26</span>
+                <span class="events-location">Amsterdam, NL</span>
+            </div>
+            <div class="events-list-text">
+                <p class="events-title">Cloud Native at the Far(m) Edge: Running Kubernetes and AI on Tractors</p>
+                <p class="events-conference">KubeCon EU</p>
+                <a class="events-link" href="https://kccnceu2026.sched.com/event/2CW75/cloud-native-at-the-farm-edge-running-kubernetes-and-ai-on-tractors-mauro-morales-spectro-cloud-jordan-karapanagiotis-aurea-imaging" target="_blank">
+                    Event details
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+        <div class="events-list-item">
+            <div class="events-list-meta">
+                <span class="events-date">Mar 23</span>
+                <span class="events-location">Amsterdam, NL</span>
+            </div>
+            <div class="events-list-text">
+                <p class="events-title">Project Lightning Talk: What's New In Kairos, 2026 Edition</p>
+                <p class="events-conference">KubeCon EU</p>
+                <a class="events-link" href="https://kccnceu2026.sched.com/event/2EFx4/project-lightning-talk-whats-new-in-kairos-2026-edition-mauro-morales-maintainer" target="_blank">
+                    Event details
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+        <div class="events-list-item">
+            <div class="events-list-meta">
+                <span class="events-date">Feb 04</span>
+                <span class="events-location">Ghent, BE</span>
+            </div>
+            <div class="events-list-text">
+                <p class="events-title">From Zero to Immutable Kubernetes</p>
+                <p class="events-conference">CfgMgmtCamp</p>
+                <a class="events-link" href="https://cfp.cfgmgmtcamp.org/ghent2026/talk/W9LUC3/" target="_blank">
+                    Event details
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+        <div class="events-list-item">
+            <div class="events-list-meta">
+                <span class="events-date">Feb 02</span>
+                <span class="events-location">Ghent, BE</span>
+            </div>
+            <div class="events-list-text">
+                <p class="events-title">Cloud Native at the Far(m) Edge: Running Kubernetes and AI on Tractors</p>
+                <p class="events-conference">CfgMgmtCamp</p>
+                <a class="events-link" href="https://cfp.cfgmgmtcamp.org/ghent2026/talk/UYXXAQ/" target="_blank">
+                    Event details
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+        <div class="events-list-item">
+            <div class="events-list-meta">
+                <span class="events-date">Jan 31</span>
+                <span class="events-location">Brussels, BE</span>
+            </div>
+            <div class="events-list-text">
+                <p class="events-title">What Image-Based Systems Taught Us About Linux Distributions</p>
+                <p class="events-conference">FOSDEM</p>
+                <a class="events-link" href="https://fosdem.org/2026/schedule/event/YQRYB7-hadron-linux/" target="_blank">
+                    Event details
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{{ end }}

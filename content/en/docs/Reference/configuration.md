@@ -59,7 +59,7 @@ install:
 
   # Override the grub entry name
   grub-entry-name: Kairos
-  
+
   # partitions setup
   # setting a partition size key to 0 means that the partition will take over the rest of the free space on the disk
   # after creating the rest of the partitions
@@ -101,7 +101,7 @@ install:
       size: 200
       fs: ext4
       label: TWO_PARTITION
-  
+
   # no-format: true skips any disk partitioning and formatting
   # If set to true installation procedure will error out if expected
   # partitions are not already present within the disk.
@@ -119,24 +119,27 @@ install:
   extra-dirs-rootfs:
     - /data
     - /src
-  
+
   # Override image sizes for active/passive/recovery
   # Note that the active+passive images are stored in the state partition and
   # the recovery in the recovery partition, so they should be big enough to accommodate te images sizes set below
   # size in MiB
   system:
     size: 4096
+    # Use a different source for the installation of active system
+    source: "oci:.."
   passive:
     size: 4096
   recovery-system:
     size: 5000
+    # Use a different source for the installation of recovery system
+    source: "oci:.."
   # note: This can also be set with dot notation like the following examples for a more condensed view:
   # system.size: 4096
   # passive.size: 4096
   # recovery-system.size: 5000
-  
-  # Use a different source for the installation
-  source: "oci:.."
+
+
   # Add bundles in runtime
   bundles:
     - ...
@@ -168,8 +171,9 @@ reset:
   # Power off after reset
   poweroff: true
 
-  # Use a different source for the reset
-  source: "oci:.."
+  # System Image (maps to Active), sets the source to reset to
+  system:
+    source: "oci:.."
 
   # Override the grub entry name
   grub-entry-name: Kairos
@@ -195,9 +199,7 @@ upgrade:
   # Power off after upgrade
   poweroff: true
 
-  # Use a different source for the upgrade
-  source: "oci:.."
-  
+
   # Override the grub entry name
   grub-entry-name: Kairos
 
@@ -211,9 +213,14 @@ upgrade:
   # size in MiB
   # During upgrade only the active or recovery image cna be resized as those are the ones that contain the upgrade
   # passive image is the current system, and that its untouched during the upgrade
+  # System Image (maps to Active)
   system:
+    source: "oci:.."
     size: 4096
+
+  # Recovery System Image (maps to Recovery)
   recovery-system:
+    source: "oci:.."
     size: 5000
 
   # Creates these dirs in the rootfs during upgrade. As the rootfs is RO from boot, sometimes we find that we
@@ -281,7 +288,7 @@ p2p:
    enable: true
    # HA enables automatic HA roles assignment.
    # A master cluster init is always required,
-   # Any additional master_node is configured as part of the 
+   # Any additional master_node is configured as part of the
    # HA control plane.
    # If auto is disabled, HA has no effect.
    ha:
@@ -400,21 +407,21 @@ stages:
 $ docker run -ti -v $PWD:/test --entrypoint /usr/bin/kairos-agent --rm {{<oci variant="core" >}} run-stage --cloud-init-paths /test initramfs
 
 # Output from the run-stage command
-INFO[2023-05-17T11:32:09+02:00] kairos-agent version 0.0.0                   
-INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs.before              
-INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.before'      
-INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs                     
-INFO[2023-05-17T11:32:09+02:00] Processing stage step ''. ( commands: 1, files: 0, ... ) 
-INFO[2023-05-17T11:32:09+02:00] Command output: hello!                       
-INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs'             
-INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs.after               
-INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.after'       
-INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs.before              
-INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.before'      
-INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs                     
-INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs'             
-INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs.after               
-INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.after'          
+INFO[2023-05-17T11:32:09+02:00] kairos-agent version 0.0.0
+INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs.before
+INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.before'
+INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs
+INFO[2023-05-17T11:32:09+02:00] Processing stage step ''. ( commands: 1, files: 0, ... )
+INFO[2023-05-17T11:32:09+02:00] Command output: hello!
+INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs'
+INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs.after
+INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.after'
+INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs.before
+INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.before'
+INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs
+INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs'
+INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs.after
+INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.after'
 
 ```
 
@@ -514,6 +521,25 @@ The table below lists all the available options for the `install.grub_options` f
 | extra_recovery_cmdline | Set additional boot commands when booting into recovery |
 | extra_cmdline          | Set additional boot commands for all entries            |
 | default_fallback       | Sets default fallback logic                             |
+
+
+The order of the cmdline parameters is as follows:
+1. Existing cmdline parameters, shipped with Kairos by default and non-modifiable
+2.`extra_cmdline`
+3.`extra_active_cmdline` or `extra_passive_cmdline` or `extra_recovery_cmdline` depending on the entry being booted
+
+Note that usually parameters for dracut and such are overridable, as they use the latest specified value in the cmdline.
+
+For example, the `rd.neednet=0` parameter is shipped with Kairos by default, but if you set `rd.neednet=1` in `extra_cmdline`, it will override the default value and enable networking during the initramfs stage.
+
+Also note that the `grub_options` for cmdline are only applied during installation. Changing them after installation won't have any effect.
+If you want to change the GRUB options after installation, you can do so by setting those values under the `/oem/grubenv` file as follows:
+
+```bash
+grub2-editenv /oem/grubenv set extra_cmdline="rd.neednet=1"
+```
+
+As a final note, just a reminder that during GRUB menu selection, you can press `e` to edit the cmdline for that boot only, which is useful for testing purposes. That allows to test extra cmdline parameters during a single boot before making them permanent.
 
 ## Kubernetes manifests
 
@@ -699,7 +725,7 @@ stages:
 | `k0s.enabled`           | Enables the k0s server instance. Accepted: `true`, `false`.                                                                                               |
 | `k0s.env`               | Additional environment variables for the k0s server instance.                                                                                             |
 | `k0s.args`              | Additional arguments for the k0s server instance.                                                                                                         |
-| `k0s.replace_env`       | Replaces all environment variables otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the environment variables you need. |
+| `k0s.replace_env`       | Replaces all environment variables otherwise passed to k0s by Kairos with those supplied here. Make sure you pass all the environment variables you need. |
 | `k0s.replace_args`      | Replaces all arguments otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the arguments you need.                         |
 
 {{% /tab %}}
@@ -709,7 +735,7 @@ stages:
 | `k0s-worker.enabled`           | Enables the k0s worker instance. Accepted: `true`, `false`.     |
 | `k0s-worker.env`               | Additional environment variables for the k0s worker instance.      |
 | `k0s-worker.args`              | Additional arguments for the k0s worker instance.      |
-| `k0s-worker.replace_env`       | Replaces all environment variables otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the environment variables you need. |
+| `k0s-worker.replace_env`       | Replaces all environment variables otherwise passed to k0s by Kairos with those supplied here. Make sure you pass all the environment variables you need. |
 | `k0s-worker.replace_args`      | Replaces all arguments otherwise passed to k0s by Kairos with those supplied here. Make sure you pass all the arguments you need.   |
 
 {{% /tab %}}

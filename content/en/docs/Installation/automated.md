@@ -42,7 +42,7 @@ install:
   poweroff: false
   auto: true # Required, for automated installations
 
-kairos:
+p2p:
   network_token: ....
 # extra configuration
 ```
@@ -112,7 +112,7 @@ $ docker run -v $PWD/cloud_init.yaml:/cloud_init.yaml \
                     -v $PWD/build:/tmp/auroraboot \
                     -v /var/run/docker.sock:/var/run/docker.sock \
                     --rm -ti quay.io/kairos/auroraboot \
-                    --set container_image=docker://$IMAGE \
+                    --set container_image=oci:$IMAGE \
                     --set "disable_http_server=true" \
                     --set "disable_netboot=true" \
                     --cloud-config /cloud_init.yaml \

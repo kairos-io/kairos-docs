@@ -39,15 +39,14 @@ FROM ${BASE_IMAGE} AS base-kairos
 ARG VARIANT=core
 ARG MODEL=generic
 ARG TRUSTED_BOOT=false
-ARG KUBERNETES_DISTRO=k3s
-ARG KUBERNETES_VERSION=latest
-ARG FRAMEWORK_VERSION=v2.20.0
+ARG PROVIDER_NAME=k3s
+#optionally specify provider version
+ARG PROVIDER_VERSION
 ARG VERSION
 
 COPY --from=kairos-init /kairos-init /kairos-init
-RUN /kairos-init -f "${FRAMEWORK_VERSION}" -l debug -s install -m "${MODEL}" -v "${VARIANT}" -t "${TRUSTED_BOOT}" -k "${KUBERNETES_DISTRO}" --k8sversion "${KUBERNETES_VERSION}" --version "${VERSION}"
-RUN /kairos-init -f "${FRAMEWORK_VERSION}" -l debug -s init -m "${MODEL}" -v "${VARIANT}" -t "${TRUSTED_BOOT}" -k "${KUBERNETES_DISTRO}" --k8sversion "${KUBERNETES_VERSION}" --version "${VERSION}"
-RUN /kairos-init -f "${FRAMEWORK_VERSION}" -l debug --validate -m "${MODEL}" -v "${VARIANT}" -t "${TRUSTED_BOOT}" -k "${KUBERNETES_DISTRO}" --k8sversion "${KUBERNETES_VERSION}" --version "${VERSION}"
+RUN /kairos-init -l debug -s install -m "${MODEL}" -v "${VARIANT}" -t "${TRUSTED_BOOT}" --provider "${PROVIDER_NAME}" --provider-"${PROVIDER_NAME}"-version "${PROVIDER_VERSION}" --version "${VERSION}"
+RUN /kairos-init -l debug -s init -m "${MODEL}" -v "${VARIANT}" -t "${TRUSTED_BOOT}" --provider "${PROVIDER_NAME}" --provider-"${PROVIDER_NAME}"-version "${PROVIDER_VERSION}" --version "${VERSION}"
 RUN rm /kairos-init
 EOF
 ```
@@ -118,10 +117,11 @@ users:
   - admin
 
 reset:
-  source: "oci:quay.io/kairos/opensuse:leap-15.6-standard-amd64-generic-master-k3sv1.32.1-rc2-k3s1"
+  system:
+    source: "oci:quay.io/kairos/opensuse:leap-15.6-standard-amd64-generic-master-k3sv1.32.1-rc2-k3s1"
 ```
 
-In the example above, we are specifying a custom image that will be used during the first boot to reset the system. When you launch an instance, Kairos will boot into "auto-reset mode" by default. This means that Kairos will "install" itself on the first boot and then reboot. The `reset.source` field in the cloud-config specifies which image will be installed during this process.
+In the example above, we are specifying a custom image that will be used during the first boot to reset the system. When you launch an instance, Kairos will boot into "auto-reset mode" by default. This means that Kairos will "install" itself on the first boot and then reboot. The `reset.system.source` field in the cloud-config specifies which image will be installed during this process.
 
 As explained in the section above, sizing the state partition properly is important when using this option.
 

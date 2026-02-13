@@ -29,10 +29,10 @@ Create `build` directory and add `cloud-config.yaml`, then run:
 
 ```bash
 docker run --rm --privileged -v /var/run/docker.sock:/var/run/docker.sock \
-                --platform linux/arm64 -v $PWD/build/:/output \
-                kairos.docker.scarf.sh/kairos/auroraboot:latest \
+                -v $PWD/build/:/output \
+                quay.io/kairos/auroraboot:latest \
                 --debug --set "disable_http_server=true" --set "disable_netboot=true" \
-                --set "state_dir=/output" --set "disk.raw=true" \
+                --set "state_dir=/output" --set "disk.raw=true" --set "arch=arm64" \
                 --cloud-config /output/cloud-config.yaml \
                 --set "container_image={{<oci variant="standard" model="rpi4" arch="arm64">}}"
 ```

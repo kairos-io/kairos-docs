@@ -113,10 +113,10 @@ Note that the size of the partitions you modify should be duly reported in the p
 
 ### Edit the parition layout
 
-We are going now to modify the partition layout in `bootloader/generic/cfg/flash_t234_qspi_sdmmc.xml` which corresponds to the partitioning of the AGX Orin board. An example config file can be found in [here](https://kairos.io/examples/images/flash_t234_qspi_sdmmc.xml). Note that the file might change across Nvidia jetson releases, so if flashing fails, use this file as baseline.
+We are going now to modify the partition layout in `bootloader/generic/cfg/flash_t234_qspi_sdmmc.xml` which corresponds to the partitioning of the AGX Orin board. An example config file can be found in [here](https://kairos.io/examples/board-configs/flash_t234_qspi_sdmmc.xml). Note that the file might change across Nvidia jetson releases, so if flashing fails, use this file as baseline.
 
 ```bash
-wget 'https://kairos.io/examples/images/flash_t234_qspi_sdmmc.xml' -O ./bootloader/generic/cfg/flash_t234_qspi_sdmmc.xml
+wget 'https://kairos.io/examples/board-configs/flash_t234_qspi_sdmmc.xml' -O ./bootloader/generic/cfg/flash_t234_qspi_sdmmc.xml
 ```
 
 If you are editing the partition sizes and generating the images manually, use the example config file as a baseline and edit the `size` accordingly to the corresponding partitions (find the respective `filename` and compare the file size, see the notes below).

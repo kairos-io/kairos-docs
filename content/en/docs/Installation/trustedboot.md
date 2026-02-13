@@ -113,7 +113,7 @@ admin
 generate
 # Follow the instructions to generate the key, you can use the default values
 # After the key is generated, you can run the following command to list the keys:
-$ pkcs11-tool --module opensc-pkcs11.so -L                        
+$ pkcs11-tool --module opensc-pkcs11.so -L
 Available slots:
 Slot 0 (0x0): Nitrokey Nitrokey Start (FSIJ-1.2.19-C5B562D9) 00 00
   token label        : OpenPGP card (User PIN)
@@ -178,6 +178,7 @@ Sign the CSR with the private key in the hardware key:
 ```bash
 $ OPENSSL_CONF=openssl-pkcs11.conf openssl x509 -req -days 3650 -in nitrokey.csr.pem \
     -signkey "pkcs11:slot-id=1;id=%01" -out nitrokey.crt.pem
+```
 
 Now you can use the hardware key and certificate to sign the UKI files.
 

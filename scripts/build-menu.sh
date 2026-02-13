@@ -16,6 +16,12 @@ if [ -z "$releases" ]; then
     exit 1
 fi
 
+# Get the latest release (first in the sorted list)
+latest_release=$(echo "$releases" | head -n1)
+# Strip origin/release/ prefix to get just the version number
+latest_version=${latest_release#origin/release/}
+echo "Latest release: $latest_version"
+
 # Verify hugo.toml exists and is readable
 if [ ! -f "hugo.toml" ]; then
     echo "Error: hugo.toml not found in $(pwd)"
@@ -65,6 +71,10 @@ while IFS= read -r line || [ -n "$line" ]; do
             echo "$url_line" >> "$tmp_file"
             echo "" >> "$tmp_file"
         fi
+    elif [[ "$line" =~ ^latest_version[[:space:]]*=[[:space:]]*\"[^\"]*\" ]]; then
+        # Update the latest_version line
+        echo "Updating latest_version to: $latest_version"
+        echo "latest_version = \"$latest_version\"" >> "$tmp_file"
     else
         # Write all other lines unchanged
         echo "$line" >> "$tmp_file"

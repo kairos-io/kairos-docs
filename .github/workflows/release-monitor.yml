@@ -1,0 +1,57 @@
+name: Release Monitor
+
+on:
+  schedule:
+    # Check for new releases every 30 minutes
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Specific version to process (optional)'
+        required: false
+        type: string
+      dry_run:
+        description: 'Dry run mode (no actual changes)'
+        required: false
+        type: boolean
+        default: false
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  check-releases:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set up environment
+        run: |
+          chmod +x scripts/*.sh
+          git config --global user.name "Kairos Release Bot"
+          git config --global user.email "release-bot@kairos.io"
+
+      - name: Run release automation
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            if [ -n "${{ github.event.inputs.version }}" ]; then
+              ./scripts/release-automation.sh --version "${{ github.event.inputs.version }}" $([ "${{ github.event.inputs.dry_run }}" = "true" ] && echo "--dry-run")
+            else
+              ./scripts/release-automation.sh $([ "${{ github.event.inputs.dry_run }}" = "true" ] && echo "--dry-run")
+            fi
+          else
+            ./scripts/release-automation.sh
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "Release automation failed. Check the logs for details."
+          # Add notification logic here (Slack, email, etc.)
+
