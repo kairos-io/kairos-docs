@@ -13,6 +13,7 @@ declare -A hugo_urls=()
 declare -A hugo_url_to_page=()
 declare -A docusaurus_urls=()
 declare -A docusaurus_page_to_url=()
+declare -A docusaurus_url_to_page=()
 declare -A requested_identifiers=()
 declare -a requested_pages=()
 declare -a selected_urls=()
@@ -174,8 +175,8 @@ get_docusaurus_current_docs_path() {
   current_path="$(
     awk '
       /current:[[:space:]]*\{/ { in_current=1 }
-      in_current && /path:[[:space:]]*'\''[^'\'']+'\''/ {
-        if (match($0, /path:[[:space:]]*'\''([^'\'']+)'\''/, m)) {
+      in_current && /path:[[:space:]]*["'\''][^"'\'']*["'\'']/ {
+        if (match($0, /path:[[:space:]]*["'\'']([^"'\'']*)["'\'']/, m)) {
           print m[1]
           exit
         }
@@ -184,11 +185,13 @@ get_docusaurus_current_docs_path() {
     ' "${DOCUSAURUS_CONFIG}" 2>/dev/null || true
   )"
 
-  if [[ -z "${current_path}" ]]; then
-    echo "next"
-  else
+  # Empty path means current docs are served under /docs/.
+  # If no current path is explicitly set, fall back to Docusaurus default "next".
+  if grep -q "current:[[:space:]]*{" "${DOCUSAURUS_CONFIG}" 2>/dev/null; then
     echo "${current_path}"
+    return
   fi
+  echo "next"
 }
 
 collect_docusaurus_urls() {
@@ -227,6 +230,7 @@ collect_docusaurus_urls() {
     url="$(normalize_url_path "${url}")"
     docusaurus_urls["${url}"]=1
     docusaurus_page_to_url["${page_id}"]="${url}"
+    docusaurus_url_to_page["${url}"]="${page_id}"
   done < <(find "${DOCUSAURUS_DIR}" -type f \( -name "*.md" -o -name "*.mdx" \) -print0)
 
   if [[ -f "${ROOT_DIR}/docusaurus/src/pages/index.tsx" || -f "${ROOT_DIR}/docusaurus/src/pages/index.md" || -f "${ROOT_DIR}/docusaurus/src/pages/index.mdx" ]]; then
@@ -326,6 +330,7 @@ collect_docusaurus_blog_urls() {
     url="$(normalize_url_path "${url}")"
     docusaurus_urls["${url}"]=1
     docusaurus_page_to_url["${page_id}"]="${url}"
+    docusaurus_url_to_page["${url}"]="${page_id}"
   done < <(find "${DOCUSAURUS_BLOG_DIR}" -type f \( -name "*.md" -o -name "*.mdx" \) -print0)
 
   docusaurus_urls["/blog"]=1
@@ -529,12 +534,15 @@ row_errors=0
 while IFS= read -r url_path; do
   [[ -z "${url_path}" ]] && continue
   page_id="${hugo_url_to_page[${url_path}]-}"
+  docusaurus_page_id="${docusaurus_url_to_page[${url_path}]-}"
 
   if [[ "${#requested_identifiers[@]}" -gt 0 ]]; then
     include=0
     if [[ -n "${requested_identifiers[url:${url_path}]-}" ]]; then
       include=1
     elif [[ -n "${page_id}" && -n "${requested_identifiers[page:${page_id}]-}" ]]; then
+      include=1
+    elif [[ -n "${docusaurus_page_id}" && -n "${requested_identifiers[page:${docusaurus_page_id}]-}" ]]; then
       include=1
     fi
     if [[ "${include}" -eq 0 ]]; then
@@ -576,6 +584,7 @@ printf "| %-*s | %-*s | %-*s | %-*s |\n" \
 
 for url_path in "${selected_urls[@]}"; do
   page_id="${hugo_url_to_page[${url_path}]-}"
+  docusaurus_page_id="${docusaurus_url_to_page[${url_path}]-}"
   total_rows=$((total_rows + 1))
 
   present="❌"
@@ -586,7 +595,9 @@ for url_path in "${selected_urls[@]}"; do
   docusaurus_file=""
   if [[ -n "${page_id}" ]]; then
     hugo_file="${hugo_pages[${page_id}]-}"
-    docusaurus_file="${docusaurus_pages[${page_id}]-}"
+  fi
+  if [[ -n "${docusaurus_page_id}" ]]; then
+    docusaurus_file="${docusaurus_pages[${docusaurus_page_id}]-}"
   fi
 
   if [[ -n "${docusaurus_file}" ]]; then
