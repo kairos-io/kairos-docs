@@ -3,6 +3,7 @@
   "position": 8,
   "link": {
     "type": "generated-index",
+    "slug": "/reference",
     "title": "Reference",
     "description": "Access essential reference materials for configuring, building, and troubleshooting Kairos nodes and images."
   },

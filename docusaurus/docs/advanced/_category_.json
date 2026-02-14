@@ -3,6 +3,7 @@
   "position": 6,
   "link": {
     "type": "generated-index",
+    "slug": "/advanced",
     "title": "Advanced Topics",
     "description": "Learn how to configure advanced Kairos features such as system extensions, partitions, bundles, and confidential computing."
   },

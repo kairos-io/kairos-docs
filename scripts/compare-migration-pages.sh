@@ -215,16 +215,22 @@ get_docusaurus_current_docs_path() {
   echo "next"
 }
 
-collect_docusaurus_urls() {
-  local current_path docs_prefix rel page_id no_ext file_name dir_name url
+get_docusaurus_docs_prefix() {
+  local current_path docs_prefix
   current_path="$(get_docusaurus_current_docs_path)"
-
-  if [[ "${current_path}" == "/" ]]; then
+  if [[ "${current_path}" == "/" || -z "${current_path}" ]]; then
     docs_prefix="/docs"
   else
     docs_prefix="/docs/${current_path#/}"
   fi
   docs_prefix="${docs_prefix%/}"
+  echo "${docs_prefix}"
+}
+
+collect_docusaurus_urls() {
+  local current_path docs_prefix rel page_id no_ext file_name dir_name url
+  current_path="$(get_docusaurus_current_docs_path)"
+  docs_prefix="$(get_docusaurus_docs_prefix)"
 
   while IFS= read -r -d '' file; do
     rel="${file#${DOCUSAURUS_DIR}/}"
@@ -258,6 +264,30 @@ collect_docusaurus_urls() {
     docusaurus_urls["/"]=1
   fi
   docusaurus_urls["/sitemap.xml"]=1
+}
+
+collect_docusaurus_category_urls() {
+  local docs_prefix file rel_dir slug url
+  docs_prefix="$(get_docusaurus_docs_prefix)"
+
+  while IFS= read -r -d '' file; do
+    if ! grep -q '"type"[[:space:]]*:[[:space:]]*"generated-index"' "${file}"; then
+      continue
+    fi
+
+    slug="$(sed -n 's/.*"slug"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "${file}" | head -n1)"
+    rel_dir="${file#${DOCUSAURUS_DIR}/}"
+    rel_dir="${rel_dir%/_category_.json}"
+
+    if [[ -n "${slug}" ]]; then
+      url="${docs_prefix}/${slug#/}"
+    else
+      url="${docs_prefix}/category/${rel_dir}"
+    fi
+
+    url="$(normalize_url_path "${url}")"
+    docusaurus_urls["${url}"]=1
+  done < <(find "${DOCUSAURUS_DIR}" -type f -name "_category_.json" -print0)
 }
 
 frontmatter_value() {
@@ -525,6 +555,7 @@ collect_pages "${HUGO_DIR}" "hugo"
 collect_pages "${DOCUSAURUS_DIR}" "docusaurus"
 collect_hugo_urls
 collect_docusaurus_urls
+collect_docusaurus_category_urls
 collect_docusaurus_blog_urls
 
 if [[ "${#requested_pages[@]}" -gt 0 ]]; then

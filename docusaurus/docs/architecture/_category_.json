@@ -3,6 +3,7 @@
   "position": 4,
   "link": {
     "type": "generated-index",
+    "slug": "/architecture",
     "title": "Architecture",
     "description": "Deep dive into Kairos architecture. Here you will learn in detail how the main features of Kairos have been designed."
   },
