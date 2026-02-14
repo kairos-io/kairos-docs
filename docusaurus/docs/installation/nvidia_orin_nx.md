@@ -6,11 +6,9 @@ description: Install Kairos on Nvidia Orin NX
 slug: /installation/nvidia_orin_nx
 ---
 
-
 :::warning Warning
 The Ubuntu versions supported on the Orin NX depend on the JetPack release. Check the compatibility matrix [here](https://developer.nvidia.com/embedded/jetpack-archive).
 :::
-
 This page describes how to install Kairos on an [Nvidia Orin NX](https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/jetson-orin/) on the NVMe.
 
 
@@ -24,7 +22,6 @@ This page describes how to install Kairos on an [Nvidia Orin NX](https://www.nvi
 :::info Debugging
 You can find debugging information [here](https://developer.ridgerun.com/wiki/index.php/NVIDIA_Jetson_Orin/In_Board/Getting_in_Board/Serial_Console)
 :::
-
 ## Flashing
 
 We are going to write the partitions to the NVMe. In order to do this we will use the Nvidia SDK configured with a custom partitioning layout.
@@ -68,11 +65,8 @@ echo "" > rootfs/boot/extlinux/extlinux.conf
 You can find Kairos core ubuntu images based on Ubuntu `22.04` [here](https://quay.io/repository/kairos/ubuntu)
 (search for `nvidia` in the tags)
 
-import Tabs from "@theme/Tabs";
-import TabItem from "@theme/TabItem";
-
-<Tabs>
-<TabItem value="build-partition-images-from-a-container-image" label="Build partition images from a container image">
+{{< tabpane text=true  >}}
+{{% tab header="Build partition images from a container image" %}}
 
 If you are customizing the image, or either modifying the default partition sizes you can build the images by running:
 ```bash
@@ -85,9 +79,8 @@ docker run --privileged --platform=linux/arm64 \
         -v $PWD/bootloader:/bootloader --entrypoint /prepare_nvidia_orin_images.sh -ti --rm quay.io/kairos/auroraboot:{{< auroraBootVersion >}}
 ```
 
-</TabItem>
-
-<TabItem value="build-partition-images-from-a-directory" label="Build partition images from a directory">
+{{% /tab %}}
+{{% tab header="Build partition images from a directory" %}}
 
 If you have instead the rootfs as a directory, you can create the required partitions with:
 ```bash
@@ -101,12 +94,12 @@ docker run --privileged --platform=linux/arm64 \
         -v $PWD/bootloader:/bootloader --entrypoint /prepare_nvidia_orin_images.sh -ti --rm quay.io/kairos/auroraboot:{{< auroraBootVersion >}}
 ```
 
-</TabItem>
-</Tabs>
+{{% /tab %}}
+{{< /tabpane >}}
 
 After running any of the commands above, the generated images files required for flashing will be inside the `bootloader` directory (`bootloader/efi.img`, `bootloader/recovery_partition.img`, `bootloader/state_partition.img`, `bootloader/oem.img`, `bootloader/persistent.img` ).
 
-:::note Note
+:::tip Note
 The persistent image is optional, as you can store the system persistent data rather in an SD card or an NVME disk. The default `persistent.img` is of 2GB size. To create a persistent image manually of the size you prefer instead you can run:
 
 ```
@@ -117,7 +110,6 @@ mkfs.ext2 -L "COS_PERSISTENT" bootloader/persistent.img
 
 Note that the size of the partitions you modify should be duly reported in the partition layout (see below).
 :::
-
 ### Edit the parition layout
 
 We are going now to modify the partition layout in `bootloader/generic/cfg/flash_t234_qspi_nvme.xml` which corresponds to the partitioning of the Orin NX board. An example config file can be found in [here](https://kairos.io/examples/board-configs/flash_t234_qspi_nvme.xml). Note that the file might change across Nvidia jetson releases, so if flashing fails, use this file as baseline.
@@ -128,8 +120,7 @@ wget 'https://kairos.io/examples/board-configs/flash_t234_qspi_nvme.xml' -O ./bo
 
 If you are editing the partition sizes and generating the images manually, use the example config file as a baseline and edit the `size` accordingly to the corresponding partitions (find the respective `filename` and compare the file size, see the notes below).
 
-:::note Note on editing the partition layout manually
-
+:::tip Note on editing the partition layout manually
 If you want to use the original file, identify the `nvme` section ( e.g. `<device type="nvme" instance="4" sector_size="512" num_sectors="INT_NUM_SECTORS" >` ), inside there is an "APP" partition ( `<partition name="APP" id="1" type="data">` ), remove it , and add the following instead:
 
 ```xml      
@@ -183,9 +174,7 @@ Be mindful also to change the esp partition or add it if required:
         </partition>
 ```
 :::
-
-
-:::note Note
+:::tip Note
 If modifying the partition sizes, you need to replace the size inside the `<size></size>` tags of each partition in the XML:
 
 ```
@@ -216,7 +205,6 @@ sed -e "s/@ESP_SIZE@/${EFI_IMG_SIZE}/" \
     tools/kernel_flash/flash_l4t_t234_nvme_kairos.xml
 ```
 :::
-
 ### Flash
 
 To flash the images to the Orin board

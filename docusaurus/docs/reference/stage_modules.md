@@ -238,7 +238,7 @@ stages:
 ### `authorized_keys`
 
 A list of SSH authorized keys that should be added for each user.
-SSH keys can be obtained from GitHub user accounts by using the format `github:&#36;&#123;USERNAME&#125;`, similarly for GitLab with `gitlab:&#36;&#123;USERNAME&#125;`.
+SSH keys can be obtained from GitHub user accounts by using the format github:${USERNAME}, similarly for GitLab with gitlab:${USERNAME}.
 
 ```yaml
 #cloud-config
@@ -412,24 +412,14 @@ You can also set custom partitions within the `kairos-install.pre.before` stage.
 custom partition in disk `/dev/vda`.
 
 
-
 :::warning Warning
-
 You're responsible to make sure the sizes of the partitions fit properly within the disk. Issues of space will be highlighted by
 the agent, but they will not fail the installation process unless you pass the `--strict` flag.
-
 :::
-
-
-
 :::warning Warning
-
 In the case of multiple devices, make sure you don't choose `auto` to determine on which device to install but instead to point
 the installation to the device where you are creating the custom partitions.
-
 :::
-
-
 ```shell
 #cloud-config
 

@@ -14,14 +14,10 @@ The configuration files in `/oem` are kept intact, the node on the next reboot a
 
 # How to
 
-
-:::note Note
-
+:::tip Note
 By following the steps below you will _reset_ entirely a node and the persistent data will be lost. This includes _every_ user-data stored on the machine.
 
 :::
-
-
 The reset action can be accessed via the Boot menu, remotely, triggered via Kubernetes or manually. In each scenario the machine will reboot into reset mode, perform the cleanup, and reboot automatically afterwards.
 
 ## From the boot menu
@@ -34,13 +30,8 @@ It is possible to reset the state of a node by either booting into the "Reset" m
 
 On a Kairos booted system, logged as root:
 
-
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
-<Tabs>
-<TabItem value="kairos-v3.0.0-and-upwards" label="Kairos v3.0.0 and upwards">
-
+{{< tabpane text=true  >}}
+{{% tab header="Kairos v3.0.0 and upwards" %}}
 To directly select the entry:
 
 ```bash
@@ -53,33 +44,24 @@ Or to get a list of available boot entries and select one interactively:
 ```bash
 $ kairos-agent bootentry
 ```
-
-</TabItem>
-
-<TabItem value="kairos-before-v3.0.0" label="Kairos before v3.0.0">
-
+{{% /tab %}}
+{{% tab header="Kairos before v3.0.0" %}}
 ```bash
 $ grub2-editenv /oem/grubenv set next_entry=statereset
 $ reboot
 ```
-
-</TabItem>
-
-</Tabs>
-
+{{% /tab %}}
+{{< /tabpane >}}
 
 
 ## From Kubernetes
 
-The [Kairos operator](../../Upgrade/kairos-operator) can be used to apply a NodeOp to the nodes to use Kubernetes to schedule the reset on the nodes itself, similarly on how upgrades are applied.
+The [Kairos operator](../Upgrade/kairos-operator) can be used to apply a NodeOp to the nodes to use Kubernetes to schedule the reset on the nodes itself, similarly on how upgrades are applied.
 
 Consider the following example which resets a machine by changing the config file used during installation:
 
-
-
-<Tabs>
-<TabItem value="kairos-v3.0.0-and-upwards" label="Kairos v3.0.0 and upwards">
-
+{{< tabpane text=true  >}}
+{{% tab header="Kairos v3.0.0 and upwards" %}}
 ```yaml
 apiVersion: operator.kairos.io/v1alpha1
 kind: NodeOp
@@ -93,7 +75,7 @@ spec:
       kairos.io/managed: "true"
 
   # The container image to use
-  image: quay.io/kairos/{{<flavorCode>}}
+  image: {{< registryURL >}}/@flavor
 
   # Custom command to execute
   command:
@@ -146,11 +128,8 @@ spec:
   # Whether to stop creating new jobs when a job fails
   stopOnFailure: true
 ```
-
-</TabItem>
-
-<TabItem value="kairos-before-v3.0.0" label="Kairos before v3.0.0">
-
+{{% /tab %}}
+{{% tab header="Kairos before v3.0.0" %}}
 ```yaml
 ---
 apiVersion: v1
@@ -197,7 +176,7 @@ metadata:
 spec:
   concurrency: 2
   # This is the version (tag) of the image.
-  version: "<!-- Hugo shortcode: ociTag variant=\"standard\"  -->"
+  version: "{{<ociTag variant=\"standard\" >}}"
   nodeSelector:
     matchExpressions:
       - { key: kubernetes.io/hostname, operator: Exists }
@@ -206,7 +185,7 @@ spec:
   upgrade:
     # Here goes the image which is tied to the flavor being used.
     # Currently can pick between opensuse and alpine
-    image: quay.io/kairos/{{<flavorCode>}}
+    image: {{< registryURL >}}/@flavor
     command:
       - "/bin/bash"
       - "-c"
@@ -217,10 +196,8 @@ spec:
       path: /host/run/system-upgrade/secrets/custom-script
 ```
 
-</TabItem>
-
-</Tabs>
-
+{{% /tab %}}
+{{< /tabpane >}}
 
 
 

@@ -5,7 +5,6 @@ description: Customize the appearance and behavior of Kairos components
 slug: /reference/branding
 ---
 
-
 Kairos supports branding customization to tailor the appearance and behavior of various components to match your organization's identity or requirements. Branding options are controlled through configuration files placed in the `/etc/kairos/branding/` directory.
 
 ## Interactive Installer Branding
@@ -53,8 +52,6 @@ CHECK_MARK="*"
 :::info Note
 If you set values to 0-9, those simple colors will be used even on 256-color terminals. For the best experience on modern terminals, use hex triplet format.
 :::
-
-
 ### Border customization
 
 The border feature allows you to add customizable borders to UI components. This enhances visual separation and improves the overall design consistency.

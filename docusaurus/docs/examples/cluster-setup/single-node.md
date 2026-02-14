@@ -9,19 +9,14 @@ In the example below we will use a bare metal host to provision a Kairos node in
 
 ## Installation
 
-For this example we will use a standard image which contains a Kubernetes distribution. You can choose between `k0s` and `k3s` as the distribution to use. Follow the [Installation](../../installation) documentation with the configurations provided on this page. Make sure to choose the one that matches the image you are using.
+For this example we will use a standard image which contains a Kubernetes distribution. You can choose between `k0s` and `k3s` as the distribution to use. Follow the [Installation](../installation) documentation with the configurations provided on this page. Make sure to choose the one that matches the image you are using.
 
 ## Configuration
 
-We will deploy a `kairos` user with the password `kairos` and the `admin` group. We will also add the public keys of the users that will be allowed to access the nodes. We will enable the Kubernetes distribution and configure it. And also include a manifest with a simple Nginx deployment that will be installed on the cluster automatically. See [docs](../../reference/configuration#kubernetes-manifests) for more information. You can change the manifest to the one of your own application or remove it if you don't need it.
+We will deploy a `kairos` user with the password `kairos` and the `admin` group. We will also add the public keys of the users that will be allowed to access the nodes. We will enable the Kubernetes distribution and configure it. And also include a manifest with a simple Nginx deployment that will be installed on the cluster automatically. See [docs](../reference/configuration#kubernetes-manifests) for more information. You can change the manifest to the one of your own application or remove it if you don't need it.
 
-
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
-<Tabs>
-<TabItem value="k3s" label="k3s">
-
+{{< tabpane text=true right=true  >}}
+{{% tab header="k3s" %}}
 ```yaml
 #cloud-config
 
@@ -66,11 +61,8 @@ write_files:
             ports:
             - containerPort: 80
 ```
-
-</TabItem>
-
-<TabItem value="k0s" label="k0s">
-
+{{% /tab %}}
+{{% tab header="k0s" %}}
 ```yaml
 #cloud-config
 
@@ -117,8 +109,5 @@ write_files:
             ports:
             - containerPort: 80
 ```
-
-</TabItem>
-
-</Tabs>
-
+{{% /tab %}}
+{{< /tabpane >}}

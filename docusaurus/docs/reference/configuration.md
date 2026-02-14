@@ -59,7 +59,7 @@ install:
 
   # Override the grub entry name
   grub-entry-name: Kairos
-  
+
   # partitions setup
   # setting a partition size key to 0 means that the partition will take over the rest of the free space on the disk
   # after creating the rest of the partitions
@@ -101,7 +101,7 @@ install:
       size: 200
       fs: ext4
       label: TWO_PARTITION
-  
+
   # no-format: true skips any disk partitioning and formatting
   # If set to true installation procedure will error out if expected
   # partitions are not already present within the disk.
@@ -119,24 +119,27 @@ install:
   extra-dirs-rootfs:
     - /data
     - /src
-  
+
   # Override image sizes for active/passive/recovery
   # Note that the active+passive images are stored in the state partition and
   # the recovery in the recovery partition, so they should be big enough to accommodate te images sizes set below
   # size in MiB
   system:
     size: 4096
+    # Use a different source for the installation of active system
+    source: "oci:.."
   passive:
     size: 4096
   recovery-system:
     size: 5000
+    # Use a different source for the installation of recovery system
+    source: "oci:.."
   # note: This can also be set with dot notation like the following examples for a more condensed view:
   # system.size: 4096
   # passive.size: 4096
   # recovery-system.size: 5000
-  
-  # Use a different source for the installation
-  source: "oci:.."
+
+
   # Add bundles in runtime
   bundles:
     - ...
@@ -168,8 +171,9 @@ reset:
   # Power off after reset
   poweroff: true
 
-  # Use a different source for the reset
-  source: "oci:.."
+  # System Image (maps to Active), sets the source to reset to
+  system:
+    source: "oci:.."
 
   # Override the grub entry name
   grub-entry-name: Kairos
@@ -195,9 +199,7 @@ upgrade:
   # Power off after upgrade
   poweroff: true
 
-  # Use a different source for the upgrade
-  source: "oci:.."
-  
+
   # Override the grub entry name
   grub-entry-name: Kairos
 
@@ -211,9 +213,14 @@ upgrade:
   # size in MiB
   # During upgrade only the active or recovery image cna be resized as those are the ones that contain the upgrade
   # passive image is the current system, and that its untouched during the upgrade
+  # System Image (maps to Active)
   system:
+    source: "oci:.."
     size: 4096
+
+  # Recovery System Image (maps to Recovery)
   recovery-system:
+    source: "oci:.."
     size: 5000
 
   # Creates these dirs in the rootfs during upgrade. As the rootfs is RO from boot, sometimes we find that we
@@ -281,7 +288,7 @@ p2p:
    enable: true
    # HA enables automatic HA roles assignment.
    # A master cluster init is always required,
-   # Any additional master_node is configured as part of the 
+   # Any additional master_node is configured as part of the
    # HA control plane.
    # If auto is disabled, HA has no effect.
    ha:
@@ -350,7 +357,7 @@ Kairos supports a portion of the standard [cloud-init](https://cloud-init.io/) s
 
 Examples using the extended notation for running K3s as agent or server can be found in the [examples](https://github.com/kairos-io/kairos/tree/master/examples)  directory of the Kairos repository.
 
-Here's an example that shows how to set up DNS at the [boot stage](../../architecture/cloud-init) using the extended syntax:
+Here's an example that shows how to set up DNS at the [boot stage](../architecture/cloud-init) using the extended syntax:
 
 ```yaml
 #cloud-config
@@ -364,17 +371,12 @@ stages:
           - 8.8.8.8
 ```
 
-
-:::note Note
-
+:::tip Note
 Kairos does not use [cloud-init](https://cloud-init.io/). [yip](https://github.com/mudler/yip) was created with the goal of being distro agnostic, and does not use Bash at all (with the exception of systemd configurations, which are assumed to be available). This makes it possible to run yip on minimal Linux distros that have been built from scratch.
 
 The rationale behind using yip instead of cloud-init is that it allows Kairos to have very minimal requirements. The cloud-init implementation has dependencies, while yip does not, which keeps the dependency tree small. There is also a CoreOS implementation of cloud-init, but it makes assumptions about the layout of the system that are not always applicable to Kairos, making it less portable.
 
 :::
-
-
-
 The extended syntax can also be used to pass commands through Kernel boot parameters. See the examples below for more details.
 
 ### Test your cloud configs
@@ -399,37 +401,33 @@ stages:
 
 
 # Run the cloud-init command on your YAML files in a Docker container
-$ docker run -ti -v $PWD:/test --entrypoint /usr/bin/kairos-agent --rm quay.io/kairos/kairos-core:latest run-stage --cloud-init-paths /test initramfs
+$ docker run -ti -v $PWD:/test --entrypoint /usr/bin/kairos-agent --rm {{<oci variant="core" >}} run-stage --cloud-init-paths /test initramfs
 
 # Output from the run-stage command
-INFO[2023-05-17T11:32:09+02:00] kairos-agent version 0.0.0                   
-INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs.before              
-INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.before'      
-INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs                     
-INFO[2023-05-17T11:32:09+02:00] Processing stage step ''. ( commands: 1, files: 0, ... ) 
-INFO[2023-05-17T11:32:09+02:00] Command output: hello!                       
-INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs'             
-INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs.after               
-INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.after'       
-INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs.before              
-INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.before'      
-INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs                     
-INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs'             
-INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs.after               
-INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.after'          
+INFO[2023-05-17T11:32:09+02:00] kairos-agent version 0.0.0
+INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs.before
+INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.before'
+INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs
+INFO[2023-05-17T11:32:09+02:00] Processing stage step ''. ( commands: 1, files: 0, ... )
+INFO[2023-05-17T11:32:09+02:00] Command output: hello!
+INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs'
+INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs.after
+INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.after'
+INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs.before
+INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.before'
+INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs
+INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs'
+INFO[2023-05-17T11:32:09+02:00] Running stage: initramfs.after
+INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.after'
 
 ```
 
 ### Validate Your Cloud Config
 
-
-:::note Note
-
+:::tip Note
 Validation of configuration is available on Kairos [v1.6.0-rc1](https://github.com/kairos-io/kairos/releases/tag/v1.6.0-rc1) and later. If you're interested in the validation rules or want to build a tool based on it, you can access them online via `https://kairos.io/RELEASE/cloud-config.json` e.g. [v1.6.0 cloud-config.json](https://kairos.io/v1.6.0/cloud-config.json)
 
 :::
-
-
 You have two options to validate your Cloud Config, one is with the Kairos command line, and the other with the Web UI.
 
 #### Configuration Validation via the Kairos Command Line
@@ -518,6 +516,25 @@ The table below lists all the available options for the `install.grub_options` f
 | extra_recovery_cmdline | Set additional boot commands when booting into recovery |
 | extra_cmdline          | Set additional boot commands for all entries            |
 | default_fallback       | Sets default fallback logic                             |
+
+
+The order of the cmdline parameters is as follows:
+1. Existing cmdline parameters, shipped with Kairos by default and non-modifiable
+2.`extra_cmdline`
+3.`extra_active_cmdline` or `extra_passive_cmdline` or `extra_recovery_cmdline` depending on the entry being booted
+
+Note that usually parameters for dracut and such are overridable, as they use the latest specified value in the cmdline.
+
+For example, the `rd.neednet=0` parameter is shipped with Kairos by default, but if you set `rd.neednet=1` in `extra_cmdline`, it will override the default value and enable networking during the initramfs stage.
+
+Also note that the `grub_options` for cmdline are only applied during installation. Changing them after installation won't have any effect.
+If you want to change the GRUB options after installation, you can do so by setting those values under the `/oem/grubenv` file as follows:
+
+```bash
+grub2-editenv /oem/grubenv set extra_cmdline="rd.neednet=1"
+```
+
+As a final note, just a reminder that during GRUB menu selection, you can press `e` to edit the cmdline for that boot only, which is useful for testing purposes. That allows to test extra cmdline parameters during a single boot before making them permanent.
 
 ## Kubernetes manifests
 
@@ -615,7 +632,7 @@ stages:
           homedir: "/home/testuser"
 ```
 
-This configuration can be either manually copied over, or can be propagated also via Kubernetes using the system upgrade controller. See [the after-install](../../advanced/after-install) section for an example.
+This configuration can be either manually copied over, or can be propagated also via Kubernetes using the system upgrade controller. See [the after-install](../advanced/after-install) section for an example.
 
 ```bash
 ❯ ssh testuser@192.168.1.238
@@ -644,12 +661,8 @@ Below is a list of the configurations available for the current providers.
 
 Note that there is currently more providers available but some are community maintained. You should refer to the provider documentation for more information on how to use them.
 
-
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
-<Tabs>
-<TabItem value="k3s" label="k3s">
+{{< tabpane text=true right=true  >}}
+{{% tab header="k3s" %}}
 
 | Key                     | Description                                                                                                                                               |
 |-------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -688,10 +701,9 @@ stages:
               ExecStartPre=-/sbin/modprobe nfs
 ```
 
-</TabItem>
 
-<TabItem value="k3s-agent" label="k3s-agent">
-
+{{% /tab %}}
+{{% tab header="k3s-agent" %}}
 | Key                     | Description                                                                                                                                               |
 |-------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `k3s-agent.enabled`           | Enables the k3s agent instance. Accepted: `true`, `false`.                                                                                               |
@@ -701,34 +713,28 @@ stages:
 | `k3s-agent.replace_args`      | Replaces all arguments otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the arguments you need.                         |
 | `k3s-agent.embedded_registry` | Enables the embedded registry in k3s. Accepted: `true`, `false`.                                                                                          |
 
-</TabItem>
-
-<TabItem value="k0s" label="k0s">
-
+{{% /tab %}}
+{{% tab header="k0s" %}}
 | Key                     | Description                                                                                                                                               |
 |-------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `k0s.enabled`           | Enables the k0s server instance. Accepted: `true`, `false`.                                                                                               |
 | `k0s.env`               | Additional environment variables for the k0s server instance.                                                                                             |
 | `k0s.args`              | Additional arguments for the k0s server instance.                                                                                                         |
-| `k0s.replace_env`       | Replaces all environment variables otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the environment variables you need. |
+| `k0s.replace_env`       | Replaces all environment variables otherwise passed to k0s by Kairos with those supplied here. Make sure you pass all the environment variables you need. |
 | `k0s.replace_args`      | Replaces all arguments otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the arguments you need.                         |
 
-</TabItem>
-
-<TabItem value="k0s-worker" label="k0s-worker">
-
+{{% /tab %}}
+{{% tab header="k0s-worker" %}}
 | Key                     | Description|
 |-------------------------|-------------|
 | `k0s-worker.enabled`           | Enables the k0s worker instance. Accepted: `true`, `false`.     |
 | `k0s-worker.env`               | Additional environment variables for the k0s worker instance.      |
 | `k0s-worker.args`              | Additional arguments for the k0s worker instance.      |
-| `k0s-worker.replace_env`       | Replaces all environment variables otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the environment variables you need. |
+| `k0s-worker.replace_env`       | Replaces all environment variables otherwise passed to k0s by Kairos with those supplied here. Make sure you pass all the environment variables you need. |
 | `k0s-worker.replace_args`      | Replaces all arguments otherwise passed to k0s by Kairos with those supplied here. Make sure you pass all the arguments you need.   |
 
-</TabItem>
-
-<TabItem value="kubevip" label="kubevip">
-
+{{% /tab %}}
+{{% tab header="kubevip" %}}
 | Key                     | Description      |
 |-------------------------|--------------------------|
 |`kubevip.enable`         | Enables kubevip. Accepted: `true`, `false`.  |
@@ -738,9 +744,8 @@ stages:
 |`kubevip.static_pod`     | Use a pod deployment for Kubevip instead of a daemonset. Accepted: `true`, `false` |
 |`kubevip.version`        | Set the specific Kubevip version to use |
 
-</TabItem>
-
-<TabItem value="kubeadm" label="kubeadm">
+{{% /tab %}}
+{{% tab header="kubeadm" %}}
 
 | Key                           | Description                                                                                                  |
 |-------------------------------|--------------------------------------------------------------------------------------------------------------|
@@ -751,20 +756,17 @@ stages:
 | `cluster.env`                 | List of environment variables to be set on the cluster.                                                      |
 | `cluster.local_images_path`   | Path to the local archive images to import.                                                                  |
 
-</TabItem>
+{{% /tab %}}
+{{% tab header="p2p" %}}
 
-<TabItem value="p2p" label="p2p">
+As P2P is a very complex topic, we have a dedicated [P2P documentation page](../installation/p2p) that explains how to use it with deep details.
 
-As P2P is a very complex topic, we have a dedicated [P2P documentation page](../../installation/p2p) that explains how to use it with deep details.
-
-</TabItem>
-
-</Tabs>
-
+{{% /tab %}}
+{{< /tabpane >}}
 
 ## Stages
 
-The `stages` key is a map that allows to execute blocks of cloud-init directives during the lifecycle of the node [stages](../../architecture/cloud-init).
+The `stages` key is a map that allows to execute blocks of cloud-init directives during the lifecycle of the node [stages](../architecture/cloud-init).
 
 A full example of a stage is the following:
 
@@ -965,7 +967,7 @@ stages:
 ### Modules
 
 For each stage, a number of modules are available, that implement various useful functions.
-Read more about them in this page: [Stage modules](../../Reference/stage_modules)
+Read more about them in this page: [Stage modules](../Reference/stage_modules)
 
 ## Running commands on different shells
 

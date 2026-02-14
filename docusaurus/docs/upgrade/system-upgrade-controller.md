@@ -6,14 +6,9 @@ date: 2024-10-02
 description: Install the system-upgrade-controller (deprecated - use Kairos operator instead)
 ---
 
-
 :::warning Deprecated
-
-The system-upgrade-controller approach is deprecated. We recommend using the [Kairos operator](.././kairos-operator) instead, which provides a more integrated and Kairos-specific way to manage upgrades and operations.
-
+The system-upgrade-controller approach is deprecated. We recommend using the [Kairos operator](./kairos-operator) instead, which provides a more integrated and Kairos-specific way to manage upgrades and operations.
 :::
-
-
 To upgrade Kairos with Kubernetes using the legacy approach, it is necessary to have [system-upgrade-controller](https://github.com/rancher/system-upgrade-controller) deployed on the target cluster.
 
 [The upstream documentation](https://github.com/rancher/system-upgrade-controller#deploying) on how to install the system-upgrade-controller, is this command:
@@ -38,7 +33,7 @@ spec:
       containers:
         - name: git
           image: alpine/git
-          command: ["git", "clone", "--branch", "latest", "https://github.com/rancher/system-upgrade-controller", "/homedir/system-upgrade-controller"]
+          command: ["git", "clone", "--branch", "v0.14.1", "https://github.com/rancher/system-upgrade-controller", "/homedir/system-upgrade-controller"]
           volumeMounts:
             - name: homedir
               mountPath: /homedir

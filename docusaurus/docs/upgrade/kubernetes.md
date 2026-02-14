@@ -10,7 +10,7 @@ Kairos upgrades can be performed either manually or via Kubernetes if the cluste
 
 ## Prerequisites
 
-The Kairos operator needs to be deployed on the target cluster. [Read the instructions here](.././kairos-operator)
+The Kairos operator needs to be deployed on the target cluster. [Read the instructions here](./kairos-operator)
 
 ### Upgrading from version X to version Y with Kubernetes
 
@@ -26,7 +26,7 @@ metadata:
   namespace: default
 spec:
   # The container image containing the new Kairos version
-  image: quay.io/kairos/{{<flavorCode>}}
+  image: {{< registryURL >}}/@flavor
   # Example: quay.io/kairos/debian
 
   # NodeSelector to target specific nodes (optional)
@@ -64,14 +64,10 @@ spec:
 
 To check all the available versions, see the [images](https://quay.io/repository/kairos/opensuse?tab=tags) available on the container registry, corresponding to the flavor/version selected.
 
-
-:::note Note
-
+:::tip Note
 The Kairos operator provides several upgrade strategies that can be configured through the `NodeOpUpgrade` resource. You can control concurrency, node selection, and failure handling. The example above shows a "canary upgrade" approach where nodes are upgraded one-by-one with failure detection.
 
 :::
-
-
 Jobs will be created for each node that needs to be upgraded. You can monitor the progress:
 
 ```bash
@@ -115,7 +111,7 @@ spec:
               - Pod
       verifyImages:
       - imageReferences:
-        - "quay.io/kairos/{{<flavorCode>}}*"
+        - "quay.io/kairos/@flavor*"
         attestors:
         - entries:
           # See: https://kyverno.io/docs/writing-policies/verify-images/#keyless-signing-and-verification
@@ -126,7 +122,7 @@ spec:
                 url: https://rekor.sigstore.dev
 ```
 
-To install Kyverno in a Kairos cluster, you can simply use the community [bundles](../../advanced/bundles). For example, you can use the following installation cloud config file:
+To install Kyverno in a Kairos cluster, you can simply use the community [bundles](../advanced/bundles). For example, you can use the following installation cloud config file:
 
 ```yaml
 #cloud-config
@@ -149,7 +145,7 @@ k3s:
  enabled: true
 ```
 
-This configuration file prepares the system with the `cert-manager` and `kyverno` bundles, enabling `k3s`. The Kairos operator can be deployed separately using the instructions in the [Kairos Operator documentation](.././kairos-operator).
+This configuration file prepares the system with the `cert-manager` and `kyverno` bundles, enabling `k3s`. The Kairos operator can be deployed separately using the instructions in the [Kairos Operator documentation](./kairos-operator).
 
 ## Customize the upgrade process
 
@@ -168,7 +164,7 @@ spec:
       kairos.io/managed: "true"
 
   # The container image containing the new Kairos version
-  image: quay.io/kairos/{{<flavorCode>}}
+  image: {{< registryURL >}}/@flavor
   # Example: quay.io/kairos/debian
 
   # Custom command to execute
@@ -233,7 +229,7 @@ spec:
       kairos.io/managed: "true"
 
   # The container image containing the new Kairos version
-  image: quay.io/kairos/{{<flavorCode>}}
+  image: {{< registryURL >}}/@flavor
   # Example: quay.io/kairos/debian
 
   # Custom command to execute
@@ -276,6 +272,6 @@ spec:
 
 ## What's next?
 
-- [Upgrade nodes manually](../../upgrade/manual)
-- [Immutable architecture](../../architecture/immutable)
-- [Create decentralized clusters](../../installation/p2p)
+- [Upgrade nodes manually](../upgrade/manual)
+- [Immutable architecture](../architecture/immutable)
+- [Create decentralized clusters](../installation/p2p)

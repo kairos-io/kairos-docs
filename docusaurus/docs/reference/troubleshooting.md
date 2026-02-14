@@ -10,13 +10,8 @@ Things can go wrong. This section tries to give guidelines in helping out identi
 It is important first to check out if your issue was already submitted [in the issue tracker](https://github.com/kairos-io/kairos/issues).
 
 
-
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
-<Tabs>
-<TabItem value="kairos" label="Kairos">
-
+{{< tabpane text=true  >}}
+{{% tab header="Kairos" %}}
 ## Gathering logs
 
 To gather useful logs and help developers spot right away issues, it's suggested to boot with `console=tty0 rd.debug` enabled for example:
@@ -68,9 +63,8 @@ It is possible to disable immutability by adding `rd.cos.debugrw` to the kernel 
 
 - [Dracut debug docs](https://fedoraproject.org/wiki/How_to_debug_Dracut_problems)
 
-</TabItem>
-
-<TabItem value="kairos-uki" label="Kairos UKI">
+{{% /tab %}}
+{{% tab header="Kairos UKI" %}}
 
 ### Note
 
@@ -91,10 +85,8 @@ After booting, you can find the logs from immucore under `/run/immucore/` (wheth
 
 In case of issues with SecureBoot, it's possible to disable it from the UEFI settings and make Immucore boot without it by setting the `rd.immucore.securebootdisabled` parameter in the cmdline. Note that this is not supported and its only provided for troubleshooting purposes as it defeats the purpose of the security features provided by SecureBoot.
 
-</TabItem>
-
-</Tabs>
-
+{{% /tab %}}
+{{< /tabpane >}}
 ## Root permission
 
 By default, there is no root user set. A default user (`kairos`) is created and can use `sudo` without password authentication during LiveCD bootup.

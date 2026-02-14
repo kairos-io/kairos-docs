@@ -53,13 +53,13 @@ When this file appears, reboot the node: `/etc/containerd/.sentinel`.
 
 ## Additional steps
 
-- [Label our node](https://github.com/confidential-containers/documentation/blob/main/quickstart#prerequisites):
+- [Label our node](https://github.com/confidential-containers/documentation/blob/main/quickstart.md#prerequisites):
 
 ```
   kubectl label --overwrite node $(kubectl get nodes -o jsonpath='{.items[].metadata.name}') node-role.kubernetes.io/worker=""
 ```
 
-- [Deploy the operator](https://github.com/confidential-containers/documentation/blob/main/quickstart#deploy-the-the-operator)
+- [Deploy the operator](https://github.com/confidential-containers/documentation/blob/main/quickstart.md#deploy-the-the-operator)
 
 ```
   kubectl apply -k github.com/confidential-containers/operator/config/release?ref=v0.4.0
@@ -73,7 +73,7 @@ When this file appears, reboot the node: `/etc/containerd/.sentinel`.
 
   (wait until they are all running: `kubectl get pods -n confidential-containers-system --watch`)
 
-- [Deploy a workload](https://github.com/confidential-containers/documentation/blob/main/quickstart#test-creating-a-workload-from-the-sample-encrypted-image)
+- [Deploy a workload](https://github.com/confidential-containers/documentation/blob/main/quickstart.md#test-creating-a-workload-from-the-sample-encrypted-image)
 
   The last part with the verification will only work from within a Pod because the IP address is internal:
 

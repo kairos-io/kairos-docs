@@ -8,14 +8,9 @@ description: |
 
 ## Check the Signatures
 
-
-:::tip Optional Step
-
+:::info Optional Step
 This is an optional but strongly encouraged step for security reasons.
-
 :::
-
-
 Our ISO releases have sha256 files to checksum the validity of the artifacts. At the same time, our sha256 files are signed automatically in the CI during the release workflow to verify that they haven't been tampered with, adding an extra step to the supply chain. 
 
 It is recommended that before starting any installation the whole security chain is validated by verifying our sha256 signature and validating that the checksum matches with the download artifacts.
@@ -26,11 +21,11 @@ To validate the whole chain you need:
 1. `sha256sum` which is usually installed by default on most linux distributions.
 2. `cosign` to verify the signatures of the sha256 file. You can install cosign via their [installation docs](https://docs.sigstore.dev/cosign/installation/)
 3. sha256, certificate and signature files that you want to verify
-    - <ImageLink variant="standard" suffix=".iso.sha256" />
-    - <ImageLink variant="standard" suffix=".iso.sha256.pem" />
-    - <ImageLink variant="standard" suffix=".iso.sha256.sig" />
+    - {{<imageLink variant="standard" suffix=".iso.sha256">}}  
+    - {{<imageLink variant="standard" suffix=".iso.sha256.pem">}}  
+    - {{<imageLink variant="standard" suffix=".iso.sha256.sig">}}  
 
-In this example we will use the `{{< kairosVersion >}}` version and <FlavorCode /> flavor and <FlavorReleaseCode /> flavor release.
+In this example we will use the `{{< kairosVersion >}}` version and {{<flavorCode >}} flavor and {{<flavorReleaseCode >}} flavor release.
 
 First we check that we have all needed files:
 
@@ -40,18 +35,13 @@ $ ls
 {{<image variant="core" suffix=".iso.sha256">}}  {{<image variant="core" suffix=".iso.sha256.sig">}}
 ```
 
-:::tip Cosign version Step
-
+:::info Cosign version Step
 We recommend using the latest cosign version, at the time of writing, 2.5.0
-
 :::
-
-
-
 Then we verify that the sha256 checksums haven't been tampered with (substitute $VERSION with the exact Kairos version you are verifying as the certificate identity is the release job that signs it):
 
 ```bash
-$ cosign verify-blob --cert {{<image variant="core" suffix=".iso.sha256.pem">}} --signature {{<image variant="core" suffix=".iso.sha256.sig">}} --certificate-identity https://github.com/kairos-io/kairos/.github/workflows/reusable-release.yaml@refs/tags/$VERSION --certificate-oidc-issuer https://token.actions.githubusercontent.com {{<image variant="core" suffix=".iso.sha256">}}
+$ cosign verify-blob --cert {{<image variant="core" suffix=".iso.sha256.pem">}} --signature {{<image variant="core" suffix=".iso.sha256.sig">}} --certificate-identity https://github.com/kairos-io/kairos/.github/workflows/reusable-release.yaml@refs/tags/$VERSION --certificate-oidc-issuer https://token.actions.githubusercontent.com {{<image variant="core" suffix=".iso.sha256">}} 
 Verified OK
 ```
 
@@ -73,4 +63,3 @@ $ sha256sum -c {{<image variant="core" suffix=".iso.sha256">}}
 ```
 
 Once we reached this point, we can be sure that from the ISO hasn't been tampered with since it was created by our release workflow.
-

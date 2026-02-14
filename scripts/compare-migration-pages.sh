@@ -658,6 +658,10 @@ collect_docusaurus_static_urls() {
 normalize_content() {
   local file_path="$1"
   awk '
+    {
+      sub(/\r$/, "", $0)
+    }
+
     NR == 1 && ($0 == "---" || $0 == "+++") {
       frontmatter = 1
       delimiter = $0
@@ -677,10 +681,14 @@ normalize_content() {
     }
 
     END {
+      start = 1
+      while (start <= count && lines[start] ~ /^[[:space:]]*$/) {
+        start++
+      }
       while (count > 0 && lines[count] ~ /^[[:space:]]*$/) {
         count--
       }
-      for (i = 1; i <= count; i++) {
+      for (i = start; i <= count; i++) {
         print lines[i]
       }
     }
@@ -747,8 +755,11 @@ normalize_content() {
 
     # Normalize internal docs references so relref/ref and relative links match.
     $text =~ s/\{\{<\s*(?:relref|ref)\s+"([^"]+)"\s*>\}\}/"__DOCREF__[" . canonical_doc_ref($1) . "]"/gexi;
+    $text =~ s/\]\((?!https?:|mailto:|#|__DOCREF__)([^)\s]+)(?:\s+"[^"]*")?\)/"](__DOCREF__[" . canonical_doc_ref($1) . "])"/gei;
     $text =~ s{(?<![A-Za-z0-9])(?:\.\./|\./)+(?:advanced|announcements|architecture|development|examples|installation|media|reference|upgrade|getting-started|quickstart|docs)(?:/[A-Za-z0-9._-]+)+/?}{"__DOCREF__[" . canonical_doc_ref($&) . "]"}gexi;
     $text =~ s{(?<![A-Za-z0-9])/?docs(?:/[A-Za-z0-9._-]+)+/?}{"__DOCREF__[" . canonical_doc_ref($&) . "]"}gexi;
+    $text =~ s/\((__DOCREF__\[[^\]]+\])\s+"[^"]*"\)/($1)/g;
+    $text =~ s/(__DOCREF__\[[^\]]+\])#[A-Za-z0-9._:-]+/$1/g;
 
     $text =~ s/^\s*\{\{%\s*alert\b[^\n]*%\}\}\s*$\n?/__ADMONITION_START__\n/gm;
     $text =~ s/^\s*\{\{%\s*\/alert\s*%\}\}\s*$\n?/__ADMONITION_END__\n/gm;

@@ -40,33 +40,33 @@ If you are familiar with Dockerfiles, then you are good to go to roll your own c
 
 ## Container Image based OS
 
-The Image support matrix in [here](../../reference/image_matrix) lists all the container images built from our CI on every release of Kairos.
+The Image support matrix in [here](../reference/image_matrix) lists all the container images built from our CI on every release of Kairos.
 
 To inspect an image and run it locally, you can use a container engine like Docker or Podman:
 
 ```bash
-docker pull quay.io/kairos/kairos-core:latest
+docker pull {{<oci variant="core" >}}
 ```
 
 We can run it locally with docker as a container to inspect it, as it is runnable:
 
 ```bash
-$ docker run -ti --rm quay.io/kairos/kairos-core:latest
+$ docker run -ti --rm {{<oci variant="core" >}}
 $ cat /etc/os-release
 ...
-KAIROS_NAME="kairos-core-{{<flavorCode>}}"
-KAIROS_VERSION="latest"
+KAIROS_NAME="kairos-core-@flavor"
+KAIROS_VERSION="{{< kairosVersion >}}"
 KAIROS_ID="kairos"
-KAIROS_ID_LIKE="kairos-core-{{<flavorCode>}}"
-KAIROS_VERSION_ID="latest"
-KAIROS_PRETTY_NAME="kairos-core-{{<flavorCode>}} latest"
+KAIROS_ID_LIKE="kairos-core-@flavor"
+KAIROS_VERSION_ID="{{< kairosVersion >}}"
+KAIROS_PRETTY_NAME="kairos-core-@flavor {{< kairosVersion >}}"
 KAIROS_BUG_REPORT_URL="https://github.com/kairos-io/kairos/issues"
 KAIROS_HOME_URL="https://github.com/kairos-io/kairos"
-KAIROS_IMAGE_REPO="quay.io/kairos/kairos-core:latest
+KAIROS_IMAGE_REPO="{{<oci variant="core" >}}"
 KAIROS_IMAGE_LABEL="latest"
 KAIROS_GITHUB_REPO="kairos-io/kairos"
 KAIROS_VARIANT="core"
-KAIROS_FLAVOR="{{<flavorCode>}}"
+KAIROS_FLAVOR="@flavor"
 ```
 
 And check out things like what's the kernel inside:
@@ -89,10 +89,10 @@ total 102M
 6692029 -rw-r--r-- 1 root root  11M Apr 16  2020 vmlinuz-5.14.21-150400.24.21-default
 ```
 
-The CI process generates bootable medium by the container images, and similarly, we can modify this image to introduce our changes and remaster an ISO as described in [Automated installation](../../installation/automated), but that can be resumed in the following steps:
+The CI process generates bootable medium by the container images, and similarly, we can modify this image to introduce our changes and remaster an ISO as described in [Automated installation](../installation/automated), but that can be resumed in the following steps:
 
 ```bash
-$ docker run -ti --name custom-container quay.io/kairos/kairos-core:latest
+$ docker run -ti --name custom-container {{<oci variant="core" >}}
 # # Do your changes inside the container..
 # echo "foo" > /foo
 # ...
@@ -100,7 +100,7 @@ $ docker run -ti --name custom-container quay.io/kairos/kairos-core:latest
 $ docker commit custom-container custom-image
  > sha256:37176f104a870480f9c3c318ab51f6c456571b6612b6a47b96af71b95a0a27c7
 # Builds an ISO from it
-$ docker run -v $PWD:/cOS -v /var/run/docker.sock:/var/run/docker.sock -i --rm quay.io/kairos/auroraboot:latest --debug build-iso --name "custom-iso" --date=false --output /cOS/ custom-image
+$ docker run -v $PWD:/cOS -v /var/run/docker.sock:/var/run/docker.sock -i --rm quay.io/kairos/auroraboot:{{< auroraBootVersion >}} --debug build-iso --name "custom-iso" --date=false --output /cOS/ custom-image
  > ...
  > ...
  > xorriso : UPDATE : Writing:     147456s   84.0%   fifo 100%  buf  50%   60.5xD
@@ -113,8 +113,8 @@ custom-iso.iso custom-iso.iso.sha256
 
 In order to go further and upgrade nodes using this image, now the only requirement is to push it in a container registry and upgrade the nodes using that container image.
 
-For upgrading to a container image see [manual upgrades](../../upgrade/manual) and [kubernetes upgrades](../../upgrade/kubernetes).
+For upgrading to a container image see [manual upgrades](../upgrade/manual) and [kubernetes upgrades](../upgrade/kubernetes).
 
 ## See also
 
-- [ISO remastering](../../installation/automated#iso-remastering)
+- [ISO remastering](../installation/automated#iso-remastering)

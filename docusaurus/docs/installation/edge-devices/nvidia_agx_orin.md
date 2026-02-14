@@ -7,14 +7,9 @@ description: Install Kairos on Nvidia AGX Orin
 slug: /installation/nvidia_agx_orin
 ---
 
-
 :::warning Warning
-
 Despite the Flavor you may have selected to look into the docs. The Nvidia AGX Orin only works with Ubuntu 22.04
-
 :::
-
-
 This page describes how to install Kairos on [Nvidia AGX Orin](https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/jetson-orin/) in the eMMC.
 
 
@@ -56,7 +51,7 @@ cd Linux_for_Tegra
 # Drop extlinux
 echo "" > ./bootloader/extlinux.conf
 # This is needed so the SDK doesn't complain of missing files (not really used in the flash process)
-IMAGE=quay.io/kairos/ubuntu:22.04-core-arm64-nvidia-jetson-agx-orin-latest
+IMAGE=quay.io/kairos/ubuntu:22.04-core-arm64-nvidia-jetson-agx-orin-{{< kairosVersion>}}
 docker run -ti --rm -v $PWD/rootfs:/rootfs quay.io/luet/base util unpack "$IMAGE" /rootfs
 # workaround needed (SDK writes to the symlink)
 rm rootfs/boot/initrd
@@ -70,27 +65,22 @@ echo "" > rootfs/boot/extlinux/extlinux.conf
 You can find Kairos core ubuntu images based on Ubuntu `22.04` here: https://quay.io/repository/kairos/ubuntu
 (search for `nvidia` in the tags)
 
-
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
-<Tabs>
-<TabItem value="build-partition-images-from-a-container-image" label="Build partition images from a container image">
+{{< tabpane text=true  >}}
+{{% tab header="Build partition images from a container image" %}}
 
 If you are customizing the image, or either modifying the default partition sizes you can build the images by running:
 ```bash
-IMAGE=quay.io/kairos/ubuntu:22.04-core-arm64-nvidia-jetson-agx-orin-latest
+IMAGE=quay.io/kairos/ubuntu:22.04-core-arm64-nvidia-jetson-agx-orin-{{< kairosVersion >}}
 docker run --privileged --platform=linux/arm64 \
         -e container_image=$IMAGE \
         -e STATE_SIZE="25500" \
         -e RECOVERY_SIZE="21000" \
         -e DEFAULT_ACTIVE_SIZE="7000" \
-        -v $PWD/bootloader:/bootloader --entrypoint /prepare_nvidia_orin_images.sh -ti --rm quay.io/kairos/auroraboot:latest
+        -v $PWD/bootloader:/bootloader --entrypoint /prepare_nvidia_orin_images.sh -ti --rm quay.io/kairos/auroraboot:{{< auroraBootVersion >}}
 ```
 
-</TabItem>
-
-<TabItem value="build-partition-images-from-a-directory" label="Build partition images from a directory">
+{{% /tab %}}
+{{% tab header="Build partition images from a directory" %}}
 
 If you have instead the rootfs as a directory, you can create the required partitions with:
 ```bash
@@ -101,19 +91,15 @@ docker run --privileged --platform=linux/arm64 \
         -e RECOVERY_SIZE="21000" \
         -e DEFAULT_ACTIVE_SIZE="7000" \
 	-v $ROOTFS:/rootfs \
-        -v $PWD/bootloader:/bootloader --entrypoint /prepare_nvidia_orin_images.sh -ti --rm quay.io/kairos/auroraboot:latest
+        -v $PWD/bootloader:/bootloader --entrypoint /prepare_nvidia_orin_images.sh -ti --rm quay.io/kairos/auroraboot:{{< auroraBootVersion >}}
 ```
 
-</TabItem>
-
-</Tabs>
-
+{{% /tab %}}
+{{< /tabpane >}}
 
 After running any of the commands above, the generated images files required for flashing will be inside the `bootloader` directory (`bootloader/efi.img`, `bootloader/recovery_partition.img`, `bootloader/state_partition.img`, `bootloader/oem.img`, `bootloader/persistent.img` ).
 
-
-:::note Note
-
+:::tip Note
 The persistent image is optional, as you can store the system persistent data rather in an SD card or an NVME disk. The default `persistent.img` is of 2GB size. To create a persistent image manually of the size you prefer instead you can run:
 
 ```
@@ -123,23 +109,18 @@ mkfs.ext2 -L "COS_PERSISTENT" bootloader/persistent.img
 ```
 
 Note that the size of the partitions you modify should be duly reported in the partition layout (see below).
-
 :::
-
-
 ### Edit the parition layout
 
-We are going now to modify the partition layout in `bootloader/generic/cfg/flash_t234_qspi_sdmmc.xml` which corresponds to the partitioning of the AGX Orin board. An example config file can be found in [here](https://kairos.io/examples/images/flash_t234_qspi_sdmmc.xml). Note that the file might change across Nvidia jetson releases, so if flashing fails, use this file as baseline.
+We are going now to modify the partition layout in `bootloader/generic/cfg/flash_t234_qspi_sdmmc.xml` which corresponds to the partitioning of the AGX Orin board. An example config file can be found in [here](https://kairos.io/examples/board-configs/flash_t234_qspi_sdmmc.xml). Note that the file might change across Nvidia jetson releases, so if flashing fails, use this file as baseline.
 
 ```bash
-wget 'https://kairos.io/examples/images/flash_t234_qspi_sdmmc.xml' -O ./bootloader/generic/cfg/flash_t234_qspi_sdmmc.xml
+wget 'https://kairos.io/examples/board-configs/flash_t234_qspi_sdmmc.xml' -O ./bootloader/generic/cfg/flash_t234_qspi_sdmmc.xml
 ```
 
 If you are editing the partition sizes and generating the images manually, use the example config file as a baseline and edit the `size` accordingly to the corresponding partitions (find the respective `filename` and compare the file size, see the notes below).
 
-
-:::note Note on editing the parition layout manually
-
+:::tip Note on editing the parition layout manually
 If you want to use the original file, identify the `sdmmc_user` section ( e.g. `<device type="sdmmc_user" instance="3" sector_size="512" num_sectors="INT_NUM_SECTORS" >` ), inside there is an "APP" partition ( `<partition name="APP" id="1" type="data">` ), remove it , and add the following instead:
 
 ```xml      
@@ -195,21 +176,11 @@ Be mindful also to change the esp partition or add it if required:
 ```
 
 You can also remove the other partitions under `sdmmc_user` as not effectively used by Kairos during boot.
-
 :::
-
-
-
-:::note Note
-
+:::tip Note
 The `COS_PERSISTENT` partition is optional. You can also use an SD card, or an nvme drive instead. The only requirement is to have the partition labeled as `COS_PERSISTENT`.
-
 :::
-
-
-
-:::note Note
-
+:::tip Note
 If modifiying the parition sizes, you need to replace the size inside the `<size></size>` tags of each partition in the XML:
 
 ```
@@ -219,10 +190,7 @@ stat -c %s bootloader/state_partition.img
 stat -c %s bootloader/oem.img
 stat -c %s bootloader/persistent.img
 ```
-
 :::
-
-
 ### Flash
 
 To flash the images to the Orin board
@@ -264,14 +232,14 @@ The solution here is trying with a different kernel version, as suggested in the
 To customize the default cloud config of the board, generate the images mounting the cloud config you want in the images in `/defaults.yaml`:
 
 ```bash
-IMAGE=quay.io/kairos/ubuntu:22.04-core-arm64-nvidia-jetson-agx-orin-latest
+IMAGE=quay.io/kairos/ubuntu:22.04-core-arm64-nvidia-jetson-agx-orin-{{< kairosVersion >}}
 CLOUD_CONFIG=/cloud/config.yaml
 docker run -v $CLOUD_CONFIG:/defaults.yaml --privileged \
         -e container_image=$IMAGE \
         -e STATE_SIZE="25500" \
         -e RECOVERY_SIZE="21000" \
         -e DEFAULT_ACTIVE_SIZE="7000" \
-        -v $PWD/bootloader:/bootloader --entrypoint /prepare_nvidia_orin_images.sh -ti --rm quay.io/kairos/auroraboot:latest
+        -v $PWD/bootloader:/bootloader --entrypoint /prepare_nvidia_orin_images.sh -ti --rm quay.io/kairos/auroraboot:{{< auroraBootVersion >}}
 ```
 
 ### Debugging

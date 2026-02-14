@@ -51,6 +51,8 @@ const config: Config = {
 
   customFields: {
     registryURL: 'quay.io/kairos',
+    auroraBootVersion: 'v0.14.0',
+    kairosInitVersion: 'v0.6.2',
   },
 
   presets: [

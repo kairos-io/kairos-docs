@@ -13,7 +13,7 @@ Kairos supports takeover installations. Here are a few summarized steps:
 
 ```bash
 export DEVICE=/dev/sda
-export IMAGE=quay.io/kairos/kairos-core:latest
+export IMAGE={{<oci variant="core">}}
 cat <<'EOF' > config.yaml
 #cloud-config
 users:
@@ -28,13 +28,8 @@ export CONFIG_FILE=config.yaml
 docker run --privileged -v $PWD:/data -v /dev:/dev -ti $IMAGE kairos-agent manual-install --device $DEVICE --source dir:/ /data/$CONFIG_FILE
 ```
 
-
 :::warning Note
-
 `--source` flag refers to the source of installation. If you want to install from the pulled docker image you can set the `--source` flag to `dir:/` to use the root dir of the image as install source. Otherwise you can point it to an oci image with the `oci:` prefix.
 
 :::
-
-
-
 - Switch back to *booting* from HD and reboot.

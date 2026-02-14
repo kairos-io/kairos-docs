@@ -8,7 +8,7 @@ slug: /installation/aws
 ---
 
 This page describes how to install Kairos on AWS after you have created an AMI. Since release v3.3.0, Kairos pipeline is pushing a public AMI image to AWS which you can use.
-If you want to build a custom image, you can follow the instructions in the [Build Kairos appliances](../../advanced/build) page.
+If you want to build a custom image, you can follow the instructions in the [Build Kairos appliances](../advanced/build) page.
 
 ## Prerequisites
 
@@ -35,7 +35,7 @@ You can also verify the AMI using the AWS CLI:
 aws ec2 describe-images --region <AMI_REGION> --image-ids <AMI_ID> --query 'Images[0].[OwnerId,Name,Description]'
 ```
 
-Replace `<AMI_ID>` with the ID of the AMI you want to verify and the &lt;AMI_REGION&gt; with the region of that AMI. The output will show you the owner ID, name, and description of the AMI.
+Replace `<AMI_ID>` with the ID of the AMI you want to verify and the <AMI_REGION> with the region of that AMI. The output will show you the owner ID, name, and description of the AMI.
 
 ## Launch the instance
 
@@ -51,7 +51,8 @@ You can specify a different image to be installed using a block like the followi
 
 ```yaml
 reset:
-  source: "oci:quay.io/kairos/opensuse:leap-15.6-standard-amd64-generic-master-k3sv1.32.1-rc2-k3s1"
+  system:
+    source: "oci:quay.io/kairos/opensuse:leap-15.6-standard-amd64-generic-master-k3sv1.32.1-rc2-k3s1"
 ```
 
 This will reset to the specified image on the first boot instead of the image booted.

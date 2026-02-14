@@ -42,13 +42,13 @@ install:
   poweroff: false
   auto: true # Required, for automated installations
 
-kairos:
+p2p:
   network_token: ....
 # extra configuration
 ```
 
 The token `p2p.network_token` is a base64 encoded string which
-contains an [`edgevpn` token](https://github.com/mudler/edgevpn/blob/master/docs/content/en/docs/Concepts/Token/_index). For more information, [check out the architecture section](../../architecture/network).
+contains an [`edgevpn` token](https://github.com/mudler/edgevpn/blob/master/docs/content/en/docs/Concepts/Token/_index.md). For more information, [check out the architecture section](../architecture/network).
 
 Save this file as `cloud_init.yaml`, then create an ISO with the following steps:
 
@@ -69,16 +69,11 @@ $ mkisofs -output ci.iso -volid cidata -joliet -rock user-data meta-data
 
 Once the ISO is created, you can attach it to your machine and boot up as usual, along with the Kairos ISO.
 
-
 :::warning Warning
-
-For security reasons, when Kairos is installed in [trusted boot mode](../../Installation/trustedboot), datasources are not parsed after installation. This prevents someone from plugging a usb stick on an edge device, applying arbitrary configuration to the system post-installation. To force parsing of the datasources after installation, you can set add the `kairos.pull_datasources` option to the cmdline. This requires extending the cmdline when building the installation medium with AuroraBoot ([read more](../../Installation/trustedboot#additional-efi-entries)).
+For security reasons, when Kairos is installed in [trusted boot mode](../Installation/trustedboot), datasources are not parsed after installation. This prevents someone from plugging a usb stick on an edge device, applying arbitrary configuration to the system post-installation. To force parsing of the datasources after installation, you can set add the `kairos.pull_datasources` option to the cmdline. This requires extending the cmdline when building the installation medium with AuroraBoot ([read more](../Installation/trustedboot.md#additional-efi-entries)).
 
 This security feature is only enabled when the system boots in trusted boot mode and only after installation (they are parsed in "live" mode). On "plain" boot mode, datasources are always parsed.
-
 :::
-
-
 ## Via config URL
 
 Another way to supply your Kairos configuration file is to specify a URL as a boot argument during startup. To do this, add `config_url=<URL>` as a boot argument. This will allow the machine to download your configuration from the specified URL and perform the installation using the provided settings.
@@ -89,7 +84,7 @@ If you're not sure where to host your configuration file, a common option is to 
 
 ## ISO remastering
 
-It is possible to create custom ISOs with an embedded cloud configuration. This allows the machine to automatically boot with a pre-specified configuration file, which will be installed on the system after provisioning is complete. See also [AuroraBoot](../../reference/auroraboot) for documentation.
+It is possible to create custom ISOs with an embedded cloud configuration. This allows the machine to automatically boot with a pre-specified configuration file, which will be installed on the system after provisioning is complete. See also [AuroraBoot](../reference/auroraboot) for documentation.
 
 ### Locally
 
@@ -97,24 +92,15 @@ To create a custom ISO, you will need Docker installed on your machine.
 
 Here's an example of how you might do this:
 
-
 :::warning Warning
-
 The image passed to the auroraboot image, needs to have one of the accepted schemes: `docker`, `oci`, `file`, `dir` or `channel`.
 
 If you don't pass one, we will make an attempt to read it as a web URL but depending on your URL this might throw an error.
-
 :::
+{{< tabpane text=true  >}}
+{{% tab header="AuroraBoot" %}}
 
-
-
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
-<Tabs>
-<TabItem value="auroraboot" label="AuroraBoot">
-
-We can use [AuroraBoot](../../reference/auroraboot) to handle the the ISO build process, for example:
+We can use [AuroraBoot](../reference/auroraboot) to handle the the ISO build process, for example:
 
 ```bash
 $ IMAGE=<scheme://host[:port]/path[:tag]>
@@ -124,7 +110,7 @@ $ docker run -v $PWD/cloud_init.yaml:/cloud_init.yaml \
                     -v $PWD/build:/tmp/auroraboot \
                     -v /var/run/docker.sock:/var/run/docker.sock \
                     --rm -ti quay.io/kairos/auroraboot \
-                    --set container_image=docker://$IMAGE \
+                    --set container_image=oci:$IMAGE \
                     --set "disable_http_server=true" \
                     --set "disable_netboot=true" \
                     --cloud-config /cloud_init.yaml \
@@ -138,10 +124,8 @@ total 778M
 34649370 -rw-r--r-- 1 root root 389M Feb  8 16:38 kairos.iso
 34649371 -rw-r--r-- 1 root root   76 Feb  8 16:39 kairos.iso.sha256
 ```
-
-</TabItem>
-
-<TabItem value="manually" label="Manually">
+{{% /tab %}}
+{{% tab header="Manually" %}}
 
 ```bash
 $ IMAGE=<scheme://host[:port]/path[:tag]>
@@ -157,31 +141,22 @@ $ docker pull $IMAGE
 # docker run --entrypoint /bin/bash --name changes -ti $IMAGE
 # docker commit changes $IMAGE
 # Build an ISO with $IMAGE
-$ docker run -v $PWD:/cOS -v /var/run/docker.sock:/var/run/docker.sock -i --rm quay.io/kairos/auroraboot:latest --debug build-iso --name "custom-iso" --date=false --overlay-iso /cOS/files-iso --output /cOS/ $IMAGE
+$ docker run -v $PWD:/cOS -v /var/run/docker.sock:/var/run/docker.sock -i --rm quay.io/kairos/auroraboot:{{< auroraBootVersion >}} --debug build-iso --name "custom-iso" --date=false --overlay-iso /cOS/files-iso --output /cOS/ $IMAGE
 ```
+{{% /tab %}}
+{{< /tabpane >}}
 
-</TabItem>
-
-</Tabs>
-
-
-
-:::note Cloud config
-
+:::tip Cloud config
 In the case of Auroraboot, make sure that the cloud config that you are mounting in the container (`-v $PWD/cloud_init.yaml:/cloud_init.yaml`) exists. Otherwise docker will create an empty directory to mount it on the container without any warnings and you will end up with an empty cloud config.
-
 :::
-
-
-
 This will create a new ISO with your specified cloud configuration embedded in it. You can then use this ISO to boot your machine and automatically install Kairos with your desired settings.
 
-You can as well modify the image in this step and add additional packages before deployment. See [customizing the system image](../../advanced/customizing).
+You can as well modify the image in this step and add additional packages before deployment. See [customizing the system image](../advanced/customizing).
 
-Check out the [AuroraBoot documentation](../../reference/auroraboot) and the [examples](../../examples) for learn more on how to generate customized images for installation.
+Check out the [AuroraBoot documentation](../reference/auroraboot) and the [examples](../examples) for learn more on how to generate customized images for installation.
 
 ### Kubernetes
 
 It is possible to create custom ISOs and derivatives using extended Kubernetes API resources with an embedded configuration file. This allows you to drive automated installations and customize the container image without breaking the concept of immutability.
 
-You can read more about it [here](../../Advanced/build#build-an-iso).
+You can read more about it [here](../Advanced/build.md#build-an-iso).

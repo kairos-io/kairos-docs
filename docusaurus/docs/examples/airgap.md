@@ -4,23 +4,18 @@ sidebar_label: "Airgapped ISO"
 description: This section describe examples on how to use AuroraBoot and Kairos bundles to create ISOs for airgapped installs
 ---
 
-If you want to create an [airgap K3s installation](https://docs.k3s.io/installation/airgap), Kairos provides a convenient way to do so using AuroraBoot. In this guide, we will go through the process of creating a custom ISO of Kairos that contains a configuration file and a [bundle](../../advanced/bundles) that executes preparatory steps after installation. The bundle will overlay new files in the system and prepare the node for having an airgapped K3s installation.
+If you want to create an [airgap K3s installation](https://docs.k3s.io/installation/airgap), Kairos provides a convenient way to do so using AuroraBoot. In this guide, we will go through the process of creating a custom ISO of Kairos that contains a configuration file and a [bundle](../advanced/bundles) that executes preparatory steps after installation. The bundle will overlay new files in the system and prepare the node for having an airgapped K3s installation.
 
-
-:::note Note
-
+:::tip Note
 If you already have a Kubernetes cluster, you can use the osbuilder controller to generate container images with your additional files already inside.
-
 :::
-
-
 ## Prerequisites
 
 Docker running in the host
 
 ## Creating the Bundle
 
-First, we need to create a bundle that contains the K3s images used for the airgap installation. The bundle will place the images in the `/var/lib/rancher/k3s/agent/images` directory. The `/var/lib/rancher` is already configured as persistent by Kairos defaults and every change to that directory persist reboots. You can add additional persistent paths in the system with [the cloud config](../../advanced/customizing#bind-mounts)
+First, we need to create a bundle that contains the K3s images used for the airgap installation. The bundle will place the images in the `/var/lib/rancher/k3s/agent/images` directory. The `/var/lib/rancher` is already configured as persistent by Kairos defaults and every change to that directory persist reboots. You can add additional persistent paths in the system with [the cloud config](../advanced/customizing#bind-mounts)
 
 1. Create a new directory named `images-bundle`, and create a new file inside it called `Dockerfile`.
 2. Paste the following code into the `Dockerfile`:
@@ -32,7 +27,7 @@ RUN wget https://github.com/k3s-io/k3s/releases/download/v1.23.16%2Bk3s1/k3s-air
 
 FROM scratch
 COPY ./run.sh /
-COPY --from=alpine /build/k3s-airgap-images-amd64.tar.gz /assets
+COPY --from=alpine /build/k3s-airgap-images-amd64.tar.gz /assets/
 ```
 3. Create a new file called `run.sh` inside the `images-bundle` directory, and paste the following code:
 
@@ -40,9 +35,9 @@ COPY --from=alpine /build/k3s-airgap-images-amd64.tar.gz /assets
 #!/bin/bash
 
 mkdir -p /usr/local/.state/var-lib-rancher.bind/k3s/agent/images/
-cp -rfv ./k3s-airgap-images-amd64.tar.gz /usr/local/.state/var-lib-rancher.bind/k3s/agent/images/
+cp -rfv assets/k3s-airgap-images-amd64.tar.gz /usr/local/.state/var-lib-rancher.bind/k3s/agent/images/
 ```
-4. Make the `run.sh` file executable by running the following command: 
+4. Make the `run.sh` file executable by running the following command:
 ```bash
 chmod +x run.sh
 ```
@@ -53,9 +48,6 @@ docker build -t images-bundle .
 6. Save the bundle:
 
 ```
-$ ls
-images-bundle
-
 # create a directory
 $ mkdir data
 $ docker save images-bundle -o data/bundle.tar
@@ -80,6 +72,8 @@ install:
    - run:///run/initramfs/live/bundle.tar
    local_file: true
 
+fail_on_bundles_errors: true
+
 # Define the user accounts on the node.
 users:
 - name: "kairos"                       # The username for the user.
@@ -91,11 +85,11 @@ k3s:
   enabled: true
 ```
 
-2. Build the ISO with [AuroraBoot](../../reference/auroraboot) by running the following command:
+2. Build the ISO with [AuroraBoot](../reference/auroraboot) by running the following command:
 
 
 ```bash
-IMAGE=quay.io/kairos/kairos-standard:latest
+IMAGE={{<oci variant="standard">}}
 
 docker pull $IMAGE
 
@@ -103,10 +97,10 @@ docker run -v $PWD/config.yaml:/config.yaml \
              -v $PWD/build:/tmp/auroraboot \
              -v /var/run/docker.sock:/var/run/docker.sock \
              -v $PWD/data:/tmp/data \
-             --rm -ti quay.io/kairos/auroraboot:latest \
+             --rm -ti quay.io/kairos/auroraboot:{{< auroraBootVersion >}} \
              --set "disable_http_server=true" \
              --set "disable_netboot=true" \
-             --set "container_image=docker://$IMAGE" \
+             --set "container_image=oci:$IMAGE" \
              --set "iso.data=/tmp/data" \
              --cloud-config /config.yaml \
              --set "state_dir=/tmp/auroraboot"
@@ -118,7 +112,7 @@ This example is also available in the [AuroraBoot repository](https://github.com
 
 ## See also
 
-- [Customize the OS image](../../advanced/customizing)
-- [Create ISOs with Kubernetes](../../installation/automated#kubernetes)
-- [Bundles reference](../../advanced/bundles)
-- [System extensions](../../advanced/sys-extensions)
+- [Customize the OS image](../advanced/customizing)
+- [Create ISOs with Kubernetes](../installation/automated#kubernetes)
+- [Bundles reference](../advanced/bundles)
+- [System extensions](../advanced/sys-extensions)

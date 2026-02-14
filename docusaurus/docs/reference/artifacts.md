@@ -8,14 +8,9 @@ description: Detailed information about how we name our artifacts including repo
 
 There are many different artifacts that Kairos produces. In this page we try to summarize them all and have a clear naming convention for them.
 
-
-:::note Info
-
+:::tip Info
 Architecture names are based on the [Go architecture names](https://go.dev/doc/install/source#environment), so `amd64` is used instead of `x86_64`, `386` instead of `i386` and `arm64` instead of `aarch64`.
-
 :::
-
-
 ## Images
 
 OS images are stored in GitHub Releases, so the name of the artifact includes all the information about the image. The only exception is when the image is too big to be stored in GitHub Releases, in that case the image is stored in Quay.io.
@@ -49,8 +44,8 @@ Keep in mind that:
 
 ### Examples
 
-- `kairos-ubuntu-23.04-core-amd64-generic-latest`
-- `kairos-ubuntu-23.04-standard-arm64-rpi4-latest-k3sv1.28.2+k3s1.iso`
+- `kairos-ubuntu-23.04-core-amd64-generic-{{< kairosVersion >}}`
+- `kairos-ubuntu-23.04-standard-arm64-rpi4-{{< kairosVersion >}}-k3sv1.28.2+k3s1.iso`
 
 ## Kernel and RAM Disk Images
 
@@ -66,8 +61,8 @@ Where:
 
 ### Examples
 
-- `kairos-ubuntu-23.04-core-amd64-generic-latest-kernel`
-- `kairos-ubuntu-23.04-standard-arm64-rpi4-latest-k3sv1.28.2+k3s1-initrd`
+- `kairos-ubuntu-23.04-core-amd64-generic-{{< kairosVersion >}}-kernel`
+- `kairos-ubuntu-23.04-standard-arm64-rpi4-{{< kairosVersion >}}-k3sv1.28.2+k3s1-initrd`
 
 ## iPXE Images
 
@@ -75,9 +70,9 @@ For iPXE we deliver three types of artifacts. The first one is the iPXE script, 
 
 ### Examples
 
-- `kairos-ubuntu-23.04-core-amd64-generic-latest.ipxe`
-- `kairos-ubuntu-23.04-core-amd64-generic-latest-ipxe.iso`
-- `kairos-ubuntu-23.04-core-amd64-generic-latest-ipxe-usb.img`
+- `kairos-ubuntu-23.04-core-amd64-generic-{{< kairosVersion >}}.ipxe`
+- `kairos-ubuntu-23.04-core-amd64-generic-{{< kairosVersion >}}-ipxe.iso`
+- `kairos-ubuntu-23.04-core-amd64-generic-{{< kairosVersion >}}-ipxe-usb.img`
 
 ## Reports
 
@@ -93,8 +88,8 @@ Where:
 
 ### Examples
 
-- `kairos-alpine-3.18-core-arm64-generic-latest-trivy.sarif`
-- `kairos-alpine-3.18-core-arm64-generic-latest-grype.json`
+- `kairos-alpine-3.18-core-arm64-generic-{{< kairosVersion >}}-trivy.sarif`
+- `kairos-alpine-3.18-core-arm64-generic-{{< kairosVersion >}}-grype.json`
 
 ## Container Images
 
@@ -112,7 +107,7 @@ This nomenclature for container images lacks some information for the following 
 
 ### Examples
 
-- <!-- OCI Image: quay.io/kairos/[flavor]-[variant]:[version] -->
+- {{<ociCode variant="core" >}}
 
 ## IMG Images
 
@@ -126,26 +121,7 @@ quay.io/kairos/<flavor>:<flavor_release>-<variant>-<arch>-<device>-<version>-img
 
 ### Examples
 
-- <!-- OCI Image: quay.io/kairos/[flavor]-[variant]:[version] -->
-
-## Framework images
-
-There are 2 framework flavors currently, `generic` and `fips`, the latter builds Kairos packages in compliance with FIPS.
-
-All different framework flavors are stored in the same image, so the details are included in the tag. The name is simplified since not all attributes apply for framework images.
-
-```
-quay.io/kairos/framework:<version>[-fips]
-```
-
-### Examples
-
-- `quay.io/kairos/framework:<!-- Hugo shortcode: defaultFrameworkRelease  -->`
-- `quay.io/kairos/framework:<!-- Hugo shortcode: defaultFrameworkRelease  -->-fips`
-- `quay.io/kairos/framework:main`
-- `quay.io/kairos/framework:main-fips`
-- `quay.io/kairos/framework:latest`
-- `quay.io/kairos/framework:latest-fips`
+- {{<ociCode variant="core" arch="arm64" model="rpi4" suffix="img" >}}
 
 ## Binaries
 

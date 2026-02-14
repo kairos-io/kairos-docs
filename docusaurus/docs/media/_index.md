@@ -18,40 +18,23 @@ description: Discover Kairos in action through videos, presentation slides, and 
 
 ### Meet Kairos, an OSS project building the immutable Kubernetes edge
 
-
-<iframe width="100%" height="450" src="https://www.youtube.com/embed/kiDQujibz2k" title="Meet Kairos, an OSS project building the immutable Kubernetes edge" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
+{{< youtube id="kiDQujibz2k" title="Meet Kairos, an OSS project building the immutable Kubernetes edge" >}}
 
 ### How we build and maintain Kairos
 
-
-<iframe width="100%" height="450" src="https://www.youtube.com/embed/P8voTbQGmP8" title="How we build and maintain Kairos" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
+{{< youtube id="P8voTbQGmP8" title="How we build and maintain Kairos" >}}
 
 
 ### CNCF TAG-Runtime Meeting 09-14-2023 (Kairos) 
 
 Starts at `9:23`:
 
-
-<iframe width="100%" height="450" src="https://www.youtube.com/embed/kTG8FuKzGYE" title="Introduction to Kairos" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
+{{< youtube id="kTG8FuKzGYE" title="Introduction to Kairos" >}}
 
 ### Conferences
 
-
-<iframe width="100%" height="450" src="https://www.youtube.com/embed/uD-T9LdfvrM" title="Special Purpose Operating Systems: The Next Step in OS Evolution or One-Trick Ponies?" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-
-<iframe width="100%" height="450" src="https://www.youtube.com/embed/dwS-dBAAuOk" title="YouTube Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-
-<iframe width="100%" height="450" src="https://www.youtube.com/embed/UmBxh5q_AF0" title="Devconf.cz" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-
-<iframe width="100%" height="450" src="https://www.youtube.com/embed/46qcE5MC6-8" title="YouTube Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-
-<iframe width="100%" height="450" src="https://www.youtube.com/embed/GuxIiludGgA" title="SCaLE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-
+{{< youtube id="uD-T9LdfvrM" title="Special Purpose Operating Systems: The Next Step in OS Evolution or One-Trick Ponies?" >}}
+{{< youtube id="dwS-dBAAuOk" title="" >}}
+{{< youtube id="UmBxh5q_AF0" title="Devconf.cz" >}}
+{{< youtube id="46qcE5MC6-8" title="" >}}
+{{< youtube id="GuxIiludGgA" title="SCaLE" >}}

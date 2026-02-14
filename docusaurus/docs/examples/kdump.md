@@ -4,14 +4,9 @@ sidebar_label: "Enabling kdump"
 description: This section describe examples on how to enable kdump in Kairos derivatives
 ---
 
-
 :::info Info
-
 This tutorial is based on Opensuse Leap. Kdump configs vary over distributions and we are not able to test them all but they should be easily adaptable from this tutorial.
-
 :::
-
-
 # Introduction
 
 kdump is a feature of the Linux kernel that creates crash dumps in the event of a kernel crash. When triggered, kdump exports a memory image (also known as vmcore) that can be analyzed for the purposes of debugging and determining the cause of a crash.
@@ -36,7 +31,7 @@ This is why we need a clean initramfs that disables most of the modules and moun
 
 ### Building the custom derivative
 
-We will keep this short as there is more docs about building your own derivatives than what we can go in this tutorial like the [Customizing page](./customizing)
+We will keep this short as there is more docs about building your own derivatives than what we can go in this tutorial like the [Customizing page](customizing)
 
 The main step is to build a clean initrd that has the kdump module and can mount persistent to store the kernel dump.
 
@@ -88,10 +83,10 @@ $ docker build -t kdump-kairos .
 
 ### Build an iso from that artifact
 
-Again, this tutorial does not cover this part deeply as there are docs providing a deep insight onto this like the [AuroraBoot page](./auroraboot)
+Again, this tutorial does not cover this part deeply as there are docs providing a deep insight onto this like the [AuroraBoot page](auroraboot)
 
 ```bash
-$ docker run -v "$PWD"/build-iso:/tmp/auroraboot -v /var/run/docker.sock:/var/run/docker.sock --rm -ti quay.io/kairos/auroraboot --set container_image="docker://kdump-kairos" --set "disable_http_server=true" --set "disable_netboot=true" --set "state_dir=/tmp/auroraboot"
+$ docker run -v "$PWD"/build-iso:/tmp/auroraboot -v /var/run/docker.sock:/var/run/docker.sock --rm -ti quay.io/kairos/auroraboot --set container_image="oci:kdump-kairos" --set "disable_http_server=true" --set "disable_netboot=true" --set "state_dir=/tmp/auroraboot"
 2:38PM INF Pulling container image 'kdump-kairos' to '/tmp/auroraboot/temp-rootfs' (local: true)
 2:38PM INF Generating iso 'kairos' from '/tmp/auroraboot/temp-rootfs' to '/tmp/auroraboot/build'
 ```
@@ -103,7 +98,7 @@ Then we burn the resulting ISO to a dvd or usb stick and boot it normally.
 
 **In order to have kdump working properly, we need to reserve a chunk of memory from the system so it can dump correctly**. Several tools exist for this like `kdumptool` which will give us some approximated values to reserve if running on the machine. A safe value might be `512M high` and `72M low`
 
-This values need to be passed to the kernel in the cmdline so kdump knows what memory it has to work with. The easiest way is to set the `install.grub_options.extra_cmdline` value in the [cloud-config](./configuration) during install.
+This values need to be passed to the kernel in the cmdline so kdump knows what memory it has to work with. The easiest way is to set the `install.grub_options.extra_cmdline` value in the [cloud-config](configuration) during install.
 
 ```yaml
 #cloud-config
@@ -163,12 +158,8 @@ drwxr-xr-x 2 root root     4096 Sep  9 15:03 .
 -rw-r--r-- 1 root root      320 Sep  9 15:03 README.txt
 ```
 
-
 :::warning Warning
-
 You can manually trigger a crash by running `echo c > /proc/sysrq-trigger`
 
 Note that this will immediately crash your machine, dump the kernel and restart so make sure that everything is ready for the sudden crash.
-
 :::
-

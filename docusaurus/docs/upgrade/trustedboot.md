@@ -6,41 +6,30 @@ date: 2022-11-13
 description: Learn how to upgrade a Kairos node with Trusted Boot enabled
 ---
 
-
-
 :::warning Warning
-
 This section is still a work in progress and only available in Kairos v3.x releases and alphas.
-
 :::
-
-
 This section covers how to upgrade a Kairos node with Trusted Boot enabled.
 
-See the [Trusted Boot Installation](../../installation/trustedboot) and [Trusted Boot Architecture](../../architecture/trustedboot) pages for more references.
+See the [Trusted Boot Installation](../installation/trustedboot) and [Trusted Boot Architecture](../architecture/trustedboot) pages for more references.
 
 ### Upgrades
 
 In order to upgrade a node to a new version of the OS, you need to generate again the installable medium with the same keys used in the steps before.
 
-
-:::note Note
-
+:::tip Note
 The resulting container image can be used for upgrades with `kairos-agent`.
-
 :::
-
-
 The process will generate an EFI file which we will pack into a container image that will be used to upgrade the node.
 
 #### Generate the upgrade image
 
 1. Build the Container image used for upgrades
 
-```bash title="Ubuntu+24.04,Fedora+40"
-CONTAINER_IMAGE=quay.io/kairos/kairos-core:latest
+```bash {class="only-flavors=Ubuntu+24.04,Fedora+40"}
+CONTAINER_IMAGE={{<oci variant="core">}}
 
-docker run --rm -v $PWD/keys:/keys -v $PWD:/work -ti quay.io/kairos/auroraboot:latest build-uki -t container --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT $CONTAINER_IMAGE
+docker run --rm -v $PWD/keys:/keys -v $PWD:/work -ti {{< registryURL >}}/auroraboot:{{< auroraBootVersion >}} build-uki -t container --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT $CONTAINER_IMAGE
 ```
 
 2. Push the upgrade image to a registry
@@ -55,14 +44,9 @@ docker push <IMAGE_NAME>
 
 #### Upgrade with kairos-agent
 
-
 :::warning Warning
-
 For upgrading use the image that has been loaded with `docker load` in the step earlier. That contains the EFI files for the upgrade process. **Do not use** the source/base image used (`$CONTAINER_IMAGE` in the example above) used as input!
-
 :::
-
-
 Let's assume an upgrade image named `acme.com/acme/kairos` has been built and pushed
 as described in the section above. From a shell inside a running Kairos OS,
 the following command will upgrade to the new version:
@@ -73,7 +57,7 @@ kairos-agent upgrade --source oci:acme.com/acme/kairos
 
 #### Upgrades with Kubernetes
 
-To upgrade Kairos with Kubernetes, the Kairos operator needs to be deployed on the target cluster. [Read the instructions here](.././kairos-operator).
+To upgrade Kairos with Kubernetes, the Kairos operator needs to be deployed on the target cluster. [Read the instructions here](./kairos-operator).
 
 A `NodeOp` resource needs to be created which will use the image generated in the step above.
 Since that image only contains the EFI files for the upgrade and in order to be able use any ImagePullSecrets
@@ -144,10 +128,6 @@ spec:
   stopOnFailure: true
 ```
 
-
-:::note Note
-
-To understand more on how this works, see the [Kairos operator documentation](.././kairos-operator) for general information about the operator and the [regular upgrade process](.././kubernetes) for non-trusted boot upgrades.
-
+:::tip Note
+To understand more on how this works, see the [Kairos operator documentation](./kairos-operator) for general information about the operator and the [regular upgrade process](./kubernetes) for non-trusted boot upgrades.
 :::
-

@@ -5,15 +5,10 @@ description: Full end to end example to bootstrap a self-coordinated cluster wit
 slug: /examples/p2p_e2e
 ---
 
-
 :::warning Network
-
 This feature is experimental and has only been tested on local setups. Run in production servers at your own risk.
 Feedback and bug reports are welcome, as we are improving the p2p aspects of Kairos.
-
 :::
-
-
 Deploying Kubernetes at the Edge can be a complex and time-consuming process, especially when it comes to setting up and managing multiple clusters. To make this process easier, Kairos leverages peer-to-peer technology to automatically coordinate and create Kubernetes clusters without the need of a control management interface.
 
 To leverage p2p self-coordination capabilities of Kairos, you will need to configure the `network_token` under the `p2p` configuration block in your cloud-config file. Once you have set this, Kairos will handle the configuration of each node.
@@ -22,7 +17,7 @@ To leverage p2p self-coordination capabilities of Kairos, you will need to confi
 
 In the following example we are going to bootstrap a new multi-node, single cluster with Kairos. We will use at least 2 nodes, one as a master and one as a worker. Note how we don't specify any role, or either pin any IP in the following configurations.
 
-We will first create a cloud config file for our deployment, and then run [AuroraBoot](../../reference/auroraboot) locally. We then start 2 VMs configured for netbooting.
+We will first create a cloud config file for our deployment, and then run [AuroraBoot](../reference/auroraboot) locally. We then start 2 VMs configured for netbooting.
 
 ## Prepare your `cloud-config` file
 
@@ -99,14 +94,14 @@ ssh_authorized_keys:
 
 ## Provisioning with AuroraBoot
 
-We now can run [AuroraBoot](../../reference/auroraboot) with <!-- OCI Image: quay.io/kairos/[flavor]-[variant]:[version] --> to provision `openSUSE Leap` machines with those k3s and kairos versions.
+We now can run [AuroraBoot](../reference/auroraboot) with {{<ociCode variant="standard">}} to provision `openSUSE Leap` machines with those k3s and kairos versions.
 
 AuroraBoot takes `cloud-config` files also from _STDIN_, so we will pipe the configuration file to it, and specify the container image that we want to use for our nodes:
 
 ``` bash
 cat <<EOF | docker run --rm -i --net host quay.io/kairos/auroraboot \
                     --cloud-config - \
-                    --set "container_image=quay.io/kairos/kairos-standard:latest"
+                    --set "container_image={{<oci variant="standard">}}"
 #cloud-config
 
 # https://github.com/kairos-io/kairos/issues/885
@@ -134,7 +129,7 @@ EOF
 
 ## Booting and access the cluster
 
-Start the Machines (VM, or baremetal) with Netboot ( see also [here](../../reference/auroraboot#3-start-nodes) ) and wait for the installation to finish.
+Start the Machines (VM, or baremetal) with Netboot ( see also [here](../reference/auroraboot#3-start-nodes) ) and wait for the installation to finish.
 
 Afterward, you should be able to ssh to one of the machines and be able to use your Kubernetes cluster:
 
@@ -144,22 +139,17 @@ $ sudo su -
 $ k9s
 ```
 
-
 :::warning Warning
-
 If k9s doesn't automatically pick up the kubeconfig, you can manually fetch it and pass it to k9s:
 
 ``` bash
 $ kairos get-kubeconfig > kubeconfig
 $ KUBECONFIG=kubeconfig k9s
 ```
-
 :::
-
-
 ## Notes
 
-By default, the Kubernetes API endpoint is not exposed outside the VPN. This is an opinionated configuration from Kairos. To check out configurations without VPN, see also [the KubeVIP example](../../examples/multi-node-p2p-ha-kubevip).
+By default, the Kubernetes API endpoint is not exposed outside the VPN. This is an opinionated configuration from Kairos. To check out configurations without VPN, see also [the KubeVIP example](../examples/multi-node-p2p-ha-kubevip).
 
 ## Troubleshooing
 
@@ -172,5 +162,5 @@ $ journalctl -fu kairos-agent
 
 ## See also
 
-- [Installation with p2p](../../installation/p2p)
-- [P2P Architecture](../../architecture/network)
+- [Installation with p2p](../installation/p2p)
+- [P2P Architecture](../architecture/network)

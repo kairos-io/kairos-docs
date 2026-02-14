@@ -20,10 +20,10 @@ Booting using these files can happen in multiple ways:
 - Software based network booting. This works with a special ISO, built with
   [ipxe](https://ipxe.org/) project. Kairos releases include pre-built ISOs for
   netbooting (named like `*.ipxe.iso.ipxe`).
-- Use [AuroraBoot](../../reference/auroraboot)
+- Use [AuroraBoot](../reference/auroraboot)
 
 Generic hardware based netbooting is out of scope for this document.
-Below we give instructions on how to use the Kairos release artifacts to netboot and how to use [AuroraBoot](../../reference/auroraboot) to boot from network.
+Below we give instructions on how to use the Kairos release artifacts to netboot and how to use [AuroraBoot](../reference/auroraboot) to boot from network.
 
 ## Boot with pre-built ISOs
 
@@ -34,10 +34,10 @@ E.g.:
 
 ```bash
 #!ipxe
-set url https://github.com/kairos-io/kairos/releases/download/latest
-set kernel <!-- Hugo shortcode: image variant="standard" suffix="-kernel"  -->
-set initrd <!-- Hugo shortcode: image variant="standard" suffix="-initrd"  -->
-set rootfs <!-- Hugo shortcode: image variant="standard" suffix=".squashfs"  -->
+set url https://github.com/kairos-io/kairos/releases/download/{{< kairosVersion >}}
+set kernel {{<image variant="standard" suffix="-kernel" >}}
+set initrd {{<image variant="standard" suffix="-initrd" >}}
+set rootfs {{<image variant="standard" suffix=".squashfs" >}}
 
 # Configure interface
 ifconf
@@ -66,21 +66,21 @@ qemu-system-x86_64 \
 
 ## Use AuroraBoot
 
-[AuroraBoot](../../reference/auroraboot) is a Kairos convinience tool that can be used to quickly deploy Kairos from Network with zero-touch configuration, for instance:
+[AuroraBoot](../reference/auroraboot) is a Kairos convinience tool that can be used to quickly deploy Kairos from Network with zero-touch configuration, for instance:
 
 ```bash
 docker run --rm -ti --net host quay.io/kairos/auroraboot \
-                    --set "container_image=quay.io/kairos/kairos-standard:latest"
+                    --set "container_image={{<oci variant="standard">}}"
                     # Optionally:
                     # --cloud-config ....
 ```
 
-Will netboot the <!-- OCI Image: quay.io/kairos/[flavor]-[variant]:[version] --> image. You can find more details in the [AuroraBoot documentation section](../../reference/auroraboot).
+Will netboot the {{<ociCode variant="standard">}} image. You can find more details in the [AuroraBoot documentation section](../reference/auroraboot).
 
 ## Notes on booting from network
 
 Another way to boot with the release artifacts is using [pixiecore](https://github.com/danderson/netboot/tree/master/pixiecore).
-`pixiecore` acts as a server which offers net boot files over the network and it's automatically discovered on a network where a DHCP server is running and is compatible with [the pixiecore architecture](https://github.com/danderson/netboot/blob/master/pixiecore/README.booting).
+`pixiecore` acts as a server which offers net boot files over the network and it's automatically discovered on a network where a DHCP server is running and is compatible with [the pixiecore architecture](https://github.com/danderson/netboot/blob/master/pixiecore/README.booting.md).
 
 
 Assuming the current directory has the `kernel`, `initrd` and `squashfs` artifacts,
@@ -89,9 +89,9 @@ Assuming the current directory has the `kernel`, `initrd` and `squashfs` artifac
 ```bash
 #!/bin/bash
 
-wget "https://github.com/kairos-io/kairos/releases/download/latest/<!-- Hugo shortcode: image variant="standard" suffix="-kernel" -->"
-wget "https://github.com/kairos-io/kairos/releases/download/latest/<!-- Hugo shortcode: image variant="standard" suffix="-initrd"  -->"
-wget "https://github.com/kairos-io/kairos/releases/download/latest/<!-- Hugo shortcode: image variant="standard" suffix=".squashfs"  -->"
+wget "https://github.com/kairos-io/kairos/releases/download/{{< kairosVersion >}}/{{<image variant="standard" suffix="-kernel">}}"
+wget "https://github.com/kairos-io/kairos/releases/download/{{< kairosVersion >}}/{{<image variant="standard" suffix="-initrd" >}}"
+wget "https://github.com/kairos-io/kairos/releases/download/{{< kairosVersion >}}/{{<image variant="standard" suffix=".squashfs" >}}"
 
 cat << EOF > config.yaml
 #cloud-config
@@ -106,7 +106,7 @@ EOF
 # Any machine that depends on DHCP to netboot will be send the specified files and the cmd boot line.
 docker run \
   -d --name pixiecore --net=host -v $PWD:/files quay.io/pixiecore/pixiecore \
-    boot /files/<!-- Hugo shortcode: image variant="standard" suffix="-kernel"  --> /files/<!-- Hugo shortcode: image variant="standard" suffix="-initrd"  --> --cmdline="rd.neednet=1 ip=dhcp rd.cos.disable root=live:{{ ID \"/files/<!-- Hugo shortcode: image variant="standard" suffix=".squashfs"  -->\" }} netboot install-mode config_url={{ ID \"/files/config.yaml\" }} console=tty1 console=ttyS0 console=tty0"
+    boot /files/{{<image variant="standard" suffix="-kernel" >}} /files/{{<image variant="standard" suffix="-initrd" >}} --cmdline="rd.neednet=1 ip=dhcp rd.cos.disable root=live:{{ ID \"/files/{{<image variant="standard" suffix=".squashfs" >}}\" }} netboot install-mode config_url={{ ID \"/files/config.yaml\" }} console=tty1 console=ttyS0 console=tty0"
 ```
 
 If your machine doesn't support netbooting, you can use our [generic image](https://github.com/kairos-io/ipxe-dhcp/releases), which is built using an ipxe script [from the pixiecore project](https://github.com/danderson/netboot/blob/master/pixiecore/boot.ipxe). The ISO will wait for a DHCP proxy response from pixiecore.

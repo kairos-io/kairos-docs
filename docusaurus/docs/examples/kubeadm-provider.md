@@ -4,7 +4,6 @@ linkTitle: A Minimal Single-Node Kubernetes with Kubeadm
 description: Learn how to build a Kairos image for a single-node Kubernetes cluster using the provider-kubeadm.
 ---
 
-
 Kairos is all about giving you the power to customize your operating system just the way you need it—declaratively, reproducibly, and predictably. Today, we're walking through how to build and boot a Kairos image using the [provider-kubeadm](https://github.com/kairos-io/provider-kubeadm) to set up a Kubernetes cluster with `kubeadm`.
 
 This guide is focused on a simple use case: booting a **single-node Kubernetes cluster** with role `init`, version `v1.30.0`.
@@ -46,10 +45,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN mkdir -p /system/providers && curl -L https://github.com/kairos-io/provider-kubeadm/releases/download/v4.7.0-rc.4/agent-provider-kubeadm-v4.7.0-rc.4-linux-amd64.tar.gz | tar -xz -C /system/providers/
 ```
 
-Or with the modern [Kairos Factory](./kairos-factory) method:
+Or with the modern [Kairos Factory](kairos-factory) method:
 
 ```Dockerfile
-FROM quay.io/kairos/kairos-init:latest AS kairos-init
+FROM quay.io/kairos/kairos-init:{{< kairosInitVersion >}} AS kairos-init
 
 FROM ubuntu:24.04
 ARG VERSION=1.0.0

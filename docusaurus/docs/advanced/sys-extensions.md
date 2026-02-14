@@ -4,25 +4,13 @@ sidebar_label: "Extending the system with systemd extensions"
 sidebar_position: 3
 ---
 
-
-
 :::warning Warning
-
 This feature is in preview state and only available in Kairos v3.4.x releases and alphas.
 Please check the section "Known issues" at the bottom for more information.
-
 :::
-
-
-
-
 :::info Signing keys for system extensions under Trusted Boot
-
 Sysexts need to be signed with the same key/cert as the ones used to sign the EFI files. As those are part of the system and available in the EFI firmware, we can extract the public part and verify the sysexts locally. Any of the PK, KEK or DB keys can be used to sign sysexts. This only affects Trusted Boot.
-
 :::
-
-
 ### Introduction
 
 System extensions are a way to extend the system with additional files and directories that are mounted at boot time. System extension images may – dynamically at runtime — extend the /usr/ directory hierarchies with additional files. This is particularly useful on immutable system images where a /usr/ hierarchy residing on a read-only file system shall be extended temporarily at runtime without making any persistent modifications.
@@ -32,6 +20,7 @@ This feature works on both Trusted Boot and normal Kairos installations, the onl
 
 For more information on system extensions, please refer to the [System extensions documentation](https://www.freedesktop.org/software/systemd/man/latest/systemd-sysext.html).
 
+**Requirement**: Base image of the OS needs to have at least systemd 252 or newer ( for example ubuntu >=23.10 or fedora >=38 )
 
 ### Building system extensions manually
 
@@ -63,14 +52,9 @@ Then you can use the `systemd-repart` tool to create the sysext image:
 $ systemd-repart -S -s SOURCE_DIR NAME.sysext.raw --private-key=PRIVATE_KEY --certificate=CERTIFICATE
 ```
 
-
 :::warning Warning
-
 Note that the extensions MUST have a `/usr/lib/extension-release.d/extension-release.NAME` file in which the NAME needs to match the sysext NAME (extension is ignored). This is an enforcement by systemd to ensure the sysext is correctly identified and some sanity checks are done with the info in that file.
-
 :::
-
-
 This will generate a signed+verity sysextension that can then be used by sysext to extend the system.
 
 Some extension examples are available under https://github.com/Itxaka/sysext-examples for k3s and sbctl.
@@ -78,15 +62,9 @@ Some extension examples are available under https://github.com/Itxaka/sysext-exa
 
 ### Building system extensions from a docker image with auroraboot
 
-
 :::warning Warning
-
 This feature is in preview state and only available in Auroraboot from version v0.3.0
-
 :::
-
-
-
 You can also build a system extension from a docker image directly by using [auroraboot](https://github.com/kairos-io/AuroraBoot) and using a dockerfile to isolate the artifacts you want converted into a system extension.
 
 Notice that when converting a docker image into a system extension, the last layer is the only one converted (The last command in a given Dockerfile) so have that in mind. This is useful for packages that ONLY install things in /usr or manual installation under /usr.
@@ -124,7 +102,7 @@ $ docker run \
 -v "$PWD":/build/ \
 -v /var/run/docker.sock:/var/run/docker.sock \
 --rm \
-quay.io/kairos/auroraboot:latest sysext --private-key=/keys/PRIVATE_KEY --certificate=/keys/CERTIFICATE --output=/build NAME CONTAINER_IMAGE
+{{< registryURL >}}/auroraboot:{{< auroraBootVersion >}} sysext --private-key=/keys/PRIVATE_KEY --certificate=/keys/CERTIFICATE --output=/build NAME CONTAINER_IMAGE
 ```
 
 The explanation of the docker command flags is as follows:
@@ -143,7 +121,7 @@ The explanation of the auroraboot command flags is as follows:
 
 Example of a successful run:
 ```bash
-$ docker run -v "$PWD":/build/ -v /tmp/keys/:/keys -v /var/run/docker.sock:/var/run/docker.sock --rm -ti quay.io/kairos/auroraboot:latest sysext --private-key=/keys/db.key --certificate=/keys/db.pem --output /build grype sysext
+$ docker run -v "$PWD":/build/ -v /tmp/keys/:/keys -v /var/run/docker.sock:/var/run/docker.sock --rm -ti {{< registryURL >}}/auroraboot:{{< auroraBootVersion >}} sysext --private-key=/keys/db.key --certificate=/keys/db.pem --output /build grype sysext
 2024-09-16T14:59:36Z INF Starting auroraboot version
 2024-09-16T14:59:36Z INF 🚀 Start sysext creation
 2024-09-16T14:59:36Z INF 💿 Getting image info
@@ -225,25 +203,25 @@ Manage extensions using `kairos-agent sysext` commands.
 
 ---
 
-### 📥 `download`
+### 📥 `install`
 
-Downloads a system extension and stores it on the node.
+Downloads/gets a system extension and stores it on the node.
 
 ```
-kairos-agent sysext download <URI>
+kairos-agent sysext install <URI>
 ```
 
 **Supported URI formats:**
 
-- `https://` – Download a raw disk image from a remote server
-- `http://` – Same as above, unencrypted
-- `file://` – Load a local disk image file
-- `oci://` – Download from an OCI-compatible container registry
+- `https:` – Download a raw disk image from a remote server
+- `http:` – Same as above, unencrypted
+- `file:` – Load a local disk image file
+- `oci:` – Download from an OCI-compatible container registry
 
 > ⚠️ **Important Notes:**
-> - `http(s)` and `file://` URIs must point directly to a raw disk image file.
-> - `oci://` support is **alpha-stage** and may change.
-> - When using `oci://`, the disk image must be **embedded inside the OCI image layer**.
+> - `http(s)` and `file:` URIs must point directly to a raw disk image file.
+> - `oci:` support is **alpha-stage** and may change.
+> - When using `oci:`, the disk image must be **embedded inside the OCI image layer**.
 
 ---
 
@@ -323,7 +301,7 @@ kairos-agent sysext list --recovery
 
 ```bash
 # Download a disk image over HTTPS
-kairos-agent sysext download https://example.org/extensions/k3sv1.32.1.raw
+kairos-agent sysext install https://example.org/extensions/k3sv1.32.1.raw
 
 # Enable for the active profile and activate it live
 kairos-agent sysext enable --active --now k3s

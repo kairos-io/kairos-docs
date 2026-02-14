@@ -7,15 +7,10 @@ description: Inter-connecting Kubernetes clusters without the need of exposing a
  
 ---
 
-
 :::warning Network
-
 This feature is experimental and has only been tested on local setups. Run in production servers at your own risk.
 Feedback and bug reports are welcome, as we are improving the p2p aspects of Kairos.
-
 :::
-
-
 Kairos has two Kubernetes Native extensions ( [entangle](https://github.com/kairos-io/entangle) and [entangle-proxy](https://github.com/kairos-io/entangle-proxy) ) that allows to interconnect services between different clusters via P2P with a shared secret.
 
 The clusters won't need to do any specific setting in order to establish a connection, as it uses [libp2p](https://github.com/libp2p/go-libp2p) to establish a connection between the nodes.
@@ -76,7 +71,7 @@ They both need to agree on a secret, which is the `network_token` to be able to 
 
 ### Generating a network token
 
-Generating a network token is described in [the p2p section](../../installation/p2p)
+Generating a network token is described in [the p2p section](../installation/p2p)
 
 ### Managed cluster
 
@@ -235,13 +230,8 @@ It can also expose services that are reachable from the host Network:
 
 Consider the following example that tunnels a cluster `192.168.1.1:80` to another one using an `Entanglement`:
 
-
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
-<Tabs>
-<TabItem value="cluster-a-(where-`192.168.1.1:80`-is-accessible)" label="Cluster A (where `192.168.1.1:80` is accessible)">
-
+{{< tabpane text=true right=true  >}}
+{{% tab header="Cluster A (where `192.168.1.1:80` is accessible)" %}}
 ```yaml
 apiVersion: v1
 kind: Secret
@@ -264,11 +254,8 @@ spec:
    port: "80"
    hostNetwork: true
 ```
-
-</TabItem>
-
-<TabItem value="cluster-b-(which-will-have-a-`clusterip`-available-on-the-kubernetes-service-network)" label="Cluster B (which will have a `ClusterIP` available on the Kubernetes service network)">
-
+{{% /tab %}}
+{{% tab header="Cluster B (which will have a `ClusterIP` available on the Kubernetes service network)" %}}
 ```yaml
 ---
 apiVersion: v1
@@ -297,11 +284,8 @@ spec:
       protocol: TCP
     type: ClusterIP
 ```
-
-</TabItem>
-
-</Tabs>
-
+{{% /tab %}}
+{{< /tabpane >}}
 
 ### Sidecar injection
 
@@ -339,11 +323,8 @@ spec:
 
 Or we can combine them together:
 
-
-
-<Tabs>
-<TabItem value="cluster-a" label="Cluster A">
-
+{{< tabpane text=true right=true  >}}
+{{% tab header="Cluster A" %}}
 ```yaml
 apiVersion: v1
 kind: Secret
@@ -384,11 +365,8 @@ spec:
           args:
             - "proxy"
 ```
-
-</TabItem>
-
-<TabItem value="cluster-b" label="Cluster B">
-
+{{% /tab %}}
+{{% tab header="Cluster B" %}}
 ```yaml
 apiVersion: v1
 kind: Secret
@@ -416,8 +394,5 @@ spec:
       protocol: TCP
     type: ClusterIP
 ```
-
-</TabItem>
-
-</Tabs>
-
+{{% /tab %}}
+{{< /tabpane >}}

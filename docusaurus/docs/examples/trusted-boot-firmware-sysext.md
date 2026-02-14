@@ -5,7 +5,6 @@ description: This section describes an examples on how to deploy the kernel firm
 slug: /examples/trusted-boot-firmware-sysext
 ---
 
-
 # Deploying Ubuntu kernel firmware via **systemd‑sysext** under **Trusted Boot** (Kairos)
 
 This hands‑on example shows how to keep your Ubuntu‑based Kairos image slim by removing firmware from the base OS, packaging the firmware as a **signed system extension (sysext)**, and loading it under **Trusted Boot (UKI)**—with notes on early‑boot firmware availability.
@@ -21,6 +20,7 @@ This hands‑on example shows how to keep your Ubuntu‑based Kairos image slim 
 
 For more info on Kairos sysexts, see the [sysext documentation](../advanced/sys-extensions).
 
+---
 
 ## Prerequisites
 
@@ -35,6 +35,7 @@ For more info on Kairos sysexts, see the [sysext documentation](../advanced/sys-
 > - **sysext**: a signed+verity system extension image that overlays **/usr** (and optionally **/opt**) at boot.
 > - **UKI**: Unified Kernel Image (`*.efi`) that systemd‑boot loads. Under Trusted Boot, the boot chain and optional sysext payloads get measured in TPM PCRs.
 
+---
 
 ## Step 1 — Build a slim Ubuntu base without firmware
 
@@ -62,6 +63,7 @@ Build and tag the image:
 docker build -f Dockerfile.kairos-ubuntu-slim -t kairos-ubuntu:1.0.0 .
 ```
 
+---
 
 ## Step 2 — Create a **firmware sysext** with AuroraBoot
 
@@ -143,6 +145,7 @@ ro root-verity-sig ba282899-118d-4b1c-ba8c-5e1af8e37c81 root-x86-64-verity-sig v
 
 ```
 
+---
 
 ## Step 3 — Deliver the sysext
 
@@ -160,6 +163,7 @@ $ kairos-agent sysext install file:/tmp/firmware-ubuntu-2404.sysext.raw
 $ kairos-agent sysext enable --common --now firmware-ubuntu-2404
 ```
 
+---
 
 ## Step 4 — **Trusted Boot** specifics and signatures
 
@@ -173,6 +177,7 @@ Some hardware needs firmware **before** the real root is mounted (e.g., early GP
     - During your UKI build step, copy only the critical blobs into `/usr/lib/firmware`
     - Keep the full set in the sysext for post‑switch use.
 
+---
 
 ## Step 5 — Verify at runtime
 
@@ -189,6 +194,7 @@ systemd-sysext status
 dmesg | grep -i firmware
 ```
 
+---
 
 ## Upgrading the firmware
 
@@ -203,6 +209,7 @@ kairos-agent sysext remove firmware-ubuntu-2404-2025.06.01
 
 > Under Trusted Boot, the new sysext must be signed with the same key/cert as your UKI.
 
+---
 
 ## Troubleshooting & known gotchas
 
@@ -211,6 +218,7 @@ kairos-agent sysext remove firmware-ubuntu-2404-2025.06.01
 - **Order matters**: multiple sysexts are applied in version‑sorted order; keep names properly versioned.
 - **Unsigned / wrong‑key sysext**: will be ignored in Trusted Boot—check logs under `/run/immucore/`.
 
+---
 
 ## Appendix — Reloading devices after firmware becomes available
 
@@ -280,4 +288,3 @@ echo "$BDF" >"/sys/bus/pci/drivers/$DRV/bind"
 
 > You can do the same trick with usb devices by sending the device ID to `/sys/bus/usb/drivers/usb/bind`
 > and `/sys/bus/usb/drivers/usb/unbind`, like `echo "1-1.2" | sudo tee /sys/bus/usb/drivers/usb/unbind`.
-

@@ -29,7 +29,7 @@ The directories and the order in which they are read and merged, is as shown bel
  - /etc/elemental (deprecated)
  - /oem
 
-This means that you could ship an ISO with a bundled config (see [Automated install](../../Installation/automated) or [Auroraboot](../../Reference/auroraboot) to see how) that adds a generic configuration that you want everywhere, and using userdata you can then overwrite the default config if needed per node/datacenter/deployment, as the useradata is read and stored into `/oem` it will be read later in the process and overwrite whatever you shipped on the defaults bundled with the ISO.
+This means that you could ship an ISO with a bundled config (see [Automated install](../Installation/automated) or [Auroraboot](../Reference/auroraboot) to see how) that adds a generic configuration that you want everywhere, and using userdata you can then overwrite the default config if needed per node/datacenter/deployment, as the useradata is read and stored into `/oem` it will be read later in the process and overwrite whatever you shipped on the defaults bundled with the ISO.
 
 In order to see the final config, you can run on a running system `kairos-agent config` and that should show the final configuration after scanning all sources.
 
@@ -89,8 +89,8 @@ In case you're using a standard image, with the Kairos provider, then these othe
 
 | **Stage**                                 | **Description**                                                    |
 |-------------------------------------------|--------------------------------------------------------------------|
-| _provider-kairos.bootstrap.before.&lt;role&gt;_ | The provider fires this stage before starting to bootstrap K3S.    |
-| _provider-kairos.bootstrap.after.&lt;role&gt;_  | The provider fires this stage after it finished bootstrapping K3S. |
+| _provider-kairos.bootstrap.before.<role>_ | The provider fires this stage before starting to bootstrap K3S.    |
+| _provider-kairos.bootstrap.after.<role>_  | The provider fires this stage after it finished bootstrapping K3S. |
 
 
 ### System stages with after and before substages
@@ -131,7 +131,7 @@ All the mentioned stages (`rootfs`, `initramfs`, `boot`, `fs`, `reconcile` and `
 ### Modules
 
 For each stage, a number of modules are available, that implement various useful functions.
-Read more about them in this page: [Stage modules](../../Reference/stage_modules)
+Read more about them in this page: [Stage modules](../Reference/stage_modules)
 
 ### Sentinels
 

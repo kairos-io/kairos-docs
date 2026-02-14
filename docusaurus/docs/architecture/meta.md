@@ -11,7 +11,7 @@ We like to define Kairos as a meta-Linux Distribution, as its goal is to convert
 
 Kairos is a software stack is composed of the following:
 
-- A core OS image release for each flavor in ISO, qcow2, and other similar formats (see [the list of supported distributions](../../reference/image_matrix)) provided for user convenience
+- A core OS image release for each flavor in ISO, qcow2, and other similar formats (see [the list of supported distributions](../reference/image_matrix)) provided for user convenience
 - A release with K3s embedded (optional).
 - An agent installed into the nodes to manage the node lifecycle.
 
@@ -30,7 +30,7 @@ In order to convert a Linux Distribution to Kairos, the distribution must meet t
 - All
   - If the system is meant to be used with EFI, the kernel needs to have enabled the `CONFIG_EFI_STUB` option ( see: https://docs.kernel.org/admin-guide/efi-stub.html)
 
-To build Kairos from scratch, see [the documentation](../../reference/build-from-scratch) section.
+To build Kairos from scratch, see [the documentation](../reference/build-from-scratch) section.
 
 ### Internal components
 
@@ -40,7 +40,7 @@ Internal:
 - [kairos](https://github.com/kairos-io/kairos) is the main repository, building the `kairos-agent` and containing the image definitions which runs on our CI pipelines.
 - [immucore](https://github.com/kairos-io/immucore) is the immutability management interface.
 - [kairos-agent](https://github.com/kairos-io/kairos-agent) manages the installation, reset, and upgrade of the Kairos nodes.
-- [system packages](https://github.com/kairos-io/packages) contains additional packages, cross-distro, partly used in framework images
+- [system packages](https://github.com/kairos-io/packages) contains additional packages, cross-distro
 - [kcrypt](https://github.com/kairos-io/kcrypt) is the component responsible for encryption and decryption of data at rest
 - [kcrypt-challenger](https://github.com/kairos-io/kcrypt-challenger) is the `kairos` plugin that works with the TPM chip to unlock LUKS partitions
 
@@ -52,4 +52,3 @@ Optional/External:
 - [entangle-proxy](https://github.com/kairos-io/entangle-proxy) a CRD to control interconnected clusters
 - [osbuilder](https://github.com/kairos-io/osbuilder) is used to build bootable artifacts from container images
 - [AuroraBoot](https://github.com/kairos-io/AuroraBoot) is the Kairos Node bootstrapper
-

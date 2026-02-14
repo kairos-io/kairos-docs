@@ -33,14 +33,9 @@ Kairos uses `systemd-boot` to manage boot entries and determine their health bas
       - If the passive entry also fails, the system boots into **recovery** mode.
       - If recovery fails, the system attempts **autorecovery**.
 
-
 :::info
-
 Current boot fallback behaviour is not set in stone yet and prone to changes in the future.
-
 :::
-
-
 This default behavior ensures resilience and an automatic progression to recovery states, but it can be further extended to incorporate custom services and automatic reboot logic.
 
 
@@ -55,15 +50,9 @@ While the default Kairos behavior is sufficient for many use cases, you can exte
 - Adding automatic reboot behavior for services that fail.
 
 
-
 :::info
-
 All the commands shown in this tutorial are meant to be run on a Kairos node.
-
 :::
-
-
-
 ## Step 1: Configuring a Service to Trigger `boot-complete.target`
 
 To ensure a service's failure impacts the boot assessment, modify its service file to interact with `boot-complete.target`:
@@ -148,7 +137,7 @@ While the above configurations are independent, combining them can create a robu
 
 ## Using cloud configs to automate the process
 
-As usual you can use ./cloud-init.md with the different ./stage_modules.md) to automate this process. Here is an example of how to use cloud-init to enable boot assessment and configure services to participate in the boot assessment process:
+As usual you can use {{< ref "cloud-init.md" >}} with the different {{< ref "stage_modules.md" >}}) to automate this process. Here is an example of how to use cloud-init to enable boot assessment and configure services to participate in the boot assessment process:
 
 ```yaml
 #cloud-config
@@ -186,7 +175,7 @@ stages:
  - We recommend using this feature with caution, as it can lead to a boot loop if not configured correctly.
  - Ideally, as the upgrade is done against the active images, we would recommend having 2 service overrides, one for the active and one for the passive, to avoid the system rebooting on passive boot entries and having a safe fallback to the active boot entry. This can be achieved by using and IF stanza when using cloud-init to check for the system state (marked by the files `/run/cos/active_mode` and `/run/cos/passive_mode`) so the service that auto reboots can be started only on the active boot entry.
 
-The follow up example uses ./cloud-init.md to generate 2 different service overrides during initramfs, one for the active and one for the passive boot entry. Only when selecting the active entry will the service auto restart:
+The follow up example uses {{< ref "cloud-init.md" >}} to generate 2 different service overrides during initramfs, one for the active and one for the passive boot entry. Only when selecting the active entry will the service auto restart:
 
 ```yaml
 #cloud-config
@@ -233,6 +222,6 @@ stages:
             - <service-name>
 ```
    
-For more information about cloud-init in Kairos, see the [Cloud-Init Architecture](./cloud-init) guide.
-For more information about stage modules, see the [Stage Modules Reference](./stage_modules).
+For more information about cloud-init in Kairos, see the [Cloud-Init Architecture](cloud-init) guide.
+For more information about stage modules, see the [Stage Modules Reference](stage_modules).
    

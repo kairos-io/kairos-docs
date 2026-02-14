@@ -5,32 +5,21 @@ sidebar_position: 4
 description: "Converting any base image into a Kairos ready image"
 ---
 
-
 :::warning Ongoing Project
-
 The Kairos factory is an ongoing project. Things might change, and we are working on improving the documentation and the process. If you encounter any issues, please feel free to open up issues and help us improve the Documentation!
 
 For further info check out [#1914](https://github.com/kairos-io/kairos/issues/1914)
-
 :::
-
-
 Kairos is not just an OS, it's also a way to turn an existing OS into a Kairos-ready image. This process is called "Kairosification" and it's done by the Kairos Factory.
 
 For the newcomer or someone who simply needs an immutable OS with k3s and edgeVPN, the Kairos OS is the way to go. As long as this components work, you don't need to worry about the changes in the underlying OS. However, if you need to ensure certain packages are present or remain stable in your system, you can use the Kairos Factory to convert your base image into a Kairos-ready image. This is particularly useful if you have special firmware requirements, or if you want to have your own release cadence.
 
-
 :::info Requirements
-
 In order to run the Kairos Factory, you will need docker installed on your system. You can find the installation instructions [here](https://docs.docker.com/get-docker/).
-
 :::
-
-
-
 ## The Kairos Factory Process
 
-The Kairos factory is a single step process applied on a container image. All you need to do is run [kairos-init](https://github.com/kairos-io/kairos-init) in your Dockerfile. Optionally, you can use [auroraboot.md](auroraboot) to generate artifacts (isos, raw images, etc..) based on the generated OCI artifact.
+The Kairos factory is a single step process applied on a container image. All you need to do is run [kairos-init](https://github.com/kairos-io/kairos-init) in your Dockerfile. Optionally, you can use [auroraboot.md](auroraboot.md) to generate artifacts (isos, raw images, etc..) based on the generated OCI artifact.
 
 
 ## What is Kairos-init?
@@ -41,23 +30,17 @@ The primary purpose of kairos-init is to convert an existing base image into a K
 kairos-init should be available to plug into your existing dockerfile and would allow you to only use docker to generate valid Kairos compatible artifacts
 
 
-
 :::warning Platforms
-
 Note that as we are using standard docker tools, the platform to build for is provided by docker, either by the default value or by the `--platform` setting when building images. The platform to build the Kairos OCI artifacts is based on that, so running it under an arm64 platform will build and arm64 Kairos artifact.
 
 See the [docker multi-platform docs](https://docs.docker.com/build/building/multi-platform/) for more info.
-
 :::
-
-
-
 ## How to use
 
 Create a single Dockerfile:
 
 ```Dockerfile
-FROM quay.io/kairos/kairos-init:latest AS kairos-init
+FROM quay.io/kairos/kairos-init:{{< kairosInitVersion >}} AS kairos-init
 
 FROM ubuntu:24.04
 ARG VERSION=1.0.0
@@ -87,13 +70,13 @@ $ docker build -t ubuntu-kairos:24.04 .
  => => naming to docker.io/library/ubuntu-kairos:24.04                                             0.0s 
 ```
 
-That will give you a nice local image tagged `ubuntu-kairos:24.04` that can be feed to [auroraboot.md](auroraboot) to generate an ISO, Trusted Boot artifacts or Cloud Images.
+That will give you a nice local image tagged `ubuntu-kairos:24.04` that can be feed to [auroraboot.md](auroraboot.md) to generate an ISO, Trusted Boot artifacts or Cloud Images.
 
 For example:
 
 ```bash
 $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $PWD/build/:/output \
-  quay.io/kairos/auroraboot:latest build-iso --output /output/ docker:ubuntu-kairos:24.04
+  quay.io/kairos/auroraboot:{{< auroraBootVersion >}} build-iso --output /output/ oci:ubuntu-kairos:24.04
 2025-02-27T13:33:42Z INF Copying ubuntu-kairos:24.04 source to /output/temp-rootfs
 2025-02-27T13:33:47Z INF Finished copying ubuntu-kairos:24.04 into /output/temp-rootfs
 2025-02-27T13:33:47Z INF Preparing squashfs root...
@@ -116,16 +99,9 @@ $ ls build
 config.yaml  kairos.iso  kairos.iso.sha256  netboot  temp-rootfs
 ```
 
-
 :::warning Bind mount the binary instead of copying?
-
 As you will see over the examples, we do not copy the kairos-init binary into the image, but rather we bind mount it from the kairos-init image. This is in order to save space due to how docker works with layers and caching. If you want to copy the binary instead, you can use the `COPY --from=kairos-init /kairos-init /kairos-init` command instead of the `RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init /kairos-init` command, the output will be the same but the end image will be a bit larger.
-
 :::
-
-
-
-
 ## Why the Version Matters
 
 When using kairos-init, the --version argument you set isn't just cosmetic — it defines the version metadata for the image you're building. This version is embedded into /etc/kairos-release inside the image, and it becomes critical for:
@@ -136,14 +112,9 @@ When using kairos-init, the --version argument you set isn't just cosmetic — i
 
  - Compatibility validation: Different components, like trusted boot artifacts or upgrade servers, rely on accurate versioning to operate properly.
 
-
 :::warning Important!
-
 Kairos Factory prepares base artifacts. It's the responsibility of the derivative project or user (you!) to define and manage the versioning of your images. The only requirement is that versions must follow Semantic Versioning (semver.org) conventions to ensure upgrades and compatibility checks work predictably.
-
 :::
-
-
 Different users may adopt different strategies:
 
  - A project building nightly or weekly Kairos images might automatically bump the patch or minor version each time, pulling in the latest OS package updates and security fixes.
@@ -157,55 +128,46 @@ If you don't set a meaningful version when running kairos-init, you risk confusi
 
 
 
-
 :::info Kairos releases
-
 Kairos releases its own artifacts with our own cadence, as we are also consumers of kairos-init. We use the same recommendations as above for our own "vanilla" Kairos releases.
-
 :::
-
-
-
 ## Configuration
 
-kairos-init can generate both core and standard images, and standard images can be bundled with either k3s or k0s and any version of the software that you want.
+kairos-init can generate both core and standard images, and standard images can be bundled with provider plugins (e.g. k3s, k0s) and any version of the software that you want.
 
-It can also prepare OCI artifacts for [Trusted Boot](../Architecture/trustedboot) which are slimmer than the usual ones, as they have size limitations plus we dont want to ship things like grub or dracut in them as they are useless.
+It can also prepare OCI artifacts for [Trusted Boot](../Architecture/trustedboot.md) which are slimmer than the usual ones, as they have size limitations plus we dont want to ship things like grub or dracut in them as they are useless.
 
-
-
+:::warning Breaking change (kairos-init v0.6.0+)
+The flags `-k` / `--kubernetes-provider` and `--k8sversion` were removed. Use `--provider` / `-p` and `--provider-<name>-version` instead. For example, `-k k3s --k8sversion v1.28.0` becomes `--provider k3s --provider-k3s-version v1.28.0`. In Dockerfiles, use build args `PROVIDER_NAME` and `PROVIDER_VERSION` instead of `KUBERNETES_PROVIDER` / `KUBERNETES_DISTRO` and `KUBERNETES_VERSION`.
+:::
 Here is a list of flags, explanation and what are the possible and default values
 
-| Flag         | Explanation                                              | Possible values            | Default value   |
-|--------------|----------------------------------------------------------|----------------------------|-----------------|
-| -v           | Set version of the artifact that we are building         | Any                        | None (REQUIRED) |
-| -l           | Sets the log level                                       | info,warn,debug,trace      | info            |
-| -s           | Sets the stage to run                                    | install, init, all         | all             |
-| -m           | Sets the model                                           | generic, rpi3, rpi4        | generic         |
-| -k           | Sets the Kubernetes provider                             | k3s,k0s                    | None            |
-| --k8sversion | Set the Kubernetes version to use for the given provider | Any valid provider version | Latest          |
-| -t           | Sets Trusted Boot on                                     | true,false                 | false           |
-| --fips       | Use FIPS framework for FIPS 140-2 compliance images      | bool                       | false           |
-| -x           | Enable the loading of stage extensions                   | bool                       | false           |
-| --skip-steps | Skip the given steps during the image build              | Steps or Stages            | None            |
+| Flag                       | Explanation                                                       | Possible values            | Default value   |
+|----------------------------|-------------------------------------------------------------------|----------------------------|-----------------|
+| -v                         | Set version of the artifact that we are building                  | Any                        | None (REQUIRED) |
+| -l                         | Sets the log level                                                | info,warn,debug,trace      | info            |
+| -s                         | Sets the stage to run                                             | install, init, all         | all             |
+| -m                         | Sets the model                                                    | generic, rpi3, rpi4        | generic         |
+| -p / --provider            | Provider plugin name (repeatable for multiple providers)          | e.g. k3s, k0s              | None            |
+| --provider-&lt;NAME&gt;-version | Version for the given provider (e.g. `--provider-k3s-version`)     | Any valid provider version | None            |
+| --provider-&lt;NAME&gt;-config  | Config file for the given provider (e.g. `--provider-k3s-config`)  | Path to config file        | None            |
+| -t                         | Sets Trusted Boot on                                              | true,false                 | false           |
+| --fips                     | Use FIPS 140-2 compliance packages for images                     | bool                       | false           |
+| -x                         | Enable the loading of stage extensions                            | bool                       | false           |
+| --skip-steps                | Skip the given steps during the image build                       | Steps or Stages            | None            |
+
+When you pass `--provider k3s` (or `-p k3s`), kairos-init registers the provider and expects you to pass the version via `--provider-k3s-version` and optionally a config path via `--provider-k3s-config`. Same pattern applies for other providers (e.g. k0s).
 
 
 You can provide a generic Dockerfile that gets all this values and passes them down into kairos-init like we do under Kairos:
 
-<!-- Source: https://raw.githubusercontent.com/kairos-io/kairos/refs/heads/master/images/Dockerfile -->
-
-See the [Kairos Dockerfile](https://raw.githubusercontent.com/kairos-io/kairos/refs/heads/master/images/Dockerfile) for the full implementation.
-
+{{< getRemoteSource "https://raw.githubusercontent.com/kairos-io/kairos/refs/heads/master/images/Dockerfile" >}}
 
 
 :::info K8s versions
-
 When selecting a k8s provider, the produced image will contain the latest published version of that provider and the Kairos provider for kubernetes.
 If you want to override the version installed see the flag `--k8sversion`
-
 :::
-
-
 ## Phases
 
 kairos-init is divided in 2 phases, one its the install phase which install all needed packages and binaries and the other is the init phase, which gets the system ready. This are the main parts of each phase:
@@ -246,7 +208,7 @@ Run `kairos-init steps-info` to see the available steps and their descriptions. 
 This is an example output of the stages and steps available. We recommend you run `kairos-init steps-info` to see the updated list of steps and stages available, as this is subject to change:
 
 ```dockerfile
-FROM quay.io/kairos/kairos-init:latest AS kairos-init
+FROM quay.io/kairos/kairos-init:{{< kairosInitVersion >}} AS kairos-init
 
 FROM ubuntu:24.04
 RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init /kairos-init steps-info
@@ -343,7 +305,7 @@ You can validate the image you built using the `kairos-init validate` command in
 Before running `kairos-init`, you need to register the system with the subscription manager and attach a subscription to it. You can do this by modifying the Dockerfile to register the system before running `kairos-init`:
 
 ```Dockerfile
-FROM quay.io/kairos/kairos-init:latest AS kairos-init
+FROM quay.io/kairos/kairos-init:{{< kairosInitVersion >}} AS kairos-init
 
 FROM redhat/ubi9
 RUN subscription-manager register --username <your-username> --password <your-password>
@@ -355,9 +317,7 @@ RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init /kairos
 
 All the examples are using the [kairos default dockerfile](https://github.com/kairos-io/kairos/blob/master/images/Dockerfile) as the base Dockerfile and its reproduced below:
 
-<!-- Source: https://raw.githubusercontent.com/kairos-io/kairos/refs/heads/master/images/Dockerfile -->
-
-See the [Kairos Dockerfile](https://raw.githubusercontent.com/kairos-io/kairos/refs/heads/master/images/Dockerfile) for the full implementation.
+{{< getRemoteSource "https://raw.githubusercontent.com/kairos-io/kairos/refs/heads/master/images/Dockerfile" >}}
 
 
 You can see more examples in the [Kairos repo](https://github.com/kairos-io/kairos/tree/master/examples).
@@ -380,7 +340,7 @@ $ docker build --platform=linux/arm64 -t ubuntu-rpi:22.04 --build-arg MODEL=rpi4
 ### Add a specific kernel to ubuntu 24.04 (amd64 platform)
 
 ```Dockerfile
-FROM quay.io/kairos/kairos-init:latest AS kairos-init
+FROM quay.io/kairos/kairos-init:{{< kairosInitVersion >}} AS kairos-init
 
 FROM ubuntu:24.04
 RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init /kairos-init -l debug -s install --version "v0.0.1" --skip-steps installKernel
@@ -416,54 +376,19 @@ $ docker build -t ubuntu-kairos-virtual:24.04 .
 
 ## Build Trusted Boot images (core and standard)
 
-Core:
+Core (no Kubernetes provider):
 
 ```bash
 $ docker build -t ubuntu-kairos-trusted-core:24.04 --build-arg BASE_IMAGE=ubuntu:24.04 --build-arg TRUSTED_BOOT=true --build-arg VERSION=v1.0.0 .
-[+] Building 64.0s (12/12) FINISHED                                                      docker:default
- => [internal] load build definition from Dockerfile                                               0.0s
- => => transferring dockerfile: 717B                                                               0.0s
- => [internal] load metadata for docker.io/library/ubuntu:24.04                                    0.0s
- => [internal] load metadata for quay.io/kairos/kairos-init:v0.5.0                                 0.6s
- => [internal] load .dockerignore                                                                  0.0s
- => => transferring context: 2B                                                                    0.0s
- => CACHED [kairos-init 1/1] FROM quay.io/kairos/kairos-init:v0.5.0@sha256:8d6a0000b6dfcf905eceeb  0.0s
- => [base-kairos 1/6] FROM docker.io/library/ubuntu:24.04                                          0.0s
- => CACHED [base-kairos 2/6] COPY --from=kairos-init /kairos-init /kairos-init                     0.0s
- => [base-kairos 3/6] RUN /kairos-init -l debug -s install -m "generic" -t "true" -k "${KUBERNET  58.3s
- => [base-kairos 4/6] RUN /kairos-init -l debug -s init -m "generic" -t "true" -k "${KUBERNETES_D  2.5s 
- => [base-kairos 5/6] RUN /kairos-init validate -t "true"                                          0.2s 
- => [base-kairos 6/6] RUN rm /kairos-init                                                          0.1s 
- => exporting to image                                                                             2.3s 
- => => exporting layers                                                                            2.3s 
- => => writing image sha256:5ca83ab1eaa4b16210e243f6f9b30e7721e2be0d55b47ae4bd178939e5a44d0f       0.0s 
- => => naming to docker.io/library/ubuntu-kairos-trusted-core:24.04                                0.0s
 ```
 
-Standard, default latest k3s:
+The Dockerfile runs kairos-init without `--provider`, so the image stays core (no k8s).
+
+Standard with k3s: use `PROVIDER_NAME` and optionally `PROVIDER_VERSION` build args. The Dockerfile should invoke kairos-init with `--provider "${PROVIDER_NAME}"` and `--provider-"${PROVIDER_NAME}"-version "${PROVIDER_VERSION}"` (e.g. `--provider k3s --provider-k3s-version v1.28.0`). Omit `PROVIDER_VERSION` to use the provider’s default/latest.
 
 ```bash
-$ docker build -t ubuntu-kairos-trusted-standard:24.04 --build-arg BASE_IMAGE=ubuntu:24.04 --build-arg TRUSTED_BOOT=true --build-arg VERSION=v1.0.0 --build-arg KUBERNETES_DISTRO=k3s .
-[+] Building 51.4s (12/12) FINISHED                                                      docker:default
- => [internal] load build definition from Dockerfile                                               0.0s
- => => transferring dockerfile: 717B                                                               0.0s
- => [internal] load metadata for docker.io/library/ubuntu:24.04                                    0.0s
- => [internal] load metadata for quay.io/kairos/kairos-init:v0.5.0                                 0.4s
- => [internal] load .dockerignore                                                                  0.0s
- => => transferring context: 2B                                                                    0.0s
- => CACHED [kairos-init 1/1] FROM quay.io/kairos/kairos-init:v0.5.0@sha256:8d6a0000b6dfcf905eceeb  0.0s
- => [base-kairos 1/6] FROM docker.io/library/ubuntu:24.04                                          0.0s
- => CACHED [base-kairos 2/6] COPY --from=kairos-init /kairos-init /kairos-init                     0.0s
- => [base-kairos 3/6] RUN /kairos-init -l debug -s install -m "generic" -t "true" -k "k3s" --k8s  45.0s
- => [base-kairos 4/6] RUN /kairos-init -l debug -s init -m "generic" -t "true" -k "k3s" --k8svers  3.1s 
- => [base-kairos 5/6] RUN /kairos-init validate -t "true"                                          0.2s 
- => [base-kairos 6/6] RUN rm /kairos-init                                                          0.1s 
- => exporting to image                                                                             2.5s 
- => => exporting layers                                                                            2.5s 
- => => writing image sha256:019237bde8a0a8b5cccf328c86aa2e4090525dadc4037ab6397272454dfd5e55       0.0s 
- => => naming to docker.io/library/ubuntu-kairos-trusted-standard:24.04                            0.0s
+$ docker build -t ubuntu-kairos-trusted-standard:24.04 --build-arg BASE_IMAGE=ubuntu:24.04 --build-arg TRUSTED_BOOT=true --build-arg VERSION=v1.0.0 --build-arg PROVIDER_NAME=k3s --build-arg PROVIDER_VERSION=v1.28.0 .
 ```
-
 
 Now lets build a Trusted Boot ISO from the standard image:
 Note that for Trusted Boot builds we need to pass the keys dir, please refer to Trusted Boot docs for more info about this.
@@ -472,8 +397,8 @@ Note that for Trusted Boot builds we need to pass the keys dir, please refer to 
 $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
   -v $PWD/e2e/assets/keys:/keys \
   -v $PWD/build/:/output \
-  quay.io/kairos/auroraboot:latest build-uki --output-dir /output/ -k /keys --output-type iso \
-  docker:ubuntu-kairos-trusted-standard:24.04                       
+  quay.io/kairos/auroraboot:{{< auroraBootVersion >}} build-uki --output-dir /output/ -k /keys --output-type iso \
+  oci:ubuntu-kairos-trusted-standard:24.04                       
 2025-02-27T14:54:41Z INF Extracting image to a temporary directory
 2025-02-27T14:54:41Z INF Copying ubuntu-kairos-trusted-standard:24.04 source to /tmp/auroraboot-build-uki-1771870410
 2025-02-27T14:54:44Z INF Finished copying ubuntu-kairos-trusted-standard:24.04 into /tmp/auroraboot-build-uki-1771870410
@@ -543,7 +468,7 @@ For complete documentation, configuration options, and advanced examples, visit 
 
 ## Web UI
 
-The Kairos Factory is also available as a web UI, which is currently under development but you can already preview since version `0.6.0` of [AuroraBoot](auroraboot).
+The Kairos Factory is also available as a web UI, which is currently under development but you can already preview since version `0.6.0` of [AuroraBoot](auroraboot.md).
 
 To use the web UI, you need to run the AuroraBoot with the `web` command:
 
@@ -552,7 +477,7 @@ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
            --privileged \
            -v $PWD/build/:/output \
            -p 8080:8080 \
-           quay.io/kairos/auroraboot:latest web
+           quay.io/kairos/auroraboot:{{< auroraBootVersion >}} web
 ```
 
 If the process is successful, you will see the following output:
@@ -571,7 +496,11 @@ ____________________________________O/_______
 
 From there you can access the web UI by visiting `http://localhost:8080` in your browser.
 
-<img src="https://github.com/user-attachments/assets/685e85b4-9559-48c6-973c-221b43883baa" alt="Kairos Web UI running on localhost:8080" width="75%" />
+{{< figure
+  src="https://github.com/user-attachments/assets/685e85b4-9559-48c6-973c-221b43883baa"
+  alt="Kairos Web UI running on localhost:8080"
+  width="75%"
+>}}
 
 ## Factory API
 

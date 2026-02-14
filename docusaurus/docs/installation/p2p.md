@@ -6,27 +6,22 @@ date: 2022-11-13
 description: Install Kairos with p2p support
 ---
 
-
 :::warning Network
-
 This feature is experimental and has only been tested on local setups. Run in production servers at your own risk.
 Feedback and bug reports are welcome, as we are improving the p2p aspects of Kairos.
-
 :::
-
-
 Deploying Kubernetes at the Edge can be a complex and time-consuming process, especially when it comes to setting up and managing multiple clusters. To make this process easier, Kairos leverages peer-to-peer technology to automatically coordinate and create Kubernetes clusters without the need of a control management interface.
 
 With this feature, users don't need to specify any network settings. They can just set the desired number of master nodes (in the case of an HA cluster) and the necessary configuration details, and Kairos will take care of the rest. The peer-to-peer technology allows the nodes in the cluster to communicate and coordinate with each other, ensuring that the clusters are set up correctly and efficiently with K3s.
 
-This makes it easier to deploy and manage Kubernetes clusters at the Edge, saving user's time and effort, allowing them to focus on running and scaling their applications. For more information about how does it work behind the scenes, [check out the architecture section](../../architecture/network).
+This makes it easier to deploy and manage Kubernetes clusters at the Edge, saving user's time and effort, allowing them to focus on running and scaling their applications. For more information about how does it work behind the scenes, [check out the architecture section](../architecture/network).
 
-You can find full examples in our [examples section](../../examples):
-- [Full end to end example to bootstrap a self-coordinated cluster with Kairos and AuroraBoot](../../examples/p2p_e2e)
-- [Self-coordinated K3s HA cluster with KubeVIP](../../examples/multi-node-p2p-ha-kubevip)
-- [Multi-node, single master setup](../../examples/multi-node-p2p)
-- [Multi-node, HA setup](../../examples/multi-node-p2p-ha)
-- [Single-node setup](../../examples/single-node-p2p)
+You can find full examples in our [examples section](../examples):
+- [Full end to end example to bootstrap a self-coordinated cluster with Kairos and AuroraBoot](../examples/p2p_e2e)
+- [Self-coordinated K3s HA cluster with KubeVIP](../examples/multi-node-p2p-ha-kubevip)
+- [Multi-node, single master setup](../examples/multi-node-p2p)
+- [Multi-node, HA setup](../examples/multi-node-p2p-ha)
+- [Single-node setup](../examples/single-node-p2p)
 
 This feature is currently experimental and can be optionally enabled by adding the following configuration to the node deployment file. If you are not familiar with the installation process, it is suggested to follow the [quickstart](/getting-started/):
 
@@ -50,7 +45,7 @@ p2p:
 ```
 
 The token `p2p.network_token` is a base64 encoded string which
-contains an [`edgevpn` token](https://github.com/mudler/edgevpn/blob/master/docs/content/en/docs/Concepts/Token/_index).
+contains an [`edgevpn` token](https://github.com/mudler/edgevpn/blob/master/docs/content/en/docs/Concepts/Token/_index.md).
 
 To enable the automatic cluster deployment with peer-to-peer technology, specify a `p2p.network_token`. To enable HA, set `p2p.auto.ha.master_nodes` to the number of wanted HA/master nodes. Additionally, the p2p block can be used to configure the VPN and other settings as needed.
 
@@ -75,15 +70,11 @@ p2p:
 
 The `p2p` block is used to configure settings related to the mesh functionalities. The minimum required argument is the `network_token` and there is no need to configure `k3s` manually with the `k3s` block as it is already implied.
 
-
-:::note Note
-
+:::tip Note
 The `k3s` block can still be used to override other `k3s` settings, e.g. `args`.
 
 :::
-
-
-The network token is a shared secret available to all the nodes of the cluster. It allows the node to co-ordinate and automatically assign roles. To generate a network token, see [documentation](../../installation/p2p#network_token).
+The network token is a shared secret available to all the nodes of the cluster. It allows the node to co-ordinate and automatically assign roles. To generate a network token, see [documentation](../installation/p2p#network_token).
 
 Simply applying the same configuration file to all the nodes should eventually bring one master and all the other nodes as workers. Adding nodes can be done also in a later step, which will automatically setup the node without any further configuration.
 
@@ -272,29 +263,18 @@ kubevip:
 The `network_token` is a unique code that is shared among nodes and can be created with the Kairos CLI or `edgevpn`. This allows nodes to automatically connect to the same network and generates private/public key pairs for secure communication using end-to-end encryption.
 
 To generate a new token, run:
-
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
-<Tabs>
-<TabItem value="docker" label="docker">
-
+{{< tabpane text=true right=true  >}}
+{{% tab header="docker" %}}
 ```bash
 docker run -ti --rm quay.io/mudler/edgevpn -b -g
 ```
-
-</TabItem>
-
-<TabItem value="cli" label="CLI">
-
+{{% /tab %}}
+{{% tab header="CLI" %}}
 ```bash
 kairos generate-token
 ```
-
-</TabItem>
-
-</Tabs>
-
+{{% /tab %}}
+{{< /tabpane >}}
 
 ## Join new nodes
 
@@ -310,14 +290,9 @@ sudo kairosctl bridge --network-token <TOKEN>
 
 This command creates a TUN device on your machine and allows you to communicate with each node in the cluster.
 
-
 :::info Note
-
 The command requires root permissions in order to create a TUN/TAP device on the host.
-
 :::
-
-
 An API will be also available at [localhost:8080](http://localhost:8080) for inspecting the network status.
 
 ## Get kubeconfig
@@ -328,10 +303,7 @@ To get the cluster `kubeconfig`, you can log in to the master node and retrieve 
 kairosctl get-kubeconfig > kubeconfig
 ```
 
-
 :::info Note
-
 Note that you must run kairos bridge in a separate window as act like `kubectl proxy` and access the Kubernetes cluster VPN. Keep the kairos bridge command running to operate the cluster.
 
 :::
-

@@ -6,12 +6,9 @@ sidebar_position: 6
 date: 2022-11-13
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 "Trusted Boot" is a combination of technologies that allows us to guarantee that a system was not tampered with, and the user-data is protected by cold attacks, it is composed by FDE, Secure Boot and Measured Boot.
 
-If you want to learn more on what Trusted Boot is and how it works, see the [Trusted Boot Architecture](../../architecture/trustedboot) page. This page describes how to enable Trusted Boot support in Kairos.
+If you want to learn more on what Trusted Boot is and how it works, see the [Trusted Boot Architecture](../architecture/trustedboot) page. This page describes how to enable Trusted Boot support in Kairos.
 
 Kairos supports Trusted boot by generating specific installable medium. This feature is optional and works alongside how Kairos works.
 
@@ -50,40 +47,25 @@ To generate the Secure boot certificates and keys along with the Microsoft keys 
 ```bash
 MY_ORG="Acme Corp"
 # Generate the keys
-docker run -v $PWD/keys:/work/keys -ti --rm quay.io/kairos/auroraboot:latest genkey --expiration-in-days 365 -o /work/keys "$MY_ORG"
+docker run -v $PWD/keys:/work/keys -ti --rm {{< registryURL >}}/auroraboot:{{< auroraBootVersion >}} genkey --expiration-in-days 365 -o /work/keys "$MY_ORG"
 ```
-
 :::warning Warning
-
 Substitute `$MY_ORG` for your own string, this can be anything but it help identifying the Keys. The keys duration can specified with `--expiration-in-days`. It is not possible to create keys that do not expire, but it is possible to specify an extremely large value (e.g. 200 years, etc.)
-
 :::
-
-
-
 :::warning Warning
-
 It is very important to preserve the keys generated in this process in a safe place. Loosing the keys will prevent you to generate new images that can be used for upgrades.
-
 :::
-
-
 ### Custom certificates by skipping Microsoft certificate keys
 
-
 :::warning Warning
-
 Some firmware is signed and verified with Microsoft's or other vendor keys when secure boot is enabled. Removing those keys could brick them. It is preferable to not use the Microsoft certificates for precaution and security reasons, however as this might be potentially a dangerous action, only do this if you know what you are doing. To check if your firmware is signed with Microsoft's keys, you can check https://github.com/Foxboron/sbctl/wiki/FAQ#option-rom. See also: https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot#Enrolling_Option_ROM_digests.
-
 :::
-
-
 If your hardware supports booting with custom Secure Boot keys, you can optionally create keys from scratch and skip the Microsoft certificate keys. To do so, run the following command:
 
 ```bash
 MY_ORG="Acme Corp"
 # Generate the keys
-docker run -v $PWD/keys:/work/keys -ti --rm quay.io/kairos/auroraboot:latest genkey --skip-microsoft-certs-I-KNOW-WHAT-IM-DOING --expiration-in-days 365 -o /work/keys "$MY_ORG"
+docker run -v $PWD/keys:/work/keys -ti --rm {{< registryURL >}}/auroraboot:{{< auroraBootVersion >}} genkey --skip-microsoft-certs-I-KNOW-WHAT-IM-DOING --expiration-in-days 365 -o /work/keys "$MY_ORG"
 ```
 
 ### Exporting keys from BIOS/UEFI and using them
@@ -105,17 +87,13 @@ MACHINE_CERTS="$PWD/path/to/machine-certs"
 # └── PK
 
 # Generate the keys
-docker run -v $MACHINE_CERTS:/work/machine-keys -v $PWD/keys:/work/keys -ti --rm quay.io/kairos/auroraboot:latest genkey --custom-cert-dir /work/machine-keys --expiration-in-days 365 -o /work/keys "$MY_ORG"
+docker run -v $MACHINE_CERTS:/work/machine-keys -v $PWD/keys:/work/keys -ti --rm quay.io/kairos/auroraboot:{{< auroraBootVersion >}} genkey --custom-cert-dir /work/machine-keys --expiration-in-days 365 -o /work/keys "$MY_ORG"
 ```
 
-
 :::warning Warning
-
 This command can be combined with the `--skip-microsoft-certs-I-KNOW-WHAT-IM-DOING` flag to avoid auto-enrolling the Microsoft keys if not needed (or already present in the "custom certs")
 
 :::
-
-
 ## Using a hardware key for signing
 
 You can use hardware keys which are compatible with the *PKCS #11* standard,  like for example a [nitrokey](https://www.nitrokey.com/) to sign the UKI files. In order to do so, you need to have the keys generated in the hardware key and then generate a certificate signed by the key like so:
@@ -130,7 +108,7 @@ admin
 generate
 # Follow the instructions to generate the key, you can use the default values
 # After the key is generated, you can run the following command to list the keys:
-$ pkcs11-tool --module opensc-pkcs11.so -L                        
+$ pkcs11-tool --module opensc-pkcs11.so -L
 Available slots:
 Slot 0 (0x0): Nitrokey Nitrokey Start (FSIJ-1.2.19-C5B562D9) 00 00
   token label        : OpenPGP card (User PIN)
@@ -189,12 +167,13 @@ $ OPENSSL_CONF=openssl-pkcs11.conf openssl req -new  -key "pkcs11:slot-id=1;id=%
     -sha256 -out nitrokey.csr.pem -subj "/CN=SecureBoot Key/"
 ```
 
-> You can append ;pin-value=&lt;YOUR USER PIN&gt; to the pkcs11 url to not have to write it. If you don't add it, openssl will ask you for it
+> You can append ;pin-value=<YOUR USER PIN> to the pkcs11 url to not have to write it. If you don't add it, openssl will ask you for it
 
 Sign the CSR with the private key in the hardware key:
 ```bash
 $ OPENSSL_CONF=openssl-pkcs11.conf openssl x509 -req -days 3650 -in nitrokey.csr.pem \
     -signkey "pkcs11:slot-id=1;id=%01" -out nitrokey.crt.pem
+```
 
 Now you can use the hardware key and certificate to sign the UKI files.
 
@@ -202,42 +181,23 @@ Now you can use the hardware key and certificate to sign the UKI files.
 
 To build the installable medium you need to run the following commands:
 
-
-#TODO -> fix this
-[//]: # (<Tabs>)
-
-[//]: # (<TabItem value="from-a-container-image" label="From a container image">)
-
-[//]: # (```bash title="Ubuntu 24.04, Fedora 40")
-
-[//]: # (CONTAINER_IMAGE=quay.io/kairos/kairos-core:latest-uki)
-
-[//]: # (docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/auroraboot:latest build-uki -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT $CONTAINER_IMAGE)
-
-[//]: # (# to build an EFI file only)
-
-[//]: # (docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/auroraboot:latest build-uki -t uki -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT $CONTAINER_IMAGE)
-
-[//]: # (```)
-
-[//]: # (</TabItem>)
-
-[//]: # (<TabItem value="from-a-directory" label="From a directory">)
-
-[//]: # (```bash)
-
-[//]: # (# Assuming you have a "rootfs" directory with the content of the OS)
-
-[//]: # (# If the image is in a directory &#40;$PWD/rootfs&#41; you can use the following command)
-
-[//]: # (docker run -ti --rm -v $PWD/build:/result -v $PWD/rootfs:/rootfs -v $PWD/keys/:/keys quay.io/kairos/auroraboot:latest build-uki -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT dir:/rootfs/)
-
-[//]: # (```)
-
-[//]: # (</TabItem>)
-
-[//]: # (</Tabs>)
-
+{{< tabpane text=true  >}}
+{{% tab header="From a container image" %}}
+```bash {class="only-flavors=Ubuntu+24.04,Fedora+40"}
+CONTAINER_IMAGE={{<oci variant="core">}}-uki
+docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys {{< registryURL >}}/auroraboot:{{< auroraBootVersion >}} build-uki -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT $CONTAINER_IMAGE
+# to build an EFI file only
+docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys {{< registryURL >}}/auroraboot:{{< auroraBootVersion >}} build-uki -t uki -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT $CONTAINER_IMAGE
+```
+{{% /tab %}}
+{{% tab header="From a directory" %}}
+```bash
+# Assuming you have a "rootfs" directory with the content of the OS
+# If the image is in a directory ($PWD/rootfs) you can use the following command
+docker run -ti --rm -v $PWD/build:/result -v $PWD/rootfs:/rootfs -v $PWD/keys/:/keys quay.io/kairos/auroraboot:{{< auroraBootVersion >}} build-uki -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT dir:/rootfs/
+```
+{{% /tab %}}
+{{< /tabpane >}}
 
 
 Let's explain some of the flags used here, especially the ones related to Trusted Boot keys:
@@ -250,65 +210,46 @@ Let's explain some of the flags used here, especially the ones related to Truste
 - `--public-keys /keys` specifies the directory where the public keys are stored. These are the keys that are auto enrolled on first boot. They are 3 (DB,KEK, PK) and are in .auth format.
 
 
-
 :::info Keys format
-
 The .auth format in Secure Boot refers to EFI Signature Lists (ESLs) wrapped in an authentication structure, which allows UEFI firmware to verify and install Secure Boot keys securely. These files are used when manually enrolling Secure Boot keys into a UEFI system, typically through the firmware setup interface. `.auth` files are signed versions of `.esl` files. An `.esl` file is a binary format defined by the UEFI specification that wraps one or more EFI Signature Data entries (usually X.509 certs or SHA256 hashes).
-
 :::
-
-
 For a more secure process you can use a hardware key to generate and sign the certificate and sign the EFI files, so you dont need to keep the private key in the filesystem.
 
 To do so, `--sb-key` accepts a pkcs11 url, for example:
 
 ```bash
-docker run -ti --rm -v /run/pcscd:/run/pcscd -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/auroraboot:latest build-uki -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key "pkcs11:slot-id=1;id=%01" --sb-cert $PATH_TO_SB_CERT $CONTAINER_IMAGE
+docker run -ti --rm -v /run/pcscd:/run/pcscd -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/auroraboot:{{< auroraBootVersion >}} build-uki -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key "pkcs11:slot-id=1;id=%01" --sb-cert $PATH_TO_SB_CERT $CONTAINER_IMAGE
 ```
 
-
 :::warning Warning
-
 Notice that for this to work you need to have the `pcscd` service running in your system, and the hardware key must be connected to the system.
 The command mounts the `/run/pcscd` directory to the container, so that the container can access the hardware key.
-
 :::
-
-
 For more info about pkcs11 urls, see the [RFC 7512](https://www.rfc-editor.org/rfc/rfc7512.html) which describes the format of the pkcs11 urls.
 
 ## Bundling system extensions during the installable medium build
 
 System extensions can be bundled in the installable medium. To bundle system extensions, you need to create a new image with the extensions you want to add. System extensions are bundled in the root on the media install. When building your Trusted Boot image, you can add the system extensions to the iso by using the `--overlay-iso` flag and pointing it to the directory containing the system extensions.
 
-
-
-<Tabs>
-<TabItem value="from-a-container-image" label="From a container image">
-
-```bash title="Ubuntu+24.04,Fedora+40"
+{{< tabpane text=true  >}}
+{{% tab header="From a container image" %}}
+```bash {class="only-flavors=Ubuntu+24.04,Fedora+40"}
 # Assuming your system extensions are stored on $PWD/system-extensions
-CONTAINER_IMAGE=quay.io/kairos/kairos-core:latest-uki
-docker run -ti --rm -v $PWD/system-extensions:/system-extensions -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/auroraboot:latest build-uki -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT --overlay-iso /system-extensions $CONTAINER_IMAGE
+CONTAINER_IMAGE={{<oci variant="core">}}-uki
+docker run -ti --rm -v $PWD/system-extensions:/system-extensions -v $PWD/build:/result -v $PWD/keys/:/keys {{< registryURL >}}/auroraboot:{{< auroraBootVersion >}} build-uki -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT --overlay-iso /system-extensions $CONTAINER_IMAGE
 # to build an EFI file only
-docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/auroraboot:latest build-uki -t uki -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT $CONTAINER_IMAGE
+docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys {{< registryURL >}}/auroraboot:{{< auroraBootVersion >}} build-uki -t uki -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT $CONTAINER_IMAGE
 ```
-
-</TabItem>
-
-<TabItem value="from-a-directory" label="From a directory">
-
+{{% /tab %}}
+{{% tab header="From a directory" %}}
 ```bash
 # Assuming you have a "rootfs" directory with the content of the OS
 # If the image is in a directory ($PWD/rootfs) you can use the following command
 # Assuming your system extensions are stored on $PWD/system-extensions
-docker run -ti --rm -v $PWD/system-extensions:/system-extensions -v $PWD/build:/result -v $PWD/rootfs:/rootfs -v $PWD/keys/:/keys quay.io/kairos/auroraboot:latest build-uki -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT --overlay-iso /system-extensions dir:/rootfs/
+docker run -ti --rm -v $PWD/system-extensions:/system-extensions -v $PWD/build:/result -v $PWD/rootfs:/rootfs -v $PWD/keys/:/keys {{< registryURL >}}/auroraboot:{{< auroraBootVersion >}} build-uki -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT --overlay-iso /system-extensions dir:/rootfs/
 ```
-
-</TabItem>
-
-</Tabs>
-
+{{% /tab %}}
+{{< /tabpane >}}
 
 ### Config files
 
@@ -327,9 +268,9 @@ title Kairos
 You can overwrite the default "Kairos" title if you pass the `--boot-branding` flag to auroraboot.
 
 
-```bash title="Ubuntu+24.04,Fedora+40"
-CONTAINER_IMAGE=quay.io/kairos/kairos-core:latest-uki
-docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/auroraboot:latest build-uki -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT --boot-branding "My Awesome OS" $CONTAINER_IMAGE
+```bash {class="only-flavors=Ubuntu+24.04,Fedora+40"}
+CONTAINER_IMAGE={{<oci variant="core">}}-uki
+docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys {{< registryURL >}}/auroraboot:{{< auroraBootVersion >}} build-uki -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT --boot-branding "My Awesome OS" $CONTAINER_IMAGE
 ```
 
 Your config file should look now like this:
@@ -343,51 +284,35 @@ title My Awesome OS
 
 You can use a custom boot splash screen by specifying the  `--splash` flag when calling auroraboot.
 
-```bash title="Ubuntu+24.04,Fedora+40"
-CONTAINER_IMAGE=quay.io/kairos/kairos-core:latest-uki
-docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys -v $PWD/splash/:/splash quay.io/kairos/auroraboot:latest build-uki -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT --boot-branding "My Awesome OS" --splash /splash/my-awesome-splash.bmp $CONTAINER_IMAGE
+```bash {class="only-flavors=Ubuntu+24.04,Fedora+40"}
+CONTAINER_IMAGE={{<oci variant="core">}}-uki
+docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys -v $PWD/splash/:/splash {{< registryURL >}}/auroraboot:{{< auroraBootVersion >}} build-uki -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT --boot-branding "My Awesome OS" --splash /splash/my-awesome-splash.bmp $CONTAINER_IMAGE
 ```
 
 
-
-:::note Info
-
+:::tip Info
 Splash images must be provided in 32 bit BMP format, no other image formats besides BMP are supported.
-
 :::
-
-
-
-
 :::warning Warning
-
 Remember when you build upgrade mediums, to also add your branding, otherwise the new active image will be named differently than your fallback and recovery ones.
-
 :::
-
-
 ### Version and cmdline in the config files
 
 In addition to having the "title" and "efi" attributes, you can include in the config files the OS "version" and "cmdline". To do so, pass `--include-version-in-config` or `--include-cmdline-in-config` flags to auroraboot.
 
-
-:::note Info
-
+:::tip Info
 The cmdline, will only show what is different between the default cmdline and the currently used cmdline. If you pass `--include-cmdline-in-config` to a default installation, the attribute cmdline will be empty.
-
 :::
-
-
 ```
 cmdline awesome=true
 title Awesome OS
 efi /EFI/kairos/active.efi
-version latest
+version {{< kairosVersion>}}
 ```
 
 ## Installation
 
-The installation process is performed as usual and the [Installation instructions](../../installation) can be followed, however the difference is that user-data will be automatically encrypted (both the OEM and the persistent partition) by using the TPM chip and the Trusted Boot mechanism.
+The installation process is performed as usual and the [Installation instructions](../installation) can be followed, however the difference is that user-data will be automatically encrypted (both the OEM and the persistent partition) by using the TPM chip and the Trusted Boot mechanism.
 
 ### Enroll the keys in Secure Boot
 
@@ -401,7 +326,7 @@ A video of the process of importing keys in QEMU is available [here](https://git
 
 ## Upgrades
 
-See the [Trusted Boot Upgrade](../../upgrade/trustedboot) page.
+See the [Trusted Boot Upgrade](../upgrade/trustedboot) page.
 
 ## Testing the images locally
 
@@ -440,9 +365,9 @@ Note: you need to keep the TPM container up and running for the VM to boot. Run 
 
 3. Run the container image with the ISO file (replace the iso file name with yours):
 
-```bash title="Ubuntu+24.04,Fedora+40"
+```bash {class="only-flavors=Ubuntu+24.04,Fedora+40"}
 # console only
-docker run --privileged -v $PWD/tpmstate:/tmp -v $PWD:/work -v /dev/kvm:/dev/kvm --rm -ti fedora-qemu -nographic -cdrom kairos-{{<flavorCode>}}-{{<flavorReleaseCode>}}-core-amd64-generic-latest.uki.iso
+docker run --privileged -v $PWD/tpmstate:/tmp -v $PWD:/work -v /dev/kvm:/dev/kvm --rm -ti fedora-qemu -nographic -cdrom kairos-@flavor-@flavorRelease-core-amd64-generic-{{< kairosVersion>}}.uki.iso
 ```
 
 Note: To stop the QEMU container you can use `Ctrl-a x` or `Ctrl-a c` to enter the QEMU console and then `quit` to exit.
@@ -585,21 +510,16 @@ To mount `/oem` and `/usr/local` after install you can also manually call `kcryp
 
 ### Force certificates auto-enrollments
 
-
 :::warning Warning
-
 Don't run auto-enrollments by default! this option is here after you are sure that the certificates generated are correct and after you have verified that manuall enrolling the certificates does not brick your device!
 
 This is specific for large-scale deployments to generate auto-installing ISOs that are meant to be used on similar hardware multiple times (thus the process only needs to be manually verified once).
-
 :::
-
-
 If you want to force the auto-enrollment of the certificates in the BIOS/UEFI, you can use the `--secure-boot-enroll` flag in the `build-uki` command.
 
-```bash title="Ubuntu+24.04,Fedora+40"
-CONTAINER_IMAGE=quay.io/kairos/kairos-core:latest-uki
-docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/auroraboot:latest build-uki --secure-boot-enroll force -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT $CONTAINER_IMAGE
+```bash {class="only-flavors=Ubuntu+24.04,Fedora+40"}
+CONTAINER_IMAGE={{<oci variant="core">}}-uki
+docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys {{< registryURL >}}/auroraboot:{{< auroraBootVersion >}} build-uki --secure-boot-enroll force -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT $CONTAINER_IMAGE
 ```
 
 ### Additional efi entries

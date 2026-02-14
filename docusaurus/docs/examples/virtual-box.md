@@ -4,7 +4,7 @@ sidebar_label: "Trusted Boot in Virtual Box"
 description: This section describes how to use Virtual Box to boot Kairos in "Trusted boot" mode
 ---
 
-To install Kairos in ["Trusted Boot Mode"](../../architecture/trustedboot) the machine needs to meet the following requirements:
+To install Kairos in ["Trusted Boot Mode"](../architecture/trustedboot) the machine needs to meet the following requirements:
 
 - Must have a tpm v2.0 chip
 - Must be able to boot in EFI mode (not "legacy BIOS")
@@ -24,8 +24,8 @@ If you don't already have an ISO to boot, you can create one using the following
 
 set -e
 
-IMAGE="${IMAGE:-quay.io/kairos/ubuntu:24.04-core-amd64-generic-latest-uki}"
-AURORABOOT_IMAGE="quay.io/kairos/auroraboot:latest"
+IMAGE="${IMAGE:-{{< registryURL >}}/ubuntu:24.04-core-amd64-generic-{{< kairosVersion >}}-uki}"
+AURORABOOT_IMAGE="{{< registryURL >}}/auroraboot:latest"
 OUTDIR=$PWD/build
 
 cleanup() {
@@ -105,7 +105,7 @@ buildISO() {
     --boot-branding "KairosAI" \
     --overlay-iso /config \
     --extend-cmdline "rd.immucore.debug rd.debug rd.shell" \
-    oci://kairos-localai
+    oci:kairos-localai
 }
 
 fixPermissions() {
@@ -130,11 +130,11 @@ keys directory with the UEFI keys used to sign the image.
 
 ## Create a VM
 
-<!-- Hugo shortcode: alert color="warning" title="Warning"  -->
+{{< alert color="warning" title="Warning" >}}
 On macOS you need to make sure you install the VirtualBox Extension Pack to enable USB 2.0 and USB 3.0 support.
 
 https://www.virtualbox.org/wiki/Downloads
-<!-- Hugo shortcode: /alert  -->
+{{< /alert >}}
 
 ```bash
 #!/bin/bash

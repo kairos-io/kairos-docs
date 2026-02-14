@@ -4,14 +4,9 @@ sidebar_label: "Run stages along with K3s"
 description: This section describes a method to run stages with k3s.
 ---
 
-
 :::info Info
-
 This tutorial is based on Debian Bookworm. Unit file configurations vary across distributions, and we are not able to test them all, but they should be easily adaptable from this tutorial.
-
 :::
-
-
 # Introduction
 
 Some use cases require a stage to run after the K3s servers are up, such as applying manifests to the Kubernetes cluster, sending health checks, or any other use case. Using systemd units, we are able to run a stage once a service is started, which can be used for K3s and K3s-server to run steps after the K3s server is up and ready to accept requests.
@@ -30,7 +25,7 @@ Some use cases require a stage to run after the K3s servers are up, such as appl
 
 ### Building the custom derivative
 
-We will keep this short as there are more docs that go more in-depth into building your derivatives than this tutorial such as the [Customizing page](./customizing).
+We will keep this short as there are more docs that go more in-depth into building your derivatives than this tutorial such as the [Customizing page](customizing).
 
 The main step is to create an image that has the systemd units we need to run our stages.
 
@@ -81,10 +76,10 @@ $ docker build -t k3s-stage-kairos .
 
 ### Build an iso from that artifact
 
-Again, this tutorial does not cover this part deeply as there already are docs that provide a deep insight into custom images such as the the [AuroraBoot page](./auroraboot).
+Again, this tutorial does not cover this part deeply as there already are docs that provide a deep insight into custom images such as the the [AuroraBoot page](auroraboot).
 
 ```bash
-$ docker run -v "$PWD"/build-iso:/tmp/auroraboot -v /var/run/docker.sock:/var/run/docker.sock --rm -ti quay.io/kairos/auroraboot --set container_image="docker://k3s-stage-kairos" --set "disable_http_server=true" --set "disable_netboot=true" --set "state_dir=/tmp/auroraboot"
+$ docker run -v "$PWD"/build-iso:/tmp/auroraboot -v /var/run/docker.sock:/var/run/docker.sock --rm -ti quay.io/kairos/auroraboot --set container_image="oci:k3s-stage-kairos" --set "disable_http_server=true" --set "disable_netboot=true" --set "state_dir=/tmp/auroraboot"
 2:38PM INF Pulling container image 'k3s-stage-kairos' to '/tmp/auroraboot/temp-rootfs' (local: true)
 2:38PM INF Generating iso 'kairos' from '/tmp/auroraboot/temp-rootfs' to '/tmp/auroraboot/build'
 ```
@@ -118,4 +113,3 @@ stages:
 ### Check that the service is enabled and works
 
 Once the system has been installed, the `k3s-ready` service is run after the k3s service has been started and running. After running, it should be in the status `Inactive`, and the `/tmp/k3s-ready` file should exist once k3s has started.
-

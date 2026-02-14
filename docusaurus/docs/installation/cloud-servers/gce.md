@@ -8,12 +8,12 @@ slug: /installation/gce
 ---
 
 This page describes how to install Kairos on Google Cloud after you have created a disk image. Since release v3.3.1, Kairos pipeline is pushing a public OS image to Google Cloud which you can use.
-If you want to build a custom image, you can follow the instructions in the [Creating Custom Cloud Images](./creating_custom_cloud_images) page.
+If you want to build a custom image, you can follow the instructions in the [Creating Custom Cloud Images](creating_custom_cloud_images) page.
 
 ## Prerequisites
 
 - A Google Cloud account with permissions to create VMs.
-- A Google Cloud compatible image of Kairos. You can use the public image provided by Kairos (see below) or [build your own image](./auroraboot) and upload it to your google project ([check how the Kairos CI does it](https://github.com/kairos-io/kairos/blob/48d5c2bc8fc5555263f799db8a3388d7d46cd559/.github/workflows/upload-cloud-images.yaml#L36-L89)).
+- A Google Cloud compatible image of Kairos. You can use the public image provided by Kairos (see below) or [build your own image](auroraboot) and upload it to your google project ([check how the Kairos CI does it](https://github.com/kairos-io/kairos/blob/48d5c2bc8fc5555263f799db8a3388d7d46cd559/.github/workflows/upload-cloud-images.yaml#L36-L89)).
 
 ## Deploy a VM
 
@@ -22,14 +22,9 @@ Unfortunately Google Cloud [doesn't allow users to search among public images in
 1. Make sure you are authenticated with the cli: `gcloud auth login`
 1. Create a VM using the latest Kairos image:
 
-
 :::warning Note
-
 As described below, it is possible to reset to any desired image on first boot. That's the reason only one Kairos flavor is published in Google Cloud (Ubuntu 24.04). This allows us to save costs and time by not pushing unnecessary artifacts.
-
 :::
-
-
 ## Verify the Image
 
 To ensure you're using a genuine Kairos image in Google Cloud, make sure the image you are going to use is in the Kairos team's Google Cloud project (`palette-kairos`).
@@ -42,18 +37,12 @@ gcloud compute images describe <IMAGE_NAME> --project palette-kairos --format="t
 
 Replace `<IMAGE_NAME>` with the name of the image. The output will show you the name, description, and status of the image. If the image doesn't belong to the Kairos project, no image will be found.
 
-
 :::warning Note
-
 As described below, it is possible to reset to any desired image on first boot. That's the reason only one Kairos flavor is published in Google Cloud (Ubuntu 24.04). This allows us to save costs and time by not pushing unnecessary artifacts.
-
 :::
-
-
-
-```bash title="Ubuntu+24.04"
+```bash {class="only-flavors=Ubuntu+24.04"}
 gcloud --project  <your_project_here> compute instances create kairos-vm-test \
-  --image=projects/palette-kairos/global/images/kairos-ubuntu-24-04-core-amd64-generic-<!-- Hugo shortcode: googleVersion  --> \
+  --image=projects/palette-kairos/global/images/kairos-ubuntu-24-04-core-amd64-generic-{{< googleVersion >}} \
   --image-project=palette-kairos \
   --zone=europe-central2-c \
   --metadata-from-file=user-data=<path_to_your_cloud_config> \
@@ -75,7 +64,8 @@ You can specify a different image to be installed using a block like the followi
 
 ```yaml
 reset:
-  source: "oci:quay.io/kairos/opensuse:leap-15.6-standard-amd64-generic-latest-latest"
+  system:
+    source: "oci:quay.io/kairos/opensuse:leap-15.6-standard-amd64-generic-{{< kairosVersion >}}-{{< k3sVersionOCI >}}"
 ```
 
 This will reset to the specified image on the first boot instead of the image booted. Once the instance is running, you can access it via SSH. Make sure reset has completed and the system has rebooted into "active" mode. The following command should report "active_boot":

@@ -4,30 +4,15 @@ sidebar_label: "Manual multi-node HA cluster"
 description: This section contains instructions how to deploy Kairos with a High Available control-plane for K3s 
 ---
 
-
 :::info K3s
-
-Please refer to the [k3s HA](https://docs.k3s.io/installation/ha-embedded) documentation.
-
+Please refer to the [k3s HA](https://docs.k3s.io/installation/ha-embedded) documentation. 
 :::
-
-
-
 :::info K0s
-
 Please refer to the [k0s multi-node manual install](https://docs.k0sproject.io/stable/k0s-multi-node/) documentation.
-
 :::
-
-
-
 :::info Production Considerations
-
-This example is for learning purposes. In production environments, it's recommended to use a load balancer in front of the highly available control plane nodes rather than exposing all control plane nodes directly. For a production-ready setup with a load balancer, see our [Self-coordinating P2P Multi-Node Cluster with High Availability and KubeVIP](../multi-node-p2p-ha-kubevip) example.
-
+This example is for learning purposes. In production environments, it's recommended to use a load balancer in front of the highly available control plane nodes rather than exposing all control plane nodes directly. For a production-ready setup with a load balancer, see our [Self-coordinating P2P Multi-Node Cluster with High Availability and KubeVIP](multi-node-p2p-ha-kubevip) example.
 :::
-
-
 This document describes how to configure Kairos with either `k3s` or `k0s` by following the same documentation outline. It is implied that you are using a Kairos version with either k3s or k0s included in the standard images.
 
 ## New cluster
@@ -36,13 +21,8 @@ To run Kairos in this mode, you must have an odd number of server nodes.
 
 The first control plane node that we will launch is considered the cluster initializer.
 
-
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
-<Tabs>
-<TabItem value="k3s" label="k3s">
-
+{{< tabpane text=true right=true  >}}
+{{% tab header="k3s" %}}
 ```yaml
 #cloud-config
 
@@ -65,11 +45,8 @@ k3s:
   env:
     K3S_TOKEN: "TOKEN_GOES_HERE"
 ```
-
-</TabItem>
-
-<TabItem value="k0s" label="k0s">
-
+{{% /tab %}}
+{{% tab header="k0s" %}}
 ```yaml
 #cloud-config
 
@@ -85,19 +62,13 @@ users:
 k0s:
   enabled: true
 ```
-
-</TabItem>
-
-</Tabs>
-
+{{% /tab %}}
+{{< /tabpane >}}
 
 After launching the first control plane, join the others
 
-
-
-<Tabs>
-<TabItem value="k3s" label="k3s">
-
+{{< tabpane text=true right=true  >}}
+{{% tab header="k3s" %}}
 ```yaml
 #cloud-config
 
@@ -119,11 +90,8 @@ k3s:
   env:
     K3S_TOKEN: "TOKEN_GOES_HERE"
 ```
-
-</TabItem>
-
-<TabItem value="k0s" label="k0s">
-
+{{% /tab %}}
+{{% tab header="k0s" %}}
 ```yaml
 #cloud-config
 
@@ -147,11 +115,8 @@ write_files:
     content: |
       <TOKEN> # generate it on your cluster init node by running `k0s token create --role=controller`
 ```
-
-</TabItem>
-
-</Tabs>
-
+{{% /tab %}}
+{{< /tabpane >}}
 
 Now you have a highly available control plane.
 
@@ -159,11 +124,8 @@ Now you have a highly available control plane.
 
 Joining additional worker nodes to the cluster follows the same procedure as a single-node cluster.
 
-
-
-<Tabs>
-<TabItem value="k3s" label="k3s">
-
+{{< tabpane text=true right=true  >}}
+{{% tab header="k3s" %}}
 ```yaml
 #cloud-config
 
@@ -184,11 +146,8 @@ k3s-agent:
     K3S_TOKEN: "TOKEN_GOES_HERE"
     K3S_URL: "https://<ip or hostname of server1>:6443"
 ```
-
-</TabItem>
-
-<TabItem value="k0s" label="k0s">
-
+{{% /tab %}}
+{{% tab header="k0s" %}}
 ```yaml
 #cloud-config
 
@@ -212,22 +171,14 @@ write_files:
     content: |
       <TOKEN> # generate it on your master node by running `k0s token create --role=worker`
 ```
-
-</TabItem>
-
-</Tabs>
-
+{{% /tab %}}
+{{< /tabpane >}}
 
 ## External DB
 
-
 :::warning K0s
-
 This section hasn't been reworked to be used with the k0s distribution yet.
-
 :::
-
-
 K3s requires two or more server nodes for this HA configuration. See the [K3s requirements guide](https://docs.k3s.io/installation/requirements) for minimum machine requirements.
 
 When running the k3s as a server, you must set the datastore-endpoint parameter so that K3s knows how to connect to the external datastore. 
