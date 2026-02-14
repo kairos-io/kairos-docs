@@ -274,7 +274,7 @@ docusaurus_blog_slug_from_file() {
   slug="${slug#/}"
   slug="${slug%/}"
   slug="${slug#blog/}"
-  echo "${slug}"
+  echo "${slug}" | tr '[:upper:]' '[:lower:]'
 }
 
 docusaurus_blog_date_parts_from_file() {
