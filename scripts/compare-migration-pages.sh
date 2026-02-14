@@ -4,23 +4,20 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 HUGO_DIR="${ROOT_DIR}/content/en"
 DOCUSAURUS_DIR="${ROOT_DIR}/docusaurus/docs"
-
-if [[ ! -d "${HUGO_DIR}" ]]; then
-  echo "ERROR: Hugo docs directory not found: ${HUGO_DIR}" >&2
-  exit 2
-fi
-
-if [[ ! -d "${DOCUSAURUS_DIR}" ]]; then
-  echo "ERROR: Docusaurus docs directory not found: ${DOCUSAURUS_DIR}" >&2
-  exit 2
-fi
+DOCUSAURUS_BLOG_DIR="${ROOT_DIR}/docusaurus/blog"
+DOCUSAURUS_CONFIG="${ROOT_DIR}/docusaurus/docusaurus.config.ts"
 
 declare -A hugo_pages=()
 declare -A docusaurus_pages=()
-declare -A all_pages=()
+declare -A hugo_urls=()
+declare -A hugo_url_to_page=()
+declare -A docusaurus_urls=()
+declare -A docusaurus_page_to_url=()
+declare -A requested_identifiers=()
 declare -a requested_pages=()
-SHOW_DIFF=0
+declare -a selected_urls=()
 
+SHOW_DIFF=0
 if [[ "${DIFF:-0}" == "1" ]]; then
   SHOW_DIFF=1
 fi
@@ -47,6 +44,27 @@ canonical_page_id() {
   fi
 }
 
+normalize_url_path() {
+  local raw="$1"
+  local path="${raw}"
+
+  path="${path#http://}"
+  path="${path#https://}"
+  if [[ "${path}" != "${raw}" ]]; then
+    path="/${path#*/}"
+  fi
+
+  path="/${path#/}"
+  path="${path%%\?*}"
+  path="${path%%\#*}"
+
+  if [[ "${path}" != "/" && "${path}" == */ ]]; then
+    path="${path%/}"
+  fi
+
+  echo "${path}"
+}
+
 parse_args() {
   if [[ $# -gt 0 && -d "$1" ]]; then
     HUGO_DIR="$1"
@@ -67,9 +85,22 @@ parse_args() {
 normalize_requested_page_id() {
   local input="$1"
   local rel="${input}"
+  local blog_page_id
 
+  rel="${rel#./}"
+  rel="${rel#${ROOT_DIR}/}"
+  rel="${rel#${DOCUSAURUS_BLOG_DIR}/}"
   rel="${rel#${HUGO_DIR}/}"
   rel="${rel#${DOCUSAURUS_DIR}/}"
+  rel="${rel#/}"
+
+  if [[ "${input}" == *"/docusaurus/blog/"* || "${input}" == docusaurus/blog/* || "${input}" == "./docusaurus/blog/"* ]]; then
+    blog_page_id="$(docusaurus_blog_page_id_from_file "${input}")"
+    if [[ -n "${blog_page_id}" ]]; then
+      echo "${blog_page_id}"
+      return
+    fi
+  fi
   rel="${rel#content/en/}"
   rel="${rel#docusaurus/docs/}"
   rel="${rel#docs/}"
@@ -93,8 +124,199 @@ collect_pages() {
     else
       docusaurus_pages["${page_id}"]="${file}"
     fi
-    all_pages["${page_id}"]=1
   done < <(find "${base_dir}" -type f \( -name "*.md" -o -name "*.mdx" \) -print0)
+}
+
+collect_hugo_urls() {
+  local line src permalink path rel page_id
+  while IFS= read -r line; do
+    [[ -z "${line}" ]] && continue
+    [[ "${line}" == path,* ]] && continue
+
+    src="${line%%,*}"
+    permalink="$(printf '%s\n' "${line}" | grep -oE 'https?://[^,]+' | head -n1 || true)"
+    [[ -z "${permalink}" ]] && continue
+
+    path="$(normalize_url_path "${permalink}")"
+    hugo_urls["${path}"]=1
+
+    if [[ "${src}" == content/en/* ]]; then
+      rel="${src#content/en/}"
+      if [[ "${rel}" == docs/* ]]; then
+        rel="${rel#docs/}"
+      fi
+      page_id="$(canonical_page_id "${rel}")"
+      if [[ -n "${hugo_pages[${page_id}]-}" ]]; then
+        hugo_url_to_page["${path}"]="${page_id}"
+      fi
+    fi
+  done < <(hugo list all 2>/dev/null || true)
+
+  # Important generated URLs that are part of the migration surface.
+  hugo_urls["/"]=1
+  hugo_urls["/sitemap.xml"]=1
+}
+
+get_docusaurus_current_docs_path() {
+  local current_path
+  current_path="$(
+    awk '
+      /current:[[:space:]]*\{/ { in_current=1 }
+      in_current && /path:[[:space:]]*'\''[^'\'']+'\''/ {
+        if (match($0, /path:[[:space:]]*'\''([^'\'']+)'\''/, m)) {
+          print m[1]
+          exit
+        }
+      }
+      in_current && /\}/ { in_current=0 }
+    ' "${DOCUSAURUS_CONFIG}" 2>/dev/null || true
+  )"
+
+  if [[ -z "${current_path}" ]]; then
+    echo "next"
+  else
+    echo "${current_path}"
+  fi
+}
+
+collect_docusaurus_urls() {
+  local current_path docs_prefix rel page_id no_ext file_name dir_name url
+  current_path="$(get_docusaurus_current_docs_path)"
+
+  if [[ "${current_path}" == "/" ]]; then
+    docs_prefix="/docs"
+  else
+    docs_prefix="/docs/${current_path#/}"
+  fi
+  docs_prefix="${docs_prefix%/}"
+
+  while IFS= read -r -d '' file; do
+    rel="${file#${DOCUSAURUS_DIR}/}"
+    page_id="$(canonical_page_id "${rel}")"
+
+    no_ext="${rel%.*}"
+    file_name="${no_ext##*/}"
+    dir_name="$(dirname "${no_ext}")"
+
+    if [[ "${file_name}" == "_index" || "${file_name}" == "index" ]]; then
+      if [[ "${dir_name}" == "." ]]; then
+        url="${docs_prefix}/"
+      else
+        url="${docs_prefix}/${dir_name}/"
+      fi
+    else
+      if [[ "${dir_name}" == "." ]]; then
+        url="${docs_prefix}/${file_name}/"
+      else
+        url="${docs_prefix}/${dir_name}/${file_name}/"
+      fi
+    fi
+
+    url="$(normalize_url_path "${url}")"
+    docusaurus_urls["${url}"]=1
+    docusaurus_page_to_url["${page_id}"]="${url}"
+  done < <(find "${DOCUSAURUS_DIR}" -type f \( -name "*.md" -o -name "*.mdx" \) -print0)
+
+  if [[ -f "${ROOT_DIR}/docusaurus/src/pages/index.tsx" || -f "${ROOT_DIR}/docusaurus/src/pages/index.md" || -f "${ROOT_DIR}/docusaurus/src/pages/index.mdx" ]]; then
+    docusaurus_urls["/"]=1
+  fi
+  docusaurus_urls["/sitemap.xml"]=1
+}
+
+frontmatter_value() {
+  local file="$1"
+  local key="$2"
+  awk -v wanted="${key}" '
+    NR==1 && $0=="---" { fm=1; next }
+    fm==1 && $0=="---" { fm=0; exit }
+    fm==1 {
+      if ($0 ~ "^[[:space:]]*" wanted ":[[:space:]]*") {
+        line=$0
+        sub("^[[:space:]]*" wanted ":[[:space:]]*", "", line)
+        gsub(/^["'\'']|["'\'']$/, "", line)
+        print line
+        exit
+      }
+    }
+  ' "${file}" 2>/dev/null || true
+}
+
+docusaurus_blog_slug_from_file() {
+  local file="$1"
+  local slug filename
+  slug="$(frontmatter_value "${file}" "slug")"
+  if [[ -z "${slug}" ]]; then
+    filename="$(basename "${file}")"
+    filename="${filename%.*}"
+    slug="$(printf '%s\n' "${filename}" | sed -E 's/^[0-9]{4}-[0-9]{2}-[0-9]{2}-//')"
+  fi
+
+  slug="${slug#/}"
+  slug="${slug%/}"
+  slug="${slug#blog/}"
+  echo "${slug}"
+}
+
+docusaurus_blog_date_parts_from_file() {
+  local file="$1"
+  local date_raw filename year month day
+  date_raw="$(frontmatter_value "${file}" "date")"
+
+  if [[ "${date_raw}" =~ ^([0-9]{4})-([0-9]{2})-([0-9]{2}) ]]; then
+    echo "${BASH_REMATCH[1]} ${BASH_REMATCH[2]} ${BASH_REMATCH[3]}"
+    return
+  fi
+
+  filename="$(basename "${file}")"
+  if [[ "${filename}" =~ ^([0-9]{4})-([0-9]{2})-([0-9]{2})- ]]; then
+    year="${BASH_REMATCH[1]}"
+    month="${BASH_REMATCH[2]}"
+    day="${BASH_REMATCH[3]}"
+    echo "${year} ${month} ${day}"
+    return
+  fi
+
+  echo ""
+}
+
+docusaurus_blog_page_id_from_file() {
+  local file="$1"
+  local resolved="${file}"
+  local slug
+
+  if [[ "${resolved}" != /* ]]; then
+    resolved="${ROOT_DIR}/${resolved#./}"
+  fi
+  [[ -f "${resolved}" ]] || { echo ""; return; }
+
+  slug="$(docusaurus_blog_slug_from_file "${resolved}")"
+  [[ -n "${slug}" ]] || { echo ""; return; }
+  echo "blog/${slug}"
+}
+
+collect_docusaurus_blog_urls() {
+  local file slug page_id date_parts year month day url
+  [[ -d "${DOCUSAURUS_BLOG_DIR}" ]] || return
+
+  while IFS= read -r -d '' file; do
+    slug="$(docusaurus_blog_slug_from_file "${file}")"
+    [[ -n "${slug}" ]] || continue
+    page_id="blog/${slug}"
+    docusaurus_pages["${page_id}"]="${file}"
+
+    date_parts="$(docusaurus_blog_date_parts_from_file "${file}")"
+    if [[ -n "${date_parts}" ]]; then
+      read -r year month day <<< "${date_parts}"
+      url="/blog/${year}/${month}/${day}/${slug}"
+    else
+      url="/blog/${slug}"
+    fi
+    url="$(normalize_url_path "${url}")"
+    docusaurus_urls["${url}"]=1
+    docusaurus_page_to_url["${page_id}"]="${url}"
+  done < <(find "${DOCUSAURUS_BLOG_DIR}" -type f \( -name "*.md" -o -name "*.mdx" \) -print0)
+
+  docusaurus_urls["/blog"]=1
 }
 
 normalize_content() {
@@ -163,7 +385,6 @@ normalize_content() {
       return $value;
     }
 
-    # Normalize Hugo alerts and Docusaurus admonitions to the same wrapper markers.
     $text =~ s/^\s*\{\{%\s*alert\b[^\n]*%\}\}\s*$\n?/__ADMONITION_START__\n/gm;
     $text =~ s/^\s*\{\{%\s*\/alert\s*%\}\}\s*$\n?/__ADMONITION_END__\n/gm;
     $text =~ s/^\s*:::(?:tip|note|info|warning|danger|caution)\b[^\n]*$\n?/__ADMONITION_START__\n/gmi;
@@ -171,28 +392,22 @@ normalize_content() {
     $text =~ s/__ADMONITION_START__\n(?:[ \t]*\n)+/__ADMONITION_START__\n/g;
     $text =~ s/(?:\n[ \t]*)+\n__ADMONITION_END__/\n__ADMONITION_END__/g;
 
-    # Strip markdown code fences and HTML pre/code wrappers so equivalent code content compares equally.
     $text =~ s/^\s*```[^\n]*$\n?//gm;
     $text =~ s/^\s*<\/?(?:pre|code)>\s*$\n?//gmi;
-
-    # Resolve MDX JSX string chunks like {'\''$ ls\n'\''} into plain text.
     $text =~ s/\{\s*'\''((?:\\\\|\\'\''|[^'\''])*)'\''\s*\}/unescape_jsx_string($1)/ge;
 
-    # Normalize Hugo shortcodes to canonical tokens.
     $text =~ s/\{\{<\s*([A-Za-z][A-Za-z0-9_-]*)\s*([^}]*)>\}\}/
       my $name = normalize_component_name($1);
       my $attrs = normalize_attrs($2);
       "__SC__[$name][$attrs]";
     /gex;
 
-    # Normalize MDX self-closing component tags to the same canonical token format.
     $text =~ s/<([A-Z][A-Za-z0-9_]*)\b([^>]*)\/>/
       my $name = normalize_component_name($1);
       my $attrs = normalize_attrs($2);
       "__SC__[$name][$attrs]";
     /gex;
 
-    # Re-trim trailing spaces and trailing blank lines after transformations.
     my @lines = split(/\n/, $text, -1);
     for my $line (@lines) {
       $line =~ s/[ \t]+$//;
@@ -207,11 +422,11 @@ normalize_content() {
 }
 
 hash_content() {
-  normalize_content "$1" | sha256sum | awk '{print $1}'
+  normalize_content "$1" | sha256sum | awk "{print \$1}"
 }
 
 print_page_diff() {
-  local page_id="$1"
+  local url_path="$1"
   local hugo_file="$2"
   local docusaurus_file="$3"
   local hugo_tmp docusaurus_tmp
@@ -223,12 +438,32 @@ print_page_diff() {
   normalize_content "${docusaurus_file}" > "${docusaurus_tmp}"
 
   echo
-  echo "Diff for ${page_id}:"
-  if ! diff -u --label "hugo:${page_id}" --label "docusaurus:${page_id}" "${hugo_tmp}" "${docusaurus_tmp}"; then
+  echo "Diff for ${url_path}:"
+  if ! diff -u --label "hugo:${url_path}" --label "docusaurus:${url_path}" "${hugo_tmp}" "${docusaurus_tmp}"; then
     true
   fi
 
   rm -f "${hugo_tmp}" "${docusaurus_tmp}"
+}
+
+print_permalink_diff() {
+  local url_path="$1"
+  local page_id="$2"
+  local mapped_url=""
+
+  if [[ -n "${page_id}" ]]; then
+    mapped_url="${docusaurus_page_to_url[${page_id}]-}"
+  fi
+
+  echo
+  echo "Permalink mismatch for ${url_path}:"
+  echo "  expected: ${url_path}"
+  if [[ -n "${mapped_url}" ]]; then
+    echo "  docusaurus_mapped: ${mapped_url}"
+    diff -u --label "expected" --label "docusaurus_mapped" <(printf "%s\n" "${url_path}") <(printf "%s\n" "${mapped_url}") || true
+  else
+    echo "  docusaurus_mapped: (no mapped doc page)"
+  fi
 }
 
 parse_args "$@"
@@ -237,7 +472,6 @@ if [[ ! -d "${HUGO_DIR}" ]]; then
   echo "ERROR: Hugo docs directory not found: ${HUGO_DIR}" >&2
   exit 2
 fi
-
 if [[ ! -d "${DOCUSAURUS_DIR}" ]]; then
   echo "ERROR: Docusaurus docs directory not found: ${DOCUSAURUS_DIR}" >&2
   exit 2
@@ -245,84 +479,143 @@ fi
 
 collect_pages "${HUGO_DIR}" "hugo"
 collect_pages "${DOCUSAURUS_DIR}" "docusaurus"
-
-total=0
-ok=0
-only_hugo=0
-only_docusaurus=0
-different=0
-not_found=0
-
-echo "Comparing Hugo pages in ${HUGO_DIR} with Docusaurus pages in ${DOCUSAURUS_DIR}"
-echo
-printf "%-12s %s\n" "STATUS" "PAGE"
-printf "%-12s %s\n" "------" "----"
+collect_hugo_urls
+collect_docusaurus_urls
+collect_docusaurus_blog_urls
 
 if [[ "${#requested_pages[@]}" -gt 0 ]]; then
-  declare -A requested_set=()
-  for requested_page in "${requested_pages[@]}"; do
-    normalized_page_id="$(normalize_requested_page_id "${requested_page}")"
-    requested_set["${normalized_page_id}"]=1
+  for requested in "${requested_pages[@]}"; do
+    if [[ "${requested}" == /* || "${requested}" =~ ^https?:// ]]; then
+      requested_url="$(normalize_url_path "${requested}")"
+      requested_identifiers["url:${requested_url}"]=1
+    fi
+    requested_page_id="$(normalize_requested_page_id "${requested}")"
+    requested_identifiers["page:${requested_page_id}"]=1
   done
-  page_list="$(printf "%s\n" "${!requested_set[@]}" | sort)"
-else
-  page_list="$(printf "%s\n" "${!all_pages[@]}" | sort)"
 fi
 
-while IFS= read -r page_id; do
-  [[ -z "${page_id}" ]] && continue
-  total=$((total + 1))
+hugo_file_backed_total="${#hugo_pages[@]}"
+docusaurus_file_backed_total="${#docusaurus_pages[@]}"
+hugo_url_total="${#hugo_urls[@]}"
 
-  hugo_file="${hugo_pages[${page_id}]-}"
-  docusaurus_file="${docusaurus_pages[${page_id}]-}"
+total_rows=0
+present_ok=0
+present_autogen=0
+present_missing=0
+permalink_ok=0
+content_ok=0
+content_review=0
+content_mismatch=0
+row_errors=0
 
-  if [[ -z "${hugo_file}" && -z "${docusaurus_file}" ]]; then
-    not_found=$((not_found + 1))
-    printf "%-12s %s\n" "ERROR_NOT_FOUND" "${page_id}"
-    continue
-  fi
+while IFS= read -r url_path; do
+  [[ -z "${url_path}" ]] && continue
+  page_id="${hugo_url_to_page[${url_path}]-}"
 
-  if [[ -n "${hugo_file}" && -z "${docusaurus_file}" ]]; then
-    only_hugo=$((only_hugo + 1))
-    printf "%-12s %s\n" "ERROR_ONLY_HUGO" "${page_id}"
-    continue
-  fi
-
-  if [[ -z "${hugo_file}" && -n "${docusaurus_file}" ]]; then
-    only_docusaurus=$((only_docusaurus + 1))
-    printf "%-12s %s\n" "ERROR_ONLY_DOCUSAURUS" "${page_id}"
-    continue
-  fi
-
-  hugo_hash="$(hash_content "${hugo_file}")"
-  docusaurus_hash="$(hash_content "${docusaurus_file}")"
-
-  if [[ "${hugo_hash}" == "${docusaurus_hash}" ]]; then
-    ok=$((ok + 1))
-    printf "%-12s %s\n" "OK" "${page_id}"
-  else
-    different=$((different + 1))
-    printf "%-12s %s\n" "ERROR_DIFFERENT" "${page_id}"
-    if [[ "${SHOW_DIFF}" -eq 1 ]]; then
-      print_page_diff "${page_id}" "${hugo_file}" "${docusaurus_file}"
+  if [[ "${#requested_identifiers[@]}" -gt 0 ]]; then
+    include=0
+    if [[ -n "${requested_identifiers[url:${url_path}]-}" ]]; then
+      include=1
+    elif [[ -n "${page_id}" && -n "${requested_identifiers[page:${page_id}]-}" ]]; then
+      include=1
+    fi
+    if [[ "${include}" -eq 0 ]]; then
+      continue
     fi
   fi
-done < <(printf "%s\n" "${page_list}")
+  selected_urls+=("${url_path}")
+done < <(printf "%s\n" "${!hugo_urls[@]}" | sort)
 
-errors=$((only_hugo + only_docusaurus + different + not_found))
+url_col_width=8
+for url_path in "${selected_urls[@]}"; do
+  if (( ${#url_path} > url_col_width )); then
+    url_col_width=${#url_path}
+  fi
+done
+
+url_sep=""
+printf -v url_sep "%*s" "${url_col_width}" ""
+url_sep="${url_sep// /-}"
+
+echo "Comparing migration coverage using Hugo URL paths as source of truth"
+echo
+printf "| %-*s | %s | %s | %s |\n" "${url_col_width}" "URL Path" "Present" "Permalink" "Content"
+printf "| %-*s | %s | %s | %s |\n" "${url_col_width}" "${url_sep}" "-------" "---------" "-------"
+
+for url_path in "${selected_urls[@]}"; do
+  page_id="${hugo_url_to_page[${url_path}]-}"
+  total_rows=$((total_rows + 1))
+
+  present="❌"
+  permalink="❌"
+  content="❌"
+
+  hugo_file=""
+  docusaurus_file=""
+  if [[ -n "${page_id}" ]]; then
+    hugo_file="${hugo_pages[${page_id}]-}"
+    docusaurus_file="${docusaurus_pages[${page_id}]-}"
+  fi
+
+  if [[ -n "${docusaurus_file}" ]]; then
+    present="✅"
+    present_ok=$((present_ok + 1))
+  elif [[ -n "${docusaurus_urls[${url_path}]-}" ]]; then
+    present="🔁"
+    present_autogen=$((present_autogen + 1))
+  else
+    present_missing=$((present_missing + 1))
+  fi
+
+  if [[ -n "${docusaurus_urls[${url_path}]-}" ]]; then
+    permalink="✅"
+    permalink_ok=$((permalink_ok + 1))
+  elif [[ "${SHOW_DIFF}" -eq 1 ]]; then
+    print_permalink_diff "${url_path}" "${page_id}"
+  fi
+
+  if [[ -n "${hugo_file}" && -n "${docusaurus_file}" ]]; then
+    if [[ "$(hash_content "${hugo_file}")" == "$(hash_content "${docusaurus_file}")" ]]; then
+      content="✅"
+      content_ok=$((content_ok + 1))
+    elif [[ "${SHOW_DIFF}" -eq 1 ]]; then
+      content_mismatch=$((content_mismatch + 1))
+      print_page_diff "${url_path}" "${hugo_file}" "${docusaurus_file}"
+    else
+      content_mismatch=$((content_mismatch + 1))
+    fi
+  elif [[ "${present}" != "❌" ]]; then
+    content="👀"
+    content_review=$((content_review + 1))
+  fi
+
+  if [[ "${present}" == "❌" ]]; then
+    row_errors=$((row_errors + 1))
+  fi
+
+  printf "| %-*s | %s | %s | %s |\n" "${url_col_width}" "${url_path}" "${present}" "${permalink}" "${content}"
+done
+
+if [[ "${#requested_identifiers[@]}" -gt 0 && "${total_rows}" -eq 0 ]]; then
+  row_errors=1
+fi
 
 echo
 echo "Summary:"
-echo "  total_pages: ${total}"
-echo "  ok: ${ok}"
-echo "  error_only_hugo: ${only_hugo}"
-echo "  error_only_docusaurus: ${only_docusaurus}"
-echo "  error_different: ${different}"
-echo "  error_not_found: ${not_found}"
-echo "  errors_total: ${errors}"
+echo "  hugo_file_backed_total: ${hugo_file_backed_total}"
+echo "  docusaurus_file_backed_total: ${docusaurus_file_backed_total}"
+echo "  hugo_url_total: ${hugo_url_total}"
+echo "  rows_checked: ${total_rows}"
+echo "  present_ok: ${present_ok}"
+echo "  present_autogen: ${present_autogen}"
+echo "  present_missing: ${present_missing}"
+echo "  permalink_ok: ${permalink_ok}"
+echo "  content_ok: ${content_ok}"
+echo "  content_review: ${content_review}"
+echo "  content_mismatch: ${content_mismatch}"
+echo "  row_errors: ${row_errors}"
 
-if [[ "${errors}" -gt 0 ]]; then
+if [[ "${row_errors}" -gt 0 ]]; then
   exit 1
 fi
-
 exit 0
