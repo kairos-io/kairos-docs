@@ -20,6 +20,7 @@ const config: Config = {
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
+  trailingSlash: true,
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
@@ -48,6 +49,12 @@ const config: Config = {
     locales: ['en'],
   },
 
+  customFields: {
+    registryURL: 'quay.io/kairos',
+    auroraBootVersion: 'v0.14.0',
+    kairosInitVersion: 'v0.6.2',
+  },
+
   presets: [
     [
       'classic',
@@ -67,7 +74,7 @@ const config: Config = {
           versions: {
             current: {
               label: 'Next 🚧',
-              path: 'next',
+              path: '',
             },
           },
         },
@@ -93,6 +100,38 @@ const config: Config = {
     ],
   ],
 
+  plugins: [
+    './plugins/hugo-mdx-preprocess-plugin.cjs',
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'getting-started',
+        path: 'getting-started',
+        routeBasePath: 'getting-started',
+        sidebarPath: './sidebarsGettingStarted.ts',
+        remarkPlugins: [remarkShortcodeCode],
+        editUrl:
+          'https://github.com/kairos-io/kairos-docs/tree/main/',
+        showLastUpdateTime: true,
+        showLastUpdateAuthor: true,
+      },
+    ],
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'quickstart',
+        path: 'quickstart',
+        routeBasePath: 'quickstart',
+        sidebarPath: './sidebarsQuickstart.ts',
+        remarkPlugins: [remarkShortcodeCode],
+        editUrl:
+          'https://github.com/kairos-io/kairos-docs/tree/main/',
+        showLastUpdateTime: true,
+        showLastUpdateAuthor: true,
+      },
+    ],
+  ],
+
   themeConfig: {
     // Replace with your project's social card
     image: 'img/Kairos_800x419.png',
@@ -107,7 +146,7 @@ const config: Config = {
       },
       items: [
         {
-          to: '/docs/getting-started',
+          to: '/getting-started',
           position: 'left',
           label: 'Getting Started',
         },
@@ -117,11 +156,16 @@ const config: Config = {
           position: 'left',
           label: 'Documentation',
         },
+        {
+          to: '/quickstart',
+          position: 'left',
+          label: 'Hadron',
+        },
         {to: '/blog', label: 'Blog', position: 'left'},
         {
           label: 'Community',
           position: 'left',
-          href: 'https://kairos.io/community/',
+          to: '/community/',
         },
         {
           type: 'docsVersionDropdown',
@@ -148,7 +192,7 @@ const config: Config = {
             {
               label: 'Getting Started',
               // point to the actual Getting Started landing
-              to: '/docs/getting-started',
+              to: '/getting-started',
             },
             {
               label: 'Installation',

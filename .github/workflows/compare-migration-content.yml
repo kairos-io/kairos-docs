@@ -6,6 +6,8 @@ on:
       - docusaurus
     types:
       - opened
+      - synchronize
+      - reopened
 
 jobs:
   compare-migration-pages:
@@ -15,6 +17,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Install Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: '0.152.2'
+          extended: true
 
       - name: Compare changed content pages
         shell: bash
