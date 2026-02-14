@@ -22,6 +22,10 @@ SHOW_DIFF=0
 if [[ "${DIFF:-0}" == "1" ]]; then
   SHOW_DIFF=1
 fi
+SHOW_ALL=0
+if [[ "${ALL:-0}" == "1" ]]; then
+  SHOW_ALL=1
+fi
 
 COLOR_RED=""
 COLOR_GREEN=""
@@ -522,6 +526,7 @@ docusaurus_file_backed_total="${#docusaurus_pages[@]}"
 hugo_url_total="${#hugo_urls[@]}"
 
 total_rows=0
+displayed_rows=0
 present_ok=0
 present_autogen=0
 present_missing=0
@@ -651,6 +656,18 @@ for url_path in "${selected_urls[@]}"; do
     *) content_cell="diff" ;;
   esac
 
+  hide_row=0
+  if [[ "${#requested_identifiers[@]}" -eq 0 && "${SHOW_ALL}" -eq 0 ]]; then
+    if [[ "${present_cell}" == "file" && "${permalink_cell}" == "same" && "${content_cell}" == "match" ]]; then
+      hide_row=1
+    fi
+  fi
+
+  if [[ "${hide_row}" -eq 1 ]]; then
+    continue
+  fi
+  displayed_rows=$((displayed_rows + 1))
+
   printf -v present_cell_padded "%-*s" "${present_col_width}" "${present_cell}"
   printf -v permalink_cell_padded "%-*s" "${permalink_col_width}" "${permalink_cell}"
   printf -v content_cell_padded "%-*s" "${content_col_width}" "${content_cell}"
@@ -694,6 +711,7 @@ echo "  hugo_file_backed_total: ${hugo_file_backed_total}"
 echo "  docusaurus_file_backed_total: ${docusaurus_file_backed_total}"
 echo "  hugo_url_total: ${hugo_url_total}"
 echo "  rows_checked: ${total_rows}"
+echo "  rows_displayed: ${displayed_rows}"
 echo "  present_ok: ${present_ok}"
 echo "  present_autogen: ${present_autogen}"
 echo "  present_missing: ${present_missing}"
