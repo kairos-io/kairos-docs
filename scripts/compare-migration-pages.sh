@@ -27,6 +27,23 @@ if [[ "${ALL:-0}" == "1" ]]; then
   SHOW_ALL=1
 fi
 
+PRESENT_FILTER="${PRESENT:-all}"
+OUTPUT_MODE="${OUTPUT:-table}"
+SUMMARY_ENABLED="${SUMMARY:-1}"
+
+case "${PRESENT_FILTER}" in
+  all|file|auto|missing) ;;
+  *) echo "ERROR: PRESENT must be one of: all|file|auto|missing" >&2; exit 2 ;;
+esac
+case "${OUTPUT_MODE}" in
+  table|list) ;;
+  *) echo "ERROR: OUTPUT must be one of: table|list" >&2; exit 2 ;;
+esac
+case "${SUMMARY_ENABLED}" in
+  0|1) ;;
+  *) echo "ERROR: SUMMARY must be 0 or 1" >&2; exit 2 ;;
+esac
+
 COLOR_RED=""
 COLOR_GREEN=""
 COLOR_ORANGE=""
@@ -576,16 +593,18 @@ content_sep="----------"
 
 echo "Comparing migration coverage using Hugo URL paths as source of truth"
 echo
-printf "| %-*s | %-*s | %-*s | %-*s |\n" \
-  "${url_col_width}" "URL Path" \
-  "${present_col_width}" "Present" \
-  "${permalink_col_width}" "Permalink" \
-  "${content_col_width}" "Content"
-printf "| %-*s | %-*s | %-*s | %-*s |\n" \
-  "${url_col_width}" "${url_sep}" \
-  "${present_col_width}" "${present_sep}" \
-  "${permalink_col_width}" "${permalink_sep}" \
-  "${content_col_width}" "${content_sep}"
+if [[ "${OUTPUT_MODE}" == "table" ]]; then
+  printf "| %-*s | %-*s | %-*s | %-*s |\n" \
+    "${url_col_width}" "URL Path" \
+    "${present_col_width}" "Present" \
+    "${permalink_col_width}" "Permalink" \
+    "${content_col_width}" "Content"
+  printf "| %-*s | %-*s | %-*s | %-*s |\n" \
+    "${url_col_width}" "${url_sep}" \
+    "${present_col_width}" "${present_sep}" \
+    "${permalink_col_width}" "${permalink_sep}" \
+    "${content_col_width}" "${content_sep}"
+fi
 
 for url_path in "${selected_urls[@]}"; do
   page_id="${hugo_url_to_page[${url_path}]-}"
@@ -598,11 +617,20 @@ for url_path in "${selected_urls[@]}"; do
 
   hugo_file=""
   docusaurus_file=""
+  docusaurus_file_from_url=""
+  docusaurus_file_from_page_id=""
   if [[ -n "${page_id}" ]]; then
     hugo_file="${hugo_pages[${page_id}]-}"
+    docusaurus_file_from_page_id="${docusaurus_pages[${page_id}]-}"
   fi
   if [[ -n "${docusaurus_page_id}" ]]; then
-    docusaurus_file="${docusaurus_pages[${docusaurus_page_id}]-}"
+    docusaurus_file_from_url="${docusaurus_pages[${docusaurus_page_id}]-}"
+  fi
+
+  if [[ -n "${docusaurus_file_from_url}" ]]; then
+    docusaurus_file="${docusaurus_file_from_url}"
+  elif [[ -n "${docusaurus_file_from_page_id}" ]]; then
+    docusaurus_file="${docusaurus_file_from_page_id}"
   fi
 
   if [[ -n "${docusaurus_file}" ]]; then
@@ -656,6 +684,10 @@ for url_path in "${selected_urls[@]}"; do
     *) content_cell="diff" ;;
   esac
 
+  if [[ "${PRESENT_FILTER}" != "all" && "${present_cell}" != "${PRESENT_FILTER}" ]]; then
+    continue
+  fi
+
   hide_row=0
   if [[ "${#requested_identifiers[@]}" -eq 0 && "${SHOW_ALL}" -eq 0 ]]; then
     if [[ "${present_cell}" == "file" && "${permalink_cell}" == "same" && "${content_cell}" == "match" ]]; then
@@ -694,32 +726,38 @@ for url_path in "${selected_urls[@]}"; do
     content_cell_colored="$(color_cell "${content_cell_padded}" "${COLOR_RED}")"
   fi
 
-  printf "| %-*s | %s | %s | %s |\n" \
-    "${url_col_width}" "${url_path}" \
-    "${present_cell_colored}" \
-    "${permalink_cell_colored}" \
-    "${content_cell_colored}"
+  if [[ "${OUTPUT_MODE}" == "list" ]]; then
+    printf "%s\n" "${url_path}"
+  else
+    printf "| %-*s | %s | %s | %s |\n" \
+      "${url_col_width}" "${url_path}" \
+      "${present_cell_colored}" \
+      "${permalink_cell_colored}" \
+      "${content_cell_colored}"
+  fi
 done
 
 if [[ "${#requested_identifiers[@]}" -gt 0 && "${total_rows}" -eq 0 ]]; then
   row_errors=1
 fi
 
-echo
-echo "Summary:"
-echo "  hugo_file_backed_total: ${hugo_file_backed_total}"
-echo "  docusaurus_file_backed_total: ${docusaurus_file_backed_total}"
-echo "  hugo_url_total: ${hugo_url_total}"
-echo "  rows_checked: ${total_rows}"
-echo "  rows_displayed: ${displayed_rows}"
-echo "  present_ok: ${present_ok}"
-echo "  present_autogen: ${present_autogen}"
-echo "  present_missing: ${present_missing}"
-echo "  permalink_ok: ${permalink_ok}"
-echo "  content_ok: ${content_ok}"
-echo "  content_review: ${content_review}"
-echo "  content_mismatch: ${content_mismatch}"
-echo "  row_errors: ${row_errors}"
+if [[ "${SUMMARY_ENABLED}" == "1" ]]; then
+  echo
+  echo "Summary:"
+  echo "  hugo_file_backed_total: ${hugo_file_backed_total}"
+  echo "  docusaurus_file_backed_total: ${docusaurus_file_backed_total}"
+  echo "  hugo_url_total: ${hugo_url_total}"
+  echo "  rows_checked: ${total_rows}"
+  echo "  rows_displayed: ${displayed_rows}"
+  echo "  present_ok: ${present_ok}"
+  echo "  present_autogen: ${present_autogen}"
+  echo "  present_missing: ${present_missing}"
+  echo "  permalink_ok: ${permalink_ok}"
+  echo "  content_ok: ${content_ok}"
+  echo "  content_review: ${content_review}"
+  echo "  content_mismatch: ${content_mismatch}"
+  echo "  row_errors: ${row_errors}"
+fi
 
 if [[ "${row_errors}" -gt 0 ]]; then
   exit 1
