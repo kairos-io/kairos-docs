@@ -22,6 +22,18 @@ if [[ "${DIFF:-0}" == "1" ]]; then
   SHOW_DIFF=1
 fi
 
+COLOR_RED=""
+COLOR_GREEN=""
+COLOR_ORANGE=""
+COLOR_RESET=""
+
+if [[ -t 1 && -z "${NO_COLOR:-}" ]]; then
+  COLOR_RED=$'\033[31m'
+  COLOR_GREEN=$'\033[32m'
+  COLOR_ORANGE=$'\033[33m'
+  COLOR_RESET=$'\033[0m'
+fi
+
 canonical_page_id() {
   local rel="$1"
   local no_ext="${rel%.*}"
@@ -466,6 +478,12 @@ print_permalink_diff() {
   fi
 }
 
+color_cell() {
+  local value="$1"
+  local color="$2"
+  printf "%s%s%s" "${color}" "${value}" "${COLOR_RESET}"
+}
+
 parse_args "$@"
 
 if [[ ! -d "${HUGO_DIR}" ]]; then
@@ -536,11 +554,25 @@ done
 url_sep=""
 printf -v url_sep "%*s" "${url_col_width}" ""
 url_sep="${url_sep// /-}"
+present_col_width=10
+permalink_col_width=9
+content_col_width=10
+present_sep="----------"
+permalink_sep="---------"
+content_sep="----------"
 
 echo "Comparing migration coverage using Hugo URL paths as source of truth"
 echo
-printf "| %-*s | %s | %s | %s |\n" "${url_col_width}" "URL Path" "Present" "Permalink" "Content"
-printf "| %-*s | %s | %s | %s |\n" "${url_col_width}" "${url_sep}" "-------" "---------" "-------"
+printf "| %-*s | %-*s | %-*s | %-*s |\n" \
+  "${url_col_width}" "URL Path" \
+  "${present_col_width}" "Present" \
+  "${permalink_col_width}" "Permalink" \
+  "${content_col_width}" "Content"
+printf "| %-*s | %-*s | %-*s | %-*s |\n" \
+  "${url_col_width}" "${url_sep}" \
+  "${present_col_width}" "${present_sep}" \
+  "${permalink_col_width}" "${permalink_sep}" \
+  "${content_col_width}" "${content_sep}"
 
 for url_path in "${selected_urls[@]}"; do
   page_id="${hugo_url_to_page[${url_path}]-}"
@@ -593,7 +625,52 @@ for url_path in "${selected_urls[@]}"; do
     row_errors=$((row_errors + 1))
   fi
 
-  printf "| %-*s | %s | %s | %s |\n" "${url_col_width}" "${url_path}" "${present}" "${permalink}" "${content}"
+  case "${present}" in
+    "✅") present_cell="file" ;;
+    "🔁") present_cell="auto" ;;
+    *) present_cell="missing" ;;
+  esac
+  case "${permalink}" in
+    "✅") permalink_cell="same" ;;
+    *) permalink_cell="diff" ;;
+  esac
+  case "${content}" in
+    "✅") content_cell="match" ;;
+    "👀") content_cell="review" ;;
+    *) content_cell="diff" ;;
+  esac
+
+  printf -v present_cell_padded "%-*s" "${present_col_width}" "${present_cell}"
+  printf -v permalink_cell_padded "%-*s" "${permalink_col_width}" "${permalink_cell}"
+  printf -v content_cell_padded "%-*s" "${content_col_width}" "${content_cell}"
+
+  if [[ "${present_cell}" == "file" || "${present_cell}" == "auto" ]]; then
+    present_cell_colored="$(color_cell "${present_cell_padded}" "${COLOR_GREEN}")"
+  elif [[ "${present_cell}" == "missing" ]]; then
+    present_cell_colored="$(color_cell "${present_cell_padded}" "${COLOR_RED}")"
+  else
+    present_cell_colored="$(color_cell "${present_cell_padded}" "${COLOR_ORANGE}")"
+  fi
+
+  if [[ "${permalink_cell}" == "same" ]]; then
+    permalink_cell_colored="$(color_cell "${permalink_cell_padded}" "${COLOR_GREEN}")"
+  else
+    permalink_cell_colored="$(color_cell "${permalink_cell_padded}" "${COLOR_RED}")"
+  fi
+
+  if [[ "${content_cell}" == "match" ]]; then
+    content_cell_colored="$(color_cell "${content_cell_padded}" "${COLOR_GREEN}")"
+  elif [[ "${content_cell}" == "review" ]]; then
+    content_cell_colored="$(color_cell "${content_cell_padded}" "${COLOR_ORANGE}")"
+  else
+    content_cell_colored="$(color_cell "${content_cell_padded}" "${COLOR_RED}")"
+  fi
+
+  printf "| %-*s | %s | %s | %s |\n" \
+    "${url_col_width}" "${url_path}" \
+    "${present_cell_colored}" \
+    "${permalink_cell_colored}" \
+    "${content_cell_colored}"
 done
 
 if [[ "${#requested_identifiers[@]}" -gt 0 && "${total_rows}" -eq 0 ]]; then
