@@ -4,6 +4,7 @@ sidebar_label: "RaspberryPi"
 sidebar_position: 4
 date: 2022-11-13
 description: Install Kairos on RaspberryPi
+slug: /installation/raspberry
 ---
 
 

@@ -4,6 +4,7 @@ sidebar_label: "Installation on Google Cloud"
 sidebar_position: 3
 date: 2025-02-28
 description: Install Kairos on Google Cloud
+slug: /installation/gce
 ---
 
 This page describes how to install Kairos on Google Cloud after you have created a disk image. Since release v3.3.1, Kairos pipeline is pushing a public OS image to Google Cloud which you can use.

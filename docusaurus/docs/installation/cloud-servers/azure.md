@@ -4,6 +4,7 @@ sidebar_label: "Installation on Azure"
 sidebar_position: 3
 date: 2025-03-24
 description: Install Kairos on Microsoft Azure
+slug: /installation/azure
 ---
 
 This page describes how to install Kairos on [Microsoft Azure](https://azure.microsoft.com/) after you have created a disk image. Since release v3.3.5, Kairos pipeline is pushing a public OS image to Azure which you can use.

@@ -2,6 +2,7 @@
 title: "Self-coordinating P2P Multi-Node Cluster with High Availability and KubeVIP"
 sidebar_label: "Self-coordinating P2P multi-node cluster HA with KubeVIP"
 description: This guide walks through the process of deploying a highly-available, P2P self-coordinated k3s cluster with KubeVIP, which provides a high available Elastic IP for the control plane. 
+slug: /examples/multi-node-p2p-ha-kubevip
 ---
 
 

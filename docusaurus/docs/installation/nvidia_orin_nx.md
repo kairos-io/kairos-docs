@@ -1,51 +1,49 @@
 ---
-title: "Nvidia AGX Orin"
-sidebar_label: "Nvidia AGX Orin"
-sidebar_position: 4
-date: 2022-11-13
-description: Install Kairos on Nvidia AGX Orin
-slug: /installation/nvidia_agx_orin
+title: "Nvidia Orin NX"
+sidebar_label: "Nvidia Orin NX"
+date: 2025-10-13
+description: Install Kairos on Nvidia Orin NX
+slug: /installation/nvidia_orin_nx
 ---
 
 
 :::warning Warning
-
-Despite the Flavor you may have selected to look into the docs. The Nvidia AGX Orin only works with Ubuntu 22.04
-
+The Ubuntu versions supported on the Orin NX depend on the JetPack release. Check the compatibility matrix [here](https://developer.nvidia.com/embedded/jetpack-archive).
 :::
 
-
-This page describes how to install Kairos on [Nvidia AGX Orin](https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/jetson-orin/) in the eMMC.
+This page describes how to install Kairos on an [Nvidia Orin NX](https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/jetson-orin/) on the NVMe.
 
 
 ## Prerequisites
 
-- [Nvidia AGX Orin](https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/jetson-orin/)
-- An USB type-C cable
-- A Linux host used to flash the Nvidia AGX Orin board
+- An [Nvidia Orin NX](https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/jetson-orin/) board
+- A USB type-C cable
+- A Linux host used to flash the Nvidia Orin NX board
 - Jetson linux SDK [download](https://developer.nvidia.com/embedded/jetson-linux)
 
-You can find debugging information here: https://developer.ridgerun.com/wiki/index.php/NVIDIA_Jetson_Orin/In_Board/Getting_in_Board/Serial_Console
+:::info Debugging
+You can find debugging information [here](https://developer.ridgerun.com/wiki/index.php/NVIDIA_Jetson_Orin/In_Board/Getting_in_Board/Serial_Console)
+:::
 
 ## Flashing
 
-We are going to write the partitions in the eMMC. In order to do this we will use the Nvidia SDK configured with a custom partitioning layout.
+We are going to write the partitions to the NVMe. In order to do this we will use the Nvidia SDK configured with a custom partitioning layout.
 
 The partitions are:
 - OEM for storing cloud config files (`/oem`)
 - COS_STATE for storing the active/passive images to boot the system
 - EFI for storing the efi shell and grub to boot the system
 - RECOVERY - to store the recovery system
-- PERSISTENT - this is an optional partition to store the persistent data of the system. you can either write this in the eMMC or, for instance, to an external storage. It is enough to create a partition and label it as `COS_PERSISTENT`. There can be only one partition with such label, the first that matches wins.
+- PERSISTENT - this is an optional partition to store the persistent data of the system. you can either write this in the NVMe or, for instance, to an external storage. It is enough to create a partition and label it as `COS_PERSISTENT`. There can be only one partition with such label, the first that matches wins.
 
 ### Prepare the SDK
 
 The Jetson Linux SDK is used to perform the flashing process.
 
-Download the Jetson Linux SDK:
+Download the Jetson Linux SDK. Change the URL according to your desired Linux for Tegra (L4T) version. For L4T 36.4.4 (JetPack 6.2.1):
 
 ```bash
-wget https://developer.nvidia.com/downloads/embedded/l4t/r36_release_v4.3/release/Jetson_Linux_r36.4.3_aarch64.tbz2 -O tegra.bz2
+wget https://developer.nvidia.com/downloads/embedded/l4t/r36_release_v4.4/release/Jetson_Linux_r36.4.4_aarch64.tbz2 -O tegra.bz2
 tar xvf tegra.bz2
 ```
 
@@ -56,7 +54,7 @@ cd Linux_for_Tegra
 # Drop extlinux
 echo "" > ./bootloader/extlinux.conf
 # This is needed so the SDK doesn't complain of missing files (not really used in the flash process)
-IMAGE=quay.io/kairos/ubuntu:22.04-core-arm64-nvidia-jetson-agx-orin-latest
+IMAGE=quay.io/kairos/ubuntu:22.04-core-arm64-nvidia-jetson-orin-nx-{{< kairosVersion>}}
 docker run -ti --rm -v $PWD/rootfs:/rootfs quay.io/luet/base util unpack "$IMAGE" /rootfs
 # workaround needed (SDK writes to the symlink)
 rm rootfs/boot/initrd
@@ -67,25 +65,24 @@ echo "" > rootfs/boot/extlinux/extlinux.conf
 
 ### Prepare the images
 
-You can find Kairos core ubuntu images based on Ubuntu `22.04` here: https://quay.io/repository/kairos/ubuntu
+You can find Kairos core ubuntu images based on Ubuntu `22.04` [here](https://quay.io/repository/kairos/ubuntu)
 (search for `nvidia` in the tags)
 
-
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
 
 <Tabs>
 <TabItem value="build-partition-images-from-a-container-image" label="Build partition images from a container image">
 
 If you are customizing the image, or either modifying the default partition sizes you can build the images by running:
 ```bash
-IMAGE=quay.io/kairos/ubuntu:22.04-core-arm64-nvidia-jetson-agx-orin-latest
+IMAGE=quay.io/kairos/ubuntu:22.04-core-arm64-nvidia-jetson-orin-nx-{{< kairosVersion >}}
 docker run --privileged --platform=linux/arm64 \
         -e container_image=$IMAGE \
         -e STATE_SIZE="25500" \
         -e RECOVERY_SIZE="21000" \
         -e DEFAULT_ACTIVE_SIZE="7000" \
-        -v $PWD/bootloader:/bootloader --entrypoint /prepare_nvidia_orin_images.sh -ti --rm quay.io/kairos/auroraboot:latest
+        -v $PWD/bootloader:/bootloader --entrypoint /prepare_nvidia_orin_images.sh -ti --rm quay.io/kairos/auroraboot:{{< auroraBootVersion >}}
 ```
 
 </TabItem>
@@ -101,19 +98,15 @@ docker run --privileged --platform=linux/arm64 \
         -e RECOVERY_SIZE="21000" \
         -e DEFAULT_ACTIVE_SIZE="7000" \
 	-v $ROOTFS:/rootfs \
-        -v $PWD/bootloader:/bootloader --entrypoint /prepare_nvidia_orin_images.sh -ti --rm quay.io/kairos/auroraboot:latest
+        -v $PWD/bootloader:/bootloader --entrypoint /prepare_nvidia_orin_images.sh -ti --rm quay.io/kairos/auroraboot:{{< auroraBootVersion >}}
 ```
 
 </TabItem>
-
 </Tabs>
-
 
 After running any of the commands above, the generated images files required for flashing will be inside the `bootloader` directory (`bootloader/efi.img`, `bootloader/recovery_partition.img`, `bootloader/state_partition.img`, `bootloader/oem.img`, `bootloader/persistent.img` ).
 
-
 :::note Note
-
 The persistent image is optional, as you can store the system persistent data rather in an SD card or an NVME disk. The default `persistent.img` is of 2GB size. To create a persistent image manually of the size you prefer instead you can run:
 
 ```
@@ -123,30 +116,27 @@ mkfs.ext2 -L "COS_PERSISTENT" bootloader/persistent.img
 ```
 
 Note that the size of the partitions you modify should be duly reported in the partition layout (see below).
-
 :::
-
 
 ### Edit the parition layout
 
-We are going now to modify the partition layout in `bootloader/generic/cfg/flash_t234_qspi_sdmmc.xml` which corresponds to the partitioning of the AGX Orin board. An example config file can be found in [here](https://kairos.io/examples/images/flash_t234_qspi_sdmmc.xml). Note that the file might change across Nvidia jetson releases, so if flashing fails, use this file as baseline.
+We are going now to modify the partition layout in `bootloader/generic/cfg/flash_t234_qspi_nvme.xml` which corresponds to the partitioning of the Orin NX board. An example config file can be found in [here](https://kairos.io/examples/board-configs/flash_t234_qspi_nvme.xml). Note that the file might change across Nvidia jetson releases, so if flashing fails, use this file as baseline.
 
 ```bash
-wget 'https://kairos.io/examples/images/flash_t234_qspi_sdmmc.xml' -O ./bootloader/generic/cfg/flash_t234_qspi_sdmmc.xml
+wget 'https://kairos.io/examples/board-configs/flash_t234_qspi_nvme.xml' -O ./bootloader/generic/cfg/flash_t234_qspi_nvme.xml
 ```
 
 If you are editing the partition sizes and generating the images manually, use the example config file as a baseline and edit the `size` accordingly to the corresponding partitions (find the respective `filename` and compare the file size, see the notes below).
 
+:::note Note on editing the partition layout manually
 
-:::note Note on editing the parition layout manually
-
-If you want to use the original file, identify the `sdmmc_user` section ( e.g. `<device type="sdmmc_user" instance="3" sector_size="512" num_sectors="INT_NUM_SECTORS" >` ), inside there is an "APP" partition ( `<partition name="APP" id="1" type="data">` ), remove it , and add the following instead:
+If you want to use the original file, identify the `nvme` section ( e.g. `<device type="nvme" instance="4" sector_size="512" num_sectors="INT_NUM_SECTORS" >` ), inside there is an "APP" partition ( `<partition name="APP" id="1" type="data">` ), remove it , and add the following instead:
 
 ```xml      
        <partition name="COS_RECOVERY" type="data">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
-            <size> 10485760000 </size>
+            <size> @RECOVERY_SIZE@ </size>
             <allocation_attribute>  0x8 </allocation_attribute>
             <filename> recovery_partition.img </filename>
             <description>  </description>
@@ -154,7 +144,7 @@ If you want to use the original file, identify the `sdmmc_user` section ( e.g. `
         <partition name="COS_STATE" type="data">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
-            <size> 14680064000 </size>
+            <size> @STATE_SIZE@ </size>
             <allocation_attribute>  0x8 </allocation_attribute>
             <filename> state_partition.img </filename>
             <description>  </description>
@@ -162,16 +152,15 @@ If you want to use the original file, identify the `sdmmc_user` section ( e.g. `
         <partition name="COS_OEM" type="data">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
-            <size> 67108864 </size>
+            <size> @OEM_SIZE@ </size>
             <allocation_attribute>  0x8 </allocation_attribute>
             <filename> oem.img </filename>
             <description>  </description>
         </partition>
-        <!-- Optional. COS_PERSISTENT can be provided by an NVME or via SD card -->
         <partition name="COS_PERSISTENT" type="data">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
-            <size> 2147483648 </size>
+            <size> @PERSISTENT_SIZE@ </size>
             <allocation_attribute>  0x8 </allocation_attribute>
             <filename> persistent.img </filename>
             <description>  </description>
@@ -184,7 +173,7 @@ Be mindful also to change the esp partition or add it if required:
      <partition name="esp" type="data">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
-	    <size> 20971520 </size>
+	    <size> @ESP_SIZE@ </size>
 	    <file_system_attribute> 0 </file_system_attribute>
 	    <partition_type_guid> C12A7328-F81F-11D2-BA4B-00A0C93EC93B </partition_type_guid>
 	    <allocation_attribute> 0x8 </allocation_attribute>
@@ -193,24 +182,11 @@ Be mindful also to change the esp partition or add it if required:
             <description> **Required.** Contains a redundant copy of CBoot. </description>
         </partition>
 ```
-
-You can also remove the other partitions under `sdmmc_user` as not effectively used by Kairos during boot.
-
 :::
 
 
-
 :::note Note
-
-The `COS_PERSISTENT` partition is optional. You can also use an SD card, or an nvme drive instead. The only requirement is to have the partition labeled as `COS_PERSISTENT`.
-
-:::
-
-
-
-:::note Note
-
-If modifiying the parition sizes, you need to replace the size inside the `<size></size>` tags of each partition in the XML:
+If modifying the partition sizes, you need to replace the size inside the `<size></size>` tags of each partition in the XML:
 
 ```
 stat -c %s bootloader/efi.img
@@ -220,19 +196,48 @@ stat -c %s bootloader/oem.img
 stat -c %s bootloader/persistent.img
 ```
 
-:::
+If you want to further automate this you can do from the Linux_for_Tegra directory:
 
+```bash
+wget 'https://kairos.io/examples/board-configs/flash_l4t_t234_nvme_kairos.tmpl' -O flash_l4t_t234_nvme_kairos.tmpl
+cp flash_l4t_t234_nvme_kairos.tmpl tools/kernel_flash/flash_l4t_t234_nvme_kairos.xml
+
+EFI_IMG_SIZE=`stat -c %s bootloader/efi.img`
+RECOVERY_IMG_SIZE=`stat -c %s bootloader/recovery_partition.img`
+STATE_IMG_SIZE=`stat -c %s bootloader/state_partition.img`
+OEM_IMG_SIZE=`stat -c %s bootloader/oem.img`
+PERSISTENT_IMG_SIZE=`stat -c %s bootloader/persistent.img`
+
+sed -e "s/@ESP_SIZE@/${EFI_IMG_SIZE}/" \
+    -e "s/@RECOVERY_SIZE@/${RECOVERY_IMG_SIZE}/" \
+    -e "s/@STATE_SIZE@/${STATE_IMG_SIZE}/" \
+    -e "s/@OEM_SIZE@/${OEM_IMG_SIZE}/" \
+    -e "s/@PERSISTENT_SIZE@/${PERSISTENT_IMG_SIZE}/" \
+    tools/kernel_flash/flash_l4t_t234_nvme_kairos.xml
+```
+:::
 
 ### Flash
 
 To flash the images to the Orin board
 
 1. Put the board in [recovery mode](https://developer.nvidia.com/embedded/learn/jetson-agx-orin-devkit-user-guide/howto.html#force-recovery-mode)
-2. Run: 
-
+2. Inside the Linux_for_Tegra directory find the Jetson board configuration (file ending with .conf). If it is not there, consult the board provider. An example for the Orin NX can be found [here](https://kairos.io/examples/board-configs/brla4n-orin-nx.conf). Set the filename without the extension as an env variable, for example:
 ```
+BOARD_CONFIG=brla4n-orin-nx
+```
+3. Run: 
+
+```bash
 sudo ./tools/l4t_flash_prerequisites.sh # Install missing dependencies and fix file permissions 
-sudo ./flash.sh jetson-agx-orin-devkit internal
+
+# This step should be performed only if there is no esp.img.
+# If this is done without being in recovery-mode the flash process fails later on with a USB timeout error.
+sudo ./flash.sh --no-flash --no-systemimg $BOARD_CONFIG mmcblk0p1
+
+# Flash images using NVIDIA's tools for the NVMe option and the custom partition layout and board configuration
+sudo ./tools/kernel_flash/l4t_initrd_flash.sh --external-device nvme0n1p1 -c tools/kernel_flash/flash_l4t_t234_nvme_kairos.xml -p "-c bootloader/t186ref/cfg/flash_t234_qspi.xml" --network usb0 $BOARD_CONFIG internal
+
 ```
 
 ### Booting
@@ -241,7 +246,7 @@ The Orin board now should boot. If you are connected over the serial you can log
 
 ## Notes
 
-## USB Timeout error
+### USB Timeout error
 
 It is possible that during flashing on certain kernel versions to see an error message:
 
@@ -264,14 +269,14 @@ The solution here is trying with a different kernel version, as suggested in the
 To customize the default cloud config of the board, generate the images mounting the cloud config you want in the images in `/defaults.yaml`:
 
 ```bash
-IMAGE=quay.io/kairos/ubuntu:22.04-core-arm64-nvidia-jetson-agx-orin-latest
+IMAGE=quay.io/kairos/ubuntu:22.04-core-arm64-nvidia-jetson-orin-nx-{{< kairosVersion >}}
 CLOUD_CONFIG=/cloud/config.yaml
 docker run -v $CLOUD_CONFIG:/defaults.yaml --privileged \
         -e container_image=$IMAGE \
         -e STATE_SIZE="25500" \
         -e RECOVERY_SIZE="21000" \
         -e DEFAULT_ACTIVE_SIZE="7000" \
-        -v $PWD/bootloader:/bootloader --entrypoint /prepare_nvidia_orin_images.sh -ti --rm quay.io/kairos/auroraboot:latest
+        -v $PWD/bootloader:/bootloader --entrypoint /prepare_nvidia_orin_images.sh -ti --rm quay.io/kairos/auroraboot:{{< auroraBootVersion >}}
 ```
 
 ### Debugging

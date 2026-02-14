@@ -2,6 +2,7 @@
 title: "Manual Multi-Node Cluster"
 sidebar_label: "Manual multi-node cluster"
 description: This section describe examples on how to deploy Kairos as a multi-node cluster
+slug: /examples/multi-node
 ---
 
 In the example below we will use a bare metal host to provision a Kairos cluster in the local network using one master node and one worker node.

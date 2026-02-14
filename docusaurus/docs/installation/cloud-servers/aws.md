@@ -4,6 +4,7 @@ sidebar_label: "Installation on AWS"
 sidebar_position: 2
 date: 2025-01-27
 description: Install Kairos on AWS
+slug: /installation/aws
 ---
 
 This page describes how to install Kairos on AWS after you have created an AMI. Since release v3.3.0, Kairos pipeline is pushing a public AMI image to AWS which you can use.

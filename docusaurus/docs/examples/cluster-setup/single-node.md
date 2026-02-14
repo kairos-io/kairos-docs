@@ -2,6 +2,7 @@
 title: "Manual Single-Node Cluster"
 sidebar_label: "Manual single-node cluster"
 description: This section describe examples on how to deploy Kairos single-node cluster
+slug: /examples/single-node
 ---
 
 In the example below we will use a bare metal host to provision a Kairos node in the local network using a single machine.

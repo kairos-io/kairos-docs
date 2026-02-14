@@ -2,6 +2,7 @@
 title: "P2P Multi-Node Cluster Provisioned via Netboot"
 sidebar_label: "P2P multi-node cluster netboot"
 description: Full end to end example to bootstrap a self-coordinated cluster with Kairos and AuroraBoot
+slug: /examples/p2p_e2e
 ---
 
 

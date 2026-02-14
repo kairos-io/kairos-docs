@@ -4,7 +4,7 @@ authors:
 slug: introducing-hadron-the-minimal-upstream-first-linux-base-for-kairos
 tags:
   - kairos
-title: Introducing Hadron: The Minimal, Upstream-First Linux Base for Kairos
+title: "Introducing Hadron: The Minimal, Upstream-First Linux Base for Kairos"
 ---
 
 The cloud-native and edge-computing world demands systems that are small, reliable, and predictable. For years, the Kairos project has empowered users to turn mainstream Linux distributions, such as Ubuntu, Alpine, Debian, Fedora and more, into immutable, image-based operating systems with secure, atomic A/B updates.
