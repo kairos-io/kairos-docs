@@ -8,8 +8,10 @@ DOCUSAURUS_BLOG_DIR="${ROOT_DIR}/docusaurus/blog"
 DOCUSAURUS_CONFIG="${ROOT_DIR}/docusaurus/docusaurus.config.ts"
 
 declare -A hugo_pages=()
+declare -A hugo_draft_pages=()
 declare -A docusaurus_pages=()
 declare -A hugo_urls=()
+declare -A hugo_draft_urls=()
 declare -A hugo_url_to_page=()
 declare -A docusaurus_urls=()
 declare -A docusaurus_page_to_url=()
@@ -142,6 +144,40 @@ normalize_requested_page_id() {
   echo "$(canonical_page_id "${rel}")"
 }
 
+is_draft_file() {
+  local file="$1"
+  [[ -f "${file}" ]] || { echo "0"; return; }
+
+  awk '
+    NR == 1 && ($0 == "---" || $0 == "+++") {
+      in_fm = 1
+      delimiter = $0
+      next
+    }
+
+    in_fm == 1 && $0 == delimiter {
+      in_fm = 0
+      exit
+    }
+
+    in_fm == 1 {
+      line = tolower($0)
+      gsub(/[[:space:]]+/, "", line)
+      if (line ~ /^draft:(true|1)$/ || line ~ /^draft=(true|1)$/) {
+        print "1"
+        found = 1
+        exit
+      }
+    }
+
+    END {
+      if (!found) {
+        print "0"
+      }
+    }
+  ' "${file}" 2>/dev/null || echo "0"
+}
+
 collect_pages() {
   local base_dir="$1"
   local target_name="$2"
@@ -153,6 +189,12 @@ collect_pages() {
       rel="${rel#docs/}"
     fi
     page_id="$(canonical_page_id "${rel}")"
+    if [[ "$(is_draft_file "${file}")" == "1" ]]; then
+      if [[ "${target_name}" == "hugo" ]]; then
+        hugo_draft_pages["${page_id}"]="${file}"
+      fi
+      continue
+    fi
     if [[ "${target_name}" == "hugo" ]]; then
       hugo_pages["${page_id}"]="${file}"
     else
@@ -162,7 +204,7 @@ collect_pages() {
 }
 
 collect_hugo_urls() {
-  local line src permalink path rel page_id
+  local line src permalink path rel page_id src_file
   while IFS= read -r line; do
     [[ -z "${line}" ]] && continue
     [[ "${line}" == path,* ]] && continue
@@ -170,6 +212,15 @@ collect_hugo_urls() {
     src="${line%%,*}"
     permalink="$(printf '%s\n' "${line}" | grep -oE 'https?://[^,]+' | head -n1 || true)"
     [[ -z "${permalink}" ]] && continue
+
+    if [[ "${src}" == content/en/* ]]; then
+      src_file="${ROOT_DIR}/${src}"
+      if [[ "$(is_draft_file "${src_file}")" == "1" ]]; then
+        path="$(normalize_url_path "${permalink}")"
+        hugo_draft_urls["${path}"]=1
+        continue
+      fi
+    fi
 
     path="$(normalize_url_path "${permalink}")"
     hugo_urls["${path}"]=1
@@ -769,7 +820,27 @@ for url_path in "${selected_urls[@]}"; do
 done
 
 if [[ "${#requested_identifiers[@]}" -gt 0 && "${total_rows}" -eq 0 ]]; then
-  row_errors=1
+  unresolved_non_draft=0
+  for key in "${!requested_identifiers[@]}"; do
+    if [[ "${key}" == url:* ]]; then
+      requested_url="${key#url:}"
+      if [[ -z "${hugo_draft_urls[${requested_url}]-}" ]]; then
+        unresolved_non_draft=1
+        break
+      fi
+    elif [[ "${key}" == page:* ]]; then
+      requested_page_id="${key#page:}"
+      if [[ -z "${hugo_draft_pages[${requested_page_id}]-}" ]]; then
+        unresolved_non_draft=1
+        break
+      fi
+    fi
+  done
+  if [[ "${unresolved_non_draft}" -eq 1 ]]; then
+    row_errors=1
+  else
+    row_errors=0
+  fi
 fi
 
 if [[ "${SUMMARY_ENABLED}" == "1" ]]; then
