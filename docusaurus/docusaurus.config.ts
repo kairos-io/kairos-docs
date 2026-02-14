@@ -94,6 +94,23 @@ const config: Config = {
     ],
   ],
 
+  plugins: [
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'quickstart',
+        path: 'quickstart',
+        routeBasePath: 'quickstart',
+        sidebarPath: './sidebarsQuickstart.ts',
+        remarkPlugins: [remarkShortcodeCode],
+        editUrl:
+          'https://github.com/kairos-io/kairos-docs/tree/main/',
+        showLastUpdateTime: true,
+        showLastUpdateAuthor: true,
+      },
+    ],
+  ],
+
   themeConfig: {
     // Replace with your project's social card
     image: 'img/Kairos_800x419.png',
@@ -117,6 +134,11 @@ const config: Config = {
           sidebarId: 'tutorialSidebar',
           position: 'left',
           label: 'Documentation',
+        },
+        {
+          to: '/quickstart',
+          position: 'left',
+          label: 'Hadron',
         },
         {to: '/blog', label: 'Blog', position: 'left'},
         {

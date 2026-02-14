@@ -7,6 +7,7 @@ HUGO_STATIC_DIR="${ROOT_DIR}/static"
 HUGO_LAYOUTS_DIR="${ROOT_DIR}/layouts"
 HUGO_ASSETS_DIR="${ROOT_DIR}/assets"
 DOCUSAURUS_DIR="${ROOT_DIR}/docusaurus/docs"
+DOCUSAURUS_QUICKSTART_DIR="${ROOT_DIR}/docusaurus/quickstart"
 DOCUSAURUS_BLOG_DIR="${ROOT_DIR}/docusaurus/blog"
 DOCUSAURUS_SITE_PAGES_DIR="${ROOT_DIR}/docusaurus/src/pages"
 DOCUSAURUS_STATIC_DIR="${ROOT_DIR}/docusaurus/static"
@@ -140,6 +141,16 @@ normalize_requested_page_id() {
   if [[ "${rel}" == docusaurus/static/* ]]; then
     static_rel="${rel#docusaurus/static/}"
     echo "static/${static_rel}"
+    return
+  fi
+  if [[ "${rel}" == docusaurus/quickstart/* ]]; then
+    rel="${rel#docusaurus/quickstart/}"
+    echo "quickstart/$(canonical_page_id "${rel}")"
+    return
+  fi
+  if [[ "${rel}" == quickstart/* && ( "${rel}" == *.md || "${rel}" == *.mdx ) ]]; then
+    rel="${rel#quickstart/}"
+    echo "quickstart/$(canonical_page_id "${rel}")"
     return
   fi
 
@@ -368,6 +379,50 @@ collect_docusaurus_urls() {
     docusaurus_urls["/"]=1
   fi
   docusaurus_urls["/sitemap.xml"]=1
+}
+
+collect_docusaurus_quickstart_urls() {
+  local rel local_page_id page_id no_ext file_name dir_name url slug
+  [[ -d "${DOCUSAURUS_QUICKSTART_DIR}" ]] || return
+
+  while IFS= read -r -d '' file; do
+    rel="${file#${DOCUSAURUS_QUICKSTART_DIR}/}"
+    local_page_id="$(canonical_page_id "${rel}")"
+    page_id="quickstart/${local_page_id}"
+    slug="$(frontmatter_value "${file}" "slug")"
+
+    no_ext="${rel%.*}"
+    file_name="${no_ext##*/}"
+    dir_name="$(dirname "${no_ext}")"
+
+    if [[ -n "${slug}" ]]; then
+      if [[ "${slug}" == /* ]]; then
+        url="/quickstart${slug}"
+      else
+        url="/quickstart/${slug}"
+      fi
+    else
+      if [[ "${file_name}" == "_index" || "${file_name}" == "index" ]]; then
+        if [[ "${dir_name}" == "." ]]; then
+          url="/quickstart/"
+        else
+          url="/quickstart/${dir_name}/"
+        fi
+      else
+        if [[ "${dir_name}" == "." ]]; then
+          url="/quickstart/${file_name}/"
+        else
+          url="/quickstart/${dir_name}/${file_name}/"
+        fi
+      fi
+    fi
+
+    url="$(normalize_url_path "${url}")"
+    docusaurus_urls["${url}"]=1
+    docusaurus_pages["${page_id}"]="${file}"
+    docusaurus_page_to_url["${page_id}"]="${url}"
+    docusaurus_url_to_page["${url}"]="${page_id}"
+  done < <(find "${DOCUSAURUS_QUICKSTART_DIR}" -type f \( -name "*.md" -o -name "*.mdx" \) -print0)
 }
 
 collect_docusaurus_category_urls() {
@@ -735,6 +790,7 @@ collect_hugo_urls
 collect_hugo_static_urls
 collect_hugo_generated_root_urls
 collect_docusaurus_urls
+collect_docusaurus_quickstart_urls
 collect_docusaurus_category_urls
 collect_docusaurus_blog_urls
 collect_docusaurus_site_page_urls
