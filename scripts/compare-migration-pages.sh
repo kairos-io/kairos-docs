@@ -709,6 +709,22 @@ normalize_content() {
       return lc($name);
     }
 
+    sub canonical_doc_ref {
+      my ($value) = @_;
+      $value //= q{};
+      $value = trim($value);
+      $value =~ s/^["'\'']|["'\'']$//g;
+      $value =~ s{\\}{/}g;
+      $value =~ s/[?#].*$//;
+      $value =~ s/\.mdx?$//i;
+      $value =~ s#^/+##;
+      # Remove relative prefixes without corrupting "../" into "."
+      $value =~ s#^(?:(?:\./)|(?:\.\./))+##;
+      $value =~ s#^docs/##i;
+      $value =~ s#/$##;
+      return lc($value);
+    }
+
     sub unescape_jsx_string {
       my ($value) = @_;
       $value =~ s/\\\\/\\__BACKSLASH__/g;
@@ -720,6 +736,19 @@ normalize_content() {
       $value =~ s/\\__BACKSLASH__/\\/g;
       return $value;
     }
+
+    # Normalize flavor placeholders across Hugo/Docusaurus syntaxes.
+    $text =~ s/\{\{<\s*flavor(?:code)?\s*>\}\}/__FLAVOR__/gmi;
+    $text =~ s/\{\{<\s*flavorrelease(?:code)?\s*>\}\}/__FLAVOR_RELEASE__/gmi;
+    $text =~ s/\{\{\s*flavor\s*\}\}/__FLAVOR__/gmi;
+    $text =~ s/\{\{\s*flavorrelease\s*\}\}/__FLAVOR_RELEASE__/gmi;
+    $text =~ s/\@flavorRelease\b/__FLAVOR_RELEASE__/g;
+    $text =~ s/\@flavor\b/__FLAVOR__/g;
+
+    # Normalize internal docs references so relref/ref and relative links match.
+    $text =~ s/\{\{<\s*(?:relref|ref)\s+"([^"]+)"\s*>\}\}/"__DOCREF__[" . canonical_doc_ref($1) . "]"/gexi;
+    $text =~ s{(?<![A-Za-z0-9])(?:\.\./|\./)+(?:advanced|announcements|architecture|development|examples|installation|media|reference|upgrade|getting-started|quickstart|docs)(?:/[A-Za-z0-9._-]+)+/?}{"__DOCREF__[" . canonical_doc_ref($&) . "]"}gexi;
+    $text =~ s{(?<![A-Za-z0-9])/?docs(?:/[A-Za-z0-9._-]+)+/?}{"__DOCREF__[" . canonical_doc_ref($&) . "]"}gexi;
 
     $text =~ s/^\s*\{\{%\s*alert\b[^\n]*%\}\}\s*$\n?/__ADMONITION_START__\n/gm;
     $text =~ s/^\s*\{\{%\s*\/alert\s*%\}\}\s*$\n?/__ADMONITION_END__\n/gm;

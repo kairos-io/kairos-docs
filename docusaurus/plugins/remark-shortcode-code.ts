@@ -7,7 +7,7 @@ type MarkdownNode = {
 
 type MarkdownTree = MarkdownNode;
 
-const IMAGE_SHORTCODE_PATTERN = /\{\{<\s*image\b[^>]*>\}\}/;
+const SUPPORTED_SHORTCODE_PATTERN = /\{\{<\s*(image\b[^>]*|flavorCode|flavorReleaseCode|registryURL)\s*>\}\}/;
 
 function visitAndTransform(node: MarkdownNode): void {
   if (!node.children || node.children.length === 0) {
@@ -20,7 +20,7 @@ function visitAndTransform(node: MarkdownNode): void {
     if (
       child.type === 'code' &&
       typeof child.value === 'string' &&
-      IMAGE_SHORTCODE_PATTERN.test(child.value)
+      SUPPORTED_SHORTCODE_PATTERN.test(child.value)
     ) {
       node.children[i] = {
         type: 'mdxJsxFlowElement',

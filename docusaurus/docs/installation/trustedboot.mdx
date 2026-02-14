@@ -442,7 +442,7 @@ Note: you need to keep the TPM container up and running for the VM to boot. Run 
 
 ```bash title="Ubuntu+24.04,Fedora+40"
 # console only
-docker run --privileged -v $PWD/tpmstate:/tmp -v $PWD:/work -v /dev/kvm:/dev/kvm --rm -ti fedora-qemu -nographic -cdrom kairos-@flavor-@flavorRelease-core-amd64-generic-latest.uki.iso
+docker run --privileged -v $PWD/tpmstate:/tmp -v $PWD:/work -v /dev/kvm:/dev/kvm --rm -ti fedora-qemu -nographic -cdrom kairos-{{<flavorCode>}}-{{<flavorReleaseCode>}}-core-amd64-generic-latest.uki.iso
 ```
 
 Note: To stop the QEMU container you can use `Ctrl-a x` or `Ctrl-a c` to enter the QEMU console and then `quit` to exit.

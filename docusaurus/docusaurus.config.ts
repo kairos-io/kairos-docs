@@ -49,6 +49,10 @@ const config: Config = {
     locales: ['en'],
   },
 
+  customFields: {
+    registryURL: 'quay.io/kairos',
+  },
+
   presets: [
     [
       'classic',

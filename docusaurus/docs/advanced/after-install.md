@@ -56,7 +56,7 @@ spec:
       kairos.io/managed: "true"
 
   # The container image to use
-  image: quay.io/kairos/@flavor
+  image: {{< registryURL >}}/{{<flavorCode>}}
 
   # Custom command to execute
   command:
