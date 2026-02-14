@@ -6,6 +6,8 @@ on:
       - docusaurus
     types:
       - opened
+      - synchronize
+      - reopened
 
 jobs:
   compare-migration-pages:
