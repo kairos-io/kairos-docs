@@ -1,5 +1,6 @@
 ---
 title: Configuring your newly deployed Kairos cluster
+sidebar_position: 2
 ---
 
 :::tip Objective

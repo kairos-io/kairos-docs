@@ -98,6 +98,20 @@ const config: Config = {
     [
       '@docusaurus/plugin-content-docs',
       {
+        id: 'getting-started',
+        path: 'getting-started',
+        routeBasePath: 'getting-started',
+        sidebarPath: './sidebarsGettingStarted.ts',
+        remarkPlugins: [remarkShortcodeCode],
+        editUrl:
+          'https://github.com/kairos-io/kairos-docs/tree/main/',
+        showLastUpdateTime: true,
+        showLastUpdateAuthor: true,
+      },
+    ],
+    [
+      '@docusaurus/plugin-content-docs',
+      {
         id: 'quickstart',
         path: 'quickstart',
         routeBasePath: 'quickstart',
@@ -125,7 +139,7 @@ const config: Config = {
       },
       items: [
         {
-          to: '/docs/getting-started',
+          to: '/getting-started',
           position: 'left',
           label: 'Getting Started',
         },
@@ -171,7 +185,7 @@ const config: Config = {
             {
               label: 'Getting Started',
               // point to the actual Getting Started landing
-              to: '/docs/getting-started',
+              to: '/getting-started',
             },
             {
               label: 'Installation',

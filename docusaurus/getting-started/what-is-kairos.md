@@ -1,5 +1,6 @@
 ---
 title: What is Kairos?
+sidebar_position: 3
 ---
 
 Kairos is a cloud-native Linux meta-distribution for running Kubernetes. It brings the power of the public cloud to your on-premises environment. With Kairos, you can build your own cloud with complete control and no vendor lock-in.

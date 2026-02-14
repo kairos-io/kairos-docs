@@ -1,5 +1,6 @@
 ---
 title: Build a Kairos Image and Upgrade Your Cluster
+sidebar_position: 4
 ---
 
 :::tip Objective
