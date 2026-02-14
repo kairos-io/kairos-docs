@@ -4,6 +4,7 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 HUGO_DIR="${ROOT_DIR}/content/en"
 DOCUSAURUS_DIR="${ROOT_DIR}/docusaurus/docs"
+DOCUSAURUS_BLOG_DIR="${ROOT_DIR}/docusaurus/blog"
 DOCUSAURUS_CONFIG="${ROOT_DIR}/docusaurus/docusaurus.config.ts"
 
 declare -A hugo_pages=()
@@ -84,12 +85,22 @@ parse_args() {
 normalize_requested_page_id() {
   local input="$1"
   local rel="${input}"
+  local blog_page_id
 
   rel="${rel#./}"
   rel="${rel#${ROOT_DIR}/}"
+  rel="${rel#${DOCUSAURUS_BLOG_DIR}/}"
   rel="${rel#${HUGO_DIR}/}"
   rel="${rel#${DOCUSAURUS_DIR}/}"
   rel="${rel#/}"
+
+  if [[ "${input}" == *"/docusaurus/blog/"* || "${input}" == docusaurus/blog/* || "${input}" == "./docusaurus/blog/"* ]]; then
+    blog_page_id="$(docusaurus_blog_page_id_from_file "${input}")"
+    if [[ -n "${blog_page_id}" ]]; then
+      echo "${blog_page_id}"
+      return
+    fi
+  fi
   rel="${rel#content/en/}"
   rel="${rel#docusaurus/docs/}"
   rel="${rel#docs/}"
@@ -210,6 +221,102 @@ collect_docusaurus_urls() {
     docusaurus_urls["/"]=1
   fi
   docusaurus_urls["/sitemap.xml"]=1
+}
+
+frontmatter_value() {
+  local file="$1"
+  local key="$2"
+  awk -v wanted="${key}" '
+    NR==1 && $0=="---" { fm=1; next }
+    fm==1 && $0=="---" { fm=0; exit }
+    fm==1 {
+      if ($0 ~ "^[[:space:]]*" wanted ":[[:space:]]*") {
+        line=$0
+        sub("^[[:space:]]*" wanted ":[[:space:]]*", "", line)
+        gsub(/^["'\'']|["'\'']$/, "", line)
+        print line
+        exit
+      }
+    }
+  ' "${file}" 2>/dev/null || true
+}
+
+docusaurus_blog_slug_from_file() {
+  local file="$1"
+  local slug filename
+  slug="$(frontmatter_value "${file}" "slug")"
+  if [[ -z "${slug}" ]]; then
+    filename="$(basename "${file}")"
+    filename="${filename%.*}"
+    slug="$(printf '%s\n' "${filename}" | sed -E 's/^[0-9]{4}-[0-9]{2}-[0-9]{2}-//')"
+  fi
+
+  slug="${slug#/}"
+  slug="${slug%/}"
+  slug="${slug#blog/}"
+  echo "${slug}"
+}
+
+docusaurus_blog_date_parts_from_file() {
+  local file="$1"
+  local date_raw filename year month day
+  date_raw="$(frontmatter_value "${file}" "date")"
+
+  if [[ "${date_raw}" =~ ^([0-9]{4})-([0-9]{2})-([0-9]{2}) ]]; then
+    echo "${BASH_REMATCH[1]} ${BASH_REMATCH[2]} ${BASH_REMATCH[3]}"
+    return
+  fi
+
+  filename="$(basename "${file}")"
+  if [[ "${filename}" =~ ^([0-9]{4})-([0-9]{2})-([0-9]{2})- ]]; then
+    year="${BASH_REMATCH[1]}"
+    month="${BASH_REMATCH[2]}"
+    day="${BASH_REMATCH[3]}"
+    echo "${year} ${month} ${day}"
+    return
+  fi
+
+  echo ""
+}
+
+docusaurus_blog_page_id_from_file() {
+  local file="$1"
+  local resolved="${file}"
+  local slug
+
+  if [[ "${resolved}" != /* ]]; then
+    resolved="${ROOT_DIR}/${resolved#./}"
+  fi
+  [[ -f "${resolved}" ]] || { echo ""; return; }
+
+  slug="$(docusaurus_blog_slug_from_file "${resolved}")"
+  [[ -n "${slug}" ]] || { echo ""; return; }
+  echo "blog/${slug}"
+}
+
+collect_docusaurus_blog_urls() {
+  local file slug page_id date_parts year month day url
+  [[ -d "${DOCUSAURUS_BLOG_DIR}" ]] || return
+
+  while IFS= read -r -d '' file; do
+    slug="$(docusaurus_blog_slug_from_file "${file}")"
+    [[ -n "${slug}" ]] || continue
+    page_id="blog/${slug}"
+    docusaurus_pages["${page_id}"]="${file}"
+
+    date_parts="$(docusaurus_blog_date_parts_from_file "${file}")"
+    if [[ -n "${date_parts}" ]]; then
+      read -r year month day <<< "${date_parts}"
+      url="/blog/${year}/${month}/${day}/${slug}"
+    else
+      url="/blog/${slug}"
+    fi
+    url="$(normalize_url_path "${url}")"
+    docusaurus_urls["${url}"]=1
+    docusaurus_page_to_url["${page_id}"]="${url}"
+  done < <(find "${DOCUSAURUS_BLOG_DIR}" -type f \( -name "*.md" -o -name "*.mdx" \) -print0)
+
+  docusaurus_urls["/blog"]=1
 }
 
 normalize_content() {
@@ -374,6 +481,7 @@ collect_pages "${HUGO_DIR}" "hugo"
 collect_pages "${DOCUSAURUS_DIR}" "docusaurus"
 collect_hugo_urls
 collect_docusaurus_urls
+collect_docusaurus_blog_urls
 
 if [[ "${#requested_pages[@]}" -gt 0 ]]; then
   for requested in "${requested_pages[@]}"; do
