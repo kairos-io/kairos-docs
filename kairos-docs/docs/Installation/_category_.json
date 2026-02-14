@@ -1,0 +1,11 @@
+{
+  "label": "Installation",
+  "position": 3,
+  "link": {
+    "type": "generated-index",
+    "title": "Installation",
+    "description": "Discover multiple ways to install Kairos across cloud, bare metal, and virtualized environments."
+  },
+  "collapsible": true,
+  "collapsed": true
+}

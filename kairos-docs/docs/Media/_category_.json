@@ -1,0 +1,10 @@
+{
+  "label": "Media",
+  "position": 10,
+  "link": {
+    "type": "doc",
+    "id": "Media/_index"
+  },
+  "collapsible": true,
+  "collapsed": true
+}
