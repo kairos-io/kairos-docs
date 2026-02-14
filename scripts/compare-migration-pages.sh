@@ -5,6 +5,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 HUGO_DIR="${ROOT_DIR}/content/en"
 DOCUSAURUS_DIR="${ROOT_DIR}/docusaurus/docs"
 DOCUSAURUS_BLOG_DIR="${ROOT_DIR}/docusaurus/blog"
+DOCUSAURUS_SITE_PAGES_DIR="${ROOT_DIR}/docusaurus/src/pages"
 DOCUSAURUS_CONFIG="${ROOT_DIR}/docusaurus/docusaurus.config.ts"
 
 declare -A hugo_pages=()
@@ -438,6 +439,44 @@ collect_docusaurus_blog_urls() {
   docusaurus_urls["/blog"]=1
 }
 
+collect_docusaurus_site_page_urls() {
+  local file rel no_ext file_name dir_name url page_id
+  [[ -d "${DOCUSAURUS_SITE_PAGES_DIR}" ]] || return
+
+  while IFS= read -r -d '' file; do
+    rel="${file#${DOCUSAURUS_SITE_PAGES_DIR}/}"
+    no_ext="${rel%.*}"
+    file_name="${no_ext##*/}"
+    dir_name="$(dirname "${no_ext}")"
+
+    # Docusaurus does not create routes for underscore-prefixed files.
+    if [[ "${file_name}" == _* ]]; then
+      continue
+    fi
+
+    if [[ "${file_name}" == "index" ]]; then
+      if [[ "${dir_name}" == "." ]]; then
+        url="/"
+      else
+        url="/${dir_name}/"
+      fi
+    else
+      if [[ "${dir_name}" == "." ]]; then
+        url="/${file_name}/"
+      else
+        url="/${dir_name}/${file_name}/"
+      fi
+    fi
+
+    url="$(normalize_url_path "${url}")"
+    page_id="site/${no_ext}"
+    docusaurus_urls["${url}"]=1
+    docusaurus_pages["${page_id}"]="${file}"
+    docusaurus_page_to_url["${page_id}"]="${url}"
+    docusaurus_url_to_page["${url}"]="${page_id}"
+  done < <(find "${DOCUSAURUS_SITE_PAGES_DIR}" -type f \( -name "*.md" -o -name "*.mdx" -o -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" \) -print0)
+}
+
 normalize_content() {
   local file_path="$1"
   awk '
@@ -608,6 +647,7 @@ collect_hugo_urls
 collect_docusaurus_urls
 collect_docusaurus_category_urls
 collect_docusaurus_blog_urls
+collect_docusaurus_site_page_urls
 
 if [[ "${#requested_pages[@]}" -gt 0 ]]; then
   for requested in "${requested_pages[@]}"; do

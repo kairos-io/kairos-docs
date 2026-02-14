@@ -122,7 +122,7 @@ const config: Config = {
         {
           label: 'Community',
           position: 'left',
-          href: 'https://kairos.io/community/',
+          to: '/community/',
         },
         {
           type: 'docsVersionDropdown',
