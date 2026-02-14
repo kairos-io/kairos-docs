@@ -500,8 +500,12 @@ hugo_url_total="${#hugo_urls[@]}"
 
 total_rows=0
 present_ok=0
+present_autogen=0
+present_missing=0
 permalink_ok=0
 content_ok=0
+content_review=0
+content_mismatch=0
 row_errors=0
 
 while IFS= read -r url_path; do
@@ -535,8 +539,8 @@ url_sep="${url_sep// /-}"
 
 echo "Comparing migration coverage using Hugo URL paths as source of truth"
 echo
-printf "| %-*s | %-7s | %-9s | %-7s |\n" "${url_col_width}" "URL Path" "Present" "Permalink" "Content"
-printf "| %-*s | %-7s | %-9s | %-7s |\n" "${url_col_width}" "${url_sep}" "-------" "---------" "-------"
+printf "| %-*s | %s | %s | %s |\n" "${url_col_width}" "URL Path" "Present" "Permalink" "Content"
+printf "| %-*s | %s | %s | %s |\n" "${url_col_width}" "${url_sep}" "-------" "---------" "-------"
 
 for url_path in "${selected_urls[@]}"; do
   page_id="${hugo_url_to_page[${url_path}]-}"
@@ -553,11 +557,14 @@ for url_path in "${selected_urls[@]}"; do
     docusaurus_file="${docusaurus_pages[${page_id}]-}"
   fi
 
-  if [[ -n "${docusaurus_file}" || "${url_path}" == "/" || "${url_path}" == "/sitemap.xml" ]]; then
-    if [[ -n "${docusaurus_file}" || -n "${docusaurus_urls[${url_path}]-}" ]]; then
-      present="✅"
-      present_ok=$((present_ok + 1))
-    fi
+  if [[ -n "${docusaurus_file}" ]]; then
+    present="✅"
+    present_ok=$((present_ok + 1))
+  elif [[ -n "${docusaurus_urls[${url_path}]-}" ]]; then
+    present="🔁"
+    present_autogen=$((present_autogen + 1))
+  else
+    present_missing=$((present_missing + 1))
   fi
 
   if [[ -n "${docusaurus_urls[${url_path}]-}" ]]; then
@@ -572,15 +579,21 @@ for url_path in "${selected_urls[@]}"; do
       content="✅"
       content_ok=$((content_ok + 1))
     elif [[ "${SHOW_DIFF}" -eq 1 ]]; then
+      content_mismatch=$((content_mismatch + 1))
       print_page_diff "${url_path}" "${hugo_file}" "${docusaurus_file}"
+    else
+      content_mismatch=$((content_mismatch + 1))
     fi
+  elif [[ "${present}" != "❌" ]]; then
+    content="👀"
+    content_review=$((content_review + 1))
   fi
 
-  if [[ "${present}" != "✅" || "${permalink}" != "✅" || "${content}" != "✅" ]]; then
+  if [[ "${present}" == "❌" ]]; then
     row_errors=$((row_errors + 1))
   fi
 
-  printf "| %-*s | %-7s | %-9s | %-7s |\n" "${url_col_width}" "${url_path}" "${present}" "${permalink}" "${content}"
+  printf "| %-*s | %s | %s | %s |\n" "${url_col_width}" "${url_path}" "${present}" "${permalink}" "${content}"
 done
 
 if [[ "${#requested_identifiers[@]}" -gt 0 && "${total_rows}" -eq 0 ]]; then
@@ -594,8 +607,12 @@ echo "  docusaurus_file_backed_total: ${docusaurus_file_backed_total}"
 echo "  hugo_url_total: ${hugo_url_total}"
 echo "  rows_checked: ${total_rows}"
 echo "  present_ok: ${present_ok}"
+echo "  present_autogen: ${present_autogen}"
+echo "  present_missing: ${present_missing}"
 echo "  permalink_ok: ${permalink_ok}"
 echo "  content_ok: ${content_ok}"
+echo "  content_review: ${content_review}"
+echo "  content_mismatch: ${content_mismatch}"
 echo "  row_errors: ${row_errors}"
 
 if [[ "${row_errors}" -gt 0 ]]; then
