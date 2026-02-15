@@ -37,12 +37,17 @@ if [[ "${ALL:-0}" == "1" ]]; then
 fi
 
 PRESENT_FILTER="${PRESENT:-all}"
+PERMALINK_FILTER="${PERMALINK:-all}"
 OUTPUT_MODE="${OUTPUT:-table}"
 SUMMARY_ENABLED="${SUMMARY:-1}"
 
 case "${PRESENT_FILTER}" in
   all|file|auto|missing) ;;
   *) echo "ERROR: PRESENT must be one of: all|file|auto|missing" >&2; exit 2 ;;
+esac
+case "${PERMALINK_FILTER}" in
+  all|same|diff) ;;
+  *) echo "ERROR: PERMALINK must be one of: all|same|diff" >&2; exit 2 ;;
 esac
 case "${OUTPUT_MODE}" in
   table|list) ;;
@@ -576,7 +581,7 @@ docusaurus_blog_page_id_from_file() {
 }
 
 collect_docusaurus_blog_urls() {
-  local file slug page_id date_parts year month day url
+  local file slug page_id url permalink
   [[ -d "${DOCUSAURUS_BLOG_DIR}" ]] || return
 
   while IFS= read -r -d '' file; do
@@ -585,10 +590,13 @@ collect_docusaurus_blog_urls() {
     page_id="blog/${slug}"
     docusaurus_pages["${page_id}"]="${file}"
 
-    date_parts="$(docusaurus_blog_date_parts_from_file "${file}")"
-    if [[ -n "${date_parts}" ]]; then
-      read -r year month day <<< "${date_parts}"
-      url="/blog/${year}/${month}/${day}/${slug}"
+    permalink="$(frontmatter_value "${file}" "permalink")"
+    if [[ -n "${permalink}" ]]; then
+      if [[ "${permalink}" == /* ]]; then
+        url="${permalink}"
+      else
+        url="/blog/${permalink#blog/}"
+      fi
     else
       url="/blog/${slug}"
     fi
@@ -717,6 +725,17 @@ normalize_content() {
       return lc($name);
     }
 
+    sub canonical_figure_url {
+      my ($value) = @_;
+      $value //= q{};
+      $value = trim($value);
+      $value =~ s/^["'\'']|["'\'']$//g;
+      $value =~ s/[?#].*$//;
+      $value =~ s{\\}{/}g;
+      $value =~ s#/$## unless $value eq q{/};
+      return $value;
+    }
+
     sub canonical_doc_ref {
       my ($value) = @_;
       $value //= q{};
@@ -758,6 +777,7 @@ normalize_content() {
     $text =~ s/\]\((?!https?:|mailto:|#|__DOCREF__)([^)\s]+)(?:\s+"[^"]*")?\)/"](__DOCREF__[" . canonical_doc_ref($1) . "])"/gei;
     $text =~ s{(?<![A-Za-z0-9])(?:\.\./|\./)+(?:advanced|announcements|architecture|development|examples|installation|media|reference|upgrade|getting-started|quickstart|docs)(?:/[A-Za-z0-9._-]+)+/?}{"__DOCREF__[" . canonical_doc_ref($&) . "]"}gexi;
     $text =~ s{(?<![A-Za-z0-9])/?docs(?:/[A-Za-z0-9._-]+)+/?}{"__DOCREF__[" . canonical_doc_ref($&) . "]"}gexi;
+    $text =~ s/__DOCREF__\[(?:images|img)\/([^\]]+)\]/__DOCREF__[img\/$1]/gmi;
     $text =~ s/\((__DOCREF__\[[^\]]+\])\s+"[^"]*"\)/($1)/g;
     $text =~ s/(__DOCREF__\[[^\]]+\])#[A-Za-z0-9._:-]+/$1/g;
 
@@ -771,6 +791,15 @@ normalize_content() {
     $text =~ s/^\s*```[^\n]*$\n?//gm;
     $text =~ s/^\s*<\/?(?:pre|code)>\s*$\n?//gmi;
     $text =~ s/\{\s*'\''((?:\\\\|\\'\''|[^'\''])*)'\''\s*\}/unescape_jsx_string($1)/ge;
+    $text =~ s/^\s*<!--\s*truncate\s*-->\s*$\n?//gmi;
+    $text =~ s/^\s*\{\s*\/\*\s*truncate\s*\*\/\s*\}\s*$\n?//gmi;
+    $text =~ s/\n{3,}/\n\n/g;
+    $text =~ s/^[ \t]*\n//gm;
+    $text =~ s/<\s*br\s*\/\s*>/<br>/gmi;
+    $text =~ s/<\s*img(\b[^>]*?)\s*\/\s*>/<img$1>/gmi;
+    $text =~ s/\bsrc=(["\x27])\/images\//src=$1\/img\//gmi;
+    $text =~ s/\bhref=(["\x27])\/images\//href=$1\/img\//gmi;
+    $text =~ s/\]\(\/images\//](\/img\//gmi;
 
     $text =~ s/\{\{<\s*([A-Za-z][A-Za-z0-9_-]*)\s*([^}]*)>\}\}/
       my $name = normalize_component_name($1);
@@ -783,6 +812,18 @@ normalize_content() {
       my $attrs = normalize_attrs($2);
       "__SC__[$name][$attrs]";
     /gex;
+
+    # Treat Hugo figure shortcode and markdown image syntax as equivalent
+    # when they reference the same image URL.
+    $text =~ s/__SC__\[figure\]\[([^\]]*)\]/
+      my $attrs = $1;
+      my $src = q{};
+      if ($attrs =~ m{(?:^|\s)src=("[^"]*"|[^ ]+)}i) {
+        $src = $1;
+      }
+      "__FIGURE__[" . canonical_figure_url($src) . "]";
+    /gex;
+    $text =~ s/!\[[^\]]*\]\(([^)\s]+)(?:\s+"[^"]*")?\)/"__FIGURE__[" . canonical_figure_url($1) . "]"/ge;
 
     my @lines = split(/\n/, $text, -1);
     for my $line (@lines) {
@@ -1050,6 +1091,9 @@ for url_path in "${selected_urls[@]}"; do
   esac
 
   if [[ "${PRESENT_FILTER}" != "all" && "${present_cell}" != "${PRESENT_FILTER}" ]]; then
+    continue
+  fi
+  if [[ "${PERMALINK_FILTER}" != "all" && "${permalink_cell}" != "${PERMALINK_FILTER}" ]]; then
     continue
   fi
 

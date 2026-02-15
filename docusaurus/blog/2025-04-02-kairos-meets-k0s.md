@@ -1,7 +1,7 @@
 ---
 authors:
 - mauro-morales
-slug: kairos-meets-k0s
+slug: 2025/04/02/kairos-meets-k0s-a-meta-distribution-for-kubernetes-is-born
 tags:
 - kairos
 title: 'Kairos Meets k0s: A Meta-Distribution for Kubernetes is Born'

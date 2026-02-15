@@ -2,7 +2,7 @@
 authors:
 - ettore-di-giacinto
 description: ''
-slug: trusted-boot
+slug: 2024/04/10/unlocking-the-mysteries-of-trusted-boot-a-deep-dive-into-secure-system-boot-processes
 tags:
 - kairos
 title: 'Unlocking the Mysteries of Trusted Boot: A Deep Dive into Secure System Boot

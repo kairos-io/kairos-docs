@@ -1,7 +1,7 @@
 ---
 authors:
 - mauro-morales
-slug: commercial-support-by-spectro-cloud
+slug: 2025/08/08/growing-stronger-introducing-commercial-support-for-kairos
 tags:
 - kairos
 title: 'Growing Stronger: Introducing Commercial Support for Kairos'

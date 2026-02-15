@@ -1,7 +1,7 @@
 ---
 authors:
 - itxaka-serrano
-slug: kairos-init-announcement
+slug: 2025/03/26/how-we-rebuilt-kairos-building-from-the-ground-up
 tags:
 - kairos
 title: How We Rebuilt Kairos building From the Ground Up

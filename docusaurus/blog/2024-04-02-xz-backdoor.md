@@ -1,7 +1,7 @@
 ---
 authors:
 - mauro-morales
-slug: xz-backdoor
+slug: 2024/04/02/xz-utils-backdoor
 tags:
 - kairos
 title: xz Utils Backdoor

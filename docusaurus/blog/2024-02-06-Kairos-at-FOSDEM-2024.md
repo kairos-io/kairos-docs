@@ -1,7 +1,7 @@
 ---
 authors:
 - mauro-morales
-slug: Kairos-at-FOSDEM-2024
+slug: 2024/02/06/kairos-at-fosdem-2024
 tags:
 - kairos
 title: Kairos at FOSDEM 2024

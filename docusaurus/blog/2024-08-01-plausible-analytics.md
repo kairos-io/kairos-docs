@@ -2,7 +2,7 @@
 authors:
 - mauro-morales
 description: Using a privacy focused analytics service on kairos.io
-slug: plausible-analytics
+slug: 2024/08/01/adding-analytics-to-kairos.io
 tags:
 - kairos
 title: Adding Analytics to Kairos.io

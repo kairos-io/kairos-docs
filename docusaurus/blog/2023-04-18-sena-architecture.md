@@ -6,7 +6,7 @@ description: Learn about how Kairos is now part of SENA, the Secure Edge-Native 
   to securely deploy, provision, operate and manage at scale edge locations. Discover
   the benefits of SENA and what's coming up in the future roadmap of Kairos' secure
   edge computing solutions.
-slug: sena-architecture
+slug: 2023/04/18/kairos-is-now-part-of-the-secure-edge-native-architecture-by-spectro-cloud-and-intel
 tags:
 - kairos
 title: Kairos is now part of the Secure Edge-Native Architecture by Spectro Cloud

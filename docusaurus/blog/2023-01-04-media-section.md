@@ -1,7 +1,7 @@
 ---
 authors:
 - mauro-morales
-slug: media-section
+slug: 2023/01/04/media-section
 tags:
 - kairos
 title: Media Section
