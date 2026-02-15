@@ -201,6 +201,7 @@ html[data-theme='light'] button[class*='toggle']:hover {
   align-items: center;
 }
 
+.navbar__search-input,
 .navbar-search-input {
   height: 32px;
   width: 190px;
@@ -212,10 +213,12 @@ html[data-theme='light'] button[class*='toggle']:hover {
   font-size: 0.9rem;
 }
 
+.navbar__search-input::placeholder,
 .navbar-search-input::placeholder {
   color: rgba(255, 255, 255, 0.7);
 }
 
+.navbar__search-input:focus,
 .navbar-search-input:focus {
   outline: none;
   border-color: var(--kairos-softest-orange);
@@ -223,6 +226,10 @@ html[data-theme='light'] button[class*='toggle']:hover {
 }
 
 @media screen and (max-width: 996px) {
+  .navbar__search-input {
+    width: 100%;
+    margin: 8px 0;
+  }
   .navbar-search-input {
     width: 100%;
     margin: 8px 0;

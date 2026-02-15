@@ -6,14 +6,9 @@ type SearchNavbarItemProps = {
   mobile?: boolean;
 };
 
-const SEARCH_BASE = 'https://duckduckgo.com/';
-const SEARCH_SCOPE = 'site:kairos.io';
-
-function buildSearchUrl(query: string): string {
-  const params = new URLSearchParams({
-    q: `${SEARCH_SCOPE} ${query}`.trim(),
-  });
-  return `${SEARCH_BASE}?${params.toString()}`;
+function buildSearchPath(query: string): string {
+  const params = new URLSearchParams({q: query});
+  return `/search/?${params.toString()}`;
 }
 
 export default function SearchNavbarItem({
@@ -28,7 +23,7 @@ export default function SearchNavbarItem({
     if (!term) {
       return;
     }
-    window.location.href = buildSearchUrl(term);
+    window.location.href = buildSearchPath(term);
   };
 
   if (mobile) {

@@ -96,6 +96,7 @@ const config: Config = {
 
   plugins: [
     './plugins/hugo-mdx-preprocess-plugin.cjs',
+    './plugins/local-search-index-plugin.cjs',
     [
       '@docusaurus/plugin-content-docs',
       {
