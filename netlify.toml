@@ -1,11 +1,10 @@
-# Hugo build configuration for Netlify
-# (https://gohugo.io/hosting-and-deployment/hosting-on-netlify/#configure-hugo-version-in-netlify)
 [build]
-  publish = "public"
-  command = "scripts/build.sh"
+  base = "docusaurus"
+  publish = "build"
+  command = "npm ci && npm run build"
 
 [build.environment]
-  HUGO_VERSION = "0.123.7"
+  NODE_VERSION = "20"
 
 [[redirects]]
 from = "/docs/contribution-guidelines/"
