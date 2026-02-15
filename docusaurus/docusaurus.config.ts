@@ -32,15 +32,6 @@ const config: Config = {
   // Change back to 'throw' once all internal links are fixed.
   onBrokenLinks: 'warn',
 
-  // GitHub buttons script
-  scripts: [
-    {
-      src: 'https://buttons.github.io/buttons.js',
-      async: true,
-      defer: true,
-    },
-  ],
-
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
   // may want to replace "en" with "zh-Hans".
@@ -105,6 +96,7 @@ const config: Config = {
 
   plugins: [
     './plugins/hugo-mdx-preprocess-plugin.cjs',
+    './plugins/local-search-index-plugin.cjs',
     [
       '@docusaurus/plugin-content-docs',
       {
@@ -179,9 +171,12 @@ const config: Config = {
           position: 'right',
         },
         {
-          type: 'html',
+          type: 'custom-search',
           position: 'right',
-          value: '<a class="github-button" href="https://github.com/kairos-io/kairos" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star kairos-io/kairos on GitHub">Star</a>',
+        },
+        {
+          type: 'custom-githubStars',
+          position: 'right',
         },
       ],
     },
