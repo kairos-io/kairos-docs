@@ -51,6 +51,7 @@ const config: Config = {
 
   customFields: {
     registryURL: 'quay.io/kairos',
+    kairosVersion: 'master',
     auroraBootVersion: 'v0.14.0',
     kairosInitVersion: 'v0.6.2',
   },
@@ -153,8 +154,7 @@ const config: Config = {
           label: 'Getting Started',
         },
         {
-          type: 'docSidebar',
-          sidebarId: 'tutorialSidebar',
+          to: '/docs/',
           position: 'left',
           label: 'Documentation',
         },

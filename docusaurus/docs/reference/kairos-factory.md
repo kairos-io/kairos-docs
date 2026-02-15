@@ -165,8 +165,7 @@ You can provide a generic Dockerfile that gets all this values and passes them d
 
 
 :::info K8s versions
-When selecting a k8s provider, the produced image will contain the latest published version of that provider and the Kairos provider for kubernetes.
-If you want to override the version installed see the flag `--k8sversion`
+When selecting a provider (e.g. with `--provider k3s`), you can pin the version using `--provider-k3s-version v1.28.0` (or the appropriate `--provider-<name>-version` flag). If you omit the version, the provider plugin typically installs its default or latest. The Kairos provider for Kubernetes is included when you use a k8s provider.
 :::
 ## Phases
 

@@ -22,7 +22,7 @@ To run Hadron Trusted Boot, you’ll need both a container engine and virtualiza
 
 ## Prefer to watch a video?
 
-<iframe width="100%" height="450" src="https://www.youtube.com/embed/2UY4J3VudnU" title="Hadron Quickstart" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen />
+{{< youtube id="2UY4J3VudnU" title="Hadron Quickstart" >}}
 
 ## Generate Your Keys
 
@@ -124,7 +124,8 @@ kairos-hadron-0.0.1-core-amd64-generic-v3.6.1-beta1-uki.iso
 
 ## Prepare a VM
 
-### VirtualBox
+{{< tabpane text=true right=true >}}
+{{% tab header="VirtualBox" %}}
 
 1. Click **New** to create a virtual machine.
 2. Fill in the VM details:
@@ -148,9 +149,8 @@ kairos-hadron-0.0.1-core-amd64-generic-v3.6.1-beta1-uki.iso
         ```
 8. With the Hadron VM selected, click **Start**.
 
-
-
-### Generic Instructions
+{{% /tab %}}
+{{% tab header="Generic Instructions" %}}
 
 1. Create a new VM.
 2. Assign the downloaded ISO to the CD-ROM and set it as the boot media.
@@ -160,6 +160,8 @@ kairos-hadron-0.0.1-core-amd64-generic-v3.6.1-beta1-uki.iso
 6. Reset the Secure Boot Keys
 7. Reboot
 
+{{% /tab %}}
+{{< /tabpane >}}
 
 
 ## Installing the OS
@@ -230,6 +232,90 @@ Trusted Boot, in the context of Kairos, is an integrated security boot process t
 
 
 
+
+<script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'HowTo',
+      name: 'Deploy Kairos Hadron with Trusted Boot on a VM',
+      description:
+        'Generate Secure Boot keys, build a signed UKI ISO, configure a VM with Secure Boot and TPM, and install Kairos Hadron with Trusted Boot enabled.',
+      step: [
+        {
+          '@type': 'HowToStep',
+          name: 'Generate Secure Boot keys',
+          text: 'Generate a new set of Secure Boot keys using auroraboot.',
+        },
+        {
+          '@type': 'HowToStep',
+          name: 'Build a signed UKI ISO',
+          text: 'Use auroraboot build-uki with your keys to produce a signed ISO.',
+        },
+        {
+          '@type': 'HowToStep',
+          name: 'Prepare a VM with Secure Boot and TPM',
+          text: 'Create a VM, enable EFI/Secure Boot, add a TPM device, and boot from the signed ISO.',
+        },
+        {
+          '@type': 'HowToStep',
+          name: 'Install the OS via the web installer',
+          text: 'Open http://IP:8080, paste the provided cloud-config, set the device to auto, and run the installation.',
+        },
+        {
+          '@type': 'HowToStep',
+          name: 'First boot and access the system',
+          text: 'Boot the installed system from disk, then SSH in to validate it is running.',
+        },
+      ],
+    }),
+  }}
+/>
+
+<script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'How do I configure the system?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'You can configure the system by editing the cloud-config file. The cloud-config file is located at `/oem/90_custom.yaml`. You can edit this file to add users, SSH keys, and other configurations. See the Cloud Config documentation for more information.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'What is Secure Boot?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Secure Boot is a firmware-level security feature that ensures a device boots only trusted software. During startup, the system's firmware (like UEFI) verifies the digital signatures of bootloaders and other critical components against trusted keys stored in the device. If anything has been tampered with or isn't properly signed, the system blocks it from running. This prevents malware—such as rootkits—from loading before the operating system, protecting the integrity of the boot process.",
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'What is UKI?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'A Unified Kernel Image (UKI)—sometimes called a Unified System Image (USI)—is a single, signed EFI executable that bundles together all components needed to boot a Linux system: the kernel, initramfs, kernel command line, and optionally a stub loader and OS metadata. By packaging everything into one signed artifact, UKIs streamline and strengthen Secure Boot flows, eliminate the need to separately verify multiple boot files, and make atomic, reproducible, and verifiable boot environments easier to manage. This approach is increasingly used with systemd-based boot workflows to simplify secure, reliable deployments.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'What is Trusted Boot?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Trusted Boot, in the context of Kairos, is an integrated security boot process that combines Secure Boot, Measured Boot, and Full Disk Encryption (FDE) to ensure that a system wasn't tampered with before booting and that its data remains protected. Secure Boot verifies that only properly signed firmware and OS components load; Measured Boot records cryptographic measurements of each boot stage (often into a TPM) so integrity can be assessed; and FDE ensures that the disk's contents are encrypted against unauthorized access. Together, this stack gives a strong guarantee of boot integrity and data protection—often implemented using a single signed Unified Kernel/System Image (UKI/USI) that the firmware can boot directly, ensuring the system state is trusted from power-on onward.",
+          },
+        },
+      ],
+    }),
+  }}
+/>
 
 ## What's Next?
 
