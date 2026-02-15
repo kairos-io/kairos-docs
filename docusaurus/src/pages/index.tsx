@@ -117,7 +117,6 @@ function FeaturesSection() {
         <div className={styles.featuresGrid}>
           {features.map((feature, idx) => (
             <div key={idx} className={styles.feature}>
-              <div className={styles.featureIcon}>{feature.icon}</div>
               <img src={useBaseUrl(feature.icon)} alt="" />
               <Heading as="h3">{feature.title}</Heading>
               <p>{feature.description}</p>
