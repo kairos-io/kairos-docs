@@ -3,6 +3,9 @@
   publish = "build"
   command = "npm ci && npm run build"
 
+[build.environment]
+  NODE_VERSION = "20"
+
 [[redirects]]
 from = "/docs/contribution-guidelines/"
 to = "https://github.com/kairos-io/kairos/blob/master/CONTRIBUTING.md"
