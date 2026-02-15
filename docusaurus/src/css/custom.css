@@ -119,7 +119,7 @@ a:hover {
 .navbar {
   background-color: var(--kairos-primary);
   box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.15);
-  border-bottom: 1px solid rgba(255, 116, 66, 0.1);
+  border-bottom: 0;
 }
 
 .navbar__title {
@@ -180,26 +180,52 @@ html[data-theme='light'] button[class*='toggle']:hover {
 /* Dark mode navbar */
 [data-theme='dark'] .navbar {
   background-color: var(--kairos-primary);
-  border-bottom: 1px solid rgba(255, 116, 66, 0.2);
+  border-bottom: 0;
 }
 
-/* GitHub Star Button in navbar */
-.navbar .github-button {
+/* Navbar GitHub stars badge */
+.navbar .github-stars-link {
   display: inline-flex;
   align-items: center;
-  margin-top: 4px;
+  padding: 0;
 }
 
-/* Make GitHub button frame blend with navbar */
-.navbar iframe.github-button {
-  margin-top: 4px;
+.navbar .github-stars-link img {
+  display: block;
+  height: 20px;
 }
 
-/* Ensure proper spacing on mobile */
+/* Navbar search */
+.navbar-search-form {
+  display: inline-flex;
+  align-items: center;
+}
+
+.navbar-search-input {
+  height: 32px;
+  width: 190px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  padding: 0 10px;
+  font-size: 0.9rem;
+}
+
+.navbar-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.navbar-search-input:focus {
+  outline: none;
+  border-color: var(--kairos-softest-orange);
+  box-shadow: 0 0 0 2px rgba(255, 116, 66, 0.25);
+}
+
 @media screen and (max-width: 996px) {
-  .navbar .github-button {
-    margin-top: 8px;
-    margin-bottom: 8px;
+  .navbar-search-input {
+    width: 100%;
+    margin: 8px 0;
   }
 }
 
