@@ -11,6 +11,7 @@ import styles from './index.module.css';
 
 function HomepageHeader() {
   const {siteConfig} = useDocusaurusContext();
+  const latestVersion = String(siteConfig.customFields?.latestVersion ?? 'v3.7.2');
   return (
     <header className={clsx('hero', styles.heroBanner)}>
       <div className={styles.heroContainer}>
@@ -23,20 +24,35 @@ function HomepageHeader() {
           </p>
           <div className={styles.heroButtons}>
             <Link
-              className="button button--primary button--lg"
-              to="/docs/_index">
+              className={clsx('button button--primary button--lg', styles.quickStartButton)}
+              to="/getting-started/">
               Quick Start
             </Link>
             <Link
-              className={clsx('button button--secondary button--lg', styles.githubButton)}
+              className={styles.githubButton}
               href="https://github.com/kairos-io/kairos"
               target="_blank">
-              ⭐ Star us on GitHub
+              <span className={styles.githubStar} aria-hidden="true">
+                <img src={useBaseUrl('/index/star.svg')} alt="" />
+              </span>
+              <span className={styles.githubText}>Star us on GitHub</span>
             </Link>
           </div>
         </div>
         <div className={styles.heroImage}>
             <img src={useBaseUrl('/img/armadillo.png')} alt="Kairos Logo" width="318" />
+            <div className={styles.latestRelease}>
+              Check out
+              <p>our latest release</p>
+              <div className={styles.latestReleaseVersion}>
+                <div>Latest release</div>
+                <div>
+                  <a href={`https://github.com/kairos-io/kairos/releases/tag/${latestVersion}`} target="_blank" rel="noreferrer">
+                    {latestVersion}
+                  </a>
+                </div>
+              </div>
+            </div>
         </div>
       </div>
     </header>

@@ -63,23 +63,10 @@
 
 .heroAccent {
   color: var(--kairos-softer-orange);
-  position: relative;
-  display: inline-block;
-}
-
-.heroAccent::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--kairos-softer-orange), var(--kairos-softest-orange));
-  border-radius: 2px;
 }
 
 .heroSubtitle {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   color: rgba(255, 255, 255, 0.9);
   margin-bottom: 2.5rem;
   line-height: 1.7;
@@ -98,10 +85,87 @@
   box-shadow: 0 4px 14px 0 rgba(238, 80, 7, 0.3);
 }
 
+.quickStartButton {
+  color: var(--kairos-white) !important;
+}
+
 .githubButton {
+  width: 264px;
+  height: 54px;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  text-decoration: none;
+  border-radius: 6px;
+  border: 1px solid var(--kairos-gray);
+  background: var(--kairos-white);
+  color: #2b2b2b;
+  overflow: hidden;
+}
+
+.githubStar {
+  width: 54px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ebf0f4;
+  border-right: 1px solid var(--kairos-gray);
+}
+
+.githubStar img {
+  width: 20px;
+}
+
+.githubText {
+  flex-grow: 1;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 100%;
+  color: #2b2b2b;
+}
+
+.latestRelease {
+  color: var(--kairos-white);
+  font-size: 45px;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: 0.45px;
+  line-height: 140%;
+}
+
+.latestRelease p {
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 140%;
+  letter-spacing: 0.28px;
+  margin-bottom: 30px;
+}
+
+.latestReleaseVersion {
+  color: #ffd9c7;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 100%;
+  border: 2px solid #ffd9c7;
+  border-radius: 6px;
+  display: flex;
+}
+
+.latestReleaseVersion a {
+  color: var(--kairos-white);
+}
+
+.latestReleaseVersion > div:first-child {
+  padding: 14px 20px;
+  background: rgba(251, 158, 112, 0.5);
+  border-right: 2px solid #ffd4bf;
+}
+
+.latestReleaseVersion > div:nth-child(2) {
+  background: var(--kairos-softer-orange);
+  padding: 14px 16px;
+  font-weight: 700;
 }
 
 .heroImage {
@@ -109,6 +173,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 2rem;
   animation: float 6s ease-in-out infinite;
 }
 
@@ -148,6 +213,23 @@
 
   .heroButtons {
     justify-content: center;
+  }
+
+  .latestRelease {
+    font-size: 34px;
+  }
+
+  .latestRelease p {
+    font-size: 22px;
+    margin-bottom: 16px;
+  }
+
+  .latestReleaseVersion {
+    justify-content: center;
+  }
+
+  .heroImage {
+    flex-direction: column;
   }
 
   .heroImage img {
