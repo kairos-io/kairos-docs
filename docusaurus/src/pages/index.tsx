@@ -11,7 +11,7 @@ import styles from './index.module.css';
 
 function HomepageHeader() {
   const {siteConfig} = useDocusaurusContext();
-  const latestVersion = String(siteConfig.customFields?.latestVersion ?? 'v3.5.2');
+  const latestVersion = String(siteConfig.customFields?.latestVersion ?? 'v3.7.2');
   return (
     <header className={clsx('hero', styles.heroBanner)}>
       <div className={styles.heroContainer}>
