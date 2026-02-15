@@ -760,3 +760,417 @@
     padding: 2rem;
   }
 }
+
+/* Hugo-like homepage section styling overrides */
+.welcomeSection {
+  background: #eaedf3;
+  padding: 64px 20px;
+}
+
+.welcomeContent {
+  max-width: 1200px;
+  overflow: hidden;
+  display: flex;
+  flex-flow: row wrap-reverse;
+  justify-content: space-between;
+  align-items: center;
+  gap: 57px;
+  padding: 56px 100px 66px 120px;
+  margin: 0 auto;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 15px 18px -20px rgba(9, 17, 49, 0.15), 0 54px 144px -60px rgba(9, 17, 49, 0.15);
+}
+
+.welcomeText h2 {
+  color: var(--kairos-primary);
+  font-size: 48px;
+  font-weight: 600;
+  line-height: 120%;
+}
+
+.welcomeText p {
+  margin-top: 24px;
+  color: #707594;
+  font-size: 22px;
+  line-height: 140%;
+}
+
+.videoLink {
+  max-width: 461px;
+  margin-top: 42px;
+  border: 1px solid #e8ebf2;
+  background: #f6f7fa;
+  color: #0d1440;
+}
+
+.videoLink img {
+  width: 39px;
+  margin-left: auto;
+}
+
+.hotPressSection {
+  background: #fafcff;
+  padding: 100px 20px;
+}
+
+.hotPressWrap {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.hotPressWrap > h2 {
+  text-align: center;
+  color: var(--kairos-primary);
+  font-size: 48px;
+  font-weight: 600;
+  margin-bottom: 64px;
+}
+
+.pressCards {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  gap: 45px;
+}
+
+.pressCard {
+  width: 369px;
+  padding: 51px 24px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 27px 66px -10px rgba(6, 17, 77, 0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.pressCard p {
+  max-width: 248px;
+  color: #041842;
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 140%;
+}
+
+.pressCard a {
+  max-width: 248px;
+  width: 100%;
+  color: var(--kairos-primary);
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.pressCardImg {
+  border-radius: 6px;
+  background: #0b1b3d;
+  max-width: 248px;
+  width: 100%;
+  height: 126px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pressCardImg img {
+  max-width: 90%;
+  max-height: 90%;
+}
+
+.pressMore {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.pressMore a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 28px;
+  border-radius: 6px;
+  background: var(--kairos-orange);
+  color: #fff;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.featuresSection {
+  background: #f5f7fa;
+  padding: 100px 20px;
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 54px;
+}
+
+.feature {
+  max-width: 573px;
+  border-radius: 20px;
+  box-shadow: 0 17px 56px -10px rgba(6, 17, 77, 0.11);
+  border: 0;
+}
+
+.feature img {
+  width: 143px;
+  height: 143px;
+}
+
+.feature h3 {
+  font-size: 36px;
+  line-height: 130%;
+}
+
+.feature p {
+  color: #707594;
+  font-size: 22px;
+  line-height: 160%;
+}
+
+.cncfSection {
+  background: var(--kairos-primary);
+  padding: 64px 20px 84px;
+}
+
+.cncfContent h2 {
+  font-size: 48px;
+  font-weight: 600;
+  line-height: 120%;
+}
+
+.cncfContent p {
+  max-width: 1055px;
+  margin: 0 auto;
+  color: #fff;
+  font-size: 24px;
+}
+
+.eventsSection {
+  background: #f7f9fc;
+  padding: 64px 20px 84px;
+}
+
+.eventsWrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  text-align: center;
+}
+
+.eventsWrap h2 {
+  color: var(--kairos-primary);
+  font-size: 44px;
+  font-weight: 600;
+}
+
+.eventsWrap p {
+  color: #344079;
+  font-size: 22px;
+}
+
+.eventsCta a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 28px;
+  border-radius: 6px;
+  background: var(--kairos-orange);
+  color: #fff;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.communitySection {
+  background: var(--kairos-orange);
+  padding: 64px 20px 84px;
+}
+
+.communitySection h2 {
+  color: #fff;
+  font-size: 48px;
+  font-weight: 600;
+}
+
+.communityDescription {
+  color: #fdd3bf;
+  font-size: 24px;
+}
+
+.communityCard {
+  background: #fff;
+  border: 1px solid #dbdfe8;
+  border-radius: 6px;
+  box-shadow: none;
+}
+
+.communityIcon {
+  font-size: 44px;
+}
+
+.communityCard p {
+  color: #344079;
+}
+
+.enterpriseSection {
+  background: #f5f7fa;
+  padding: 64px 20px 84px;
+}
+
+.enterpriseSection h2 {
+  color: var(--kairos-primary);
+  font-size: 48px;
+  font-weight: 600;
+}
+
+.enterpriseDescription {
+  color: #000;
+  font-size: 24px;
+}
+
+.enterpriseCard {
+  max-width: 573px;
+  border-radius: 20px;
+  box-shadow: 0 17px 56px -10px rgba(6, 17, 77, 0.11);
+  border: 0;
+}
+
+.enterpriseCard p {
+  color: #707594;
+  font-size: 22px;
+  line-height: 160%;
+}
+
+.enterpriseCard :global(.button--primary) {
+  background-color: var(--kairos-orange) !important;
+  border-color: var(--kairos-orange) !important;
+  color: #fff !important;
+}
+
+.enterpriseCard :global(a.button--primary:link),
+.enterpriseCard :global(a.button--primary:visited) {
+  color: #fff !important;
+}
+
+.enterpriseCard :global(.button--primary:hover),
+.enterpriseCard :global(.button--primary:focus),
+.enterpriseCard :global(.button--primary:active),
+[data-theme='dark'] .enterpriseCard :global(.button--primary),
+[data-theme='dark'] .enterpriseCard :global(.button--primary:hover),
+[data-theme='dark'] .enterpriseCard :global(.button--primary:focus),
+[data-theme='dark'] .enterpriseCard :global(.button--primary:active) {
+  background-color: var(--kairos-orange) !important;
+  border-color: var(--kairos-orange) !important;
+  color: #fff !important;
+}
+
+.adoptersSection {
+  background: #fff;
+  padding: 100px 20px;
+}
+
+.adoptersWrap {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.adoptersWrap h2 {
+  text-align: center;
+  color: var(--kairos-primary);
+  font-size: 48px;
+  font-weight: 600;
+  margin-bottom: 64px;
+}
+
+.adoptersCards {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  gap: 45px;
+}
+
+.adopterCard {
+  width: 369px;
+  padding: 51px 24px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 27px 66px -10px rgba(6, 17, 77, 0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.adopterCard p {
+  max-width: 248px;
+  color: #041842;
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 140%;
+}
+
+.adopterCardImg {
+  border-radius: 6px;
+  background: var(--kairos-orange);
+  max-width: 248px;
+  width: 100%;
+  height: 126px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.adopterCardImg img {
+  max-width: 90%;
+  max-height: 90%;
+}
+
+.adopterCard a {
+  max-width: 248px;
+  width: 100%;
+  color: var(--kairos-primary);
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.basicsSection {
+  background: #fafcff;
+  padding: 50px 20px;
+}
+
+[data-theme='dark'] .enterpriseSection {
+  background: #131a24;
+}
+
+[data-theme='dark'] .enterpriseSection h2 {
+  color: #fff;
+}
+
+[data-theme='dark'] .enterpriseDescription {
+  color: #d5dbe6;
+}
+
+[data-theme='dark'] .enterpriseCard {
+  background: #fff;
+  border: 0;
+  box-shadow: 0 17px 56px -10px rgba(6, 17, 77, 0.22);
+}
+
+[data-theme='dark'] .enterpriseCard p {
+  color: #707594;
+}
+
+@media screen and (max-width: 900px) {
+  .featuresGrid {
+    grid-template-columns: 1fr;
+  }
+}
