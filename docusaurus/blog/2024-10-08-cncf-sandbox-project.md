@@ -1,7 +1,7 @@
 ---
 authors:
 - mauro-morales
-slug: cncf-sandbox-project
+slug: 2024/10/08/kairos-joins-the-cncf-as-a-sandbox-project
 tags:
 - kairos
 title: Kairos Joins the CNCF as a Sandbox Project

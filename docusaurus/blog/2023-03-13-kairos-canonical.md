@@ -6,7 +6,7 @@ description: Kairos, the open-source distributed infrastructure platform, has co
   The solution leverages the latest advances in OpenRAN automation and distributed
   compute management, and is set to take center stage at this year's Mobile World
   Congress.
-slug: kairos-canonical
+slug: 2023/03/13/kairos-spectrocloud-and-canonical-collaborate-to-deliver-revolutionary-telco-radio-edge-solution
 tags:
 - kairos
 title: Kairos, SpectroCloud, and Canonical Collaborate to Deliver Revolutionary Telco

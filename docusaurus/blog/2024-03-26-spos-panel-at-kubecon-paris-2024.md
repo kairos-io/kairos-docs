@@ -1,7 +1,7 @@
 ---
 authors:
 - mauro-morales
-slug: spos-panel-at-kubecon-paris-2024
+slug: 2024/03/26/spos-panel-at-kubecon-paris-2024
 tags:
 - kairos
 title: SPOS Panel at KubeCon Paris 2024
@@ -32,4 +32,4 @@ The rest of the time was dedicated for Q&A.
 
 Last but not least, let me reiterate like I did in the Spectro Cloud post that, these panels and similar initiatives are important because they help users understand why these projects exist and get an idea of why we have different options and how that makes us a stronger community instead of rivals.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/uD-T9LdfvrM" title="Special Purpose Operating Systems: The Next Step in OS Evolution or One-Trick Ponies?" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+{{< youtube id="uD-T9LdfvrM" title="Special Purpose Operating Systems: The Next Step in OS Evolution or One-Trick Ponies?" >}}

@@ -1,7 +1,7 @@
 ---
 authors:
 - mauro-morales
-slug: kairos-doorbell
+slug: 2025/03/18/how-i-automated-my-doorbell-with-kairos-and-you-can-too
 tags:
 - kairos
 title: How I Automated My Doorbell with Kairos (and You Can Too)

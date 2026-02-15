@@ -3,7 +3,7 @@ authors:
 - mauro-morales
 description: Discover how our new customizable flavor menu in Kairos documentation
   streamlines your experience by allowing you to select your preferred Linux distribution.
-slug: flavor-menu
+slug: 2024/08/14/enhancing-kairos-documentation-with-a-customizable-flavor-menu
 tags:
 - kairos
 title: Enhancing Kairos Documentation with a Customizable Flavor Menu

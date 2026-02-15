@@ -1,7 +1,7 @@
 ---
 authors:
 - mauro-morales
-slug: hacktoberfest-2024
+slug: 2024/10/07/hacktoberfest-2024
 tags:
 - kairos
 title: Hacktoberfest 2024

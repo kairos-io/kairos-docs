@@ -1,7 +1,7 @@
 ---
 authors:
 - mauro-morales
-slug: crowdstrike-outage
+slug: 2024/07/22/the-importance-of-resilient-infrastructure-how-kairos-could-have-mitigated-the-crowdstrike-outage
 tags:
 - kairos
 title: 'The Importance of Resilient Infrastructure: How Kairos Could Have Mitigated

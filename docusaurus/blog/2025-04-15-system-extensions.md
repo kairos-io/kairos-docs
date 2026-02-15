@@ -1,7 +1,7 @@
 ---
 description: Introducing the new CLI-driven system extension management in Kairos.
   Download, enable, and manage system extensions live without rebuilding your OS image.
-slug: system-extensions
+slug: 2025/04/15/system-extensions-simplified-live-customization-with-kairos
 tags:
 - kairos
 title: 'System Extensions, Simplified: Live Customization with Kairos'

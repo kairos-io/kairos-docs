@@ -1,7 +1,7 @@
 ---
 authors:
   - mauro-morales
-slug: welcome-william-rizzo-new-kairos-maintainer
+slug: 2026/01/15/welcome-william-rizzo-new-kairos-maintainer
 tags:
   - kairos
 title: Welcome William Rizzo, New Kairos Maintainer

@@ -1,7 +1,7 @@
 ---
 authors:
 - mauro-morales
-slug: hacktoberfest-2023
+slug: 2023/09/26/hacktoberfest-2023
 tags:
 - kairos
 title: Hacktoberfest 2023

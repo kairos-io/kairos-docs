@@ -1,7 +1,36 @@
 'use strict';
 
+function parseShortcodeAttrs(raw) {
+  const attrs = {};
+  const re = /([A-Za-z_][A-Za-z0-9_-]*)\s*=\s*"([^"]*)"/g;
+  let m = re.exec(raw || '');
+  while (m) {
+    attrs[m[1]] = m[2];
+    m = re.exec(raw || '');
+  }
+  return attrs;
+}
+
 function transformNonInlineCode(segment) {
   let out = segment;
+
+  // Render Hugo youtube shortcode into embeddable iframe.
+  out = out.replace(/\{\{<\s*youtube\b([^>]*)>\}\}/gi, (_full, rawAttrs) => {
+    const attrs = parseShortcodeAttrs(rawAttrs);
+    const id = (attrs.id || '').trim();
+    if (!id) return _full;
+    const title = (attrs.title || 'YouTube video').replace(/"/g, '&quot;');
+    return `<iframe width="560" height="315" src="https://www.youtube.com/embed/${id}" title="${title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+  });
+  out = out.replace(/\{\{<\s*card\b([^>]*)>\}\}/gi, (_full, rawAttrs) => {
+    const attrs = parseShortcodeAttrs(rawAttrs);
+    const parts = [];
+    if (attrs.header) parts.push(attrs.header);
+    if (attrs.subtitle) parts.push(attrs.subtitle);
+    if (attrs.footer) parts.push(attrs.footer);
+    return parts.join('\n');
+  });
+  out = out.replace(/\{\{<\s*\/card\s*>\}\}/gi, '');
 
   // Make HTML <br> tags explicit self-closing tags for MDX compatibility.
   out = out.replace(/<br>/gi, '<br />');
@@ -51,7 +80,14 @@ function wrapShortcodesOutsideInline(line) {
       const end = line.indexOf(close, i + 3);
       if (end !== -1) {
         const shortcode = line.slice(i, end + close.length);
-        out += `\`${shortcode}\``;
+        const shortcodeNameMatch = shortcode.match(/^\{\{[<%]\s*\/?\s*([A-Za-z0-9_-]+)/);
+        const shortcodeName = shortcodeNameMatch ? shortcodeNameMatch[1].toLowerCase() : '';
+        const supportedInlineShortcodes = new Set(['youtube', 'card']);
+        if (supportedInlineShortcodes.has(shortcodeName)) {
+          out += shortcode;
+        } else {
+          out += `\`${shortcode}\``;
+        }
         i = end + close.length;
         continue;
       }

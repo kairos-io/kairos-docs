@@ -1,7 +1,7 @@
 ---
 authors:
 - dimitris-karakasilis
-slug: home-lab-with-kairos-and-wireguard
+slug: 2023/03/29/access-your-home-lab-kairos-cluster-over-a-wireguard-vpn
 tags:
 - kairos
 title: Access your home-lab Kairos cluster over a Wireguard VPN

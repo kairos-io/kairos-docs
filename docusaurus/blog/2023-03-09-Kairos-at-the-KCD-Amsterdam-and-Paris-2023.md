@@ -1,7 +1,7 @@
 ---
 authors:
 - mauro-morales
-slug: Kairos-at-the-KCD-Amsterdam-and-Paris-2023
+slug: 2023/03/09/kairos-at-the-kcd-amsterdam-and-paris-2023
 tags:
 - kairos
 title: Kairos at the KCD Amsterdam and Paris 2023

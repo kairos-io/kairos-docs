@@ -1,7 +1,7 @@
 ---
 authors:
   - ettore-di-giacinto
-slug: introducing-hadron-the-minimal-upstream-first-linux-base-for-kairos
+slug: 2025/12/17/introducing-hadron-the-minimal-upstream-first-linux-base-for-kairos
 tags:
   - kairos
 title: "Introducing Hadron: The Minimal, Upstream-First Linux Base for Kairos"
