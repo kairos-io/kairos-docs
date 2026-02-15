@@ -14,7 +14,7 @@ This guide will walk you through the steps to build a new Kairos container image
 
 ## Do you prefer to watch a video?
 
-<iframe width="100%" height="450" src="https://www.youtube.com/embed/bXTvNMs1wcI" title="Building and Upgrading Kairos" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen />
+{{< youtube id="bXTvNMs1wcI" title="Building and Upgrading Kairos" >}}
 
 ## Containers
 
@@ -75,69 +75,41 @@ No problem, just [build your image from scratch](/reference/build-from-scratch/)
 
 Yes you can! Boot into the passive (fallback) system, and apply an upgrade with the previous image (or to any image you'd rather upgrade to). This will completely replace the active image with the one you specify, keeping your passive image intact.
 
-[//]: # (<script type="application/ld+json">)
-
-[//]: # ({)
-
-[//]: # (  "@context": "https://schema.org",)
-
-[//]: # (  "@type": "FAQPage",)
-
-[//]: # (  "mainEntity": [)
-
-[//]: # (    {)
-
-[//]: # (      "@type": "Question",)
-
-[//]: # (      "name": "When should I add things on the Dockerfile and when to the cloud-config?",)
-
-[//]: # (      "acceptedAnswer": {)
-
-[//]: # (        "@type": "Answer",)
-
-[//]: # (        "text": "The answer to this will depend on your setup but here are two things to keep in mind. If you can install software via Kubernetes, then you don't need to build your own images, for example for a Ruby on Rails application, you don't need Ruby at the host system, since it will running in containers. If you cannot or don't want to install on Kubernetes, then just keep this in mind. Changes to your cloud-config can be applied on a node and the effects will be present as soon as you reboot, giving you a faster feedback loop, while changes done at the Dockerfile level, will require that you build a new image and upgrade all your nodes.")
-
-[//]: # (      })
-
-[//]: # (    },)
-
-[//]: # (    {)
-
-[//]: # (      "@type": "Question",)
-
-[//]: # (      "name": "What if I don't want to base my image on the Kairos released artifacts?",)
-
-[//]: # (      "acceptedAnswer": {)
-
-[//]: # (        "@type": "Answer",)
-
-[//]: # (        "text": "No problem, just [build your image from scratch]&#40;/reference/build-from-scratch/&#41;")
-
-[//]: # (      })
-
-[//]: # (    },)
-
-[//]: # (    {)
-
-[//]: # (      "@type": "Question",)
-
-[//]: # (      "name": "Can I easily rollback an upgrade?",)
-
-[//]: # (      "acceptedAnswer": {)
-
-[//]: # (        "@type": "Answer",)
-
-[//]: # (        "text": "Yes you can! Boot into the passive &#40;fallback&#41; system, and apply an upgrade with the previous image &#40;or to any image you'd rather upgrade to&#41;. This will completely replace the active image with the one you specify, keeping your passive image intact.")
-
-[//]: # (      })
-
-[//]: # (    })
-
-[//]: # (  ])
-
-[//]: # (})
-
-[//]: # (</script>)
+<script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'When should I add things on the Dockerfile and when to the cloud-config?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "The answer to this will depend on your setup but here are two things to keep in mind. If you can install software via Kubernetes, then you don't need to build your own images, for example for a Ruby on Rails application, you don't need Ruby at the host system, since it will running in containers. If you cannot or don't want to install on Kubernetes, then just keep this in mind. Changes to your cloud-config can be applied on a node and the effects will be present as soon as you reboot, giving you a faster feedback loop, while changes done at the Dockerfile level, will require that you build a new image and upgrade all your nodes.",
+          },
+        },
+        {
+          '@type': 'Question',
+          name: "What if I don't want to base my image on the Kairos released artifacts?",
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'No problem, just [build your image from scratch](/reference/build-from-scratch/)',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Can I easily rollback an upgrade?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Yes you can! Boot into the passive (fallback) system, and apply an upgrade with the previous image (or to any image you'd rather upgrade to). This will completely replace the active image with the one you specify, keeping your passive image intact.",
+          },
+        },
+      ],
+    }),
+  }}
+/>
 
 ## What's next?
 

@@ -23,7 +23,7 @@ To run Hadron Trusted Boot, you’ll need virtualization software that can run o
 
 ## Prefer to watch a video?
 
-<iframe width="100%" height="450" src="https://www.youtube.com/embed/0avUNGAjMVw" title="Hadron Quickstart" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen />
+{{< youtube id="0avUNGAjMVw" title="Hadron Quickstart" >}}
 
 ## Download an ISO
 
@@ -57,7 +57,8 @@ Hadron Single-Node Demo Requirements (with k3s)
 
 :::
 
-### VirtualBox
+{{< tabpane text=true right=true >}}
+{{% tab header="VirtualBox" %}}
 
 1. Click **New** to create a virtual machine.
 2. Fill in the VM details:
@@ -78,15 +79,16 @@ Hadron Single-Node Demo Requirements (with k3s)
 7. Click **OK** to save your changes.
 8. With the Hadron VM selected, click **Start**.
 
-
-
-### Generic Instructions
+{{% /tab %}}
+{{% tab header="Generic Instructions" %}}
 
 1. Create a new VM.
 2. Assign the downloaded ISO to the CD-ROM and set it as the boot media.
 3. Configure the VM hardware according to the requirements.
 4. Start the VM.
 
+{{% /tab %}}
+{{< /tabpane >}}
 
 
 ## Installing the OS
@@ -223,5 +225,91 @@ Yes, absolutely! You can use Kairos as a standalone Linux distribution without K
 
 Yes, you can download the standard image with k0s. Both k3s and k0s are equally supported by the Kairos team.
 
+<script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'HowTo',
+      name: 'Install Kairos Hadron on a VM (single-node Kubernetes with k3s)',
+      description:
+        'Download the Hadron ISO, create a VM, install via the web installer, then SSH in and verify your k3s cluster is running.',
+      step: [
+        {
+          '@type': 'HowToStep',
+          name: 'Download a Hadron ISO',
+          text: 'Download the Hadron amd64 ISO from the releases link on this page.',
+        },
+        {
+          '@type': 'HowToStep',
+          name: 'Create a virtual machine',
+          text: 'Create a VM (for example in VirtualBox), attach the ISO, configure CPU/RAM/disk, and boot the VM.',
+        },
+        {
+          '@type': 'HowToStep',
+          name: 'Install the OS via the web installer',
+          text: 'Open http://IP:8080, paste the provided cloud-config, set the device to auto, and run the installation.',
+        },
+        {
+          '@type': 'HowToStep',
+          name: 'First boot',
+          text: 'After installation, boot the system from disk and log in with the configured credentials.',
+        },
+        {
+          '@type': 'HowToStep',
+          name: 'SSH into the system',
+          text: 'SSH to the VM using the same IP address used during installation.',
+        },
+        {
+          '@type': 'HowToStep',
+          name: 'Verify the running cluster',
+          text: 'Switch to root and run kubectl get nodes and kubectl get pods -n kube-system to confirm the cluster is healthy.',
+        },
+      ],
+    }),
+  }}
+/>
 
-
+<script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'How do I configure the system?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'You can configure the system by editing the cloud-config file. The cloud-config file is located at /oem/90_custom.yaml. You can edit this file to add users, SSH keys, and other configurations. See the Cloud Config documentation for more information.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'What is a Kairos flavor?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'A Kairos flavor is a specific version of Kairos that is built on top of a specific Linux distribution. For example, the Alpine Kairos flavor is built on top of Alpine Linux. You can choose the flavor that best suits your needs.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Can I use Kairos without Kubernetes?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Yes, absolutely! You can use Kairos as a standalone Linux distribution without Kubernetes. Just download the Kairos Core artifacts if you don't want to use Kubernetes, or configure the Standard artifacts with the `k3s` option disabled.",
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Can I use a different Kubernetes distribution with Kairos?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Yes, you can download the standard image with k0s. Both k3s and k0s are equally supported by the Kairos team.',
+          },
+        },
+      ],
+    }),
+  }}
+/>

@@ -11,6 +11,14 @@ function parseShortcodeAttrs(raw) {
   return attrs;
 }
 
+function slugifyTabValue(text) {
+  return String(text || '')
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '') || 'tab';
+}
+
 function transformNonInlineCode(segment) {
   let out = segment;
 
@@ -45,6 +53,7 @@ function transformNonInlineCode(segment) {
       'a', 'b', 'blockquote', 'br', 'code', 'details', 'div', 'em', 'h1', 'h2', 'h3',
       'h4', 'h5', 'h6', 'hr', 'i', 'img', 'li', 'ol', 'p', 'pre', 'span', 'strong',
       'summary', 'table', 'tbody', 'td', 'th', 'thead', 'tr', 'ul',
+      'tabs', 'tabitem', 'kairosversion',
     ]);
     if (htmlTags.has(normalized)) {
       return full;
@@ -57,6 +66,29 @@ function transformNonInlineCode(segment) {
     return /\/\s*>$/.test(full) ? full : `<img${attrs} />`;
   });
 
+  // Render supported simple value shortcodes as MDX components outside code.
+  out = out.replace(/\{\{<\s*kairosVersion\s*>\}\}/gi, '<KairosVersion />');
+
+  return out;
+}
+
+function transformTabShortcodeLine(line) {
+  let out = line;
+  out = out.replace(/^\s*\{\{[<%]\s*tabpane\b[^}]*[>%]\}\}\s*$/i, '<Tabs>');
+  out = out.replace(/^\s*\{\{[<%]\s*\/tabpane\s*[>%]\}\}\s*$/i, '</Tabs>');
+  out = out.replace(/^\s*\{\{[<%]\s*tab\b([^}]*)[>%]\}\}\s*$/i, (_full, rawAttrs) => {
+    const attrs = parseShortcodeAttrs(rawAttrs);
+    const label = String(
+      attrs.header || attrs.name || attrs.title || attrs.value || attrs.tab || 'Tab',
+    ).trim();
+    const value = slugifyTabValue(label);
+    const isSelfClosing = /\/\s*$/.test(String(rawAttrs || '').trim());
+    if (isSelfClosing) {
+      return `<TabItem value="${value}" label="${label}" />`;
+    }
+    return `<TabItem value="${value}" label="${label}">`;
+  });
+  out = out.replace(/^\s*\{\{[<%]\s*\/tab\s*[>%]\}\}\s*$/i, '</TabItem>');
   return out;
 }
 
@@ -82,7 +114,13 @@ function wrapShortcodesOutsideInline(line) {
         const shortcode = line.slice(i, end + close.length);
         const shortcodeNameMatch = shortcode.match(/^\{\{[<%]\s*\/?\s*([A-Za-z0-9_-]+)/);
         const shortcodeName = shortcodeNameMatch ? shortcodeNameMatch[1].toLowerCase() : '';
-        const supportedInlineShortcodes = new Set(['youtube', 'card']);
+        const supportedInlineShortcodes = new Set([
+          'youtube',
+          'card',
+          'kairosversion',
+          'tabpane',
+          'tab',
+        ]);
         if (supportedInlineShortcodes.has(shortcodeName)) {
           out += shortcode;
         } else {
@@ -101,7 +139,7 @@ function wrapShortcodesOutsideInline(line) {
 }
 
 function normalizeOutsideCode(line) {
-  const out = wrapShortcodesOutsideInline(line);
+  const out = wrapShortcodesOutsideInline(transformTabShortcodeLine(line));
 
   // Avoid changing shortcode text inside inline markdown code spans.
   const parts = out.split('`');
@@ -117,9 +155,23 @@ module.exports = function hugoMdxPreprocessLoader(source) {
   const out = [];
   let inFence = false;
   let inMultilineShortcode = false;
+  let inJsonLdScript = false;
 
   for (const line of lines) {
     const trimmed = line.trimStart();
+    if (trimmed.match(/^<script\b/i) && /type\s*=\s*["']application\/ld\+json["']/i.test(trimmed)) {
+      inJsonLdScript = true;
+      out.push(line);
+      continue;
+    }
+    if (inJsonLdScript) {
+      out.push(line);
+      if (trimmed.match(/^<\/script>/i)) {
+        inJsonLdScript = false;
+      }
+      continue;
+    }
+
     if (/^(```|~~~)/.test(trimmed)) {
       inFence = !inFence;
       out.push(line);

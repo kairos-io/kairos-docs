@@ -16,7 +16,7 @@ Ready to launch your Kubernetes cluster with ease? With Kairos, deployment is a 
 
 ## Do you prefer to watch a video?
 
-<iframe width="100%" height="450" src="https://www.youtube.com/embed/XAIsitP5OII" title="Getting Started with Kairos" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen />
+{{< youtube id="XAIsitP5OII" title="Getting Started with Kairos" >}}
 
 ## Download an ISO
 
@@ -25,7 +25,7 @@ Kairos comes in many flavors. These are the underlying Linux distributions on wh
 :::
 
 1. Select your Kairos Flavor from the nav bar
-2. Click the following link to download an iso: [Download the ISO for your selected flavor](https://github.com/kairos-io/kairos/releases)
+2. Click the following link to download an iso: <ImageLink variant="standard" suffix=".iso" />
 
 ## Create a Virtual Machine (VM)
 
@@ -146,75 +146,47 @@ Yes, absolutely! You can use Kairos as a standalone Linux distribution without K
 
 Kairos uses providers to install Kubernetes distributions. The Kairos provider is the only one that is built and tested by the Kairos team, but there are other providers by the community and you can build your own!
 
-[//]: # (<script type="application/ld+json">)
-
-[//]: # ({)
-
-[//]: # (  "@context": "https://schema.org",)
-
-[//]: # (  "@type": "FAQPage",)
-
-[//]: # (  "mainEntity": [)
-
-[//]: # (    {)
-
-[//]: # (      "@type": "Question",)
-
-[//]: # (      "name": "What is a Kairos flavor?",)
-
-[//]: # (      "acceptedAnswer": {)
-
-[//]: # (        "@type": "Answer",)
-
-[//]: # (        "text": "A Kairos flavor is a specific version of Kairos that is built on top of a specific Linux distribution. For example, the Alpine Kairos flavor is built on top of Alpine Linux. You can choose the flavor that best suits your needs.")
-
-[//]: # (      })
-
-[//]: # (    },)
-
-[//]: # (    {)
-
-[//]: # (      "@type": "Question",)
-
-[//]: # (      "name": "Can I use Kairos without Kubernetes?",)
-
-[//]: # (      "acceptedAnswer": {)
-
-[//]: # (        "@type": "Answer",)
-
-[//]: # (        "text": "Yes, absolutely! You can use Kairos as a standalone Linux distribution without Kubernetes. Just download the Kairos Core artifacts if you don't want to use Kubernetes, or configure the Standard artifacts with the `k3s` option disabled.")
-
-[//]: # (      })
-
-[//]: # (    },)
-
-[//]: # (    {)
-
-[//]: # (      "@type": "Question",)
-
-[//]: # (      "name": "Can I use a different Kubernetes distribution with Kairos?",)
-
-[//]: # (      "acceptedAnswer": {)
-
-[//]: # (        "@type": "Answer",)
-
-[//]: # (        "text": "Kairos uses providers to install Kubernetes distributions. The Kairos provider is the only one that is built and tested by the Kairos team, but there are other providers by the community and you can build your own!")
-
-[//]: # (      })
-
-[//]: # (    })
-
-[//]: # (  ])
-
-[//]: # (})
-
-[//]: # (</script>)
+<script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'What is a Kairos flavor?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'A Kairos flavor is a specific version of Kairos that is built on top of a specific Linux distribution. For example, the Alpine Kairos flavor is built on top of Alpine Linux. You can choose the flavor that best suits your needs.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Can I use Kairos without Kubernetes?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Yes, absolutely! You can use Kairos as a standalone Linux distribution without Kubernetes. Just download the Kairos Core artifacts if you don't want to use Kubernetes, or configure the Standard artifacts with the `k3s` option disabled.",
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Can I use a different Kubernetes distribution with Kairos?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Kairos uses providers to install Kubernetes distributions. The Kairos provider is the only one that is built and tested by the Kairos team, but there are other providers by the community and you can build your own!',
+          },
+        },
+      ],
+    }),
+  }}
+/>
 
 ## What's Next?
 
 Ready to configure your newly deployed Kairos node?
 
-<a class="btn btn-lg btn-primary me-3 mb-4" href="initial-configuration.md">
+<a class="btn btn-lg btn-primary me-3 mb-4" href="/getting-started/initial-configuration/">
     Quick configuration guide
 </a>
 

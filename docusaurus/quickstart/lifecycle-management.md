@@ -23,7 +23,7 @@ To extend and run Hadron, you’ll need virtualization software that can run (or
 
 ## Prefer to watch a video?
 
-<iframe width="100%" height="450" src="https://www.youtube.com/embed/Xd2VfPB0ueM" title="Hadron Quickstart" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen />
+{{< youtube id="Xd2VfPB0ueM" title="Hadron Quickstart" >}}
 
 ## Running an upgrade
 
@@ -117,5 +117,80 @@ Use the same command, but point it to the image tag you want to downgrade to.
 
 By default, if Kairos can’t boot your newly upgraded image, it will try to configure your bootloader to boot the passive system (your previously running image). You can use that (or the recovery system) to mount the active partition and determine what’s going on. Alternatively, also check the [troubleshooting guide](/docs/reference/troubleshooting/)
 
+<script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'HowTo',
+      name: 'Upgrade a Kairos system atomically (image-based upgrade)',
+      description:
+        'Upgrade a running Kairos node to a new OCI image, reboot into it, and verify the new version is running.',
+      step: [
+        {
+          '@type': 'HowToStep',
+          name: 'SSH into the node',
+          text: 'SSH into the running Kairos system.',
+        },
+        {
+          '@type': 'HowToStep',
+          name: 'Run an upgrade to a target OCI image',
+          text: 'Run kairos-agent upgrade pointing at the OCI image you want to switch to.',
+        },
+        {
+          '@type': 'HowToStep',
+          name: 'Reboot into the upgraded system',
+          text: 'Reboot the node so it boots into the upgraded image.',
+        },
+        {
+          '@type': 'HowToStep',
+          name: 'Verify the running version',
+          text: 'SSH in again and confirm the running version via /etc/kairos-release.',
+        },
+        {
+          '@type': 'HowToStep',
+          name: 'Validate your change is present',
+          text: 'Run a command that depends on your new image contents (for example btm) to confirm the upgrade took effect.',
+        },
+      ],
+    }),
+  }}
+/>
+
+<script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'My upgrade failed. What can I do?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Run the upgrade with the `--debug` flag to help identify what’s causing the issue. If you still can’t determine the problem, use the output when asking for help in the community channel, or contact one of our partner organizations for professional support.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'How do I downgrade?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Use the same command, but point it to the image tag you want to downgrade to.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'My upgrade was successful, but the new image doesn’t boot. What can I do?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'By default, if Kairos can’t boot your newly upgraded image, it will try to configure your bootloader to boot the passive system (your previously running image). You can use that (or the recovery system) to mount the active partition and determine what’s going on. Alternatively, also check the troubleshooting guide.',
+          },
+        },
+      ],
+    }),
+  }}
+/>
 
 

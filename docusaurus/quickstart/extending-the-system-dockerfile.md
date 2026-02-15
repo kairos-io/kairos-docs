@@ -29,7 +29,7 @@ To extend and run Hadron, you’ll need a container engine and virtualization so
 
 ## Prefer to watch a video?
 
-<iframe width="100%" height="450" src="https://www.youtube.com/embed/EQsVnWqd7Ic" title="Hadron Quickstart" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen />
+{{< youtube id="EQsVnWqd7Ic" title="Hadron Quickstart" >}}
 
 ## Building
 
@@ -160,5 +160,79 @@ Yes, with the `--provider` flag you can define if you want `k3s` or `k0s` instal
 
 No problem—remove the `--provider` flag from `kairos-init` and you’ll get a `core` image without Kubernetes installed.
 
+<script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'HowTo',
+      name: 'Extend Kairos Hadron with a Dockerfile',
+      description:
+        'Build a custom Hadron image with kairos-init, add an extra binary, and push the resulting image to an OCI registry.',
+      step: [
+        {
+          '@type': 'HowToStep',
+          name: 'Create a Dockerfile and kairosify the base image',
+          text: 'Create a Dockerfile that uses kairos-init to initialize (kairosify) a Hadron base image.',
+        },
+        {
+          '@type': 'HowToStep',
+          name: 'Build the custom image',
+          text: 'Build the image with docker build, tagging it with a version you control.',
+        },
+        {
+          '@type': 'HowToStep',
+          name: 'Add an extra binary at build time',
+          text: 'Update the Dockerfile to copy in a prebuilt binary (for example btm) using a build stage.',
+        },
+        {
+          '@type': 'HowToStep',
+          name: 'Rebuild with a new version tag',
+          text: 'Build again with a new tag (for example bumping from 0.1.0 to 0.2.0) so upgrades can target the new image.',
+        },
+        {
+          '@type': 'HowToStep',
+          name: 'Push the image to a registry',
+          text: 'Tag and push the image to an OCI registry you can access (for example ttl.sh or your own registry).',
+        },
+      ],
+    }),
+  }}
+/>
 
+<script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'What is the hadron-toolchain container for?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Hadron builds many packages that are available in the toolchain image but are not included in the final production images. They’re useful for building code from source and other build-time tasks, but you typically avoid shipping them at runtime for security and size reasons.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Can I have a specific version of Kubernetes?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Yes, with the `--provider` flag you can define if you want `k3s` or `k0s` installed, and with the `--provider-k3s-version` and `--provider-k0s-version` respectively, you can define the exact version to install.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: "What if I don't need Kubernetes?",
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'No problem—remove the `--provider` flag from `kairos-init` and you’ll get a `core` image without Kubernetes installed.',
+          },
+        },
+      ],
+    }),
+  }}
+/>
 

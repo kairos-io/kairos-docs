@@ -33,7 +33,7 @@ Try Kairos today and experience the benefits of a unified, cloud-native approach
 
 Our key features include are
 
-- [Immutability](docs/architecture/immutable): ensure your infrastructure stays consistent with atomic upgrades
+- [Immutability](/docs/architecture/immutable): ensure your infrastructure stays consistent with atomic upgrades
 - [Trusted Boot](/docs/architecture/trustedboot): stay safe by limiting the operating systems allowed to boot on your systems
 - [Container-based](/docs/architecture/container): manage your nodes as apps in containers for maximum flexibility and portability
 - [P2P Mesh](/docs/architecture/network): self-coordinated, automated, no interaction Kubernetes deployments with Peer-2-Peer technology
@@ -119,7 +119,7 @@ To build the base artifact we can do:
 docker build -t myBaseKairos:v1.0.0 --build-arg VERSION=v1.0.0 --build-arg BASE_IMAGE=@baseImage -f images/Dockerfile .
 ```
 
-Then we can build the ISO with the following command for a Kairos core image based on Ubuntu:
+Then we can build the ISO with the following command for a Kairos core image based on <Flavor/>:
 
 ```bash
 docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $PWD/build/:/output \

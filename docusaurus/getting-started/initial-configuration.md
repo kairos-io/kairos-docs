@@ -13,7 +13,7 @@ This guide will teach you the basics about immutability and configuration in Kai
 
 ## Do you prefer to watch a video?
 
-<iframe width="100%" height="450" src="https://www.youtube.com/embed/Rom4uPatO3k" title="Configuring a Kairos node" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen />
+{{< youtube id="Rom4uPatO3k" title="Configuring a Kairos node" >}}
 
 ## How is Kairos immutable?
 
@@ -170,75 +170,47 @@ Kairos has been designed to be configured a Cloud Init like approach but at the 
 
 Cloud init is a standard in the industry and is widely supported. It is also very flexible and powerful. Read more about [Cloud Init](/docs/architecture/cloud-init/).
 
-[//]: # (<script type="application/ld+json">)
-
-[//]: # ({)
-
-[//]: # (  "@context": "https://schema.org",)
-
-[//]: # (  "@type": "FAQPage",)
-
-[//]: # (  "mainEntity": [)
-
-[//]: # (    {)
-
-[//]: # (      "@type": "Question",)
-
-[//]: # (      "name": "Why is immutability important?",)
-
-[//]: # (      "acceptedAnswer": {)
-
-[//]: # (        "@type": "Answer",)
-
-[//]: # (        "text": "It reduces the attack surface of the OS and the chances of having snowflakes. Learn more about [Immutable Linux OS]&#40;/blog/2023/03/22/understanding-immutable-linux-os-benefits-architecture-and-challenges/&#41;.")
-
-[//]: # (      })
-
-[//]: # (    },)
-
-[//]: # (    {)
-
-[//]: # (      "@type": "Question",)
-
-[//]: # (      "name": "Can I still use my favorite System Configuration Management System?",)
-
-[//]: # (      "acceptedAnswer": {)
-
-[//]: # (        "@type": "Answer",)
-
-[//]: # (        "text": "Kairos has been designed to be configured a Cloud Init like approach but at the end of the day it is just a Linux distribution. Keep in mind that the immutability of the system will limit the changes you can make, but the better you understand Kairos, the more likely you will be able to configure it to play well with your CMS.")
-
-[//]: # (      })
-
-[//]: # (    },)
-
-[//]: # (    {)
-
-[//]: # (      "@type": "Question",)
-
-[//]: # (      "name": "Why cloud init and not something else?",)
-
-[//]: # (      "acceptedAnswer": {)
-
-[//]: # (        "@type": "Answer",)
-
-[//]: # (        "text": "Cloud init is a standard in the industry and is widely supported. It is also very flexible and powerful. Read more about [Cloud Init]&#40;/docs/architecture/cloud-init/&#41;.")
-
-[//]: # (      })
-
-[//]: # (    })
-
-[//]: # (  ])
-
-[//]: # (})
-
-[//]: # (</script>)
+<script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'Why is immutability important?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'It reduces the attack surface of the OS and the chances of having snowflakes. Learn more about [Immutable Linux OS](/blog/2023/03/22/understanding-immutable-linux-os-benefits-architecture-and-challenges/).',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Can I still use my favorite System Configuration Management System?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Kairos has been designed to be configured a Cloud Init like approach but at the end of the day it is just a Linux distribution. Keep in mind that the immutability of the system will limit the changes you can make, but the better you understand Kairos, the more likely you will be able to configure it to play well with your CMS.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Why cloud init and not something else?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Cloud init is a standard in the industry and is widely supported. It is also very flexible and powerful. Read more about [Cloud Init](/docs/architecture/cloud-init/).',
+          },
+        },
+      ],
+    }),
+  }}
+/>
 
 ## What's next?
 
 Ok, but how do I add a package?
 
-<a class="btn btn-lg btn-primary me-3 mb-4" href="/kairos-docs/docs/getting-started/building-and-upgrading">
+<a class="btn btn-lg btn-primary me-3 mb-4" href="/getting-started/building-and-upgrading/">
     Building And Upgrading Guide
 </a>
 

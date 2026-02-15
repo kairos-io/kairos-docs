@@ -14,6 +14,7 @@ const OCI_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*oci\s+([^>]*?)\s*>\}\}/g;
 const FLAVOR_CODE_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*flavorCode\s*>\}\}/g;
 const FLAVOR_RELEASE_CODE_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*flavorReleaseCode\s*>\}\}/g;
 const REGISTRY_URL_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*registryURL\s*>\}\}/g;
+const KAIROS_VERSION_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*kairosVersion\s*>\}\}/g;
 const KAIROS_INIT_VERSION_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*kairosInitVersion\s*>\}\}/g;
 const AURORA_BOOT_VERSION_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*auroraBootVersion\s*>\}\}/g;
 const ATTRIBUTE_PATTERN = /([a-zA-Z_][a-zA-Z0-9_-]*)\s*=\s*"([^"]*)"/g;
@@ -34,12 +35,14 @@ function renderTemplate(
   flavor: string,
   flavorRelease: string,
   registryURL: string,
+  kairosVersion: string,
   kairosInitVersion: string,
   auroraBootVersion: string,
 ): string {
   return template
     .replace(AURORA_BOOT_VERSION_SHORTCODE_GLOBAL_PATTERN, auroraBootVersion)
     .replace(KAIROS_INIT_VERSION_SHORTCODE_GLOBAL_PATTERN, kairosInitVersion)
+    .replace(KAIROS_VERSION_SHORTCODE_GLOBAL_PATTERN, kairosVersion)
     .replace(REGISTRY_URL_SHORTCODE_GLOBAL_PATTERN, registryURL)
     .replace(FLAVOR_RELEASE_CODE_SHORTCODE_GLOBAL_PATTERN, flavorRelease)
     .replace(FLAVOR_CODE_SHORTCODE_GLOBAL_PATTERN, flavor)
@@ -84,6 +87,7 @@ export default function ShortcodeCodeBlock({
   const {siteConfig} = useDocusaurusContext();
   const {selection} = useFlavor();
   const registryURL = String(siteConfig.customFields?.registryURL ?? 'quay.io/kairos');
+  const kairosVersion = String(siteConfig.customFields?.kairosVersion ?? 'master');
   const kairosInitVersion = String(siteConfig.customFields?.kairosInitVersion ?? 'latest');
   const auroraBootVersion = String(siteConfig.customFields?.auroraBootVersion ?? 'latest');
   const content = renderTemplate(
@@ -91,6 +95,7 @@ export default function ShortcodeCodeBlock({
     selection.flavor,
     selection.flavorRelease,
     registryURL,
+    kairosVersion,
     kairosInitVersion,
     auroraBootVersion,
   );
