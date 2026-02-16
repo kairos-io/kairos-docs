@@ -8,3 +8,4 @@
   - `import TabItem from '@theme/TabItem';`
   - `<Tabs> ... <TabItem ...> ... </TabItem> ... </Tabs>`
 - After migration, verify no `{{< tabpane ... >}}` / `{{% tab ... %}}` usages remain and then delete the conversion code.
+- Replace Hugo `figure` shortcode usage with native Docusaurus image/figure markup, then remove `figure` shortcode conversion from `docusaurus/plugins/hugo-mdx-preprocess-loader.cjs`.

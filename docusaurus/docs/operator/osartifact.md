@@ -8,9 +8,9 @@ description: Build OS artifacts (ISOs, cloud images, netboot) from container ima
 
 The `OSArtifact` custom resource allows you to build Linux distribution artifacts (ISO images, cloud images, netboot artifacts, etc.) from container images directly in Kubernetes. This is particularly useful for building Kairos OS images and other bootable artifacts as Kubernetes-native resources.
 
-{{% alert title="Note" color="info" %}}
+:::info Note
 This guide provides detailed information about building Kairos images using the Kairos operator. For a complete guide on creating custom cloud images, including when and how to use these build methods, see [Creating Custom Cloud Images](/docs/advanced/creating_custom_cloud_images/).
-{{% /alert %}}
+:::
 
 While it's possible to just run Kairos from the artifacts provided by our release process, there are specific use-cases which need extended customization, for example when additional kernel modules, or custom, user-defined logic that you might want to embed in the media used for installations.
 
@@ -160,9 +160,9 @@ spec:
     key: userdata
 ```
 
-{{% alert title="Note" color="info" %}}
+:::info Note
 The cloud image boots into recovery mode on first boot and automatically partitions the disk and resets into the active system. This is handled internally by AuroraBoot during the build process, so the cloud-config only needs to contain your own configuration (users, etc.). The CRD also allows embedding a custom cloud-config to make configuration permanent for VM images running outside a cloud provider.
-{{% /alert %}}
+:::
 
 After applying the spec, the controller will create a Kubernetes Job which runs the build process and then copy the produced `hello-kairos.raw` file to the nginx server (see above). Alternatively you may configure your own job to copy the content elsewhere. This file is an EFI bootable raw disk, bootable in QEMU and compatible with AWS which automatically provisions the node:
 

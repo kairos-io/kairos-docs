@@ -11,6 +11,22 @@ function parseShortcodeAttrs(raw) {
   return attrs;
 }
 
+function renderFigureShortcode(rawAttrs) {
+  const attrs = parseShortcodeAttrs(rawAttrs);
+  const src = (attrs.src || '').trim();
+  if (!src) {
+    return `{{< figure${rawAttrs || ''}>}}`;
+  }
+  const alt = (attrs.alt || '').trim();
+  const title = (attrs.title || attrs.caption || '').trim();
+  const escapedAlt = alt.replace(/\]/g, '\\]');
+  if (title) {
+    const escapedTitle = title.replace(/"/g, '\\"');
+    return `![${escapedAlt}](${src} "${escapedTitle}")`;
+  }
+  return `![${escapedAlt}](${src})`;
+}
+
 function slugifyTabValue(text) {
   return String(text || '')
     .trim()
@@ -68,6 +84,46 @@ function transformNonInlineCode(segment) {
 
   // Render supported simple value shortcodes as MDX components outside code.
   out = out.replace(/\{\{<\s*kairosVersion\s*>\}\}/gi, '<KairosVersion />');
+  out = out.replace(/\{\{<\s*imageLink\b([^>]*)>\}\}/gi, (_full, rawAttrs) => {
+    const attrs = parseShortcodeAttrs(rawAttrs);
+    const props = [];
+    if (attrs.variant) props.push(`variant="${attrs.variant.replace(/"/g, '&quot;')}"`);
+    if (attrs.arch) props.push(`arch="${attrs.arch.replace(/"/g, '&quot;')}"`);
+    if (attrs.model) props.push(`model="${attrs.model.replace(/"/g, '&quot;')}"`);
+    if (attrs.suffix) props.push(`suffix="${attrs.suffix.replace(/"/g, '&quot;')}"`);
+    if (attrs.kairosVersion) props.push(`kairosVersion="${attrs.kairosVersion.replace(/"/g, '&quot;')}"`);
+    if (attrs.k3sVersion) props.push(`k3sVersion="${attrs.k3sVersion.replace(/"/g, '&quot;')}"`);
+    if (attrs.flavor) props.push(`flavor="${attrs.flavor.replace(/"/g, '&quot;')}"`);
+    if (attrs.flavorRelease) props.push(`flavorRelease="${attrs.flavorRelease.replace(/"/g, '&quot;')}"`);
+    return `<ImageLink ${props.join(' ')} />`;
+  });
+  out = out.replace(/\{\{<\s*figure\b([\s\S]*?)>\}\}/gi, (_full, rawAttrs) =>
+    renderFigureShortcode(rawAttrs),
+  );
+  out = out.replace(/\{\{<\s*container-repo-link\b([^>]*)>\}\}/gi, (_full, rawAttrs) => {
+    const attrs = parseShortcodeAttrs(rawAttrs);
+    const flavor = (attrs.flavor || '').replace(/"/g, '&quot;');
+    return `<ContainerRepoLink flavor="${flavor}" />`;
+  });
+  out = out.replace(/\{\{<\s*ociCode\b([^>]*)>\}\}/gi, (_full, rawAttrs) => {
+    const attrs = parseShortcodeAttrs(rawAttrs);
+    const props = [];
+    if (attrs.variant) props.push(`variant="${attrs.variant.replace(/"/g, '&quot;')}"`);
+    if (attrs.arch) props.push(`arch="${attrs.arch.replace(/"/g, '&quot;')}"`);
+    if (attrs.model) props.push(`model="${attrs.model.replace(/"/g, '&quot;')}"`);
+    if (attrs.suffix) props.push(`suffix="${attrs.suffix.replace(/"/g, '&quot;')}"`);
+    return `<OciCode ${props.join(' ')} />`;
+  });
+  out = out.replace(/\{\{<\s*getRemoteSource\s+"([^"]+)"\s*>\}\}/gi, (_full, url) => {
+    const safeUrl = String(url || '').replace(/"/g, '&quot;');
+    return `<GetRemoteSource url="${safeUrl}" />`;
+  });
+  out = out.replace(/\{\{<\s*getRemoteSource\b([^>]*)>\}\}/gi, (_full, rawAttrs) => {
+    const attrs = parseShortcodeAttrs(rawAttrs);
+    const url = (attrs.url || '').replace(/"/g, '&quot;');
+    if (!url) return _full;
+    return `<GetRemoteSource url="${url}" />`;
+  });
 
   return out;
 }
@@ -117,7 +173,12 @@ function wrapShortcodesOutsideInline(line) {
         const supportedInlineShortcodes = new Set([
           'youtube',
           'card',
+          'figure',
+          'imagelink',
           'kairosversion',
+          'container-repo-link',
+          'ocicode',
+          'getremotesource',
           'tabpane',
           'tab',
         ]);
@@ -150,7 +211,9 @@ function normalizeOutsideCode(line) {
 }
 
 module.exports = function hugoMdxPreprocessLoader(source) {
-  const input = String(source);
+  const input = String(source).replace(/\{\{<\s*figure\b([\s\S]*?)>\}\}/gi, (_full, rawAttrs) =>
+    renderFigureShortcode(rawAttrs),
+  );
   const lines = input.split('\n');
   const out = [];
   let inFence = false;
