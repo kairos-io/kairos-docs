@@ -1,0 +1,8 @@
+# Approved Hugo -> Docusaurus link fixes.
+# Format: <hugo_docref>|<docusaurus_docref>
+# Both refs are canonicalized docref values (lowercase, no leading /docs).
+
+reference/creating_custom_cloud_images|advanced/creating_custom_cloud_images
+creating_custom_cloud_images|advanced/creating_custom_cloud_images
+reference/creating_custom_cloud_images|advanced/creating_custom_cloud_images
+auroraboot|reference/auroraboot
