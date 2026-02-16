@@ -35,7 +35,7 @@ Reading of `/etc/elemental/config.yaml` will be deprecated in favor of `/etc/kai
 
 :::tip Config dirs read ordering
 
-Starting on v3.2.0, we have agreed on the order the config dirs are read upon. See the [cloud-config](../../Architecture/cloud-init/#configuration-order) page for more info.
+Starting on v3.2.0, we have agreed on the order the config dirs are read upon. See the [cloud-config](/docs/architecture/cloud-init/#configuration-order) page for more info.
 
 :::
 

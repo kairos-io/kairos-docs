@@ -6,7 +6,7 @@ date: 2022-06-12
 ---
 
 This document describes how an administrator can prevent certain OS images from
-booting on their hardware in the context of ["Trusted Boot"](../architecture/trustedboot).
+booting on their hardware in the context of ["Trusted Boot"](/docs/architecture/trustedboot).
 
 Two different scenarios will be covered, with the process being only slightly different for each case.
 
@@ -49,7 +49,7 @@ format. Using the signed version has the benefit that no private keys need to be
 in order to do the enrollement, while using the unsigned format needs the private
 keys to be present.
 
-If you followed [the instructions to create signing keys](../Installation/trustedboot.md#key-generation), you should have a directory with a `db.pem` certificate. This is the certificate
+If you followed [the instructions to create signing keys](/docs/installation/trustedboot/#key-generation), you should have a directory with a `db.pem` certificate. This is the certificate
 we will blacklist. To do so, we need to convert it to the "esl" format and then
 sign it to create the final `.auth` file, which will be used for enrollement.
 The utilities used are usually shipped in the various distros under a name like `efitools` (e.g. in Ubuntu). Here are the commands to generate the needed signed authenticated variables file:
@@ -64,7 +64,7 @@ sign-efi-sig-list -c keys/KEK.pem -k keys/KEK.key dbx db-dbx.esl db-dbx.auth
 
 ### PCRs and disk encryption
 
-As described in the ["Trusted Boot"](../architecture/trustedboot) documentation page,
+As described in the ["Trusted Boot"](/docs/architecture/trustedboot) documentation page,
 the decryption of the disk partitions is bound to some PCR registers on the TPM chip.
 Specifically registers 11 and 7.
 There are 2 ways to bind to a PCR register, the direct and the indirect. You can
@@ -301,7 +301,7 @@ The upgrade command is:
 kairos-agent upgrade --recovery --source oci:<YOUR_UPGRADE_IMAGE_HERE>
 ```
 
-The "fallback" image will be upgraded on the next upgrade. Read the ["Container based"](../architecture/container)
+The "fallback" image will be upgraded on the next upgrade. Read the ["Container based"](/docs/architecture/container)
 document to understand more.
 
 ## Scenario 2 - One specific image is no longer trusted

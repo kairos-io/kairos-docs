@@ -9,7 +9,7 @@ This guide will teach you the basics about immutability and configuration in Kai
 
 ## Prerequisites
 
-- A single node Kairos cluster as the one deployed in the [Getting Started guide](/docs/getting-started).
+- A single node Kairos cluster as the one deployed in the [Getting Started guide](/getting-started/).
 
 ## Do you prefer to watch a video?
 
@@ -56,7 +56,7 @@ cat: /etc/hostname: No such file or directory
 
 So how do you configure Kairos if it is immutable? The answer is simple: you use configuration files. These files are read at boot time and the changes are applied to the OS on every boot.
 
-Your system is already configured this way. Have a look at the file `/oem/90_custom.yaml`. If you followed the [Getting Started guide](/docs/getting-started), you should see a file with similar content to mine:
+Your system is already configured this way. Have a look at the file `/oem/90_custom.yaml`. If you followed the [Getting Started guide](/getting-started/), you should see a file with similar content to mine:
 
 ```yaml
 #cloud-config

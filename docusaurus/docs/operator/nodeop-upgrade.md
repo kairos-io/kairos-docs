@@ -6,7 +6,7 @@ date: 2025-07-25
 description: Upgrade Kairos nodes using the NodeOpUpgrade custom resource
 ---
 
-The `NodeOpUpgrade` custom resource is a Kairos-specific resource for upgrading Kairos nodes. Under the hood, it creates a [NodeOp]({{< relref "nodeop" >}}) with the appropriate upgrade script and configuration, so you only need to specify the target image and a few options.
+The `NodeOpUpgrade` custom resource is a Kairos-specific resource for upgrading Kairos nodes. Under the hood, it creates a [NodeOp](../nodeop) with the appropriate upgrade script and configuration, so you only need to specify the target image and a few options.
 
 ## Basic Example
 
@@ -43,7 +43,7 @@ Only 4 fields is all it takes to safely upgrade the whole cluster.
 | Field | Type | Default | Description |
 |---|---|---|---|
 | `image` | `string` | (required) | Container image containing the new Kairos version |
-| `imagePullSecrets` | `[]LocalObjectReference` | (none) | Secrets for pulling from private registries ([details]({{< relref "private-registries" >}})) |
+| `imagePullSecrets` | `[]LocalObjectReference` | (none) | Secrets for pulling from private registries ([details](../private-registries)) |
 | `nodeSelector` | `LabelSelector` | (none) | Standard Kubernetes label selector to target specific nodes |
 | `concurrency` | `int` | `0` | Max nodes running the upgrade simultaneously (0 = all at once) |
 | `stopOnFailure` | `bool` | `false` | Stop creating new jobs when a job fails (canary mode) |
@@ -124,7 +124,7 @@ kairos-upgrade   5s
 
 ## What's next?
 
-- [Upgrading from Kubernetes]({{< relref "../Upgrade/kubernetes" >}}) — full upgrade workflow guide
-- [Trusted Boot upgrades]({{< relref "../Upgrade/trustedboot" >}}) — upgrades with Trusted Boot enabled
-- [NodeOp]({{< relref "nodeop" >}}) — for custom upgrade logic or other operations
-- [Bandwidth Optimized Upgrades]({{< relref "../Examples/bandwidth-optimized-upgrades" >}}) — optimize bandwidth during upgrades
+- [Upgrading from Kubernetes](/docs/upgrade/kubernetes/) — full upgrade workflow guide
+- [Trusted Boot upgrades](/docs/upgrade/trustedboot/) — upgrades with Trusted Boot enabled
+- [NodeOp](../nodeop) — for custom upgrade logic or other operations
+- [Bandwidth Optimized Upgrades](/docs/examples/bandwidth-optimized-upgrades/) — optimize bandwidth during upgrades

@@ -10,7 +10,7 @@ Kairos upgrades can be performed either manually or via Kubernetes if the cluste
 
 ## Prerequisites
 
-The Kairos operator needs to be deployed on the target cluster. [Read the installation instructions here]({{< relref "../Operator/installation" >}})
+The Kairos operator needs to be deployed on the target cluster. [Read the installation instructions here](/docs/operator/installation/)
 
 ### Upgrading from version X to version Y with Kubernetes
 
@@ -122,7 +122,7 @@ spec:
                 url: https://rekor.sigstore.dev
 ```
 
-To install Kyverno in a Kairos cluster, you can simply use the community [bundles](../advanced/bundles). For example, you can use the following installation cloud config file:
+To install Kyverno in a Kairos cluster, you can simply use the community [bundles](/docs/advanced/bundles). For example, you can use the following installation cloud config file:
 
 ```yaml
 #cloud-config
@@ -145,7 +145,7 @@ k3s:
  enabled: true
 ```
 
-This configuration file prepares the system with the `cert-manager` and `kyverno` bundles, enabling `k3s`. The Kairos operator can be deployed separately using the instructions in the [Kairos Operator documentation]({{< relref "../Operator/installation" >}}).
+This configuration file prepares the system with the `cert-manager` and `kyverno` bundles, enabling `k3s`. The Kairos operator can be deployed separately using the instructions in the [Kairos Operator documentation](/docs/operator/installation/).
 
 ## Customize the upgrade process
 
@@ -272,6 +272,6 @@ spec:
 
 ## What's next?
 
-- [Upgrade nodes manually](../upgrade/manual)
-- [Immutable architecture](../architecture/immutable)
-- [Create decentralized clusters](../installation/p2p)
+- [Upgrade nodes manually](/docs/upgrade/manual)
+- [Immutable architecture](/docs/architecture/immutable)
+- [Create decentralized clusters](/docs/installation/p2p)

@@ -11,6 +11,8 @@ The cloud-native and edge-computing world demands systems that are small, reliab
 
 That mission remains core to us. But in transforming traditional distributions, we continually encountered friction: the inherited bloat of legacy package managers, sprawling dependency graphs, and downstream patches that increase image size and boot time.
 
+<!-- truncate -->
+
 Today, we are excited to announce a new option for the Kairos ecosystem: [Hadron Linux](https://hadron-linux.io).
 
 Hadron is a brand-new, minimal, and trustworthy Linux distribution engineered from scratch by the Kairos team to be the perfect base for immutable, image-based systems.

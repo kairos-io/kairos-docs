@@ -18,7 +18,7 @@ This hands‑on example shows how to keep your Ubuntu‑based Kairos image slim 
 > • **Swap/iterate fast**: update firmware by swapping the sysext without rebuilding the whole OS.
 > 
 
-For more info on Kairos sysexts, see the [sysext documentation](../advanced/sys-extensions).
+For more info on Kairos sysexts, see the [sysext documentation](/docs/advanced/sys-extensions).
 
 ---
 

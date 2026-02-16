@@ -11,7 +11,7 @@ We like to define Kairos as a meta-Linux Distribution, as its goal is to convert
 
 Kairos is a software stack is composed of the following:
 
-- A core OS image release for each flavor in ISO, qcow2, and other similar formats (see [the list of supported distributions](../reference/image_matrix)) provided for user convenience
+- A core OS image release for each flavor in ISO, qcow2, and other similar formats (see [the list of supported distributions](/docs/reference/image_matrix)) provided for user convenience
 - A release with K3s embedded (optional).
 - An agent installed into the nodes to manage the node lifecycle.
 
@@ -30,7 +30,7 @@ In order to convert a Linux Distribution to Kairos, the distribution must meet t
 - All
   - If the system is meant to be used with EFI, the kernel needs to have enabled the `CONFIG_EFI_STUB` option ( see: https://docs.kernel.org/admin-guide/efi-stub.html)
 
-To build Kairos from scratch, see [the documentation](../reference/build-from-scratch) section.
+To build Kairos from scratch, see [the documentation](/docs/reference/build-from-scratch) section.
 
 ### Internal components
 

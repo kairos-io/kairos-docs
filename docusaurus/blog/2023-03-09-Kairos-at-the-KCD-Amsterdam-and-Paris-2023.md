@@ -17,7 +17,7 @@ Let me start by saying, that I'm fairly new to Kubernetes and its community :wav
 
 Most attendees that approached us at the Kairos booths, were hearing about Kairos for the first time, and genuinely wanted to know what the project was about. I feel confident to say this, because we didn't bring fancy prizes to give away and yet most of them would happily stay with us for 5, 10 and up to 15 minutes hearing about our features and engaging in conversation.
 
-_If you're reading this and would like to know about those cool features I'd recommend going checking out the [Getting Started](/docs/getting-started/), [Web UI](/docs/installation/webui/), [P2P Network](/docs/architecture/network/) and [AuroraBoot](/docs/reference/auroraboot/)_
+_If you're reading this and would like to know about those cool features I'd recommend going checking out the [Getting Started](/getting-started/), [Web UI](/docs/installation/webui/), [P2P Network](/docs/architecture/network/) and [AuroraBoot](/docs/reference/auroraboot/)_
 
 When you're in the trenches building a product, talking to users or potential users is super valuable because it lets you see first hand, what kind of issues they are trying to solve. I don't like building projects just because they are cool. To me, it's important that they make people's life easier. Some of the folks who reached to us, had clear problems in mind, and they didn't shy to make hard questions about the internals of Kairos, our project's governance and beyond. I'm very pleased to say that some of them left the booth with a smile on their face, because they might have found a good fit.
 

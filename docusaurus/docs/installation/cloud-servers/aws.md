@@ -8,7 +8,7 @@ slug: /installation/aws
 ---
 
 This page describes how to install Kairos on AWS after you have created an AMI. Since release v3.3.0, Kairos pipeline is pushing a public AMI image to AWS which you can use.
-If you want to build a custom image, you can follow the instructions in the [OSArtifact]({{< relref "../Operator/osartifact" >}}) page.
+If you want to build a custom image, you can follow the instructions in the [OSArtifact](/docs/operator/osartifact/) page.
 
 ## Prerequisites
 

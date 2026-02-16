@@ -4,7 +4,7 @@ sidebar_label: "Trusted Boot in Virtual Box"
 description: This section describes how to use Virtual Box to boot Kairos in "Trusted boot" mode
 ---
 
-To install Kairos in ["Trusted Boot Mode"](../architecture/trustedboot) the machine needs to meet the following requirements:
+To install Kairos in ["Trusted Boot Mode"](/docs/architecture/trustedboot) the machine needs to meet the following requirements:
 
 - Must have a tpm v2.0 chip
 - Must be able to boot in EFI mode (not "legacy BIOS")

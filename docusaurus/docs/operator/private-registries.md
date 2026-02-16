@@ -6,7 +6,7 @@ date: 2025-07-25
 description: Configure the Kairos operator to pull images from private container registries
 ---
 
-The Kairos Operator supports `imagePullSecrets` for [NodeOp]({{< relref "nodeop" >}}), [NodeOpUpgrade]({{< relref "nodeop-upgrade" >}}), and [OSArtifact]({{< relref "osartifact" >}}) resources, allowing you to pull images from private container registries.
+The Kairos Operator supports `imagePullSecrets` for [NodeOp](../nodeop), [NodeOpUpgrade](../nodeop-upgrade), and [OSArtifact](../osartifact) resources, allowing you to pull images from private container registries.
 
 ## Creating Image Pull Secrets
 

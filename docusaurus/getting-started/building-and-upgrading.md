@@ -9,7 +9,7 @@ This guide will walk you through the steps to build a new Kairos container image
 
 ## Prerequisites
 
-- A single node Kairos cluster as the one deployed in the [Getting Started guide](/docs/getting-started).
+- A single node Kairos cluster as the one deployed in the [Getting Started guide](/getting-started/).
 - Access to Docker or a different container engine on your machine
 
 ## Do you prefer to watch a video?
@@ -69,7 +69,7 @@ The answer to this will depend on your setup but here are two things to keep in 
 
 **What if I don't want to base my image on the Kairos released artifacts?**
 
-No problem, just [build your image from scratch](/reference/build-from-scratch/)
+No problem, just [build your image from scratch](/docs/reference/build-from-scratch/)
 
 **Can I easily rollback an upgrade?**
 
@@ -95,7 +95,7 @@ Yes you can! Boot into the passive (fallback) system, and apply an upgrade with 
           name: "What if I don't want to base my image on the Kairos released artifacts?",
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'No problem, just [build your image from scratch](/reference/build-from-scratch/)',
+            text: 'No problem, just [build your image from scratch](/docs/reference/build-from-scratch/)',
           },
         },
         {
@@ -121,7 +121,7 @@ Check other ways to upgrade Kairos
 
 Create your own Kairos Flavor
 
-<a class="btn btn-lg btn-primary me-3 mb-4" href="/docs/reference/build-from-scratch">
+<a class="btn btn-lg btn-primary me-3 mb-4" href="/docs/docs/reference/build-from-scratch/">
     Build from Scratch Guide
 </a>
 

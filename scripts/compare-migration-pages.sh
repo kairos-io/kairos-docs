@@ -14,6 +14,7 @@ DOCUSAURUS_BLOG_DIR="${ROOT_DIR}/docusaurus/blog"
 DOCUSAURUS_SITE_PAGES_DIR="${ROOT_DIR}/docusaurus/src/pages"
 DOCUSAURUS_STATIC_DIR="${ROOT_DIR}/docusaurus/static"
 DOCUSAURUS_CONFIG="${ROOT_DIR}/docusaurus/docusaurus.config.ts"
+LINK_FIXES_FILE="${ROOT_DIR}/scripts/compare-migration-link-fixes.txt"
 
 declare -A hugo_pages=()
 declare -A hugo_draft_pages=()
@@ -715,8 +716,15 @@ normalize_content() {
         print lines[i]
       }
     }
-  ' "${file_path}" | perl -0777 -ne '
+  ' "${file_path}" | FILE_PATH="${file_path}" perl -0777 -ne '
     my $text = $_;
+    my $source_path = lc($ENV{FILE_PATH} // q{});
+    my $section_ctx = q{};
+    if (
+      $source_path =~ m{/(?:content/en(?:/docs)?|docusaurus(?:/docs)?)/(getting-started|quickstart|upgrade|reference)/}i
+    ) {
+      $section_ctx = $1;
+    }
 
     sub trim {
       my ($value) = @_;
@@ -779,6 +787,20 @@ normalize_content() {
       if ($value eq q{sys-extensions}) {
         return q{advanced/sys-extensions};
       }
+      # Section-aware index normalization: in section-scoped content, treat
+      # "index", "<section>", and "<section>/index" as the same page.
+      if ($section_ctx ne q{} && ($value eq q{index} || $value eq $section_ctx || $value eq "$section_ctx/index")) {
+        return "$section_ctx/index";
+      }
+      # In upgrade docs, Hugo often links by short page id (e.g. "kubernetes")
+      # while Docusaurus links may be explicit ("upgrade/kubernetes").
+      if ($section_ctx eq q{upgrade} && $value !~ m{/} && $value ne q{index}) {
+        return "upgrade/$value";
+      }
+      # In reference docs, short page ids commonly target sibling reference pages.
+      if ($section_ctx eq q{reference} && $value !~ m{/} && $value ne q{index}) {
+        return "reference/$value";
+      }
       return $value;
     }
 
@@ -809,6 +831,7 @@ normalize_content() {
     $text =~ s/\bhref=(["\x27])__DOCREF__\[([^\]]+)\]\1/"href=$1__DOCREF__[" . canonical_doc_ref($2) . "]$1"/gei;
     $text =~ s{(?<![A-Za-z0-9])(?:\.\./|\./)+(?:advanced|announcements|architecture|development|examples|installation|media|reference|upgrade|getting-started|quickstart|docs)(?:/[A-Za-z0-9._-]+)+/?}{"__DOCREF__[" . canonical_doc_ref($&) . "]"}gexi;
     $text =~ s{(?<![A-Za-z0-9])/?docs(?:/[A-Za-z0-9._-]+)+/?}{"__DOCREF__[" . canonical_doc_ref($&) . "]"}gexi;
+    $text =~ s/__DOCREF__\[([^\]]+)\]/"__DOCREF__[" . canonical_doc_ref($1) . "]"/gei;
     $text =~ s/__DOCREF__\[sys-extensions\]/__DOCREF__[advanced\/sys-extensions]/gmi;
     $text =~ s/__DOCREF__\[(?:images|img)\/([^\]]+)\]/__DOCREF__[img\/$1]/gmi;
     $text =~ s/\((__DOCREF__\[[^\]]+\])\s+"[^"]*"\)/($1)/g;
@@ -816,6 +839,8 @@ normalize_content() {
 
     $text =~ s/^\s*\{\{%\s*alert\b[^\n]*%\}\}\s*$\n?/__ADMONITION_START__\n/gm;
     $text =~ s/^\s*\{\{%\s*\/alert\s*%\}\}\s*$\n?/__ADMONITION_END__\n/gm;
+    $text =~ s/^\s*\{\{<\s*alert\b[^}]*>\}\}\s*$\n?/__ADMONITION_START__\n/gm;
+    $text =~ s/^\s*\{\{<\s*\/alert\s*>\}\}\s*$\n?/__ADMONITION_END__\n/gm;
     $text =~ s/^\s*:::(?:tip|note|info|warning|danger|caution)\b[^\n]*$\n?/__ADMONITION_START__\n/gmi;
     $text =~ s/^\s*:::\s*$\n?/__ADMONITION_END__\n/gm;
     $text =~ s/__ADMONITION_START__\n(?:[ \t]*\n)+/__ADMONITION_START__\n/g;
@@ -851,6 +876,11 @@ normalize_content() {
     /gex;
     $text =~ s/__SC__\[flavor\]\[[^\]]*\]/__FLAVOR__/gmi;
     $text =~ s/__SC__\[flavorrelease\]\[[^\]]*\]/__FLAVOR_RELEASE__/gmi;
+    $text =~ s/__SC__\[alert\]\[[^\]]*\]/__ADMONITION_START__/gmi;
+
+    # Legacy Hugo release-note links occasionally became absolute kairos.io URLs
+    # during migration; treat them as equivalent to the original docref form.
+    $text =~ s#https://kairos\.io/v([0-9]+\.[0-9]+\.[0-9]+)/docs/?#__DOCREF__[v$1/docs]#gmi;
 
     # Treat Hugo figure shortcode and markdown image syntax as equivalent
     # when they reference the same image URL.
@@ -890,6 +920,91 @@ hash_content() {
       sha256sum "${file}" | awk "{print \$1}"
       ;;
   esac
+}
+
+apply_approved_link_equivalence_to_normalized_file() {
+  local input_file="$1"
+  local output_file="$2"
+  local rules_file="$3"
+
+  RULES_FILE="${rules_file}" perl -0777 -ne '
+    my $text = $_;
+    my $rules_file = $ENV{RULES_FILE} // q{};
+    if ($rules_file ne q{} && -f $rules_file) {
+      open my $fh, q{<}, $rules_file or die "cannot open rules file: $rules_file";
+      local $/ = "\n";
+      while (my $line = <$fh>) {
+        chomp $line;
+        $line =~ s/\r$//;
+        $line =~ s/^\s+//;
+        $line =~ s/\s+$//;
+        next if $line eq q{} || $line =~ /^\s*#/;
+        next unless $line =~ /\|/;
+
+        my ($hugo_ref, $docusaurus_ref) = split(/\|/, $line, 2);
+        for ($hugo_ref, $docusaurus_ref) {
+          $_ //= q{};
+          s/^\s+//;
+          s/\s+$//;
+        }
+        next if $hugo_ref eq q{} || $docusaurus_ref eq q{};
+
+        # Canonical token is keyed by the Docusaurus target so multiple Hugo
+        # aliases for the same target collapse to a single equivalent value.
+        my $token = "__DOCFIX__[" . $docusaurus_ref . "]";
+        my $hugo_from = "__DOCREF__[$hugo_ref]";
+        my $hugo_from_escaped = "__DOCREF__[" . ($hugo_ref =~ s#/#\\/#gr) . "]";
+        my $docus_from = "__DOCREF__[$docusaurus_ref]";
+        my $docus_from_escaped = "__DOCREF__[" . ($docusaurus_ref =~ s#/#\\/#gr) . "]";
+        $text =~ s/\Q$hugo_from\E/$token/g;
+        $text =~ s/\Q$hugo_from_escaped\E/$token/g;
+        $text =~ s/\Q$docus_from\E/$token/g;
+        $text =~ s/\Q$docus_from_escaped\E/$token/g;
+      }
+      close $fh;
+    }
+
+    print $text;
+    exit(0);
+  ' "${input_file}" > "${output_file}"
+}
+
+is_only_approved_link_fix_diff() {
+  local hugo_file="$1"
+  local docusaurus_file="$2"
+  local hugo_tmp docusaurus_tmp hugo_equiv_tmp docusaurus_equiv_tmp
+
+  [[ -f "${LINK_FIXES_FILE}" ]] || return 1
+
+  hugo_tmp="$(mktemp)"
+  docusaurus_tmp="$(mktemp)"
+  hugo_equiv_tmp="$(mktemp)"
+  docusaurus_equiv_tmp="$(mktemp)"
+
+  normalize_content "${hugo_file}" > "${hugo_tmp}"
+  normalize_content "${docusaurus_file}" > "${docusaurus_tmp}"
+
+  if cmp -s "${hugo_tmp}" "${docusaurus_tmp}"; then
+    rm -f "${hugo_tmp}" "${docusaurus_tmp}" "${hugo_equiv_tmp}" "${docusaurus_equiv_tmp}"
+    return 1
+  fi
+
+  apply_approved_link_equivalence_to_normalized_file "${hugo_tmp}" "${hugo_equiv_tmp}" "${LINK_FIXES_FILE}"
+  apply_approved_link_equivalence_to_normalized_file "${docusaurus_tmp}" "${docusaurus_equiv_tmp}" "${LINK_FIXES_FILE}"
+
+  if cmp -s "${hugo_equiv_tmp}" "${docusaurus_equiv_tmp}"; then
+    rm -f "${hugo_tmp}" "${docusaurus_tmp}" "${hugo_equiv_tmp}" "${docusaurus_equiv_tmp}"
+    return 0
+  fi
+
+  if [[ "${DEBUG_LINK_FIXES:-0}" == "1" ]]; then
+    echo
+    echo "Approved-link equivalence mismatch:"
+    diff -u --label "hugo-equiv" --label "docusaurus-equiv" "${hugo_equiv_tmp}" "${docusaurus_equiv_tmp}" || true
+  fi
+
+  rm -f "${hugo_tmp}" "${docusaurus_tmp}" "${hugo_equiv_tmp}" "${docusaurus_equiv_tmp}"
+  return 1
 }
 
 is_frontmatter_only_markdown() {
@@ -990,6 +1105,18 @@ color_cell() {
   printf "%s%s%s" "${color}" "${value}" "${COLOR_RESET}"
 }
 
+has_malformed_relref_shortcode() {
+  local file="$1"
+  [[ -f "${file}" ]] || return 1
+  grep -Eq '\{\{<relref\b' "${file}"
+}
+
+has_literal_relref_link() {
+  local file="$1"
+  [[ -f "${file}" ]] || return 1
+  grep -Eq '\]\(\{\{<\s*(relref|ref)\b[^}]*>\}\}\)' "${file}"
+}
+
 parse_args "$@"
 
 if [[ ! -d "${HUGO_DIR}" ]]; then
@@ -1036,8 +1163,11 @@ present_autogen=0
 present_missing=0
 permalink_ok=0
 content_ok=0
+content_fixed=0
 content_review=0
 content_mismatch=0
+malformed_relref=0
+literal_relref_links=0
 row_errors=0
 
 while IFS= read -r url_path; do
@@ -1097,6 +1227,7 @@ for url_path in "${selected_urls[@]}"; do
   page_id="${hugo_url_to_page[${url_path}]-}"
   docusaurus_page_id="${docusaurus_url_to_page[${url_path}]-}"
   total_rows=$((total_rows + 1))
+  row_has_error=0
 
   present="❌"
   permalink="❌"
@@ -1137,13 +1268,45 @@ for url_path in "${selected_urls[@]}"; do
     print_permalink_diff "${url_path}" "${page_id}"
   fi
 
-  if [[ -n "${hugo_file}" && -n "${docusaurus_file}" ]]; then
+  malformed_relref_found=0
+  literal_relref_link_found=0
+  if [[ -n "${docusaurus_file}" ]] && has_malformed_relref_shortcode "${docusaurus_file}"; then
+    malformed_relref_found=1
+    malformed_relref=$((malformed_relref + 1))
+    if [[ "${SHOW_DIFF}" -eq 1 ]]; then
+      echo
+      echo "Malformed shortcode in ${url_path}:"
+      echo "  file: ${docusaurus_file}"
+      grep -nE '\{\{<relref\b' "${docusaurus_file}" || true
+      echo "  expected shortcode style: {{< relref \"...\" >}}"
+    fi
+  fi
+  if [[ -n "${docusaurus_file}" ]] && has_literal_relref_link "${docusaurus_file}"; then
+    literal_relref_link_found=1
+    literal_relref_links=$((literal_relref_links + 1))
+    if [[ "${SHOW_DIFF}" -eq 1 ]]; then
+      echo
+      echo "Literal relref/ref link target in ${url_path}:"
+      echo "  file: ${docusaurus_file}"
+      grep -nE '\]\(\{\{<\s*(relref|ref)\b[^}]*>\}\}\)' "${docusaurus_file}" || true
+      echo "  expected Docusaurus link style: [text](./relative-path) or [text](/absolute-path)"
+    fi
+  fi
+
+  if [[ "${malformed_relref_found}" -eq 1 || "${literal_relref_link_found}" -eq 1 ]]; then
+    content="❌"
+    content_mismatch=$((content_mismatch + 1))
+    row_has_error=1
+  elif [[ -n "${hugo_file}" && -n "${docusaurus_file}" ]]; then
     if [[ "$(is_frontmatter_only_markdown "${hugo_file}")" == "1" ]]; then
       content="👀"
       content_review=$((content_review + 1))
     elif [[ "$(hash_content "${hugo_file}")" == "$(hash_content "${docusaurus_file}")" ]]; then
       content="✅"
       content_ok=$((content_ok + 1))
+    elif is_only_approved_link_fix_diff "${hugo_file}" "${docusaurus_file}"; then
+      content="🛠"
+      content_fixed=$((content_fixed + 1))
     elif [[ "${SHOW_DIFF}" -eq 1 ]]; then
       content_mismatch=$((content_mismatch + 1))
       print_page_diff "${url_path}" "${hugo_file}" "${docusaurus_file}"
@@ -1156,6 +1319,9 @@ for url_path in "${selected_urls[@]}"; do
   fi
 
   if [[ "${present}" == "❌" ]]; then
+    row_has_error=1
+  fi
+  if [[ "${row_has_error}" -eq 1 ]]; then
     row_errors=$((row_errors + 1))
   fi
 
@@ -1170,6 +1336,7 @@ for url_path in "${selected_urls[@]}"; do
   esac
   case "${content}" in
     "✅") content_cell="match" ;;
+    "🛠") content_cell="fixed" ;;
     "👀") content_cell="review" ;;
     *) content_cell="diff" ;;
   esac
@@ -1212,6 +1379,8 @@ for url_path in "${selected_urls[@]}"; do
   fi
 
   if [[ "${content_cell}" == "match" ]]; then
+    content_cell_colored="$(color_cell "${content_cell_padded}" "${COLOR_GREEN}")"
+  elif [[ "${content_cell}" == "fixed" ]]; then
     content_cell_colored="$(color_cell "${content_cell_padded}" "${COLOR_GREEN}")"
   elif [[ "${content_cell}" == "review" ]]; then
     content_cell_colored="$(color_cell "${content_cell_padded}" "${COLOR_ORANGE}")"
@@ -1267,8 +1436,11 @@ if [[ "${SUMMARY_ENABLED}" == "1" ]]; then
   echo "  present_missing: ${present_missing}"
   echo "  permalink_ok: ${permalink_ok}"
   echo "  content_ok: ${content_ok}"
+  echo "  content_fixed: ${content_fixed}"
   echo "  content_review: ${content_review}"
   echo "  content_mismatch: ${content_mismatch}"
+  echo "  malformed_relref: ${malformed_relref}"
+  echo "  literal_relref_links: ${literal_relref_links}"
   echo "  row_errors: ${row_errors}"
 fi
 

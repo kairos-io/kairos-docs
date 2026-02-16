@@ -11,7 +11,7 @@ Upgrades can be run manually from the terminal.
 Kairos images are released on [quay.io](https://quay.io/organization/kairos).
 
 :::tip Note
-Looking to upgrade from a private registry OCI image? Check the [Private registry auth](../Advanced/private_registry_auth) page.
+Looking to upgrade from a private registry OCI image? Check the [Private registry auth](/docs/advanced/private_registry_auth) page.
 :::
 ## Listing available versions
 
@@ -64,7 +64,7 @@ The passive system is the one that is not running. It is not possible to upgrade
 
 ## Upgrading single entries (trusted boot installations)
 
-On systems installed in ["trusted boot" mode](../../Architecture/trustedboot/), it's not possible to edit the cmdline
+On systems installed in ["trusted boot" mode](/docs/architecture/trustedboot/), it's not possible to edit the cmdline
 without generating a new bootable image because the cmdline is part of the signed artifact.
 For this reason, custom cmdlines are generated as separate artifacts at build time.
 Being different artifacts though, means that they will need to be upgraded too.

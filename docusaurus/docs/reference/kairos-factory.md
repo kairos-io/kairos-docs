@@ -135,7 +135,7 @@ Kairos releases its own artifacts with our own cadence, as we are also consumers
 
 kairos-init can generate both core and standard images, and standard images can be bundled with provider plugins (e.g. k3s, k0s) and any version of the software that you want.
 
-It can also prepare OCI artifacts for [Trusted Boot](../Architecture/trustedboot.md) which are slimmer than the usual ones, as they have size limitations plus we dont want to ship things like grub or dracut in them as they are useless.
+It can also prepare OCI artifacts for [Trusted Boot](/docs/architecture/trustedboot/) which are slimmer than the usual ones, as they have size limitations plus we dont want to ship things like grub or dracut in them as they are useless.
 
 :::warning Breaking change (kairos-init v0.6.0+)
 The flags `-k` / `--kubernetes-provider` and `--k8sversion` were removed. Use `--provider` / `-p` and `--provider-<name>-version` instead. For example, `-k k3s --k8sversion v1.28.0` becomes `--provider k3s --provider-k3s-version v1.28.0`. In Dockerfiles, use build args `PROVIDER_NAME` and `PROVIDER_VERSION` instead of `KUBERNETES_PROVIDER` / `KUBERNETES_DISTRO` and `KUBERNETES_VERSION`.

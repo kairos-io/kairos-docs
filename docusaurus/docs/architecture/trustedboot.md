@@ -39,7 +39,7 @@ The UKI files are generated from container images as usual.
 
 ![Trusted boot](https://github.com/kairos-io/kairos-docs/assets/2420543/2f49d592-9ae3-43ee-b22b-0313be455bf7)
 
-The process to generate the installable medium is described in the [Trustedboot installation documentation](./trustedboot). Internally we rely on the *osbuilder* tool to generate all the installation artifacts from a single container image.
+The process to generate the installable medium is described in the [Trustedboot installation documentation](/docs/installation/trustedboot/). Internally we rely on the *osbuilder* tool to generate all the installation artifacts from a single container image.
 
 ### Booting process
 
@@ -50,15 +50,15 @@ The booting process of an installed system with Trusted Boot is different from a
 1. The Firmware loads the `systemd-boot` bootloader from the EFI partition
 2. `systemd-boot` loads the UKI file from the EFI partition (that can be either the Active system, the passive or recovery system)
 3. The EFI system starts. The kernel and the initrd are loaded from the UKI file, and the kernel is booted with the command line specified in the UKI file. 
-4. The initrd will decrypt the user-data and mount the portions of it in the root filesystem. This includes for instance any changes to `/etc` (like adding new users and passwords), `/usr/local`, and all the mount bindpoints specified in the configuration file (see [Bind mount documentation](./customizing#bind-mounts) ). There is no second stage loaded and no system pivoting, the system is booted directly from the UKI file.
+4. The initrd will decrypt the user-data and mount the portions of it in the root filesystem. This includes for instance any changes to `/etc` (like adding new users and passwords), `/usr/local`, and all the mount bindpoints specified in the configuration file (see [Bind mount documentation](/docs/advanced/customizing/#bind-mounts) ). There is no second stage loaded and no system pivoting, the system is booted directly from the UKI file.
 
 ### Booting system
 
 ![Trusted boot](https://github.com/kairos-io/kairos-docs/assets/2420543/757870d3-3b40-46ea-9c86-13c4a545f167)
 
-There is no difference with a layout of a standard Kairos system (as explained in the [Immutable OS](./immutable) page), however in this setup now the partitions containing data are always encrypted:
+There is no difference with a layout of a standard Kairos system (as explained in the [Immutable OS](/docs/architecture/immutable/) page), however in this setup now the partitions containing data are always encrypted:
 
-- [List of persistent data path overlayed and encrypted](https://github.com/kairos-io/packages/blob/528682cddf7191fb52580e7c41a33e73c1ee0001/packages/static/kairos-overlay-files/files/system/oem/00_rootfs_uki.yaml#L18) (see also [the bind mount documentation](./customizing#bind-mounts) to customize it with your own paths).
+- [List of persistent data path overlayed and encrypted](https://github.com/kairos-io/packages/blob/528682cddf7191fb52580e7c41a33e73c1ee0001/packages/static/kairos-overlay-files/files/system/oem/00_rootfs_uki.yaml#L18) (see also [the bind mount documentation](/docs/advanced/customizing/#bind-mounts) to customize it with your own paths).
 - `/oem` encrypted
 - `/usr/local` encrypted
 - `/etc` ephemeral
@@ -76,11 +76,11 @@ The keys are used to sign the UKI file, and to generate a PCR policy keypair req
 
 ### Expanding the system with system extensions
 
-Check the relevant documentation on how to [extend the system with system extensions](./sys-extensions) and how to [use /opt with system extensions](./adding_opt_to_system_extensions).
+Check the relevant documentation on how to [extend the system with system extensions](/docs/advanced/sys-extensions/) and how to [use /opt with system extensions](/docs/advanced/adding_opt_to_system_extensions/).
 
 ### Trusted Boot - Boot Assessment
 
-See the [Trusted Boot - Boot Assessment](./boot_assessment_trusted_boot) documentation for more information on how to enable automatic boot assessment with Trusted Boot and how to make your own services participate in the boot assessment process.
+See the [Trusted Boot - Boot Assessment](/docs/examples/boot_assessment_trusted_boot/) documentation for more information on how to enable automatic boot assessment with Trusted Boot and how to make your own services participate in the boot assessment process.
 
 ### Considerations
 
@@ -98,14 +98,14 @@ UKI file's signatures are including also the kernel command line, so any change 
 - [UKI file format](https://uapi-group.org/specifications/specs/unified_kernel_image/#file-format)
 - [Secure Boot](https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot)
 
-For more information about installing Kairos with Trusted Boot, see the [Trusted Boot Installation Guide](./trustedboot).
+For more information about installing Kairos with Trusted Boot, see the [Trusted Boot Installation Guide](/docs/installation/trustedboot/).
 
-For more information about customizing Kairos images, see the [Customizing Images](./customizing) guide.
+For more information about customizing Kairos images, see the [Customizing Images](/docs/advanced/customizing/) guide.
 
-For more information about the immutable nature of Kairos, see the [Immutable Architecture](./immutable) guide.
+For more information about the immutable nature of Kairos, see the [Immutable Architecture](/docs/architecture/immutable/) guide.
 
-For more information about system extensions, see the [System Extensions](./sys-extensions) guide.
+For more information about system extensions, see the [System Extensions](/docs/advanced/sys-extensions/) guide.
 
-For more informations about revoking certificates, see [Revoking secure boot access](./../advanced/revoking-secureboot-access)
+For more informations about revoking certificates, see [Revoking secure boot access](/docs/advanced/revoking-secureboot-access)
 
-For a complete example of boot assessment with Trusted Boot, see the [Boot Assessment with Trusted Boot](./boot_assessment_trusted_boot) guide.
+For a complete example of boot assessment with Trusted Boot, see the [Boot Assessment with Trusted Boot](/docs/examples/boot_assessment_trusted_boot/) guide.

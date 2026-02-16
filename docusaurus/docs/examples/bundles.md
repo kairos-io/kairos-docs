@@ -4,7 +4,7 @@ sidebar_label: "Bundles"
 description: This section describe examples on how to use a Kairos bundle to deploy MetalLB on top of K3s
 ---
 
-Welcome to the guide on setting up MetalLB on a Kairos cluster with K3s! This tutorial will walk you through the steps of using a Kairos [bundle](../../advanced/bundles) to automatically configure MetalLB on your local network with an IP range of `192.168.1.10-192.168.1.20`. Check out the [MetalLB](../../examples/metallb) example to configure it without a [bundle](../../advanced/bundles).
+Welcome to the guide on setting up MetalLB on a Kairos cluster with K3s! This tutorial will walk you through the steps of using a Kairos [bundle](/docs/advanced/bundles) to automatically configure MetalLB on your local network with an IP range of `192.168.1.10-192.168.1.20`. Check out the [MetalLB](/docs/examples/metallb) example to configure it without a [bundle](/docs/advanced/bundles).
 
 For those unfamiliar with [MetalLB](https://metallb.universe.tf/), it is an open-source load balancer implementation for bare metal Kubernetes clusters that utilizes standard routing protocols. When used with K3s on Kairos, it provides load balancing capabilities and helps manage IP addresses within a cluster. 
 
@@ -54,6 +54,6 @@ metallb:
 There are a few key points to note in the configuration file:
 
 - The `metallb` block is provided by the MetalLB bundle and allows us to specify the version of MetalLB that we want to deploy, as well as the `address_pool` available for our services.
-- The `bundles` block enables the `run` [bundle](../../advanced/bundles) type. The bundle we are using is part of the [community-bundles](https://github.com/kairos-io/community-bundles) repository.
+- The `bundles` block enables the `run` [bundle](/docs/advanced/bundles) type. The bundle we are using is part of the [community-bundles](https://github.com/kairos-io/community-bundles) repository.
 
-And that's it! With these steps, you should now have MetalLB configured and ready to use on your Kairos cluster. If you have any questions or run into any issues, don't hesitate to check out the [bundle documentation](../../advanced/bundles) or reach out to the community for support.
+And that's it! With these steps, you should now have MetalLB configured and ready to use on your Kairos cluster. If you have any questions or run into any issues, don't hesitate to check out the [bundle documentation](/docs/advanced/bundles) or reach out to the community for support.

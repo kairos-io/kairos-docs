@@ -7,7 +7,7 @@ description: Install the system-upgrade-controller (deprecated - use Kairos oper
 ---
 
 :::warning Deprecated
-The system-upgrade-controller approach is deprecated. We recommend using the [Kairos operator]({{< relref "../Operator" >}}) instead, which provides a more integrated and Kairos-specific way to manage upgrades and operations.
+The system-upgrade-controller approach is deprecated. We recommend using the [Kairos operator](/docs/operator/) instead, which provides a more integrated and Kairos-specific way to manage upgrades and operations.
 :::
 To upgrade Kairos with Kubernetes using the legacy approach, it is necessary to have [system-upgrade-controller](https://github.com/rancher/system-upgrade-controller) deployed on the target cluster.
 

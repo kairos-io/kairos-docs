@@ -25,7 +25,7 @@ a non-bootable system. This section describes those measure and how they work.
   By default, Kairos adds `panic=5` to the kernel cmdline. This instructs the kernel to reboot after 5 seconds if a panic occurs.
 
 - "Trusted boot" installations:
-  The same option are included in [the default cmdline](https://github.com/kairos-io/AuroraBoot/blob/5d5bd2742520d654cd1bb865864acc3d37c43e57/pkg/constants/constants.go#L77), when an image is built with aurorabootk([trusted boot docs](../../Installation/trustedboot)).
+  The same option are included in [the default cmdline](https://github.com/kairos-io/AuroraBoot/blob/5d5bd2742520d654cd1bb865864acc3d37c43e57/pkg/constants/constants.go#L77), when an image is built with aurorabootk([trusted boot docs](/docs/installation/trustedboot)).
 
 ## Automatic reboot in case of systemd crash
 
@@ -33,7 +33,7 @@ a non-bootable system. This section describes those measure and how they work.
   By default, Kairos adds `rd.shell=0 systemd.crash_reboot=yes` to the kernel cmdline. This makes systemd restart in case it crashes ([Read more](https://www.freedesktop.org/software/systemd/man/249/systemd.html#systemd.crash_reboot))
 
 - "Trusted boot" installations:
-  The same options are included in [the default cmdline](https://github.com/kairos-io/AuroraBoot/blob/5d5bd2742520d654cd1bb865864acc3d37c43e57/pkg/constants/constants.go#L77), when an image is built with auroraboot ([trusted boot docs](../../Installation/trustedboot)).
+  The same options are included in [the default cmdline](https://github.com/kairos-io/AuroraBoot/blob/5d5bd2742520d654cd1bb865864acc3d37c43e57/pkg/constants/constants.go#L77), when an image is built with auroraboot ([trusted boot docs](/docs/installation/trustedboot)).
 
 ## Booting to fallback
 
@@ -49,4 +49,4 @@ a non-bootable system. This section describes those measure and how they work.
 
 ## Validating the image signatures (Trusted boot installations)
 
-When Kairos is installed [in trusted boot mode](../../Installation/trustedboot), the OS image comes as a single signed file. The certificate signing the image has to be enrolled in the system's firmware database otherwise the system won't allow booting it. This is also true when Kairos is being upgraded to a new version (which is a new image). For this reason, when upgrading, the `kairos-agent` will perform a check to see if the certificate that signs the new image is enrolled (and not blacklisted) in the firmware database. If not, the upgrade will be aborted to avoid a situation where booting is not possible.
+When Kairos is installed [in trusted boot mode](/docs/installation/trustedboot), the OS image comes as a single signed file. The certificate signing the image has to be enrolled in the system's firmware database otherwise the system won't allow booting it. This is also true when Kairos is being upgraded to a new version (which is a new image). For this reason, when upgrading, the `kairos-agent` will perform a check to see if the certificate that signs the new image is enrolled (and not blacklisted) in the firmware database. If not, the upgrade will be aborted to avoid a situation where booting is not possible.

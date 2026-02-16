@@ -13,6 +13,8 @@ William is a CNCF Ambassador and Linkerd Ambassador, and he currently works at M
 
 Open source and cloud-native communities are a major part of William's professional identity. He actively volunteers in several Cloud Native groups and helps organize KCD Netherlands. He also brings public speaking experience from community talks. He is a strong addition to the team, bringing years of experience in the field and a collaborative, community-first approach.
 
+<!-- truncate -->
+
 ## A milestone for the project
 
 William is the first Kairos maintainer from a different company than the original Kairos creators, and that is a meaningful signal for the ecosystem. It shows the value Kairos brings beyond its origins and highlights growing, shared ownership of the project.

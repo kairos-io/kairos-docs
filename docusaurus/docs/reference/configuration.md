@@ -357,7 +357,7 @@ Kairos supports a portion of the standard [cloud-init](https://cloud-init.io/) s
 
 Examples using the extended notation for running K3s as agent or server can be found in the [examples](https://github.com/kairos-io/kairos/tree/master/examples)  directory of the Kairos repository.
 
-Here's an example that shows how to set up DNS at the [boot stage](../architecture/cloud-init) using the extended syntax:
+Here's an example that shows how to set up DNS at the [boot stage](/docs/architecture/cloud-init) using the extended syntax:
 
 ```yaml
 #cloud-config
@@ -632,7 +632,7 @@ stages:
           homedir: "/home/testuser"
 ```
 
-This configuration can be either manually copied over, or can be propagated also via Kubernetes using the system upgrade controller. See [the after-install](../advanced/after-install) section for an example.
+This configuration can be either manually copied over, or can be propagated also via Kubernetes using the system upgrade controller. See [the after-install](/docs/advanced/after-install) section for an example.
 
 ```bash
 ❯ ssh testuser@192.168.1.238
@@ -759,14 +759,14 @@ stages:
 {{% /tab %}}
 {{% tab header="p2p" %}}
 
-As P2P is a very complex topic, we have a dedicated [P2P documentation page](../installation/p2p) that explains how to use it with deep details.
+As P2P is a very complex topic, we have a dedicated [P2P documentation page](/docs/installation/p2p) that explains how to use it with deep details.
 
 {{% /tab %}}
 {{< /tabpane >}}
 
 ## Stages
 
-The `stages` key is a map that allows to execute blocks of cloud-init directives during the lifecycle of the node [stages](../architecture/cloud-init).
+The `stages` key is a map that allows to execute blocks of cloud-init directives during the lifecycle of the node [stages](/docs/architecture/cloud-init).
 
 A full example of a stage is the following:
 
@@ -967,7 +967,7 @@ stages:
 ### Modules
 
 For each stage, a number of modules are available, that implement various useful functions.
-Read more about them in this page: [Stage modules](../Reference/stage_modules)
+Read more about them in this page: [Stage modules](/docs/reference/stage_modules)
 
 ## Running commands on different shells
 

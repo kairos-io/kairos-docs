@@ -10,12 +10,12 @@ This page provides a reference guide on how to build raw images for Kairos using
 
 :::note Note
 
-This method differs from the ones documented in the [Auroraboot](./auroraboot) section: this method is suitable if you need to create appliances that have to run a full-installation. AuroraBoot will create instead images pre-installed which will skip the usual Kairos installation process in runtime
+This method differs from the ones documented in the [Auroraboot](/docs/reference/auroraboot/) section: this method is suitable if you need to create appliances that have to run a full-installation. AuroraBoot will create instead images pre-installed which will skip the usual Kairos installation process in runtime
 
 :::
 
 
-For more information about AuroraBoot, see the [AuroraBoot Reference](./auroraboot).
+For more information about AuroraBoot, see the [AuroraBoot Reference](/docs/reference/auroraboot/).
 
 ## Requirements
 

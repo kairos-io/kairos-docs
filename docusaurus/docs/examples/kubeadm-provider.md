@@ -45,7 +45,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN mkdir -p /system/providers && curl -L https://github.com/kairos-io/provider-kubeadm/releases/download/v4.7.0-rc.4/agent-provider-kubeadm-v4.7.0-rc.4-linux-amd64.tar.gz | tar -xz -C /system/providers/
 ```
 
-Or with the modern [Kairos Factory](kairos-factory) method:
+Or with the modern [Kairos Factory](/docs/reference/kairos-factory/) method:
 
 ```Dockerfile
 FROM quay.io/kairos/kairos-init:{{< kairosInitVersion >}} AS kairos-init

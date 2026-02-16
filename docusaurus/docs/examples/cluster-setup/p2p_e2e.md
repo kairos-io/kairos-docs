@@ -17,7 +17,7 @@ To leverage p2p self-coordination capabilities of Kairos, you will need to confi
 
 In the following example we are going to bootstrap a new multi-node, single cluster with Kairos. We will use at least 2 nodes, one as a master and one as a worker. Note how we don't specify any role, or either pin any IP in the following configurations.
 
-We will first create a cloud config file for our deployment, and then run [AuroraBoot](../reference/auroraboot) locally. We then start 2 VMs configured for netbooting.
+We will first create a cloud config file for our deployment, and then run [AuroraBoot](/docs/reference/auroraboot) locally. We then start 2 VMs configured for netbooting.
 
 ## Prepare your `cloud-config` file
 
@@ -94,7 +94,7 @@ ssh_authorized_keys:
 
 ## Provisioning with AuroraBoot
 
-We now can run [AuroraBoot](../reference/auroraboot) with {{<ociCode variant="standard">}} to provision `openSUSE Leap` machines with those k3s and kairos versions.
+We now can run [AuroraBoot](/docs/reference/auroraboot) with {{<ociCode variant="standard">}} to provision `openSUSE Leap` machines with those k3s and kairos versions.
 
 AuroraBoot takes `cloud-config` files also from _STDIN_, so we will pipe the configuration file to it, and specify the container image that we want to use for our nodes:
 
@@ -129,7 +129,7 @@ EOF
 
 ## Booting and access the cluster
 
-Start the Machines (VM, or baremetal) with Netboot ( see also [here](../reference/auroraboot#3-start-nodes) ) and wait for the installation to finish.
+Start the Machines (VM, or baremetal) with Netboot ( see also [here](/docs/reference/auroraboot#3-start-nodes) ) and wait for the installation to finish.
 
 Afterward, you should be able to ssh to one of the machines and be able to use your Kubernetes cluster:
 
@@ -149,7 +149,7 @@ $ KUBECONFIG=kubeconfig k9s
 :::
 ## Notes
 
-By default, the Kubernetes API endpoint is not exposed outside the VPN. This is an opinionated configuration from Kairos. To check out configurations without VPN, see also [the KubeVIP example](../examples/multi-node-p2p-ha-kubevip).
+By default, the Kubernetes API endpoint is not exposed outside the VPN. This is an opinionated configuration from Kairos. To check out configurations without VPN, see also [the KubeVIP example](/docs/examples/multi-node-p2p-ha-kubevip).
 
 ## Troubleshooing
 
@@ -162,5 +162,5 @@ $ journalctl -fu kairos-agent
 
 ## See also
 
-- [Installation with p2p](../installation/p2p)
-- [P2P Architecture](../architecture/network)
+- [Installation with p2p](/docs/installation/p2p)
+- [P2P Architecture](/docs/architecture/network)

@@ -299,19 +299,19 @@ function BasicsSection() {
       title: 'Installation',
       description: 'See how to get up and running with Kairos, in less than 15 minutes!',
       icon: '📦',
-      href: '/docs/Installation',
+      href: '/docs/installation',
     },
     {
       title: 'Architecture',
       description: 'Get inside Kairos, from the factory to P2P mesh capabilities.',
       icon: '🏗️',
-      href: '/docs/Architecture',
+      href: '/docs/architecture',
     },
     {
       title: 'Examples',
       description: 'Stretch your wings with best practices of common tasks after installing Kairos.',
       icon: '🚀',
-      href: '/docs/Examples',
+      href: '/docs/examples',
     },
   ];
 

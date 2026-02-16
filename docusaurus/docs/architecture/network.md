@@ -15,7 +15,7 @@ To address these challenges, Kairos provides an easy and robust solution for dep
 In this document, we will examine the advantages of using Kairos to deploy Kubernetes clusters at the edge, and how p2p technology facilitates self-coordination for a zero-touch configuration experience. We will also explore how Kairos' highly adaptable and container-based approach, combined with an immutable OS and meta-distribution, makes it an excellent choice for edge deployments.
 
 :::tip Note
-You can also watch our [Kairos and libp2p video](../media/#how-kairos-uses-libp2p "Media") in the [Media Section](../media "Media")
+You can also watch our [Kairos and libp2p video](/docs/media/#how-kairos-uses-libp2p "Media") in the [Media Section](/docs/media/ "Media")
 :::
 ## Overview: P2P for self-coordination
 
@@ -25,14 +25,14 @@ Kairos creates self-coordinated, fully meshed clusters at the edge by using a co
 
 This design is made up of several components:
 
-- The Kairos base OS with support for different distribution flavors and k3s combinations (see our support matrix [here](../reference/image_matrix)).
+- The Kairos base OS with support for different distribution flavors and k3s combinations (see our support matrix [here](/docs/reference/image_matrix)).
 - A Virtual private network interface ([EdgeVPN](https://github.com/mudler/edgevpn) which leverages [libp2p](https://github.com/libp2p/go-libp2p)).
 - K3s/CNI configured to work with the VPN interface.
 - A shared ledger accessible to all nodes in the p2p private network.
 
 By using libp2p as the transport layer, Kairos can abstract connections between the nodes and use it as a coordination mechanism. The shared ledger serves as a cache to store additional data, such as node tokens to join nodes to the cluster or the cluster topology, and is accessible to all nodes in the P2P private network. The VPN interface is automatically configured and self-coordinated, requiring zero-configuration and no user intervention.
 
-Moreover, any application at the OS level can use P2P functionalities by using Virtual IPs within the VPN. The user only needs to provide a generated shared token containing OTP seeds for rendezvous points used during connection bootstrapping between the peers. It's worth noting that the VPN is optional, and the shared ledger can be used to coordinate and set up other forms of networking between the cluster nodes, such as KubeVIP. (See this example [here](../examples/multi-node-p2p-ha-kubevip))
+Moreover, any application at the OS level can use P2P functionalities by using Virtual IPs within the VPN. The user only needs to provide a generated shared token containing OTP seeds for rendezvous points used during connection bootstrapping between the peers. It's worth noting that the VPN is optional, and the shared ledger can be used to coordinate and set up other forms of networking between the cluster nodes, such as KubeVIP. (See this example [here](/docs/examples/multi-node-p2p-ha-kubevip))
 
 ## Implementation
 
@@ -86,7 +86,7 @@ Nonetheless, these tradeoffs can be overcome, and new features can be added due 
 - The p2p layer is decentralized and can span across different networks by using DHT and a bootstrap server
 - Self-coordination simplifies the provisioning experience
 - Internal cluster traffic can also be offloaded to other mechanisms if network performance is a prerequisite
-- For instance, with [KubeVIP](../examples/multi-node-p2p-ha-kubevip), new nodes can join the network and become cluster members even after the cluster provisioning phase, making EdgeVPN a scalable solution.
+- For instance, with [KubeVIP](/docs/examples/multi-node-p2p-ha-kubevip), new nodes can join the network and become cluster members even after the cluster provisioning phase, making EdgeVPN a scalable solution.
 
 ### Why a VPN ?
 
@@ -104,7 +104,7 @@ Additionally, network configuration is simplified with a VPN. Without a VPN, `et
 
 In terms of networking, a Kubernetes cluster without a VPN handles cluster IPs and networking natively without additional layers. However, with a VPN, Kubernetes network services will have Cluster IPs below the VPN. This means that all internal Kubernetes communication goes through the VPN. While the additional end-to-end encrypted network layer might add some latency, it is observed typically to be only 0-1ms in LAN. However, due to the Encryption layers, the CPU usage might be high if used for high-demanding traffic.
 
-It's also worth noting that while a VPN provides a unified network environment, it may not be necessary or appropriate for all use cases. Users can choose to opt-out of using the VPN and leverage only the coordination aspect, for example, with KubeVIP. Ultimately, the decision to use a VPN should be based on the specific needs and requirements of your Kubernetes cluster, and as such you can just use the co-ordination aspect and leverage for instance [KubeVIP](../examples/multi-node-p2p-ha-kubevip).
+It's also worth noting that while a VPN provides a unified network environment, it may not be necessary or appropriate for all use cases. Users can choose to opt-out of using the VPN and leverage only the coordination aspect, for example, with KubeVIP. Ultimately, the decision to use a VPN should be based on the specific needs and requirements of your Kubernetes cluster, and as such you can just use the co-ordination aspect and leverage for instance [KubeVIP](/docs/examples/multi-node-p2p-ha-kubevip).
 
 ### Packet flow
 
@@ -129,7 +129,7 @@ Assuming that we want to establish an SSH connection from Node A to Node B throu
 
 ### Controller
 
-A set of Kubernetes Native Extensions ([Entangle](../reference/entangle)) provides peer-to-peer functionalities also to existing clusters by allowing to bridge connection with the same design architecture described above.
+A set of Kubernetes Native Extensions ([Entangle](/docs/reference/entangle)) provides peer-to-peer functionalities also to existing clusters by allowing to bridge connection with the same design architecture described above.
 
 It can be used to:
 
@@ -137,7 +137,7 @@ It can be used to:
 - Bridge external connections to cluster
 - Setup EdgeVPN as a daemonset between cluster nodes
 
-See also the Entangle [documentation](../reference/entangle) to learn more about it.
+See also the Entangle [documentation](/docs/reference/entangle) to learn more about it.
 
 ## Benefits
 
@@ -148,7 +148,7 @@ See also the Entangle [documentation](../reference/entangle) to learn more about
 The use of p2p technology to enable self-coordination of Kubernetes clusters in Kairos offers a number of benefits:
 
 1. **Simplified deployment**: Deploying Kubernetes clusters at the edge is greatly simplified. Users don’t need to specify any network settings or use a control management interface to set up and manage their clusters.
-1. **Easy customization**: Kairos offers a highly customizable approach to deploying Kubernetes clusters at the edge. Users can choose from a range of meta distributions, including openSUSE, Ubuntu, Alpine and [many others](../reference/image_matrix), and customize the configuration of their clusters as needed.
+1. **Easy customization**: Kairos offers a highly customizable approach to deploying Kubernetes clusters at the edge. Users can choose from a range of meta distributions, including openSUSE, Ubuntu, Alpine and [many others](/docs/reference/image_matrix), and customize the configuration of their clusters as needed.
 1. **Automatic coordination**: With Kairos, the coordination of Kubernetes clusters is completely automated. The p2p network is used as a coordination mechanism for the nodes, allowing them to communicate and coordinate with each other without the need for any external management interface. This means that users can set up and manage their Kubernetes clusters at the edge with minimal effort, freeing up their time to focus on other tasks.
 1. **Secure and replicated**: The use of rendezvous points and a shared ledger, encrypted with AES and rotated via OTP, ensures that the p2p network is secure and resilient. This is especially important when deploying Kubernetes clusters at the edge, where network conditions can be unpredictable.
 1. **Resilient**: Kairos ensures that the cluster remains resilient, even in the face of network disruptions or failures. By using VirtualIPs, nodes can communicate with each other without the need for static IPs, and the cluster's etcd database remains unaffected by any disruptions.
