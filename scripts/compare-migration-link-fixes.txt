@@ -23,3 +23,9 @@ hackweek-2024|blog/2024/08/13/our-first-hackweek
 k3s-stages|examples/k3s-stages
 multi-node|examples/multi-node
 single-node-p2p|examples/single-node-p2p
+https://github.com/user-attachments/assets/2fbdd893-dba4-496e-9bbc-6450418d5eb4|424012408-2fbdd893-dba4-496e-9bbc-6450418d5eb4.png
+https://github.com/user-attachments/assets/da048846-16f8-41ca-8673-1467a1028fa3|424012979-da048846-16f8-41ca-8673-1467a1028fa3.jpeg
+https://github.com/user-attachments/assets/f1afd596-60ef-4181-92c3-250af52693a3|424013401-f1afd596-60ef-4181-92c3-250af52693a3.jpeg
+https://github.com/user-attachments/assets/8aac2983-3208-4792-a14e-713afea7bd0d|424014404-8aac2983-3208-4792-a14e-713afea7bd0d.jpeg
+https://github.com/user-attachments/assets/c10b4573-dc3d-478c-9853-07abbafaef8c|424014588-c10b4573-dc3d-478c-9853-07abbafaef8c.jpeg
+https://github.com/user-attachments/assets/c86d85e4-86b5-465d-bf1a-83a8850916bc|424011822-c86d85e4-86b5-465d-bf1a-83a8850916bc.jpeg
