@@ -753,6 +753,7 @@ normalize_content() {
       $value //= q{};
       $value = trim($value);
       $value =~ s/^["'\'']|["'\'']$//g;
+      $value =~ s/^__DOCREF__\[([^\]]+)\]$/$1/i;
       $value =~ s/[?#].*$//;
       $value =~ s{\\}{/}g;
       $value =~ s#/$## unless $value eq q{/};
@@ -956,10 +957,18 @@ apply_approved_link_equivalence_to_normalized_file() {
         my $hugo_from_escaped = "__DOCREF__[" . ($hugo_ref =~ s#/#\\/#gr) . "]";
         my $docus_from = "__DOCREF__[$docusaurus_ref]";
         my $docus_from_escaped = "__DOCREF__[" . ($docusaurus_ref =~ s#/#\\/#gr) . "]";
+        my $hugo_fig = "__FIGURE__[$hugo_ref]";
+        my $hugo_fig_escaped = "__FIGURE__[" . ($hugo_ref =~ s#/#\\/#gr) . "]";
+        my $docus_fig = "__FIGURE__[$docusaurus_ref]";
+        my $docus_fig_escaped = "__FIGURE__[" . ($docusaurus_ref =~ s#/#\\/#gr) . "]";
         $text =~ s/\Q$hugo_from\E/$token/g;
         $text =~ s/\Q$hugo_from_escaped\E/$token/g;
         $text =~ s/\Q$docus_from\E/$token/g;
         $text =~ s/\Q$docus_from_escaped\E/$token/g;
+        $text =~ s/\Q$hugo_fig\E/$token/g;
+        $text =~ s/\Q$hugo_fig_escaped\E/$token/g;
+        $text =~ s/\Q$docus_fig\E/$token/g;
+        $text =~ s/\Q$docus_fig_escaped\E/$token/g;
       }
       close $fh;
     }
@@ -1350,7 +1359,7 @@ for url_path in "${selected_urls[@]}"; do
 
   hide_row=0
   if [[ "${#requested_identifiers[@]}" -eq 0 && "${SHOW_ALL}" -eq 0 ]]; then
-    if [[ "${present_cell}" == "file" && "${permalink_cell}" == "same" && "${content_cell}" == "match" ]]; then
+    if [[ "${present_cell}" == "file" && "${permalink_cell}" == "same" && ( "${content_cell}" == "match" || "${content_cell}" == "fixed" ) ]]; then
       hide_row=1
     fi
   fi
