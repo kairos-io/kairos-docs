@@ -79,7 +79,7 @@ spec:
 |---|---|---|---|
 | `nodeSelector` | `LabelSelector` | (none) | Standard Kubernetes label selector to target specific nodes |
 | `image` | `string` | (required) | Container image to run on each node |
-| `imagePullSecrets` | `[]LocalObjectReference` | (none) | Secrets for pulling from private registries ([details]({{< relref "private-registries" >}})) |
+| `imagePullSecrets` | `[]LocalObjectReference` | (none) | Secrets for pulling from private registries ([details](private-registries)) |
 | `command` | `[]string` | (required) | Command to execute in the container |
 | `hostMountPath` | `string` | `/host` | Path where the node's root filesystem is mounted |
 | `cordon` | `bool` | `false` | Whether to cordon the node before running the operation |
@@ -167,6 +167,6 @@ spec:
 
 ## What's next?
 
-- [NodeOpUpgrade]({{< relref "nodeop-upgrade" >}}) — simplified Kairos-specific upgrades
-- [Pushing configuration after install]({{< relref "../Advanced/after-install" >}}) — use NodeOp to push configs
-- [Reset a node from Kubernetes]({{< relref "../Reference/reset" >}}) — use NodeOp to reset nodes
+- [NodeOpUpgrade](nodeop-upgrade) — simplified Kairos-specific upgrades
+- [Pushing configuration after install](/docs/advanced/after-install/) — use NodeOp to push configs
+- [Reset a node from Kubernetes](/docs/reference/reset/) — use NodeOp to reset nodes

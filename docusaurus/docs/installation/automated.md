@@ -159,4 +159,4 @@ Check out the [AuroraBoot documentation](../reference/auroraboot) and the [examp
 
 It is possible to create custom ISOs and derivatives using extended Kubernetes API resources with an embedded configuration file. This allows you to drive automated installations and customize the container image without breaking the concept of immutability.
 
-You can read more about it [here]({{< relref "../Operator/osartifact" >}}).
+You can read more about it [here](/docs/operator/osartifact/).

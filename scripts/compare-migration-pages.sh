@@ -990,6 +990,18 @@ color_cell() {
   printf "%s%s%s" "${color}" "${value}" "${COLOR_RESET}"
 }
 
+has_malformed_relref_shortcode() {
+  local file="$1"
+  [[ -f "${file}" ]] || return 1
+  grep -Eq '\{\{<relref\b' "${file}"
+}
+
+has_literal_relref_link() {
+  local file="$1"
+  [[ -f "${file}" ]] || return 1
+  grep -Eq '\]\(\{\{<\s*(relref|ref)\b[^}]*>\}\}\)' "${file}"
+}
+
 parse_args "$@"
 
 if [[ ! -d "${HUGO_DIR}" ]]; then
@@ -1038,6 +1050,8 @@ permalink_ok=0
 content_ok=0
 content_review=0
 content_mismatch=0
+malformed_relref=0
+literal_relref_links=0
 row_errors=0
 
 while IFS= read -r url_path; do
@@ -1097,6 +1111,7 @@ for url_path in "${selected_urls[@]}"; do
   page_id="${hugo_url_to_page[${url_path}]-}"
   docusaurus_page_id="${docusaurus_url_to_page[${url_path}]-}"
   total_rows=$((total_rows + 1))
+  row_has_error=0
 
   present="❌"
   permalink="❌"
@@ -1137,7 +1152,36 @@ for url_path in "${selected_urls[@]}"; do
     print_permalink_diff "${url_path}" "${page_id}"
   fi
 
-  if [[ -n "${hugo_file}" && -n "${docusaurus_file}" ]]; then
+  malformed_relref_found=0
+  literal_relref_link_found=0
+  if [[ -n "${docusaurus_file}" ]] && has_malformed_relref_shortcode "${docusaurus_file}"; then
+    malformed_relref_found=1
+    malformed_relref=$((malformed_relref + 1))
+    if [[ "${SHOW_DIFF}" -eq 1 ]]; then
+      echo
+      echo "Malformed shortcode in ${url_path}:"
+      echo "  file: ${docusaurus_file}"
+      grep -nE '\{\{<relref\b' "${docusaurus_file}" || true
+      echo "  expected shortcode style: {{< relref \"...\" >}}"
+    fi
+  fi
+  if [[ -n "${docusaurus_file}" ]] && has_literal_relref_link "${docusaurus_file}"; then
+    literal_relref_link_found=1
+    literal_relref_links=$((literal_relref_links + 1))
+    if [[ "${SHOW_DIFF}" -eq 1 ]]; then
+      echo
+      echo "Literal relref/ref link target in ${url_path}:"
+      echo "  file: ${docusaurus_file}"
+      grep -nE '\]\(\{\{<\s*(relref|ref)\b[^}]*>\}\}\)' "${docusaurus_file}" || true
+      echo "  expected Docusaurus link style: [text](./relative-path) or [text](/absolute-path)"
+    fi
+  fi
+
+  if [[ "${malformed_relref_found}" -eq 1 || "${literal_relref_link_found}" -eq 1 ]]; then
+    content="❌"
+    content_mismatch=$((content_mismatch + 1))
+    row_has_error=1
+  elif [[ -n "${hugo_file}" && -n "${docusaurus_file}" ]]; then
     if [[ "$(is_frontmatter_only_markdown "${hugo_file}")" == "1" ]]; then
       content="👀"
       content_review=$((content_review + 1))
@@ -1156,6 +1200,9 @@ for url_path in "${selected_urls[@]}"; do
   fi
 
   if [[ "${present}" == "❌" ]]; then
+    row_has_error=1
+  fi
+  if [[ "${row_has_error}" -eq 1 ]]; then
     row_errors=$((row_errors + 1))
   fi
 
@@ -1269,6 +1316,8 @@ if [[ "${SUMMARY_ENABLED}" == "1" ]]; then
   echo "  content_ok: ${content_ok}"
   echo "  content_review: ${content_review}"
   echo "  content_mismatch: ${content_mismatch}"
+  echo "  malformed_relref: ${malformed_relref}"
+  echo "  literal_relref_links: ${literal_relref_links}"
   echo "  row_errors: ${row_errors}"
 fi
 

@@ -13,17 +13,17 @@ The [Kairos operator](https://github.com/kairos-io/kairos-operator) is a Kuberne
 
 The operator provides three custom resources:
 
-- **[NodeOp]({{< relref "nodeop" >}})**: Run generic operations on Kubernetes nodes (Kairos or not). It allows mounting the host's root filesystem to perform operations or run scripts. Useful for firmware upgrades, configuration changes, resets, and more.
+- **[NodeOp](nodeop)**: Run generic operations on Kubernetes nodes (Kairos or not). It allows mounting the host's root filesystem to perform operations or run scripts. Useful for firmware upgrades, configuration changes, resets, and more.
 
-- **[NodeOpUpgrade]({{< relref "nodeop-upgrade" >}})**: A Kairos-specific custom resource for upgrading Kairos nodes. It automatically creates a NodeOp with the appropriate upgrade script and configuration. Supports canary deployments, concurrency control, and failure handling.
+- **[NodeOpUpgrade](nodeop-upgrade)**: A Kairos-specific custom resource for upgrading Kairos nodes. It automatically creates a NodeOp with the appropriate upgrade script and configuration. Supports canary deployments, concurrency control, and failure handling.
 
-- **[OSArtifact]({{< relref "osartifact" >}})**: Build Linux distribution artifacts (ISO images, cloud images, netboot artifacts, etc.) from container images directly in Kubernetes. This allows you to build Kairos OS images and other bootable artifacts as Kubernetes-native resources.
+- **[OSArtifact](osartifact)**: Build Linux distribution artifacts (ISO images, cloud images, netboot artifacts, etc.) from container images directly in Kubernetes. This allows you to build Kairos OS images and other bootable artifacts as Kubernetes-native resources.
 
 ## Getting Started
 
-1. [Install the operator]({{< relref "installation" >}}) on your Kubernetes cluster
+1. [Install the operator](installation) on your Kubernetes cluster
 2. Explore the CRDs for your use case:
-   - Need to **upgrade** your Kairos nodes? See [NodeOpUpgrade]({{< relref "nodeop-upgrade" >}})
-   - Need to **run operations** on nodes (firmware updates, config changes, resets)? See [NodeOp]({{< relref "nodeop" >}})
-   - Need to **build OS images** (ISOs, cloud images, netboot)? See [OSArtifact]({{< relref "osartifact" >}})
-3. If you use private container registries, see [Private Registries]({{< relref "private-registries" >}})
+   - Need to **upgrade** your Kairos nodes? See [NodeOpUpgrade](nodeop-upgrade)
+   - Need to **run operations** on nodes (firmware updates, config changes, resets)? See [NodeOp](nodeop)
+   - Need to **build OS images** (ISOs, cloud images, netboot)? See [OSArtifact](osartifact)
+3. If you use private container registries, see [Private Registries](private-registries)

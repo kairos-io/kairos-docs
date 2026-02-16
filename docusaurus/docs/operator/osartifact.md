@@ -9,7 +9,7 @@ description: Build OS artifacts (ISOs, cloud images, netboot) from container ima
 The `OSArtifact` custom resource allows you to build Linux distribution artifacts (ISO images, cloud images, netboot artifacts, etc.) from container images directly in Kubernetes. This is particularly useful for building Kairos OS images and other bootable artifacts as Kubernetes-native resources.
 
 {{% alert title="Note" color="info" %}}
-This guide provides detailed information about building Kairos images using the Kairos operator. For a complete guide on creating custom cloud images, including when and how to use these build methods, see [Creating Custom Cloud Images]({{< ref "../advanced/creating_custom_cloud_images.md" >}}).
+This guide provides detailed information about building Kairos images using the Kairos operator. For a complete guide on creating custom cloud images, including when and how to use these build methods, see [Creating Custom Cloud Images](/docs/advanced/creating_custom_cloud_images/).
 {{% /alert %}}
 
 While it's possible to just run Kairos from the artifacts provided by our release process, there are specific use-cases which need extended customization, for example when additional kernel modules, or custom, user-defined logic that you might want to embed in the media used for installations.
@@ -18,7 +18,7 @@ While it's possible to just run Kairos from the artifacts provided by our releas
 
 To build with the Kubernetes Native extensions, a Kubernetes cluster is required and `helm` and `kubectl` installed locally. Note [kind](https://github.com/kubernetes-sigs/kind) can be used as well. The Native extensions don't require any special permission, and run completely unprivileged.
 
-The [Kairos operator]({{< relref "installation" >}}) needs to be installed on the cluster.
+The [Kairos operator](installation) needs to be installed on the cluster.
 
 ## Image Sources
 
@@ -102,7 +102,7 @@ spec:
 
 Apply the manifest with `kubectl apply`.
 
-Note, the CRD allows to specify a custom Cloud config file, [check out the full configuration reference]({{< relref "../reference/configuration" >}}).
+Note, the CRD allows to specify a custom Cloud config file, [check out the full configuration reference](/docs/reference/configuration/).
 
 The exporter in the example above uploads the built artifacts to an nginx server. The operator includes a ready-to-use nginx kustomization that deploys an nginx server with WebDAV upload support. See [Serving Artifacts with Nginx](#serving-artifacts-with-nginx) below.
 
@@ -214,7 +214,7 @@ aws ec2 import-snapshot --description "Kairos custom image" --disk-container fil
 
 Follow the procedure described in [AWS docs](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-ebs.html#creating-launching-ami-from-snapshot) to register an AMI from snapshot. Use all default settings except for the firmware, set to force to UEFI boot.
 
-Since release v3.3.0, Kairos release pipeline is pushing a public image to AWS, which you can use. Read how to deploy Kairos using an AMI (the released or a custom one), in the [relevant page]({{< relref "../installation/aws" >}}).
+Since release v3.3.0, Kairos release pipeline is pushing a public image to AWS, which you can use. Read how to deploy Kairos using an AMI (the released or a custom one), in the [relevant page](/docs/installation/aws/).
 
 ### Use the Image in OpenStack
 
