@@ -3,7 +3,7 @@
   "position": 9,
   "link": {
     "type": "generated-index",
-    "slug": "/development/overview",
+    "slug": "/development",
     "title": "Development",
     "description": "Want to help develop Kairos? This section will teach you about our development process so you can become a contributor."
   },

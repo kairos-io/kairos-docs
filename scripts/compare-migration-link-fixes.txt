@@ -4,5 +4,22 @@
 
 reference/creating_custom_cloud_images|advanced/creating_custom_cloud_images
 creating_custom_cloud_images|advanced/creating_custom_cloud_images
-reference/creating_custom_cloud_images|advanced/creating_custom_cloud_images
 auroraboot|reference/auroraboot
+configuration|reference/configuration
+kairos-factory|reference/kairos-factory
+image_matrix|reference/image_matrix
+nvidia_agx_orin|installation/nvidia_agx_orin
+aws|installation/aws
+azure|installation/azure
+gce|installation/gce
+trustedboot|installation/trustedboot
+customizing|advanced/customizing
+adding_opt_to_system_extensions|advanced/adding_opt_to_system_extensions
+boot_assessment_trusted_boot|examples/boot_assessment_trusted_boot
+cloud-init|architecture/cloud-init
+stage_modules|reference/stage_modules
+multi-node-p2p-ha-kubevip|examples/multi-node-p2p-ha-kubevip
+hackweek-2024|blog/2024/08/13/our-first-hackweek
+k3s-stages|examples/k3s-stages
+multi-node|examples/multi-node
+single-node-p2p|examples/single-node-p2p

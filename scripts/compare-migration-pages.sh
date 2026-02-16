@@ -839,6 +839,8 @@ normalize_content() {
 
     $text =~ s/^\s*\{\{%\s*alert\b[^\n]*%\}\}\s*$\n?/__ADMONITION_START__\n/gm;
     $text =~ s/^\s*\{\{%\s*\/alert\s*%\}\}\s*$\n?/__ADMONITION_END__\n/gm;
+    $text =~ s/^\s*\{\{<\s*alert\b[^}]*>\}\}\s*$\n?/__ADMONITION_START__\n/gm;
+    $text =~ s/^\s*\{\{<\s*\/alert\s*>\}\}\s*$\n?/__ADMONITION_END__\n/gm;
     $text =~ s/^\s*:::(?:tip|note|info|warning|danger|caution)\b[^\n]*$\n?/__ADMONITION_START__\n/gmi;
     $text =~ s/^\s*:::\s*$\n?/__ADMONITION_END__\n/gm;
     $text =~ s/__ADMONITION_START__\n(?:[ \t]*\n)+/__ADMONITION_START__\n/g;
@@ -874,6 +876,11 @@ normalize_content() {
     /gex;
     $text =~ s/__SC__\[flavor\]\[[^\]]*\]/__FLAVOR__/gmi;
     $text =~ s/__SC__\[flavorrelease\]\[[^\]]*\]/__FLAVOR_RELEASE__/gmi;
+    $text =~ s/__SC__\[alert\]\[[^\]]*\]/__ADMONITION_START__/gmi;
+
+    # Legacy Hugo release-note links occasionally became absolute kairos.io URLs
+    # during migration; treat them as equivalent to the original docref form.
+    $text =~ s#https://kairos\.io/v([0-9]+\.[0-9]+\.[0-9]+)/docs/?#__DOCREF__[v$1/docs]#gmi;
 
     # Treat Hugo figure shortcode and markdown image syntax as equivalent
     # when they reference the same image URL.
