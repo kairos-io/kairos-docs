@@ -18,7 +18,7 @@ While it's possible to just run Kairos from the artifacts provided by our releas
 
 To build with the Kubernetes Native extensions, a Kubernetes cluster is required and `helm` and `kubectl` installed locally. Note [kind](https://github.com/kubernetes-sigs/kind) can be used as well. The Native extensions don't require any special permission, and run completely unprivileged.
 
-The [Kairos operator](installation) needs to be installed on the cluster.
+The [Kairos operator](../installation) needs to be installed on the cluster.
 
 ## Image Sources
 
