@@ -94,6 +94,32 @@ a:hover {
   color: var(--ifm-link-hover-color);
 }
 
+/* Callout/admonition links: make links clearly distinguishable from body text */
+.theme-admonition a,
+.alert a,
+.admonition a {
+  color: var(--ifm-link-color);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1.5px;
+  font-weight: 600;
+}
+
+.theme-admonition a:hover,
+.alert a:hover,
+.admonition a:hover {
+  color: var(--ifm-link-hover-color);
+  text-decoration-thickness: 2px;
+}
+
+.theme-admonition a:focus-visible,
+.alert a:focus-visible,
+.admonition a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
 /* Button styles */
 .button--primary {
   background-color: var(--kairos-orange);
