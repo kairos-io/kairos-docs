@@ -27,10 +27,12 @@ const config: Config = {
   // organizationName: 'jasperdekeuk', // Usually your GitHub org/user name.
   // projectName: 'kairos-docs', // Usually your repo name.
 
-  // Make broken links warnings during local builds so the build can complete
-  // while we iteratively fix unresolved internal links across many files.
-  // Change back to 'throw' once all internal links are fixed.
-  onBrokenLinks: 'warn',
+  onBrokenLinks: 'throw',
+  markdown: {
+    hooks: {
+      onBrokenMarkdownLinks: 'throw',
+    },
+  },
 
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you

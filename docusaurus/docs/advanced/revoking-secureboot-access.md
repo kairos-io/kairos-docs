@@ -49,7 +49,7 @@ format. Using the signed version has the benefit that no private keys need to be
 in order to do the enrollement, while using the unsigned format needs the private
 keys to be present.
 
-If you followed [the instructions to create signing keys](../Installation/trustedboot.md#key-generation), you should have a directory with a `db.pem` certificate. This is the certificate
+If you followed [the instructions to create signing keys](/docs/installation/trustedboot/#key-generation), you should have a directory with a `db.pem` certificate. This is the certificate
 we will blacklist. To do so, we need to convert it to the "esl" format and then
 sign it to create the final `.auth` file, which will be used for enrollement.
 The utilities used are usually shipped in the various distros under a name like `efitools` (e.g. in Ubuntu). Here are the commands to generate the needed signed authenticated variables file:

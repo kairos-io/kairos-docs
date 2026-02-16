@@ -39,7 +39,7 @@ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $PWD/build/:/out
 
 You can see some example of builds in either the [kairos-init repo](https://github.com/kairos-io/kairos-init/blob/main/.github/workflows/test.yml), which builds a series of OCI containers of different base images, variants and platforms or on the [Kairos repo](https://github.com/kairos-io/kairos/tree/master/.github/workflows) itself which generates not only different types of platforms and variants and base images but also generates different types of artifacts, like ISOs, Trusted Boot ISOs, Trusted Boot upgrade artifacts, raw disk images and so on.
 
-For more information on kairos-init, see the [kairos factory documentation](../Reference/kairos-factory.md)
+For more information on kairos-init, see the [kairos factory documentation](/docs/reference/kairos-factory/)
 
 ## New controllers
 
