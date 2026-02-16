@@ -10,7 +10,7 @@ By default, `kairos` reads in lexicographic order YAML cloud-config files in the
 
 This mechanism can be used to set and enable persistent configuration on boot after node deployment.
 
-We are going to see how to do that manually or with Kubernetes by using the [Kairos operator]({{< relref "../Upgrade/kairos-operator" >}}).
+We are going to see how to do that manually or with Kubernetes by using the [Kairos operator]({{< relref "../Operator" >}}).
 
 ## Manually
 
@@ -31,7 +31,7 @@ name: "zfs setup"
 
 ## With Kubernetes
 
-To push configurations to a node, it is recommended to use the [Kairos operator]({{< relref "../Upgrade/kairos-operator" >}}) which provides a more integrated approach for managing Kairos nodes. In the example below, we use a NodeOp to push a swapfile configuration and restart the node afterward.
+To push configurations to a node, it is recommended to use the [Kairos operator]({{< relref "../Operator" >}}) which provides a more integrated approach for managing Kairos nodes. In the example below, we use a [NodeOp]({{< relref "../Operator/nodeop" >}}) to push a swapfile configuration and restart the node afterward.
 
 {{% alert title="Note" color="success" %}}
 
