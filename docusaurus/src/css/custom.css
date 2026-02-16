@@ -503,6 +503,74 @@ html[data-theme='light'] button[class*='toggle']:hover {
   border-top: 1px solid rgba(255, 116, 66, 0.1);
 }
 
+.footer__bottom {
+  margin-top: 1.5rem;
+  padding-top: 0.5rem;
+}
+
+.footer-supported-by-link {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.4rem;
+}
+
+.footer-supported-by-logo {
+  width: 150px;
+  height: auto;
+  vertical-align: middle;
+}
+
+.footer-kairos-logo {
+  width: 140px;
+  height: auto;
+  vertical-align: middle;
+}
+
+.footer__copyright {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.65rem;
+  flex-wrap: nowrap;
+  width: 100%;
+}
+
+.footer-kairos-wrap,
+.footer-supported-by-wrap,
+.footer-copyright-text {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1.2;
+}
+
+.footer-supported-by-wrap,
+.footer-copyright-text {
+  border-left: 1px solid var(--kairos-orange);
+  padding-left: 0.65rem;
+}
+
+.footer-copyright-text {
+  border-left: 0;
+  margin-left: auto;
+}
+
+@media (max-width: 996px) {
+  .footer__copyright {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .footer-supported-by-wrap,
+  .footer-copyright-text {
+    border-left: 0;
+    padding-left: 0;
+  }
+
+  .footer-copyright-text {
+    margin-left: 0;
+  }
+}
+
 /* Improved button styling */
 .button {
   font-weight: 600;
