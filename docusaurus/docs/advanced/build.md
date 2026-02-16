@@ -13,4 +13,4 @@ The Kairos operator provides the `OSArtifact` CRD which allows you to build ISOs
 
 - **[OSArtifact — Build OS Artifacts](/docs/operator/osartifact/)** — Full documentation on building ISOs, cloud images, and netboot artifacts
 - **[Operator Installation](/docs/operator/installation/)** — How to install the operator
-- **[Creating Custom Cloud Images](creating_custom_cloud_images)** — Guide on creating custom cloud images
+- **[Creating Custom Cloud Images](/docs/advanced/creating_custom_cloud_images/)** — Guide on creating custom cloud images

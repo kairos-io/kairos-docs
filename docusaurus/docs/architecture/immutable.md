@@ -77,7 +77,7 @@ For the most up-to-date list of paths, please refer to the [default rootfs confi
 
 :::info
 
-You can add additional paths to the persistent partition by using the [bind_mounts configuration option](../../reference/configuration). This is useful for storing additional data that you want to persist across reboots or upgrades.
+You can add additional paths to the persistent partition by using the [bind_mounts configuration option](/docs/reference/configuration). This is useful for storing additional data that you want to persist across reboots or upgrades.
 
 :::
 

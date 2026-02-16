@@ -368,8 +368,8 @@ For the most current examples and detailed configurations, always refer to the [
 
 # Related Documentation
 
-- [K3s Stages](k3s-stages) - Running stages with k3s
-- [Multi-node Setup](multi-node) - Setting up multi-node clusters
-- [P2P Examples](single-node-p2p) - P2P coordination examples
+- [K3s Stages](/docs/examples/k3s-stages/) - Running stages with k3s
+- [Multi-node Setup](/docs/examples/multi-node/) - Setting up multi-node clusters
+- [P2P Examples](/docs/examples/single-node-p2p/) - P2P coordination examples
 - [Provider-kubeadm Repository](https://github.com/kairos-io/provider-kubeadm) - Complete examples and build instructions
 - [Spegel Documentation](https://spegel.dev) - Official Spegel distributed registry documentation 

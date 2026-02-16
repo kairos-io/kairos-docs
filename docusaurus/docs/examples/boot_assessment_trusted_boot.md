@@ -222,6 +222,6 @@ stages:
             - <service-name>
 ```
    
-For more information about cloud-init in Kairos, see the [Cloud-Init Architecture](cloud-init) guide.
-For more information about stage modules, see the [Stage Modules Reference](stage_modules).
+For more information about cloud-init in Kairos, see the [Cloud-Init Architecture](/docs/architecture/cloud-init/) guide.
+For more information about stage modules, see the [Stage Modules Reference](/docs/reference/stage_modules/).
    

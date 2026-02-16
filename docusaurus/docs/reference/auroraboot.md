@@ -6,7 +6,7 @@ description: Reference documentation for AuroraBoot, a tool for generating boota
 ---
 
 :::info Note
-This is the reference documentation for AuroraBoot. For a complete guide on creating custom cloud images, including how to use AuroraBoot in the context of a full workflow, see [Creating Custom Cloud Images](creating_custom_cloud_images).
+This is the reference documentation for AuroraBoot. For a complete guide on creating custom cloud images, including how to use AuroraBoot in the context of a full workflow, see [Creating Custom Cloud Images](/docs/advanced/creating_custom_cloud_images/).
 :::
 **AuroraBoot** is a tool designed to make the process of bootstrapping Kairos machines quick, simple and efficient. It is specifically designed for the Kairos operating system and provides a comprehensive solution for downloading required artifacts and provisioning a machine, both from network or manually via flashing to USB stick.
 
@@ -96,7 +96,7 @@ By default AuroraBoot will automatically attempt to bootstrap other machines, wh
 
 There are only 3 steps involved in the process:
 
-1. Select the release of Kairos that you want to deploy and optionally a cloud config (see also our [examples](../examples))
+1. Select the release of Kairos that you want to deploy and optionally a cloud config (see also our [examples](/docs/examples/))
 1. Run AuroraBoot in your workstation with the appropriate CLI args
 1. Boot up other nodes, already configured to boot from network
 
@@ -107,7 +107,7 @@ AuroraBoot can bootstrap container images or released assets from our GitHub rel
 To use GitHub releases set a release version with `--set release_version` (the GitHub release), an artifact version with `--set artifact_version` (the artifact version) a flavor with `--set flavor` and a repository with `--set repository`.
 Kairos has releases with (standard) and without (core) k3s both can be downloaded in the [release page at kairos](https://github.com/kairos-io/kairos/releases).
 
-To use a container image, you can use [the Kairos released images](../reference/image_matrix) or [customized](../advanced/customizing) by specifying `--set container_image` instead with the container image of choice.
+To use a container image, you can use [the Kairos released images](/docs/reference/image_matrix) or [customized](/docs/advanced/customizing) by specifying `--set container_image` instead with the container image of choice.
 
 #### 2. Run AuroraBoot
 
@@ -120,7 +120,7 @@ In the example below we selected `{{< kairosVersion >}}-{{< k3sVersion >}}`, {{<
 
 By indicating a `container_image`, AuroraBoot will pull the image locally and start to serve it for network booting.
 
-You can use [the Kairos released images](../reference/image_matrix) or [your own](../advanced/customizing).
+You can use [the Kairos released images](/docs/reference/image_matrix) or [your own](/docs/advanced/customizing).
 
 ```bash
 docker run --rm -ti --net host quay.io/kairos/auroraboot \
@@ -192,7 +192,7 @@ To disable netboot and provide only offline artifacts, run `auroraboot` with `--
 
 #### 1. Node configuration
 
-Create a cloud config file, see [our documentation](../examples) for ready-to use examples, but a minimal configuration that automatically installs, and allows us to login afterward can be the following:
+Create a cloud config file, see [our documentation](/docs/examples/) for ready-to use examples, but a minimal configuration that automatically installs, and allows us to login afterward can be the following:
 
 ```yaml
 #cloud-config
@@ -378,7 +378,7 @@ cloud_config: |
 |-----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `artifact_version`    | Corresponding artifact versions from the Kairos release page (e.g. Kubernetes version included).                                                                                                                                                                                                      |
 | `release_version`     | Version of the release in GitHub.                                                                                                                                                                                                                                                                     |
-| `flavor`              | The Kairos flavor to use. See [the Kairos support matrix](../reference/image_matrix) for a list.                                                                                                                                                                                     |
+| `flavor`              | The Kairos flavor to use. See [the Kairos support matrix](/docs/reference/image_matrix) for a list.                                                                                                                                                                                     |
 | `repository`          | Github repository to use. This can either be `kairos-io/kairos` or `kairos-io/provider-kairos` for images with `k3s` prior to v2.4.0.                                                                                                                                                                 |
 | `container_image`     | Container image. It will try to pull from the local docker daemon first and fallback to remote if not found. If a `container_image` is specified, `artifact_version`, `flavor` and `release_version` are ignored.                                                                                     |
 | `disable_netboot`     | Disable netboot.                                                                                                                                                                                                                                                                                      |
@@ -569,7 +569,7 @@ docker run -v "$PWD"/config.yaml:/config.yaml \
 
 ### Prepare ISO for Airgap installations
 
-See the [Airgap example](../examples/airgap) in the [examples section](../examples).
+See the [Airgap example](/docs/examples/airgap) in the [examples section](/docs/examples/).
 
 ### Netboot with core images from Github releases
 
@@ -605,7 +605,7 @@ docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos
 ### Generate RAW disk images
 
 :::tip Note
-This method differs from the ones documented in the [Build raw images with QEMU](build_raw_images_with_qemu) section: this method is suitable if you need to create appliances that have to run a full-installation. AuroraBoot will create instead images pre-installed which will skip the usual Kairos installation process in runtime
+This method differs from the ones documented in the [Build raw images with QEMU](/docs/reference/build_raw_images_with_qemu/) section: this method is suitable if you need to create appliances that have to run a full-installation. AuroraBoot will create instead images pre-installed which will skip the usual Kairos installation process in runtime
 :::
 Consider the following example:
 

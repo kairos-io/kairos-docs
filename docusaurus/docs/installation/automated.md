@@ -48,7 +48,7 @@ p2p:
 ```
 
 The token `p2p.network_token` is a base64 encoded string which
-contains an [`edgevpn` token](https://github.com/mudler/edgevpn/blob/master/docs/content/en/docs/Concepts/Token/_index.md). For more information, [check out the architecture section](../architecture/network).
+contains an [`edgevpn` token](https://github.com/mudler/edgevpn/blob/master/docs/content/en/docs/Concepts/Token/_index.md). For more information, [check out the architecture section](/docs/architecture/network).
 
 Save this file as `cloud_init.yaml`, then create an ISO with the following steps:
 
@@ -84,7 +84,7 @@ If you're not sure where to host your configuration file, a common option is to 
 
 ## ISO remastering
 
-It is possible to create custom ISOs with an embedded cloud configuration. This allows the machine to automatically boot with a pre-specified configuration file, which will be installed on the system after provisioning is complete. See also [AuroraBoot](../reference/auroraboot) for documentation.
+It is possible to create custom ISOs with an embedded cloud configuration. This allows the machine to automatically boot with a pre-specified configuration file, which will be installed on the system after provisioning is complete. See also [AuroraBoot](/docs/reference/auroraboot) for documentation.
 
 ### Locally
 
@@ -100,7 +100,7 @@ If you don't pass one, we will make an attempt to read it as a web URL but depen
 {{< tabpane text=true  >}}
 {{% tab header="AuroraBoot" %}}
 
-We can use [AuroraBoot](../reference/auroraboot) to handle the the ISO build process, for example:
+We can use [AuroraBoot](/docs/reference/auroraboot) to handle the the ISO build process, for example:
 
 ```bash
 $ IMAGE=<scheme://host[:port]/path[:tag]>
@@ -151,9 +151,9 @@ In the case of Auroraboot, make sure that the cloud config that you are mounting
 :::
 This will create a new ISO with your specified cloud configuration embedded in it. You can then use this ISO to boot your machine and automatically install Kairos with your desired settings.
 
-You can as well modify the image in this step and add additional packages before deployment. See [customizing the system image](../advanced/customizing).
+You can as well modify the image in this step and add additional packages before deployment. See [customizing the system image](/docs/advanced/customizing).
 
-Check out the [AuroraBoot documentation](../reference/auroraboot) and the [examples](../examples) for learn more on how to generate customized images for installation.
+Check out the [AuroraBoot documentation](/docs/reference/auroraboot) and the [examples](/docs/examples/) for learn more on how to generate customized images for installation.
 
 ### Kubernetes
 

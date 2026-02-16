@@ -6,9 +6,9 @@ description: Learn how to customize Kairos images to suit your needs
 ---
 
 :::info Note
-This guide focuses on customizing Kairos images. For a complete guide on creating custom cloud images from scratch, including when and how to apply these customizations, see [Creating Custom Cloud Images](creating_custom_cloud_images).
+This guide focuses on customizing Kairos images. For a complete guide on creating custom cloud images from scratch, including when and how to apply these customizations, see [Creating Custom Cloud Images](/docs/advanced/creating_custom_cloud_images/).
 :::
-Kairos is an open source, container-based operating system. To modify Kairos and add a package, you'll need to build a container image from the [Kairos images](../reference/image_matrix). Here's an example with Docker which adds `figlet`:
+Kairos is an open source, container-based operating system. To modify Kairos and add a package, you'll need to build a container image from the [Kairos images](/docs/reference/image_matrix). Here's an example with Docker which adds `figlet`:
 
 ```dockerfile
 FROM {{<oci variant="standard">}}
@@ -47,7 +47,7 @@ c58930881bc4: Pushed
 ...
 ```
 
-You can use your custom image when [upgrading nodes manually](../upgrade/manual), [with Kubernetes](../upgrade/kubernetes) or [specifying it in the cloud-config during installation](../examples/core). Here's how to do it manually with the `kairos-agent` command:
+You can use your custom image when [upgrading nodes manually](/docs/upgrade/manual), [with Kubernetes](/docs/upgrade/kubernetes) or [specifying it in the cloud-config during installation](/docs/examples/core). Here's how to do it manually with the `kairos-agent` command:
 
 ```
 node:/home/kairos # kairos-agent upgrade --image docker.io/<your-org>/myos:0.1
@@ -110,7 +110,7 @@ kernel=$(ls /lib/modules | head -n1)
 depmod -a "${kernel}"
 ```
 
-After you have modified the kernel and initrd, you can use the kairos-agent upgrade command to update your nodes, or [within Kubernetes](../upgrade/kubernetes).
+After you have modified the kernel and initrd, you can use the kairos-agent upgrade command to update your nodes, or [within Kubernetes](/docs/upgrade/kubernetes).
 
 
 ## Customizing the file system hierarchy using custom mounts.
@@ -164,7 +164,7 @@ install:
 ...
 ```
 Note, that these paths should exist in the container file-system used to create the ISO.
-See [ISO customization](../Advanced/customizing) above.
+See [ISO customization](/docs/advanced/customizing) above.
 
 
 ## Customizing the file system hierarchy using cloud-config.

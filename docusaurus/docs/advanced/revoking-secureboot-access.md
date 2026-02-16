@@ -6,7 +6,7 @@ date: 2022-06-12
 ---
 
 This document describes how an administrator can prevent certain OS images from
-booting on their hardware in the context of ["Trusted Boot"](../architecture/trustedboot).
+booting on their hardware in the context of ["Trusted Boot"](/docs/architecture/trustedboot).
 
 Two different scenarios will be covered, with the process being only slightly different for each case.
 
@@ -64,7 +64,7 @@ sign-efi-sig-list -c keys/KEK.pem -k keys/KEK.key dbx db-dbx.esl db-dbx.auth
 
 ### PCRs and disk encryption
 
-As described in the ["Trusted Boot"](../architecture/trustedboot) documentation page,
+As described in the ["Trusted Boot"](/docs/architecture/trustedboot) documentation page,
 the decryption of the disk partitions is bound to some PCR registers on the TPM chip.
 Specifically registers 11 and 7.
 There are 2 ways to bind to a PCR register, the direct and the indirect. You can
@@ -301,7 +301,7 @@ The upgrade command is:
 kairos-agent upgrade --recovery --source oci:<YOUR_UPGRADE_IMAGE_HERE>
 ```
 
-The "fallback" image will be upgraded on the next upgrade. Read the ["Container based"](../architecture/container)
+The "fallback" image will be upgraded on the next upgrade. Read the ["Container based"](/docs/architecture/container)
 document to understand more.
 
 ## Scenario 2 - One specific image is no longer trusted

@@ -11,7 +11,7 @@ This section is still a work in progress and only available in Kairos v3.x relea
 :::
 This section covers how to upgrade a Kairos node with Trusted Boot enabled.
 
-See the [Trusted Boot Installation](../installation/trustedboot) and [Trusted Boot Architecture](../architecture/trustedboot) pages for more references.
+See the [Trusted Boot Installation](/docs/installation/trustedboot) and [Trusted Boot Architecture](/docs/architecture/trustedboot) pages for more references.
 
 ### Upgrades
 
@@ -129,5 +129,5 @@ spec:
 ```
 
 :::tip Note
-To understand more on how this works, see the [Kairos operator documentation](/docs/operator/) for general information about the operator and the [regular upgrade process](./kubernetes) for non-trusted boot upgrades.
+To understand more on how this works, see the [Kairos operator documentation](/docs/operator/) for general information about the operator and the [regular upgrade process](/docs/upgrade/kubernetes/) for non-trusted boot upgrades.
 :::

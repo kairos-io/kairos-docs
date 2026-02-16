@@ -41,7 +41,7 @@ What do these settings do?
 - `users`: This block defines the user accounts on the node. In this example, it creates a user named `kairos` with the password `kairos` and adds two SSH keys to the user's authorized keys.
 - `k3s`: This block enables K3s on the node.
 
-[Check out the full configuration reference](../../reference/configuration).
+[Check out the full configuration reference](/docs/reference/configuration).
 
 Save this file as config.yaml and pass it to the kairos agent during the installation process.
 

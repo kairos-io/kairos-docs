@@ -24,7 +24,7 @@ This example is for learning purposes. In production environments, it's recommen
 
 To enable automatic HA rollout, enable the `p2p.auto.ha.enable` option in your cloud-config, and set up a number of `master_nodes`. The number of `master_nodes` is the number of additional masters in addition to the initial HA role. There will always be a minimum of 1 master, which is already taken into account. For example, setting up `master_nodes` to two will result in a total of 3 master nodes in your cluster.
 
-To make this process even easier, Kairos automatically configures each node in the cluster from a unique cloud-config. This way, you don't have to manually configure each node, but provide instead a config file for all of the machines during [Installation](../../installation/).
+To make this process even easier, Kairos automatically configures each node in the cluster from a unique cloud-config. This way, you don't have to manually configure each node, but provide instead a config file for all of the machines during [Installation](/docs/installation/).
 
 Here is an example of what your cloud-config might look like:
 ```yaml
@@ -65,5 +65,5 @@ p2p:
      master_nodes: 2
 ```
 
-Note: In order for the automatic HA rollout to work, you need to generate a network token. You can find more information on how to do this in the [dedicated section](../../installation/p2p#network_token).
+Note: In order for the automatic HA rollout to work, you need to generate a network token. You can find more information on how to do this in the [dedicated section](/docs/installation/p2p#network_token).
 

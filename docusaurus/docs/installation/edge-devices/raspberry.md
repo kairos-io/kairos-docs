@@ -45,7 +45,7 @@ sudo dd if=build/{{<image variant="standard" model="rpi4" arch="arm64" suffix=".
 
 ### Download
 
-Extract the `img` file from a container image as described [in this page](../reference/image_matrix)
+Extract the `img` file from a container image as described [in this page](/docs/reference/image_matrix)
 
 ### Flash the image
 
@@ -77,4 +77,4 @@ $ sudo cp cloud-config.yaml /tmp/oem/90_custom.yaml
 $ sudo umount /tmp/oem
 ```
 
-You can push additional `cloud config` files. For a full reference check out the [docs](../reference/configuration) and also [configuration after-installation](../advanced/after-install)
+You can push additional `cloud config` files. For a full reference check out the [docs](/docs/reference/configuration) and also [configuration after-installation](/docs/advanced/after-install)

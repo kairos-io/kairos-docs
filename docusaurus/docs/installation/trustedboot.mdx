@@ -8,7 +8,7 @@ date: 2022-11-13
 
 "Trusted Boot" is a combination of technologies that allows us to guarantee that a system was not tampered with, and the user-data is protected by cold attacks, it is composed by FDE, Secure Boot and Measured Boot.
 
-If you want to learn more on what Trusted Boot is and how it works, see the [Trusted Boot Architecture](../architecture/trustedboot) page. This page describes how to enable Trusted Boot support in Kairos.
+If you want to learn more on what Trusted Boot is and how it works, see the [Trusted Boot Architecture](/docs/architecture/trustedboot) page. This page describes how to enable Trusted Boot support in Kairos.
 
 Kairos supports Trusted boot by generating specific installable medium. This feature is optional and works alongside how Kairos works.
 
@@ -312,7 +312,7 @@ version {{< kairosVersion>}}
 
 ## Installation
 
-The installation process is performed as usual and the [Installation instructions](../installation) can be followed, however the difference is that user-data will be automatically encrypted (both the OEM and the persistent partition) by using the TPM chip and the Trusted Boot mechanism.
+The installation process is performed as usual and the [Installation instructions](/docs/installation/) can be followed, however the difference is that user-data will be automatically encrypted (both the OEM and the persistent partition) by using the TPM chip and the Trusted Boot mechanism.
 
 ### Enroll the keys in Secure Boot
 
@@ -326,7 +326,7 @@ A video of the process of importing keys in QEMU is available [here](https://git
 
 ## Upgrades
 
-See the [Trusted Boot Upgrade](../upgrade/trustedboot) page.
+See the [Trusted Boot Upgrade](/docs/upgrade/trustedboot) page.
 
 ## Testing the images locally
 

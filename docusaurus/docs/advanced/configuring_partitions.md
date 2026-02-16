@@ -4,7 +4,7 @@ sidebar_label: "Configuring partitions"
 sidebar_position: 1
 ---
 
-Kairos configuration mechanism for partitions is based on the [cloud-config](../../Reference/configuration) file 
+Kairos configuration mechanism for partitions is based on the [cloud-config](/docs/reference/configuration) file 
 given during installation to override the default values set by the installer.
 
 We allow certain flexibility in the sizes and filesystems used for the default install and allow to create extra partitions as well.
@@ -138,4 +138,4 @@ stages:
 ```
 
 
-For more information about the full config available for partitions and extra partitions see the full [cloud-config page](../../Reference/configuration)
+For more information about the full config available for partitions and extra partitions see the full [cloud-config page](/docs/reference/configuration)

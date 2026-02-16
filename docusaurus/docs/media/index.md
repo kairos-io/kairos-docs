@@ -1,4 +1,5 @@
 ---
+slug: /media
 title: "Media"
 sidebar_label: "Media"
 sidebar_position: 9

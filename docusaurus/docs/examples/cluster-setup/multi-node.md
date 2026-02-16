@@ -9,7 +9,7 @@ In the example below we will use a bare metal host to provision a Kairos cluster
 
 ## Installation
 
-For this example we will use a standard image which contains a Kubernetes distribution. You can choose between `k0s` and `k3s` as the distribution to use. Follow the [Installation](../installation) documentation with the configurations provided on this page. Make sure to choose the one that matches the image you are using.
+For this example we will use a standard image which contains a Kubernetes distribution. You can choose between `k0s` and `k3s` as the distribution to use. Follow the [Installation](/docs/installation/) documentation with the configurations provided on this page. Make sure to choose the one that matches the image you are using.
 
 
 ## Configuration

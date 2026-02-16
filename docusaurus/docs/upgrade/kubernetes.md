@@ -122,7 +122,7 @@ spec:
                 url: https://rekor.sigstore.dev
 ```
 
-To install Kyverno in a Kairos cluster, you can simply use the community [bundles](../advanced/bundles). For example, you can use the following installation cloud config file:
+To install Kyverno in a Kairos cluster, you can simply use the community [bundles](/docs/advanced/bundles). For example, you can use the following installation cloud config file:
 
 ```yaml
 #cloud-config
@@ -272,6 +272,6 @@ spec:
 
 ## What's next?
 
-- [Upgrade nodes manually](../upgrade/manual)
-- [Immutable architecture](../architecture/immutable)
-- [Create decentralized clusters](../installation/p2p)
+- [Upgrade nodes manually](/docs/upgrade/manual)
+- [Immutable architecture](/docs/architecture/immutable)
+- [Create decentralized clusters](/docs/installation/p2p)

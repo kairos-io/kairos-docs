@@ -99,7 +99,7 @@ export default function CommunityPage(): React.JSX.Element {
             <CommunityLinksList links={developerLinks} />
             <p className={styles.contributeLine}>
               You can find out how to contribute to Kairos in our{' '}
-              <Link to="/docs/contribution-guidelines">Contribution Guidelines</Link>.
+              <Link href="https://github.com/kairos-io/kairos/blob/master/CONTRIBUTING.md">Contribution Guidelines</Link>.
             </p>
           </div>
         </div>

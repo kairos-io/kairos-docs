@@ -11,7 +11,7 @@ Please refer to the [k3s HA](https://docs.k3s.io/installation/ha-embedded) docum
 Please refer to the [k0s multi-node manual install](https://docs.k0sproject.io/stable/k0s-multi-node/) documentation.
 :::
 :::info Production Considerations
-This example is for learning purposes. In production environments, it's recommended to use a load balancer in front of the highly available control plane nodes rather than exposing all control plane nodes directly. For a production-ready setup with a load balancer, see our [Self-coordinating P2P Multi-Node Cluster with High Availability and KubeVIP](multi-node-p2p-ha-kubevip) example.
+This example is for learning purposes. In production environments, it's recommended to use a load balancer in front of the highly available control plane nodes rather than exposing all control plane nodes directly. For a production-ready setup with a load balancer, see our [Self-coordinating P2P Multi-Node Cluster with High Availability and KubeVIP](/docs/examples/multi-node-p2p-ha-kubevip/) example.
 :::
 This document describes how to configure Kairos with either `k3s` or `k0s` by following the same documentation outline. It is implied that you are using a Kairos version with either k3s or k0s included in the standard images.
 

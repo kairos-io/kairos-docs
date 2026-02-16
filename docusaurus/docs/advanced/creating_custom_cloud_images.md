@@ -60,7 +60,7 @@ Once you have a base image, you can customize it by:
 3. Adding custom services
 4. Including additional files
 
-See the [Customizing Images](./customizing) guide for detailed instructions.
+See the [Customizing Images](/docs/advanced/customizing/) guide for detailed instructions.
 
 ## Step 3: Building Bootable Images with AuroraBoot
 
@@ -78,7 +78,7 @@ docker run -v "$PWD"/build:/tmp/auroraboot \
 ```
 
 :::info Note
-For more details about AuroraBoot options and configurations, see the [AuroraBoot documentation](./auroraboot).
+For more details about AuroraBoot options and configurations, see the [AuroraBoot documentation](/docs/reference/auroraboot/).
 :::
 
 ### State Partition Sizing
@@ -128,13 +128,13 @@ As explained in the section above, sizing the state partition properly is import
 ## Step 5: Building for Specific Platforms
 
 ### AWS
-To install on AWS, follow the [AWS Guide](./aws).
+To install on AWS, follow the [AWS Guide](/docs/installation/aws/).
 
 ### Google Cloud
-To install on Google Cloud, follow the [Google Cloud Installation Guide](./gce).
+To install on Google Cloud, follow the [Google Cloud Installation Guide](/docs/installation/gce/).
 
 ### Microsoft Azure
-For Azure deployments, see the [Azure Installation Guide](./azure).
+For Azure deployments, see the [Azure Installation Guide](/docs/installation/azure/).
 
 ## Troubleshooting
 
@@ -145,6 +145,6 @@ Common issues and solutions:
 
 ## Next Steps
 
-- [Customizing Images](./customizing)
-- [AuroraBoot Reference](./auroraboot)
-- [Cloud Configuration Reference](./configuration)
+- [Customizing Images](/docs/advanced/customizing/)
+- [AuroraBoot Reference](/docs/reference/auroraboot/)
+- [Cloud Configuration Reference](/docs/reference/configuration/)
