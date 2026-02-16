@@ -102,7 +102,7 @@ docker run -v $PWD/config.yaml:/config.yaml \
              --set "disable_http_server=true" \
              --set "disable_netboot=true" \
              --set "container_image=oci:$IMAGE" \
-             --set "iso.data=/tmp/data" \
+             --set "iso.overlay_iso=/tmp/data" \
              --cloud-config /config.yaml \
              --set "state_dir=/tmp/auroraboot"
 ```
