@@ -245,7 +245,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Kairos authors`,
+      copyright: `<span class="footer-kairos-wrap"><img src="/index/footer-logo.png" class="footer-kairos-logo" width="167" height="29" alt="Kairos Logo" /></span><span class="footer-supported-by-wrap">Project supported by <a class="footer-supported-by-link" href="https://spectrocloud.com" target="_blank" rel="noopener noreferrer"><img src="/img/spectrocloud-dark.svg" class="footer-supported-by-logo" width="192" height="51" alt="Spectro Cloud logo" /></a></span><span class="footer-copyright-text">Copyright © ${new Date().getFullYear()} Kairos authors</span>`,
     },
     prism: {
       theme: prismThemes.github,
