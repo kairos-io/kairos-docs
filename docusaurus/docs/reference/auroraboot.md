@@ -320,20 +320,21 @@ Make sure you have KVM enabled, this will improve the performance of your VM sig
     :::
 This would be the way to start it via the command line, but you can also use the GUI
 
-    {{< highlight bash >}}
-      virt-install --name my-first-kairos-vm \
-                  --vcpus 1 \
-                  --memory 1024 \
-                  --cdrom build/kairos.iso.custom.iso \
-                  --disk size=30 \
-                  --os-variant opensuse-factory \
-                  --virt-type kvm
+```bash
+virt-install --name my-first-kairos-vm \
+             --vcpus 1 \
+             --memory 1024 \
+             --cdrom build/kairos.iso.custom.iso \
+             --disk size=30 \
+             --os-variant opensuse-factory \
+             --virt-type kvm
+```
 
-    {{< / highlight >}}
     Immediately after open a viewer so you can interact with the boot menu:
-    {{< highlight bash >}}
-    virt-viewer my-first-kairos-vm
-    {{< / highlight >}}
+
+```bash
+virt-viewer my-first-kairos-vm
+```
 
   {{% /tab %}}
 {{< /tabpane >}}

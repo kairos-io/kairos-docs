@@ -137,7 +137,7 @@ While the above configurations are independent, combining them can create a robu
 
 ## Using cloud configs to automate the process
 
-As usual you can use {{< ref "cloud-init.md" >}} with the different {{< ref "stage_modules.md" >}}) to automate this process. Here is an example of how to use cloud-init to enable boot assessment and configure services to participate in the boot assessment process:
+As usual you can use [cloud-init](/docs/architecture/cloud-init/) with the different [stage modules](/docs/reference/stage_modules/)) to automate this process. Here is an example of how to use cloud-init to enable boot assessment and configure services to participate in the boot assessment process:
 
 ```yaml
 #cloud-config
@@ -175,7 +175,7 @@ stages:
  - We recommend using this feature with caution, as it can lead to a boot loop if not configured correctly.
  - Ideally, as the upgrade is done against the active images, we would recommend having 2 service overrides, one for the active and one for the passive, to avoid the system rebooting on passive boot entries and having a safe fallback to the active boot entry. This can be achieved by using and IF stanza when using cloud-init to check for the system state (marked by the files `/run/cos/active_mode` and `/run/cos/passive_mode`) so the service that auto reboots can be started only on the active boot entry.
 
-The follow up example uses {{< ref "cloud-init.md" >}} to generate 2 different service overrides during initramfs, one for the active and one for the passive boot entry. Only when selecting the active entry will the service auto restart:
+The follow up example uses [cloud-init](/docs/architecture/cloud-init/) to generate 2 different service overrides during initramfs, one for the active and one for the passive boot entry. Only when selecting the active entry will the service auto restart:
 
 ```yaml
 #cloud-config
