@@ -606,3 +606,80 @@ html[data-theme='light'] button[class*='toggle']:hover {
   color: var(--kairos-white);
   box-shadow: 0 6px 20px rgba(238, 80, 7, 0.25);
 }
+
+/* Blog CTA prominence */
+.blog-list-page article footer.row .text--right a,
+.blog-tags-post-list-page article footer.row .text--right a,
+.blog-authors-posts-page article footer.row .text--right a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: 8px;
+  border: 1px solid var(--kairos-orange);
+  background: var(--kairos-orange);
+  color: var(--kairos-white);
+  text-decoration: none;
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: 0 4px 14px rgba(238, 80, 7, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.blog-list-page article footer.row .text--right a b,
+.blog-tags-post-list-page article footer.row .text--right a b,
+.blog-authors-posts-page article footer.row .text--right a b {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  margin: 0;
+}
+
+.blog-list-page article footer.row .text--right a:hover,
+.blog-tags-post-list-page article footer.row .text--right a:hover,
+.blog-authors-posts-page article footer.row .text--right a:hover {
+  background: var(--kairos-softer-orange);
+  border-color: var(--kairos-softer-orange);
+  color: var(--kairos-white);
+  text-decoration: none;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(238, 80, 7, 0.35);
+}
+
+.blog-post-page .markdown .buttons {
+  margin: 1.5rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.blog-post-page .markdown .buttons a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.65rem 1.2rem;
+  border-radius: 10px;
+  border: 1px solid var(--kairos-orange);
+  background: var(--kairos-orange);
+  color: var(--kairos-white);
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  box-shadow: 0 6px 20px rgba(238, 80, 7, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.blog-post-page .markdown .buttons a:hover {
+  background: var(--kairos-softer-orange);
+  border-color: var(--kairos-softer-orange);
+  color: var(--kairos-white);
+  text-decoration: none;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(238, 80, 7, 0.38);
+}
+
+.blog-post-page .markdown .buttons a p {
+  margin: 0;
+  line-height: 1;
+}
