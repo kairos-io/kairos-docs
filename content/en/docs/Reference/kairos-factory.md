@@ -314,7 +314,22 @@ This would run the `before-install` and `install` stages as normal, but then on 
 You can validate the image you built using the `kairos-init validate` command inside the image. This will check if the image is valid and if it has all the necessary components to run Kairos.
 
 
-## Building RHEL images
+## RHEL family notes (RHEL, CentOS, Rocky, AlmaLinux, etc.)
+
+### Using systemd-networkd
+
+When building RHEL family images, the default is to use NetworkManager for networking. If systemd-networkd is preferred, you should install it before running `kairos-init` and it will be used instead.
+
+### EPEL repos
+
+When building RHEL family images, the EPEL repository is added automatically as some required packages are only available there.
+If you want to remove the repository after the build, first run the `install` stage and then remove the EPEL repository in your Dockerfile:
+
+```bash
+dnf remove epel-release
+```
+
+### Building RHEL images
 
 Before running `kairos-init`, you need to register the system with the subscription manager and attach a subscription to it. You can do this by modifying the Dockerfile to register the system before running `kairos-init`:
 
