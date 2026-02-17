@@ -633,10 +633,17 @@ spec:
     - name: rootfs-overlay
       configMap:
         name: my-rootfs-files
+        items:
+          - key: motd
+            path: etc/motd
 
   volumeBindings:
     overlayRootfs: rootfs-overlay
 ```
+
+{{% alert title="Note" color="info" %}}
+When mounting a ConfigMap as a volume, each key becomes a file at the mount point. Use the `items` field to map keys to specific paths within the overlay. In this example, the `motd` key is mapped to `etc/motd`, placing the file at `/etc/motd` in the rootfs overlay.
+{{% /alert %}}
 
 ### Example: Multiple Overlays with Importers
 
