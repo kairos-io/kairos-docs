@@ -517,6 +517,197 @@ spec:
 
 If the nginx service is deployed in a different namespace than the OSArtifact, set the `NGINX_URL` environment variable to `http://kairos-operator-nginx.<namespace>.svc.cluster.local`.
 
+## Importers and Custom Volumes
+
+The OSArtifact CRD supports **importers** — init containers that run before the build phase — and **user-defined volumes** that can be shared between importers and the build process. This allows you to fetch files, prepare directories, and inject content into your builds without baking everything into a container image or Secret.
+
+### How It Works
+
+1. **Volumes** (`spec.volumes`): Define standard Kubernetes volumes (EmptyDir, ConfigMap, Secret, PVC, etc.) that are added to the builder Pod. These can be mounted by importers and, through volume bindings, used by the build steps.
+
+2. **Importers** (`spec.importers`): A list of init containers that run sequentially before the build. They follow the standard `corev1.Container` schema and can mount any volume from `spec.volumes`. Use them to download files, clone repositories, generate configurations, or prepare overlay directories.
+
+3. **Volume Bindings** (`spec.volumeBindings`): Maps a user-defined volume to a specific role in the build:
+
+| Binding | Effect | Applies to |
+|---------|--------|------------|
+| `buildContext` | Mounts the volume at `/workspace` in the kaniko container, providing the Docker build context | Dockerfile builds (`baseImageDockerfile`) |
+| `overlayISO` | Mounts the volume at `/overlay-iso` and passes `--overlay-iso` to AuroraBoot. Files appear at `/run/initramfs/live` during live boot. | ISO builds (`iso: true`) |
+| `overlayRootfs` | Mounts the volume at `/overlay-rootfs` and passes `--overlay-rootfs` to AuroraBoot. Files are merged into the OS rootfs (squashfs) and become part of the installed system. | ISO builds (`iso: true`) |
+
+For a detailed explanation of what the overlay options do, where files end up, and when to use each one, see [Customizing ISO contents]({{< relref "../Reference/auroraboot#customizing-iso-contents" >}}) in the AuroraBoot reference.
+
+{{% alert title="Note" color="info" %}}
+Volume names must not collide with names reserved for internal use: `artifacts`, `rootfs`, `config`, `dockerfile`, `cloudconfig`. The controller validates this and will reject specs that use reserved names.
+{{% /alert %}}
+
+### Example: ISO with Overlay Files from a Remote Source
+
+This example fetches extra files from a remote URL and injects them into the ISO filesystem:
+
+```yaml
+apiVersion: build.kairos.io/v1alpha2
+kind: OSArtifact
+metadata:
+  name: my-custom-iso
+spec:
+  imageName: "quay.io/kairos/opensuse:leap-15.6-core-amd64-generic-v3.6.0"
+  iso: true
+
+  volumes:
+    - name: iso-overlay
+      emptyDir: {}
+
+  importers:
+    - name: fetch-overlay
+      image: curlimages/curl:latest
+      command: ["/bin/sh", "-c"]
+      args:
+        - |
+          curl -L https://example.com/extra-files.tar.gz | tar xz -C /iso-overlay
+      volumeMounts:
+        - name: iso-overlay
+          mountPath: /iso-overlay
+
+  volumeBindings:
+    overlayISO: iso-overlay
+```
+
+### Example: Custom Docker Build Context
+
+This example uses an importer to prepare a build context directory, then builds a container image from it with kaniko:
+
+```yaml
+apiVersion: build.kairos.io/v1alpha2
+kind: OSArtifact
+metadata:
+  name: custom-context-build
+spec:
+  baseImageDockerfile:
+    name: my-dockerfile-secret
+    key: Dockerfile
+  iso: true
+
+  volumes:
+    - name: my-context
+      emptyDir: {}
+
+  importers:
+    - name: prepare-context
+      image: alpine/git:latest
+      command: ["/bin/sh", "-c"]
+      args:
+        - |
+          git clone --depth 1 https://github.com/myorg/myrepo.git /context
+      volumeMounts:
+        - name: my-context
+          mountPath: /context
+
+  volumeBindings:
+    buildContext: my-context
+```
+
+The Dockerfile Secret mount at `/workspace/dockerfile` is always preserved alongside the build context volume.
+
+### Example: Overlay from a ConfigMap
+
+Volumes don't have to be populated by importers. You can use any Kubernetes volume type directly. For example, a ConfigMap can serve as a rootfs overlay without needing an importer:
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-rootfs-files
+data:
+  motd: "Welcome to my custom Kairos build!\n"
+---
+apiVersion: build.kairos.io/v1alpha2
+kind: OSArtifact
+metadata:
+  name: configmap-overlay
+spec:
+  imageName: "quay.io/kairos/opensuse:leap-15.6-core-amd64-generic-v3.6.0"
+  iso: true
+
+  volumes:
+    - name: rootfs-overlay
+      configMap:
+        name: my-rootfs-files
+        items:
+          - key: motd
+            path: etc/motd
+
+  volumeBindings:
+    overlayRootfs: rootfs-overlay
+```
+
+{{% alert title="Note" color="info" %}}
+When mounting a ConfigMap as a volume, each key becomes a file at the mount point. Use the `items` field to map keys to specific paths within the overlay. In this example, the `motd` key is mapped to `etc/motd`, placing the file at `/etc/motd` in the rootfs overlay.
+{{% /alert %}}
+
+### Example: Multiple Overlays with Importers
+
+You can combine multiple overlay types and chain importers sequentially:
+
+```yaml
+apiVersion: build.kairos.io/v1alpha2
+kind: OSArtifact
+metadata:
+  name: full-custom-iso
+spec:
+  imageName: "quay.io/kairos/opensuse:leap-15.6-core-amd64-generic-v3.6.0"
+  iso: true
+
+  volumes:
+    - name: iso-overlay
+      emptyDir: {}
+    - name: rootfs-overlay
+      emptyDir: {}
+
+  importers:
+    - name: fetch-iso-files
+      image: curlimages/curl:latest
+      command: ["/bin/sh", "-c"]
+      args:
+        - curl -L https://example.com/iso-extras.tar.gz | tar xz -C /iso-overlay
+      volumeMounts:
+        - name: iso-overlay
+          mountPath: /iso-overlay
+    - name: fetch-rootfs-files
+      image: curlimages/curl:latest
+      command: ["/bin/sh", "-c"]
+      args:
+        - curl -L https://example.com/rootfs-extras.tar.gz | tar xz -C /rootfs-overlay
+      volumeMounts:
+        - name: rootfs-overlay
+          mountPath: /rootfs-overlay
+
+  volumeBindings:
+    overlayISO: iso-overlay
+    overlayRootfs: rootfs-overlay
+
+  exporters:
+    - template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: upload
+              image: curlimages/curl
+              command: ["sh", "-ec"]
+              args:
+                - |
+                  for f in /artifacts/*; do
+                    [ -f "$f" ] || continue
+                    curl -fsSL -T "$f" "http://kairos-operator-nginx/$(basename $f)"
+                  done
+              volumeMounts:
+                - name: artifacts
+                  readOnly: true
+                  mountPath: /artifacts
+```
+
+Importers run in declaration order as init containers on the builder Pod, so `fetch-iso-files` completes before `fetch-rootfs-files` starts.
+
 ## Advanced Configuration
 
 ```yaml

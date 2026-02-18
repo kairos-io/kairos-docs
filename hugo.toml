@@ -92,7 +92,7 @@ github_branch = "main"
 # Enable Lunr.js offline search
 offlineSearch = true
 
-latest_version = "v3.5.2"
+latest_version = "v3.7.2"
 development = true
 
 [params.robots]
