@@ -4,4 +4,4 @@
 # Optional hash-only lines are also supported:
 #   sha256_of_normalized_diff
 
-/docs/reference/auroraboot|f3e2dc63e6210c8a09cf3978517c8226fe46960bfc276bd3c30c5564be59ba67
+/docs/reference/auroraboot|5cb4dff5ac7219d086dab10dff308c0af3a1caafdc4004d06047c988894c9cbc
