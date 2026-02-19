@@ -76,11 +76,17 @@ const config: Config = {
           showLastUpdateTime: true,
           showLastUpdateAuthor: true,
           // Enable versioning
-          lastVersion: 'current',
+          lastVersion: 'v3.7.2',
           versions: {
             current: {
               label: 'Next 🚧',
+              path: 'next',
+              banner: 'unreleased',
+            },
+            'v3.7.2': {
+              label: 'v3.7.2',
               path: '',
+              banner: 'none',
             },
           },
         },
