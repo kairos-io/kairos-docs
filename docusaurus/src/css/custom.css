@@ -31,11 +31,6 @@
   --ifm-link-color: #c44200;
   --ifm-link-hover-color: var(--kairos-orange);
 
-  /* Menu/Sidebar active state colors - The Docusaurus way */
-  --ifm-menu-color-background-active: var(--kairos-orange);
-  --ifm-menu-color-background-hover: rgba(255, 116, 66, 0.1);
-  --ifm-menu-color-active: var(--kairos-white);
-
   /* Font family */
   --ifm-font-family-base: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   --ifm-heading-font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
@@ -78,10 +73,6 @@
   --ifm-link-color: #FF7442;
   --ifm-link-hover-color: #FFB394;
 
-  /* Menu colors for dark mode */
-  --ifm-menu-color-background-active: var(--kairos-orange);
-  --ifm-menu-color-background-hover: rgba(255, 116, 66, 0.15);
-  --ifm-menu-color-active: var(--kairos-white);
 
   --docusaurus-highlighted-code-line-bg: rgba(255, 116, 66, 0.1);
   --ifm-background-color: #1a1e25;
@@ -321,13 +312,17 @@ div[class*='announcementBar_'] button {
 .theme-doc-sidebar-container {
   background-color: var(--kairos-primary) !important;
   border-right: 0;
+  --ifm-menu-color-background-active: var(--kairos-orange);
+  --ifm-menu-color-background-hover: rgba(255, 116, 66, 0.1);
+  --ifm-menu-color-active: var(--kairos-white);
+  --ifm-menu-color: rgba(255, 255, 255, 0.85);
 }
 
 .theme-doc-sidebar-menu {
   padding: 0.5rem;
 }
 
-.menu__link {
+.theme-doc-sidebar-container .menu__link {
   color: rgba(255, 255, 255, 0.85);
   font-weight: 500;
   transition: all 0.2s ease;
@@ -335,26 +330,26 @@ div[class*='announcementBar_'] button {
   padding: 0.5rem 0.75rem;
 }
 
-.menu__link:hover {
+.theme-doc-sidebar-container .menu__link:hover {
   color: var(--kairos-white);
   background-color: rgba(255, 116, 66, 0.1);
 }
 
-.menu__link--active {
+.theme-doc-sidebar-container .menu__link--active {
   color: var(--kairos-white);
   background-color: var(--kairos-orange);
   font-weight: 600;
 }
 
-.menu__link--active:hover {
+.theme-doc-sidebar-container .menu__link--active:hover {
   background-color: var(--kairos-softer-orange);
 }
 
-.menu__list-item-collapsible:hover {
+.theme-doc-sidebar-container .menu__list-item-collapsible:hover {
   background-color: rgba(255, 116, 66, 0.05);
 }
 
-.menu__caret::before {
+.theme-doc-sidebar-container .menu__caret::before {
   background: var(--ifm-menu-link-sublist-icon) 50% / 1.5rem 1.5rem;
   filter: brightness(0) invert(1);
 }
@@ -365,13 +360,13 @@ div[class*='announcementBar_'] button {
 }
 
 /* Active state for category index pages - work with Docusaurus's defaults */
-.menu__list-item-collapsible .menu__link--active {
+.theme-doc-sidebar-container .menu__list-item-collapsible .menu__link--active {
   color: var(--kairos-white);
   background-color: var(--kairos-orange);
   font-weight: 600;
 }
 
-.menu__list-item-collapsible .menu__link--active:hover {
+.theme-doc-sidebar-container .menu__list-item-collapsible .menu__link--active:hover {
   background-color: var(--kairos-softer-orange);
 }
 
@@ -570,7 +565,7 @@ div[class*='announcementBar_'] button {
     min-width: auto;
   }
 }
-.menu__list-item--active > .menu__list-item-collapsible > .menu__link {
+.theme-doc-sidebar-container .menu__list-item--active > .menu__list-item-collapsible > .menu__link {
   color: var(--kairos-white);
   background-color: var(--kairos-orange);
   font-weight: 600;
