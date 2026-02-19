@@ -7,6 +7,21 @@
   NODE_VERSION = "20"
 
 [[redirects]]
+from = "/v3.7.2/docs/*"
+to = "/docs/v3.7.2/:splat"
+status = 302
+
+[[redirects]]
+from = "/v3.6.0/docs/*"
+to = "/docs/v3.6.0/:splat"
+status = 302
+
+[[redirects]]
+from = "/v3.5.7/docs/*"
+to = "/docs/v3.5.7/:splat"
+status = 302
+
+[[redirects]]
 from = "/docs/contribution-guidelines/"
 to = "https://github.com/kairos-io/kairos/blob/master/CONTRIBUTING.md"
 status = 200
