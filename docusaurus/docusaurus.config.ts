@@ -111,7 +111,15 @@ const config: Config = {
 
   plugins: [
     './plugins/hugo-mdx-preprocess-plugin.cjs',
-    './plugins/local-search-index-plugin.cjs',
+    [
+      '@cmfcmf/docusaurus-search-local',
+      {
+        indexDocs: true,
+        indexBlog: true,
+        indexPages: true,
+        language: 'en',
+      },
+    ],
     [
       '@docusaurus/plugin-content-docs',
       {
@@ -194,7 +202,7 @@ const config: Config = {
           position: 'right',
         },
         {
-          type: 'custom-search',
+          type: 'search',
           position: 'right',
         },
         {
