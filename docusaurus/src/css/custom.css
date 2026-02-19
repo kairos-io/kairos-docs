@@ -51,6 +51,17 @@
   /* Hero background */
   --ifm-hero-background-color: var(--kairos-primary);
   --ifm-hero-text-color: var(--kairos-white);
+
+  /* Local search (autocomplete-theme-classic) - Kairos light theme */
+  --aa-primary-color-rgb: 3, 21, 58 !important;
+  --aa-text-color-rgb: 3, 21, 58 !important;
+  --aa-muted-color-rgb: 90, 106, 133 !important;
+  --aa-panel-background-color-rgb: 255, 255, 255 !important;
+  --aa-input-background-color-rgb: 255, 255, 255 !important;
+  --aa-input-border-color-rgb: 3, 21, 58 !important;
+  --aa-input-border-color-alpha: 0.25 !important;
+  --aa-selected-color-rgb: 238, 80, 7 !important;
+  --aa-description-highlight-background-color-rgb: 255, 233, 220 !important;
 }
 
 /* Dark mode colors - Enhanced for better contrast and aesthetics */
@@ -82,6 +93,17 @@
 
   /* Better code block colors */
   --ifm-code-background: rgba(255, 116, 66, 0.08);
+
+  /* Local search (autocomplete-theme-classic) - Kairos dark theme */
+  --aa-primary-color-rgb: 255, 116, 66 !important;
+  --aa-text-color-rgb: 255, 255, 255 !important;
+  --aa-muted-color-rgb: 195, 203, 214 !important;
+  --aa-panel-background-color-rgb: 26, 31, 38 !important;
+  --aa-input-background-color-rgb: 26, 31, 38 !important;
+  --aa-input-border-color-rgb: 255, 116, 66 !important;
+  --aa-input-border-color-alpha: 0.45 !important;
+  --aa-selected-color-rgb: 255, 159, 112 !important;
+  --aa-description-highlight-background-color-rgb: 79, 41, 23 !important;
 }
 
 /* Global link styles */
