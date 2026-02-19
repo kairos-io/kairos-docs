@@ -41,9 +41,39 @@ export default function FlavorSelectorNavbarItem({
 
   if (mobile) {
     return (
-      <div className="menu__list-item">
-        <div className="menu__link">Flavor: {selection.label}</div>
-      </div>
+      <li className={clsx('menu__list-item', {'menu__list-item--collapsed': !showDropdown})}>
+        <a
+          role="button"
+          href="#"
+          className={clsx('menu__link menu__link--sublist menu__link--sublist-caret')}
+          onClick={(e) => {
+            e.preventDefault();
+            setShowDropdown((v) => !v);
+          }}>
+          {selection.label}
+        </a>
+        <ul className={clsx('menu__list')} style={showDropdown ? undefined : {display: 'none'}}>
+          {FLAVOR_OPTIONS.map((option) => {
+            const key = optionKey(option);
+            const isActive = key === selectedKey;
+            return (
+              <li key={key} className="menu__list-item">
+                <a
+                  role="button"
+                  href="#"
+                  className={clsx('menu__link', {'menu__link--active': isActive})}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setSelection(option);
+                    setShowDropdown(false);
+                  }}>
+                  {option.label}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </li>
     );
   }
 
