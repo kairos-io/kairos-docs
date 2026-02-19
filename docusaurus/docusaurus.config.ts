@@ -45,9 +45,21 @@ const config: Config = {
   customFields: {
     registryURL: 'quay.io/kairos',
     kairosVersion: 'master',
+    k3sVersion: 'v1.35.0+k3s1',
+    providerVersion: 'v2.14.0',
     latestVersion: 'v3.7.2',
     auroraBootVersion: 'v0.14.0',
     kairosInitVersion: 'v0.6.2',
+    docsVersionCustomFields: {
+      'v3.5.7': {
+        registryURL: 'quay.io/kairos',
+        kairosVersion: 'v3.5.7',
+        k3sVersion: 'v1.34.1+k3s1',
+        providerVersion: 'v2.13.4',
+        auroraBootVersion: 'v0.13.0',
+        kairosInitVersion: 'v0.5.26',
+      },
+    },
   },
 
   presets: [
@@ -133,6 +145,13 @@ const config: Config = {
   themeConfig: {
     // Replace with your project's social card
     image: 'img/Kairos_800x419.png',
+    announcementBar: {
+      id: 'hadron-linux-out',
+      content: '⚛️ <a href="/quickstart/">Hadron Linux</a> is out! 🚀',
+      backgroundColor: '#1baaff',
+      textColor: '#000000',
+      isCloseable: true,
+    },
     colorMode: {
       respectPrefersColorScheme: true,
     },
@@ -149,9 +168,10 @@ const config: Config = {
           label: 'Getting Started',
         },
         {
-          to: '/docs/',
+          type: 'docSidebar',
+          sidebarId: 'tutorialSidebar',
           position: 'left',
-          label: 'Documentation',
+          label: 'Docs',
         },
         {
           to: '/quickstart',

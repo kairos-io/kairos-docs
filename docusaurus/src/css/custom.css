@@ -221,6 +221,38 @@ html[data-theme='light'] button[class*='toggle']:hover {
   height: 20px;
 }
 
+/* Announcement bar: striped style inspired by docusaurus.io */
+div[class*='announcementBar_'] {
+  background-image: repeating-linear-gradient(
+    -35deg,
+    #8fd8ff 0,
+    #8fd8ff 18px,
+    #a6e2ff 18px,
+    #a6e2ff 36px
+  ) !important;
+  border: 0 !important;
+  border-top: 0 !important;
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+}
+
+div[class*='announcementBarContent_'] {
+  color: #000000 !important;
+  font-weight: 900;
+  font-size: inherit !important;
+}
+
+div[class*='announcementBarContent_'] a {
+  color: #000000 !important;
+  font-weight: 900;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+}
+
+div[class*='announcementBar_'] button {
+  color: #03153a;
+}
+
 /* Navbar search */
 .navbar-search-form {
   display: inline-flex;

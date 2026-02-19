@@ -1,8 +1,8 @@
 import React from 'react';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import {useVersionedCustomFields} from '@site/src/utils/versionedCustomFields';
 
 export default function KairosVersion(): React.JSX.Element {
-  const {siteConfig} = useDocusaurusContext();
-  const version = String(siteConfig.customFields?.kairosVersion ?? 'master');
+  const {kairosVersion} = useVersionedCustomFields();
+  const version = String(kairosVersion ?? 'master');
   return <>{version}</>;
 }

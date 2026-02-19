@@ -84,6 +84,7 @@ function transformNonInlineCode(segment) {
 
   // Render supported simple value shortcodes as MDX components outside code.
   out = out.replace(/\{\{<\s*kairosVersion\s*>\}\}/gi, '<KairosVersion />');
+  out = out.replace(/\{\{<\s*providerVersion\s*>\}\}/gi, '<ProviderVersion />');
   out = out.replace(/\{\{<\s*imageLink\b([^>]*)>\}\}/gi, (_full, rawAttrs) => {
     const attrs = parseShortcodeAttrs(rawAttrs);
     const props = [];
@@ -176,6 +177,7 @@ function wrapShortcodesOutsideInline(line) {
           'figure',
           'imagelink',
           'kairosversion',
+          'providerversion',
           'container-repo-link',
           'ocicode',
           'getremotesource',

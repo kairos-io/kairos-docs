@@ -13,6 +13,8 @@ description: Discover Kairos in action through videos, presentation slides, and 
 
 ## Slides
 
+### How Kairos uses libp2p {#how-kairos-uses-libp2p}
+
  * [Kairos and libp2p](https://github.com/kairos-io/kairos/files/10743709/Kairos_P2P.pdf)
 
 ## Videos
