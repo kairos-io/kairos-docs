@@ -219,6 +219,7 @@ module.exports = function hugoMdxPreprocessLoader(source) {
   const lines = input.split('\n');
   const out = [];
   let inFence = false;
+  let onlyFlavorsFence = false;
   let inMultilineShortcode = false;
   let inJsonLdScript = false;
 
@@ -238,8 +239,31 @@ module.exports = function hugoMdxPreprocessLoader(source) {
     }
 
     if (/^(```|~~~)/.test(trimmed)) {
-      inFence = !inFence;
+      if (!inFence) {
+        const openMatch = trimmed.match(/^(```|~~~)(.*)$/);
+        const fenceMarker = openMatch ? openMatch[1] : '```';
+        const fenceInfo = openMatch ? String(openMatch[2] || '').trim() : '';
+        const onlyFlavorsMatch = fenceInfo.match(/^([A-Za-z0-9_-]+)\s+\{class="only-flavors=([^"]+)"\}\s*$/);
+        if (onlyFlavorsMatch) {
+          const language = onlyFlavorsMatch[1];
+          const onlyFlavors = onlyFlavorsMatch[2].replace(/"/g, '&quot;');
+          out.push(`<OnlyFlavors onlyFlavors="${onlyFlavors}">`);
+          out.push(`${fenceMarker}${language}`);
+          inFence = true;
+          onlyFlavorsFence = true;
+          continue;
+        }
+        inFence = true;
+        out.push(line);
+        continue;
+      }
+
+      inFence = false;
       out.push(line);
+      if (onlyFlavorsFence) {
+        out.push('</OnlyFlavors>');
+        onlyFlavorsFence = false;
+      }
       continue;
     }
 
