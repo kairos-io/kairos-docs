@@ -26,9 +26,10 @@
   --ifm-color-primary-lighter: #041c4d;
   --ifm-color-primary-lightest: #052159;
 
-  /* Orange accent for links and CTAs */
-  --ifm-link-color: #009ffd;
-  --ifm-link-hover-color: var(--kairos-primary);
+
+  /* Link colors — on-brand deep orange, readable on warm paper */
+  --ifm-link-color: #c44200;
+  --ifm-link-hover-color: var(--kairos-orange);
 
   /* Menu/Sidebar active state colors - The Docusaurus way */
   --ifm-menu-color-background-active: var(--kairos-orange);
@@ -83,13 +84,13 @@
   --ifm-menu-color-active: var(--kairos-white);
 
   --docusaurus-highlighted-code-line-bg: rgba(255, 116, 66, 0.1);
-  --ifm-background-color: #0f1419;
-  --ifm-background-surface-color: #1a1f26;
+  --ifm-background-color: #1a1e25;
+  --ifm-background-surface-color: #232830;
   --ifm-color-emphasis-800: #d4d4d4;
   --ifm-heading-color: #ffffff;
 
   /* Enhanced card backgrounds */
-  --ifm-card-background-color: #1a1f26;
+  --ifm-card-background-color: #232830;
 
   /* Better code block colors */
   --ifm-code-background: rgba(255, 116, 66, 0.08);

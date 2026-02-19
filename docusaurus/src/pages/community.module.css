@@ -25,7 +25,7 @@
 }
 
 .linkBoxSection {
-  background: #fff;
+  background: var(--ifm-background-color);
   color: #1b1b1d;
   padding: 2.25rem 1.5rem 2.75rem;
 }
