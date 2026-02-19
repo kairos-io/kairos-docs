@@ -2,6 +2,7 @@
 title: "Development notes"
 sidebar_label: "Development"
 sidebar_position: 1
+slug: /development/notes
 date: 2022-11-13
 description: Learn how to contribute to Kairos by exploring its development practices, debugging tools, and supported hardware.
 ---
