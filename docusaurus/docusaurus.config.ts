@@ -145,6 +145,13 @@ const config: Config = {
   themeConfig: {
     // Replace with your project's social card
     image: 'img/Kairos_800x419.png',
+    announcementBar: {
+      id: 'hadron-linux-out',
+      content: '⚛️ <a href="/quickstart/">Hadron Linux</a> is out! 🚀',
+      backgroundColor: '#1baaff',
+      textColor: '#000000',
+      isCloseable: true,
+    },
     colorMode: {
       respectPrefersColorScheme: true,
     },
@@ -164,7 +171,7 @@ const config: Config = {
           type: 'docSidebar',
           sidebarId: 'tutorialSidebar',
           position: 'left',
-          label: 'Documentation',
+          label: 'Docs',
         },
         {
           to: '/quickstart',
