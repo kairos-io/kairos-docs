@@ -80,12 +80,12 @@ const config: Config = {
           versions: {
             current: {
               label: 'Next 🚧',
-              path: 'next',
+              path: '',
               banner: 'unreleased',
             },
             'v3.7.2': {
               label: 'v3.7.2',
-              path: '',
+              path: 'v3.7.2',
               banner: 'none',
             },
           },
