@@ -12,6 +12,7 @@ import Image from '@site/src/components/Image';
 import ImageLink from '@site/src/components/ImageLink';
 import KairosVersion from '@site/src/components/KairosVersion';
 import OciCode from '@site/src/components/OciCode';
+import ProviderVersion from '@site/src/components/ProviderVersion';
 import ShortcodeCodeBlock from '@site/src/components/ShortcodeCodeBlock';
 
 const components: MDXComponentsObject = {
@@ -28,6 +29,7 @@ const components: MDXComponentsObject = {
   ImageLink,
   KairosVersion,
   OciCode,
+  ProviderVersion,
   ShortcodeCodeBlock,
 };
 

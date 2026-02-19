@@ -6,7 +6,7 @@ description: Reference documentation for AuroraBoot, a tool for generating boota
 ---
 
 :::info Note
-This is the reference documentation for AuroraBoot. For a complete guide on creating custom cloud images, including how to use AuroraBoot in the context of a full workflow, see [Creating Custom Cloud Images](/docs/reference/creating_custom_cloud_images/).
+This is the reference documentation for AuroraBoot. For a complete guide on creating custom cloud images, including how to use AuroraBoot in the context of a full workflow, see [Creating Custom Cloud Images](/docs/advanced/creating_custom_cloud_images/).
 :::
 **AuroraBoot** is a tool designed to make the process of bootstrapping Kairos machines quick, simple and efficient. It is specifically designed for the Kairos operating system and provides a comprehensive solution for downloading required artifacts and provisioning a machine, both from network or manually via flashing to USB stick.
 

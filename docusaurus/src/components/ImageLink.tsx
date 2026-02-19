@@ -2,6 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import {useFlavor} from '@site/src/context/flavor';
 import {buildKairosImageName} from '@site/src/components/kairos-image-name';
+import {useVersionedCustomFields} from '@site/src/utils/versionedCustomFields';
 
 type ImageLinkProps = {
   variant: string;
@@ -17,13 +18,15 @@ type ImageLinkProps = {
 
 export default function ImageLink(props: ImageLinkProps): React.JSX.Element {
   const {selection} = useFlavor();
-  const kairosVersion = props.kairosVersion ?? 'latest';
+  const {kairosVersion: defaultKairosVersion, k3sVersion: defaultK3sVersion} = useVersionedCustomFields();
+  const kairosVersion = props.kairosVersion ?? defaultKairosVersion;
   const flavor = props.flavor ?? selection.flavor;
   const flavorRelease = props.flavorRelease ?? selection.flavorRelease;
 
   const imageName = buildKairosImageName({
     ...props,
     kairosVersion,
+    k3sVersion: props.k3sVersion ?? defaultK3sVersion,
     flavor,
     flavorRelease,
   });

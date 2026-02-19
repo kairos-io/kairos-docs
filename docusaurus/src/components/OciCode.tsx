@@ -1,6 +1,6 @@
 import React from 'react';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import {useFlavor} from '@site/src/context/flavor';
+import {useVersionedCustomFields} from '@site/src/utils/versionedCustomFields';
 
 type OciCodeProps = {
   variant?: string;
@@ -15,14 +15,12 @@ export default function OciCode({
   model = 'generic',
   suffix = '',
 }: OciCodeProps): React.JSX.Element {
-  const {siteConfig} = useDocusaurusContext();
   const {selection} = useFlavor();
-  const registryURL = String(siteConfig.customFields?.registryURL ?? 'quay.io/kairos');
-  const kairosVersion = String(siteConfig.customFields?.kairosVersion ?? 'master');
-  const k3sVersion = String(siteConfig.customFields?.k3sVersion ?? 'v1.35.0+k3s1').replaceAll('+', '-');
+  const {registryURL, kairosVersion, k3sVersion} = useVersionedCustomFields();
+  const normalizedK3sVersion = String(k3sVersion).replaceAll('+', '-');
   const variantValue = String(variant).trim();
   const suffixValue = String(suffix).trim();
-  const k3sSegment = variantValue === 'standard' ? `-k3s${k3sVersion}` : '';
+  const k3sSegment = variantValue === 'standard' ? `-k3s${normalizedK3sVersion}` : '';
   const suffixSegment = suffixValue ? `-${suffixValue}` : '';
   const value =
     `${registryURL}/${selection.flavor}:` +

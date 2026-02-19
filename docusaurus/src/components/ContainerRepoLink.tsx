@@ -1,5 +1,5 @@
 import React from 'react';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import {useVersionedCustomFields} from '@site/src/utils/versionedCustomFields';
 
 type ContainerRepoLinkProps = {
   flavor?: string;
@@ -8,8 +8,7 @@ type ContainerRepoLinkProps = {
 export default function ContainerRepoLink({
   flavor = '',
 }: ContainerRepoLinkProps): React.JSX.Element {
-  const {siteConfig} = useDocusaurusContext();
-  const registryURL = String(siteConfig.customFields?.registryURL ?? 'quay.io/kairos');
+  const {registryURL} = useVersionedCustomFields();
   const trimmedFlavor = String(flavor).trim();
   const text = `${registryURL}/${trimmedFlavor}`;
   const href = `http://${text}`;

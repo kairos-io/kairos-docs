@@ -1,8 +1,8 @@
 import React from 'react';
 import CodeBlock from '@theme/CodeBlock';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import {useFlavor} from '@site/src/context/flavor';
 import {buildKairosImageName} from '@site/src/components/kairos-image-name';
+import {useVersionedCustomFields} from '@site/src/utils/versionedCustomFields';
 
 type ShortcodeCodeBlockProps = {
   language?: string;
@@ -15,6 +15,7 @@ const FLAVOR_CODE_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*flavorCode\s*>\}\}/g;
 const FLAVOR_RELEASE_CODE_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*flavorReleaseCode\s*>\}\}/g;
 const REGISTRY_URL_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*registryURL\s*>\}\}/g;
 const KAIROS_VERSION_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*kairosVersion\s*>\}\}/g;
+const PROVIDER_VERSION_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*providerVersion\s*>\}\}/g;
 const KAIROS_INIT_VERSION_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*kairosInitVersion\s*>\}\}/g;
 const AURORA_BOOT_VERSION_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*auroraBootVersion\s*>\}\}/g;
 const ATTRIBUTE_PATTERN = /([a-zA-Z_][a-zA-Z0-9_-]*)\s*=\s*"([^"]*)"/g;
@@ -35,14 +36,17 @@ function renderTemplate(
   flavor: string,
   flavorRelease: string,
   registryURL: string,
-  kairosVersion: string,
+  defaultKairosVersion: string,
+  defaultK3sVersion: string,
+  providerVersion: string,
   kairosInitVersion: string,
   auroraBootVersion: string,
 ): string {
   return template
     .replace(AURORA_BOOT_VERSION_SHORTCODE_GLOBAL_PATTERN, auroraBootVersion)
     .replace(KAIROS_INIT_VERSION_SHORTCODE_GLOBAL_PATTERN, kairosInitVersion)
-    .replace(KAIROS_VERSION_SHORTCODE_GLOBAL_PATTERN, kairosVersion)
+    .replace(KAIROS_VERSION_SHORTCODE_GLOBAL_PATTERN, defaultKairosVersion)
+    .replace(PROVIDER_VERSION_SHORTCODE_GLOBAL_PATTERN, providerVersion)
     .replace(REGISTRY_URL_SHORTCODE_GLOBAL_PATTERN, registryURL)
     .replace(FLAVOR_RELEASE_CODE_SHORTCODE_GLOBAL_PATTERN, flavorRelease)
     .replace(FLAVOR_CODE_SHORTCODE_GLOBAL_PATTERN, flavor)
@@ -54,8 +58,8 @@ function renderTemplate(
       const variant = attrs.variant;
       const arch = attrs.arch ?? 'amd64';
       const model = attrs.model ?? 'generic';
-      const kairosVersion = attrs.kairosVersion ?? 'latest';
-      const k3sVersion = (attrs.k3sVersion ?? 'v1.35.0+k3s1').replaceAll('+', '-');
+      const kairosVersion = attrs.kairosVersion ?? defaultKairosVersion;
+      const k3sVersion = (attrs.k3sVersion ?? defaultK3sVersion).replaceAll('+', '-');
       const suffix = attrs.suffix ? `-${attrs.suffix}` : '';
       const k3sSegment = variant === 'standard' ? `-k3s${k3sVersion}` : '';
       const tag = `${flavorRelease}-${variant}-${arch}-${model}-${kairosVersion}${k3sSegment}${suffix}`;
@@ -84,18 +88,23 @@ export default function ShortcodeCodeBlock({
   language = 'text',
   template,
 }: ShortcodeCodeBlockProps): React.JSX.Element {
-  const {siteConfig} = useDocusaurusContext();
   const {selection} = useFlavor();
-  const registryURL = String(siteConfig.customFields?.registryURL ?? 'quay.io/kairos');
-  const kairosVersion = String(siteConfig.customFields?.kairosVersion ?? 'master');
-  const kairosInitVersion = String(siteConfig.customFields?.kairosInitVersion ?? 'latest');
-  const auroraBootVersion = String(siteConfig.customFields?.auroraBootVersion ?? 'latest');
+  const {
+    registryURL,
+    kairosVersion,
+    k3sVersion,
+    providerVersion,
+    kairosInitVersion,
+    auroraBootVersion,
+  } = useVersionedCustomFields();
   const content = renderTemplate(
     template,
     selection.flavor,
     selection.flavorRelease,
     registryURL,
     kairosVersion,
+    k3sVersion,
+    providerVersion,
     kairosInitVersion,
     auroraBootVersion,
   );
