@@ -230,7 +230,10 @@ div[class*='announcementBar_'] {
     #a6e2ff 18px,
     #a6e2ff 36px
   ) !important;
-  box-shadow: inset 0 -1px 0 rgba(3, 21, 58, 0.18);
+  border: 0 !important;
+  border-top: 0 !important;
+  border-bottom: 0 !important;
+  box-shadow: none !important;
 }
 
 div[class*='announcementBarContent_'] {
