@@ -322,6 +322,10 @@ div[class*='announcementBar_'] button {
   border-right: 1px solid rgba(255, 116, 66, 0.1);
 }
 
+.theme-doc-sidebar-menu {
+  padding: 0.5rem;
+}
+
 .menu__link {
   color: rgba(255, 255, 255, 0.85);
   font-weight: 500;
