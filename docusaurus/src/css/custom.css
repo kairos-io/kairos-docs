@@ -319,7 +319,7 @@ div[class*='announcementBar_'] button {
 /* Sidebar styling - Match navbar color scheme */
 .theme-doc-sidebar-container {
   background-color: var(--kairos-primary) !important;
-  border-right: 1px solid rgba(255, 116, 66, 0.1);
+  border-right: 0;
 }
 
 .theme-doc-sidebar-menu {
@@ -578,7 +578,7 @@ div[class*='announcementBar_'] button {
 /* Dark mode sidebar adjustments */
 [data-theme='dark'] .theme-doc-sidebar-container {
   background-color: var(--kairos-primary) !important;
-  border-right: 1px solid rgba(255, 116, 66, 0.2);
+  border-right: 0;
 }
 
 /* Footer styling */

@@ -69,10 +69,9 @@ const config: Config = {
         docs: {
           sidebarPath: './sidebars.ts',
           remarkPlugins: [remarkShortcodeCode],
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/kairos-io/kairos-docs/tree/main/',
+          // Uncomment after migration to re-enable "Edit this page" links.
+          // editUrl:
+          //   'https://github.com/kairos-io/kairos-docs/tree/main/',
           // Show last update time and author
           showLastUpdateTime: true,
           showLastUpdateAuthor: true,
@@ -93,10 +92,9 @@ const config: Config = {
             type: ['rss', 'atom'],
             xslt: true,
           },
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/kairos-io/kairos/tree/main/packages/create-kairos/templates/shared/',
+          // Uncomment after migration to re-enable "Edit this page" links.
+          // editUrl:
+          //   'https://github.com/kairos-io/kairos/tree/main/packages/create-kairos/templates/shared/',
           // Useful options to enforce blogging best practices
           onInlineTags: 'warn',
           onInlineAuthors: 'warn',
@@ -128,8 +126,9 @@ const config: Config = {
         routeBasePath: 'getting-started',
         sidebarPath: './sidebarsGettingStarted.ts',
         remarkPlugins: [remarkShortcodeCode],
-        editUrl:
-          'https://github.com/kairos-io/kairos-docs/tree/main/',
+        // Uncomment after migration to re-enable "Edit this page" links.
+        // editUrl:
+        //   'https://github.com/kairos-io/kairos-docs/tree/main/',
         showLastUpdateTime: true,
         showLastUpdateAuthor: true,
       },
@@ -142,8 +141,9 @@ const config: Config = {
         routeBasePath: 'quickstart',
         sidebarPath: './sidebarsQuickstart.ts',
         remarkPlugins: [remarkShortcodeCode],
-        editUrl:
-          'https://github.com/kairos-io/kairos-docs/tree/main/',
+        // Uncomment after migration to re-enable "Edit this page" links.
+        // editUrl:
+        //   'https://github.com/kairos-io/kairos-docs/tree/main/',
         showLastUpdateTime: true,
         showLastUpdateAuthor: true,
       },
