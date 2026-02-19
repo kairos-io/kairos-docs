@@ -161,7 +161,8 @@ const config: Config = {
           label: 'Getting Started',
         },
         {
-          to: '/docs/',
+          type: 'docSidebar',
+          sidebarId: 'tutorialSidebar',
           position: 'left',
           label: 'Documentation',
         },
