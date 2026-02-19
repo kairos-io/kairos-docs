@@ -26,6 +26,9 @@ declare -A hugo_url_to_page=()
 declare -A docusaurus_urls=()
 declare -A docusaurus_page_to_url=()
 declare -A docusaurus_url_to_page=()
+declare -A allowed_missing_urls=(
+  ["/search"]=1
+)
 declare -A requested_identifiers=()
 declare -a requested_pages=()
 declare -a selected_urls=()
@@ -1331,6 +1334,7 @@ total_rows=0
 displayed_rows=0
 present_ok=0
 present_autogen=0
+present_ignored=0
 present_missing=0
 permalink_ok=0
 content_ok=0
@@ -1429,6 +1433,9 @@ for url_path in "${selected_urls[@]}"; do
   elif [[ -n "${docusaurus_urls[${url_path}]-}" ]]; then
     present="🔁"
     present_autogen=$((present_autogen + 1))
+  elif [[ -n "${allowed_missing_urls[${url_path}]-}" ]]; then
+    present="⏭"
+    present_ignored=$((present_ignored + 1))
   else
     present_missing=$((present_missing + 1))
   fi
@@ -1514,7 +1521,7 @@ for url_path in "${selected_urls[@]}"; do
     content_review=$((content_review + 1))
   fi
 
-  if [[ "${present}" == "❌" ]]; then
+  if [[ "${present}" == "❌" && -z "${allowed_missing_urls[${url_path}]-}" ]]; then
     row_has_error=1
   fi
   if [[ "${row_has_error}" -eq 1 ]]; then
@@ -1524,6 +1531,7 @@ for url_path in "${selected_urls[@]}"; do
   case "${present}" in
     "✅") present_cell="file" ;;
     "🔁") present_cell="auto" ;;
+    "⏭") present_cell="ignored" ;;
     *) present_cell="missing" ;;
   esac
   case "${permalink}" in
@@ -1545,7 +1553,9 @@ for url_path in "${selected_urls[@]}"; do
   fi
 
   hide_row=0
-  if [[ "${#requested_identifiers[@]}" -eq 0 && "${SHOW_ALL}" -eq 0 ]]; then
+  if [[ "${SHOW_ALL}" -eq 0 && "${present_cell}" == "ignored" ]]; then
+    hide_row=1
+  elif [[ "${#requested_identifiers[@]}" -eq 0 && "${SHOW_ALL}" -eq 0 ]]; then
     if [[ "${present_cell}" == "file" && "${permalink_cell}" == "same" && ( "${content_cell}" == "match" || "${content_cell}" == "fixed" ) ]]; then
       hide_row=1
     fi
@@ -1560,7 +1570,7 @@ for url_path in "${selected_urls[@]}"; do
   printf -v permalink_cell_padded "%-*s" "${permalink_col_width}" "${permalink_cell}"
   printf -v content_cell_padded "%-*s" "${content_col_width}" "${content_cell}"
 
-  if [[ "${present_cell}" == "file" || "${present_cell}" == "auto" ]]; then
+  if [[ "${present_cell}" == "file" || "${present_cell}" == "auto" || "${present_cell}" == "ignored" ]]; then
     present_cell_colored="$(color_cell "${present_cell_padded}" "${COLOR_GREEN}")"
   elif [[ "${present_cell}" == "missing" ]]; then
     present_cell_colored="$(color_cell "${present_cell_padded}" "${COLOR_RED}")"
@@ -1629,6 +1639,7 @@ if [[ "${SUMMARY_ENABLED}" == "1" ]]; then
   echo "  rows_displayed: ${displayed_rows}"
   echo "  present_ok: ${present_ok}"
   echo "  present_autogen: ${present_autogen}"
+  echo "  present_ignored: ${present_ignored}"
   echo "  present_missing: ${present_missing}"
   echo "  permalink_ok: ${permalink_ok}"
   echo "  content_ok: ${content_ok}"
