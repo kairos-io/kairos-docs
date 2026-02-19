@@ -322,6 +322,19 @@ div[class*='announcementBar_'] button {
   padding: 0.5rem;
 }
 
+/* Let sidebar expand with content instead of its own scrollbar */
+.theme-doc-sidebar-container > div {
+  position: static !important;
+  top: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.theme-doc-sidebar-container nav.menu {
+  overflow: visible !important;
+  max-height: none !important;
+}
+
 .theme-doc-sidebar-container .menu__link {
   color: rgba(255, 255, 255, 0.85);
   font-weight: 500;
