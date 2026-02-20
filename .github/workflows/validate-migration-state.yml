@@ -1,0 +1,29 @@
+name: Validate Migration State
+
+on:
+  push:
+    branches:
+      - docusaurus
+  workflow_dispatch:
+
+jobs:
+  validate-migration:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: '0.152.2'
+          extended: true
+
+      - name: Validate migration mapping and content parity
+        shell: bash
+        run: |
+          set -euo pipefail
+          chmod +x ./scripts/compare-migration-pages.sh
+          ./scripts/compare-migration-pages.sh

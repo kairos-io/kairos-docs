@@ -1,0 +1,7 @@
+User-agent: *
+Sitemap: https://kairos.io/sitemap.xml
+
+Disallow: /index.json
+Disallow: /search/
+
+llms-txt: https://kairos.io/llms.txt
