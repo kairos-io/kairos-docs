@@ -54,19 +54,19 @@ We can run it locally with docker as a container to inspect it, as it is runnabl
 $ docker run -ti --rm {{<oci variant="core" >}}
 $ cat /etc/os-release
 ...
-KAIROS_NAME="kairos-core-@flavor"
+KAIROS_NAME="kairos-core-{{< flavorCode >}}"
 KAIROS_VERSION="{{< kairosVersion >}}"
 KAIROS_ID="kairos"
-KAIROS_ID_LIKE="kairos-core-@flavor"
+KAIROS_ID_LIKE="kairos-core-{{< flavorCode >}}"
 KAIROS_VERSION_ID="{{< kairosVersion >}}"
-KAIROS_PRETTY_NAME="kairos-core-@flavor {{< kairosVersion >}}"
+KAIROS_PRETTY_NAME="kairos-core-{{< flavorCode >}} {{< kairosVersion >}}"
 KAIROS_BUG_REPORT_URL="https://github.com/kairos-io/kairos/issues"
 KAIROS_HOME_URL="https://github.com/kairos-io/kairos"
 KAIROS_IMAGE_REPO="{{<oci variant="core" >}}"
 KAIROS_IMAGE_LABEL="latest"
 KAIROS_GITHUB_REPO="kairos-io/kairos"
 KAIROS_VARIANT="core"
-KAIROS_FLAVOR="@flavor"
+KAIROS_FLAVOR="{{< flavorCode >}}"
 ```
 
 And check out things like what's the kernel inside:

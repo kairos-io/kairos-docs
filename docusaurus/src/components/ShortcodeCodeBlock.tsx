@@ -18,6 +18,8 @@ const KAIROS_VERSION_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*kairosVersion\s*>\}\}/g
 const PROVIDER_VERSION_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*providerVersion\s*>\}\}/g;
 const KAIROS_INIT_VERSION_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*kairosInitVersion\s*>\}\}/g;
 const AURORA_BOOT_VERSION_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*auroraBootVersion\s*>\}\}/g;
+const FLAVOR_AT_PATTERN = /@flavor\b/g;
+const FLAVOR_RELEASE_AT_PATTERN = /@flavorRelease\b/g;
 const ATTRIBUTE_PATTERN = /([a-zA-Z_][a-zA-Z0-9_-]*)\s*=\s*"([^"]*)"/g;
 
 function parseAttributes(rawAttributes: string): Record<string, string> {
@@ -48,6 +50,8 @@ function renderTemplate(
     .replace(KAIROS_VERSION_SHORTCODE_GLOBAL_PATTERN, defaultKairosVersion)
     .replace(PROVIDER_VERSION_SHORTCODE_GLOBAL_PATTERN, providerVersion)
     .replace(REGISTRY_URL_SHORTCODE_GLOBAL_PATTERN, registryURL)
+    .replace(FLAVOR_RELEASE_AT_PATTERN, flavorRelease)
+    .replace(FLAVOR_AT_PATTERN, flavor)
     .replace(FLAVOR_RELEASE_CODE_SHORTCODE_GLOBAL_PATTERN, flavorRelease)
     .replace(FLAVOR_CODE_SHORTCODE_GLOBAL_PATTERN, flavor)
     .replace(OCI_SHORTCODE_GLOBAL_PATTERN, (_full, rawAttrs) => {

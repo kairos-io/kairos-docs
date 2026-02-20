@@ -51,8 +51,8 @@ Building ISOs still works as long as you mount the container `/tmp` disk to a lo
 docker run --rm -ti -v "$PWD"/config.yaml:/config.yaml -v ${PWD}:/tmp quay.io/kairos/auroraboot \
                     --set "artifact_version={{< kairosVersion >}}" \
                     --set "release_version={{< kairosVersion >}}" \
-                    --set "flavor=@flavor" \
-                    --set "flavor_release=@flavorRelease" \
+                    --set "flavor={{< flavorCode >}}" \
+                    --set "flavor_release={{< flavorReleaseCode >}}" \
                     --set "repository=kairos-io/kairos" \
                     --set "disable_http_server=true" \
                     --set "disable_netboot=true" \
@@ -83,7 +83,7 @@ For example, to netboot a machine with the latest version of Kairos and {{<flavo
 docker run --rm -ti --net host quay.io/kairos/auroraboot \
                     --set "artifact_version={{< kairosVersion >}}" \
                     --set "release_version={{< kairosVersion >}}" \
-                    --set "flavor=@flavor" \
+                    --set "flavor={{< flavorCode >}}" \
                     --set repository="kairos-io/kairos" \
                     --cloud-config https://...
 ```
@@ -149,8 +149,8 @@ By indicating a `artifact_version`, a `release_version`, a `flavor` and a `repos
 docker run --rm -ti --net host quay.io/kairos/auroraboot \
                     --set "artifact_version={{< kairosVersion >}}-{{< k3sVersionOCI >}}" \
                     --set "release_version={{< kairosVersion >}}" \
-                    --set "flavor=@flavor" \
-                    --set "flavor_release=@flavorRelease" \
+                    --set "flavor={{< flavorCode >}}" \
+                    --set "flavor_release={{< flavorReleaseCode >}}" \
                     --set "repository=kairos-io/provider-kairos"
 ```
 {{% /tab %}}
@@ -266,8 +266,8 @@ Build the ISO:
 docker run -v "$PWD"/build:/tmp/auroraboot -v /var/run/docker.sock:/var/run/docker.sock --rm -ti quay.io/kairos/auroraboot \
                     --set "artifact_version={{< kairosVersion >}}-{{< k3sVersionOCI >}}" \
                     --set "release_version={{< kairosVersion >}}" \
-                    --set "flavor=@flavor" \
-                    --set "flavor_release=@flavorRelease" \
+                    --set "flavor={{< flavorCode >}}" \
+                    --set "flavor_release={{< flavorReleaseCode >}}" \
                     --set "repository=kairos-io/provider-kairos" \
                     --set "disable_http_server=true" \
                     --set "disable_netboot=true" \
@@ -346,7 +346,7 @@ artifact_version: "v..."
 release_version: "{{< kairosVersion >}}"
 
 # Flavor
-flavor: "@flavor"
+flavor: "{{< flavorCode >}}"
 
 # Github repository
 repository: "kairos-io/kairos"
@@ -671,7 +671,7 @@ See the [Airgap example](/docs/examples/airgap) in the [examples section](/docs/
 docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos/auroraboot \
         --set "artifact_version={{< kairosVersion >}}" \
         --set "release_version={{< kairosVersion >}}" \
-        --set "flavor=@flavor" \
+        --set "flavor={{< flavorCode >}}" \
         --set repository="kairos-io/kairos" \
         --cloud-config /config.yaml
 ```
@@ -682,8 +682,8 @@ docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos
 docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos/auroraboot \
         --set "artifact_version={{< kairosVersion >}}-{{< k3sVersionOCI >}}" \
         --set "release_version={{< kairosVersion >}}" \
-        --set "flavor=@flavor" \
-        --set "flavor_release=@flavorRelease" \
+        --set "flavor={{< flavorCode >}}" \
+        --set "flavor_release={{< flavorReleaseCode >}}" \
         --set "repository=kairos-io/provider-kairos" \
         --cloud-config /config.yaml
 ```

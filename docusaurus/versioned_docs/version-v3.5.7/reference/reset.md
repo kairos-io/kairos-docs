@@ -77,7 +77,7 @@ spec:
       kairos.io/managed: "true"
 
   # The container image to use
-  image: {{< registryURL >}}/@flavor
+  image: {{< registryURL >}}/{{< flavorCode >}}
 
   # Custom command to execute
   command:
@@ -187,7 +187,7 @@ spec:
   upgrade:
     # Here goes the image which is tied to the flavor being used.
     # Currently can pick between opensuse and alpine
-    image: {{< registryURL >}}/@flavor
+    image: {{< registryURL >}}/{{< flavorCode >}}
     command:
       - "/bin/bash"
       - "-c"
