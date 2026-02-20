@@ -1,0 +1,778 @@
+/**
+ * Kairos custom styling
+ * Colors and typography matching the Kairos brand
+ */
+
+/* Import Noto Sans font */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
+
+/* Kairos Color Palette */
+:root {
+  /* Primary colors */
+  --kairos-primary: #03153A;
+  --kairos-secondary: #e1e5ee;
+  --kairos-orange: #EE5007;
+  --kairos-softer-orange: #FF7442;
+  --kairos-softest-orange: #FB9E70;
+  --kairos-white: #ffffff;
+  --kairos-gray: #E2E7EB;
+
+  /* Infima overrides - Light mode */
+  --ifm-color-primary: #03153A;
+  --ifm-color-primary-dark: #020f2a;
+  --ifm-color-primary-darker: #020e27;
+  --ifm-color-primary-darkest: #010b1f;
+  --ifm-color-primary-light: #041b4a;
+  --ifm-color-primary-lighter: #041c4d;
+  --ifm-color-primary-lightest: #052159;
+
+
+  /* Link colors — on-brand deep orange, readable on warm paper */
+  --ifm-link-color: #c44200;
+  --ifm-link-hover-color: var(--kairos-orange);
+
+  /* Font family */
+  --ifm-font-family-base: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --ifm-heading-font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+
+  /* Font sizes - Docusaurus way */
+  --ifm-navbar-link-font-size: 1.125rem;  /* 18px - Larger navbar links */
+  --ifm-toc-link-font-size: 1rem;         /* 16px - Larger TOC links */
+  --ifm-menu-link-font-size: 1rem;        /* 16px - Larger sidebar menu links */
+
+  /* Code font */
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+
+  /* Hero background */
+  --ifm-hero-background-color: var(--kairos-primary);
+  --ifm-hero-text-color: var(--kairos-white);
+
+  /* Local search (autocomplete-theme-classic) - Kairos light theme */
+  --aa-primary-color-rgb: 3, 21, 58 !important;
+  --aa-text-color-rgb: 3, 21, 58 !important;
+  --aa-muted-color-rgb: 90, 106, 133 !important;
+  --aa-panel-background-color-rgb: 255, 255, 255 !important;
+  --aa-input-background-color-rgb: 255, 255, 255 !important;
+  --aa-input-border-color-rgb: 3, 21, 58 !important;
+  --aa-input-border-color-alpha: 0.25 !important;
+  --aa-selected-color-rgb: 238, 80, 7 !important;
+  --aa-description-highlight-background-color-rgb: 255, 233, 220 !important;
+}
+
+/* Dark mode colors - Enhanced for better contrast and aesthetics */
+[data-theme='dark'] {
+  --ifm-color-primary: #FF7442;
+  --ifm-color-primary-dark: #ff5f29;
+  --ifm-color-primary-darker: #ff5419;
+  --ifm-color-primary-darkest: #e64000;
+  --ifm-color-primary-light: #ff895b;
+  --ifm-color-primary-lighter: #ff946b;
+  --ifm-color-primary-lightest: #ffb394;
+
+  --ifm-link-color: #FF7442;
+  --ifm-link-hover-color: #FFB394;
+
+
+  --docusaurus-highlighted-code-line-bg: rgba(255, 116, 66, 0.1);
+  --ifm-background-color: #1a1e25;
+  --ifm-background-surface-color: #232830;
+  --ifm-color-emphasis-800: #d4d4d4;
+  --ifm-heading-color: #ffffff;
+
+  /* Enhanced card backgrounds */
+  --ifm-card-background-color: #232830;
+
+  /* Better code block colors */
+  --ifm-code-background: rgba(255, 116, 66, 0.08);
+
+  /* Local search (autocomplete-theme-classic) - Kairos dark theme */
+  --aa-primary-color-rgb: 255, 116, 66 !important;
+  --aa-text-color-rgb: 255, 255, 255 !important;
+  --aa-muted-color-rgb: 195, 203, 214 !important;
+  --aa-panel-background-color-rgb: 26, 31, 38 !important;
+  --aa-input-background-color-rgb: 26, 31, 38 !important;
+  --aa-input-border-color-rgb: 255, 116, 66 !important;
+  --aa-input-border-color-alpha: 0.45 !important;
+  --aa-selected-color-rgb: 255, 159, 112 !important;
+  --aa-description-highlight-background-color-rgb: 79, 41, 23 !important;
+}
+
+/* Global link styles */
+a {
+  color: var(--ifm-link-color);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--ifm-link-hover-color);
+}
+
+/* Callout/admonition links: make links clearly distinguishable from body text */
+.theme-admonition a,
+.alert a,
+.admonition a {
+  color: var(--ifm-link-color);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1.5px;
+  font-weight: 600;
+}
+
+.theme-admonition a:hover,
+.alert a:hover,
+.admonition a:hover {
+  color: var(--ifm-link-hover-color);
+  text-decoration-thickness: 2px;
+}
+
+.theme-admonition a:focus-visible,
+.alert a:focus-visible,
+.admonition a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Button styles */
+.button--primary {
+  background-color: var(--kairos-orange);
+  border-color: var(--kairos-orange);
+}
+
+.button--primary:hover {
+  background-color: var(--kairos-softer-orange);
+  border-color: var(--kairos-softer-orange);
+}
+
+.button--secondary {
+  color: var(--kairos-orange);
+  border-color: var(--kairos-orange);
+}
+
+.button--secondary:hover {
+  background-color: var(--kairos-orange);
+  color: var(--kairos-white);
+}
+
+/* Navbar styling - Dark to match footer */
+.navbar {
+  background-color: var(--kairos-primary);
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.15);
+  border-bottom: 0;
+}
+
+.navbar__title {
+  color: var(--kairos-white);
+  font-weight: 700;
+}
+
+.navbar__link {
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.navbar__link:hover {
+  color: var(--kairos-softer-orange);
+}
+
+.navbar__item {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.dropdown__menu .dropdown__link {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
+/* Navbar logo - keep original colors */
+.navbar__logo {
+  /* Logo retains original Kairos colors */
+}
+
+/* Color mode toggle - ensure visibility on dark navbar */
+.navbar__items .navbar__item button[class*='colorModeToggle'],
+.navbar__items .navbar__item a[class*='colorModeToggle'],
+html[data-theme='light'] button[class*='toggle'] {
+  color: rgba(255, 255, 255, 0.85);
+  transition: color 0.2s ease;
+}
+
+.navbar__items .navbar__item button[class*='colorModeToggle']:hover,
+html[data-theme='light'] button[class*='toggle']:hover {
+  color: var(--kairos-softer-orange);
+}
+
+/* Make the toggle icon visible */
+.navbar button[class*='toggleButton'] svg {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.navbar button[class*='toggleButton']:hover svg {
+  color: var(--kairos-softer-orange);
+}
+
+/* Dark mode navbar */
+[data-theme='dark'] .navbar {
+  background-color: var(--kairos-primary);
+  border-bottom: 0;
+}
+
+/* Navbar GitHub stars badge */
+.navbar .github-stars-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+}
+
+.navbar .github-stars-link img {
+  display: block;
+  height: 20px;
+}
+
+/* Announcement bar: striped style inspired by docusaurus.io */
+div[class*='announcementBar_'] {
+  background-image: repeating-linear-gradient(
+    -35deg,
+    #8fd8ff 0,
+    #8fd8ff 18px,
+    #a6e2ff 18px,
+    #a6e2ff 36px
+  ) !important;
+  border: 0 !important;
+  border-top: 0 !important;
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+}
+
+div[class*='announcementBarContent_'] {
+  color: #000000 !important;
+  font-weight: 900;
+  font-size: inherit !important;
+}
+
+div[class*='announcementBarContent_'] a {
+  color: #000000 !important;
+  font-weight: 900;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+}
+
+div[class*='announcementBar_'] button {
+  color: #03153a;
+}
+
+/* Navbar search */
+.navbar-search-form {
+  display: inline-flex;
+  align-items: center;
+}
+
+.navbar__search-input,
+.navbar-search-input {
+  height: 32px;
+  width: 190px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  padding: 0 10px;
+  font-size: 0.9rem;
+}
+
+.navbar__search-input::placeholder,
+.navbar-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.navbar__search-input:focus,
+.navbar-search-input:focus {
+  outline: none;
+  border-color: var(--kairos-softest-orange);
+  box-shadow: 0 0 0 2px rgba(255, 116, 66, 0.25);
+}
+
+@media screen and (max-width: 996px) {
+  .navbar__search-input {
+    width: 100%;
+    margin: 8px 0;
+  }
+  .navbar-search-input {
+    width: 100%;
+    margin: 8px 0;
+  }
+}
+
+/* Sidebar styling - Match navbar color scheme */
+.theme-doc-sidebar-container {
+  background-color: var(--kairos-primary) !important;
+  border-right: 0;
+  --ifm-menu-color-background-active: var(--kairos-orange);
+  --ifm-menu-color-background-hover: rgba(255, 116, 66, 0.1);
+  --ifm-menu-color-active: var(--kairos-white);
+  --ifm-menu-color: rgba(255, 255, 255, 0.85);
+}
+
+.theme-doc-sidebar-menu {
+  padding: 0.5rem;
+}
+
+/* Let sidebar expand with content instead of its own scrollbar */
+.theme-doc-sidebar-container > div {
+  position: static !important;
+  top: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.theme-doc-sidebar-container nav.menu {
+  overflow: visible !important;
+  max-height: none !important;
+}
+
+.theme-doc-sidebar-container .menu__link {
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+}
+
+.theme-doc-sidebar-container .menu__link:hover {
+  color: var(--kairos-white);
+  background-color: rgba(255, 116, 66, 0.1);
+}
+
+.theme-doc-sidebar-container .menu__link--active {
+  color: var(--kairos-white);
+  background-color: var(--kairos-orange);
+  font-weight: 600;
+}
+
+.theme-doc-sidebar-container .menu__link--active:hover {
+  background-color: var(--kairos-softer-orange);
+}
+
+.theme-doc-sidebar-container .menu__list-item-collapsible:hover {
+  background-color: rgba(255, 116, 66, 0.05);
+}
+
+.theme-doc-sidebar-container .menu__caret::before {
+  background: var(--ifm-menu-link-sublist-icon) 50% / 1.5rem 1.5rem;
+  filter: brightness(0) invert(1);
+}
+
+.theme-doc-sidebar-item-category-level-1 > .menu__list-item-collapsible > .menu__link {
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 600;
+}
+
+/* Active state for category index pages - work with Docusaurus's defaults */
+.theme-doc-sidebar-container .menu__list-item-collapsible .menu__link--active {
+  color: var(--kairos-white);
+  background-color: var(--kairos-orange);
+  font-weight: 600;
+}
+
+.theme-doc-sidebar-container .menu__list-item-collapsible .menu__link--active:hover {
+  background-color: var(--kairos-softer-orange);
+}
+
+/* When viewing a category's index page, highlight the category link */
+
+/* Events page */
+.press-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 24px 100px;
+}
+
+.events-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 24px 100px;
+}
+
+.press-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 48px;
+}
+
+.press-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 22px 28px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid #e2e7eb;
+  box-shadow: 0 18px 40px -18px rgba(6, 17, 77, 0.15);
+}
+
+.press-list-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.press-list-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.press-list-meta > time,
+.press-list-meta > span {
+  color: #5a6a85;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 120%;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.press-list-meta > span::before {
+  content: "•";
+  margin-right: 10px;
+  color: #c3cbd6;
+}
+
+.press-list-text > p {
+  margin-bottom: 0;
+  color: #041842;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 140%;
+}
+
+.press-list-item > a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--kairos-primary);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 140%;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.press-list-item > a:hover {
+  color: var(--kairos-orange);
+  transition: all 0.3s;
+}
+
+.events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 48px;
+}
+
+.events-list-item {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 26px 28px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid #e2e7eb;
+  box-shadow: 0 18px 40px -18px rgba(6, 17, 77, 0.15);
+}
+
+.events-list-meta {
+  min-width: 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.events-date {
+  color: #041842;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 120%;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.events-location {
+  color: #5a6a85;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 120%;
+}
+
+.events-list-text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.events-title {
+  margin: 0;
+  color: #041842;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 140%;
+}
+
+.events-conference {
+  margin: 0;
+  color: #ee5007;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 120%;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.events-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #03153a;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 140%;
+  text-decoration: none;
+}
+
+.events-link::after {
+  content: "›";
+  font-size: 18px;
+  line-height: 1;
+}
+
+.events-link:hover {
+  color: #ee5007;
+  transition: all 0.3s;
+}
+
+@media screen and (max-width: 720px) {
+  .press-list-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .press-list-item > a {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .events-list-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .events-list-meta {
+    min-width: auto;
+  }
+}
+.theme-doc-sidebar-container .menu__list-item--active > .menu__list-item-collapsible > .menu__link {
+  color: var(--kairos-white);
+  background-color: var(--kairos-orange);
+  font-weight: 600;
+}
+
+/* Dark mode sidebar adjustments */
+[data-theme='dark'] .theme-doc-sidebar-container {
+  background-color: var(--kairos-primary) !important;
+  border-right: 0;
+}
+
+/* Footer styling */
+.footer--dark {
+  background-color: var(--kairos-primary);
+  border-top: 1px solid rgba(255, 116, 66, 0.1);
+}
+
+.footer__bottom {
+  margin-top: 1.5rem;
+  padding-top: 0.5rem;
+}
+
+.footer-supported-by-link {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.4rem;
+}
+
+.footer-supported-by-logo {
+  width: 150px;
+  height: auto;
+  vertical-align: middle;
+}
+
+.footer-kairos-logo {
+  width: 140px;
+  height: auto;
+  vertical-align: middle;
+}
+
+.footer__copyright {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.65rem;
+  flex-wrap: nowrap;
+  width: 100%;
+}
+
+.footer-kairos-wrap,
+.footer-supported-by-wrap,
+.footer-copyright-text {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1.2;
+}
+
+.footer-supported-by-wrap,
+.footer-copyright-text {
+  border-left: 1px solid var(--kairos-orange);
+  padding-left: 0.65rem;
+}
+
+.footer-copyright-text {
+  border-left: 0;
+  margin-left: auto;
+}
+
+@media (max-width: 996px) {
+  .footer__copyright {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .footer-supported-by-wrap,
+  .footer-copyright-text {
+    border-left: 0;
+    padding-left: 0;
+  }
+
+  .footer-copyright-text {
+    margin-left: 0;
+  }
+}
+
+/* Improved button styling */
+.button {
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 8px;
+  text-transform: none;
+  letter-spacing: 0.01em;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Dark mode button adjustments */
+[data-theme='dark'] .button--primary {
+  background-color: var(--kairos-orange);
+  box-shadow: 0 4px 14px rgba(238, 80, 7, 0.25);
+}
+
+[data-theme='dark'] .button--primary:hover {
+  background-color: var(--kairos-softer-orange);
+  box-shadow: 0 6px 20px rgba(238, 80, 7, 0.35);
+}
+
+[data-theme='dark'] .button--secondary {
+  border-color: var(--kairos-orange);
+  color: var(--kairos-orange);
+}
+
+[data-theme='dark'] .button--secondary:hover {
+  background-color: var(--kairos-orange);
+  color: var(--kairos-white);
+  box-shadow: 0 6px 20px rgba(238, 80, 7, 0.25);
+}
+
+/* Blog CTA prominence */
+.blog-list-page article footer.row .text--right a,
+.blog-tags-post-list-page article footer.row .text--right a,
+.blog-authors-posts-page article footer.row .text--right a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: 8px;
+  border: 1px solid var(--kairos-orange);
+  background: var(--kairos-orange);
+  color: var(--kairos-white);
+  text-decoration: none;
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: 0 4px 14px rgba(238, 80, 7, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.blog-list-page article footer.row .text--right a b,
+.blog-tags-post-list-page article footer.row .text--right a b,
+.blog-authors-posts-page article footer.row .text--right a b {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  margin: 0;
+}
+
+.blog-list-page article footer.row .text--right a:hover,
+.blog-tags-post-list-page article footer.row .text--right a:hover,
+.blog-authors-posts-page article footer.row .text--right a:hover {
+  background: var(--kairos-softer-orange);
+  border-color: var(--kairos-softer-orange);
+  color: var(--kairos-white);
+  text-decoration: none;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(238, 80, 7, 0.35);
+}
+
+.blog-post-page .markdown .buttons {
+  margin: 1.5rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.blog-post-page .markdown .buttons a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.65rem 1.2rem;
+  border-radius: 10px;
+  border: 1px solid var(--kairos-orange);
+  background: var(--kairos-orange);
+  color: var(--kairos-white);
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  box-shadow: 0 6px 20px rgba(238, 80, 7, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.blog-post-page .markdown .buttons a:hover {
+  background: var(--kairos-softer-orange);
+  border-color: var(--kairos-softer-orange);
+  color: var(--kairos-white);
+  text-decoration: none;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(238, 80, 7, 0.38);
+}
+
+.blog-post-page .markdown .buttons a p {
+  margin: 0;
+  line-height: 1;
+}
