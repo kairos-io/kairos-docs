@@ -40,6 +40,7 @@ const config: Config = {
       ? [
           {
             tagName: 'script',
+            attributes: {},
             innerHTML:
               'window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }',
           },
@@ -49,6 +50,7 @@ const config: Config = {
       ? [
           {
             tagName: 'script',
+            attributes: {},
             innerHTML: `console.log(${JSON.stringify(branchDeployLogMessage)});`,
           },
         ]
