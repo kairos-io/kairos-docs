@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
@@ -9,6 +11,117 @@ const isNetlifyProduction = process.env.CONTEXT === 'production';
 const netlifyDeployRef =
   process.env.BRANCH || process.env.HEAD || process.env.REVIEW_ID || 'unknown';
 const branchDeployLogMessage = `Netlify branch deploy: ${netlifyDeployRef}`;
+
+type ParsedVersion = {
+  raw: string;
+  major: number;
+  minor: number;
+  patch: number;
+};
+
+function parseVersionTag(version: string): ParsedVersion {
+  const match = version.match(/^v(\d+)\.(\d+)\.(\d+)$/);
+  if (!match) {
+    throw new Error(`Invalid version in versions.json: ${version}`);
+  }
+
+  return {
+    raw: version,
+    major: Number.parseInt(match[1], 10),
+    minor: Number.parseInt(match[2], 10),
+    patch: Number.parseInt(match[3], 10),
+  };
+}
+
+function compareParsedVersions(a: ParsedVersion, b: ParsedVersion): number {
+  if (a.major !== b.major) {
+    return a.major - b.major;
+  }
+  if (a.minor !== b.minor) {
+    return a.minor - b.minor;
+  }
+  return a.patch - b.patch;
+}
+
+const versionsJsonPath = path.join(__dirname, 'versions.json');
+const versionsFromJson = fs.existsSync(versionsJsonPath)
+  ? (JSON.parse(fs.readFileSync(versionsJsonPath, 'utf8')) as string[])
+  : [];
+
+if (versionsFromJson.length === 0) {
+  throw new Error('versions.json is empty or missing; cannot determine latest docs version');
+}
+
+const latestVersion = versionsFromJson
+  .map(parseVersionTag)
+  .sort(compareParsedVersions)
+  .at(-1)?.raw;
+
+if (!latestVersion) {
+  throw new Error('Unable to determine latest version from versions.json');
+}
+
+const docsVersionCustomFields = {
+  'v3.7.2': {
+    registryURL: 'quay.io/kairos',
+    k3sVersion: 'v1.35.0+k3s3',
+    providerVersion: 'v2.14.0',
+    auroraBootVersion: 'v0.14.0',
+    kairosInitVersion: 'v0.7.0',
+  },
+  'v3.6.0': {
+    registryURL: 'quay.io/kairos',
+    k3sVersion: 'v1.33.5+k3s1',
+    providerVersion: 'v2.14.0',
+    auroraBootVersion: 'v0.13.0',
+    kairosInitVersion: 'v0.6.2',
+  },
+  'v3.5.7': {
+    registryURL: 'quay.io/kairos',
+    k3sVersion: 'v1.34.1+k3s1',
+    providerVersion: 'v2.13.4',
+    auroraBootVersion: 'v0.13.0',
+    kairosInitVersion: 'v0.5.26',
+  },
+} as const;
+
+const versionedDocsFolderPath = path.join(__dirname, 'versioned_docs');
+const versionedDocsFolders = fs.existsSync(versionedDocsFolderPath)
+  ? fs
+      .readdirSync(versionedDocsFolderPath, {withFileTypes: true})
+      .filter((entry) => entry.isDirectory() && entry.name.startsWith('version-'))
+      .map((entry) => entry.name.replace(/^version-/, ''))
+      .sort()
+  : [];
+
+const customFieldVersions = Object.keys(docsVersionCustomFields).sort();
+const missingCustomFieldVersions = versionedDocsFolders.filter(
+  (version) => !(version in docsVersionCustomFields),
+);
+const extraCustomFieldVersions = customFieldVersions.filter(
+  (version) => !versionedDocsFolders.includes(version),
+);
+
+if (missingCustomFieldVersions.length > 0 || extraCustomFieldVersions.length > 0) {
+  const errors = [];
+  if (missingCustomFieldVersions.length > 0) {
+    errors.push(`missing docsVersionCustomFields entries: ${missingCustomFieldVersions.join(', ')}`);
+  }
+  if (extraCustomFieldVersions.length > 0) {
+    errors.push(`docsVersionCustomFields without versioned_docs folder: ${extraCustomFieldVersions.join(', ')}`);
+  }
+  throw new Error(
+    `docsVersionCustomFields mismatch (${errors.join(' | ')})`,
+  );
+}
+
+const latestVersionCustomFields = docsVersionCustomFields[latestVersion as keyof typeof docsVersionCustomFields];
+if (!latestVersionCustomFields) {
+  throw new Error(`latestVersion ${latestVersion} is missing in docsVersionCustomFields`);
+}
+if (!latestVersionCustomFields.k3sVersion) {
+  throw new Error(`latestVersion ${latestVersion} is missing k3sVersion in docsVersionCustomFields`);
+}
 
 const config: Config = {
   title: 'Kairos',
@@ -79,21 +192,14 @@ const config: Config = {
 
   customFields: {
     registryURL: 'quay.io/kairos',
-    kairosVersion: 'master',
-    k3sVersion: 'v1.35.0+k3s1',
+    kairosVersion: latestVersion,
+    k3sVersion: latestVersionCustomFields.k3sVersion,
     providerVersion: 'v2.14.0',
-    latestVersion: 'v3.7.2',
+    latestVersion,
     auroraBootVersion: 'v0.14.0',
     kairosInitVersion: 'v0.6.2',
     docsVersionCustomFields: {
-      'v3.5.7': {
-        registryURL: 'quay.io/kairos',
-        kairosVersion: 'v3.5.7',
-        k3sVersion: 'v1.34.1+k3s1',
-        providerVersion: 'v2.13.4',
-        auroraBootVersion: 'v0.13.0',
-        kairosInitVersion: 'v0.5.26',
-      },
+      ...docsVersionCustomFields,
     },
   },
 
@@ -111,16 +217,16 @@ const config: Config = {
           showLastUpdateTime: true,
           showLastUpdateAuthor: true,
           // Enable versioning
-          lastVersion: 'v3.7.2',
+          lastVersion: latestVersion,
           versions: {
             current: {
               label: 'Next 🚧',
               path: '',
               banner: 'unreleased',
             },
-            'v3.7.2': {
-              label: 'v3.7.2',
-              path: 'v3.7.2',
+            [latestVersion]: {
+              label: latestVersion,
+              path: latestVersion,
               banner: 'none',
             },
           },

@@ -80,8 +80,8 @@ function renderTemplate(
         arch: attrs.arch,
         model: attrs.model,
         suffix: attrs.suffix,
-        kairosVersion: attrs.kairosVersion,
-        k3sVersion: attrs.k3sVersion,
+        kairosVersion: attrs.kairosVersion ?? defaultKairosVersion,
+        k3sVersion: attrs.k3sVersion ?? defaultK3sVersion,
         flavor,
         flavorRelease,
       });

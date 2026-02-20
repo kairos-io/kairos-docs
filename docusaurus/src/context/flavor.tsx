@@ -15,7 +15,7 @@ export const FLAVOR_OPTIONS: FlavorSelection[] = [
   {family: 'opensuse', flavor: 'opensuse', flavorRelease: 'leap-15.6', label: 'openSUSE Leap-15.6'},
   {family: 'opensuse', flavor: 'opensuse', flavorRelease: 'tumbleweed', label: 'openSUSE Tumbleweed'},
   {family: 'rhel', flavor: 'rockylinux', flavorRelease: '9', label: 'Rockylinux 9'},
-  {family: 'ubuntu', flavor: 'ubuntu', flavorRelease: '24.10', label: 'Ubuntu 24.10'},
+  {family: 'ubuntu', flavor: 'ubuntu', flavorRelease: '25.10', label: 'Ubuntu 25.10'},
   {family: 'ubuntu', flavor: 'ubuntu', flavorRelease: '24.04', label: 'Ubuntu 24.04'},
   {family: 'ubuntu', flavor: 'ubuntu', flavorRelease: '22.04', label: 'Ubuntu 22.04'},
   {family: 'ubuntu', flavor: 'ubuntu', flavorRelease: '20.04', label: 'Ubuntu 20.04'},

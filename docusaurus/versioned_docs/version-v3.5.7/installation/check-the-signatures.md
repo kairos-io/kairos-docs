@@ -26,7 +26,7 @@ To validate the whole chain you need:
     - {{<imageLink variant="standard" suffix=".iso.sha256.pem">}}  
     - {{<imageLink variant="standard" suffix=".iso.sha256.sig">}}  
 
-In this example we will use the `{{< kairosVersion >}}` version and {{<flavorCode >}} flavor and {{<flavorReleaseCode >}} flavor release.
+In this example we will use the {{< kairosVersion >}} version and {{<flavorCode >}} flavor and {{<flavorReleaseCode >}} flavor release.
 
 First we check that we have all needed files:
 
@@ -66,4 +66,3 @@ $ sha256sum -c {{<image variant="core" suffix=".iso.sha256">}}
 ```
 
 Once we reached this point, we can be sure that from the ISO hasn't been tampered with since it was created by our release workflow.
-

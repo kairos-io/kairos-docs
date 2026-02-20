@@ -78,7 +78,7 @@ export function useVersionedCustomFields(): DocsCustomFields {
 
   return {
     registryURL: String(versionFields.registryURL ?? base.registryURL),
-    kairosVersion: String(versionFields.kairosVersion ?? base.kairosVersion),
+    kairosVersion: String(versionFields.kairosVersion ?? docsVersion),
     k3sVersion: String(versionFields.k3sVersion ?? base.k3sVersion),
     providerVersion: String(versionFields.providerVersion ?? base.providerVersion),
     kairosInitVersion: String(versionFields.kairosInitVersion ?? base.kairosInitVersion),

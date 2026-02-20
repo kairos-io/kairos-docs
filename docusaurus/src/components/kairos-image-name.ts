@@ -3,7 +3,7 @@ export type KairosImageNameParams = {
   arch?: string;
   model?: string;
   suffix?: string;
-  kairosVersion?: string;
+  kairosVersion: string;
   k3sVersion?: string;
   flavor?: string;
   flavorRelease?: string;
@@ -14,7 +14,7 @@ export function buildKairosImageName({
   arch = 'amd64',
   model = 'generic',
   suffix = '',
-  kairosVersion = 'latest',
+  kairosVersion,
   k3sVersion = 'v1.35.0+k3s1',
   flavor = 'ubuntu',
   flavorRelease = '24.04',
