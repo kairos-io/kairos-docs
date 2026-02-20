@@ -5,6 +5,16 @@ import remarkShortcodeCode from './plugins/remark-shortcode-code';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
+const isNetlifyProduction =
+  process.env.CI === 'true' &&
+  process.env.CONTEXT === 'production';
+const isNetlifyBranchDeploy =
+  process.env.CI === 'true' &&
+  process.env.CONTEXT === 'branch-deploy';
+const netlifyDeployRef =
+  process.env.BRANCH || process.env.HEAD || process.env.REVIEW_ID || 'unknown';
+const branchDeployLogMessage = `Netlify branch deploy: ${netlifyDeployRef}`;
+
 const config: Config = {
   title: 'Kairos',
   tagline: 'Transform your Linux system and preferred Kubernetes distribution into a secure bootable image for your edge devices',
@@ -21,6 +31,34 @@ const config: Config = {
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
   trailingSlash: true,
+  scripts: isNetlifyProduction
+    ? [
+        {
+          src: 'https://plausible.io/js/script.outbound-links.tagged-events.js',
+          defer: true,
+          'data-domain': 'kairos.io',
+        },
+      ]
+    : [],
+  headTags: [
+    ...(isNetlifyProduction
+      ? [
+          {
+            tagName: 'script',
+            innerHTML:
+              'window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }',
+          },
+        ]
+      : []),
+    ...(isNetlifyBranchDeploy
+      ? [
+          {
+            tagName: 'script',
+            innerHTML: `console.log(${JSON.stringify(branchDeployLogMessage)});`,
+          },
+        ]
+      : []),
+  ],
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
