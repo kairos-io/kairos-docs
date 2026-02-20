@@ -1275,3 +1275,97 @@
 [data-theme='dark'] .basicCard p {
   color: #707594;
 }
+
+@media screen and (max-width: 768px) {
+  .welcomeSection {
+    padding: 32px 12px;
+  }
+
+  .welcomeContent {
+    padding: 32px 20px;
+    gap: 24px;
+    justify-content: center;
+  }
+
+  .welcomeImage {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .welcomeText h2 {
+    font-size: 28px;
+  }
+
+  .welcomeText p {
+    font-size: 16px;
+  }
+
+  .videoLink {
+    max-width: 100%;
+  }
+
+  .welcomeImage img {
+    max-width: 180px;
+  }
+
+  .heroBanner {
+    padding: 2rem 1rem 3rem;
+  }
+
+  .heroContent {
+    flex: 1 1 100%;
+  }
+
+  .latestRelease {
+    font-size: 24px;
+  }
+
+  .latestRelease p {
+    font-size: 16px;
+  }
+
+  .featuresGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .cncfContent h2 {
+    font-size: 28px;
+  }
+
+  .cncfContent p {
+    font-size: 16px;
+  }
+
+  .communitySection h2 {
+    font-size: 28px;
+  }
+
+  .communityDescription {
+    font-size: 16px;
+  }
+
+  .enterpriseSection h2 {
+    font-size: 28px;
+  }
+
+  .enterpriseDescription {
+    font-size: 16px;
+  }
+
+  .eventsWrap h2 {
+    font-size: 28px;
+  }
+
+  .eventsWrap p {
+    font-size: 16px;
+  }
+
+  .hotPressWrap > h2 {
+    font-size: 28px;
+  }
+
+  .adoptersWrap h2 {
+    font-size: 28px;
+  }
+}
