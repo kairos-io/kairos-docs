@@ -5,12 +5,7 @@ import remarkShortcodeCode from './plugins/remark-shortcode-code';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
-const isNetlifyProduction =
-  process.env.CI === 'true' &&
-  process.env.CONTEXT === 'production';
-const isNetlifyBranchDeploy =
-  process.env.CI === 'true' &&
-  process.env.CONTEXT === 'branch-deploy';
+const isNetlifyProduction = process.env.CONTEXT === 'production';
 const netlifyDeployRef =
   process.env.BRANCH || process.env.HEAD || process.env.REVIEW_ID || 'unknown';
 const branchDeployLogMessage = `Netlify branch deploy: ${netlifyDeployRef}`;
@@ -50,7 +45,7 @@ const config: Config = {
           },
         ]
       : []),
-    ...(isNetlifyBranchDeploy
+    ...(!isNetlifyProduction
       ? [
           {
             tagName: 'script',
