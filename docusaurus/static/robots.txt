@@ -1,10 +1,7 @@
 User-agent: *
 Sitemap: https://kairos.io/sitemap.xml
 
-Disallow: /docs/announcements/
 Disallow: /index.json
-Disallow: /blog/
-Disallow: /community/
 Disallow: /search/
 
 llms-txt: https://kairos.io/llms.txt
