@@ -150,6 +150,7 @@ const config: Config = {
 
   plugins: [
     './plugins/hugo-mdx-preprocess-plugin.cjs',
+    './plugins/llms-txt-plugin.cjs',
     [
       '@cmfcmf/docusaurus-search-local',
       {
