@@ -7,7 +7,7 @@ type MarkdownNode = {
 
 type MarkdownTree = MarkdownNode;
 
-const SUPPORTED_SHORTCODE_PATTERN = /(\{\{<\s*(image\b[^>]*|oci\b[^>]*|flavorCode|flavorReleaseCode|registryURL|kairosVersion|k3sVersion|k3sVersionOCI|providerVersion|kairosInitVersion|auroraBootVersion|googleVersion|ociTag)\s*>\}\}|<\s*ProviderVersion\s*\/>)/i;
+const SUPPORTED_SHORTCODE_PATTERN = /(\{\{<\s*(Image\b[^>]*|OCI\b[^>]*|FlavorCode|FlavorReleaseCode|RegistryURL|KairosVersion|K3sVersion|K3sVersionOCI|ProviderVersion|KairosInitVersion|AuroraBootVersion|GoogleVersion|OCITag)\s*>\}\}|<\s*ProviderVersion\s*\/>)/;
 
 function visitAndTransform(node: MarkdownNode): void {
   if (!node.children || node.children.length === 0) {
