@@ -22,9 +22,9 @@ To validate the whole chain you need:
 1. `sha256sum` which is usually installed by default on most linux distributions.
 2. `cosign` to verify the signatures of the sha256 file. You can install cosign via their [installation docs](https://docs.sigstore.dev/cosign/installation/)
 3. sha256, certificate and signature files that you want to verify
-    - {{< imageLink variant="standard" suffix=".iso.sha256" kairosVersion="v3.7.2" k3sVersion="v1.35.0+k3s3" >}}  
-    - {{< imageLink variant="standard" suffix=".iso.sha256.pem" kairosVersion="v3.7.2" k3sVersion="v1.35.0+k3s3" >}}  
-    - {{< imageLink variant="standard" suffix=".iso.sha256.sig" kairosVersion="v3.7.2" k3sVersion="v1.35.0+k3s3" >}}  
+    - <ImageLink variant="standard" suffix=".iso.sha256" kairosVersion="v3.7.2" k3sVersion="v1.35.0+k3s3" />  
+    - <ImageLink variant="standard" suffix=".iso.sha256.pem" kairosVersion="v3.7.2" k3sVersion="v1.35.0+k3s3" />  
+    - <ImageLink variant="standard" suffix=".iso.sha256.sig" kairosVersion="v3.7.2" k3sVersion="v1.35.0+k3s3" />  
 
 In this example we will use the `v3.7.2` version and <FlavorCode /> flavor and <FlavorReleaseCode /> flavor release.
 
@@ -66,4 +66,3 @@ $ sha256sum -c {{< image variant="core" suffix=".iso.sha256" kairosVersion="v3.7
 ```
 
 Once we reached this point, we can be sure that from the ISO hasn't been tampered with since it was created by our release workflow.
-

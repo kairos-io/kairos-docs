@@ -53,19 +53,6 @@ function transformNonInlineCode(segment) {
   // Render supported simple value shortcodes as MDX components outside code.
   out = out.replace(/\{\{<\s*kairosVersion\s*>\}\}/gi, '<KairosVersion />');
   out = out.replace(/\{\{<\s*providerVersion\s*>\}\}/gi, '<ProviderVersion />');
-  out = out.replace(/\{\{<\s*imageLink\b([^>]*)>\}\}/gi, (_full, rawAttrs) => {
-    const attrs = parseShortcodeAttrs(rawAttrs);
-    const props = [];
-    if (attrs.variant) props.push(`variant="${attrs.variant.replace(/"/g, '&quot;')}"`);
-    if (attrs.arch) props.push(`arch="${attrs.arch.replace(/"/g, '&quot;')}"`);
-    if (attrs.model) props.push(`model="${attrs.model.replace(/"/g, '&quot;')}"`);
-    if (attrs.suffix) props.push(`suffix="${attrs.suffix.replace(/"/g, '&quot;')}"`);
-    if (attrs.kairosVersion) props.push(`kairosVersion="${attrs.kairosVersion.replace(/"/g, '&quot;')}"`);
-    if (attrs.k3sVersion) props.push(`k3sVersion="${attrs.k3sVersion.replace(/"/g, '&quot;')}"`);
-    if (attrs.flavor) props.push(`flavor="${attrs.flavor.replace(/"/g, '&quot;')}"`);
-    if (attrs.flavorRelease) props.push(`flavorRelease="${attrs.flavorRelease.replace(/"/g, '&quot;')}"`);
-    return `<ImageLink ${props.join(' ')} />`;
-  });
   out = out.replace(/\{\{<\s*container-repo-link\b([^>]*)>\}\}/gi, (_full, rawAttrs) => {
     const attrs = parseShortcodeAttrs(rawAttrs);
     const flavor = (attrs.flavor || '').replace(/"/g, '&quot;');
@@ -118,7 +105,6 @@ function wrapShortcodesOutsideInline(line) {
         const shortcodeName = shortcodeNameMatch ? shortcodeNameMatch[1].toLowerCase() : '';
         const supportedInlineShortcodes = new Set([
           'card',
-          'imagelink',
           'kairosversion',
           'providerversion',
           'container-repo-link',
