@@ -37,7 +37,7 @@ function transformNonInlineCode(segment) {
       'a', 'b', 'blockquote', 'br', 'code', 'details', 'div', 'em', 'h1', 'h2', 'h3',
       'h4', 'h5', 'h6', 'hr', 'i', 'img', 'li', 'ol', 'p', 'pre', 'span', 'strong',
       'summary', 'table', 'tbody', 'td', 'th', 'thead', 'tr', 'ul',
-      'tabs', 'tabitem', 'kairosversion',
+      'tabs', 'tabitem',
     ]);
     if (htmlTags.has(normalized)) {
       return full;
@@ -51,7 +51,6 @@ function transformNonInlineCode(segment) {
   });
 
   // Render supported simple value shortcodes as MDX components outside code.
-  out = out.replace(/\{\{<\s*kairosVersion\s*>\}\}/gi, '<KairosVersion />');
   out = out.replace(/\{\{<\s*providerVersion\s*>\}\}/gi, '<ProviderVersion />');
   out = out.replace(/\{\{<\s*container-repo-link\b([^>]*)>\}\}/gi, (_full, rawAttrs) => {
     const attrs = parseShortcodeAttrs(rawAttrs);
@@ -105,7 +104,6 @@ function wrapShortcodesOutsideInline(line) {
         const shortcodeName = shortcodeNameMatch ? shortcodeNameMatch[1].toLowerCase() : '';
         const supportedInlineShortcodes = new Set([
           'card',
-          'kairosversion',
           'providerversion',
           'container-repo-link',
           'ocicode',

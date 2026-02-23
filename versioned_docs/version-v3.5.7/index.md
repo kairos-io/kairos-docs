@@ -5,7 +5,7 @@ description: "Explore the official documentation for Kairos and discover how it 
 sidebar_position: 20
 ---
 
-Welcome to the Kairos {{< kairosVersion >}} Documentation
+Welcome to the Kairos <KairosVersion /> Documentation
 
 Kairos is the open-source project that simplifies Edge, cloud, and bare metal OS lifecycle management. With a unified Cloud Native API, Kairos is community-driven, open source, and distro agnostic.
 

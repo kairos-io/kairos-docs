@@ -26,7 +26,7 @@ To validate the whole chain you need:
     - <ImageLink variant="standard" suffix=".iso.sha256.pem" />  
     - <ImageLink variant="standard" suffix=".iso.sha256.sig" />  
 
-In this example we will use the {{< kairosVersion >}} version and <FlavorCode /> flavor and <FlavorReleaseCode /> flavor release.
+In this example we will use the <KairosVersion /> version and <FlavorCode /> flavor and <FlavorReleaseCode /> flavor release.
 
 First we check that we have all needed files:
 
