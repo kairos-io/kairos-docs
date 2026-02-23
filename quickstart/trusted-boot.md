@@ -4,6 +4,9 @@ description: Learn how to deploy Kairos Hadron with Trusted Boot on a VM.
 sidebar_position: 4
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 
 :::tip Objective
 Deploy Kairos Hadron with Trusted Boot enabled. You will learn how to generate Secure Boot keys, build a signed Unified Kernel Image (UKI) ISO, configure a virtual machine with Secure Boot and TPM support, and perform an interactive installation.
@@ -124,8 +127,8 @@ kairos-hadron-0.0.1-core-amd64-generic-v3.6.1-beta1-uki.iso
 
 ## Prepare a VM
 
-{{< tabpane text=true right=true >}}
-{{% tab header="VirtualBox" %}}
+<Tabs>
+<TabItem value="virtualbox" label="VirtualBox">
 
 1. Click **New** to create a virtual machine.
 2. Fill in the VM details:
@@ -149,8 +152,8 @@ kairos-hadron-0.0.1-core-amd64-generic-v3.6.1-beta1-uki.iso
         ```
 8. With the Hadron VM selected, click **Start**.
 
-{{% /tab %}}
-{{% tab header="Generic Instructions" %}}
+</TabItem>
+<TabItem value="generic-instructions" label="Generic Instructions">
 
 1. Create a new VM.
 2. Assign the downloaded ISO to the CD-ROM and set it as the boot media.
@@ -160,8 +163,8 @@ kairos-hadron-0.0.1-core-amd64-generic-v3.6.1-beta1-uki.iso
 6. Reset the Secure Boot Keys
 7. Reboot
 
-{{% /tab %}}
-{{< /tabpane >}}
+</TabItem>
+</Tabs>
 
 
 ## Installing the OS

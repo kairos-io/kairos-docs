@@ -4,6 +4,9 @@ sidebar_label: "Networking"
 sidebar_position: 3
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 By default, Kairos ISOs are configured to automatically get an IP from the network interface. However, depending on the base system you have chosen, there are different way to configure networking. This section collects information on setting network configuration depending on the base that is being chosen (openSUSE, Alpine, Ubuntu).
 
 There are different network managers depending on the distro:
@@ -15,8 +18,8 @@ There are different network managers depending on the distro:
 
 To get a static IP, you can additionally define the following in your configuration file, depending on the network-manager being used:
 
-{{< tabpane text=true right=true  >}}
-{{% tab header="connman" %}}
+<Tabs>
+<TabItem value="connman" label="connman">
 ```yaml
 stages:
   initramfs:
@@ -30,8 +33,8 @@ stages:
             IPv6 = off
             Nameservers = 1.1.1.1
 ```
-{{% /tab %}}
-{{% tab header="systemd-networkd" %}}
+</TabItem>
+<TabItem value="systemd-networkd" label="systemd-networkd">
 ```yaml
 stages:
   initramfs:
@@ -47,15 +50,15 @@ stages:
             Gateway=10.1.0.1
             DNS=10.1.0.1
 ```
-{{% /tab %}}
-{{< /tabpane >}}
+</TabItem>
+</Tabs>
 
 ## Bonding
 
 Bonding setup with Ubuntu can be configured via systemd-networkd (Ubuntu based images) and wicked (openSUSE based images), consider the following examples:
 
-{{< tabpane text=true right=true  >}}
-{{% tab header="systemd-networkd" %}}
+<Tabs>
+<TabItem value="systemd-networkd" label="systemd-networkd">
 ```yaml
 #cloud-config
 name: "My Deployment"
@@ -121,8 +124,8 @@ k3s-agent:
     K3S_TOKEN: "KubeSecret"
     K3S_URL: https://hostname:6443
 ```
-{{% /tab %}}
-{{% tab header="connman" %}}
+</TabItem>
+<TabItem value="connman" label="connman">
 ```yaml
 stages:
    boot:
@@ -156,8 +159,8 @@ stages:
          owner: 0
          group: 0
 ```
-{{% /tab %}}
-{{< /tabpane >}}
+</TabItem>
+</Tabs>
 
 ### References
 

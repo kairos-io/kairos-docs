@@ -4,6 +4,9 @@ description: Deploy an immutable Kubernetes cluster with Hadron by Kairos, faste
 sidebar_position: 1
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 
 :::tip Objective
 This guide shows how easy it is to deploy a Kubernetes cluster using Hadron by Kairos. To keep things quick and effective, we’ll pre-select a few choices for you. You’ll perform a traditional, interactive installation of a single-node cluster on an x86_64 virtual machine. At the end, you’ll find links to explore many other setup options.
@@ -57,8 +60,8 @@ Hadron Single-Node Demo Requirements (with k3s)
 
 :::
 
-{{< tabpane text=true right=true >}}
-{{% tab header="VirtualBox" %}}
+<Tabs>
+<TabItem value="virtualbox" label="VirtualBox">
 
 1. Click **New** to create a virtual machine.
 2. Fill in the VM details:
@@ -79,16 +82,16 @@ Hadron Single-Node Demo Requirements (with k3s)
 7. Click **OK** to save your changes.
 8. With the Hadron VM selected, click **Start**.
 
-{{% /tab %}}
-{{% tab header="Generic Instructions" %}}
+</TabItem>
+<TabItem value="generic-instructions" label="Generic Instructions">
 
 1. Create a new VM.
 2. Assign the downloaded ISO to the CD-ROM and set it as the boot media.
 3. Configure the VM hardware according to the requirements.
 4. Start the VM.
 
-{{% /tab %}}
-{{< /tabpane >}}
+</TabItem>
+</Tabs>
 
 
 ## Installing the OS

@@ -5,6 +5,9 @@ description: This section describe examples on how to deploy Kairos single-node 
 slug: /examples/single-node
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 In the example below we will use a bare metal host to provision a Kairos node in the local network using a single machine.
 
 ## Installation
@@ -15,8 +18,8 @@ For this example we will use a standard image which contains a Kubernetes distri
 
 We will deploy a `kairos` user with the password `kairos` and the `admin` group. We will also add the public keys of the users that will be allowed to access the nodes. We will enable the Kubernetes distribution and configure it. And also include a manifest with a simple Nginx deployment that will be installed on the cluster automatically. See [docs](/docs/reference/configuration#kubernetes-manifests) for more information. You can change the manifest to the one of your own application or remove it if you don't need it.
 
-{{< tabpane text=true right=true  >}}
-{{% tab header="k3s" %}}
+<Tabs>
+<TabItem value="k3s" label="k3s">
 ```yaml
 #cloud-config
 
@@ -61,8 +64,8 @@ write_files:
             ports:
             - containerPort: 80
 ```
-{{% /tab %}}
-{{% tab header="k0s" %}}
+</TabItem>
+<TabItem value="k0s" label="k0s">
 ```yaml
 #cloud-config
 
@@ -109,5 +112,5 @@ write_files:
             ports:
             - containerPort: 80
 ```
-{{% /tab %}}
-{{< /tabpane >}}
+</TabItem>
+</Tabs>

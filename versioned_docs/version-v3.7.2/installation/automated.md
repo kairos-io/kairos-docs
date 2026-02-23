@@ -6,6 +6,9 @@ date: 2022-11-13
 description: Install Kairos automatically, with zero touch provisioning
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 To automate Kairos installation, you can configure a specific portion of the installation configuration file. The configuration file can then be supplied in a few different ways, such as creating an additional ISO to mount, specifying a URL, or even creating an ISO from a container image with an embedded configuration file.
 
 Here's an example of how you might customize the install block:
@@ -99,8 +102,8 @@ The image passed to the auroraboot image, needs to have one of the accepted sche
 If you don't pass one, we will make an attempt to read it as a web URL but depending on your URL this might throw an error.
 :::
 
-{{< tabpane text=true  >}}
-{{% tab header="AuroraBoot" %}}
+<Tabs>
+<TabItem value="auroraboot" label="AuroraBoot">
 
 We can use [AuroraBoot](/docs/v3.7.2/reference/auroraboot/) to handle the the ISO build process, for example:
 
@@ -126,8 +129,8 @@ total 778M
 34649370 -rw-r--r-- 1 root root 389M Feb  8 16:38 kairos.iso
 34649371 -rw-r--r-- 1 root root   76 Feb  8 16:39 kairos.iso.sha256
 ```
-{{% /tab %}}
-{{% tab header="Manually" %}}
+</TabItem>
+<TabItem value="manually" label="Manually">
 
 ```bash
 $ IMAGE=<scheme://host[:port]/path[:tag]>
@@ -145,8 +148,8 @@ $ docker pull $IMAGE
 # Build an ISO with $IMAGE
 $ docker run -v $PWD:/cOS -v /var/run/docker.sock:/var/run/docker.sock -i --rm quay.io/kairos/auroraboot:v0.14.0 --debug build-iso --name "custom-iso" --date=false --overlay-iso /cOS/files-iso --output /cOS/ $IMAGE
 ```
-{{% /tab %}}
-{{< /tabpane >}}
+</TabItem>
+</Tabs>
 
 :::tip Cloud config
 In the case of Auroraboot, make sure that the cloud config that you are mounting in the container (`-v $PWD/cloud_init.yaml:/cloud_init.yaml`) exists. Otherwise docker will create an empty directory to mount it on the container without any warnings and you will end up with an empty cloud config.

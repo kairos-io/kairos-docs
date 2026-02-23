@@ -6,6 +6,9 @@ date: 2022-11-13
 description: Install Kairos with p2p support
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 :::warning Network
 This feature is experimental and has only been tested on local setups. Run in production servers at your own risk.
 Feedback and bug reports are welcome, as we are improving the p2p aspects of Kairos.
@@ -266,18 +269,18 @@ kubevip:
 The `network_token` is a unique code that is shared among nodes and can be created with the Kairos CLI or `edgevpn`. This allows nodes to automatically connect to the same network and generates private/public key pairs for secure communication using end-to-end encryption.
 
 To generate a new token, run:
-{{< tabpane text=true right=true  >}}
-{{% tab header="docker" %}}
+<Tabs>
+<TabItem value="docker" label="docker">
 ```bash
 docker run -ti --rm quay.io/mudler/edgevpn -b -g
 ```
-{{% /tab %}}
-{{% tab header="CLI" %}}
+</TabItem>
+<TabItem value="cli" label="CLI">
 ```bash
 kairos generate-token
 ```
-{{% /tab %}}
-{{< /tabpane >}}
+</TabItem>
+</Tabs>
 
 ## Join new nodes
 

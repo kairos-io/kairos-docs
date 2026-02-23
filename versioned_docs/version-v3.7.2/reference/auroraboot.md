@@ -5,6 +5,9 @@ sidebar_position: 1
 description: Reference documentation for AuroraBoot, a tool for generating bootable images
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 :::info Note
 This is the reference documentation for AuroraBoot. For a complete guide on creating custom cloud images, including how to use AuroraBoot in the context of a full workflow, see [Creating Custom Cloud Images](/docs/v3.7.2/advanced/creating_custom_cloud_images/).
 :::
@@ -116,8 +119,8 @@ Now we can run AuroraBoot with the version we selected, either from GitHub relea
 
 In the example below we selected `v3.7.2-{{< k3sVersion >}}`, <FlavorCode /> flavor, so we would run either one of the following:
 
-{{< tabpane text=true  >}}
-{{% tab header="Container image" %}}
+<Tabs>
+<TabItem value="container-image" label="Container image">
 
 By indicating a `container_image`, AuroraBoot will pull the image locally and start to serve it for network booting.
 
@@ -128,8 +131,8 @@ docker run --rm -ti --net host quay.io/kairos/auroraboot \
                     --set "container_image={{< oci variant="standard" kairosVersion="v3.7.2" k3sVersion="v1.35.0+k3s3" >}}"
 ```
 
-{{% /tab %}}
-{{% tab header="Container Image, with dockerd" %}}
+</TabItem>
+<TabItem value="container-image-with-dockerd" label="Container Image, with dockerd">
 
 By indicating a `container_image` prefixed with `oci:`, AuroraBoot will pull the image from the local daemon and start to serve it for network booting.
 
@@ -141,8 +144,8 @@ docker pull {{< oci variant="standard" kairosVersion="v3.7.2" k3sVersion="v1.35.
 docker run --rm -ti -v /var/run/docker.sock:/var/run/docker.sock --net host quay.io/kairos/auroraboot \
                     --set "container_image=oci:{{< oci variant="standard" kairosVersion="v3.7.2" k3sVersion="v1.35.0+k3s3" >}}"
 ```
-{{% /tab %}}
-{{% tab header="Github releases" %}}
+</TabItem>
+<TabItem value="github-releases" label="Github releases">
 
 By indicating a `artifact_version`, a `release_version`, a `flavor` and a `repository`, AuroraBoot will use GitHub released assets.
 
@@ -154,8 +157,8 @@ docker run --rm -ti --net host quay.io/kairos/auroraboot \
                     --set "flavor_release={{< flavorReleaseCode >}}" \
                     --set "repository=kairos-io/provider-kairos"
 ```
-{{% /tab %}}
-{{< /tabpane >}}
+</TabItem>
+</Tabs>
 
 To specify a cloud config, you can set it with `--cloud-config`. See the sections below for further examples.
 
@@ -220,8 +223,8 @@ Save the file locally or remotely, you can pass it by in the arguments with `--c
 
 Run AuroraBoot with a cloud-config to create an ISO with the embedded configuration:
 
-{{< tabpane text=true  >}}
-{{% tab header="Container image" %}}
+<Tabs>
+<TabItem value="container-image" label="Container image">
 
 Check we have the cloud config file:
 ```bash
@@ -253,8 +256,8 @@ sudo ls -liah build/iso
 # 34649372 -rw-r--r-- 1 root root 389M Feb  8 16:39 kairos.iso.custom.iso
 # 34649371 -rw-r--r-- 1 root root   76 Feb  8 16:39 kairos.iso.sha256
 ```
-{{% /tab %}}
-{{% tab header="Github releases" %}}
+</TabItem>
+<TabItem value="github-releases" label="Github releases">
 
 Check we have the cloud config file:
 ```bash
@@ -290,8 +293,8 @@ sudo ls -liah build/iso
 # 34649371 -rw-r--r-- 1 root root   76 Feb  8 16:39 kairos.iso.sha256
 ```
 
-{{% /tab %}}
-{{< /tabpane >}}
+</TabItem>
+</Tabs>
 
 
 The result process will write an iso `kairos.iso.custom.iso` under `build/iso`. That is the iso with our embedded cloud-config.
@@ -300,9 +303,9 @@ The result process will write an iso `kairos.iso.custom.iso` under `build/iso`. 
 
 The iso now is ready to be written to USB stick with either `dd` or with [BalenaEtcher](https://www.balena.io/etcher), or attached to a VM.
 
-{{< tabpane text=true right=true >}}
-  {{% tab header="**Machine**:" disabled=true /%}}
-  {{% tab header="Bare-Metal" %}}
+<Tabs>
+  <TabItem value="machine" label="Machine:" disabled />
+  <TabItem value="bare-metal" label="Bare-Metal">
 
   When deploying on a bare metal server, directly flash the image into a USB stick. There are multiple ways to do this:
 
@@ -314,8 +317,8 @@ The iso now is ready to be written to USB stick with either `dd` or with [Balena
 
   or with [BalenaEtcher](https://www.balena.io/etcher).
 
-  {{% /tab %}}
-  {{< tab header="QEMU" >}}
+  </TabItem>
+  <TabItem value="qemu" label="QEMU">
 :::warning Warning
     Make sure you have KVM enabled, this will improve the performance of your VM significantly!
 :::
@@ -337,8 +340,8 @@ The iso now is ready to be written to USB stick with either `dd` or with [Balena
     virt-viewer my-first-kairos-vm
 ```
 
-  {{% /tab %}}
-{{< /tabpane >}}
+  </TabItem>
+</Tabs>
 
 ## Configuration
 

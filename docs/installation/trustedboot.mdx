@@ -6,6 +6,9 @@ sidebar_position: 6
 date: 2022-11-13
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 "Trusted Boot" is a combination of technologies that allows us to guarantee that a system was not tampered with, and the user-data is protected by cold attacks, it is composed by FDE, Secure Boot and Measured Boot.
 
 If you want to learn more on what Trusted Boot is and how it works, see the [Trusted Boot Architecture](/docs/architecture/trustedboot) page. This page describes how to enable Trusted Boot support in Kairos.
@@ -181,23 +184,23 @@ Now you can use the hardware key and certificate to sign the UKI files.
 
 To build the installable medium you need to run the following commands:
 
-{{< tabpane text=true  >}}
-{{% tab header="From a container image" %}}
+<Tabs>
+<TabItem value="from-a-container-image" label="From a container image">
 ```bash {class="only-flavors=Ubuntu+24.04,Fedora+40"}
 CONTAINER_IMAGE={{<oci variant="core">}}-uki
 docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys {{< registryURL >}}/auroraboot:{{< auroraBootVersion >}} build-uki -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT $CONTAINER_IMAGE
 # to build an EFI file only
 docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys {{< registryURL >}}/auroraboot:{{< auroraBootVersion >}} build-uki -t uki -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT $CONTAINER_IMAGE
 ```
-{{% /tab %}}
-{{% tab header="From a directory" %}}
+</TabItem>
+<TabItem value="from-a-directory" label="From a directory">
 ```bash
 # Assuming you have a "rootfs" directory with the content of the OS
 # If the image is in a directory ($PWD/rootfs) you can use the following command
 docker run -ti --rm -v $PWD/build:/result -v $PWD/rootfs:/rootfs -v $PWD/keys/:/keys quay.io/kairos/auroraboot:{{< auroraBootVersion >}} build-uki -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT dir:/rootfs/
 ```
-{{% /tab %}}
-{{< /tabpane >}}
+</TabItem>
+</Tabs>
 
 
 Let's explain some of the flags used here, especially the ones related to Trusted Boot keys:
@@ -231,8 +234,8 @@ For more info about pkcs11 urls, see the [RFC 7512](https://www.rfc-editor.org/r
 
 System extensions can be bundled in the installable medium. To bundle system extensions, you need to create a new image with the extensions you want to add. System extensions are bundled in the root on the media install. When building your Trusted Boot image, you can add the system extensions to the iso by using the `--overlay-iso` flag and pointing it to the directory containing the system extensions.
 
-{{< tabpane text=true  >}}
-{{% tab header="From a container image" %}}
+<Tabs>
+<TabItem value="from-a-container-image" label="From a container image">
 ```bash {class="only-flavors=Ubuntu+24.04,Fedora+40"}
 # Assuming your system extensions are stored on $PWD/system-extensions
 CONTAINER_IMAGE={{<oci variant="core">}}-uki
@@ -240,16 +243,16 @@ docker run -ti --rm -v $PWD/system-extensions:/system-extensions -v $PWD/build:/
 # to build an EFI file only
 docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys {{< registryURL >}}/auroraboot:{{< auroraBootVersion >}} build-uki -t uki -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT $CONTAINER_IMAGE
 ```
-{{% /tab %}}
-{{% tab header="From a directory" %}}
+</TabItem>
+<TabItem value="from-a-directory" label="From a directory">
 ```bash
 # Assuming you have a "rootfs" directory with the content of the OS
 # If the image is in a directory ($PWD/rootfs) you can use the following command
 # Assuming your system extensions are stored on $PWD/system-extensions
 docker run -ti --rm -v $PWD/system-extensions:/system-extensions -v $PWD/build:/result -v $PWD/rootfs:/rootfs -v $PWD/keys/:/keys {{< registryURL >}}/auroraboot:{{< auroraBootVersion >}} build-uki -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT --overlay-iso /system-extensions dir:/rootfs/
 ```
-{{% /tab %}}
-{{< /tabpane >}}
+</TabItem>
+</Tabs>
 
 ### Config files
 

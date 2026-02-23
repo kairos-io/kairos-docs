@@ -4,6 +4,9 @@ sidebar_label: "Manual multi-node HA cluster"
 description: This section contains instructions how to deploy Kairos with a High Available control-plane for K3s 
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 :::info K3s
 Please refer to the [k3s HA](https://docs.k3s.io/installation/ha-embedded) documentation. 
 :::
@@ -24,8 +27,8 @@ To run Kairos in this mode, you must have an odd number of server nodes.
 
 The first control plane node that we will launch is considered the cluster initializer.
 
-{{< tabpane text=true right=true  >}}
-{{% tab header="k3s" %}}
+<Tabs>
+<TabItem value="k3s" label="k3s">
 ```yaml
 #cloud-config
 
@@ -48,8 +51,8 @@ k3s:
   env:
     K3S_TOKEN: "TOKEN_GOES_HERE"
 ```
-{{% /tab %}}
-{{% tab header="k0s" %}}
+</TabItem>
+<TabItem value="k0s" label="k0s">
 ```yaml
 #cloud-config
 
@@ -65,13 +68,13 @@ users:
 k0s:
   enabled: true
 ```
-{{% /tab %}}
-{{< /tabpane >}}
+</TabItem>
+</Tabs>
 
 After launching the first control plane, join the others
 
-{{< tabpane text=true right=true  >}}
-{{% tab header="k3s" %}}
+<Tabs>
+<TabItem value="k3s" label="k3s">
 ```yaml
 #cloud-config
 
@@ -93,8 +96,8 @@ k3s:
   env:
     K3S_TOKEN: "TOKEN_GOES_HERE"
 ```
-{{% /tab %}}
-{{% tab header="k0s" %}}
+</TabItem>
+<TabItem value="k0s" label="k0s">
 ```yaml
 #cloud-config
 
@@ -118,8 +121,8 @@ write_files:
     content: |
       <TOKEN> # generate it on your cluster init node by running `k0s token create --role=controller`
 ```
-{{% /tab %}}
-{{< /tabpane >}}
+</TabItem>
+</Tabs>
 
 Now you have a highly available control plane.
 
@@ -127,8 +130,8 @@ Now you have a highly available control plane.
 
 Joining additional worker nodes to the cluster follows the same procedure as a single-node cluster.
 
-{{< tabpane text=true right=true  >}}
-{{% tab header="k3s" %}}
+<Tabs>
+<TabItem value="k3s" label="k3s">
 ```yaml
 #cloud-config
 
@@ -149,8 +152,8 @@ k3s-agent:
     K3S_TOKEN: "TOKEN_GOES_HERE"
     K3S_URL: "https://<ip or hostname of server1>:6443"
 ```
-{{% /tab %}}
-{{% tab header="k0s" %}}
+</TabItem>
+<TabItem value="k0s" label="k0s">
 ```yaml
 #cloud-config
 
@@ -174,8 +177,8 @@ write_files:
     content: |
       <TOKEN> # generate it on your master node by running `k0s token create --role=worker`
 ```
-{{% /tab %}}
-{{< /tabpane >}}
+</TabItem>
+</Tabs>
 
 ## External DB
 

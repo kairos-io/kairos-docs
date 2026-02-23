@@ -6,6 +6,9 @@ date: 2022-11-13
 description: "Welcome to the Kairos configuration reference page. This page provides details on the fields available in the YAML file used for installing Kairos, a Linux distribution focused on running Kubernetes. This file, written in cloud-config format, allows you to enable Kairos features, configure k3s, and set various other options."
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 Welcome to the Kairos configuration reference page. This page provides details on the fields available in the YAML file used for installing Kairos, a Linux distribution focused on running Kubernetes. This file, written in cloud-config format, allows you to enable Kairos features, configure k3s, and set various other options.
 
 The structure of the configuration file is as follows:
@@ -666,8 +669,8 @@ Below is a list of the configurations available for the current providers.
 
 Note that there is currently more providers available but some are community maintained. You should refer to the provider documentation for more information on how to use them.
 
-{{< tabpane text=true right=true  >}}
-{{% tab header="k3s" %}}
+<Tabs>
+<TabItem value="k3s" label="k3s">
 
 | Key                     | Description                                                                                                                                               |
 |-------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -707,8 +710,8 @@ stages:
 ```
 
 
-{{% /tab %}}
-{{% tab header="k3s-agent" %}}
+</TabItem>
+<TabItem value="k3s-agent" label="k3s-agent">
 | Key                     | Description                                                                                                                                               |
 |-------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `k3s-agent.enabled`           | Enables the k3s agent instance. Accepted: `true`, `false`.                                                                                               |
@@ -718,8 +721,8 @@ stages:
 | `k3s-agent.replace_args`      | Replaces all arguments otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the arguments you need.                         |
 | `k3s-agent.embedded_registry` | Enables the embedded registry in k3s. Accepted: `true`, `false`.                                                                                          |
 
-{{% /tab %}}
-{{% tab header="k0s" %}}
+</TabItem>
+<TabItem value="k0s" label="k0s">
 | Key                     | Description                                                                                                                                               |
 |-------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `k0s.enabled`           | Enables the k0s server instance. Accepted: `true`, `false`.                                                                                               |
@@ -728,8 +731,8 @@ stages:
 | `k0s.replace_env`       | Replaces all environment variables otherwise passed to k0s by Kairos with those supplied here. Make sure you pass all the environment variables you need. |
 | `k0s.replace_args`      | Replaces all arguments otherwise passed to k3s by Kairos with those supplied here. Make sure you pass all the arguments you need.                         |
 
-{{% /tab %}}
-{{% tab header="k0s-worker" %}}
+</TabItem>
+<TabItem value="k0s-worker" label="k0s-worker">
 | Key                     | Description|
 |-------------------------|-------------|
 | `k0s-worker.enabled`           | Enables the k0s worker instance. Accepted: `true`, `false`.     |
@@ -738,8 +741,8 @@ stages:
 | `k0s-worker.replace_env`       | Replaces all environment variables otherwise passed to k0s by Kairos with those supplied here. Make sure you pass all the environment variables you need. |
 | `k0s-worker.replace_args`      | Replaces all arguments otherwise passed to k0s by Kairos with those supplied here. Make sure you pass all the arguments you need.   |
 
-{{% /tab %}}
-{{% tab header="kubevip" %}}
+</TabItem>
+<TabItem value="kubevip" label="kubevip">
 | Key                     | Description      |
 |-------------------------|--------------------------|
 |`kubevip.enable`         | Enables kubevip. Accepted: `true`, `false`.  |
@@ -749,8 +752,8 @@ stages:
 |`kubevip.static_pod`     | Use a pod deployment for Kubevip instead of a daemonset. Accepted: `true`, `false` |
 |`kubevip.version`        | Set the specific Kubevip version to use |
 
-{{% /tab %}}
-{{% tab header="kubeadm" %}}
+</TabItem>
+<TabItem value="kubeadm" label="kubeadm">
 
 | Key                           | Description                                                                                                  |
 |-------------------------------|--------------------------------------------------------------------------------------------------------------|
@@ -761,13 +764,13 @@ stages:
 | `cluster.env`                 | List of environment variables to be set on the cluster.                                                      |
 | `cluster.local_images_path`   | Path to the local archive images to import.                                                                  |
 
-{{% /tab %}}
-{{% tab header="p2p" %}}
+</TabItem>
+<TabItem value="p2p" label="p2p">
 
 As P2P is a very complex topic, we have a dedicated [P2P documentation page](/docs/v3.7.2/installation/p2p/) that explains how to use it with deep details.
 
-{{% /tab %}}
-{{< /tabpane >}}
+</TabItem>
+</Tabs>
 
 ## Stages
 

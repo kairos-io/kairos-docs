@@ -5,6 +5,9 @@ description: This section describe examples on how to deploy Kairos as a multi-n
 slug: /examples/multi-node
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 In the example below we will use a bare metal host to provision a Kairos cluster in the local network using one master node and one worker node.
 
 ## Installation
@@ -20,8 +23,8 @@ On all nodes, we will deploy a `kairos` user with the password `kairos` and the 
 
 On the master node configuration, we will enable the Kubernetes distribution and configure it. We will also include a manifest with a simple Nginx deployment that will be installed on the cluster once it's running. You can change the manifest to the one of your own application or remove it if you don't need it.
 
-{{< tabpane text=true right=true  >}}
-{{% tab header="k3s" %}}
+<Tabs>
+<TabItem value="k3s" label="k3s">
 ```yaml
 #cloud-config
 
@@ -69,8 +72,8 @@ write_files:
             ports:
             - containerPort: 80
 ```
-{{% /tab %}}
-{{% tab header="k0s" %}}
+</TabItem>
+<TabItem value="k0s" label="k0s">
 ```yaml
 #cloud-config
 
@@ -116,15 +119,15 @@ write_files:
             ports:
             - containerPort: 80
 ```
-{{% /tab %}}
-{{< /tabpane >}}
+</TabItem>
+</Tabs>
 
 ### Worker nodes
 
 With the master node up and running, we can configure the worker nodes
 
-{{< tabpane text=true right=true  >}}
-{{% tab header="k3s" %}}
+<Tabs>
+<TabItem value="k3s" label="k3s">
 ```yaml
 #cloud-config
 
@@ -145,8 +148,8 @@ k3s-agent: # Warning: the key is different from the master node one
     K3S_TOKEN: "<MASTER_SERVER_TOKEN>" # /var/lib/rancher/k3s/server/node-token from the master node
     K3S_URL: https://<MASTER_SERVER_IP>:6443 # Same IP that you use to log into your master node
 ```
-{{% /tab %}}
-{{% tab header="k0s" %}}
+</TabItem>
+<TabItem value="k0s" label="k0s">
 ```yaml
 #cloud-config
 
@@ -170,14 +173,14 @@ write_files:
     content: |
       <TOKEN> # generate it on your master node by running `k0s token create --role=worker`
 ```
-{{% /tab %}}
-{{< /tabpane >}}
+</TabItem>
+</Tabs>
 
-{{< tabpane text=true right=true  >}}
-{{% tab header="k3s" %}}
+<Tabs>
+<TabItem value="k3s" label="k3s">
 To find out more about args configuration from k3s, follow their [server](https://docs.k3s.io/cli/server) and [agent](https://docs.k3s.io/cli/agent) documentation.
-{{% /tab %}}
-{{% tab header="k0s" %}}
+</TabItem>
+<TabItem value="k0s" label="k0s">
 To learn more about a multi-node setup with k0s, follow their [multi-node](https://docs.k0sproject.io/stable/k0s-multi-node/) documentation.
-{{% /tab %}}
-{{< /tabpane >}}
+</TabItem>
+</Tabs>

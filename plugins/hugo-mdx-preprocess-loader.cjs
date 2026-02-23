@@ -11,14 +11,6 @@ function parseShortcodeAttrs(raw) {
   return attrs;
 }
 
-function slugifyTabValue(text) {
-  return String(text || '')
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '') || 'tab';
-}
-
 function transformNonInlineCode(segment) {
   let out = segment;
 
@@ -110,26 +102,6 @@ function transformNonInlineCode(segment) {
   return out;
 }
 
-function transformTabShortcodeLine(line) {
-  let out = line;
-  out = out.replace(/^\s*\{\{[<%]\s*tabpane\b[^}]*[>%]\}\}\s*$/i, '<Tabs>');
-  out = out.replace(/^\s*\{\{[<%]\s*\/tabpane\s*[>%]\}\}\s*$/i, '</Tabs>');
-  out = out.replace(/^\s*\{\{[<%]\s*tab\b([^}]*)[>%]\}\}\s*$/i, (_full, rawAttrs) => {
-    const attrs = parseShortcodeAttrs(rawAttrs);
-    const label = String(
-      attrs.header || attrs.name || attrs.title || attrs.value || attrs.tab || 'Tab',
-    ).trim();
-    const value = slugifyTabValue(label);
-    const isSelfClosing = /\/\s*$/.test(String(rawAttrs || '').trim());
-    if (isSelfClosing) {
-      return `<TabItem value="${value}" label="${label}" />`;
-    }
-    return `<TabItem value="${value}" label="${label}">`;
-  });
-  out = out.replace(/^\s*\{\{[<%]\s*\/tab\s*[>%]\}\}\s*$/i, '</TabItem>');
-  return out;
-}
-
 function wrapShortcodesOutsideInline(line) {
   let out = '';
   let i = 0;
@@ -161,8 +133,6 @@ function wrapShortcodesOutsideInline(line) {
           'container-repo-link',
           'ocicode',
           'getremotesource',
-          'tabpane',
-          'tab',
         ]);
         if (supportedInlineShortcodes.has(shortcodeName)) {
           out += shortcode;
@@ -182,7 +152,7 @@ function wrapShortcodesOutsideInline(line) {
 }
 
 function normalizeOutsideCode(line) {
-  const out = wrapShortcodesOutsideInline(transformTabShortcodeLine(line));
+  const out = wrapShortcodesOutsideInline(line);
 
   // Avoid changing shortcode text inside inline markdown code spans.
   const parts = out.split('`');

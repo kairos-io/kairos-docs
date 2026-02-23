@@ -7,6 +7,9 @@ description: Inter-connecting Kubernetes clusters without the need of exposing a
  
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 :::warning Network
 This feature is experimental and has only been tested on local setups. Run in production servers at your own risk.
 Feedback and bug reports are welcome, as we are improving the p2p aspects of Kairos.
@@ -230,8 +233,8 @@ It can also expose services that are reachable from the host Network:
 
 Consider the following example that tunnels a cluster `192.168.1.1:80` to another one using an `Entanglement`:
 
-{{< tabpane text=true right=true  >}}
-{{% tab header="Cluster A (where `192.168.1.1:80` is accessible)" %}}
+<Tabs>
+<TabItem value="cluster-a-where-192-168-1-1-80-is-accessible" label="Cluster A (where `192.168.1.1:80` is accessible)">
 ```yaml
 apiVersion: v1
 kind: Secret
@@ -254,8 +257,8 @@ spec:
    port: "80"
    hostNetwork: true
 ```
-{{% /tab %}}
-{{% tab header="Cluster B (which will have a `ClusterIP` available on the Kubernetes service network)" %}}
+</TabItem>
+<TabItem value="cluster-b-which-will-have-a-clusterip-available-on-the-kubernetes-service-network" label="Cluster B (which will have a `ClusterIP` available on the Kubernetes service network)">
 ```yaml
 ---
 apiVersion: v1
@@ -284,8 +287,8 @@ spec:
       protocol: TCP
     type: ClusterIP
 ```
-{{% /tab %}}
-{{< /tabpane >}}
+</TabItem>
+</Tabs>
 
 ### Sidecar injection
 
@@ -323,8 +326,8 @@ spec:
 
 Or we can combine them together:
 
-{{< tabpane text=true right=true  >}}
-{{% tab header="Cluster A" %}}
+<Tabs>
+<TabItem value="cluster-a" label="Cluster A">
 ```yaml
 apiVersion: v1
 kind: Secret
@@ -365,8 +368,8 @@ spec:
           args:
             - "proxy"
 ```
-{{% /tab %}}
-{{% tab header="Cluster B" %}}
+</TabItem>
+<TabItem value="cluster-b" label="Cluster B">
 ```yaml
 apiVersion: v1
 kind: Secret
@@ -394,5 +397,5 @@ spec:
       protocol: TCP
     type: ClusterIP
 ```
-{{% /tab %}}
-{{< /tabpane >}}
+</TabItem>
+</Tabs>

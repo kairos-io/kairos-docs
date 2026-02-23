@@ -6,6 +6,9 @@ date: 2022-11-13
 description: Install Kairos on Nvidia AGX Orin
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 :::warning Warning
 Despite the Flavor you may have selected to look into the docs. The Nvidia AGX Orin only works with Ubuntu 22.04
 :::
@@ -65,8 +68,8 @@ echo "" > rootfs/boot/extlinux/extlinux.conf
 You can find Kairos core ubuntu images based on Ubuntu `22.04` here: https://quay.io/repository/kairos/ubuntu
 (search for `nvidia` in the tags)
 
-{{< tabpane text=true  >}}
-{{% tab header="Build partition images from a container image" %}}
+<Tabs>
+<TabItem value="build-partition-images-from-a-container-image" label="Build partition images from a container image">
 
 If you are customizing the image, or either modifying the default partition sizes you can build the images by running:
 ```bash
@@ -79,8 +82,8 @@ docker run --privileged --platform=linux/arm64 \
         -v $PWD/bootloader:/bootloader --entrypoint /prepare_nvidia_orin_images.sh -ti --rm quay.io/kairos/auroraboot:v0.13.0
 ```
 
-{{% /tab %}}
-{{% tab header="Build partition images from a directory" %}}
+</TabItem>
+<TabItem value="build-partition-images-from-a-directory" label="Build partition images from a directory">
 
 If you have instead the rootfs as a directory, you can create the required partitions with:
 ```bash
@@ -94,8 +97,8 @@ docker run --privileged --platform=linux/arm64 \
         -v $PWD/bootloader:/bootloader --entrypoint /prepare_nvidia_orin_images.sh -ti --rm quay.io/kairos/auroraboot:v0.13.0
 ```
 
-{{% /tab %}}
-{{< /tabpane >}}
+</TabItem>
+</Tabs>
 
 After running any of the commands above, the generated images files required for flashing will be inside the `bootloader` directory (`bootloader/efi.img`, `bootloader/recovery_partition.img`, `bootloader/state_partition.img`, `bootloader/oem.img`, `bootloader/persistent.img` ).
 

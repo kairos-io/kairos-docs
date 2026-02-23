@@ -6,6 +6,9 @@ sidebar_position: 4
 date: 2022-11-13
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 Kairos has a recovery mechanism built-in which can be leveraged to restore the system to a known point. At installation time, the recovery partition is created from the installation medium and can be used to restore the system from scratch, leaving configuration intact and cleaning any persistent data accumulated by usage in the host (e.g. Kubernetes images, persistent volumes, etc. ).
 
 The reset action will regenerate the bootloader configuration and the images in the state partition (labeled `COS_STATE`) by using the recovery image generated at install time, cleaning up the host.
@@ -30,8 +33,8 @@ It is possible to reset the state of a node by either booting into the "Reset" m
 
 On a Kairos booted system, logged as root:
 
-{{< tabpane text=true  >}}
-{{% tab header="Kairos v3.0.0 and upwards" %}}
+<Tabs>
+<TabItem value="kairos-v3-0-0-and-upwards" label="Kairos v3.0.0 and upwards">
 To directly select the entry:
 
 ```bash
@@ -44,14 +47,14 @@ Or to get a list of available boot entries and select one interactively:
 ```bash
 $ kairos-agent bootentry
 ```
-{{% /tab %}}
-{{% tab header="Kairos before v3.0.0" %}}
+</TabItem>
+<TabItem value="kairos-before-v3-0-0" label="Kairos before v3.0.0">
 ```bash
 $ grub2-editenv /oem/grubenv set next_entry=statereset
 $ reboot
 ```
-{{% /tab %}}
-{{< /tabpane >}}
+</TabItem>
+</Tabs>
 
 
 ## From Kubernetes
@@ -60,8 +63,8 @@ The [Kairos operator](/docs/operator/) can be used to apply a [NodeOp](/docs/ope
 
 Consider the following example which resets a machine by changing the config file used during installation:
 
-{{< tabpane text=true  >}}
-{{% tab header="Kairos v3.0.0 and upwards" %}}
+<Tabs>
+<TabItem value="kairos-v3-0-0-and-upwards" label="Kairos v3.0.0 and upwards">
 ```yaml
 apiVersion: operator.kairos.io/v1alpha1
 kind: NodeOp
@@ -128,8 +131,8 @@ spec:
   # Whether to stop creating new jobs when a job fails
   stopOnFailure: true
 ```
-{{% /tab %}}
-{{% tab header="Kairos before v3.0.0" %}}
+</TabItem>
+<TabItem value="kairos-before-v3-0-0" label="Kairos before v3.0.0">
 ```yaml
 ---
 apiVersion: v1
@@ -196,8 +199,8 @@ spec:
       path: /host/run/system-upgrade/secrets/custom-script
 ```
 
-{{% /tab %}}
-{{< /tabpane >}}
+</TabItem>
+</Tabs>
 
 
 
