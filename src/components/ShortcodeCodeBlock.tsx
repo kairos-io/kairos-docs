@@ -16,6 +16,7 @@ const FLAVOR_RELEASE_CODE_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*flavorReleaseCode\
 const REGISTRY_URL_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*registryURL\s*>\}\}/g;
 const KAIROS_VERSION_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*kairosVersion\s*>\}\}/g;
 const PROVIDER_VERSION_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*providerVersion\s*>\}\}/g;
+const PROVIDER_VERSION_COMPONENT_GLOBAL_PATTERN = /<\s*ProviderVersion\s*\/>/g;
 const KAIROS_INIT_VERSION_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*kairosInitVersion\s*>\}\}/g;
 const AURORA_BOOT_VERSION_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*auroraBootVersion\s*>\}\}/g;
 const FLAVOR_AT_PATTERN = /@flavor\b/g;
@@ -49,6 +50,7 @@ function renderTemplate(
     .replace(KAIROS_INIT_VERSION_SHORTCODE_GLOBAL_PATTERN, kairosInitVersion)
     .replace(KAIROS_VERSION_SHORTCODE_GLOBAL_PATTERN, defaultKairosVersion)
     .replace(PROVIDER_VERSION_SHORTCODE_GLOBAL_PATTERN, providerVersion)
+    .replace(PROVIDER_VERSION_COMPONENT_GLOBAL_PATTERN, providerVersion)
     .replace(REGISTRY_URL_SHORTCODE_GLOBAL_PATTERN, registryURL)
     .replace(FLAVOR_RELEASE_AT_PATTERN, flavorRelease)
     .replace(FLAVOR_AT_PATTERN, flavor)

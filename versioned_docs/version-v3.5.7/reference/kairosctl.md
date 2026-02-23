@@ -10,7 +10,7 @@ The `kairosctl` binary is provided as part of releases associated to each Kairos
 
 
 ```bash
-curl -L https://github.com/kairos-io/provider-kairos/releases/download/{{<providerVersion>}}/kairosctl-.{{<providerVersion>}}-.linux-.amd64.tar.gz -o - | tar -xvzf - -C .
+curl -L https://github.com/kairos-io/provider-kairos/releases/download/<ProviderVersion />/kairosctl-<ProviderVersion />-linux-amd64.tar.gz -o - | tar -xvzf - -C .
 ```
 
 ```bash

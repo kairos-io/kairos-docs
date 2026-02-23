@@ -51,7 +51,6 @@ function transformNonInlineCode(segment) {
   });
 
   // Render supported simple value shortcodes as MDX components outside code.
-  out = out.replace(/\{\{<\s*providerVersion\s*>\}\}/gi, '<ProviderVersion />');
   out = out.replace(/\{\{<\s*container-repo-link\b([^>]*)>\}\}/gi, (_full, rawAttrs) => {
     const attrs = parseShortcodeAttrs(rawAttrs);
     const flavor = (attrs.flavor || '').replace(/"/g, '&quot;');
@@ -104,7 +103,6 @@ function wrapShortcodesOutsideInline(line) {
         const shortcodeName = shortcodeNameMatch ? shortcodeNameMatch[1].toLowerCase() : '';
         const supportedInlineShortcodes = new Set([
           'card',
-          'providerversion',
           'container-repo-link',
           'ocicode',
           'getremotesource',
