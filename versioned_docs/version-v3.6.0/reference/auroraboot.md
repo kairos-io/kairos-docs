@@ -117,7 +117,7 @@ To use a container image, you can use [the Kairos released images](/docs/v3.6.0/
 
 Now we can run AuroraBoot with the version we selected, either from GitHub releases or directly from a container image.
 
-In the example below we selected `v3.6.0-{{< k3sVersion >}}`, <FlavorCode /> flavor, so we would run either one of the following:
+In the example below we selected <code>v3.6.0-<K3sVersion /></code>, <FlavorCode /> flavor, so we would run either one of the following:
 
 <Tabs>
 <TabItem value="container-image" label="Container image">

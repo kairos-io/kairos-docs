@@ -11,6 +11,7 @@ import GetRemoteSource from '@site/src/components/GetRemoteSource';
 import Image from '@site/src/components/Image';
 import ImageLink from '@site/src/components/ImageLink';
 import KairosVersion from '@site/src/components/KairosVersion';
+import K3sVersion from '@site/src/components/K3sVersion';
 import OciCode from '@site/src/components/OciCode';
 import OnlyFlavors from '@site/src/components/OnlyFlavors';
 import ProviderVersion from '@site/src/components/ProviderVersion';
@@ -30,6 +31,7 @@ const components: MDXComponentsObject = {
   Image,
   ImageLink,
   KairosVersion,
+  K3sVersion,
   OciCode,
   OCICode: OciCode,
   OnlyFlavors,

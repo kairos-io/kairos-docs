@@ -45,8 +45,8 @@ Keep in mind that:
 
 ### Examples
 
-- `kairos-ubuntu-23.04-core-amd64-generic-{{< kairosVersion >}}`
-- `kairos-ubuntu-23.04-standard-arm64-rpi4-{{< kairosVersion >}}-k3sv1.28.2+k3s1.iso`
+- <code>kairos-ubuntu-23.04-core-amd64-generic-<KairosVersion /></code>
+- <code>kairos-ubuntu-23.04-standard-arm64-rpi4-<KairosVersion />-k3sv1.28.2+k3s1.iso</code>
 
 ## Kernel and RAM Disk Images
 
@@ -62,8 +62,8 @@ Where:
 
 ### Examples
 
-- `kairos-ubuntu-23.04-core-amd64-generic-{{< kairosVersion >}}-kernel`
-- `kairos-ubuntu-23.04-standard-arm64-rpi4-{{< kairosVersion >}}-k3sv1.28.2+k3s1-initrd`
+- <code>kairos-ubuntu-23.04-core-amd64-generic-<KairosVersion />-kernel</code>
+- <code>kairos-ubuntu-23.04-standard-arm64-rpi4-<KairosVersion />-k3sv1.28.2+k3s1-initrd</code>
 
 ## iPXE Images
 
@@ -71,9 +71,9 @@ For iPXE we deliver three types of artifacts. The first one is the iPXE script, 
 
 ### Examples
 
-- `kairos-ubuntu-23.04-core-amd64-generic-{{< kairosVersion >}}.ipxe`
-- `kairos-ubuntu-23.04-core-amd64-generic-{{< kairosVersion >}}-ipxe.iso`
-- `kairos-ubuntu-23.04-core-amd64-generic-{{< kairosVersion >}}-ipxe-usb.img`
+- <code>kairos-ubuntu-23.04-core-amd64-generic-<KairosVersion />.ipxe</code>
+- <code>kairos-ubuntu-23.04-core-amd64-generic-<KairosVersion />-ipxe.iso</code>
+- <code>kairos-ubuntu-23.04-core-amd64-generic-<KairosVersion />-ipxe-usb.img</code>
 
 ## Reports
 
@@ -89,8 +89,8 @@ Where:
 
 ### Examples
 
-- `kairos-alpine-3.18-core-arm64-generic-{{< kairosVersion >}}-trivy.sarif`
-- `kairos-alpine-3.18-core-arm64-generic-{{< kairosVersion >}}-grype.json`
+- <code>kairos-alpine-3.18-core-arm64-generic-<KairosVersion />-trivy.sarif</code>
+- <code>kairos-alpine-3.18-core-arm64-generic-<KairosVersion />-grype.json</code>
 
 ## Container Images
 
