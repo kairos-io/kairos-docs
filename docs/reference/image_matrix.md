@@ -37,7 +37,7 @@ The various images are available with different tags in the form of:
 quay.io/kairos/<flavor>:<flavor_release>-<variant>-<arch>-<device>-<version>
 ```
 
-For example: {{<ociCode variant="standard">}}. More about Kairos naming conventions [here](/docs/reference/artifacts/).
+For example: <OCICode variant="standard" />. More about Kairos naming conventions [here](/docs/reference/artifacts/).
 
 Notes:
 

@@ -41,15 +41,6 @@ function transformNonInlineCode(segment) {
   });
 
   // Render supported simple value shortcodes as MDX components outside code.
-  out = out.replace(/\{\{<\s*ociCode\b([^>]*)>\}\}/gi, (_full, rawAttrs) => {
-    const attrs = parseShortcodeAttrs(rawAttrs);
-    const props = [];
-    if (attrs.variant) props.push(`variant="${attrs.variant.replace(/"/g, '&quot;')}"`);
-    if (attrs.arch) props.push(`arch="${attrs.arch.replace(/"/g, '&quot;')}"`);
-    if (attrs.model) props.push(`model="${attrs.model.replace(/"/g, '&quot;')}"`);
-    if (attrs.suffix) props.push(`suffix="${attrs.suffix.replace(/"/g, '&quot;')}"`);
-    return `<OciCode ${props.join(' ')} />`;
-  });
   out = out.replace(/\{\{<\s*getRemoteSource\s+"([^"]+)"\s*>\}\}/gi, (_full, url) => {
     const safeUrl = String(url || '').replace(/"/g, '&quot;');
     return `<GetRemoteSource url="${safeUrl}" />`;
@@ -87,7 +78,6 @@ function wrapShortcodesOutsideInline(line) {
         const shortcodeNameMatch = shortcode.match(/^\{\{[<%]\s*\/?\s*([A-Za-z0-9_-]+)/);
         const shortcodeName = shortcodeNameMatch ? shortcodeNameMatch[1].toLowerCase() : '';
         const supportedInlineShortcodes = new Set([
-          'ocicode',
           'getremotesource',
         ]);
         if (supportedInlineShortcodes.has(shortcodeName)) {

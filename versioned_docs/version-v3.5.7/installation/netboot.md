@@ -75,7 +75,7 @@ docker run --rm -ti --net host quay.io/kairos/auroraboot \
                     # --cloud-config ....
 ```
 
-Will netboot the {{<ociCode variant="standard">}} image. You can find more details in the [AuroraBoot documentation section](/docs/v3.5.7/reference/auroraboot/).
+Will netboot the <OCICode variant="standard" /> image. You can find more details in the [AuroraBoot documentation section](/docs/v3.5.7/reference/auroraboot/).
 
 ## Notes on booting from network
 

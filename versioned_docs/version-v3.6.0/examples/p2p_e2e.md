@@ -94,7 +94,7 @@ ssh_authorized_keys:
 
 ## Provisioning with AuroraBoot
 
-We now can run [AuroraBoot](/docs/v3.6.0/reference/auroraboot/) with {{< ociCode variant="standard" kairosVersion="v3.6.0" k3sVersion="v1.33.5+k3s1" >}} to provision `openSUSE Leap` machines with those k3s and kairos versions.
+We now can run [AuroraBoot](/docs/v3.6.0/reference/auroraboot/) with <OCICode variant="standard" kairosVersion="v3.6.0" k3sVersion="v1.33.5+k3s1" /> to provision `openSUSE Leap` machines with those k3s and kairos versions.
 
 AuroraBoot takes `cloud-config` files also from _STDIN_, so we will pipe the configuration file to it, and specify the container image that we want to use for our nodes:
 

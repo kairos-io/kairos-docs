@@ -108,7 +108,7 @@ This nomenclature for container images lacks some information for the following 
 
 ### Examples
 
-- {{< ociCode variant="core" kairosVersion="v3.6.0" >}}
+- <OCICode variant="core" kairosVersion="v3.6.0" />
 
 ## IMG Images
 
@@ -122,7 +122,7 @@ quay.io/kairos/<flavor>:<flavor_release>-<variant>-<arch>-<device>-<version>-img
 
 ### Examples
 
-- {{< ociCode variant="core" arch="arm64" model="rpi4" suffix="img" kairosVersion="v3.6.0" >}}
+- <OCICode variant="core" arch="arm64" model="rpi4" suffix="img" kairosVersion="v3.6.0" />
 
 ## Binaries
 

@@ -31,6 +31,7 @@ const components: MDXComponentsObject = {
   ImageLink,
   KairosVersion,
   OciCode,
+  OCICode: OciCode,
   OnlyFlavors,
   ProviderVersion,
   ShortcodeCodeBlock,
