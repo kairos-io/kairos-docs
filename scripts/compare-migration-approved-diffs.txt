@@ -1,9 +1,0 @@
-# Approved content diffs that are intentional during migration.
-# Format:
-#   /url/path|sha256_of_normalized_diff
-# Optional hash-only lines are also supported:
-#   sha256_of_normalized_diff
-
-/docs/reference/auroraboot|5cb4dff5ac7219d086dab10dff308c0af3a1caafdc4004d06047c988894c9cbc
-/docs/reference/image_matrix|0671fac66a3966af4aa36ebbab19e97359f88f5a72bacd4b1c9913f613f827b5
-/docs/media|5b58d494728a1458514b27d4107588fbac2d63ac629ee99025765f50e9dd5147
