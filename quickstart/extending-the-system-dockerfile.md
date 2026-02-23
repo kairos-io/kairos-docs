@@ -29,7 +29,7 @@ To extend and run Hadron, you’ll need a container engine and virtualization so
 
 ## Prefer to watch a video?
 
-{{< youtube id="EQsVnWqd7Ic" title="Hadron Quickstart" >}}
+<YouTube id="EQsVnWqd7Ic" title="Hadron Quickstart" />
 
 ## Building
 

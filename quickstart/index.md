@@ -26,7 +26,7 @@ To run Hadron Trusted Boot, you’ll need virtualization software that can run o
 
 ## Prefer to watch a video?
 
-{{< youtube id="0avUNGAjMVw" title="Hadron Quickstart" >}}
+<YouTube id="0avUNGAjMVw" title="Hadron Quickstart" />
 
 ## Download an ISO
 

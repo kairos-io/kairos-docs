@@ -32,4 +32,4 @@ The rest of the time was dedicated for Q&A.
 
 Last but not least, let me reiterate like I did in the Spectro Cloud post that, these panels and similar initiatives are important because they help users understand why these projects exist and get an idea of why we have different options and how that makes us a stronger community instead of rivals.
 
-{{< youtube id="uD-T9LdfvrM" title="Special Purpose Operating Systems: The Next Step in OS Evolution or One-Trick Ponies?" >}}
+<YouTube id="uD-T9LdfvrM" title="Special Purpose Operating Systems: The Next Step in OS Evolution or One-Trick Ponies?" />

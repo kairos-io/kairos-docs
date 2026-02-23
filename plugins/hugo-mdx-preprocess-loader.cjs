@@ -14,14 +14,6 @@ function parseShortcodeAttrs(raw) {
 function transformNonInlineCode(segment) {
   let out = segment;
 
-  // Render Hugo youtube shortcode into embeddable iframe.
-  out = out.replace(/\{\{<\s*youtube\b([^>]*)>\}\}/gi, (_full, rawAttrs) => {
-    const attrs = parseShortcodeAttrs(rawAttrs);
-    const id = (attrs.id || '').trim();
-    if (!id) return _full;
-    const title = (attrs.title || 'YouTube video').replace(/"/g, '&quot;');
-    return `<iframe width="560" height="315" src="https://www.youtube.com/embed/${id}" title="${title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-  });
   out = out.replace(/\{\{<\s*card\b([^>]*)>\}\}/gi, (_full, rawAttrs) => {
     const attrs = parseShortcodeAttrs(rawAttrs);
     const parts = [];
@@ -125,7 +117,6 @@ function wrapShortcodesOutsideInline(line) {
         const shortcodeNameMatch = shortcode.match(/^\{\{[<%]\s*\/?\s*([A-Za-z0-9_-]+)/);
         const shortcodeName = shortcodeNameMatch ? shortcodeNameMatch[1].toLowerCase() : '';
         const supportedInlineShortcodes = new Set([
-          'youtube',
           'card',
           'imagelink',
           'kairosversion',

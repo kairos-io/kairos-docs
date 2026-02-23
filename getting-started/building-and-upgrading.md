@@ -14,7 +14,7 @@ This guide will walk you through the steps to build a new Kairos container image
 
 ## Do you prefer to watch a video?
 
-{{< youtube id="bXTvNMs1wcI" title="Building and Upgrading Kairos" >}}
+<YouTube id="bXTvNMs1wcI" title="Building and Upgrading Kairos" />
 
 ## Containers
 

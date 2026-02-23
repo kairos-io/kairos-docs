@@ -23,7 +23,7 @@ To extend and run Hadron, you’ll need virtualization software that can run (or
 
 ## Prefer to watch a video?
 
-{{< youtube id="Xd2VfPB0ueM" title="Hadron Quickstart" >}}
+<YouTube id="Xd2VfPB0ueM" title="Hadron Quickstart" />
 
 ## Running an upgrade
 

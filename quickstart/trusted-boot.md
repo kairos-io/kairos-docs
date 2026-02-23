@@ -25,7 +25,7 @@ To run Hadron Trusted Boot, you’ll need both a container engine and virtualiza
 
 ## Prefer to watch a video?
 
-{{< youtube id="2UY4J3VudnU" title="Hadron Quickstart" >}}
+<YouTube id="2UY4J3VudnU" title="Hadron Quickstart" />
 
 ## Generate Your Keys
 

@@ -15,6 +15,7 @@ import OciCode from '@site/src/components/OciCode';
 import OnlyFlavors from '@site/src/components/OnlyFlavors';
 import ProviderVersion from '@site/src/components/ProviderVersion';
 import ShortcodeCodeBlock from '@site/src/components/ShortcodeCodeBlock';
+import YouTube from '@site/src/components/YouTube';
 
 const components: MDXComponentsObject = {
   ...MDXComponents,
@@ -33,6 +34,7 @@ const components: MDXComponentsObject = {
   OnlyFlavors,
   ProviderVersion,
   ShortcodeCodeBlock,
+  YouTube,
 };
 
 export default components;

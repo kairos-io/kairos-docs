@@ -13,7 +13,7 @@ This guide will teach you the basics about immutability and configuration in Kai
 
 ## Do you prefer to watch a video?
 
-{{< youtube id="Rom4uPatO3k" title="Configuring a Kairos node" >}}
+<YouTube id="Rom4uPatO3k" title="Configuring a Kairos node" />
 
 ## How is Kairos immutable?
 

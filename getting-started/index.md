@@ -16,7 +16,7 @@ Ready to launch your Kubernetes cluster with ease? With Kairos, deployment is a 
 
 ## Do you prefer to watch a video?
 
-{{< youtube id="XAIsitP5OII" title="Getting Started with Kairos" >}}
+<YouTube id="XAIsitP5OII" title="Getting Started with Kairos" />
 
 ## Download an ISO
 
