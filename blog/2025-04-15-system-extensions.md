@@ -9,8 +9,6 @@ title: 'System Extensions, Simplified: Live Customization with Kairos'
 
 
 
-# 🔧 System Extensions, Simplified: Live Customization with Kairos
-
 Kairos has always focused on making operating system deployments more predictable, reproducible, and manageable—especially in edge and embedded environments. But for all the benefits of immutability, one challenge has lingered:
 
 > **How do you safely and easily customize a system after it’s built—without breaking the image or going full Dockerfile rebuild?**

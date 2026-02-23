@@ -6,8 +6,6 @@ description: |
     Verify the integrity of the ISO by checking the signatures.
 ---
 
-## Check the Signatures
-
 :::note Optional Step
 This is an optional but strongly encouraged step for security reasons.
 :::

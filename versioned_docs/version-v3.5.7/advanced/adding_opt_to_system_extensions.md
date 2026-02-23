@@ -4,8 +4,6 @@ sidebar_label: "Using /opt with System Extensions"
 sidebar_position: 3
 ---
 
-## Using /opt with System Extensions
-
 By default, Kairos does not include `/opt` as a system extension (`sysext`) overlay hierarchy. This is because in normal runtime, `/opt` is writable and bind-mounted to the persistent partition, allowing users and applications to freely write data that persists across reboots.
 
 However, when a system extension is loaded that includes a `/opt` hierarchy, the behavior of that directory changes: it becomes **read-only**, overridden by the overlay from the system extension image. This is a consequence of how `systemd-sysext` currently operates and reflects a known upstream limitation.
