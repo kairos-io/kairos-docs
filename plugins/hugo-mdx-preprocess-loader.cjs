@@ -14,16 +14,6 @@ function parseShortcodeAttrs(raw) {
 function transformNonInlineCode(segment) {
   let out = segment;
 
-  out = out.replace(/\{\{<\s*card\b([^>]*)>\}\}/gi, (_full, rawAttrs) => {
-    const attrs = parseShortcodeAttrs(rawAttrs);
-    const parts = [];
-    if (attrs.header) parts.push(attrs.header);
-    if (attrs.subtitle) parts.push(attrs.subtitle);
-    if (attrs.footer) parts.push(attrs.footer);
-    return parts.join('\n');
-  });
-  out = out.replace(/\{\{<\s*\/card\s*>\}\}/gi, '');
-
   // Make HTML <br> tags explicit self-closing tags for MDX compatibility.
   out = out.replace(/<br>/gi, '<br />');
 
@@ -97,7 +87,6 @@ function wrapShortcodesOutsideInline(line) {
         const shortcodeNameMatch = shortcode.match(/^\{\{[<%]\s*\/?\s*([A-Za-z0-9_-]+)/);
         const shortcodeName = shortcodeNameMatch ? shortcodeNameMatch[1].toLowerCase() : '';
         const supportedInlineShortcodes = new Set([
-          'card',
           'ocicode',
           'getremotesource',
         ]);

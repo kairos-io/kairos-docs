@@ -23,9 +23,9 @@ title: 'Understanding Immutable Linux OS: Benefits, Architecture, and Challenges
 
 For years, the traditional Linux operating system has been a top pick for its flexibility and ability to be customized. But as great as it is, there are use cases in which stricter security rules and higher reliability standards are needed. That's where immutable Linux operating systems come in - offering a more secure and reliable option, especially in settings where security is paramount.
 
-{{< card header="![castle](https://user-images.githubusercontent.com/2420543/226939911-6801ecab-d023-4357-92f2-b782ae086462.png)" subtitle="_An illustration of a fortress surrounded by a moat and guarded by armored knights, with a banner flying the Linux penguin logo, medieval, fortified, secure, trending on Artstation._ Author: _Midjourney AI_"
-         >}}
-{{< /card >}}
+![castle](https://user-images.githubusercontent.com/2420543/226939911-6801ecab-d023-4357-92f2-b782ae086462.png)
+
+_An illustration of a fortress surrounded by a moat and guarded by armored knights, with a banner flying the Linux penguin logo, medieval, fortified, secure, trending on Artstation._ Author: _Midjourney AI_
 
 
 
@@ -71,10 +71,9 @@ In standard Linux systems, the package manager has a lot of responsibilities and
 
 When it comes to upgrading an installed system, the package manager should take care of many aspects, such as: correctly ordering dependencies (which may require a solver), verifying which packages are installed or not, which new packages will be installed, and handling file transmission securely. However, as the complexity of the stack grows, conflicts between packages can arise, and the package manager may prompt the user to solve them. This is not ideal for scaling out deployments, upgrades, and cutting operational costs since it exposes the infrastructure to drift.
 
-{{< card header="![Screenshot from 2023-03-09 18-25-17](https://user-images.githubusercontent.com/2420543/224106950-7d652652-c8e0-4ee4-980d-b057e4af903f.png)" 
-          footer="">}}
- _Huh, didn't we get rid of package conflicts already? ([screenshot](https://www.reddit.com/r/openSUSE/comments/z4ld75/this_seems_to_be_common_in_opensuse_should_i_wait/))_
-{{< /card >}}
+![Screenshot from 2023-03-09 18-25-17](https://user-images.githubusercontent.com/2420543/224106950-7d652652-c8e0-4ee4-980d-b057e4af903f.png)
+
+_Huh, didn't we get rid of package conflicts already? ([screenshot](https://www.reddit.com/r/openSUSE/comments/z4ld75/this_seems_to_be_common_in_opensuse_should_i_wait/))_
 
 Tools like Ansible, Salt, Puppet, or Chef can manage and control standard systems upgrade mechanisms without requiring any interaction with each system during high-scale upgrades. In the standard model, clients handle certain portions of upgrades and installations, such as updating configuration files, or regenerating the initramfs. However, these actions could eventually raise the infrastructure drift level, causing a configuration merging to block everything or cause damage to your infrastructure and interrupt services. To avoid such issues, preparing fallback or switching services connections after an upgrade has been rolled out is one way to approach it.
 
