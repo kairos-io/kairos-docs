@@ -24,12 +24,12 @@ Below is a list of the container repositories for each flavor:
 
 | **Flavor**      | repository                                      |
 |-----------------|-------------------------------------------------|
-| **Alpine**      | {{< container-repo-link flavor="alpine" >}}     |
-| **Debian**      | {{< container-repo-link flavor="debian" >}}     |
-| **Fedora**      | {{< container-repo-link flavor="fedora" >}}     |
-| **openSUSE**    | {{< container-repo-link flavor="opensuse" >}}   |
-| **Ubuntu**      | {{< container-repo-link flavor="ubuntu" >}}     |
-| **Rocky Linux** | {{< container-repo-link flavor="rockylinux" >}} |
+| **Alpine**      | <ContainerRepoLink flavor="alpine" />     |
+| **Debian**      | <ContainerRepoLink flavor="debian" />     |
+| **Fedora**      | <ContainerRepoLink flavor="fedora" />     |
+| **openSUSE**    | <ContainerRepoLink flavor="opensuse" />   |
+| **Ubuntu**      | <ContainerRepoLink flavor="ubuntu" />     |
+| **Rocky Linux** | <ContainerRepoLink flavor="rockylinux" /> |
 
 The various images are available with different tags in the form of:
 
