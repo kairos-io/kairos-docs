@@ -41,16 +41,6 @@ function transformNonInlineCode(segment) {
   });
 
   // Render supported simple value shortcodes as MDX components outside code.
-  out = out.replace(/\{\{<\s*getRemoteSource\s+"([^"]+)"\s*>\}\}/gi, (_full, url) => {
-    const safeUrl = String(url || '').replace(/"/g, '&quot;');
-    return `<GetRemoteSource url="${safeUrl}" />`;
-  });
-  out = out.replace(/\{\{<\s*getRemoteSource\b([^>]*)>\}\}/gi, (_full, rawAttrs) => {
-    const attrs = parseShortcodeAttrs(rawAttrs);
-    const url = (attrs.url || '').replace(/"/g, '&quot;');
-    if (!url) return _full;
-    return `<GetRemoteSource url="${url}" />`;
-  });
 
   return out;
 }
@@ -78,7 +68,6 @@ function wrapShortcodesOutsideInline(line) {
         const shortcodeNameMatch = shortcode.match(/^\{\{[<%]\s*\/?\s*([A-Za-z0-9_-]+)/);
         const shortcodeName = shortcodeNameMatch ? shortcodeNameMatch[1].toLowerCase() : '';
         const supportedInlineShortcodes = new Set([
-          'getremotesource',
         ]);
         if (supportedInlineShortcodes.has(shortcodeName)) {
           out += shortcode;

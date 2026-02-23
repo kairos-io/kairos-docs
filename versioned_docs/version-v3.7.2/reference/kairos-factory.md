@@ -175,7 +175,7 @@ When you pass `--provider k3s` (or `-p k3s`), kairos-init registers the provider
 
 You can provide a generic Dockerfile that gets all this values and passes them down into kairos-init like we do under Kairos:
 
-{{< getRemoteSource "https://raw.githubusercontent.com/kairos-io/kairos/refs/heads/master/images/Dockerfile" >}}
+<GetRemoteSource url="https://raw.githubusercontent.com/kairos-io/kairos/refs/heads/master/images/Dockerfile" />
 
 
 :::info Provider versions
@@ -331,7 +331,7 @@ RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init /kairos
 
 All the examples are using the [kairos default dockerfile](https://github.com/kairos-io/kairos/blob/master/images/Dockerfile) as the base Dockerfile and its reproduced below:
 
-{{< getRemoteSource "https://raw.githubusercontent.com/kairos-io/kairos/refs/heads/master/images/Dockerfile" >}}
+<GetRemoteSource url="https://raw.githubusercontent.com/kairos-io/kairos/refs/heads/master/images/Dockerfile" />
 
 
 You can see more examples in the [Kairos repo](https://github.com/kairos-io/kairos/tree/master/examples).
