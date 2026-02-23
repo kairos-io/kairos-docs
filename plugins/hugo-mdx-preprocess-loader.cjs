@@ -11,22 +11,6 @@ function parseShortcodeAttrs(raw) {
   return attrs;
 }
 
-function renderFigureShortcode(rawAttrs) {
-  const attrs = parseShortcodeAttrs(rawAttrs);
-  const src = (attrs.src || '').trim();
-  if (!src) {
-    return `{{< figure${rawAttrs || ''}>}}`;
-  }
-  const alt = (attrs.alt || '').trim();
-  const title = (attrs.title || attrs.caption || '').trim();
-  const escapedAlt = alt.replace(/\]/g, '\\]');
-  if (title) {
-    const escapedTitle = title.replace(/"/g, '\\"');
-    return `![${escapedAlt}](${src} "${escapedTitle}")`;
-  }
-  return `![${escapedAlt}](${src})`;
-}
-
 function slugifyTabValue(text) {
   return String(text || '')
     .trim()
@@ -100,9 +84,6 @@ function transformNonInlineCode(segment) {
     if (attrs.flavorRelease) props.push(`flavorRelease="${attrs.flavorRelease.replace(/"/g, '&quot;')}"`);
     return `<ImageLink ${props.join(' ')} />`;
   });
-  out = out.replace(/\{\{<\s*figure\b([\s\S]*?)>\}\}/gi, (_full, rawAttrs) =>
-    renderFigureShortcode(rawAttrs),
-  );
   out = out.replace(/\{\{<\s*container-repo-link\b([^>]*)>\}\}/gi, (_full, rawAttrs) => {
     const attrs = parseShortcodeAttrs(rawAttrs);
     const flavor = (attrs.flavor || '').replace(/"/g, '&quot;');
@@ -176,7 +157,6 @@ function wrapShortcodesOutsideInline(line) {
         const supportedInlineShortcodes = new Set([
           'youtube',
           'card',
-          'figure',
           'imagelink',
           'kairosversion',
           'flavorcode',
@@ -217,9 +197,7 @@ function normalizeOutsideCode(line) {
 }
 
 module.exports = function hugoMdxPreprocessLoader(source) {
-  const input = String(source).replace(/\{\{<\s*figure\b([\s\S]*?)>\}\}/gi, (_full, rawAttrs) =>
-    renderFigureShortcode(rawAttrs),
-  );
+  const input = String(source);
   const lines = input.split('\n');
   const out = [];
   let inFence = false;
