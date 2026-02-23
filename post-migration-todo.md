@@ -8,8 +8,4 @@
   - `import TabItem from '@theme/TabItem';`
   - `<Tabs> ... <TabItem ...> ... </TabItem> ... </Tabs>`
 - After migration, verify no `{{< tabpane ... >}}` / `{{% tab ... %}}` usages remain and then delete the conversion code.
-- Replace remaining Hugo flavor shortcodes with native MDX components and then remove shortcode conversion for:
-  - `{{< flavorCode >}}` -> `<FlavorCode />`
-  - `{{< flavorReleaseCode >}}` -> `<FlavorReleaseCode />`
-  from `docusaurus/plugins/hugo-mdx-preprocess-loader.cjs`.
 - Uncomment `editUrl` in `docusaurus/docusaurus.config.ts` to re-enable "Edit this page" links (disabled in 4 places: docs preset, blog preset, getting-started plugin, quickstart plugin).

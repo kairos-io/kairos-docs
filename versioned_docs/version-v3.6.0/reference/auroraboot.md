@@ -78,7 +78,7 @@ The basic usage of AuroraBoot involves passing it several parameters that define
 
 AuroraBoot will download the artifacts required for bootstrapping the nodes, and prepare the environment required for a zero-touch deployment.
 
-For example, to netboot a machine with the latest version of Kairos and {{<flavorCode >}} using a cloud config, you would run the following command:
+For example, to netboot a machine with the latest version of Kairos and <FlavorCode /> using a cloud config, you would run the following command:
 
 ```bash
 docker run --rm -ti --net host quay.io/kairos/auroraboot \
@@ -114,7 +114,7 @@ To use a container image, you can use [the Kairos released images](/docs/v3.6.0/
 
 Now we can run AuroraBoot with the version we selected, either from GitHub releases or directly from a container image.
 
-In the example below we selected `v3.6.0-{{< k3sVersion >}}`, {{<flavorCode >}} flavor, so we would run either one of the following:
+In the example below we selected `v3.6.0-{{< k3sVersion >}}`, <FlavorCode /> flavor, so we would run either one of the following:
 
 {{< tabpane text=true  >}}
 {{% tab header="Container image" %}}

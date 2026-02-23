@@ -111,7 +111,7 @@ Release changelogs are available for Kairos core and for each component. Below i
   https://github.com/kairos-io/kairos/releases/download/v3.6.0/{{< image variant="core" suffix="-sbom.spdx.json" kairosVersion="v3.6.0" >}}
   ```
 
- is the SBOM for the core {{<flavorCode >}} image.
+ is the SBOM for the core <FlavorCode /> image.
 
 ## Image verification
 
