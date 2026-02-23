@@ -45,28 +45,28 @@ The Image support matrix in [here](/docs/v3.5.7/reference/image_matrix/) lists a
 To inspect an image and run it locally, you can use a container engine like Docker or Podman:
 
 ```bash
-docker pull {{<oci variant="core" >}}
+docker pull {{< OCI variant="core"  >}}
 ```
 
 We can run it locally with docker as a container to inspect it, as it is runnable:
 
 ```bash
-$ docker run -ti --rm {{<oci variant="core" >}}
+$ docker run -ti --rm {{< OCI variant="core"  >}}
 $ cat /etc/os-release
 ...
-KAIROS_NAME="kairos-core-{{< flavorCode >}}"
-KAIROS_VERSION="{{< kairosVersion >}}"
+KAIROS_NAME="kairos-core-{{< FlavorCode  >}}"
+KAIROS_VERSION="{{< KairosVersion  >}}"
 KAIROS_ID="kairos"
-KAIROS_ID_LIKE="kairos-core-{{< flavorCode >}}"
-KAIROS_VERSION_ID="{{< kairosVersion >}}"
-KAIROS_PRETTY_NAME="kairos-core-{{< flavorCode >}} {{< kairosVersion >}}"
+KAIROS_ID_LIKE="kairos-core-{{< FlavorCode  >}}"
+KAIROS_VERSION_ID="{{< KairosVersion  >}}"
+KAIROS_PRETTY_NAME="kairos-core-{{< FlavorCode  >}} {{< KairosVersion  >}}"
 KAIROS_BUG_REPORT_URL="https://github.com/kairos-io/kairos/issues"
 KAIROS_HOME_URL="https://github.com/kairos-io/kairos"
-KAIROS_IMAGE_REPO="{{<oci variant="core" >}}"
+KAIROS_IMAGE_REPO="{{< OCI variant="core"  >}}"
 KAIROS_IMAGE_LABEL="latest"
 KAIROS_GITHUB_REPO="kairos-io/kairos"
 KAIROS_VARIANT="core"
-KAIROS_FLAVOR="{{< flavorCode >}}"
+KAIROS_FLAVOR="{{< FlavorCode  >}}"
 ```
 
 And check out things like what's the kernel inside:
@@ -92,7 +92,7 @@ total 102M
 The CI process generates bootable medium by the container images, and similarly, we can modify this image to introduce our changes and remaster an ISO as described in [Automated installation](/docs/v3.5.7/installation/automated/), but that can be resumed in the following steps:
 
 ```bash
-$ docker run -ti --name custom-container {{<oci variant="core" >}}
+$ docker run -ti --name custom-container {{< OCI variant="core"  >}}
 # # Do your changes inside the container..
 # echo "foo" > /foo
 # ...
@@ -100,7 +100,7 @@ $ docker run -ti --name custom-container {{<oci variant="core" >}}
 $ docker commit custom-container custom-image
  > sha256:37176f104a870480f9c3c318ab51f6c456571b6612b6a47b96af71b95a0a27c7
 # Builds an ISO from it
-$ docker run -v $PWD:/cOS -v /var/run/docker.sock:/var/run/docker.sock -i --rm quay.io/kairos/auroraboot:{{< auroraBootVersion >}} --debug build-iso --name "custom-iso" --date=false --output /cOS/ custom-image
+$ docker run -v $PWD:/cOS -v /var/run/docker.sock:/var/run/docker.sock -i --rm quay.io/kairos/auroraboot:{{< AuroraBootVersion  >}} --debug build-iso --name "custom-iso" --date=false --output /cOS/ custom-image
  > ...
  > ...
  > xorriso : UPDATE : Writing:     147456s   84.0%   fifo 100%  buf  50%   60.5xD

@@ -11,14 +11,16 @@ type ShortcodeCodeBlockProps = {
 
 const IMAGE_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*image\s+([^>]*?)\s*>\}\}/g;
 const OCI_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*oci\s+([^>]*?)\s*>\}\}/g;
-const FLAVOR_CODE_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*flavorCode\s*>\}\}/g;
-const FLAVOR_RELEASE_CODE_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*flavorReleaseCode\s*>\}\}/g;
-const REGISTRY_URL_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*registryURL\s*>\}\}/g;
-const KAIROS_VERSION_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*kairosVersion\s*>\}\}/g;
-const PROVIDER_VERSION_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*providerVersion\s*>\}\}/g;
+const FLAVOR_CODE_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*flavorCode\s*>\}\}/gi;
+const FLAVOR_RELEASE_CODE_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*flavorReleaseCode\s*>\}\}/gi;
+const REGISTRY_URL_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*registryURL\s*>\}\}/gi;
+const KAIROS_VERSION_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*kairosVersion\s*>\}\}/gi;
+const K3S_VERSION_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*k3sVersion\s*>\}\}/gi;
+const K3S_VERSION_OCI_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*k3sVersionOCI\s*>\}\}/gi;
+const PROVIDER_VERSION_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*providerVersion\s*>\}\}/gi;
 const PROVIDER_VERSION_COMPONENT_GLOBAL_PATTERN = /<\s*ProviderVersion\s*\/>/g;
-const KAIROS_INIT_VERSION_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*kairosInitVersion\s*>\}\}/g;
-const AURORA_BOOT_VERSION_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*auroraBootVersion\s*>\}\}/g;
+const KAIROS_INIT_VERSION_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*kairosInitVersion\s*>\}\}/gi;
+const AURORA_BOOT_VERSION_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*auroraBootVersion\s*>\}\}/gi;
 const FLAVOR_AT_PATTERN = /@flavor\b/g;
 const FLAVOR_RELEASE_AT_PATTERN = /@flavorRelease\b/g;
 const ATTRIBUTE_PATTERN = /([a-zA-Z_][a-zA-Z0-9_-]*)\s*=\s*"([^"]*)"/g;
@@ -49,6 +51,8 @@ function renderTemplate(
     .replace(AURORA_BOOT_VERSION_SHORTCODE_GLOBAL_PATTERN, auroraBootVersion)
     .replace(KAIROS_INIT_VERSION_SHORTCODE_GLOBAL_PATTERN, kairosInitVersion)
     .replace(KAIROS_VERSION_SHORTCODE_GLOBAL_PATTERN, defaultKairosVersion)
+    .replace(K3S_VERSION_OCI_SHORTCODE_GLOBAL_PATTERN, defaultK3sVersion.replaceAll('+', '-'))
+    .replace(K3S_VERSION_SHORTCODE_GLOBAL_PATTERN, defaultK3sVersion)
     .replace(PROVIDER_VERSION_SHORTCODE_GLOBAL_PATTERN, providerVersion)
     .replace(PROVIDER_VERSION_COMPONENT_GLOBAL_PATTERN, providerVersion)
     .replace(REGISTRY_URL_SHORTCODE_GLOBAL_PATTERN, registryURL)

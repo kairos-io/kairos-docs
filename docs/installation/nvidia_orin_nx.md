@@ -54,7 +54,7 @@ cd Linux_for_Tegra
 # Drop extlinux
 echo "" > ./bootloader/extlinux.conf
 # This is needed so the SDK doesn't complain of missing files (not really used in the flash process)
-IMAGE=quay.io/kairos/ubuntu:22.04-core-arm64-nvidia-jetson-orin-nx-{{< kairosVersion>}}
+IMAGE=quay.io/kairos/ubuntu:22.04-core-arm64-nvidia-jetson-orin-nx-{{< KairosVersion >}}
 docker run -ti --rm -v $PWD/rootfs:/rootfs quay.io/luet/base util unpack "$IMAGE" /rootfs
 # workaround needed (SDK writes to the symlink)
 rm rootfs/boot/initrd
@@ -73,13 +73,13 @@ You can find Kairos core ubuntu images based on Ubuntu `22.04` [here](https://qu
 
 If you are customizing the image, or either modifying the default partition sizes you can build the images by running:
 ```bash
-IMAGE=quay.io/kairos/ubuntu:22.04-core-arm64-nvidia-jetson-orin-nx-{{< kairosVersion >}}
+IMAGE=quay.io/kairos/ubuntu:22.04-core-arm64-nvidia-jetson-orin-nx-{{< KairosVersion  >}}
 docker run --privileged --platform=linux/arm64 \
         -e container_image=$IMAGE \
         -e STATE_SIZE="25500" \
         -e RECOVERY_SIZE="21000" \
         -e DEFAULT_ACTIVE_SIZE="7000" \
-        -v $PWD/bootloader:/bootloader --entrypoint /prepare_nvidia_orin_images.sh -ti --rm quay.io/kairos/auroraboot:{{< auroraBootVersion >}}
+        -v $PWD/bootloader:/bootloader --entrypoint /prepare_nvidia_orin_images.sh -ti --rm quay.io/kairos/auroraboot:{{< AuroraBootVersion  >}}
 ```
 
 </TabItem>
@@ -94,7 +94,7 @@ docker run --privileged --platform=linux/arm64 \
         -e RECOVERY_SIZE="21000" \
         -e DEFAULT_ACTIVE_SIZE="7000" \
 	-v $ROOTFS:/rootfs \
-        -v $PWD/bootloader:/bootloader --entrypoint /prepare_nvidia_orin_images.sh -ti --rm quay.io/kairos/auroraboot:{{< auroraBootVersion >}}
+        -v $PWD/bootloader:/bootloader --entrypoint /prepare_nvidia_orin_images.sh -ti --rm quay.io/kairos/auroraboot:{{< AuroraBootVersion  >}}
 ```
 
 </TabItem>
@@ -260,14 +260,14 @@ The solution here is trying with a different kernel version, as suggested in the
 To customize the default cloud config of the board, generate the images mounting the cloud config you want in the images in `/defaults.yaml`:
 
 ```bash
-IMAGE=quay.io/kairos/ubuntu:22.04-core-arm64-nvidia-jetson-orin-nx-{{< kairosVersion >}}
+IMAGE=quay.io/kairos/ubuntu:22.04-core-arm64-nvidia-jetson-orin-nx-{{< KairosVersion  >}}
 CLOUD_CONFIG=/cloud/config.yaml
 docker run -v $CLOUD_CONFIG:/defaults.yaml --privileged \
         -e container_image=$IMAGE \
         -e STATE_SIZE="25500" \
         -e RECOVERY_SIZE="21000" \
         -e DEFAULT_ACTIVE_SIZE="7000" \
-        -v $PWD/bootloader:/bootloader --entrypoint /prepare_nvidia_orin_images.sh -ti --rm quay.io/kairos/auroraboot:{{< auroraBootVersion >}}
+        -v $PWD/bootloader:/bootloader --entrypoint /prepare_nvidia_orin_images.sh -ti --rm quay.io/kairos/auroraboot:{{< AuroraBootVersion  >}}
 ```
 
 ### Debugging

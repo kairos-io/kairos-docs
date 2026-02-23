@@ -40,7 +40,7 @@ Where type can be `dir` or `oci` and address is the path to the directory in the
 For example, if you wanted to upgrade to the latest available stable release you could run the following command:
 
 ```bash
-sudo kairos-agent upgrade --source oci:{{<oci variant="standard">}}
+sudo kairos-agent upgrade --source oci:{{< OCI variant="standard" >}}
 ```
 
 Once you have tested the new system and are happy with it, you can upgrade the recovery system.
@@ -55,7 +55,7 @@ Only upgrade the recovery system, when you are sure that the active system is ru
 To make this process less error prone, the upgrade command provides an extra flag that will upgrade the recovery only. It uses the same system and flags as the normal upgrade.
 
 ```bash
-sudo kairos-agent upgrade --recovery --source oci:{{<oci variant="standard">}}
+sudo kairos-agent upgrade --recovery --source oci:{{< OCI variant="standard" >}}
 ```
 
 ## What about the passive system?
@@ -72,7 +72,7 @@ Being different artifacts though, means that they will need to be upgraded too.
 This can be achieved by passing the name of the `efi` file (without the extension) to the upgrade command like this:
 
 ```bash
-kairos-agent upgrade --source oci:{{<oci variant="standard">}} --boot-entry <efi_file_name_here>
+kairos-agent upgrade --source oci:{{< OCI variant="standard" >}} --boot-entry <efi_file_name_here>
 ```
 
 You can find the efi file name by listing all the efi files in the installed system:

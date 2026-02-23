@@ -45,28 +45,28 @@ The Image support matrix in [here](/docs/v3.6.0/reference/image_matrix/) lists a
 To inspect an image and run it locally, you can use a container engine like Docker or Podman:
 
 ```bash
-docker pull {{< oci variant="core" kairosVersion="v3.6.0" >}}
+docker pull {{< OCI variant="core" kairosVersion="v3.6.0"  >}}
 ```
 
 We can run it locally with docker as a container to inspect it, as it is runnable:
 
 ```bash
-$ docker run -ti --rm {{< oci variant="core" kairosVersion="v3.6.0" >}}
+$ docker run -ti --rm {{< OCI variant="core" kairosVersion="v3.6.0"  >}}
 $ cat /etc/os-release
 ...
-KAIROS_NAME="kairos-core-{{< flavorCode >}}"
+KAIROS_NAME="kairos-core-{{< FlavorCode  >}}"
 KAIROS_VERSION="v3.6.0"
 KAIROS_ID="kairos"
-KAIROS_ID_LIKE="kairos-core-{{< flavorCode >}}"
+KAIROS_ID_LIKE="kairos-core-{{< FlavorCode  >}}"
 KAIROS_VERSION_ID="v3.6.0"
-KAIROS_PRETTY_NAME="kairos-core-{{< flavorCode >}} v3.6.0"
+KAIROS_PRETTY_NAME="kairos-core-{{< FlavorCode  >}} v3.6.0"
 KAIROS_BUG_REPORT_URL="https://github.com/kairos-io/kairos/issues"
 KAIROS_HOME_URL="https://github.com/kairos-io/kairos"
-KAIROS_IMAGE_REPO="{{< oci variant="core" kairosVersion="v3.6.0" >}}"
+KAIROS_IMAGE_REPO="{{< OCI variant="core" kairosVersion="v3.6.0"  >}}"
 KAIROS_IMAGE_LABEL="latest"
 KAIROS_GITHUB_REPO="kairos-io/kairos"
 KAIROS_VARIANT="core"
-KAIROS_FLAVOR="{{< flavorCode >}}"
+KAIROS_FLAVOR="{{< FlavorCode  >}}"
 ```
 
 And check out things like what's the kernel inside:
@@ -92,7 +92,7 @@ total 102M
 The CI process generates bootable medium by the container images, and similarly, we can modify this image to introduce our changes and remaster an ISO as described in [Automated installation](/docs/v3.6.0/installation/automated/), but that can be resumed in the following steps:
 
 ```bash
-$ docker run -ti --name custom-container {{< oci variant="core" kairosVersion="v3.6.0" >}}
+$ docker run -ti --name custom-container {{< OCI variant="core" kairosVersion="v3.6.0"  >}}
 # # Do your changes inside the container..
 # echo "foo" > /foo
 # ...

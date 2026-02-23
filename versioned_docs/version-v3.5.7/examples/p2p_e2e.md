@@ -101,7 +101,7 @@ AuroraBoot takes `cloud-config` files also from _STDIN_, so we will pipe the con
 ``` bash
 cat <<EOF | docker run --rm -i --net host quay.io/kairos/auroraboot \
                     --cloud-config - \
-                    --set "container_image={{<oci variant="standard">}}"
+                    --set "container_image={{< OCI variant="standard" >}}"
 #cloud-config
 
 # https://github.com/kairos-io/kairos/issues/885

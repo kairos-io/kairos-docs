@@ -144,7 +144,7 @@ $ docker pull $IMAGE
 # docker run --entrypoint /bin/bash --name changes -ti $IMAGE
 # docker commit changes $IMAGE
 # Build an ISO with $IMAGE
-$ docker run -v $PWD:/cOS -v /var/run/docker.sock:/var/run/docker.sock -i --rm quay.io/kairos/auroraboot:{{< auroraBootVersion >}} --debug build-iso --name "custom-iso" --date=false --overlay-iso /cOS/files-iso --output /cOS/ $IMAGE
+$ docker run -v $PWD:/cOS -v /var/run/docker.sock:/var/run/docker.sock -i --rm quay.io/kairos/auroraboot:{{< AuroraBootVersion  >}} --debug build-iso --name "custom-iso" --date=false --overlay-iso /cOS/files-iso --output /cOS/ $IMAGE
 ```
 </TabItem>
 </Tabs>

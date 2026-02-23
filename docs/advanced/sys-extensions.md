@@ -102,7 +102,7 @@ $ docker run \
 -v "$PWD":/build/ \
 -v /var/run/docker.sock:/var/run/docker.sock \
 --rm \
-{{< registryURL >}}/auroraboot:{{< auroraBootVersion >}} sysext --private-key=/keys/PRIVATE_KEY --certificate=/keys/CERTIFICATE --output=/build NAME CONTAINER_IMAGE
+{{< RegistryURL  >}}/auroraboot:{{< AuroraBootVersion  >}} sysext --private-key=/keys/PRIVATE_KEY --certificate=/keys/CERTIFICATE --output=/build NAME CONTAINER_IMAGE
 ```
 
 The explanation of the docker command flags is as follows:
@@ -121,7 +121,7 @@ The explanation of the auroraboot command flags is as follows:
 
 Example of a successful run:
 ```bash
-$ docker run -v "$PWD":/build/ -v /tmp/keys/:/keys -v /var/run/docker.sock:/var/run/docker.sock --rm -ti {{< registryURL >}}/auroraboot:{{< auroraBootVersion >}} sysext --private-key=/keys/db.key --certificate=/keys/db.pem --output /build grype sysext
+$ docker run -v "$PWD":/build/ -v /tmp/keys/:/keys -v /var/run/docker.sock:/var/run/docker.sock --rm -ti {{< RegistryURL  >}}/auroraboot:{{< AuroraBootVersion  >}} sysext --private-key=/keys/db.key --certificate=/keys/db.pem --output /build grype sysext
 2024-09-16T14:59:36Z INF Starting auroraboot version
 2024-09-16T14:59:36Z INF 🚀 Start sysext creation
 2024-09-16T14:59:36Z INF 💿 Getting image info

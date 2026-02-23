@@ -65,7 +65,7 @@ apiVersion: build.kairos.io/v1alpha2
 metadata:
   name: hello-kairos
 spec:
-  imageName: "{{<oci variant="standard">}}"
+  imageName: "{{< OCI variant="standard" >}}"
   iso: true
   bundles:
   # Bundles available at: https://packages.kairos.io/Kairos/
@@ -122,7 +122,7 @@ kind: OSArtifact
 metadata:
   name: hello-kairos
 spec:
-  imageName: "{{<oci variant="core">}}"
+  imageName: "{{< OCI variant="core" >}}"
   netboot: true
   netbootURL: ...
   bundles: ...
@@ -153,7 +153,7 @@ kind: OSArtifact
 metadata:
   name: hello-kairos
 spec:
-  imageName: "{{<oci variant="core">}}"
+  imageName: "{{< OCI variant="core" >}}"
   cloudImage: true
   cloudConfigRef:
     name: cloud-config
@@ -248,7 +248,7 @@ kind: OSArtifact
 metadata:
   name: hello-kairos
 spec:
-  imageName: "{{<oci variant="core">}}"
+  imageName: "{{< OCI variant="core" >}}"
   azureImage: true
   ...
 ```
@@ -286,7 +286,7 @@ kind: OSArtifact
 metadata:
   name: hello-kairos
 spec:
-  imageName: "{{<oci variant="core">}}"
+  imageName: "{{< OCI variant="core" >}}"
   gceImage: true
   ...
 ```

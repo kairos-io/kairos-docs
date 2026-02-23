@@ -54,7 +54,7 @@ spec:
       kairos.io/managed: "true"
 
   # The container image to use
-  image: quay.io/kairos/{{< flavorCode >}}
+  image: quay.io/kairos/{{< FlavorCode  >}}
 
   # Custom command to execute
   command:

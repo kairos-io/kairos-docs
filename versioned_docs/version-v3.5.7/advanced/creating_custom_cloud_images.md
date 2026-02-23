@@ -33,7 +33,7 @@ Here's a basic example of creating a base image:
 docker build -t my-custom-image - <<EOF
 ARG BASE_IMAGE=ubuntu:24.04
 
-FROM quay.io/kairos/kairos-init:{{< kairosInitVersion >}} AS kairos-init
+FROM quay.io/kairos/kairos-init:{{< KairosInitVersion  >}} AS kairos-init
 
 FROM ${BASE_IMAGE} AS base-kairos
 ARG VARIANT=core
@@ -68,7 +68,7 @@ After creating and customizing your base image, you can use AuroraBoot to create
 ```bash
 docker run -v "$PWD"/build:/tmp/auroraboot \
              -v /var/run/docker.sock:/var/run/docker.sock \
-             --rm -ti quay.io/kairos/auroraboot:{{< auroraBootVersion >}} \
+             --rm -ti quay.io/kairos/auroraboot:{{< AuroraBootVersion  >}} \
              --set container_image=my-custom-image \
              --set "disable_http_server=true" \
              --set "disable_netboot=true" \

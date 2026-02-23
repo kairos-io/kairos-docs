@@ -13,7 +13,7 @@ Kairos supports takeover installations. Here are a few summarized steps:
 
 ```bash
 export DEVICE=/dev/sda
-export IMAGE={{< oci variant="core" kairosVersion="v3.6.0" >}}
+export IMAGE={{< OCI variant="core" kairosVersion="v3.6.0"  >}}
 cat <<'EOF' > config.yaml
 #cloud-config
 users:

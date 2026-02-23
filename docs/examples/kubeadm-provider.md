@@ -48,7 +48,7 @@ RUN mkdir -p /system/providers && curl -L https://github.com/kairos-io/provider-
 Or with the modern [Kairos Factory](/docs/reference/kairos-factory/) method:
 
 ```Dockerfile
-FROM quay.io/kairos/kairos-init:{{< kairosInitVersion >}} AS kairos-init
+FROM quay.io/kairos/kairos-init:{{< KairosInitVersion  >}} AS kairos-init
 
 FROM ubuntu:24.04
 ARG VERSION=1.0.0

@@ -44,7 +44,7 @@ As described below, it is possible to reset to any desired image on first boot. 
 
 ```bash {class="only-flavors=Ubuntu+24.04"}
 gcloud --project  <your_project_here> compute instances create kairos-vm-test \
-  --image=projects/palette-kairos/global/images/kairos-ubuntu-24-04-core-amd64-generic-{{< googleVersion >}} \
+  --image=projects/palette-kairos/global/images/kairos-ubuntu-24-04-core-amd64-generic-{{< GoogleVersion  >}} \
   --image-project=palette-kairos \
   --zone=europe-central2-c \
   --metadata-from-file=user-data=<path_to_your_cloud_config> \
@@ -67,7 +67,7 @@ You can specify a different image to be installed using a block like the followi
 ```yaml
 reset:
   system:
-    source: "oci:quay.io/kairos/opensuse:leap-15.6-standard-amd64-generic-v3.7.2-{{< k3sVersionOCI >}}"
+    source: "oci:quay.io/kairos/opensuse:leap-15.6-standard-amd64-generic-v3.7.2-{{< K3sVersionOCI  >}}"
 ```
 
 This will reset to the specified image on the first boot instead of the image booted. Once the instance is running, you can access it via SSH. Make sure reset has completed and the system has rebooted into "active" mode. The following command should report "active_boot":

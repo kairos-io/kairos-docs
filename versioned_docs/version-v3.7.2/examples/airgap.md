@@ -90,7 +90,7 @@ k3s:
 
 
 ```bash
-IMAGE={{< oci variant="standard" kairosVersion="v3.7.2" k3sVersion="v1.35.0+k3s3" >}}
+IMAGE={{< OCI variant="standard" kairosVersion="v3.7.2" k3sVersion="v1.35.0+k3s3"  >}}
 
 docker pull $IMAGE
 

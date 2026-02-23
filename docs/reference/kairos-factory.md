@@ -40,7 +40,7 @@ See the [docker multi-platform docs](https://docs.docker.com/build/building/mult
 Create a single Dockerfile:
 
 ```Dockerfile
-FROM quay.io/kairos/kairos-init:{{< kairosInitVersion >}} AS kairos-init
+FROM quay.io/kairos/kairos-init:{{< KairosInitVersion  >}} AS kairos-init
 
 FROM ubuntu:24.04
 ARG VERSION=1.0.0
@@ -76,7 +76,7 @@ For example:
 
 ```bash
 $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $PWD/build/:/output \
-  quay.io/kairos/auroraboot:{{< auroraBootVersion >}} build-iso --output /output/ oci:ubuntu-kairos:24.04
+  quay.io/kairos/auroraboot:{{< AuroraBootVersion  >}} build-iso --output /output/ oci:ubuntu-kairos:24.04
 2025-02-27T13:33:42Z INF Copying ubuntu-kairos:24.04 source to /output/temp-rootfs
 2025-02-27T13:33:47Z INF Finished copying ubuntu-kairos:24.04 into /output/temp-rootfs
 2025-02-27T13:33:47Z INF Preparing squashfs root...
@@ -207,7 +207,7 @@ Run `kairos-init steps-info` to see the available steps and their descriptions. 
 This is an example output of the stages and steps available. We recommend you run `kairos-init steps-info` to see the updated list of steps and stages available, as this is subject to change:
 
 ```dockerfile
-FROM quay.io/kairos/kairos-init:{{< kairosInitVersion >}} AS kairos-init
+FROM quay.io/kairos/kairos-init:{{< KairosInitVersion  >}} AS kairos-init
 
 FROM ubuntu:24.04
 RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init /kairos-init steps-info
@@ -319,7 +319,7 @@ dnf remove epel-release
 Before running `kairos-init`, you need to register the system with the subscription manager and attach a subscription to it. You can do this by modifying the Dockerfile to register the system before running `kairos-init`:
 
 ```Dockerfile
-FROM quay.io/kairos/kairos-init:{{< kairosInitVersion >}} AS kairos-init
+FROM quay.io/kairos/kairos-init:{{< KairosInitVersion  >}} AS kairos-init
 
 FROM redhat/ubi9
 RUN subscription-manager register --username <your-username> --password <your-password>
@@ -354,7 +354,7 @@ $ docker build --platform=linux/arm64 -t ubuntu-rpi:22.04 --build-arg MODEL=rpi4
 ### Add a specific kernel to ubuntu 24.04 (amd64 platform)
 
 ```Dockerfile
-FROM quay.io/kairos/kairos-init:{{< kairosInitVersion >}} AS kairos-init
+FROM quay.io/kairos/kairos-init:{{< KairosInitVersion  >}} AS kairos-init
 
 FROM ubuntu:24.04
 RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init /kairos-init -l debug -s install --version "v0.0.1" --skip-steps installKernel
@@ -411,7 +411,7 @@ Note that for Trusted Boot builds we need to pass the keys dir, please refer to 
 $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
   -v $PWD/e2e/assets/keys:/keys \
   -v $PWD/build/:/output \
-  quay.io/kairos/auroraboot:{{< auroraBootVersion >}} build-uki --output-dir /output/ -k /keys --output-type iso \
+  quay.io/kairos/auroraboot:{{< AuroraBootVersion  >}} build-uki --output-dir /output/ -k /keys --output-type iso \
   oci:ubuntu-kairos-trusted-standard:24.04                       
 2025-02-27T14:54:41Z INF Extracting image to a temporary directory
 2025-02-27T14:54:41Z INF Copying ubuntu-kairos-trusted-standard:24.04 source to /tmp/auroraboot-build-uki-1771870410
@@ -491,7 +491,7 @@ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
            --privileged \
            -v $PWD/build/:/output \
            -p 8080:8080 \
-           quay.io/kairos/auroraboot:{{< auroraBootVersion >}} web
+           quay.io/kairos/auroraboot:{{< AuroraBootVersion  >}} web
 ```
 
 If the process is successful, you will see the following output:

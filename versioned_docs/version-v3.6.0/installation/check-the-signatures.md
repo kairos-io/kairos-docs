@@ -30,8 +30,8 @@ First we check that we have all needed files:
 
 ```bash
 $ ls      
-{{< image variant="core" suffix=".iso" kairosVersion="v3.6.0" >}}         {{< image variant="core" suffix=".iso.sha256.pem" kairosVersion="v3.6.0" >}}
-{{< image variant="core" suffix=".iso.sha256" kairosVersion="v3.6.0" >}}  {{< image variant="core" suffix=".iso.sha256.sig" kairosVersion="v3.6.0" >}}
+{{< Image variant="core" suffix=".iso" kairosVersion="v3.6.0"  >}}         {{< Image variant="core" suffix=".iso.sha256.pem" kairosVersion="v3.6.0"  >}}
+{{< Image variant="core" suffix=".iso.sha256" kairosVersion="v3.6.0"  >}}  {{< Image variant="core" suffix=".iso.sha256.sig" kairosVersion="v3.6.0"  >}}
 ```
 
 :::note Cosign version Step
@@ -42,7 +42,7 @@ We recommend using the latest cosign version, at the time of writing, 2.5.0
 Then we verify that the sha256 checksums haven't been tampered with (substitute $VERSION with the exact Kairos version you are verifying as the certificate identity is the release job that signs it):
 
 ```bash
-$ cosign verify-blob --cert {{< image variant="core" suffix=".iso.sha256.pem" kairosVersion="v3.6.0" >}} --signature {{< image variant="core" suffix=".iso.sha256.sig" kairosVersion="v3.6.0" >}} --certificate-identity https://github.com/kairos-io/kairos/.github/workflows/reusable-release.yaml@refs/tags/$VERSION --certificate-oidc-issuer https://token.actions.githubusercontent.com {{< image variant="core" suffix=".iso.sha256" kairosVersion="v3.6.0" >}} 
+$ cosign verify-blob --cert {{< Image variant="core" suffix=".iso.sha256.pem" kairosVersion="v3.6.0"  >}} --signature {{< Image variant="core" suffix=".iso.sha256.sig" kairosVersion="v3.6.0"  >}} --certificate-identity https://github.com/kairos-io/kairos/.github/workflows/reusable-release.yaml@refs/tags/$VERSION --certificate-oidc-issuer https://token.actions.githubusercontent.com {{< Image variant="core" suffix=".iso.sha256" kairosVersion="v3.6.0"  >}} 
 Verified OK
 ```
 
@@ -51,16 +51,16 @@ Once we see that `Verified OK` we can be sure that the file hasn't been tampered
 For an example of a failure validation see below:
 
 ```bash
-$ cosign verify-blob --cert {{< image variant="core" suffix=".iso.sha256.pem" kairosVersion="v3.6.0" >}} --signature {{< image variant="core" suffix=".iso.sha256.sig" kairosVersion="v3.6.0" >}} --certificate-identity https://github.com/kairos-io/kairos/.github/workflows/reusable-release.yaml@refs/tags/$VERSION --certificate-oidc-issuer https://token.actions.githubusercontent.com {{< image variant="core" suffix=".iso.sha256.modified" kairosVersion="v3.6.0" >}} 
-Error: verifying blob [{{< image variant="core" suffix=".iso.sha256.modified" kairosVersion="v3.6.0" >}}]: invalid signature when validating ASN.1 encoded signature
-main.go:62: error during command execution: verifying blob [{{< image variant="core" suffix=".iso.sha256.modified" kairosVersion="v3.6.0" >}}]: invalid signature when validating ASN.1 encoded signature
+$ cosign verify-blob --cert {{< Image variant="core" suffix=".iso.sha256.pem" kairosVersion="v3.6.0"  >}} --signature {{< Image variant="core" suffix=".iso.sha256.sig" kairosVersion="v3.6.0"  >}} --certificate-identity https://github.com/kairos-io/kairos/.github/workflows/reusable-release.yaml@refs/tags/$VERSION --certificate-oidc-issuer https://token.actions.githubusercontent.com {{< Image variant="core" suffix=".iso.sha256.modified" kairosVersion="v3.6.0"  >}} 
+Error: verifying blob [{{< Image variant="core" suffix=".iso.sha256.modified" kairosVersion="v3.6.0"  >}}]: invalid signature when validating ASN.1 encoded signature
+main.go:62: error during command execution: verifying blob [{{< Image variant="core" suffix=".iso.sha256.modified" kairosVersion="v3.6.0"  >}}]: invalid signature when validating ASN.1 encoded signature
 ```
 
 Now we can verify that the integrity of the ISO hasnt been compromise:
 
 ```bash
-$ sha256sum -c {{< image variant="core" suffix=".iso.sha256" kairosVersion="v3.6.0" >}}
-{{< image variant="core" suffix=".iso" kairosVersion="v3.6.0" >}}: OK
+$ sha256sum -c {{< Image variant="core" suffix=".iso.sha256" kairosVersion="v3.6.0"  >}}
+{{< Image variant="core" suffix=".iso" kairosVersion="v3.6.0"  >}}: OK
 ```
 
 Once we reached this point, we can be sure that from the ISO hasn't been tampered with since it was created by our release workflow.

@@ -35,9 +35,9 @@ E.g.:
 ```bash
 #!ipxe
 set url https://github.com/kairos-io/kairos/releases/download/v3.6.0
-set kernel {{< image variant="standard" suffix="-kernel" kairosVersion="v3.6.0" k3sVersion="v1.33.5+k3s1" >}}
-set initrd {{< image variant="standard" suffix="-initrd" kairosVersion="v3.6.0" k3sVersion="v1.33.5+k3s1" >}}
-set rootfs {{< image variant="standard" suffix=".squashfs" kairosVersion="v3.6.0" k3sVersion="v1.33.5+k3s1" >}}
+set kernel {{< Image variant="standard" suffix="-kernel" kairosVersion="v3.6.0" k3sVersion="v1.33.5+k3s1"  >}}
+set initrd {{< Image variant="standard" suffix="-initrd" kairosVersion="v3.6.0" k3sVersion="v1.33.5+k3s1"  >}}
+set rootfs {{< Image variant="standard" suffix=".squashfs" kairosVersion="v3.6.0" k3sVersion="v1.33.5+k3s1"  >}}
 
 # Configure interface
 ifconf
@@ -70,7 +70,7 @@ qemu-system-x86_64 \
 
 ```bash
 docker run --rm -ti --net host quay.io/kairos/auroraboot \
-                    --set "container_image={{< oci variant="standard" kairosVersion="v3.6.0" k3sVersion="v1.33.5+k3s1" >}}"
+                    --set "container_image={{< OCI variant="standard" kairosVersion="v3.6.0" k3sVersion="v1.33.5+k3s1"  >}}"
                     # Optionally:
                     # --cloud-config ....
 ```
@@ -89,9 +89,9 @@ Assuming the current directory has the `kernel`, `initrd` and `squashfs` artifac
 ```bash
 #!/bin/bash
 
-wget "https://github.com/kairos-io/kairos/releases/download/v3.6.0/{{< image variant="standard" suffix="-kernel" kairosVersion="v3.6.0" k3sVersion="v1.33.5+k3s1" >}}"
-wget "https://github.com/kairos-io/kairos/releases/download/v3.6.0/{{< image variant="standard" suffix="-initrd" kairosVersion="v3.6.0" k3sVersion="v1.33.5+k3s1" >}}"
-wget "https://github.com/kairos-io/kairos/releases/download/v3.6.0/{{< image variant="standard" suffix=".squashfs" kairosVersion="v3.6.0" k3sVersion="v1.33.5+k3s1" >}}"
+wget "https://github.com/kairos-io/kairos/releases/download/v3.6.0/{{< Image variant="standard" suffix="-kernel" kairosVersion="v3.6.0" k3sVersion="v1.33.5+k3s1"  >}}"
+wget "https://github.com/kairos-io/kairos/releases/download/v3.6.0/{{< Image variant="standard" suffix="-initrd" kairosVersion="v3.6.0" k3sVersion="v1.33.5+k3s1"  >}}"
+wget "https://github.com/kairos-io/kairos/releases/download/v3.6.0/{{< Image variant="standard" suffix=".squashfs" kairosVersion="v3.6.0" k3sVersion="v1.33.5+k3s1"  >}}"
 
 cat << EOF > config.yaml
 #cloud-config
@@ -106,7 +106,7 @@ EOF
 # Any machine that depends on DHCP to netboot will be send the specified files and the cmd boot line.
 docker run \
   -d --name pixiecore --net=host -v $PWD:/files quay.io/pixiecore/pixiecore \
-    boot /files/{{< image variant="standard" suffix="-kernel" kairosVersion="v3.6.0" k3sVersion="v1.33.5+k3s1" >}} /files/{{< image variant="standard" suffix="-initrd" kairosVersion="v3.6.0" k3sVersion="v1.33.5+k3s1" >}} --cmdline="rd.neednet=1 ip=dhcp rd.cos.disable root=live:{{ ID \"/files/{{< image variant="standard" suffix=".squashfs" kairosVersion="v3.6.0" k3sVersion="v1.33.5+k3s1" >}}\" }} netboot install-mode config_url={{ ID \"/files/config.yaml\" }} console=tty1 console=ttyS0 console=tty0"
+    boot /files/{{< Image variant="standard" suffix="-kernel" kairosVersion="v3.6.0" k3sVersion="v1.33.5+k3s1"  >}} /files/{{< Image variant="standard" suffix="-initrd" kairosVersion="v3.6.0" k3sVersion="v1.33.5+k3s1"  >}} --cmdline="rd.neednet=1 ip=dhcp rd.cos.disable root=live:{{ ID \"/files/{{< Image variant="standard" suffix=".squashfs" kairosVersion="v3.6.0" k3sVersion="v1.33.5+k3s1"  >}}\" }} netboot install-mode config_url={{ ID \"/files/config.yaml\" }} console=tty1 console=ttyS0 console=tty0"
 ```
 
 If your machine doesn't support netbooting, you can use our [generic image](https://github.com/kairos-io/ipxe-dhcp/releases), which is built using an ipxe script [from the pixiecore project](https://github.com/danderson/netboot/blob/master/pixiecore/boot.ipxe). The ISO will wait for a DHCP proxy response from pixiecore.

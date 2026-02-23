@@ -27,9 +27,9 @@ The process will generate an EFI file which we will pack into a container image 
 1. Build the Container image used for upgrades
 
 ```bash {class="only-flavors=Ubuntu+24.04,Fedora+40"}
-CONTAINER_IMAGE={{<oci variant="core">}}
+CONTAINER_IMAGE={{< OCI variant="core" >}}
 
-docker run --rm -v $PWD/keys:/keys -v $PWD:/work -ti {{< registryURL >}}/auroraboot:{{< auroraBootVersion >}} build-uki -t container --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT $CONTAINER_IMAGE
+docker run --rm -v $PWD/keys:/keys -v $PWD:/work -ti {{< RegistryURL  >}}/auroraboot:{{< AuroraBootVersion  >}} build-uki -t container --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT $CONTAINER_IMAGE
 ```
 
 2. Push the upgrade image to a registry

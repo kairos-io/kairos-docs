@@ -32,13 +32,13 @@ docker run --rm --privileged -v /var/run/docker.sock:/var/run/docker.sock \
                 --debug --set "disable_http_server=true" --set "disable_netboot=true" \
                 --set "state_dir=/output" --set "disk.raw=true" --set "arch=arm64" \
                 --cloud-config /output/cloud-config.yaml \
-                --set "container_image={{<oci variant="standard" model="rpi4" arch="arm64">}}"
+                --set "container_image={{< OCI variant="standard" model="rpi4" arch="arm64" >}}"
 ```
 
 Once complete, use Etcher or `dd` to flash the image to an SD card:
 
 ```bash {class="only-flavors=openSUSE+Leap-15.6,openSUSE+Tumbleweed,Ubuntu+20.04,Ubuntu+22.04,Alpine+3.19"}
-sudo dd if=build/{{<image variant="standard" model="rpi4" arch="arm64" suffix=".raw">}} of=<device> oflag=sync status=progress bs=10M
+sudo dd if=build/{{< Image variant="standard" model="rpi4" arch="arm64" suffix=".raw" >}} of=<device> oflag=sync status=progress bs=10M
 ```
 
 ## Install using images
@@ -52,7 +52,7 @@ Extract the `img` file from a container image as described [in this page](/docs/
 Plug the SD card to your system. To flash the image, you can either use Etcher or `dd`:
 
 ```bash {class="only-flavors=openSUSE+Leap-15.6,openSUSE+Tumbleweed,Ubuntu+20.04,Ubuntu+22.04,Alpine+3.19"}
-sudo dd if={{<image variant="standard" model="rpi4" arch="arm64" suffix=".raw">}} of=<device> oflag=sync status=progress bs=10MB
+sudo dd if={{< Image variant="standard" model="rpi4" arch="arm64" suffix=".raw" >}} of=<device> oflag=sync status=progress bs=10MB
 ```
 
 Once the image is flashed, there is no need to carry out any other installation steps, it can be booted right away. However you may want to add a `cloud-config` at this point - see below.

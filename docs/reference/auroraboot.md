@@ -52,10 +52,10 @@ Building ISOs still works as long as you mount the container `/tmp` disk to a lo
 
 ```bash
 docker run --rm -ti -v "$PWD"/config.yaml:/config.yaml -v ${PWD}:/tmp quay.io/kairos/auroraboot \
-                    --set "artifact_version={{< kairosVersion >}}" \
-                    --set "release_version={{< kairosVersion >}}" \
-                    --set "flavor={{< flavorCode >}}" \
-                    --set "flavor_release={{< flavorReleaseCode >}}" \
+                    --set "artifact_version={{< KairosVersion  >}}" \
+                    --set "release_version={{< KairosVersion  >}}" \
+                    --set "flavor={{< FlavorCode  >}}" \
+                    --set "flavor_release={{< FlavorReleaseCode  >}}" \
                     --set "repository=kairos-io/kairos" \
                     --set "disable_http_server=true" \
                     --set "disable_netboot=true" \
@@ -84,9 +84,9 @@ For example, to netboot a machine with the latest version of Kairos and <FlavorC
 
 ```bash
 docker run --rm -ti --net host quay.io/kairos/auroraboot \
-                    --set "artifact_version={{< kairosVersion >}}" \
-                    --set "release_version={{< kairosVersion >}}" \
-                    --set "flavor={{< flavorCode >}}" \
+                    --set "artifact_version={{< KairosVersion  >}}" \
+                    --set "release_version={{< KairosVersion  >}}" \
+                    --set "flavor={{< FlavorCode  >}}" \
                     --set repository="kairos-io/kairos" \
                     --cloud-config https://...
 ```
@@ -127,7 +127,7 @@ You can use [the Kairos released images](/docs/reference/image_matrix) or [your 
 
 ```bash
 docker run --rm -ti --net host quay.io/kairos/auroraboot \
-                    --set "container_image={{<oci variant="standard">}}"
+                    --set "container_image={{< OCI variant="standard" >}}"
 ```
 
 </TabItem>
@@ -138,10 +138,10 @@ By indicating a `container_image` prefixed with `oci:`, AuroraBoot will pull the
 This implies that the host has a docker daemon, and we have to give access to its socket with `-v /var/run/docker.sock:/var/run/docker.sock`.
 
 ```bash
-docker pull {{<oci variant="standard">}}
+docker pull {{< OCI variant="standard" >}}
 # This will use the container image from the host's docker daemon
 docker run --rm -ti -v /var/run/docker.sock:/var/run/docker.sock --net host quay.io/kairos/auroraboot \
-                    --set "container_image=oci:{{<oci variant="standard">}}"
+                    --set "container_image=oci:{{< OCI variant="standard" >}}"
 ```
 </TabItem>
 <TabItem value="github-releases" label="Github releases">
@@ -150,10 +150,10 @@ By indicating a `artifact_version`, a `release_version`, a `flavor` and a `repos
 
 ```bash
 docker run --rm -ti --net host quay.io/kairos/auroraboot \
-                    --set "artifact_version={{< kairosVersion >}}-{{< k3sVersionOCI >}}" \
-                    --set "release_version={{< kairosVersion >}}" \
-                    --set "flavor={{< flavorCode >}}" \
-                    --set "flavor_release={{< flavorReleaseCode >}}" \
+                    --set "artifact_version={{< KairosVersion  >}}-{{< K3sVersionOCI  >}}" \
+                    --set "release_version={{< KairosVersion  >}}" \
+                    --set "flavor={{< FlavorCode  >}}" \
+                    --set "flavor_release={{< FlavorReleaseCode  >}}" \
                     --set "repository=kairos-io/provider-kairos"
 ```
 </TabItem>
@@ -236,7 +236,7 @@ Build the ISO:
 docker run -v "$PWD"/config.yaml:/config.yaml \
                     -v "$PWD"/build:/tmp/auroraboot \
                     --rm -ti quay.io/kairos/auroraboot \
-                    --set container_image={{<oci variant="core">}} \
+                    --set container_image={{< OCI variant="core" >}} \
                     --set "disable_http_server=true" \
                     --set "disable_netboot=true" \
                     --cloud-config /config.yaml \
@@ -267,10 +267,10 @@ ls
 Build the ISO:
 ```bash
 docker run -v "$PWD"/build:/tmp/auroraboot -v /var/run/docker.sock:/var/run/docker.sock --rm -ti quay.io/kairos/auroraboot \
-                    --set "artifact_version={{< kairosVersion >}}-{{< k3sVersionOCI >}}" \
-                    --set "release_version={{< kairosVersion >}}" \
-                    --set "flavor={{< flavorCode >}}" \
-                    --set "flavor_release={{< flavorReleaseCode >}}" \
+                    --set "artifact_version={{< KairosVersion  >}}-{{< K3sVersionOCI  >}}" \
+                    --set "release_version={{< KairosVersion  >}}" \
+                    --set "flavor={{< FlavorCode  >}}" \
+                    --set "flavor_release={{< FlavorReleaseCode  >}}" \
                     --set "repository=kairos-io/provider-kairos" \
                     --set "disable_http_server=true" \
                     --set "disable_netboot=true" \
@@ -346,10 +346,10 @@ The AuroraBoot configuration file reference is the following:
 # Corresponding artifact versions from the kairos release page (e.g. kubernetes version included)
 artifact_version: "v..."
 # Version of the release in github
-release_version: "{{< kairosVersion >}}"
+release_version: "{{< KairosVersion  >}}"
 
 # Flavor
-flavor: "{{< flavorCode >}}"
+flavor: "{{< FlavorCode  >}}"
 
 # Github repository
 repository: "kairos-io/kairos"
@@ -563,7 +563,7 @@ To pass-by a cloud-config via pipes, set `--cloud-config -`, for example:
 ```yaml
 cat <<EOF | docker run --rm -i --net host quay.io/kairos/auroraboot \
                     --cloud-config - \
-                    --set "container_image={{<oci variant="standard">}}"
+                    --set "container_image={{< OCI variant="standard" >}}"
 #cloud-config
 
 install:
@@ -633,7 +633,7 @@ Build the custom ISO with the cloud config:
 docker run -v "$PWD"/config.yaml:/config.yaml \
              -v "$PWD"/build:/tmp/auroraboot \
              --rm -ti quay.io/kairos/auroraboot \
-             --set container_image=oci:{{<oci variant="core">}} \
+             --set container_image=oci:{{< OCI variant="core" >}} \
              --set "disable_http_server=true" \
              --set "disable_netboot=true" \
              --cloud-config /config.yaml \
@@ -656,7 +656,7 @@ docker run -v "$PWD"/config.yaml:/config.yaml \
              -v "$PWD"/data:/tmp/data \
              -v "$PWD"/build:/tmp/auroraboot \
              --rm -ti quay.io/kairos/auroraboot \
-             --set container_image={{<oci variant="core">}} \
+             --set container_image={{< OCI variant="core" >}} \
              --set "disable_http_server=true" \
              --set "disable_netboot=true" \
              --cloud-config /config.yaml \
@@ -672,9 +672,9 @@ See the [Airgap example](/docs/examples/airgap) in the [examples section](/docs/
 
 ```bash
 docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos/auroraboot \
-        --set "artifact_version={{< kairosVersion >}}" \
-        --set "release_version={{< kairosVersion >}}" \
-        --set "flavor={{< flavorCode >}}" \
+        --set "artifact_version={{< KairosVersion  >}}" \
+        --set "release_version={{< KairosVersion  >}}" \
+        --set "flavor={{< FlavorCode  >}}" \
         --set repository="kairos-io/kairos" \
         --cloud-config /config.yaml
 ```
@@ -683,10 +683,10 @@ docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos
 
 ```bash
 docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos/auroraboot \
-        --set "artifact_version={{< kairosVersion >}}-{{< k3sVersionOCI >}}" \
-        --set "release_version={{< kairosVersion >}}" \
-        --set "flavor={{< flavorCode >}}" \
-        --set "flavor_release={{< flavorReleaseCode >}}" \
+        --set "artifact_version={{< KairosVersion  >}}-{{< K3sVersionOCI  >}}" \
+        --set "release_version={{< KairosVersion  >}}" \
+        --set "flavor={{< FlavorCode  >}}" \
+        --set "flavor_release={{< FlavorReleaseCode  >}}" \
         --set "repository=kairos-io/provider-kairos" \
         --cloud-config /config.yaml
 ```
@@ -695,7 +695,7 @@ docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos
 
 ```bash
 docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos/auroraboot \
-        --set container_image={{<oci variant="core">}}
+        --set container_image={{< OCI variant="core" >}}
         --cloud-config /config.yaml
 ```
 
@@ -713,7 +713,7 @@ docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock \
   --set "disable_http_server=true" \
   --set "disable_netboot=true" \
   --set "disk.efi=true" \
-  --set "container_image={{<oci variant="standard">}}" \
+  --set "container_image={{< OCI variant="standard" >}}" \
   --set "state_dir=/aurora"
 ```
 
@@ -729,7 +729,7 @@ docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock \
   --set "disable_netboot=true" \
   --set "disk.efi=true" \
   --set "disk.state_size=6000" \
-  --set "container_image={{<oci variant="standard">}}" \
+  --set "container_image={{< OCI variant="standard" >}}" \
   --set "state_dir=/aurora"
 ```
 
@@ -743,7 +743,7 @@ docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock \
   -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot \
   --debug \
   --set "disable_http_server=true" \
-  --set "container_image={{<oci variant="standard">}}" \
+  --set "container_image={{< OCI variant="standard" >}}" \
   --set "disable_netboot=true" \
   --cloud-config /aurora/config.yaml \
   --set "disk.gce=true" \
@@ -758,7 +758,7 @@ docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock \
   -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot \
   --debug \
   --set "disable_http_server=true" \
-  --set "container_image={{<oci variant="standard">}}" \
+  --set "container_image={{< OCI variant="standard" >}}" \
   --set "disable_netboot=true" \
   --cloud-config /aurora/config.yaml \
   --set "disk.vhd=true" \
@@ -775,7 +775,7 @@ Note that for creating raw images, the `--privileged` flag is used as the proces
 Write down an aurora config file as `aurora.yaml`:
 
 ```yaml
-container_image: "{{<oci variant="core">}}"
+container_image: "{{< OCI variant="core" >}}"
 
 cloud_config: |
     #cloud-config

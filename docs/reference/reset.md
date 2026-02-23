@@ -78,7 +78,7 @@ spec:
       kairos.io/managed: "true"
 
   # The container image to use
-  image: {{< registryURL >}}/{{< flavorCode >}}
+  image: {{< RegistryURL  >}}/{{< FlavorCode  >}}
 
   # Custom command to execute
   command:
@@ -179,7 +179,7 @@ metadata:
 spec:
   concurrency: 2
   # This is the version (tag) of the image.
-  version: "{{<ociTag variant=\"standard\" >}}"
+  version: "{{< OCITag variant=\"standard\"  >}}"
   nodeSelector:
     matchExpressions:
       - { key: kubernetes.io/hostname, operator: Exists }
@@ -188,7 +188,7 @@ spec:
   upgrade:
     # Here goes the image which is tied to the flavor being used.
     # Currently can pick between opensuse and alpine
-    image: {{< registryURL >}}/{{< flavorCode >}}
+    image: {{< RegistryURL  >}}/{{< FlavorCode  >}}
     command:
       - "/bin/bash"
       - "-c"

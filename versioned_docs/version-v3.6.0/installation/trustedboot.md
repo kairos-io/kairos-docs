@@ -192,7 +192,7 @@ To build the installable medium you need to run the following commands:
 <Tabs>
 <TabItem value="from-a-container-image" label="From a container image">
 ```bash {class="only-flavors=Ubuntu+24.04,Fedora+40"}
-CONTAINER_IMAGE={{< oci variant="core" kairosVersion="v3.6.0" >}}-uki
+CONTAINER_IMAGE={{< OCI variant="core" kairosVersion="v3.6.0"  >}}-uki
 docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/auroraboot:v0.13.0 build-uki -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT $CONTAINER_IMAGE
 # to build an EFI file only
 docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/auroraboot:v0.13.0 build-uki -t uki -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT $CONTAINER_IMAGE
@@ -245,7 +245,7 @@ System extensions can be bundled in the installable medium. To bundle system ext
 <TabItem value="from-a-container-image" label="From a container image">
 ```bash {class="only-flavors=Ubuntu+24.04,Fedora+40"}
 # Assuming your system extensions are stored on $PWD/system-extensions
-CONTAINER_IMAGE={{< oci variant="core" kairosVersion="v3.6.0" >}}-uki
+CONTAINER_IMAGE={{< OCI variant="core" kairosVersion="v3.6.0"  >}}-uki
 docker run -ti --rm -v $PWD/system-extensions:/system-extensions -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/auroraboot:v0.13.0 build-uki -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT --overlay-iso /system-extensions $CONTAINER_IMAGE
 # to build an EFI file only
 docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/auroraboot:v0.13.0 build-uki -t uki -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT $CONTAINER_IMAGE
@@ -279,7 +279,7 @@ You can overwrite the default "Kairos" title if you pass the `--boot-branding` f
 
 
 ```bash {class="only-flavors=Ubuntu+24.04,Fedora+40"}
-CONTAINER_IMAGE={{< oci variant="core" kairosVersion="v3.6.0" >}}-uki
+CONTAINER_IMAGE={{< OCI variant="core" kairosVersion="v3.6.0"  >}}-uki
 docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/auroraboot:v0.13.0 build-uki -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT --boot-branding "My Awesome OS" $CONTAINER_IMAGE
 ```
 
@@ -295,7 +295,7 @@ title My Awesome OS
 You can use a custom boot splash screen by specifying the  `--splash` flag when calling auroraboot.
 
 ```bash {class="only-flavors=Ubuntu+24.04,Fedora+40"}
-CONTAINER_IMAGE={{< oci variant="core" kairosVersion="v3.6.0" >}}-uki
+CONTAINER_IMAGE={{< OCI variant="core" kairosVersion="v3.6.0"  >}}-uki
 docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys -v $PWD/splash/:/splash quay.io/kairos/auroraboot:v0.13.0 build-uki -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT --boot-branding "My Awesome OS" --splash /splash/my-awesome-splash.bmp $CONTAINER_IMAGE
 ```
 
@@ -381,7 +381,7 @@ Note: you need to keep the TPM container up and running for the VM to boot. Run 
 
 ```bash {class="only-flavors=Ubuntu+24.04,Fedora+40"}
 # console only
-docker run --privileged -v $PWD/tpmstate:/tmp -v $PWD:/work -v /dev/kvm:/dev/kvm --rm -ti fedora-qemu -nographic -cdrom kairos-{{< flavorCode >}}-{{< flavorReleaseCode >}}-core-amd64-generic-v3.6.0.uki.iso
+docker run --privileged -v $PWD/tpmstate:/tmp -v $PWD:/work -v /dev/kvm:/dev/kvm --rm -ti fedora-qemu -nographic -cdrom kairos-{{< FlavorCode  >}}-{{< FlavorReleaseCode  >}}-core-amd64-generic-v3.6.0.uki.iso
 ```
 
 Note: To stop the QEMU container you can use `Ctrl-a x` or `Ctrl-a c` to enter the QEMU console and then `quit` to exit.
@@ -533,7 +533,7 @@ This is specific for large-scale deployments to generate auto-installing ISOs th
 If you want to force the auto-enrollment of the certificates in the BIOS/UEFI, you can use the `--secure-boot-enroll` flag in the `build-uki` command.
 
 ```bash {class="only-flavors=Ubuntu+24.04,Fedora+40"}
-CONTAINER_IMAGE={{< oci variant="core" kairosVersion="v3.6.0" >}}-uki
+CONTAINER_IMAGE={{< OCI variant="core" kairosVersion="v3.6.0"  >}}-uki
 docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/auroraboot:v0.13.0 build-uki --secure-boot-enroll force -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key $PATH_TO_SB_KEY --sb-cert $PATH_TO_SB_CERT $CONTAINER_IMAGE
 ```
 

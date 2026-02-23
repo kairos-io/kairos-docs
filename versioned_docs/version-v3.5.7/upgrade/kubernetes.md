@@ -26,7 +26,7 @@ metadata:
   namespace: default
 spec:
   # The container image containing the new Kairos version
-  image: {{< registryURL >}}/{{< flavorCode >}}
+  image: {{< RegistryURL  >}}/{{< FlavorCode  >}}
   # Example: quay.io/kairos/debian
 
   # NodeSelector to target specific nodes (optional)
@@ -113,7 +113,7 @@ spec:
               - Pod
       verifyImages:
       - imageReferences:
-        - "quay.io/kairos/{{< flavorCode >}}*"
+        - "quay.io/kairos/{{< FlavorCode  >}}*"
         attestors:
         - entries:
           # See: https://kyverno.io/docs/writing-policies/verify-images/#keyless-signing-and-verification
@@ -166,7 +166,7 @@ spec:
       kairos.io/managed: "true"
 
   # The container image containing the new Kairos version
-  image: {{< registryURL >}}/{{< flavorCode >}}
+  image: {{< RegistryURL  >}}/{{< FlavorCode  >}}
   # Example: quay.io/kairos/debian
 
   # Custom command to execute
@@ -231,7 +231,7 @@ spec:
       kairos.io/managed: "true"
 
   # The container image containing the new Kairos version
-  image: {{< registryURL >}}/{{< flavorCode >}}
+  image: {{< RegistryURL  >}}/{{< FlavorCode  >}}
   # Example: quay.io/kairos/debian
 
   # Custom command to execute

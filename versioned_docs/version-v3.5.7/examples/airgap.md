@@ -93,7 +93,7 @@ k3s:
 
 
 ```bash
-IMAGE={{<oci variant="standard">}}
+IMAGE={{< OCI variant="standard" >}}
 
 docker pull $IMAGE
 
@@ -101,7 +101,7 @@ docker run -v $PWD/config.yaml:/config.yaml \
              -v $PWD/build:/tmp/auroraboot \
              -v /var/run/docker.sock:/var/run/docker.sock \
              -v $PWD/data:/tmp/data \
-             --rm -ti quay.io/kairos/auroraboot:{{< auroraBootVersion >}} \
+             --rm -ti quay.io/kairos/auroraboot:{{< AuroraBootVersion  >}} \
              --set "disable_http_server=true" \
              --set "disable_netboot=true" \
              --set "container_image=docker://$IMAGE" \

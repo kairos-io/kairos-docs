@@ -18,7 +18,7 @@ For example, let's say you want to use a standard image. Your cloud config file 
 #cloud-config
 install:
  # Here we specify the image that we want to deploy
- source: "oci:{{< oci variant="standard" kairosVersion="v3.6.0" k3sVersion="v1.33.5+k3s1" >}}"
+ source: "oci:{{< OCI variant="standard" kairosVersion="v3.6.0" k3sVersion="v1.33.5+k3s1"  >}}"
 ```
 
 :::tip Note
@@ -38,7 +38,7 @@ install:
  auto: true
  reboot: true
  # Here we specify the image that we want to deploy
- source: "oci:{{< oci variant="standard" kairosVersion="v3.6.0" k3sVersion="v1.33.5+k3s1" >}}"
+ source: "oci:{{< OCI variant="standard" kairosVersion="v3.6.0" k3sVersion="v1.33.5+k3s1"  >}}"
 
 hostname: "test"
 users:
