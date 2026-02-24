@@ -40,6 +40,16 @@ Start here:
 - [Build from scratch](/docs/reference/build-from-scratch/)
 - [Build raw images with qemu](/docs/reference/build_raw_images_with_qemu/)
 
+### 3) Kubernetes-native path (Kairos Operator)
+
+Use the Kairos Operator to build OS artifacts directly in Kubernetes using the OSArtifact CRD.
+
+- Build ISOs, cloud images, and netboot artifacts as Kubernetes-native resources.
+- Integrates with existing Kubernetes workflows and GitOps patterns.
+- Manage upgrades and operations on Kairos nodes from within Kubernetes.
+
+Start here: [Kairos Operator](/docs/operator/)
+
 ## Suggested workflow
 
 1. Select your base distribution and release.
