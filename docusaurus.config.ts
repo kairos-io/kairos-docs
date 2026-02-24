@@ -211,8 +211,7 @@ const config: Config = {
           sidebarPath: './sidebars.ts',
           remarkPlugins: [remarkShortcodeCode],
           // Uncomment after migration to re-enable "Edit this page" links.
-          // editUrl:
-          //   'https://github.com/kairos-io/kairos-docs/tree/main/',
+          editUrl: 'https://github.com/kairos-io/kairos-docs/tree/main/',
           // Show last update time and author
           showLastUpdateTime: true,
           showLastUpdateAuthor: true,
