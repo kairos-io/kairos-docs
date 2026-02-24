@@ -21,10 +21,10 @@
     },
     {
       "fileMatch": [
-        "^hugo.toml$"
+        "^docusaurus.config.ts$"
       ],
       "matchStrings": [
-        "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.+_version\\s*=\\s*\"?(?<currentValue>.*?)\"?\\s"
+        "//\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s+[A-Za-z_][A-Za-z0-9_]*:\\s*'(?<currentValue>[^']+)'"
       ],
       "versioningTemplate": "{{#if versioning}}{{versioning}}{{else}}semver{{/if}}"
     }

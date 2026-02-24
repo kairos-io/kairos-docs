@@ -1,5 +1,0 @@
-<!-- This shortcode accepts a remote url and gets its content, extracts the extensions and returns a neatly formatted source output -->
-{{- $url := .Get 0 -}}
-{{- $remote := resources.GetRemote $url -}}
-{{- $fileExt := replace (index (findRE "(\\.)\\w+$" $remote) 0) "." "" -}}
-<pre><code class="language-{{ $fileExt }}">{{- $remote.Content -}}</code></pre>
