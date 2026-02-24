@@ -28,7 +28,7 @@ az sig image-version show --gallery-name kairos.io --gallery-image-definition ka
 Replace `<KAIROS_IMAGE_VERSION>` with the version of the image (e.g. `3.3.5`).
 :::
 :::warning Note
-As described below, it is possible to reset to any desired image on first boot. That's why only one Kairos flavor is published in Azure (Ubuntu 24.04). This allows us to save costs and time by not pushing unnecessary artifacts.
+As described below, it is possible to reset to any desired image on first boot. That's why only one Kairos flavor is published in Azure (Hadron). This allows us to save costs and time by not pushing unnecessary artifacts.
 :::
 There are multiple options to select for your VM. We suggest you choose a size that has:
 
