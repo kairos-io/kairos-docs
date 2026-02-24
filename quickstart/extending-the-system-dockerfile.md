@@ -1,0 +1,238 @@
+---
+title: "Extending the System via Dockerfiles"
+description: Build a custom Hadron image using a Dockerfile, add an extra binary, publish it to an OCI registry, and upgrade a running node to the new image.
+sidebar_label: "Extending the System"
+sidebar_position: 2
+---
+
+
+:::tip Objective
+By the end of this quickstart, you will be able to:
+- kairosify a Hadron base image with `kairos-init`
+- add an additional tool during build time (we’ll install `btm`)
+- publish your custom image to an OCI registry
+:::
+
+Now that you've launched your [first Kubernetes cluster on Hadron](/quickstart/), you might want to extend the system.
+Kairos supports multiple approaches for this—Dockerfiles, systemd system extensions, and bundles. There isn’t a single “best” option: each has trade-offs, and the right choice depends on your needs. In this quickstart, we’ll extend the system using a Dockerfile.
+
+## Prerequisites
+
+:::tip Alternatives
+This tutorial uses the recommended container and virtualization tools to keep the instructions simple. Other alternatives should work as well, but they’re not documented here. If you successfully follow the tutorial using different tools, please consider opening a PR so others can benefit from your steps.
+:::
+
+To extend and run Hadron, you’ll need a container engine and virtualization software that can run (or emulate) the amd64 architecture. In this guide, we’ll use:
+
+- [Docker](https://docs.docker.com/engine/install/)
+- [VirtualBox](https://www.virtualbox.org/)
+
+## Prefer to watch a video?
+
+<YouTube id="EQsVnWqd7Ic" title="Hadron Quickstart" />
+
+## Building
+
+Hadron by itself is not immutable. To get the full Kairos experience—immutability, atomic upgrades, and more—we first need to initialize (often called “kairosify”) the system using `kairos-init`.
+
+Create a `Dockerfile` with the following content:
+
+```dockerfile
+FROM quay.io/kairos/kairos-init:v0.6.8 AS kairos-init
+
+FROM ghcr.io/kairos-io/hadron:v0.0.1-beta2 AS base
+ARG VERSION
+
+RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init \
+    eval /kairos-init -l debug -s install --model generic --provider k3s --version \"${VERSION}\" && \
+    eval /kairos-init -l debug -s init --model generic --provider k3s --version \"${VERSION}\"
+```
+
+Build it with the following command. Here, `0.1.0` is the version we’re assigning to `my-hadron`. We tag the image and also pass the version as a build argument so `kairos-init` writes it into `/etc/kairos-release`. We’ll use that in later steps.
+
+:::warning arm64
+Hadron is currently in beta, and only amd64 images are available at the moment. If you're running on arm64, you’ll need to build for amd64.
+:::
+
+
+```bash
+docker build -t my-hadron:0.1.0 --build-arg=VERSION=0.1.0 .
+```
+
+If the command finishes successfully, you should see `my-hadron` among your local images:
+
+```bash
+docker images | grep my-hadron
+```
+
+```
+my-hadron                          0.1.0          5effd0969bfe   4 minutes ago   397MB
+```
+
+## Adding a binary
+
+Hadron doesn’t ship with a package manager. That means the two straightforward options to extend the system are:
+- build packages yourself, or
+- add a prebuilt binary.
+
+To keep this quickstart short, we’ll use the second approach.
+
+As an example, we’ll download and install `bottom` (`btm`) to inspect system resource usage.
+
+:::info Toolchain
+In this example we use the Hadron `hadron-toolchain` image as a build stage. It contains a full build environment (gcc, make, headers, etc.) that is not included in the final production images—useful for build-time tasks, but typically avoided at runtime for security and size reasons.
+:::
+
+```dockerfile
+FROM quay.io/kairos/kairos-init:v0.6.4 AS kairos-init
+
+FROM ghcr.io/kairos-io/hadron-toolchain:v0.0.1-beta1 AS bottom
+RUN curl -L -o bottom.tar.gz https://github.com/ClementTsang/bottom/releases/download/0.11.4/bottom_x86_64-unknown-linux-musl.tar.gz
+RUN tar xvzf bottom.tar.gz
+
+FROM ghcr.io/kairos-io/hadron:v0.0.1-beta1 AS base
+ARG VERSION
+
+RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init \
+    eval /kairos-init -l debug -s install --provider k3s --version \"${VERSION}\" && \
+    eval /kairos-init -l debug -s init --provider k3s --version \"${VERSION}\"
+
+COPY --from=bottom /btm /usr/bin/btm
+```
+
+Now build the image again, but assign a new version. Since we’re using SemVer, bumping the minor version to `0.2.0` is a good next step. This makes it easy to distinguish images and perform upgrades.
+
+```bash
+docker build -t my-hadron:0.2.0 --build-arg=VERSION=0.2.0 .
+```
+
+Next, push the image to a registry you can access. If you don’t have one available, you can use `ttl.sh`.
+Keep in mind `ttl.sh` is an anonymous registry, so an image with the same name might already exist—use a unique image name.
+
+```bash
+docker tag my-hadron:0.2.0 ttl.sh/my-hadron:0.2.0
+docker push ttl.sh/my-hadron:0.2.0
+```
+
+## Conclusion
+
+Congratulations—you’ve successfully extended a Hadron image.
+
+## What's Next?
+
+### Other ways to extend the system
+
+<a class="btn btn-lg btn-outline-primary me-3 mb-4" href="/docs/advanced/sys-extensions/">
+    Extend with systemd extensions
+</a>
+
+### Continue the quickstart
+
+If you’re new to Kairos, follow these in order to learn the full workflow: build a custom image, upgrade atomically, then harden the system.
+
+<a class="btn btn-lg btn-primary me-3 mb-4" href="/quickstart/lifecycle-management/">
+    Upgrade & rollback (atomic upgrades)
+</a>
+
+<a class="btn btn-lg btn-primary me-3 mb-4" href="/quickstart/trusted-boot/">
+    Trusted Boot (TPM + Secure Boot) quickstart
+</a>
+
+### Deep dive docs
+
+If you’re already comfortable with Kairos and want details, jump straight to the reference docs.
+
+<a class="btn btn-lg btn-primary me-3 mb-4" href="/docs/reference/configuration/">
+    Cloud-config reference
+</a>
+
+## Frequently Asked Questions (FAQs)
+
+**What is the hadron-toolchain container for?**
+
+Hadron builds many packages that are available in the toolchain image but are not included in the final production images. They’re useful for building code from source and other build-time tasks, but you typically avoid shipping them at runtime for security and size reasons.
+
+**Can I have a specific version of Kubernetes?**
+
+Yes, with the `--provider` flag you can define if you want `k3s` or `k0s` installed, and with the `--provider-k3s-version` and `--provider-k0s-version` respectively, you can define the exact version to install.
+
+**What if I don't need Kubernetes?**
+
+No problem—remove the `--provider` flag from `kairos-init` and you’ll get a `core` image without Kubernetes installed.
+
+<script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'HowTo',
+      name: 'Extend Kairos Hadron with a Dockerfile',
+      description:
+        'Build a custom Hadron image with kairos-init, add an extra binary, and push the resulting image to an OCI registry.',
+      step: [
+        {
+          '@type': 'HowToStep',
+          name: 'Create a Dockerfile and kairosify the base image',
+          text: 'Create a Dockerfile that uses kairos-init to initialize (kairosify) a Hadron base image.',
+        },
+        {
+          '@type': 'HowToStep',
+          name: 'Build the custom image',
+          text: 'Build the image with docker build, tagging it with a version you control.',
+        },
+        {
+          '@type': 'HowToStep',
+          name: 'Add an extra binary at build time',
+          text: 'Update the Dockerfile to copy in a prebuilt binary (for example btm) using a build stage.',
+        },
+        {
+          '@type': 'HowToStep',
+          name: 'Rebuild with a new version tag',
+          text: 'Build again with a new tag (for example bumping from 0.1.0 to 0.2.0) so upgrades can target the new image.',
+        },
+        {
+          '@type': 'HowToStep',
+          name: 'Push the image to a registry',
+          text: 'Tag and push the image to an OCI registry you can access (for example ttl.sh or your own registry).',
+        },
+      ],
+    }),
+  }}
+/>
+
+<script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'What is the hadron-toolchain container for?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Hadron builds many packages that are available in the toolchain image but are not included in the final production images. They’re useful for building code from source and other build-time tasks, but you typically avoid shipping them at runtime for security and size reasons.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Can I have a specific version of Kubernetes?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Yes, with the `--provider` flag you can define if you want `k3s` or `k0s` installed, and with the `--provider-k3s-version` and `--provider-k0s-version` respectively, you can define the exact version to install.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: "What if I don't need Kubernetes?",
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'No problem—remove the `--provider` flag from `kairos-init` and you’ll get a `core` image without Kubernetes installed.',
+          },
+        },
+      ],
+    }),
+  }}
+/>
+
