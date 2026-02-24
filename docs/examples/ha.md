@@ -24,7 +24,7 @@ To run Kairos in this mode, you must have an odd number of server nodes.
 
 The first control plane node that we will launch is considered the cluster initializer.
 
-<Tabs>
+<Tabs groupId="kubernetes-distribution">
 <TabItem value="k3s" label="k3s">
 ```yaml
 #cloud-config
@@ -70,7 +70,7 @@ k0s:
 
 After launching the first control plane, join the others
 
-<Tabs>
+<Tabs groupId="kubernetes-distribution">
 <TabItem value="k3s" label="k3s">
 ```yaml
 #cloud-config
@@ -127,7 +127,7 @@ Now you have a highly available control plane.
 
 Joining additional worker nodes to the cluster follows the same procedure as a single-node cluster.
 
-<Tabs>
+<Tabs groupId="kubernetes-distribution">
 <TabItem value="k3s" label="k3s">
 ```yaml
 #cloud-config

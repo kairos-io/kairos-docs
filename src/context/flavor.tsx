@@ -1,4 +1,5 @@
 import React, {createContext, useContext, useMemo, useState} from 'react';
+import {useLocation} from '@docusaurus/router';
 
 export type FlavorSelection = {
   family: string;
@@ -36,6 +37,12 @@ const FlavorContext = createContext<FlavorContextValue>({
 });
 
 const STORAGE_KEY = 'selectedDistro';
+const CURRENT_DOCS_FLAVOR: FlavorSelection = {
+  family: 'hadron',
+  flavor: 'hadron',
+  flavorRelease: '0.0.3',
+  label: 'Hadron 0.0.3',
+};
 
 function parseStoredSelection(raw: string | null): FlavorSelection | null {
   if (!raw) {
@@ -84,5 +91,12 @@ export function FlavorProvider({children}: {children: React.ReactNode}): React.J
 }
 
 export function useFlavor(): FlavorContextValue {
-  return useContext(FlavorContext);
+  const context = useContext(FlavorContext);
+  const location = useLocation();
+  const isVersionedDocs = /^\/docs\/v\d+\.\d+\.\d+(\/|$)/.test(location.pathname);
+
+  return {
+    selection: isVersionedDocs ? context.selection : CURRENT_DOCS_FLAVOR,
+    setSelection: context.setSelection,
+  };
 }

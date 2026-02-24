@@ -7,7 +7,7 @@ date: 2022-11-13
 
 ## What is the difference between Kairos compared to Talos/Sidero Metal and Flatcar?
 
-Kairos is distro-agnostic by design. Currently, you can pick among a list from the [supported matrix](/docs/reference/image_matrix#image-flavors), but we are working on CRDs to let assemble OSes from other bases in a Kubernetes native way.
+Kairos is distro-agnostic by design. You can pick from the [tested matrix](/docs/reference/image_matrix/), and we are working on CRDs to let you assemble OSes from other bases in a Kubernetes native way.
 
 The key difference, is that the OS is distributed as a standard container, similar to how apps are distributed with container registries. You can also use `docker run` locally and inspect the OS, and similarly, push customizations by pointing nodes to a new image.
 
@@ -15,7 +15,7 @@ Also, Kairos is easy to setup. The P2P capabilities allow nodes to self-coordina
 
 ## What would be the difference between Kairos and Fedora Coreos?
 
-Kairos is distribution agnostic. It supports all the distributions in the [supported matrix](/docs/reference/image_matrix#image-flavors). In addition, we plan to have K3s automatically deploy Kubernetes (even by self-coordinating nodes).
+Kairos is distribution agnostic. It supports the distributions in the [tested matrix](/docs/reference/image_matrix/). In addition, we plan to have K3s automatically deploy Kubernetes (even by self-coordinating nodes).
 
 Additionally, Kairos is OCI-based, and the system is based from a container image. This makes it possible to also run it locally with `docker run` to inspect it, as well to customize and upgrade your nodes by just pointing at it. Think of it like containers apps, but bootable.
 

@@ -210,6 +210,10 @@ If you’re already comfortable with Kairos and want details, jump straight to t
     Cloud-config reference
 </a>
 
+<a class="btn btn-lg btn-outline-primary me-3 mb-4" href="/docs/reference/byoi/">
+    BYOI and custom pipelines
+</a>
+
 ## Frequently Asked Questions (FAQs)
 
 **How do I configure the system?**

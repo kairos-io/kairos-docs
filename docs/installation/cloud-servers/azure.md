@@ -28,7 +28,7 @@ az sig image-version show --gallery-name kairos.io --gallery-image-definition ka
 Replace `<KAIROS_IMAGE_VERSION>` with the version of the image (e.g. `3.3.5`).
 :::
 :::warning Note
-As described below, it is possible to reset to any desired image on first boot. That's the reason only one Kairos flavor is published in Google Cloud (Ubuntu 24.04). This allows us to save costs and time by not pushing unnecessary artifacts.
+As described below, it is possible to reset to any desired image on first boot. That's why only one Kairos flavor is published in Azure (Hadron). This allows us to save costs and time by not pushing unnecessary artifacts.
 :::
 There are multiple options to select for your VM. We suggest you choose a size that has:
 
@@ -41,6 +41,10 @@ Under the "Advanced" tab, click on "Enable user data". In the field that is open
 
 When the instance boots for the first time, it will boot into "auto-reset mode" by default. This means, that Kairos will "install" itself on the first boot and then reboot.
 You can specify a different image to be installed using a block like the following in the cloud config section:
+
+:::warning Legacy flavor example
+The image below is a valid example of the naming pattern, but these non-Hadron flavor repositories are not actively updated by the Kairos release pipeline anymore. Build and publish your own image with [BYOI](/docs/reference/byoi/) and [Kairos Factory](/docs/reference/kairos-factory/).
+:::
 
 ```yaml
 reset:
