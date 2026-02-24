@@ -7,7 +7,7 @@ description: This page contains a reference on how to run Kairos on Nvidia Jetso
 ---
 
 :::warning Warning
-Despite the Flavor you may have selected to look into the docs. The Nvidia AGX Orin only works with Ubuntu 20.04
+This guide was written and tested for the Nvidia AGX Orin using Ubuntu 20.04 as the base distribution.
 :::
 :::tip Note
 Please note that the following page contains only development reference. At the time of writing, we have tried porting Kairos to Jetson Nano eMMC without success. This is due to the old kernel supported (4.9), not properly working with `EFISTUB` and `U-boot` (you can see the [issue here](https://github.com/kairos-io/kairos/issues/45)). However, the steps outlined _should_ be a good reference to port Kairos to those architecture _when_ a new kernel version is available. We have tested, and have successfully booted a Jetson Nano with the 5.15 kernel, however, due to the lack of driver support, eMMC partitions are not properly recognized.

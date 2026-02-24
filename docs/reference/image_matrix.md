@@ -5,59 +5,46 @@ sidebar_position: 5
 date: 2022-11-13
 ---
 
-Kairos offers several pre-built images for user convenience based on popular Linux distributions such as openSUSE, Alpine Linux, and Ubuntu. The Kairos core team does its best to test these images, but those that are based on systemd (e.g. openSUSE, Ubuntu) are more thoroughly tested due to their homogenous settings. Support for other non-systemd based flavors (e.g. Alpine) may be limited due to team bandwidth. However, as Kairos is an open source community-driven project, we welcome any contributions, bug reports, and bug fixes. Check out our [Contribution guidelines](https://github.com/kairos-io/kairos/contribute) for more information.
+Kairos supports multiple Linux distributions and this remains a core feature.
 
-In addition, tighter integration with systemd allows for several features that are only available with it, such as live layering.
+As a small open-source team, we now focus official prebuilt artifacts and docs defaults on Hadron. Other distributions are still supported and validated through automated testing in `kairos-init`.
 
-These images are pushed to quay.io and are available for installation and upgrading. The installable mediums included in the releases are generated using the methods described in the [automated installation reference](/docs/installation/automated#iso-remastering), and the images can be used for upgrades as well.
+## Tested distribution matrix
 
-<a id="framework-images"></a>
+The current list of tested base distributions and releases is maintained in the `kairos-init` CI workflow:
 
-## Image flavors
+- https://github.com/kairos-io/kairos-init/blob/main/.github/workflows/test.yml#L22-L39
 
-Kairos release processes generates images based on official container images from popular Linux distributions. If you don't see your preferred distribution, check if [we are already planning](https://github.com/kairos-io/kairos/issues?q=is%3Aopen+is%3Aissue+label%3Aarea%2Fflavor) support for it or create a new issue.
+This workflow is the source of truth for what is continuously tested.
 
-:::tip Note
-You can also download ISOs and other artifacts from the [releases page](https://github.com/kairos-io/kairos/releases).
-:::
-Below is a list of the container repositories for each flavor:
+## What this means for users
 
-| **Flavor**      | repository                                      |
-|-----------------|-------------------------------------------------|
-| **Alpine**      | <ContainerRepoLink flavor="alpine" />     |
-| **Debian**      | <ContainerRepoLink flavor="debian" />     |
-| **Fedora**      | <ContainerRepoLink flavor="fedora" />     |
-| **openSUSE**    | <ContainerRepoLink flavor="opensuse" />   |
-| **Ubuntu**      | <ContainerRepoLink flavor="ubuntu" />     |
-| **Rocky Linux** | <ContainerRepoLink flavor="rockylinux" /> |
+- Hadron is the default fast path for docs and prebuilt artifacts.
+- Multi-distribution support is still available and supported for custom builds.
+- You can build and publish your own images with [BYOI](/docs/reference/byoi/) and [Kairos Factory](/docs/reference/kairos-factory/).
 
-The various images are available with different tags in the form of:
+## Image naming format
 
-```
-quay.io/kairos/<flavor>:<flavor_release>-<variant>-<arch>-<device>-<version>
+Kairos image tags follow this structure:
+
+```text
+<registry>/<repository>:<flavor_release>-<variant>-<arch>-<device>-<version>
 ```
 
-For example: <OCICode variant="standard" />. More about Kairos naming conventions [here](/docs/reference/artifacts/).
+More about naming conventions: [Artifact Naming Convention](/docs/reference/artifacts/).
 
 Notes:
 
-- The **Core** images do not include any Kubernetes engine and can be used as a base for customizations.
-- The **Standard** images include `k3s` and the [kairos provider](https://github.com/kairos-io/provider-kairos), which enables Kubernetes deployments and optionally enables [p2p](/docs/installation/p2p).
-- The **-img** repositories contain an img file which can be directly written to an SD card or USB drive for use with ARM devices.
+- **Core** images do not include a Kubernetes engine and are suitable as a base for customization.
+- **Standard** images include `k3s` and the [kairos provider](https://github.com/kairos-io/provider-kairos), with optional [p2p](/docs/installation/p2p).
 
-:::info Note
-The pipelines do not publish `raw` artifacts for the arm architecture because the files are too large for GitHub Actions (they exceed the artifact size limit). These artifacts can be extracted from the published docker images using the following command:
-
-```bash {class="only-flavors=openSUSE+Leap-15.6,openSUSE+Tumbleweed,Ubuntu+20.04,Ubuntu+22.04,Alpine+3.19"}
-docker run -ti --rm -v $PWD:/image gcr.io/go-containerregistry/crane export "{{< OCI variant="core" arch="arm64" model="rpi4" suffix="img" >}}" - | tar -xvf -
-```
-
-The artifacts can be found in the `build` directory.
-
+:::info Legacy flavor example
+Some docs still show concrete flavor/release examples (for example `ubuntu:22.04` or `opensuse:leap-15.6`) to illustrate commands and naming. Those flavor repositories are no longer actively updated by the Kairos release pipeline. Use them as templates and build/publish your own images with [BYOI](/docs/reference/byoi/).
 :::
+
 ### Building core and standard generic images
 
-Unfortunately we don't have the resources and capacity to build every possible artifact in our matrix. Thankfully, you can still build those images manually on your local machine, all you need is [git](https://git-scm.com/) and [docker](https://www.docker.com/). Here's an example how to build an Almalinux ARM RPI4 container image.
+You can build unsupported or custom artifacts locally with [git](https://git-scm.com/) and [docker](https://www.docker.com/). Example (AlmaLinux ARM RPI4):
 
 ```bash
 git clone https://github.com/kairos-io/kairos.git
@@ -66,8 +53,7 @@ docker build --platform linux/arm64 --build-arg BASE_IMG=almalinux:9 --build-arg
 ```
 
 :::tip Note
-See the [kairos-factory.md](kairos-factory.md) page for more info.
-
+See [Kairos Factory](/docs/reference/kairos-factory/) for a production-ready path to automate this in CI.
 :::
 ## Versioning policy
 
@@ -106,7 +92,7 @@ Release changelogs are available for Kairos core and for each component. Below i
   https://github.com/kairos-io/kairos/releases/download/{{< KairosVersion  >}}/{{< Image variant="core" suffix="-sbom.spdx.json"  >}}
   ```
 
- is the SBOM for the core <FlavorCode /> image.
+ is the SBOM for a core Kairos image release artifact.
 
 ## Image verification
 
@@ -114,7 +100,7 @@ Images signatures are pushed regularly for tagged releases. To verify images wit
 
 ```bash
 cosign verify-attestation \
-        --type spdx {{< OCI variant="core" >}} \
+        --type spdx <your-image-reference> \
         --certificate-identity "https://github.com/kairos-io/kairos/.github/workflows/release.yaml@refs/tags/{{< KairosVersion  >}}" \
         --certificate-oidc-issuer "https://token.actions.githubusercontent.com"
 ```

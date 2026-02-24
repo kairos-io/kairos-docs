@@ -1,5 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
+import {useLocation} from '@docusaurus/router';
 import {FLAVOR_OPTIONS, useFlavor} from '@site/src/context/flavor';
 
 type FlavorSelectorNavbarItemProps = {
@@ -15,10 +16,16 @@ export default function FlavorSelectorNavbarItem({
   mobile,
   className,
 }: FlavorSelectorNavbarItemProps): React.JSX.Element {
+  const location = useLocation();
   const {selection, setSelection} = useFlavor();
   const [showDropdown, setShowDropdown] = React.useState(false);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
   const selectedKey = optionKey(selection);
+  const isVersionedDocs = /^\/docs\/v\d+\.\d+\.\d+(\/|$)/.test(location.pathname);
+
+  if (!isVersionedDocs) {
+    return <></>;
+  }
 
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent | TouchEvent | FocusEvent): void => {

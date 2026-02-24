@@ -12,6 +12,10 @@ Most of the steps are already covered in the [Keylime documentation](https://key
 
 First of all we need to create a Kairos derivative with the keylime agent, in order to do this we use the [Kairos factory process](https://kairos.io/docs/reference/kairos-factory/) where we will build our own OS derivative to bundle keylime-agent:
 
+:::warning Legacy flavor example
+The base image tag in the example below is shown as a concrete reference, but this non-Hadron flavor repository is not actively updated by the Kairos release pipeline anymore. Build and publish your own maintained image with [BYOI](/docs/reference/byoi/) and [Kairos Factory](/docs/reference/kairos-factory/).
+:::
+
 
 ```Dockerfile
 # Build the keylime agent

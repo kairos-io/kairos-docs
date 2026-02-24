@@ -22,6 +22,11 @@ to = "/docs/v3.5.7/:splat"
 status = 302
 
 [[redirects]]
+from = "/getting-started/*"
+to = "/quickstart/"
+status = 302
+
+[[redirects]]
 from = "/docs/contribution-guidelines/"
 to = "https://github.com/kairos-io/kairos/blob/master/CONTRIBUTING.md"
 status = 200

@@ -65,6 +65,10 @@ echo "" > rootfs/boot/extlinux/extlinux.conf
 
 ### Prepare the images
 
+:::warning Legacy flavor example
+The Ubuntu image tags in this page are valid examples for Orin NX workflows, but these non-Hadron flavor repositories are not actively updated by the Kairos release pipeline anymore. Build and publish your own image with [BYOI](/docs/reference/byoi/) and [Kairos Factory](/docs/reference/kairos-factory/).
+:::
+
 You can find Kairos core ubuntu images based on Ubuntu `22.04` [here](https://quay.io/repository/kairos/ubuntu)
 (search for `nvidia` in the tags)
 

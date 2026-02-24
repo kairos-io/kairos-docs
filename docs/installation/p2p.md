@@ -26,7 +26,7 @@ You can find full examples in our [examples section](/docs/examples/):
 - [Multi-node, HA setup](/docs/examples/multi-node-p2p-ha)
 - [Single-node setup](/docs/examples/single-node-p2p)
 
-This feature is currently experimental and can be optionally enabled by adding the following configuration to the node deployment file. If you are not familiar with the installation process, it is suggested to follow the [quickstart](/getting-started/):
+This feature is currently experimental and can be optionally enabled by adding the following configuration to the node deployment file. If you are not familiar with the installation process, it is suggested to follow the [quickstart](/quickstart/):
 
 ```yaml
 p2p:

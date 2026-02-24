@@ -25,7 +25,7 @@ function HomepageHeader() {
           <div className={styles.heroButtons}>
             <Link
               className={clsx('button button--primary button--lg', styles.quickStartButton)}
-              to="/getting-started/">
+              to="/quickstart/">
               Quick Start
             </Link>
             <Link

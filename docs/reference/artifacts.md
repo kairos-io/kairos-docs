@@ -8,6 +8,10 @@ description: Detailed information about how we name our artifacts including repo
 
 There are many different artifacts that Kairos produces. In this page we try to summarize them all and have a clear naming convention for them.
 
+:::warning Naming flexibility
+Examples in this page that use flavor names like `ubuntu`, `alpine`, or `opensuse` are illustrative. Hadron is the default path in the current docs. If you build your own images instead of using Hadron artifacts, you can either follow this naming convention for consistency or define your own naming scheme.
+:::
+
 :::tip Info
 Architecture names are based on the [Go architecture names](https://go.dev/doc/install/source#environment), so `amd64` is used instead of `x86_64`, `386` instead of `i386` and `arm64` instead of `aarch64`.
 :::

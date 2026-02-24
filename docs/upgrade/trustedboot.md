@@ -9,6 +9,9 @@ description: Learn how to upgrade a Kairos node with Trusted Boot enabled
 :::warning Warning
 This section is still a work in progress and only available in Kairos v3.x releases and alphas.
 :::
+:::warning Tested distributions
+Commands in this page are written for Hadron, but if adapted they should work on these other distributions: Ubuntu 24.04 and Fedora 40.
+:::
 This section covers how to upgrade a Kairos node with Trusted Boot enabled.
 
 See the [Trusted Boot Installation](/docs/installation/trustedboot) and [Trusted Boot Architecture](/docs/architecture/trustedboot) pages for more references.
