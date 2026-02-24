@@ -1,28 +1,35 @@
-# :book: Kairos documentation
+# Kairos documentation
 
-The Kairos documentation uses [docsy](https://docsy.dev) a hugo theme for documentation. And is deployed using [Netlify](https://app.netlify.com/projects/kairos-io/deploys).
+The Kairos documentation is built with [Docusaurus](https://docusaurus.io/) and deployed with [Netlify](https://app.netlify.com/projects/kairos-io/deploys).
 
 ## Prerequisites
 
-The following software is needed to preview the documentation changes locally.
+- Node.js `>=20` (Netlify build currently uses `24.13.0`)
+- npm
 
-* Hugo [v0.115.0](https://gohugo.io/installation/) (make sure to use the extended version!)
-* nodeJs [v16+](https://nodejs.org/en/download/)
+## Local development
 
-## Test your changes
-
-After cloning the repo (with submodules), just run `make serve` to test the website locally.
-
-```
-$> git clone https://github.com/kairos-io/kairos-docs
-$> cd kairos-docs
-$> make serve
+```bash
+git clone https://github.com/kairos-io/kairos-docs
+cd kairos-docs
+npm ci
+npm run start
 ```
 
-To run the website locally in other platforms, e.g. MacOS:
+The dev server is available at `http://localhost:3000`.
 
-```
-$> HUGO_PLATFORM=macOS-64bit make serve
+## Build and preview
+
+```bash
+npm run build
+npm run serve
 ```
 
-**Note**: If the `make serve` command does not work for you, try to start hugo directly with the command `hugo server -D`.
+This generates the static site in `build/`.
+
+## Useful scripts
+
+- `npm run start` - start local dev server
+- `npm run build` - produce production build
+- `npm run serve` - serve the built site locally
+- `npm run typecheck` - run TypeScript checks
