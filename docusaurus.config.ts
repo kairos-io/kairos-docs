@@ -269,21 +269,6 @@ const config: Config = {
     [
       '@docusaurus/plugin-content-docs',
       {
-        id: 'getting-started',
-        path: 'getting-started',
-        routeBasePath: 'getting-started',
-        sidebarPath: './sidebarsGettingStarted.ts',
-        remarkPlugins: [remarkShortcodeCode],
-        // Uncomment after migration to re-enable "Edit this page" links.
-        // editUrl:
-        //   'https://github.com/kairos-io/kairos-docs/tree/main/',
-        showLastUpdateTime: true,
-        showLastUpdateAuthor: true,
-      },
-    ],
-    [
-      '@docusaurus/plugin-content-docs',
-      {
         id: 'quickstart',
         path: 'quickstart',
         routeBasePath: 'quickstart',
@@ -319,20 +304,15 @@ const config: Config = {
       },
       items: [
         {
-          to: '/getting-started',
+          to: '/quickstart',
           position: 'left',
-          label: 'Getting Started',
+          label: 'Quick Start',
         },
         {
           type: 'docSidebar',
           sidebarId: 'tutorialSidebar',
           position: 'left',
           label: 'Docs',
-        },
-        {
-          to: '/quickstart',
-          position: 'left',
-          label: 'Hadron',
         },
         {to: '/blog', label: 'Blog', position: 'left'},
         {
@@ -366,9 +346,8 @@ const config: Config = {
           title: 'Documentation',
           items: [
             {
-              label: 'Getting Started',
-              // point to the actual Getting Started landing
-              to: '/getting-started',
+              label: 'Quick Start',
+              to: '/quickstart',
             },
             {
               label: 'Installation',

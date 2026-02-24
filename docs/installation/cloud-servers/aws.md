@@ -43,11 +43,15 @@ In this page you get to select the instance type, configure the instance, and ad
 
 You can also pass a Kairos config using the userdata field (Click on `Advanced details` -> `User data` and put your Kairos config in the box).
 
-You should at least specify a user and a password (or SSH key) if you need to SSH to the instance (Check the [Getting started](/getting-started/) page for some examples).
+You should at least specify a user and a password (or SSH key) if you need to SSH to the instance (check the [Quick Start](/quickstart/) page for some examples).
 
 When you click on `Launch instance` the instance will be created and Kairos will boot into "auto-reset mode" by default. This means, that Kairos will "install" itself on the first boot and then reboot.
 
 You can specify a different image to be installed using a block like the following in the userdata:
+
+:::warning Legacy flavor example
+The image below is a valid example of the naming pattern, but these non-Hadron flavor repositories are not actively updated by the Kairos release pipeline anymore. Build and publish your own image with [BYOI](/docs/reference/byoi/) and [Kairos Factory](/docs/reference/kairos-factory/).
+:::
 
 ```yaml
 reset:

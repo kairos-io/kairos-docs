@@ -11,7 +11,7 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 :::warning Warning
-Despite the Flavor you may have selected to look into the docs. The Nvidia AGX Orin only works with Ubuntu 22.04
+Nvidia AGX Orin currently only works with Ubuntu 22.04-based images.
 :::
 This page describes how to install Kairos on [Nvidia AGX Orin](https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/jetson-orin/) in the eMMC.
 
@@ -64,6 +64,10 @@ echo "" > rootfs/boot/extlinux/extlinux.conf
 ```
 
 ### Prepare the images
+
+:::warning Legacy flavor example
+The Ubuntu image tags in this page are valid examples for AGX Orin workflows, but these non-Hadron flavor repositories are not actively updated by the Kairos release pipeline anymore. Build and publish your own image with [BYOI](/docs/reference/byoi/) and [Kairos Factory](/docs/reference/kairos-factory/).
+:::
 
 You can find Kairos core ubuntu images based on Ubuntu `22.04` here: https://quay.io/repository/kairos/ubuntu
 (search for `nvidia` in the tags)

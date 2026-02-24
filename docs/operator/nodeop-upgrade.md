@@ -12,6 +12,10 @@ The `NodeOpUpgrade` custom resource is a Kairos-specific resource for upgrading 
 
 The following is an example of a "canary upgrade", which upgrades Kairos nodes one-by-one (master nodes first). It will stop upgrading if one of the nodes doesn't complete the upgrade and reboot successfully.
 
+:::warning Legacy flavor example
+The image references below show a valid tag format, but these non-Hadron flavor repositories are not actively updated by the Kairos release pipeline anymore. Build and publish your own upgrade image with [BYOI](/docs/reference/byoi/) and [Kairos Factory](/docs/reference/kairos-factory/).
+:::
+
 ```yaml
 apiVersion: operator.kairos.io/v1alpha1
 kind: NodeOpUpgrade

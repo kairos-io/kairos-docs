@@ -8,7 +8,7 @@ description: |
 
 ## Installation media
 
-Download the Kairos ISO of your choice. See the [Getting Started guide](/getting-started/) for more information.
+Download the Kairos ISO of your choice. See the [Quick Start guide](/quickstart/) for more information.
 
 When deploying on a bare metal server, directly flash the image into a USB stick. There are multiple ways to do this:
 
@@ -28,6 +28,5 @@ For example using an application like [balenaEtcher](https://www.balena.io/etche
 If you're booting in UEFI mode, make sure that your storage device where you're planning to install Kairos, is configured as ACHI and not RAID.
 
 :::
-
 
 

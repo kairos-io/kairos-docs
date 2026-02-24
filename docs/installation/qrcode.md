@@ -48,7 +48,7 @@ max_message_size: 20971520
 
 For more information about EdgeVPN, [check out the architecture section](/docs/architecture/network).
 
-To trigger the installation process via QR code, you need to use the Kairos CLI and provide a Cloud Config, as described in the [Getting started guide](/getting-started). You can also see some Cloud Config examples in our [Examples section](/docs/examples/). The CLI is currently available only for Linux and Windows. It can be downloaded from the release artifact:
+To trigger the installation process via QR code, you need to use the Kairos CLI and provide a Cloud Config, as described in the [Quick Start guide](/quickstart/). You can also see some Cloud Config examples in our [Examples section](/docs/examples/). The CLI is currently available only for Linux and Windows. It can be downloaded from the release artifact:
 
 ```bash
 VERSION=$(wget -q -O- https://api.github.com/repos/kairos-io/provider-kairos/releases/latest | jq -r '.tag_name')

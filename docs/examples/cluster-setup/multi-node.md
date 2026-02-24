@@ -23,7 +23,7 @@ On all nodes, we will deploy a `kairos` user with the password `kairos` and the 
 
 On the master node configuration, we will enable the Kubernetes distribution and configure it. We will also include a manifest with a simple Nginx deployment that will be installed on the cluster once it's running. You can change the manifest to the one of your own application or remove it if you don't need it.
 
-<Tabs>
+<Tabs groupId="kubernetes-distribution">
 <TabItem value="k3s" label="k3s">
 ```yaml
 #cloud-config
@@ -126,7 +126,7 @@ write_files:
 
 With the master node up and running, we can configure the worker nodes
 
-<Tabs>
+<Tabs groupId="kubernetes-distribution">
 <TabItem value="k3s" label="k3s">
 ```yaml
 #cloud-config
@@ -176,7 +176,7 @@ write_files:
 </TabItem>
 </Tabs>
 
-<Tabs>
+<Tabs groupId="kubernetes-distribution">
 <TabItem value="k3s" label="k3s">
 To find out more about args configuration from k3s, follow their [server](https://docs.k3s.io/cli/server) and [agent](https://docs.k3s.io/cli/agent) documentation.
 </TabItem>
