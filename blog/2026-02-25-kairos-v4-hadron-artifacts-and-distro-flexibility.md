@@ -65,3 +65,5 @@ If you have questions, issues, or feedback, please reach out:
 Open an issue on GitHub: [https://github.com/kairos-io/kairos/issues/new/choose](https://github.com/kairos-io/kairos/issues/new/choose).
 
 Join the CNCF Slack (`#kairos`): [https://slack.cncf.io/](https://slack.cncf.io/).
+
+If you or your team plan to publicly build and distribute Kairos for a specific distro, please let us know. We would love to coordinate and help identify the best way to promote you.
