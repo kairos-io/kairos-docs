@@ -52,7 +52,11 @@ We understand this may introduce some inconvenience for users who relied on proj
 
 At the same time, this change helps us keep Kairos sustainable and gives us more time to focus on features, quality, and platform evolution.
 
-It also aligns with the Kairos ethos: giving end users control over their own release cadence and distribution flexibility.
+From our side, the overall release matrix grew beyond what we could reliably sustain. Managing multiple distributions across provider variants and Kubernetes combinations (k0s and k3s, each with multiple versions) pushed us to more than 500 artifacts per release cycle. At that scale, keeping pipelines, CI, and verification checks consistently healthy became increasingly difficult, and the risk of missing artifact signatures or specific version outputs was no longer acceptable.
+
+It also aligns with the Kairos ethos: giving end users control over their own release cadence and distribution flexibility. We do not want users to be blocked by our release timing when their priorities are different. If a critical CVE appears in a component that matters to your environment, you should be able to rebuild and release on your own schedule instead of waiting for our next publication window.
+
+Just as importantly, different teams need different upgrade policies. Some users may want kernel or base OS patch updates without moving to a newer k3s version. Others may want to avoid agent bumps and only roll selected OS fixes. This shift is about making that level of control practical, so each team can decide what to update, when to update it, and how fast to promote it through their own pipeline.
 
 ## Feedback and support
 
