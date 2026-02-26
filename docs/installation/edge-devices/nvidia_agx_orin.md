@@ -55,7 +55,7 @@ cd Linux_for_Tegra
 echo "" > ./bootloader/extlinux.conf
 # This is needed so the SDK doesn't complain of missing files (not really used in the flash process)
 IMAGE=quay.io/kairos/ubuntu:22.04-core-arm64-nvidia-jetson-agx-orin-{{< KairosVersion >}}
-docker run -ti --rm -v $PWD/rootfs:/rootfs quay.io/luet/base util unpack "$IMAGE" /rootfs
+docker run -ti --rm -v $PWD/rootfs:/rootfs quay.io/luet/base util unpack "$IMAGE" /rootfs --platform linux/arm64
 # workaround needed (SDK writes to the symlink)
 rm rootfs/boot/initrd
 # Extlinux is required by the SDK - so we fake it in our root (it will not be there eventually)
