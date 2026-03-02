@@ -27,8 +27,7 @@ export default function ConditionalVersionDropdownNavbarItem({
   const base = `/${routeBasePath}/`;
   const isActive =
     pathname === `/${routeBasePath}` ||
-    pathname.startsWith(base) ||
-    pathname.startsWith(`/${routeBasePath}/`);
+    pathname.startsWith(base);
 
   if (!isActive) {
     return null;
