@@ -32,6 +32,11 @@ to = "/operator-docs/"
 status = 302
 
 [[redirects]]
+from = "/docs/operator/"
+to = "/operator-docs/"
+status = 302
+
+[[redirects]]
 from = "/docs/operator/*"
 to = "/operator-docs/:splat"
 status = 302
