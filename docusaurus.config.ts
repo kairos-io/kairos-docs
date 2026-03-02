@@ -123,6 +123,16 @@ if (!latestVersionCustomFields.k3sVersion) {
   throw new Error(`latestVersion ${latestVersion} is missing k3sVersion in docsVersionCustomFields`);
 }
 
+// Operator docs versioning (separate lifecycle from Kairos OS docs)
+const operatorVersionsJsonPath = path.join(__dirname, 'operator-docs_versions.json');
+const operatorVersionsFromJson = fs.existsSync(operatorVersionsJsonPath)
+  ? (JSON.parse(fs.readFileSync(operatorVersionsJsonPath, 'utf8')) as string[])
+  : [];
+const latestOperatorVersion =
+  operatorVersionsFromJson.length > 0
+    ? operatorVersionsFromJson.map(parseVersionTag).sort(compareParsedVersions).at(-1)?.raw
+    : null;
+
 const config: Config = {
   title: 'Kairos',
   tagline: 'Transform your Linux system and preferred Kubernetes distribution into a secure bootable image for your edge devices',
@@ -196,6 +206,7 @@ const config: Config = {
     k3sVersion: latestVersionCustomFields.k3sVersion,
     providerVersion: 'v2.14.0',
     latestVersion,
+    latestOperatorVersion: latestOperatorVersion ?? null,
     auroraBootVersion: 'v0.14.0',
     kairosInitVersion: 'v0.6.2',
     docsVersionCustomFields: {
@@ -280,6 +291,34 @@ const config: Config = {
         showLastUpdateAuthor: true,
       },
     ],
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'operator-docs',
+        path: 'operator-docs',
+        routeBasePath: 'operator-docs',
+        sidebarPath: './sidebarsOperator.ts',
+        remarkPlugins: [remarkShortcodeCode],
+        editUrl: 'https://github.com/kairos-io/kairos-docs/tree/main/',
+        showLastUpdateTime: true,
+        showLastUpdateAuthor: true,
+        ...(latestOperatorVersion && {
+          lastVersion: latestOperatorVersion,
+          versions: {
+            current: {
+              label: 'Next 🚧',
+              path: '',
+              banner: 'unreleased',
+            },
+            [latestOperatorVersion]: {
+              label: latestOperatorVersion,
+              path: latestOperatorVersion,
+              banner: 'none',
+            },
+          },
+        }),
+      },
+    ],
   ],
 
   themeConfig: {
@@ -313,6 +352,13 @@ const config: Config = {
           position: 'left',
           label: 'Docs',
         },
+        {
+          type: 'docSidebar',
+          docsPluginId: 'operator-docs',
+          sidebarId: 'operatorSidebar',
+          position: 'left',
+          label: 'Operator',
+        },
         {to: '/blog', label: 'Blog', position: 'left'},
         {
           label: 'Community',
@@ -320,8 +366,18 @@ const config: Config = {
           to: '/community/',
         },
         {
-          type: 'docsVersionDropdown',
+          type: 'custom-conditionalVersionDropdown',
           position: 'right',
+          routeBasePath: 'docs',
+          label: 'Kairos',
+          dropdownActiveClassDisabled: true,
+        },
+        {
+          type: 'custom-conditionalVersionDropdown',
+          position: 'right',
+          routeBasePath: 'operator-docs',
+          label: 'Operator',
+          docsPluginId: 'operator-docs',
           dropdownActiveClassDisabled: true,
         },
         {
@@ -359,6 +415,10 @@ const config: Config = {
             {
               label: 'Examples',
               to: '/docs/examples',
+            },
+            {
+              label: 'Operator Docs',
+              to: '/operator-docs/',
             },
           ],
         },
