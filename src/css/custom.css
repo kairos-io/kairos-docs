@@ -177,8 +177,41 @@ a:hover {
   color: var(--kairos-softer-orange);
 }
 
+/* Highlight Docs / Operator when viewing that section */
+.navbar__link.navbar__link--active {
+  color: var(--kairos-white);
+  font-weight: 600;
+  position: relative;
+  display: inline-block;
+}
+
+.navbar__link.navbar__link--active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--kairos-softer-orange);
+  border-radius: 1px;
+}
+
 .navbar__item {
   color: rgba(255, 255, 255, 0.85);
+}
+
+/* Version dropdown with label (Kairos / Operator) */
+.navbar__version-dropdown-with-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.navbar__version-label {
+  font-size: var(--ifm-navbar-link-font-size);
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
 }
 
 .dropdown__menu .dropdown__link {

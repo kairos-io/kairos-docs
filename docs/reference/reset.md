@@ -59,7 +59,7 @@ $ reboot
 
 ## From Kubernetes
 
-The [Kairos operator](/docs/operator/) can be used to apply a [NodeOp](/docs/operator/nodeop/) to the nodes to use Kubernetes to schedule the reset on the nodes itself, similarly on how upgrades are applied.
+The [Kairos operator](/operator-docs/) can be used to apply a [NodeOp](/operator-docs/nodeop/) to the nodes to use Kubernetes to schedule the reset on the nodes itself, similarly on how upgrades are applied.
 
 Consider the following example which resets a machine by changing the config file used during installation:
 

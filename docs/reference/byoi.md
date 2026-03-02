@@ -48,7 +48,7 @@ Use the Kairos Operator to build OS artifacts directly in Kubernetes using the O
 - Integrates with existing Kubernetes workflows and GitOps patterns.
 - Manage upgrades and operations on Kairos nodes from within Kubernetes.
 
-Start here: [Kairos Operator](/docs/operator/)
+Start here: [Kairos Operator](/operator-docs/)
 
 ## Suggested workflow
 
