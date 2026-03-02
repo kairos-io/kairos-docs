@@ -10,7 +10,7 @@ Kairos upgrades can be performed either manually or via Kubernetes if the cluste
 
 ## Prerequisites
 
-The Kairos operator needs to be deployed on the target cluster. [Read the installation instructions here](/docs/operator/installation/)
+The Kairos operator needs to be deployed on the target cluster. [Read the installation instructions here](/operator-docs/installation/)
 
 ### Upgrading from version X to version Y with Kubernetes
 
@@ -145,7 +145,7 @@ k3s:
  enabled: true
 ```
 
-This configuration file prepares the system with the `cert-manager` and `kyverno` bundles, enabling `k3s`. The Kairos operator can be deployed separately using the instructions in the [Kairos Operator documentation](/docs/operator/installation/).
+This configuration file prepares the system with the `cert-manager` and `kyverno` bundles, enabling `k3s`. The Kairos operator can be deployed separately using the instructions in the [Kairos Operator documentation](/operator-docs/installation/).
 
 ## Customize the upgrade process
 
