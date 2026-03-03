@@ -25,7 +25,7 @@ For a complete guide on creating custom cloud images and when to use these build
 
 Several examples below reference Secrets (OCI spec, push credentials, cloud-config). Here is what those Secrets must look like.
 
-**Push credentials** (`pushCredentialsSecretRef`): used when you set `spec.image.push: true`. The Secret must be of type `kubernetes.io/dockerconfigjson` and contain the key `.dockerconfigjson` with a JSON object. The `auth` field is the base64-encoding of `username:password` for the registry.
+**Push credentials** (`spec.image.pushCredentialsSecretRef`): used when you set `spec.image.push: true`. The Secret must be of type `kubernetes.io/dockerconfigjson` and contain the key `.dockerconfigjson` with a JSON object. The `auth` field is the base64-encoding of `username:password` for the registry.
 
 ```yaml
 apiVersion: v1
@@ -741,7 +741,7 @@ spec:
 Download the ISO:
 
 ```bash
-PORT=$(kubectl get svc kairos-operator-nginx -o json | jq '.spec.ports[0].nodePort')
+PORT=$(kubectl get svc kairos-operator-nginx -o jsonpath='{.spec.ports[0].nodePort}')
 curl http://<node-ip>:$PORT/my-kairos-iso.iso -o output.iso
 ```
 
