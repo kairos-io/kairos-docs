@@ -1,0 +1,11 @@
+{
+  "label": "Edge devices",
+  "link": {
+    "type": "generated-index",
+    "slug": "/installation/edge-devices",
+    "title": "Edge Devices Installation",
+    "description": "Learn how to install Kairos on different edge devices."
+  },
+  "collapsible": true,
+  "collapsed": true
+}

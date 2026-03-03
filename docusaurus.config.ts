@@ -62,6 +62,13 @@ if (!latestVersion) {
 }
 
 const docsVersionCustomFields = {
+  'v4.0.1': {
+    registryURL: 'quay.io/kairos',
+    k3sVersion: 'v1.35.0+k3s3',
+    providerVersion: 'v2.14.0',
+    auroraBootVersion: 'v0.14.0',
+    kairosInitVersion: 'v0.7.0',
+  },
   'v3.7.2': {
     registryURL: 'quay.io/kairos',
     k3sVersion: 'v1.35.0+k3s3',
@@ -75,13 +82,6 @@ const docsVersionCustomFields = {
     providerVersion: 'v2.14.0',
     auroraBootVersion: 'v0.13.0',
     kairosInitVersion: 'v0.6.2',
-  },
-  'v3.5.7': {
-    registryURL: 'quay.io/kairos',
-    k3sVersion: 'v1.34.1+k3s1',
-    providerVersion: 'v2.13.4',
-    auroraBootVersion: 'v0.13.0',
-    kairosInitVersion: 'v0.5.26',
   },
 } as const;
 
