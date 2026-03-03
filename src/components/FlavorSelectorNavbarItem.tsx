@@ -22,10 +22,7 @@ export default function FlavorSelectorNavbarItem({
   const dropdownRef = React.useRef<HTMLDivElement>(null);
   const selectedKey = optionKey(selection);
   const isVersionedDocs = /^\/docs\/v\d+\.\d+\.\d+(\/|$)/.test(location.pathname);
-
-  if (!isVersionedDocs) {
-    return <></>;
-  }
+  const isV401Docs = /^\/docs\/v4\.0\.1(\/|$)/.test(location.pathname);
 
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent | TouchEvent | FocusEvent): void => {
@@ -45,6 +42,10 @@ export default function FlavorSelectorNavbarItem({
       document.removeEventListener('focusin', handleClickOutside);
     };
   }, []);
+
+  if (!isVersionedDocs || isV401Docs) {
+    return <></>;
+  }
 
   if (mobile) {
     return (

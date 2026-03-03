@@ -5,7 +5,7 @@ description: Starting with Kairos v4, the project will publish Hadron-based arti
 slug: 2026/02/25/kairos-v4-hadron-artifacts-and-distro-flexibility
 tags:
   - kairos
-title: "Kairos v4: Hadron-Only Artifacts with Ongoing Distro Support"
+title: "Hadron-Only Artifacts with Ongoing Distro Support"
 ---
 
 Starting with **Kairos v4**, the Kairos project will publish **Hadron-based artifacts only**.
