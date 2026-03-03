@@ -19,7 +19,7 @@ For a complete guide on creating custom cloud images and when to use these build
 ## Prerequisites
 
 - A Kubernetes cluster with `kubectl` (and optionally `helm`) installed. [kind](https://github.com/kubernetes-sigs/kind) works as well.
-- The [Kairos operator](installation) installed on the cluster.
+- The [Kairos operator](../installation) installed on the cluster.
 
 ### Creating the Secrets
 
