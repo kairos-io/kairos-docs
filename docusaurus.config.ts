@@ -326,7 +326,7 @@ const config: Config = {
     image: 'img/Kairos_800x419.png',
     announcementBar: {
       id: 'hadron-linux-out',
-      content: '⚛️ <a href="/quickstart/">Hadron Linux</a> is out! 🚀',
+      content: '<a href="/blog/2026/02/27/kairos-release-v4.0.0/">Kairos v4.0.1</a> is out! 🚀',
       backgroundColor: '#1baaff',
       textColor: '#000000',
       isCloseable: true,
