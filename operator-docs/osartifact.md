@@ -3,702 +3,734 @@ title: "OSArtifact"
 linkTitle: "OSArtifact"
 weight: 4
 date: 2025-07-25
-description: Build OS artifacts (ISOs, cloud images, netboot) from container images using the OSArtifact custom resource
+description: Build OS artifacts (ISOs, cloud images, netboot, UKI) from container images using the two-stage OSArtifact API
 ---
 
-The `OSArtifact` custom resource allows you to build Linux distribution artifacts (ISO images, cloud images, netboot artifacts, etc.) from container images directly in Kubernetes. This is particularly useful for building Kairos OS images and other bootable artifacts as Kubernetes-native resources.
+The `OSArtifact` custom resource lets you build Linux distribution artifacts (ISO images, cloud images, netboot, UKI signed artifacts) from container images directly in Kubernetes. The API is organized in **two stages**: **Stage 1** defines how to obtain the OCI image (pre-built or built from options or a custom OCI spec); **Stage 2** defines which artifacts to produce from that image (ISO, cloud image, etc.).
 
-:::info Note
-This guide provides detailed information about building Kairos images using the Kairos operator. For a complete guide on creating custom cloud images, including when and how to use these build methods, see [Creating Custom Cloud Images](/docs/advanced/creating_custom_cloud_images/).
+:::tip Terminology: OCI spec vs Dockerfile
+This documentation uses **OCI spec** (or **OCI build definition**) to mean the instructions that describe how to build a container image — the same concept that is often called a **Dockerfile** elsewhere. We use vendor-neutral wording; the format and behavior are the same as the Dockerfile format you may already know (e.g. `FROM`, `RUN`, `COPY`). When the spec says "store your OCI spec in a Secret," you can put a Dockerfile-format file there (commonly with key `Dockerfile`).
 :::
 
-While it's possible to just run Kairos from the artifacts provided by our release process, there are specific use-cases which need extended customization, for example when additional kernel modules, or custom, user-defined logic that you might want to embed in the media used for installations.
+:::info Note
+For a complete guide on creating custom cloud images and when to use these build methods, see [Creating Custom Cloud Images](/docs/advanced/creating_custom_cloud_images/).
+:::
 
 ## Prerequisites
 
-To build with the Kubernetes Native extensions, a Kubernetes cluster is required and `helm` and `kubectl` installed locally. Note [kind](https://github.com/kubernetes-sigs/kind) can be used as well. The Native extensions don't require any special permission, and run completely unprivileged.
+- A Kubernetes cluster with `kubectl` (and optionally `helm`) installed. [kind](https://github.com/kubernetes-sigs/kind) works as well.
+- The [Kairos operator](installation) installed on the cluster.
 
-The [Kairos operator](../installation/) needs to be installed on the cluster.
+### Creating the Secrets
 
-## Image Sources
+Several examples below reference Secrets (OCI spec, push credentials, cloud-config). Here is what those Secrets must look like.
 
-The OSArtifact resource supports two ways to specify the source image:
-
-1. **Pre-built Kairos image** (using `imageName`):
-   ```yaml
-   spec:
-     imageName: quay.io/kairos/opensuse:leap-15.6-core-amd64-generic-v3.6.0
-   ```
-
-2. **Dockerfile in a Secret** (using `baseImageDockerfile`):
-   ```yaml
-   spec:
-     baseImageDockerfile:
-       name: dockerfile-secret
-       key: Dockerfile
-     iso: true
-   ```
-
-## Build an ISO
-
-To build an ISO, consider the following spec, which provides a hybrid bootable ISO (UEFI/MBR), with the `core` kairos image, adding `helm`:
+**Push credentials** (`pushCredentialsSecretRef`): used when you set `spec.image.push: true`. The Secret must be of type `kubernetes.io/dockerconfigjson` and contain the key `.dockerconfigjson` with a JSON object. The `auth` field is the base64-encoding of `username:password` for the registry.
 
 ```yaml
-kind: Secret
 apiVersion: v1
+kind: Secret
 metadata:
-  name: cloud-config
+  name: registry-credentials
+  namespace: default
+type: kubernetes.io/dockerconfigjson
 stringData:
-  userdata: |
-    #cloud-config
-    users:
-    - name: "kairos"
-      passwd: "kairos"
-    install:
-      device: "auto"
-      reboot: true
-      poweroff: false
-      auto: true # Required, for automated installations
----
-kind: OSArtifact
-apiVersion: build.kairos.io/v1alpha2
-metadata:
-  name: hello-kairos
-spec:
-  imageName: "{{< OCI variant="standard" >}}"
-  iso: true
-  bundles:
-  # Bundles available at: https://packages.kairos.io/Kairos/
-  - quay.io/kairos/packages:helm-utils-3.10.1
-  cloudConfigRef:
-    name: cloud-config
-    key: userdata
-  exporters:
-  - template:
-      spec:
-        restartPolicy: Never
-        containers:
-        - name: upload
-          image: quay.io/curl/curl
-          command: ["sh", "-ec"]
-          args:
-          - |
-            NGINX_URL="${NGINX_URL:-http://kairos-operator-nginx}"
-            for f in /artifacts/*; do
-              [ -f "$f" ] || continue
-              base=$(basename "$f")
-              echo "Uploading $base to $NGINX_URL/$base"
-              curl -fsSL -T "$f" "$NGINX_URL/$base" || exit 1
-            done
-            echo "Upload done"
-          env:
-          - name: NGINX_URL
-            value: "http://kairos-operator-nginx"
-          volumeMounts:
-          - name: artifacts
-            readOnly: true
-            mountPath: /artifacts
+  .dockerconfigjson: |
+    {
+      "auths": {
+        "my-registry.example.com": {
+          "username": "myuser",
+          "password": "mypassword",
+          "auth": "bXl1c2VyOm15cGFzc3dvcmQ="
+        }
+      }
+    }
 ```
 
-Apply the manifest with `kubectl apply`.
-
-Note, the CRD allows to specify a custom Cloud config file, [check out the full configuration reference](/docs/reference/configuration/).
-
-The exporter in the example above uploads the built artifacts to an nginx server. The operator includes a ready-to-use nginx kustomization that deploys an nginx server with WebDAV upload support. See [Serving Artifacts with Nginx](#serving-artifacts-with-nginx) below.
-
-To download the built artifacts, get the nginx service's node port and use it to fetch the ISO:
+Replace `my-registry.example.com`, `myuser`, and `mypassword` with your registry host, username, and password. The `auth` value is `echo -n 'myuser:mypassword' | base64 -w0`. You can also create this Secret with:
 
 ```bash
-$ PORT=$(kubectl get svc kairos-operator-nginx -o json | jq '.spec.ports[0].nodePort')
-$ curl http://<node-ip>:$PORT/hello-kairos.iso -o output.iso
+kubectl create secret docker-registry registry-credentials \
+  --docker-server=my-registry.example.com \
+  --docker-username=myuser \
+  --docker-password=mypassword \
+  -n default
 ```
 
-## Netboot Artifacts
-
-It is possible to use the CRD to prepare artifacts required for netbooting, by enabling `netboot: true`:
+**OCI spec** (`spec.image.ociSpec.ref`): when you build from your own OCI spec, store it in a Secret of type `Opaque`. Use one key (e.g. `ociSpec` or `Dockerfile`) whose value is the full OCI spec content (the instructions that define how to build the image). The `spec.image.ociSpec.ref.key` in the OSArtifact must match that key name.
 
 ```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: my-ocispec
+  namespace: default
+type: Opaque
+stringData:
+  ociSpec: |
+    FROM quay.io/kairos/kairos-init:v0.7.0 AS kairos-init
+    FROM opensuse/leap:15.6
+    ARG MODEL=generic
+    ARG VERSION=v3.6.0
+    COPY --from=kairos-init /kairos-init /kairos-init
+    RUN /kairos-init -l debug -s install -m "${MODEL}" --version "${VERSION}" && \
+        /kairos-init -l debug -s init -m "${MODEL}" --version "${VERSION}" && \
+        rm -f /kairos-init
+```
+
+In the OSArtifact, reference it with `ociSpec.ref.name: my-ocispec` and `ociSpec.ref.key: ociSpec`. You can use `Dockerfile` as the key instead; just set `ref.key` to match.
+
+**Cloud config** (`artifacts.cloudConfigRef`): create a Secret with key `userdata` (or another key you reference) containing your cloud-init YAML (e.g. `#cloud-config` and users, install options).
+
+---
+
+## Two-stage model
+
+| Stage | Spec | Purpose |
+|-------|------|---------|
+| **Stage 1** | `spec.image` | How to obtain the OCI image: use a pre-built ref, build with options (default OCI spec), or build with your own OCI spec. Optionally push the built image to a registry. |
+| **Stage 2** | `spec.artifacts` | Which artifacts to produce from the Stage 1 image: ISO, cloud image, netboot, Azure/GCE images, UKI signed outputs. Optional; if omitted or all disabled, only Stage 1 runs (build + optional push). |
+
+### Choosing how to build (decision tree)
+
+1. **Already have a Kairos image?** → Set `spec.image.ref` to the image reference. No build; Stage 2 uses that image. Use this when you build the Kairos image through other means (e.g. using [AuroraBoot](https://github.com/kairos-io/AuroraBoot) directly) or when consuming the upstream released Kairos images.
+2. **Build with options only (no custom OCI spec)?** → Set `spec.image.buildOptions` (e.g. `version`, `baseImage`, `model`, `kubernetesDistro`). The operator uses its default OCI build definition and injects `kairos-init`. Version is required. Use this method when you want to define the base image and some parameters but you don't need any additional control.
+3. **Full control (your OCI spec including FROM and kairos-init)?** → Set `spec.image.ociSpec.ref` to a Secret holding your OCI build definition. The operator does not modify it. Use this method when you want full control, for example when you want to perform some action between the kairos-init installation and init stages.
+4. **Your OCI spec fragment + operator adds base image and kairos-init?** → Set both `spec.image.ociSpec` (template, no `FROM`) and `spec.image.buildOptions`. The operator injects `FROM buildOptions.baseImage` at the top and the kairos-init block at the bottom. Use this method when you want to add steps to the used ociSpec (e.g. install or remove packages, enable services etc) but you don't need to intercept the "kairosification" steps.
+5. **Push the built image to a registry?** → When building, set `spec.image.push: true` and `spec.image.pushCredentialsSecretRef` (and optionally `spec.image.buildImage` for registry/repository/tag).
+
+---
+
+## Stage 1: Image source
+
+### Pre-built image (`image.ref`)
+
+When `spec.image.ref` is set, the operator does not build; it uses the given image for Stage 2. `buildOptions` and `ociSpec` are ignored.
+
+```yaml
+apiVersion: build.kairos.io/v1alpha2
 kind: OSArtifact
 metadata:
-  name: hello-kairos
+  name: from-prebuilt-image
+  namespace: default
 spec:
-  imageName: "{{< OCI variant="core" >}}"
-  netboot: true
-  netbootURL: ...
-  bundles: ...
-  cloudConfigRef: ...
-  exporters: ...
+  image:
+    ref: quay.io/kairos-io/kairos:v3.6.0
+
+  artifacts:
+    arch: amd64
+    iso: true
+    cloudImage: true
+    cloudConfigRef:
+      name: cloud-config
+      key: userdata
+
+  exporters: []
 ```
 
-## Build a Cloud Image
+Create a `cloud-config` Secret with key `userdata` containing your cloud-init config (e.g. users, install options). Then apply the manifest.
 
-Cloud images are images that automatically boot into recovery mode and can be used to deploy whatever image you want to the VM. Custom user-data from the Cloud provider is automatically retrieved. Additionally the CRD allows to embed a custom cloudConfig so that we can use to make configuration permanent also for VM images running outside a cloud provider.
+### Build with options only (default OCI spec)
 
-A Cloud Image boots in QEMU and also in AWS, consider:
+When you want a “kairosified” image without writing a OCI spec, use `spec.image.buildOptions`. The operator uses an embedded default OCI build definition and injects `kairos-init` with the options you supply. **Version is required.**
 
 ```yaml
+apiVersion: build.kairos.io/v1alpha2
+kind: OSArtifact
+metadata:
+  name: standard-kairos-build
+  namespace: default
+spec:
+  image:
+    buildOptions:
+      version: v3.6.0
+      baseImage: ubuntu:24.04
+      model: generic
+      kubernetesDistro: k3s
+      kubernetesVersion: "v1.35.1+k3s1"
+    buildImage:
+      registry: my-registry.example.com
+      repository: my-ns/standard-kairos
+      tag: v3.6.0
+    push: true
+    pushCredentialsSecretRef:
+      name: registry-credentials
+
+  artifacts:
+    arch: amd64
+    iso: true
+    cloudImage: true
+    cloudConfigRef:
+      name: cloud-config
+      key: userdata
+
+  exporters: []
+```
+
+- **baseImage**: Base image for the build (e.g. `ubuntu:24.04` or a non-kairosified image like `ghcr.io/kairos-io/hadron:v0.0.4`). When set, the operator injects `FROM baseImage` at the top.
+- **buildImage**: Registry, repository, and tag for the built image (useful for tools that bump tags).
+- **push** and **pushCredentialsSecretRef**: Push the built image to a registry; the Secret must contain `.dockerconfigjson` for the registry.
+
+### Kairosify a custom base image
+
+Same as above, but use a custom base (e.g. Hadron) and optionally disable push or some artifacts:
+
+```yaml
+apiVersion: build.kairos.io/v1alpha2
+kind: OSArtifact
+metadata:
+  name: kairosify-custom-base
+  namespace: default
+spec:
+  image:
+    buildOptions:
+      version: v1.0.0
+      baseImage: ghcr.io/kairos-io/hadron:v0.0.4
+      model: generic
+      kubernetesDistro: k0s
+      kubernetesVersion: "v1.35.1+k0s.0"
+    buildImage:
+      registry: quay.io
+      repository: kairos/hadron
+      tag: v1.0.0
+    push: false
+
+  artifacts:
+    arch: amd64
+    iso: true
+    cloudConfigRef:
+      name: cloud-config
+      key: userdata
+
+  exporters: []
+```
+
+### Build with your own OCI spec (full control)
+
+For full control, store your OCI spec (build definition) in a Secret and reference it with `spec.image.ociSpec.ref`. Your definition must include the base image (`FROM`) and any kairos-init logic; the operator does not modify it.
+
+```yaml
+---
 kind: Secret
 apiVersion: v1
 metadata:
-  name: cloud-config
+  name: my-ocispec
+  namespace: default
+type: Opaque
 stringData:
-  userdata: |
-    #cloud-config
-    users:
-    - name: "kairos"
-      passwd: "kairos"
+  Dockerfile: |
+    FROM quay.io/kairos/kairos-init:v0.7.0 AS kairos-init
+    FROM opensuse/leap:15.6
+    ARG MODEL=generic
+    ARG VERSION=v3.6.0
+    COPY --from=kairos-init /kairos-init /kairos-init
+    RUN /kairos-init -l debug -s install -m "${MODEL}" --version "${VERSION}" && \
+        /kairos-init -l debug -s init -m "${MODEL}" --version "${VERSION}" && \
+        rm -f /kairos-init
 ---
 apiVersion: build.kairos.io/v1alpha2
 kind: OSArtifact
 metadata:
-  name: hello-kairos
+  name: full-control-ocispec
+  namespace: default
 spec:
-  imageName: "{{< OCI variant="core" >}}"
-  cloudImage: true
-  cloudConfigRef:
-    name: cloud-config
-    key: userdata
+  image:
+    ociSpec:
+      ref:
+        name: my-ocispec
+        key: Dockerfile
+    buildImage:
+      registry: my-registry.example.com
+      repository: my-ns/full-control-kairos
+      tag: latest
+    push: true
+    pushCredentialsSecretRef:
+      name: registry-credentials
+
+  artifacts:
+    arch: amd64
+    iso: true
+    cloudConfigRef:
+      name: cloud-config
+      key: userdata
+
+  exporters: []
+```
+
+#### Templating the OCI spec
+
+You can render the OCI spec with variables using `ociSpec.templateValuesFrom` (Secret) and/or `ociSpec.templateValues` (inline). Use standard Go template syntax (e.g. `{{ .VariableName }}`). Values are applied when the operator renders the build definition before the build.
+
+**Example: inline values**
+
+```yaml
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: my-ocispec-templated
+  namespace: default
+type: Opaque
+stringData:
+  ociSpec: |
+    FROM {{ .BaseImage }}
+    ARG VERSION={{ .Version }}
+    RUN echo "Built from {{ .BaseImage }} at {{ .Version }}" > /etc/build-info
+---
+apiVersion: build.kairos.io/v1alpha2
+kind: OSArtifact
+metadata:
+  name: templated-build
+  namespace: default
+spec:
+  image:
+    ociSpec:
+      ref:
+        name: my-ocispec-templated
+        key: ociSpec
+      templateValues:
+        BaseImage: "ubuntu:22.04"
+        Version: "v1.0.0"
+    buildImage:
+      registry: my-registry.example.com
+      repository: my-ns/templated
+      tag: latest
+  artifacts:
+    arch: amd64
+    iso: true
+```
+
+You can use a Secret for values instead: set `templateValuesFrom.name` to the Secret name; the operator uses all keys in that Secret as template values. Inline `templateValues` take precedence over the Secret on key conflict. Missing keys render as empty strings.
+
+**Restrictions:** Only value substitution and basic control flow (`if`/`else`, `range`, `with`) are supported. The directives **`define`**, **`template`**, and **`block`** are not allowed and will cause the build to fail. This keeps templates predictable and avoids nesting that is not useful in OCI build definitions.
+
+For a larger example that combines templating with BuildOptions and a build context, see [OCISpec + BuildOptions (templated OCI spec + kairos-init)](#ocispec--buildoptions-templated-oci-spec--kairos-init).
+
+### OCI-only build (no artifacts)
+
+When you only want to build and optionally push the OCI image (no ISO or cloud image), omit `spec.artifacts` or leave all artifact types disabled. Only Stage 1 runs.
+
+```yaml
+apiVersion: build.kairos.io/v1alpha2
+kind: OSArtifact
+metadata:
+  name: oci-only-build
+  namespace: default
+spec:
+  image:
+    buildOptions:
+      version: v3.6.0
+      baseImage: ubuntu:24.04
+      model: generic
+      kubernetesDistro: k3s
+      kubernetesVersion: "v1.35.1+k3s1"
+    buildImage:
+      registry: my-registry.example.com
+      repository: my-ns/kairos-oci
+      tag: v3.6.0
+    push: true
+    pushCredentialsSecretRef:
+      name: registry-credentials
+
+  # No artifacts: only build and push the OCI image.
+```
+
+---
+
+## Stage 2: Artifacts
+
+All artifact options live under `spec.artifacts`. Common fields:
+
+- **arch**: `amd64` or `arm64`
+- **iso**: Produce a hybrid bootable ISO (UEFI/MBR).
+- **cloudImage**: Produce a raw disk image (e.g. for QEMU and AWS).
+- **azureImage**, **gceImage**: Produce Azure VHD or GCE disk images.
+- **netboot**, **netbootURL**: Netboot artifacts.
+- **cloudConfigRef**: Secret reference for cloud-init userdata (key typically `userdata`).
+- **diskSize**: Disk size for cloud images (e.g. `32000` for 32GB).
+- **grubConfig**, **bundles**, **osRelease**, **kairosRelease**: Additional AuroraBoot options. **bundles** is a list of OCI image references; each image is unpacked onto the rootfs (e.g. add-ons like Helm or k9s). Valid bundles are published in the [Kairos packages repository](https://packages.kairos.io/Kairos/) and as container images at `quay.io/kairos/packages` with tags like `helm-utils-4.1.1`, `k9s-utils-0.50.18` (use full refs, e.g. `quay.io/kairos/packages:helm-utils-4.1.1`).
+
+Example: ISO + cloud image with cloud-config:
+
+```yaml
+spec:
+  image:
+    ref: quay.io/kairos-io/kairos:v3.6.0
+  artifacts:
+    arch: amd64
+    iso: true
+    cloudImage: true
+    cloudConfigRef:
+      name: cloud-config
+      key: userdata
+```
+
+### Overlay volumes (scoped under artifacts)
+
+To inject files into the ISO or the OS rootfs, use **volumes** and **importers**, then reference the volume names under `spec.artifacts`. The operator passes these to [AuroraBoot](https://github.com/kairos-io/AuroraBoot) when building the ISO:
+
+- **overlayISOVolume**: Volume name for `--overlay-iso` (files appear at `/run/initramfs/live` during live boot).
+- **overlayRootfsVolume**: Volume name for `--overlay-rootfs` (files are merged into the OS rootfs/squashfs).
+
+Define volumes in `spec.volumes` and populate them with `spec.importers` (init containers). Then set `artifacts.overlayISOVolume` and/or `artifacts.overlayRootfsVolume` to those volume names.
+
+```yaml
+apiVersion: build.kairos.io/v1alpha2
+kind: OSArtifact
+metadata:
+  name: importers-scoped-bindings
+  namespace: default
+spec:
+  image:
+    ref: quay.io/kairos/hadron:v0.0.1-core-amd64-generic-v3.7.2
+
+  volumes:
+    - name: iso-overlay
+      emptyDir: {}
+    - name: rootfs-overlay
+      emptyDir: {}
+
+  importers:
+    - name: populate-iso-overlay
+      image: busybox:latest
+      command: ["/bin/sh", "-c"]
+      args:
+        - |
+          echo "On ISO root (live)." > /overlay/README-ISO.txt
+      volumeMounts:
+        - name: iso-overlay
+          mountPath: /overlay
+    - name: populate-rootfs-overlay
+      image: busybox:latest
+      command: ["/bin/sh", "-c"]
+      args:
+        - |
+          mkdir -p /overlay/etc
+          echo "Baked into OS rootfs." > /overlay/etc/README-ROOTFS.txt
+      volumeMounts:
+        - name: rootfs-overlay
+          mountPath: /overlay
+
+  artifacts:
+    arch: amd64
+    iso: true
+    overlayISOVolume: iso-overlay
+    overlayRootfsVolume: rootfs-overlay
+```
+
+### UKI (signed) artifacts
+
+To build signed UKI artifacts (Secure Boot, TPM), use `spec.artifacts.uki` with a volume that holds the signing keys. When any of `uki.iso`, `uki.container`, or `uki.efi` is true, **keysVolume** is required (validation).
+
+The keys volume must contain (e.g. from `auroraboot genkey <name> -o keys/`): `PK.auth`, `KEK.auth`, `db.auth`, `db.key`, `db.pem`, `tpm2-pcr-private.pem`. Use a volume (e.g. `emptyDir`) and an importer to generate or copy the keys.
+
+```yaml
+apiVersion: build.kairos.io/v1alpha2
+kind: OSArtifact
+metadata:
+  name: uki-keys-volume
+  namespace: default
+spec:
+  image:
+    ref: quay.io/kairos/hadron:v0.0.1-core-amd64-generic-v3.7.2
+
+  volumes:
+    - name: uki-keys
+      emptyDir: {}
+
+  importers:
+    - name: generate-uki-keys
+      image: quay.io/kairos/auroraboot:latest
+      command: ["/bin/sh", "-c"]
+      args:
+        - auroraboot genkey my-uki -o /keys
+      volumeMounts:
+        - name: uki-keys
+          mountPath: /keys
+
+  artifacts:
+    arch: amd64
+    uki:
+      iso: true
+      # container: true   # signed UKI OCI image
+      # efi: true        # raw .efi files
+      keysVolume: uki-keys
+```
+
+UKI outputs use distinct names (e.g. `<artifact-name>-uki.iso`) so they do not collide with unsigned artifacts.
+
+---
+
+## Build context volume (OCISpec)
+
+When building from a custom OCI spec which uses `COPY` from the build context, set **spec.image.ociSpec.buildContextVolume** to a volume name from `spec.volumes`. Importers can populate that volume; Kaniko will see it at `/workspace`.
+
+```yaml
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: my-ocispec-with-context
+  namespace: default
+type: Opaque
+stringData:
+  Dockerfile: |
+    FROM quay.io/kairos/kairos-init:v0.7.0 AS kairos-init
+    FROM opensuse/leap:15.6
+    ARG MODEL=generic
+    ARG VERSION=v3.6.0
+    COPY --from=kairos-init /kairos-init /kairos-init
+    COPY build-info.txt /etc/kairos-build-info.txt
+    RUN /kairos-init -l debug -s install -m "${MODEL}" --version "${VERSION}" && \
+        /kairos-init -l debug -s init -m "${MODEL}" --version "${VERSION}" && \
+        rm -f /kairos-init
+---
+apiVersion: build.kairos.io/v1alpha2
+kind: OSArtifact
+metadata:
+  name: ocispec-build-context-volume
+  namespace: default
+spec:
+  image:
+    ociSpec:
+      ref:
+        name: my-ocispec-with-context
+        key: Dockerfile
+      buildContextVolume: build-context
+
+  volumes:
+    - name: build-context
+      emptyDir: {}
+
+  importers:
+    - name: populate-build-context
+      image: busybox:latest
+      command: ["/bin/sh", "-c"]
+      args:
+        - 'echo "Built with importers at $(date)" > /ctx/build-info.txt'
+      volumeMounts:
+        - name: build-context
+          mountPath: /ctx
+
+  artifacts:
+    arch: amd64
+    iso: true
+```
+
+---
+
+## OCISpec + BuildOptions (templated OCI spec + kairos-init)
+
+When both `spec.image.ociSpec` and `spec.image.buildOptions` are set, the operator injects:
+
+- At the **top**: `FROM buildOptions.baseImage` (when baseImage is set).
+- At the **bottom**: the kairos-init block; BuildOptions supply its arguments.
+
+Your OCI spec (e.g. a template) must **not** add its own `FROM`; it can be built from multiple named fragments that you define (for example, one fragment from a shared or generated source and one from the user). Use **templateValuesFrom** and/or **templateValues** to fill the template, and **buildContextVolume** if the OCI spec uses `COPY` from the context.
+
+The example below uses two template variables, `Part1` and `Part2`, to illustrate the idea—you can use any variable names and any number of fragments.
+
+```yaml
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: dockerfile-template-concat
+  namespace: default
+type: Opaque
+stringData:
+  Dockerfile: |
+    {{ .Part1 }}
+    {{ .Part2 }}
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: dockerfile-fragments
+  namespace: default
+type: Opaque
+stringData:
+  Part1: |
+    RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && rm -rf /var/lib/apt/lists/*
+    COPY extra-bundle.txt /etc/extra-bundle.txt
+  Part2: |
+    RUN apt-get update && apt-get install -y --no-install-recommends curl jq && rm -rf /var/lib/apt/lists/*
+---
+apiVersion: build.kairos.io/v1alpha2
+kind: OSArtifact
+metadata:
+  name: template-fragments-kairosify
+  namespace: default
+spec:
+  image:
+    ociSpec:
+      ref:
+        name: dockerfile-template-concat
+        key: Dockerfile
+      templateValuesFrom:
+        name: dockerfile-fragments
+      buildContextVolume: build-context
+    buildOptions:
+      baseImage: ubuntu:24.04
+      version: v3.6.0
+      model: generic
+      kubernetesDistro: k3s
+      kubernetesVersion: "v1.35.1+k3s1"
+    buildImage:
+      registry: my-registry.example.com
+      repository: my-ns/template-fragments-kairos
+      tag: v3.6.0
+    push: true
+    pushCredentialsSecretRef:
+      name: registry-credentials
+
+  volumes:
+    - name: build-context
+      emptyDir: {}
+
+  importers:
+    - name: populate-build-context
+      image: busybox:latest
+      command: ["/bin/sh", "-c"]
+      args:
+        - 'echo "Extra packages and files" > /ctx/extra-bundle.txt'
+      volumeMounts:
+        - name: build-context
+          mountPath: /ctx
+
+  artifacts:
+    arch: amd64
+    iso: true
+    cloudConfigRef:
+      name: cloud-config
+      key: userdata
+
+  exporters: []
+```
+
+---
+
+## Netboot artifacts
+
+Enable netboot under `spec.artifacts`:
+
+```yaml
+spec:
+  image:
+    ref: quay.io/kairos-io/kairos:v3.6.0
+  artifacts:
+    arch: amd64
+    netboot: true
+    netbootURL: https://...
+    cloudConfigRef:
+      name: cloud-config
+      key: userdata
+  exporters: []
+```
+
+---
+
+## Cloud images (raw, Azure, GCE)
+
+Output file names are derived from the OSArtifact **resource name** (`metadata.name`). For example, an OSArtifact named `my-hadron-cloud` produces `my-hadron-cloud.raw`, `my-hadron-cloud-azure.vhd`, and `my-hadron-cloud.gce.raw.tar.gz`.
+
+- **Cloud image (raw)**: Set `artifacts.cloudImage: true`. Produces a raw disk (e.g. `<name>.raw`) bootable in QEMU and suitable for AWS. Use `artifacts.diskSize` (e.g. `32000` for 32GB) if needed.
+- **Azure**: Set `artifacts.azureImage: true`. Produces `<name>-azure.vhd`.
+- **GCE**: Set `artifacts.gceImage: true`. Produces `<name>.gce.raw.tar.gz`.
+
+Example (raw + cloud-config):
+
+```yaml
+apiVersion: build.kairos.io/v1alpha2
+kind: OSArtifact
+metadata:
+  name: my-hadron-cloud
+  namespace: default
+spec:
+  image:
+    ref: quay.io/kairos/hadron:v0.0.3-core-amd64-generic-v4.0.0
+  artifacts:
+    arch: amd64
+    cloudImage: true
+    diskSize: "32000"
+    cloudConfigRef:
+      name: cloud-config
+      key: userdata
 ```
 
 :::info Note
-The cloud image boots into recovery mode on first boot and automatically partitions the disk and resets into the active system. This is handled internally by AuroraBoot during the build process, so the cloud-config only needs to contain your own configuration (users, etc.). The CRD also allows embedding a custom cloud-config to make configuration permanent for VM images running outside a cloud provider.
+The cloud image boots into recovery mode on first boot and partitions the disk. Your cloud-config can contain users and other config; see [configuration reference](/docs/reference/configuration/).
 :::
 
-After applying the spec, the controller will create a Kubernetes Job which runs the build process and then copy the produced `hello-kairos.raw` file to the nginx server (see above). Alternatively you may configure your own job to copy the content elsewhere. This file is an EFI bootable raw disk, bootable in QEMU and compatible with AWS which automatically provisions the node:
+### Using the raw image (QEMU, AWS, OpenStack)
 
-```bash
-$ PORT=$(kubectl get svc kairos-operator-nginx -o json | jq '.spec.ports[0].nodePort')
-$ curl http://<node-ip>:$PORT/hello-kairos.raw -o output.raw
-```
+- **QEMU**: Resize if needed (`truncate -s "+$((32000*1024*1024))" my-hadron-cloud.raw`), then run with EFI:
+  `qemu-system-x86_64 -m 2048 -bios /usr/share/qemu/ovmf-x86_64.bin -drive if=virtio,media=disk,file=my-hadron-cloud.raw`
+- **AWS**: Upload to S3, use `aws ec2 import-snapshot` and register an AMI; set firmware to UEFI. See [AWS docs](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-ebs.html#creating-launching-ami-from-snapshot) and [Kairos on AWS](/docs/installation/aws/).
+- **OpenStack**: `osp image create my-hadron-cloud-image --property hw_firmware_type='uefi' --file ./my-hadron-cloud.raw`
+- **Azure**: Upload VHD to blob storage, then `az image create --source ... --hyper-v-generation v2`.
+- **GCE**: `gsutil cp ... gs://<bucket>/`, then `gcloud compute images create ... --guest-os-features=UEFI_COMPATIBLE`.
 
-Note, in order to use the image with QEMU, we need to resize the disk at least to 32GB, this can be done with the CRD by setting `diskSize: 32000` or by truncating the file after downloading:
+---
 
-```bash
-truncate -s "+$((32000*1024*1024))" hello-kairos.raw
-```
+## Monitoring build status
 
-This is not required if running the image in the Cloud as providers usually resize the disk during import or creation of new instances.
+The OSArtifact resource reports status in **status.phase** (and optionally **status.message** for failure details). The phases match the controller logic:
 
-To run the image locally with QEMU we need `qemu` installed in the system, and we need to be able to run VMs with EFI, for example:
-
-```bash
-qemu-system-x86_64 -m 2048 -bios /usr/share/qemu/ovmf-x86_64.bin -drive if=virtio,media=disk,file=output.raw
-```
-
-### Use the Image in AWS
-
-To consume the image, copy it into an s3 bucket:
-
-```bash
-aws s3 cp <cos-raw-image> s3://<your_s3_bucket>
-```
-
-Create a `container.json` file referring to it:
-
-```json
-{
-"Description": "Kairos custom image",
-"Format": "raw",
-"UserBucket": {
-  "S3Bucket": "<your_s3_bucket>",
-  "S3Key": "<cos-raw-image>"
-}
-}
-```
-
-Import the image:
-
-```bash
-aws ec2 import-snapshot --description "Kairos custom image" --disk-container file://container.json
-```
-
-Follow the procedure described in [AWS docs](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-ebs.html#creating-launching-ami-from-snapshot) to register an AMI from snapshot. Use all default settings except for the firmware, set to force to UEFI boot.
-
-Since release v3.3.0, Kairos release pipeline is pushing a public image to AWS, which you can use. Read how to deploy Kairos using an AMI (the released or a custom one), in the [relevant page](/docs/installation/aws/).
-
-### Use the Image in OpenStack
-
-First get the generated image:
-```bash
-$ PORT=$(kubectl get svc kairos-operator-nginx -o json | jq '.spec.ports[0].nodePort')
-$ curl http://<node-ip>:$PORT/hello-kairos.raw -o output.raw
-```
-
-Import the image to Glance:
-
-```bash
-osp image create hello-kairos-image --property hw_firmware_type='uefi' --file ./hello-kairos.raw
-```
-
-Image could be used to create an OpenStack instance.
-
-Set the property to force to UEFI boot. If not kairos won't be able to start and you could be prompted endlessly by :
-
-```bash
-Booting from hard drive...
-```
-
-## Build a Cloud Image for Azure
-
-Similarly we can build images for Azure, consider:
-
-```yaml
-apiVersion: build.kairos.io/v1alpha2
-kind: OSArtifact
-metadata:
-  name: hello-kairos
-spec:
-  imageName: "{{< OCI variant="core" >}}"
-  azureImage: true
-  ...
-```
-
-Will generate a compressed disk `hello-kairos-azure.vhd` ready to be used in Azure.
-
-```bash
-$ PORT=$(kubectl get svc kairos-operator-nginx -o json | jq '.spec.ports[0].nodePort')
-$ curl http://<node-ip>:$PORT/hello-kairos-azure.vhd -o output.vhd
-```
-
-### How to use the image in Azure
-
-Upload the Azure Cloud VHD disk in  `.vhda`  format to your bucket:
-
-```bash
-az storage copy --source <cos-azure-image> --destination https://<account>.blob.core.windows.net/<container>/<destination-azure-image>
-```
-
-Import the disk:
-
-```bash
-az image create --resource-group <resource-group> --source https://<account>.blob.core.windows.net/<container>/<destination-azure-image> --os-type linux --hyper-v-generation v2 --name <image-name>
-```
-
-Note:  There is currently no way of altering the boot disk of an Azure VM via GUI, use the `az` to launch the VM with an expanded OS disk if needed
-
-## Build a Cloud Image for GCE
-
-Similarly we can build images for GCE, consider:
-
-```yaml
-apiVersion: build.kairos.io/v1alpha2
-kind: OSArtifact
-metadata:
-  name: hello-kairos
-spec:
-  imageName: "{{< OCI variant="core" >}}"
-  gceImage: true
-  ...
-```
-
-Will generate a compressed disk `hello-kairos.gce.raw.tar.gz` ready to be used in GCE.
-
-```bash
-$ PORT=$(kubectl get svc kairos-operator-nginx -o json | jq '.spec.ports[0].nodePort')
-$ curl http://<node-ip>:$PORT/hello-kairos.gce.raw.tar.gz -o output.gce.raw.tar.gz
-```
-
-### How to use the image in GCE
-
-To upload the image in GCE (compressed):
-
-```bash
-gsutil cp <cos-gce-image> gs://<your_bucket>/
-```
-
-Import the disk:
-
-```bash
-gcloud compute images create <new_image_name> --source-uri=<your_bucket>/<cos-gce-image> --guest-os-features=UEFI_COMPATIBLE
-```
-
-See [here how to use a cloud-init with Google cloud](https://cloud.google.com/container-optimized-os/docs/how-to/create-configure-instance#using_cloud-init_with_the_cloud_config_format).
-
-## Building from Dockerfiles
-
-You can also build from a Dockerfile stored in a Kubernetes Secret:
-
-```yaml
-apiVersion: build.kairos.io/v1alpha2
-kind: OSArtifact
-metadata:
-  name: custom-build
-  namespace: default
-spec:
-  baseImageDockerfile:
-    name: my-dockerfile-secret
-    key: Dockerfile  # Optional: defaults to "Dockerfile"
-  iso: true
-```
-
-### Dockerfile Templating
-
-When building from a Dockerfile (via `baseImageDockerfile`), you can use Go template syntax in the Dockerfile. This lets you parameterize your builds — for example, changing the base image or injecting version strings — without maintaining multiple Dockerfiles.
-
-Template variables use the standard Go template syntax `{{ .VariableName }}`. Values can be provided in two ways, and both can be used together:
-
-1. **Inline values** (`dockerfileTemplateValues`) — a map of key-value pairs defined directly in the OSArtifact spec.
-2. **Secret reference** (`dockerfileTemplateValuesFrom`) — a reference to a Kubernetes Secret whose data entries are used as template values.
-
-When both are set, inline values take precedence on key conflicts.
-
-#### Example Dockerfile with template variables
-
-Create a Secret containing a Dockerfile that uses template variables:
-
-```bash
-kubectl create secret generic my-dockerfile --from-file=Dockerfile
-```
-
-Where `Dockerfile` contains:
-
-```dockerfile
-FROM {{ .BaseImage }}
-
-RUN zypper install -y {{ .ExtraPackages }}
-RUN echo "Version: {{ .Version }}" > /etc/build-info
-```
-
-#### Inline template values
-
-```yaml
-apiVersion: build.kairos.io/v1alpha2
-kind: OSArtifact
-metadata:
-  name: custom-build
-  namespace: default
-spec:
-  baseImageDockerfile:
-    name: my-dockerfile
-    key: Dockerfile
-  dockerfileTemplateValues:
-    BaseImage: "opensuse/leap:15.6"
-    ExtraPackages: "vim curl"
-    Version: "1.0.0"
-  iso: true
-```
-
-#### Template values from a Secret
-
-First, create a Secret with the template values:
-
-```yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: dockerfile-values
-  namespace: default
-stringData:
-  BaseImage: "opensuse/leap:15.6"
-  ExtraPackages: "vim curl"
-  Version: "1.0.0"
-```
-
-Then reference it in the OSArtifact:
-
-```yaml
-apiVersion: build.kairos.io/v1alpha2
-kind: OSArtifact
-metadata:
-  name: custom-build
-  namespace: default
-spec:
-  baseImageDockerfile:
-    name: my-dockerfile
-    key: Dockerfile
-  dockerfileTemplateValuesFrom:
-    name: dockerfile-values
-  iso: true
-```
-
-#### Combining both sources
-
-You can use a Secret for base values and override specific ones inline:
-
-```yaml
-apiVersion: build.kairos.io/v1alpha2
-kind: OSArtifact
-metadata:
-  name: custom-build
-  namespace: default
-spec:
-  baseImageDockerfile:
-    name: my-dockerfile
-    key: Dockerfile
-  dockerfileTemplateValuesFrom:
-    name: dockerfile-values
-  dockerfileTemplateValues:
-    Version: "2.0.0"  # overrides the value from the Secret
-  iso: true
-```
-
-#### Template restrictions
-
-Only simple value substitution and basic control flow (`if`/`else`/`range`/`with`) are supported. The `define`, `template`, and `block` directives are explicitly forbidden and will cause the build to fail. Any template variable that is not provided will render as an empty string.
-
-## Monitoring Build Status
-
-The OSArtifact resource tracks the build status through the `status.phase` field:
-
-- `Pending`: The artifact is queued for building
-- `Building`: The build is in progress
-- `Exporting`: The artifact is being exported (if exporters are configured)
-- `Ready`: The artifact build completed successfully
-- `Error`: The build failed
-
-You can check the status with:
+- **Pending**: Initial state; build not yet started (default).
+- **Building**: Builder pod is running (image build and/or artifact generation).
+- **Exporting**: Build pod succeeded; exporter jobs are running (if `spec.exporters` is set). If there are no exporters, this phase is brief before transitioning to Ready.
+- **Ready**: Build and all exporters completed successfully.
+- **Error**: Build pod failed or an exporter job failed. Check **status.message** for details.
 
 ```bash
 kubectl get osartifact my-kairos-iso
 kubectl describe osartifact my-kairos-iso
 ```
 
-## Accessing Built Artifacts
+---
 
-Built artifacts are stored in a PersistentVolumeClaim (PVC) that is automatically created. You can access them through:
+## Accessing built artifacts
 
-1. **Export Jobs**: Configure `exporters` in the spec to run custom jobs that can copy, upload, or process the artifacts
-2. **Direct PVC Access**: The PVC is labeled with `build.kairos.io/artifact=<artifact-name>` and can be mounted by other pods
+- **Exporters**: Configure `spec.exporters` to run jobs that copy, upload, or process the built artifacts (e.g. upload to nginx or S3). Each exporter is a Job template; the artifacts volume is mounted at `/artifacts`.
+- **Direct PVC**: The controller creates a PersistentVolumeClaim for each OSArtifact. PVCs are namespaced: the artifacts PVC is created in the **same namespace as the OSArtifact**, named `<artifact-name>-artifacts`, and labeled `build.kairos.io/artifact=<artifact-name>`. Other pods in that namespace can mount it by name or by selecting that label.
 
-## Serving Artifacts with Nginx
+---
 
-The operator includes a ready-to-use nginx kustomization that deploys an nginx server with WebDAV upload support. This lets OSArtifact exporters upload built artifacts via HTTP PUT and then serve them for download.
+## Serving artifacts with Nginx
 
-Deploy it with:
+The operator repo includes an nginx kustomization so exporters can upload artifacts (HTTP PUT) and you can download them (HTTP GET and directory listing). It lives under [config/nginx](https://github.com/kairos-io/kairos-operator/tree/main/config/nginx) in the operator repository. Nginx is configured via a ConfigMap (`nginx-upload-config`) that enables the DAV module with `dav_methods PUT`, `create_full_put_path on`, and `autoindex on` for the root location; the server root is a PersistentVolumeClaim so uploaded files persist.
+
+Deploy it in the namespace where you run OSArtifacts (e.g. `default`):
 
 ```bash
-# Deploy in the same namespace as your OSArtifact resources
 kubectl apply -k https://github.com/kairos-io/kairos-operator/config/nginx -n default
 ```
 
-This creates:
-- An **nginx Deployment** with a PersistentVolumeClaim for artifact storage
-- A **ConfigMap** with an nginx configuration that enables WebDAV PUT and directory listing
-- A **NodePort Service** (`kairos-operator-nginx`) to expose the server
-- A **Role** (`artifactCopier`) with permissions to list pods and exec into them
-
-Once deployed, configure your OSArtifact exporter to upload artifacts to the nginx service:
+This creates an nginx Deployment (backed by a PVC for storage), the ConfigMap, and a NodePort Service named `kairos-operator-nginx`. Configure an exporter to upload artifacts to that service:
 
 ```yaml
-apiVersion: build.kairos.io/v1alpha2
-kind: OSArtifact
-metadata:
-  name: my-kairos-iso
-  namespace: default
 spec:
-  imageName: quay.io/kairos/opensuse:leap-15.6-core-amd64-generic-v3.6.0
-  iso: true
-  exporters:
-  - template:
-      spec:
-        restartPolicy: Never
-        containers:
-        - name: upload-to-nginx
-          image: curlimages/curl
-          command: ["sh", "-ec"]
-          args:
-          - |
-            NGINX_URL="${NGINX_URL:-http://kairos-operator-nginx}"
-            for f in /artifacts/*; do
-              [ -f "$f" ] || continue
-              base=$(basename "$f")
-              echo "Uploading $base to $NGINX_URL/$base"
-              curl -fsSL -T "$f" "$NGINX_URL/$base" || exit 1
-            done
-            echo "Upload done"
-          env:
-          - name: NGINX_URL
-            value: "http://kairos-operator-nginx"
-          volumeMounts:
-          - name: artifacts
-            readOnly: true
-            mountPath: /artifacts
-```
-
-If the nginx service is deployed in a different namespace than the OSArtifact, set the `NGINX_URL` environment variable to `http://kairos-operator-nginx.<namespace>.svc.cluster.local`.
-
-## Importers and Custom Volumes
-
-The OSArtifact CRD supports **importers** — init containers that run before the build phase — and **user-defined volumes** that can be shared between importers and the build process. This allows you to fetch files, prepare directories, and inject content into your builds without baking everything into a container image or Secret.
-
-### How It Works
-
-1. **Volumes** (`spec.volumes`): Define standard Kubernetes volumes (EmptyDir, ConfigMap, Secret, PVC, etc.) that are added to the builder Pod. These can be mounted by importers and, through volume bindings, used by the build steps.
-
-2. **Importers** (`spec.importers`): A list of init containers that run sequentially before the build. They follow the standard `corev1.Container` schema and can mount any volume from `spec.volumes`. Use them to download files, clone repositories, generate configurations, or prepare overlay directories.
-
-3. **Volume Bindings** (`spec.volumeBindings`): Maps a user-defined volume to a specific role in the build:
-
-| Binding | Effect | Applies to |
-|---------|--------|------------|
-| `buildContext` | Mounts the volume at `/workspace` in the kaniko container, providing the Docker build context | Dockerfile builds (`baseImageDockerfile`) |
-| `overlayISO` | Mounts the volume at `/overlay-iso` and passes `--overlay-iso` to AuroraBoot. Files appear at `/run/initramfs/live` during live boot. | ISO builds (`iso: true`) |
-| `overlayRootfs` | Mounts the volume at `/overlay-rootfs` and passes `--overlay-rootfs` to AuroraBoot. Files are merged into the OS rootfs (squashfs) and become part of the installed system. | ISO builds (`iso: true`) |
-
-For a detailed explanation of what the overlay options do, where files end up, and when to use each one, see [Customizing ISO contents](/docs/reference/auroraboot#customizing-iso-contents) in the AuroraBoot reference.
-
-:::info Note
-Volume names must not collide with names reserved for internal use: `artifacts`, `rootfs`, `config`, `dockerfile`, `cloudconfig`. The controller validates this and will reject specs that use reserved names.
-:::
-
-### Example: ISO with Overlay Files from a Remote Source
-
-This example fetches extra files from a remote URL and injects them into the ISO filesystem:
-
-```yaml
-apiVersion: build.kairos.io/v1alpha2
-kind: OSArtifact
-metadata:
-  name: my-custom-iso
-spec:
-  imageName: "quay.io/kairos/opensuse:leap-15.6-core-amd64-generic-v3.6.0"
-  iso: true
-
-  volumes:
-    - name: iso-overlay
-      emptyDir: {}
-
-  importers:
-    - name: fetch-overlay
-      image: curlimages/curl:latest
-      command: ["/bin/sh", "-c"]
-      args:
-        - |
-          curl -L https://example.com/extra-files.tar.gz | tar xz -C /iso-overlay
-      volumeMounts:
-        - name: iso-overlay
-          mountPath: /iso-overlay
-
-  volumeBindings:
-    overlayISO: iso-overlay
-```
-
-### Example: Custom Docker Build Context
-
-This example uses an importer to prepare a build context directory, then builds a container image from it with kaniko:
-
-```yaml
-apiVersion: build.kairos.io/v1alpha2
-kind: OSArtifact
-metadata:
-  name: custom-context-build
-spec:
-  baseImageDockerfile:
-    name: my-dockerfile-secret
-    key: Dockerfile
-  iso: true
-
-  volumes:
-    - name: my-context
-      emptyDir: {}
-
-  importers:
-    - name: prepare-context
-      image: alpine/git:latest
-      command: ["/bin/sh", "-c"]
-      args:
-        - |
-          git clone --depth 1 https://github.com/myorg/myrepo.git /context
-      volumeMounts:
-        - name: my-context
-          mountPath: /context
-
-  volumeBindings:
-    buildContext: my-context
-```
-
-The Dockerfile Secret mount at `/workspace/dockerfile` is always preserved alongside the build context volume.
-
-### Example: Overlay from a ConfigMap
-
-Volumes don't have to be populated by importers. You can use any Kubernetes volume type directly. For example, a ConfigMap can serve as a rootfs overlay without needing an importer:
-
-```yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: my-rootfs-files
-data:
-  motd: "Welcome to my custom Kairos build!\n"
----
-apiVersion: build.kairos.io/v1alpha2
-kind: OSArtifact
-metadata:
-  name: configmap-overlay
-spec:
-  imageName: "quay.io/kairos/opensuse:leap-15.6-core-amd64-generic-v3.6.0"
-  iso: true
-
-  volumes:
-    - name: rootfs-overlay
-      configMap:
-        name: my-rootfs-files
-        items:
-          - key: motd
-            path: etc/motd
-
-  volumeBindings:
-    overlayRootfs: rootfs-overlay
-```
-
-:::info Note
-When mounting a ConfigMap as a volume, each key becomes a file at the mount point. Use the `items` field to map keys to specific paths within the overlay. In this example, the `motd` key is mapped to `etc/motd`, placing the file at `/etc/motd` in the rootfs overlay.
-:::
-
-### Example: Multiple Overlays with Importers
-
-You can combine multiple overlay types and chain importers sequentially:
-
-```yaml
-apiVersion: build.kairos.io/v1alpha2
-kind: OSArtifact
-metadata:
-  name: full-custom-iso
-spec:
-  imageName: "quay.io/kairos/opensuse:leap-15.6-core-amd64-generic-v3.6.0"
-  iso: true
-
-  volumes:
-    - name: iso-overlay
-      emptyDir: {}
-    - name: rootfs-overlay
-      emptyDir: {}
-
-  importers:
-    - name: fetch-iso-files
-      image: curlimages/curl:latest
-      command: ["/bin/sh", "-c"]
-      args:
-        - curl -L https://example.com/iso-extras.tar.gz | tar xz -C /iso-overlay
-      volumeMounts:
-        - name: iso-overlay
-          mountPath: /iso-overlay
-    - name: fetch-rootfs-files
-      image: curlimages/curl:latest
-      command: ["/bin/sh", "-c"]
-      args:
-        - curl -L https://example.com/rootfs-extras.tar.gz | tar xz -C /rootfs-overlay
-      volumeMounts:
-        - name: rootfs-overlay
-          mountPath: /rootfs-overlay
-
-  volumeBindings:
-    overlayISO: iso-overlay
-    overlayRootfs: rootfs-overlay
-
+  image:
+    ref: quay.io/kairos-io/kairos:v3.6.0
+  artifacts:
+    arch: amd64
+    iso: true
   exporters:
     - template:
         spec:
           restartPolicy: Never
           containers:
-            - name: upload
+            - name: upload-to-nginx
               image: curlimages/curl
               command: ["sh", "-ec"]
               args:
                 - |
+                  NGINX_URL="${NGINX_URL:-http://kairos-operator-nginx}"
                   for f in /artifacts/*; do
                     [ -f "$f" ] || continue
-                    curl -fsSL -T "$f" "http://kairos-operator-nginx/$(basename $f)"
+                    base=$(basename "$f")
+                    curl -fsSL -T "$f" "$NGINX_URL/$base" || exit 1
                   done
               volumeMounts:
                 - name: artifacts
@@ -706,9 +738,35 @@ spec:
                   mountPath: /artifacts
 ```
 
-Importers run in declaration order as init containers on the builder Pod, so `fetch-iso-files` completes before `fetch-rootfs-files` starts.
+Download the ISO:
 
-## Advanced Configuration
+```bash
+PORT=$(kubectl get svc kairos-operator-nginx -o json | jq '.spec.ports[0].nodePort')
+curl http://<node-ip>:$PORT/my-kairos-iso.iso -o output.iso
+```
+
+If nginx is in another namespace, set `NGINX_URL` to `http://kairos-operator-nginx.<namespace>.svc.cluster.local`.
+
+---
+
+## Volume and importer reference
+
+- **spec.volumes**: Standard Kubernetes volumes (emptyDir, ConfigMap, Secret, PVC, etc.) available to importers and to the build/artifact stages via the scoped bindings below.
+- **spec.importers**: Init containers that run in order before the build. They can mount any `spec.volumes` volume. Use them to fetch files, generate config, or populate overlay/build-context directories.
+- **Scoped bindings**:
+  - **Stage 1**: `spec.image.ociSpec.buildContextVolume` — volume name for the OCI build context at `/workspace` (Kaniko). Only used when building from an OCI spec.
+  - **Stage 2**: `spec.artifacts.overlayISOVolume`, `spec.artifacts.overlayRootfsVolume` — volume names for AuroraBoot overlay-iso and overlay-rootfs.
+  - **UKI**: `spec.artifacts.uki.keysVolume` — volume name for the directory containing UKI signing keys.
+
+:::info Note
+Do not use reserved volume names: `artifacts`, `rootfs`, `config`, `dockerfile`, `cloudconfig`. The controller rejects them.
+:::
+
+---
+
+## Advanced configuration example
+
+Multiple artifact types, custom cloud-config, GRUB, bundles, image pull secrets, and a custom PVC size. The **volume** field is optional: it lets you override the [PersistentVolumeClaimSpec](https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#PersistentVolumeClaimSpec) for the artifacts PVC that the controller creates (name `<artifact-name>-artifacts`). If omitted, the controller uses a default of 10Gi and ReadWriteOnce. Use it when you need more space or different access modes.
 
 ```yaml
 apiVersion: build.kairos.io/v1alpha2
@@ -717,40 +775,32 @@ metadata:
   name: advanced-build
   namespace: default
 spec:
-  imageName: quay.io/kairos/opensuse:leap-15.6-core-amd64-generic-v3.6.0
+  image:
+    ref: quay.io/kairos/hadron:v0.0.3-core-amd64-generic-v4.0.0
 
-  # Build multiple formats
-  iso: true
-  cloudImage: true
-  azureImage: true
+  artifacts:
+    arch: amd64
+    iso: true
+    cloudImage: true
+    azureImage: true
+    cloudConfigRef:
+      name: cloud-config-secret
+      key: cloud-config.yaml
+    grubConfig: |
+      set timeout=5
+      set default=0
+    osRelease: "hadron"
+    kairosRelease: "v4.0.0"
+    bundles:
+      - quay.io/kairos/packages:helm-utils-4.1.1
+      - quay.io/kairos/packages:k9s-utils-0.50.18
 
-  # Custom cloud config
-  cloudConfigRef:
-    name: cloud-config-secret
-    key: cloud-config.yaml
-
-  # Custom GRUB configuration
-  grubConfig: |
-    set timeout=5
-    set default=0
-
-  # OS release information
-  osRelease: "opensuse-leap-15.6"
-  kairosRelease: "v3.6.0"
-
-  # Additional bundles to include
-  bundles:
-  - docker
-  - k3s
-
-  # Image pull secrets for private registries
   imagePullSecrets:
-  - name: private-registry-secret
+    - name: private-registry-secret
 
-  # Custom volume configuration
   volume:
     accessModes:
-    - ReadWriteOnce
+      - ReadWriteOnce
     resources:
       requests:
         storage: 50Gi
