@@ -112,6 +112,7 @@ You can also set **`spec.imagePullSecrets`** (a list of Secret names) if you nee
 3. **Full control (your OCI spec including FROM and kairos-init)?** → Set `spec.image.ociSpec.ref` to a Secret holding your OCI build definition. The operator does not modify it. Use this method when you want full control, for example when you want to perform some action between the kairos-init installation and init stages.
 4. **Your OCI spec fragment + operator adds base image and kairos-init?** → Set both `spec.image.ociSpec` (template, no `FROM`) and `spec.image.buildOptions`. The operator injects `FROM buildOptions.baseImage` at the top and the kairos-init block at the bottom. Use this method when you want to add steps to the used ociSpec (e.g. install or remove packages, enable services etc) but you don't need to intercept the "kairosification" steps.
 5. **Push the built image to a registry?** → When building, set `spec.image.push: true` and `spec.image.imageCredentialsSecretRef` (and optionally `spec.image.buildImage` for registry/repository/tag).
+6. **Build behind a proxy or use a custom CA for the registry?** → When building, set `spec.image.buildEnv` (e.g. `HTTP_PROXY`, `HTTPS_PROXY`, `NO_PROXY`) and/or `spec.image.caCertificatesVolume` (volume with CA certs). See [Build environment and CA certificates (Kaniko)](#build-environment-and-ca-certificates-kaniko).
 
 ---
 
@@ -347,6 +348,67 @@ spec:
       name: registry-credentials
 
   # No artifacts: only build and push the OCI image.
+```
+
+### Build environment and CA certificates (Kaniko)
+
+When building (with `buildOptions` or `ociSpec`), the operator runs Kaniko to build the Stage 1 image. You can pass environment variables and custom CA certificates to the Kaniko container.
+
+**`spec.image.buildEnv`** — Environment variables for the Kaniko build container. Use this for:
+
+- **Proxy settings**: Set `HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY` when the cluster uses an HTTP proxy to reach the internet. Kaniko (and any `RUN` steps that use the network) will use these. Exclude registries and in-cluster hosts in `NO_PROXY` so image pull/push still works (e.g. `NO_PROXY=localhost,127.0.0.1,.cluster.local,.svc,quay.io`).
+- **Any other build-time env**: Any `corev1.EnvVar` (name/value or valueFrom) is supported.
+
+Only used when building (Stage 1); ignored when `spec.image.ref` is set (pre-built image).
+
+**`spec.image.caCertificatesVolume`** — Name of a volume (from `spec.volumes`) that contains custom CA certificates. The operator mounts this volume at `/kaniko/ssl/certs` in the Kaniko container (read-only). Use it when pulling or pushing images from a registry that uses a private or corporate CA (e.g. TLS for private registries). Only used when building; ignored when using a pre-built image. The volume must exist in `spec.volumes` (e.g. a Secret with `ca.crt` or a ConfigMap with PEM files).
+
+Example: build behind a proxy with custom CA for the registry.
+
+Create a Secret that contains your registry’s CA certificate(s) (PEM format). Use any key name; the whole Secret is mounted as a directory at `/kaniko/ssl/certs`, so Kaniko will use all PEM files it finds there:
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: registry-ca-secret
+  namespace: default
+type: Opaque
+stringData:
+  ca.crt: |
+    -----BEGIN CERTIFICATE-----
+    MIIDXTCCAkWgAwIBAgIJAKL0UG+mRKQbMA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNV
+    BAYTAkFVMRMwEQYDVQQIDApTb21lLVN0YXRlMSEwHwYDVQQKDBhJbnRlcm5ldCBX
+    aWRnaXRzIFB0eSBMdGQwHhcNMjAwMTAxMDAwMDAwWhcNMzAwMTIzMTIzNTk1WjBF
+    MQswCQYDVQQGEwJBVTETMBEGA1UECAwKU29tZS1TdGF0ZTEhMB8GA1UECgwYSW50
+    ZXJuZXQgV2lkZ2l0cyBQdHkgTHRkMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIB
+    CgKCAQEA0... (your registry CA PEM)
+    -----END CERTIFICATE-----
+```
+
+Then reference it in the OSArtifact:
+
+```yaml
+spec:
+  image:
+    buildOptions:
+      version: v3.6.0
+      baseImage: ubuntu:24.04
+      model: generic
+    buildEnv:
+      - name: HTTP_PROXY
+        value: "http://proxy.example.com:3128"
+      - name: HTTPS_PROXY
+        value: "http://proxy.example.com:3128"
+      - name: NO_PROXY
+        value: "localhost,127.0.0.1,.cluster.local,.svc,my-registry.example.com"
+    caCertificatesVolume: my-ca-certs
+  volumes:
+    - name: my-ca-certs
+      secret:
+        secretName: registry-ca-secret
+  artifacts:
+    iso: true
 ```
 
 ---
@@ -769,6 +831,7 @@ If nginx is in another namespace, set `NGINX_URL` to `http://kairos-operator-ngi
 - **spec.importers**: Init containers that run in order before the build. They can mount any `spec.volumes` volume. Use them to fetch files, generate config, or populate overlay/build-context directories.
 - **Scoped bindings**:
   - **Stage 1**: `spec.image.ociSpec.buildContextVolume` — volume name for the OCI build context at `/workspace` (Kaniko). Only used when building from an OCI spec.
+  - **Stage 1**: `spec.image.caCertificatesVolume` — volume name for custom CA certificates mounted at `/kaniko/ssl/certs` (Kaniko). Only used when building.
   - **Stage 2**: `spec.artifacts.overlayISOVolume`, `spec.artifacts.overlayRootfsVolume` — volume names for AuroraBoot overlay-iso and overlay-rootfs.
   - **UKI**: `spec.artifacts.uki.keysVolume` — volume name for the directory containing UKI signing keys.
 
