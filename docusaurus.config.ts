@@ -352,13 +352,6 @@ const config: Config = {
           position: 'left',
           label: 'Docs',
         },
-        {
-          type: 'docSidebar',
-          docsPluginId: 'operator-docs',
-          sidebarId: 'operatorSidebar',
-          position: 'left',
-          label: 'Operator',
-        },
         {to: '/blog', label: 'Blog', position: 'left'},
         {
           label: 'Community',
