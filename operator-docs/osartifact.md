@@ -23,9 +23,9 @@ For a complete guide on creating custom cloud images and when to use these build
 
 ### Creating the Secrets
 
-Several examples below reference Secrets (OCI spec, push credentials, cloud-config). Here is what those Secrets must look like.
+Several examples below reference Secrets (OCI spec, image credentials, cloud-config). Here is what those Secrets must look like.
 
-**Push credentials** (`spec.image.pushCredentialsSecretRef`): used when you set `spec.image.push: true`. The Secret must be of type `kubernetes.io/dockerconfigjson` and contain the key `.dockerconfigjson` with a JSON object. The `auth` field is the base64-encoding of `username:password` for the registry.
+**Image credentials** (`spec.image.imageCredentialsSecretRef`): used for both **pull** and **push** of container images. The Secret must be of type `kubernetes.io/dockerconfigjson` and contain the key `.dockerconfigjson` with a JSON object. The `auth` field is the base64-encoding of `username:password` for the registry. See [Image credentials: when they are used](#image-credentials-when-they-are-used) for all use cases.
 
 ```yaml
 apiVersion: v1
@@ -82,6 +82,20 @@ In the OSArtifact, reference it with `ociSpec.ref.name: my-ocispec` and `ociSpec
 
 **Cloud config** (`artifacts.cloudConfigRef`): create a Secret with key `userdata` (or another key you reference) containing your cloud-init YAML (e.g. `#cloud-config` and users, install options).
 
+#### Image credentials: when they are used
+
+The same credentials Secret (`spec.image.imageCredentialsSecretRef`) is used in different places depending on how you obtain the Stage 1 image:
+
+| Use case | Where credentials are used | Why |
+|----------|----------------------------|-----|
+| **Pulling the tool image** (AuroraBoot, Kaniko, etc.) from a private registry | Pod-level **ImagePullSecrets** | The Kubernetes kubelet uses `spec.imagePullSecrets` to pull the builder pod’s container images. When `imageCredentialsSecretRef` is set, the operator also adds that secret to the pod’s ImagePullSecrets so the same credentials can pull the tool image if it lives in your private registry. |
+| **Pulling a pre-built image** (`spec.image.ref`) from a private registry | Unpack container (AuroraBoot) | When using a pre-built image, the operator runs an init container that uses AuroraBoot to unpack `image.ref`. AuroraBoot uses go-containerregistry’s default keychain, which reads from `DOCKER_CONFIG`. The operator mounts the credentials at `/root/.docker` and sets `DOCKER_CONFIG` so the unpack container can pull private `image.ref`. |
+| **Pulling the base image** when building with **buildOptions** | Kaniko build container | The operator injects `FROM buildOptions.baseImage`; Kaniko must pull that image. The operator mounts the credentials in the Kaniko container and sets `DOCKER_CONFIG` so Kaniko can pull from private registries. |
+| **Pulling the `FROM` image** when building with **ociSpec** | Kaniko build container | Your OCI spec’s first line is typically `FROM <some-image>`. Kaniko must pull that image. The same mount and `DOCKER_CONFIG` in the Kaniko container allow pulls from private registries. |
+| **Pushing the built image** when `spec.image.push: true` | Kaniko build container | When you enable push, Kaniko pushes the built image to the registry. The same credentials mount is used for push. |
+
+You can also set **`spec.imagePullSecrets`** (a list of Secret names) if you need additional pull secrets only for the pod’s container images (e.g. a different registry for the tool image). For pulling `image.ref`, the FROM/base image, and for push, use **`spec.image.imageCredentialsSecretRef`**.
+
 ---
 
 ## Two-stage model
@@ -97,7 +111,7 @@ In the OSArtifact, reference it with `ociSpec.ref.name: my-ocispec` and `ociSpec
 2. **Build with options only (no custom OCI spec)?** → Set `spec.image.buildOptions` (e.g. `version`, `baseImage`, `model`, `kubernetesDistro`). The operator uses its default OCI build definition and injects `kairos-init`. Version is required. Use this method when you want to define the base image and some parameters but you don't need any additional control.
 3. **Full control (your OCI spec including FROM and kairos-init)?** → Set `spec.image.ociSpec.ref` to a Secret holding your OCI build definition. The operator does not modify it. Use this method when you want full control, for example when you want to perform some action between the kairos-init installation and init stages.
 4. **Your OCI spec fragment + operator adds base image and kairos-init?** → Set both `spec.image.ociSpec` (template, no `FROM`) and `spec.image.buildOptions`. The operator injects `FROM buildOptions.baseImage` at the top and the kairos-init block at the bottom. Use this method when you want to add steps to the used ociSpec (e.g. install or remove packages, enable services etc) but you don't need to intercept the "kairosification" steps.
-5. **Push the built image to a registry?** → When building, set `spec.image.push: true` and `spec.image.pushCredentialsSecretRef` (and optionally `spec.image.buildImage` for registry/repository/tag).
+5. **Push the built image to a registry?** → When building, set `spec.image.push: true` and `spec.image.imageCredentialsSecretRef` (and optionally `spec.image.buildImage` for registry/repository/tag).
 
 ---
 
@@ -153,7 +167,7 @@ spec:
       repository: my-ns/standard-kairos
       tag: v3.6.0
     push: true
-    pushCredentialsSecretRef:
+    imageCredentialsSecretRef:
       name: registry-credentials
 
   artifacts:
@@ -169,7 +183,7 @@ spec:
 
 - **baseImage**: Base image for the build (e.g. `ubuntu:24.04` or a non-kairosified image like `ghcr.io/kairos-io/hadron:v0.0.4`). When set, the operator injects `FROM baseImage` at the top.
 - **buildImage**: Registry, repository, and tag for the built image (useful for tools that bump tags).
-- **push** and **pushCredentialsSecretRef**: Push the built image to a registry; the Secret must contain `.dockerconfigjson` for the registry.
+- **push** and **imageCredentialsSecretRef**: Push the built image to a registry; the Secret must contain `.dockerconfigjson` for the registry. The same secret is also used to pull the base image (see [Image credentials: when they are used](#image-credentials-when-they-are-used)).
 
 ### Kairosify a custom base image
 
@@ -244,7 +258,7 @@ spec:
       repository: my-ns/full-control-kairos
       tag: latest
     push: true
-    pushCredentialsSecretRef:
+    imageCredentialsSecretRef:
       name: registry-credentials
 
   artifacts:
@@ -329,7 +343,7 @@ spec:
       repository: my-ns/kairos-oci
       tag: v3.6.0
     push: true
-    pushCredentialsSecretRef:
+    imageCredentialsSecretRef:
       name: registry-credentials
 
   # No artifacts: only build and push the OCI image.
@@ -581,7 +595,7 @@ spec:
       repository: my-ns/template-fragments-kairos
       tag: v3.6.0
     push: true
-    pushCredentialsSecretRef:
+    imageCredentialsSecretRef:
       name: registry-credentials
 
   volumes:

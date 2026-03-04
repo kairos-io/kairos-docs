@@ -6,7 +6,7 @@ date: 2025-07-25
 description: Configure the Kairos operator to pull images from private container registries
 ---
 
-The Kairos Operator supports `imagePullSecrets` for [NodeOp](../nodeop/), [NodeOpUpgrade](../nodeop-upgrade/), and [OSArtifact](../osartifact/) resources, allowing you to pull images from private container registries.
+The Kairos Operator supports `imagePullSecrets` for [NodeOp](../nodeop/), [NodeOpUpgrade](../nodeop-upgrade/), and [OSArtifact](../osartifact/) resources, allowing you to pull images from private container registries. For **OSArtifact**, you also use **`spec.image.imageCredentialsSecretRef`** when the Stage 1 image (or its base image) comes from a private registry or when you push the built image to a private registry — see [OSArtifact: Image credentials](../osartifact/#image-credentials-when-they-are-used) for the full list of use cases.
 
 ## Creating Image Pull Secrets
 
@@ -97,8 +97,20 @@ spec:
 2. For `NodeOpUpgrade` resources, the `imagePullSecrets` are automatically passed to the underlying `NodeOp` resource that gets created.
 3. The Kubernetes kubelet on each node will use these secrets to authenticate with the container registry when pulling the specified images.
 
+## Usage with OSArtifact
+
+For **OSArtifact** resources, two mechanisms apply:
+
+1. **`spec.imagePullSecrets`** — Used by the Kubernetes kubelet to pull the **builder pod’s container images** (e.g. the AuroraBoot or Kaniko image). If your tool image is in a private registry, list the pull secret(s) here.
+2. **`spec.image.imageCredentialsSecretRef`** — A single Secret reference used for **pull and push** of the Stage 1 image. It is used when:
+   - Pulling a **pre-built image** (`spec.image.ref`) from a private registry (unpack container),
+   - Pulling the **base image** when building with `buildOptions` or the **FROM image** when building with `ociSpec` (Kaniko),
+   - **Pushing** the built image when `spec.image.push: true` (Kaniko).
+
+When `imageCredentialsSecretRef` is set, the operator also adds that secret to the pod’s ImagePullSecrets, so one Secret can cover both the tool image and the Stage 1 image when they share the same registry. For the full table of use cases, see [Image credentials: when they are used](../osartifact/#image-credentials-when-they-are-used) in the OSArtifact documentation.
+
 ## Notes
 
-- The secrets must exist in the same namespace as the NodeOp or NodeOpUpgrade resource.
-- Multiple secrets can be specified if needed.
-- The secrets are only used for pulling the main operation image, not for any additional images that might be used internally by the operator.
+- The secrets must exist in the same namespace as the NodeOp, NodeOpUpgrade, or OSArtifact resource.
+- Multiple secrets can be specified in `imagePullSecrets` if needed.
+- For NodeOp/NodeOpUpgrade, the secrets are only used for pulling the main operation image, not for any additional images that might be used internally by the operator.
