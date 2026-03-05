@@ -389,6 +389,11 @@ stringData:
 Then reference it in the OSArtifact:
 
 ```yaml
+apiVersion: build.kairos.io/v1alpha2
+kind: OSArtifact
+metadata:
+  name: build-with-proxy-and-ca
+  namespace: default
 spec:
   image:
     buildOptions:
