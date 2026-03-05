@@ -154,7 +154,7 @@ Hadron builds many packages that are available in the toolchain image but are no
 
 **Can I have a specific version of Kubernetes?**
 
-Yes, with the `--provider` flag you can define if you want `k3s` or `k0s` installed, and with the `--provider-k3s-version` and `--provider-k0s-version` respectively, you can define the exact version to install.
+Yes, with the `--provider` flag you can define if you want `k3s` or `k0s` installed, and with the `--provider-k3s-version` and `--provider-k0s-version` respectively, you can define the exact version to install. The version must be an existing release tag from the provider (e.g. [k3s](https://github.com/k3s-io/k3s/releases) such as `v1.35.1+k3s1`, [k0s](https://github.com/k0sproject/k0s/releases) such as `v1.35.1+k0s.1`).
 
 **What if I don't need Kubernetes?**
 
@@ -220,7 +220,7 @@ No problem—remove the `--provider` flag from `kairos-init` and you’ll get a 
           name: 'Can I have a specific version of Kubernetes?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Yes, with the `--provider` flag you can define if you want `k3s` or `k0s` installed, and with the `--provider-k3s-version` and `--provider-k0s-version` respectively, you can define the exact version to install.',
+            text: 'Yes, with the `--provider` flag you can define if you want `k3s` or `k0s` installed, and with the `--provider-k3s-version` and `--provider-k0s-version` respectively, you can define the exact version to install. The version must be an existing release tag from the provider (e.g. [k3s](https://github.com/k3s-io/k3s/releases) such as `v1.35.1+k3s1`, [k0s](https://github.com/k0sproject/k0s/releases) such as `v1.35.1+k0s.1`).',
           },
         },
         {

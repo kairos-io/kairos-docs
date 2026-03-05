@@ -138,7 +138,7 @@ kairos-init can generate both core and standard images, and standard images can 
 It can also prepare OCI artifacts for [Trusted Boot](/docs/architecture/trustedboot/) which are slimmer than the usual ones, as they have size limitations plus we dont want to ship things like grub or dracut in them as they are useless.
 
 :::warning Breaking change (kairos-init v0.6.0+)
-The flags `-k` / `--kubernetes-provider` and `--k8sversion` were removed. Use `--provider` / `-p` and `--provider-<name>-version` instead. For example, `-k k3s --k8sversion v1.28.0` becomes `--provider k3s --provider-k3s-version v1.28.0`. In Dockerfiles, use build args `PROVIDER_NAME` and `PROVIDER_VERSION` instead of `KUBERNETES_PROVIDER` / `KUBERNETES_DISTRO` and `KUBERNETES_VERSION`.
+The flags `-k` / `--kubernetes-provider` and `--k8sversion` were removed. Use `--provider` / `-p` and `--provider-<name>-version` instead. For example, `-k k3s --k8sversion v1.28.0` becomes `--provider k3s --provider-k3s-version v1.35.1+k3s1`. In Dockerfiles, use build args `PROVIDER_NAME` and `PROVIDER_VERSION` instead of `KUBERNETES_PROVIDER` / `KUBERNETES_DISTRO` and `KUBERNETES_VERSION`.
 :::
 Here is a list of flags, explanation and what are the possible and default values
 
@@ -149,7 +149,7 @@ Here is a list of flags, explanation and what are the possible and default value
 | -s                         | Sets the stage to run                                             | install, init, all         | all             |
 | -m                         | Sets the model                                                    | generic, rpi3, rpi4        | generic         |
 | -p / --provider            | Provider plugin name (repeatable for multiple providers)          | e.g. k3s, k0s              | None            |
-| --provider-&lt;NAME&gt;-version | Version for the given provider (e.g. `--provider-k3s-version`)     | Any valid provider version | None            |
+| --provider-&lt;NAME&gt;-version | Version for the given provider (e.g. `--provider-k3s-version`)     | Release tag from provider (e.g. k3s: [v1.35.1+k3s1](https://github.com/k3s-io/k3s/releases), k0s: [v1.35.1+k0s.1](https://github.com/k0sproject/k0s/releases)) | None            |
 | --provider-&lt;NAME&gt;-config  | Config file for the given provider (e.g. `--provider-k3s-config`)  | Path to config file        | None            |
 | -t                         | Sets Trusted Boot on                                              | true,false                 | false           |
 | --fips                     | Use FIPS 140-2 compliance packages for images                     | bool                       | false           |
@@ -165,7 +165,7 @@ You can provide a generic Dockerfile that gets all this values and passes them d
 
 
 :::info K8s versions
-When selecting a provider (e.g. with `--provider k3s`), you can pin the version using `--provider-k3s-version v1.28.0` (or the appropriate `--provider-<name>-version` flag). If you omit the version, the provider plugin typically installs its default or latest. The Kairos provider for Kubernetes is included when you use a k8s provider.
+When selecting a provider (e.g. with `--provider k3s`), you can pin the version using `--provider-k3s-version` or `--provider-k0s-version`. The value **must be an existing release tag** from the provider's release page (e.g. [k3s releases](https://github.com/k3s-io/k3s/releases) such as `v1.35.1+k3s1`, [k0s releases](https://github.com/k0sproject/k0s/releases) such as `v1.35.1+k0s.1`). If you omit the version, the provider plugin typically installs its default or latest. The Kairos provider for Kubernetes is included when you use a k8s provider.
 :::
 ## Phases
 
@@ -398,10 +398,10 @@ $ docker build -t ubuntu-kairos-trusted-core:24.04 --build-arg BASE_IMAGE=ubuntu
 
 The Dockerfile runs kairos-init without `--provider`, so the image stays core (no k8s).
 
-Standard with k3s: use `PROVIDER_NAME` and optionally `PROVIDER_VERSION` build args. The Dockerfile should invoke kairos-init with `--provider "${PROVIDER_NAME}"` and `--provider-"${PROVIDER_NAME}"-version "${PROVIDER_VERSION}"` (e.g. `--provider k3s --provider-k3s-version v1.28.0`). Omit `PROVIDER_VERSION` to use the provider’s default/latest.
+Standard with k3s: use `PROVIDER_NAME` and optionally `PROVIDER_VERSION` build args. The Dockerfile should invoke kairos-init with `--provider "${PROVIDER_NAME}"` and `--provider-"${PROVIDER_NAME}"-version "${PROVIDER_VERSION}"` (e.g. `--provider k3s --provider-k3s-version v1.35.1+k3s1`). The version must be an existing release tag from the provider (see [k3s](https://github.com/k3s-io/k3s/releases), [k0s](https://github.com/k0sproject/k0s/releases)). Omit `PROVIDER_VERSION` to use the provider’s default/latest.
 
 ```bash
-$ docker build -t ubuntu-kairos-trusted-standard:24.04 --build-arg BASE_IMAGE=ubuntu:24.04 --build-arg TRUSTED_BOOT=true --build-arg VERSION=v1.0.0 --build-arg PROVIDER_NAME=k3s --build-arg PROVIDER_VERSION=v1.28.0 .
+$ docker build -t ubuntu-kairos-trusted-standard:24.04 --build-arg BASE_IMAGE=ubuntu:24.04 --build-arg TRUSTED_BOOT=true --build-arg VERSION=v1.0.0 --build-arg PROVIDER_NAME=k3s --build-arg PROVIDER_VERSION=v1.35.1+k3s1 .
 ```
 
 Now lets build a Trusted Boot ISO from the standard image:
