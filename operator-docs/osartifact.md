@@ -357,7 +357,7 @@ When building (with `buildOptions` or `ociSpec`), the operator runs Kaniko to bu
 **`spec.image.buildEnv`** — Environment variables for the Kaniko build container. Use this for:
 
 - **Proxy settings**: Set `HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY` when the cluster uses an HTTP proxy to reach the internet. Kaniko (and any `RUN` steps that use the network) will use these. Exclude registries and in-cluster hosts in `NO_PROXY` so image pull/push still works (e.g. `NO_PROXY=localhost,127.0.0.1,.cluster.local,.svc,quay.io`).
-- **Any other build-time env**: Any `corev1.EnvVar` (name/value or valueFrom) is supported.
+- **Any other build-time env**: Any standard Kubernetes EnvVar entry is supported (either with `name` and `value`, or with `name` and `valueFrom` for ConfigMap or Secret references).
 
 Only used when building (Stage 1); ignored when `spec.image.ref` is set (pre-built image).
 
