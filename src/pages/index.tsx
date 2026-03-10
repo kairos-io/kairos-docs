@@ -76,13 +76,13 @@ export default function DesignThreePage(): ReactNode {
   };
 
   const supportedDistributions = [
-    {name: 'Alpine', src: useBaseUrl('/img/kairos-alpine-logo.png')},
+    {name: 'Alpine', src: 'https://cdn.simpleicons.org/alpinelinux/0D597F'},
     {name: 'Debian', src: 'https://cdn.simpleicons.org/debian/A81DFA'},
-    {name: 'Fedora', src: useBaseUrl('/img/kairos-fedora-logo.png')},
-    {name: 'Hadron', src: 'https://hadron-linux.io/images/hadron-logo.svg'},
+    {name: 'Fedora', src: 'https://cdn.simpleicons.org/fedora/51A2DA'},
+    {name: 'Hadron', src: '/img/hadron-linux-icon.svg'},
     {name: 'openSUSE', src: 'https://cdn.simpleicons.org/opensuse/73BA25'},
     {name: 'Rocky', src: 'https://cdn.simpleicons.org/rockylinux/10B981'},
-    {name: 'Ubuntu', src: useBaseUrl('/img/kairos-ubuntu-logo.png')},
+    {name: 'Ubuntu', src: 'https://cdn.simpleicons.org/ubuntu/E95420'},
   ];
 
   const stackFeatures = [
@@ -109,17 +109,10 @@ export default function DesignThreePage(): ReactNode {
             <Heading as="h1">{heroHeadline}</Heading>
             <p>{heroDescription}</p>
             <p className={styles.tech}>{heroTechnicalDescription}</p>
-            <p className={styles.motto}>
-              <span>The Cloud Native OS for</span>
-              <span className={styles.wordCarousel} aria-label="Deployment targets">
-                <span className={styles.wordCarouselTrack}>
-                  {mottoWords.map((word) => (
-                    <span key={word}>{word}</span>
-                  ))}
-                  <span aria-hidden="true">{mottoWords[0]}</span>
-                </span>
-              </span>
-            </p>
+            <div className={styles.quickStartCta}>
+              <span className={styles.quickStartText}>Spin up kairos on a VM in the time you drink a coffee.</span>
+              <Link to="/quickstart/" className={styles.quickStartButton}>Quick Start</Link>
+            </div>
           </div>
         </section>
 
@@ -131,10 +124,17 @@ export default function DesignThreePage(): ReactNode {
                 <strong>Sandbox Project</strong>
               </a>
               <div className={styles.socialProofDivider} aria-hidden="true" />
-              <div className={styles.quickStartCta}>
-                <span>Spin up kairos on a VM in the time you drink a coffee.</span>
-                <Link to="/quickstart/" className={styles.quickStartButton}>Quick Start</Link>
-              </div>
+              <p className={styles.motto}>
+                <span>The Cloud Native OS for</span>
+                <span className={styles.wordCarousel} aria-label="Deployment targets">
+                  <span className={styles.wordCarouselTrack}>
+                    {mottoWords.map((word) => (
+                      <span key={word}>{word}</span>
+                    ))}
+                    <span aria-hidden="true">{mottoWords[0]}</span>
+                  </span>
+                </span>
+              </p>
             </div>
           </div>
         </section>
@@ -307,21 +307,23 @@ export default function DesignThreePage(): ReactNode {
               {upcomingEvents.length > 0 ? (
                 <div className={styles.eventsList}>
                   {upcomingEvents.map((event) => (
-                    <div key={event.title} className={styles.eventBox}>
-                      <strong>{event.dateLabel}</strong>
-                      <p>{event.title}</p>
-                      <span>{event.conference} — {event.location}</span>
-                      <a href={event.url} target="_blank" rel="noreferrer">Event details</a>
-                    </div>
+                    <a key={event.title} href={event.url} target="_blank" rel="noreferrer" className={styles.eventBoxLink}>
+                      <div className={styles.eventBox}>
+                        <strong>{event.dateLabel}</strong>
+                        <p>{event.title}</p>
+                        <span>{event.conference} — {event.location}</span>
+                      </div>
+                    </a>
                   ))}
                 </div>
               ) : nextEvent ? (
-                <div className={styles.eventBox}>
-                  <strong>{nextEvent.dateLabel}</strong>
-                  <p>{nextEvent.title}</p>
-                  <span>{nextEvent.conference} — {nextEvent.location}</span>
-                  <a href={nextEvent.url} target="_blank" rel="noreferrer">Event details</a>
-                </div>
+                <a href={nextEvent.url} target="_blank" rel="noreferrer" className={styles.eventBoxLink}>
+                  <div className={styles.eventBox}>
+                    <strong>{nextEvent.dateLabel}</strong>
+                    <p>{nextEvent.title}</p>
+                    <span>{nextEvent.conference} — {nextEvent.location}</span>
+                  </div>
+                </a>
               ) : (
                 <div className={styles.eventBox}><p>There is nothing planned for the moment but keep checking our events page for news.</p></div>
               )}
@@ -366,8 +368,11 @@ export default function DesignThreePage(): ReactNode {
                   </div>
                 </a>
                 <a href="https://slack.cncf.io/#kairos" target="_blank" rel="noreferrer" className={styles.communityItem}>
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M9.6 1.2a2.4 2.4 0 1 0-4.8 0v2.4h4.8V1.2ZM12 1.2a2.4 2.4 0 1 1 4.8 0v2.4H12V1.2ZM1.2 9.6a2.4 2.4 0 1 1 0-4.8h2.4v4.8H1.2ZM1.2 12a2.4 2.4 0 1 0 0 4.8h2.4V12H1.2ZM9.6 22.8a2.4 2.4 0 1 1-4.8 0v-2.4h4.8v2.4ZM12 22.8a2.4 2.4 0 1 0 4.8 0v-2.4H12v2.4ZM22.8 9.6a2.4 2.4 0 1 0 0-4.8h-2.4v4.8h2.4ZM22.8 12a2.4 2.4 0 1 1 0 4.8h-2.4V12h2.4ZM8.4 4.8h7.2V12H8.4V4.8ZM8.4 12h7.2v7.2H8.4V12Z" />
+                  <svg viewBox="0 0 256 256" aria-hidden="true">
+                    <path d="M53.8412698 161.320635C53.8412698 176.152381 41.8539683 188.139683 27.0222222 188.139683C12.1904762 188.139683 0.203174603 176.152381 0.203174603 161.320635C0.203174603 146.488889 12.1904762 134.501587 27.0222222 134.501587H53.8412698V161.320635ZM67.2507937 161.320635C67.2507937 146.488889 79.2380952 134.501587 94.0698413 134.501587C108.901587 134.501587 120.888889 146.488889 120.888889 161.320635V228.368254C120.888889 243.2 108.901587 255.187302 94.0698413 255.187302C79.2380952 255.187302 67.2507937 243.2 67.2507937 228.368254V161.320635Z" fill="#E01E5A" />
+                    <path d="M94.0698413 53.6380952C79.2380952 53.6380952 67.2507937 41.6507937 67.2507937 26.8190476C67.2507937 11.9873016 79.2380952 0 94.0698413 0C108.901587 0 120.888889 11.9873016 120.888889 26.8190476V53.6380952H94.0698413ZM94.0698413 67.2507937C108.901587 67.2507937 120.888889 79.2380952 120.888889 94.0698413C120.888889 108.901587 108.901587 120.888889 94.0698413 120.888889H26.8190476C11.9873016 120.888889 0 108.901587 0 94.0698413C0 79.2380952 11.9873016 67.2507937 26.8190476 67.2507937H94.0698413Z" fill="#36C5F0" />
+                    <path d="M201.549206 94.0698413C201.549206 79.2380952 213.536508 67.2507937 228.368254 67.2507937C243.2 67.2507937 255.187302 79.2380952 255.187302 94.0698413C255.187302 108.901587 243.2 120.888889 228.368254 120.888889H201.549206V94.0698413ZM188.139683 94.0698413C188.139683 108.901587 176.152381 120.888889 161.320635 120.888889C146.488889 120.888889 134.501587 108.901587 134.501587 94.0698413V26.8190476C134.501587 11.9873016 146.488889 0 161.320635 0C176.152381 0 188.139683 11.9873016 188.139683 26.8190476V94.0698413Z" fill="#2EB67D" />
+                    <path d="M161.320635 201.549206C176.152381 201.549206 188.139683 213.536508 188.139683 228.368254C188.139683 243.2 176.152381 255.187302 161.320635 255.187302C146.488889 255.187302 134.501587 243.2 134.501587 228.368254V201.549206H161.320635ZM161.320635 188.139683C146.488889 188.139683 134.501587 176.152381 134.501587 161.320635C134.501587 146.488889 146.488889 134.501587 161.320635 134.501587H228.571429C243.403175 134.501587 255.390476 146.488889 255.390476 161.320635C255.390476 176.152381 243.403175 188.139683 228.571429 188.139683H161.320635Z" fill="#ECB22E" />
                   </svg>
                   <div>
                     <strong>Slack</strong>
@@ -376,14 +381,18 @@ export default function DesignThreePage(): ReactNode {
                 </a>
               </div>
             </article>
-            <article>
+            <article className={styles.enterpriseSupportCard}>
               <Heading as="h2">Enterprise support</Heading>
-              <p>Need a hand? For enterprise support, <strong>get in touch</strong> with companies ready to help you tackle the toughest challenges.</p>
-              <p><strong>Spectro Cloud</strong> is the main supporter behind Kairos and provides enterprise-grade Kubernetes management through its platform, Palette, which allows organizations to deploy, manage, and scale Kubernetes across various environments, including public clouds, data centers, bare metal, and edge computing.</p>
-              <div className={styles.enterpriseActionRow}>
-                <img src={useBaseUrl('/img/spectrocloud-dark.svg')} alt="Spectro Cloud" className={styles.spectro} />
-                <a className={styles.enterpriseLink} href="https://www.spectrocloud.com/solutions/kairos-support">Learn more</a>
-              </div>
+              <p className={styles.enterpriseIntro}>Need a hand? For enterprise support, <strong>get in touch</strong> with companies ready to help you tackle the toughest challenges.</p>
+              <ul className={styles.enterpriseList}>
+                <li className={styles.enterpriseItem}>
+                  <img src={useBaseUrl('/img/spectrocloud-dark.svg')} alt="Spectro Cloud" className={styles.spectro} />
+                  <a className={styles.enterpriseLink} href="https://www.spectrocloud.com/solutions/kairos-support">Learn more</a>
+                </li>
+              </ul>
+              <p className={styles.enterpriseHint}>
+                Do you offer Enterprise Support for Kairos? <a href="mailto:members@kairos.io">Reach out</a> so we can add you to the list.
+              </p>
             </article>
           </div>
         </section>

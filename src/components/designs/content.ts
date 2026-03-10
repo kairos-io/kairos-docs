@@ -131,7 +131,7 @@ export const communityLinks = [
 ];
 
 export const communityCopy =
-  "Whether you're a part of a DevOps team, an IT engineer, a hobbyist, or a maker, we welcome you to join us in driving forward our vision of a secure, decentralized, and containerized edge.";
+  'Stay up to date with releases, give and get feedback, and contribute by joining our different community channels.';
 
 export const enterpriseIntroCopy =
   'Need a hand? For enterprise support, get in touch with companies ready to help you tackle the toughest challenges.';
