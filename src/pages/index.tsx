@@ -106,12 +106,19 @@ export default function DesignThreePage(): ReactNode {
       <main className={styles.page}>
         <section className={styles.hero}>
           <div className={styles.wrap}>
-            <Heading as="h1">{heroHeadline}</Heading>
-            <p>{heroDescription}</p>
-            <p className={styles.tech}>{heroTechnicalDescription}</p>
-            <div className={styles.quickStartCta}>
-              <span className={styles.quickStartText}>Spin up kairos on a VM in the time you drink a coffee.</span>
-              <Link to="/quickstart/" className={styles.quickStartButton}>Quick Start</Link>
+            <div className={styles.heroLayout}>
+              <div>
+                <Heading as="h1">{heroHeadline}</Heading>
+                <p>{heroDescription}</p>
+                <p className={styles.tech}>{heroTechnicalDescription}</p>
+                <div className={styles.quickStartCta}>
+                  <span className={styles.quickStartText}>Spin up kairos on a VM in the time you drink a coffee.</span>
+                  <Link to="/quickstart/" className={styles.quickStartButton}>Quick Start</Link>
+                </div>
+              </div>
+              <div className={styles.heroLogoWrap}>
+                <img src={useBaseUrl('/img/kairos-horizontal-dark.svg')} alt="Kairos" className={styles.heroLogo} />
+              </div>
             </div>
           </div>
         </section>

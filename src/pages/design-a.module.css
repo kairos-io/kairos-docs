@@ -20,6 +20,23 @@
   color: #fff;
 }
 
+.heroLayout {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 1rem;
+  align-items: center;
+}
+
+.heroLogoWrap {
+  display: flex;
+  justify-content: center;
+}
+
+.heroLogo {
+  width: min(460px, 100%);
+  height: auto;
+}
+
 .kicker {
   margin: 0;
   text-transform: uppercase;
@@ -772,6 +789,7 @@
 }
 
 @media (max-width: 996px) {
+  .heroLayout,
   .downloadLayout,
   .altGrid,
   .wrapTwo,
