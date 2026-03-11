@@ -87,13 +87,13 @@ const v372FlavorOptions = [
 ] as const;
 
 const v401FlavorOptions = [
-  {family: 'hadron', flavor: 'hadron', flavorRelease: '0.0.4', label: 'Hadron 0.0.4'},
+  {family: 'hadron', flavor: 'hadron', flavorRelease: 'v0.0.4', label: 'Hadron v0.0.4'},
 ] as const;
 
 const docsVersionCustomFields = {
   'v4.0.1': {
     registryURL: 'quay.io/kairos',
-    hadronFlavorRelease: '0.0.4',
+    hadronFlavorRelease: 'v0.0.4',
     k3sVersion: 'v1.35.1+k3s1',
     flavorOptions: v401FlavorOptions,
     providerVersion: 'v2.14.0',
@@ -245,7 +245,7 @@ const config: Config = {
 
   customFields: {
     registryURL: 'quay.io/kairos',
-    hadronFlavorRelease: '0.0.4',
+    hadronFlavorRelease: 'v0.0.4',
     kairosVersion: latestVersion,
     k3sVersion: latestVersionCustomFields.k3sVersion,
     flavorOptions: latestVersionCustomFields.flavorOptions,
