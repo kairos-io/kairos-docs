@@ -110,7 +110,6 @@ export default function DesignThreePage(): ReactNode {
               <div>
                 <Heading as="h1">{heroHeadline}</Heading>
                 <p>{heroDescription}</p>
-                <p className={styles.tech}>{heroTechnicalDescription}</p>
                 <div className={styles.quickStartCta}>
                   <span className={styles.quickStartText}>Spin up kairos on a VM in the time you drink a coffee.</span>
                   <Link to="/quickstart/" className={styles.quickStartButton}>Quick Start</Link>
@@ -219,49 +218,92 @@ export default function DesignThreePage(): ReactNode {
 
         <section className={styles.compareSection}>
           <div className={styles.wrap}>
-            <Heading as="h2">Why Kairos and not ...?</Heading>
+            <Heading as="h2">Kairos vs Others</Heading>
+            <p className={styles.compareIntro}>
+              Kairos combines the operational model of an immutable image-based OS with the openness of a
+              distro-agnostic build system and the ergonomics of Kubernetes-native lifecycle management.
+            </p>
             <table className={styles.compareTable}>
               <thead>
                 <tr>
-                  <th aria-hidden="true" />
+                  <th>Capability</th>
                   <th>Kairos</th>
                   <th>Configuration Management Systems</th>
-                  <th>Other Special Purpose OSes</th>
+                  <th>Other Special-Purpose OSes</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>You need predictable operations at fleet scale</td>
-                  <td>Kairos keeps machine behavior consistent release after release</td>
-                  <td>Consistency depends on ongoing playbook and drift-control discipline</td>
-                  <td>Can be consistent, but often coupled to a narrower distro or workflow</td>
+                  <td>Immutable root filesystem</td>
+                  <td className={styles.comparePos}>Yes</td>
+                  <td className={styles.compareNeg}>No</td>
+                  <td className={styles.comparePos}>Yes</td>
                 </tr>
                 <tr>
-                  <td>You want faster maintenance windows</td>
-                  <td>Kairos lets teams update and recover nodes with less downtime risk</td>
-                  <td>Patch cycles and reconciliation tend to be slower across large fleets</td>
-                  <td>Update speed varies by vendor tooling and image pipeline constraints</td>
+                  <td>Atomic image upgrades / rollback</td>
+                  <td className={styles.comparePos}>Yes</td>
+                  <td className={styles.compareNeg}>No</td>
+                  <td className={styles.comparePos}>Yes</td>
                 </tr>
                 <tr>
-                  <td>You need one model across cloud, edge and datacenter</td>
-                  <td>Kairos uses the same lifecycle approach in every environment</td>
-                  <td>Different modules and environment-specific tuning are typically required</td>
-                  <td>Many options focus on one environment and need custom work to bridge others</td>
+                  <td>Reuse existing Linux images</td>
+                  <td className={styles.comparePos}>Yes</td>
+                  <td className={styles.comparePos}>Yes*</td>
+                  <td className={styles.compareNeg}>No +</td>
                 </tr>
                 <tr>
-                  <td>You want platform flexibility without lock-in</td>
-                  <td>BYOI lets you keep your preferred Linux base while standardizing operations</td>
-                  <td>Flexible, but still tied to long-term config ownership and imperative changes</td>
-                  <td>Can introduce lock-in through fixed images, tooling, or platform assumptions</td>
+                  <td>Persistent config layering after install</td>
+                  <td className={styles.comparePos}>Yes</td>
+                  <td className={styles.comparePos}>Yes</td>
+                  <td className={styles.comparePos}>Yes ^</td>
                 </tr>
                 <tr>
-                  <td>You need to run cloud-native and non-cloud-native workloads side by side</td>
-                  <td>Kairos is optimized for Kubernetes while still supporting standard Linux workloads</td>
-                  <td>Possible, but operators usually need extra layers to keep both models consistent</td>
-                  <td>Often optimized for one workload model, requiring trade-offs for mixed environments</td>
+                  <td>Kubernetes-native OS lifecycle management</td>
+                  <td className={styles.comparePos}>Yes</td>
+                  <td className={styles.compareNeg}>No</td>
+                  <td className={styles.compareMid}>Partial ~</td>
+                </tr>
+                <tr>
+                  <td>Choice of Kubernetes distro</td>
+                  <td className={styles.comparePos}>Yes</td>
+                  <td className={styles.comparePos}>Yes</td>
+                  <td className={styles.compareNeg}>No #</td>
                 </tr>
               </tbody>
             </table>
+            <p className={styles.compareNotes}>
+              * Yes for CMS because they can manage many distros and apply ongoing config, but they do it by mutating
+              the running host rather than by shipping a new immutable machine image. Puppet and Salt describe keeping
+              systems in a predetermined state by reading actual state and changing the target system in place. Ansible
+              is documented as configuring most operating systems and deploying software, and Red Hat describes it as
+              agentless automation over SSH/APIs.
+            </p>
+            <p className={styles.compareNotes}>
+              + Some image-based systems such as bootc support custom bootable images, but they require adopting the
+              bootc-compatible image model. This is different from reusing an existing distro image pipeline directly
+              under the same assumptions.
+            </p>
+            <p className={styles.compareNotes}>
+              ^ Support varies by system. Talos supports updating machine configuration on running nodes, and
+              Bottlerocket has a persistent API/settings model. Flatcar and Fedora CoreOS primarily rely on
+              Ignition-style first-boot provisioning rather than the same kind of post-install layered config workflow.
+            </p>
+            <p className={styles.compareNotes}>
+              ~ Bottlerocket provides Kubernetes-coordinated updates via Brupop, and Talos provides strong day-2
+              lifecycle operations through talosctl, but these approaches do not generally expose the same breadth of
+              operator-driven OS lifecycle management through Kubernetes resources as Kairos.
+            </p>
+            <p className={styles.compareNotes}>
+              # Some SPOS offer different prebuilt variants or orchestrator targets, but that is not the same as
+              choosing which Kubernetes distribution to run on the same operating system model. Bottlerocket, for
+              example, ships environment-specific variants rather than a bring-your-own Kubernetes distro approach.
+            </p>
+          </div>
+        </section>
+
+        <section className={styles.techBand}>
+          <div className={styles.wrap}>
+            <p className={styles.techBandText}>{heroTechnicalDescription}</p>
           </div>
         </section>
 

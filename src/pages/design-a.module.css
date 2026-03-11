@@ -65,6 +65,20 @@
   font-size: 0.95rem;
 }
 
+.techBand {
+  background: #0a1224;
+  border-top: 1px solid #20385f;
+  border-bottom: 1px solid #20385f;
+}
+
+.techBandText {
+  margin: 0;
+  padding: 0.85rem 0;
+  color: #a8bbe0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
 .motto {
   margin: 1rem 0 0;
   display: flex;
@@ -467,6 +481,10 @@
   overflow: hidden;
 }
 
+.compareIntro {
+  margin-top: 0.85rem;
+}
+
 .compareTable td {
   padding: 0.74rem 0.84rem;
   border-bottom: 1px solid #304466;
@@ -519,11 +537,37 @@
   background: #0c1630;
   color: #f0f5ff;
   font-weight: 600;
+  text-align: center;
 }
 
 .compareTable td:nth-child(n + 3) {
   background: #101b36;
   color: #d1def6;
+  text-align: center;
+}
+
+.comparePos {
+  background: #123826 !important;
+  color: #d9ffe9 !important;
+  font-weight: 700;
+}
+
+.compareNeg {
+  background: #402025 !important;
+  color: #ffd8de !important;
+  font-weight: 700;
+}
+
+.compareMid {
+  background: #4a3a18 !important;
+  color: #ffefc0 !important;
+  font-weight: 700;
+}
+
+.compareNotes {
+  margin: 0.45rem 0 0;
+  color: #9fb2d8;
+  font-size: 0.8rem;
 }
 
 .hadron {
