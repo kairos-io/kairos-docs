@@ -47,7 +47,7 @@ For this reason, we have specific directories under `/usr` that are used for the
 
 This should cover all the use case for extensions, while preserving our ability to have persistent mounts.
 
-In the case of config extensions, nothign is changed since they are mounted under `/etc` and do not interfere with our persistent partition management.
+In the case of config extensions, nothing is changed since they are mounted under `/etc` and do not interfere with our persistent partition management.
 
 
 ### Building system extensions
