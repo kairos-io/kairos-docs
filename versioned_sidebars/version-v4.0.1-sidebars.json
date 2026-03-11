@@ -8,6 +8,11 @@
       "type": "link",
       "label": "Operator",
       "href": "/operator-docs/"
+    },
+    {
+      "type": "link",
+      "label": "Hadron",
+      "href": "/hadron-docs/"
     }
   ]
 }
