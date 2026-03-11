@@ -53,45 +53,7 @@ In the case of config extensions, nothign is changed since they are mounted unde
 ### Building system extensions
 
 <Tabs>
-<TabItem value="manually" label="Manually">
-
-To build a system extension, you need to create a directory with the files you want to add to the system. Then you can use the `systemd-repart` tool to create a system extension image which is signed and verity protected.
-
-The directory with the sources needs to be structured in a way that the files are placed in the same path as they would be in the final system. For example, this is the dir tree for k3s:
-```text
-.
-└── v1.29.2+k3s1
-    └── usr
-        ├── lib
-        │   └── extension-release.d
-        │       └── extension-release.k3s-v1.29.2+k3s1
-        └── local
-            ├── bin
-            │   ├── crictl -> ./k3s
-            │   ├── ctr -> ./k3s
-            │   ├── k3s
-            │   └── kubectl -> ./k3s
-            └── lib
-                └── systemd
-                    └── system
-                        ├── k3s-agent.service
-                        └── k3s.service
-```
-
-Then you can use the `systemd-repart` tool to create the sysext image:
-```bash
-$ systemd-repart -S -s SOURCE_DIR NAME.sysext.raw --private-key=PRIVATE_KEY --certificate=CERTIFICATE
-```
-
-:::warning Warning
-Note that the extensions MUST have a `/usr/lib/extension-release.d/extension-release.NAME` file in which the NAME needs to match the sysext NAME (extension is ignored). This is an enforcement by systemd to ensure the sysext is correctly identified and some sanity checks are done with the info in that file.
-:::
-This will generate a signed+verity sysextension that can then be used by sysext to extend the system.
-
-Some extension examples are available under https://github.com/Itxaka/sysext-examples for k3s and sbctl.
-
-</TabItem>
-<TabItem value="auroraboot" label="With auroraboot">
+<TabItem value="auroraboot" label="With Auroraboot">
 
 You can also build a system/config extension from a docker image directly by using [auroraboot](https://github.com/kairos-io/AuroraBoot) and using a dockerfile to isolate the artifacts you want converted into a system extension.
 
@@ -172,6 +134,44 @@ Since the config extensions are mounted under `/etc`, only the files and directo
 
 If your image ships files in other paths, they will be fully ignored and not included in the final system/config extension. So make sure to place the files you want to include in the correct paths as explained in the section "System/Config extensions under Kairos" above.
 :::
+
+</TabItem>
+<TabItem value="manually" label="Manually">
+
+To build a system extension, you need to create a directory with the files you want to add to the system. Then you can use the `systemd-repart` tool to create a system extension image which is signed and verity protected.
+
+The directory with the sources needs to be structured in a way that the files are placed in the same path as they would be in the final system. For example, this is the dir tree for k3s:
+```text
+.
+└── v1.29.2+k3s1
+    └── usr
+        ├── lib
+        │   └── extension-release.d
+        │       └── extension-release.k3s-v1.29.2+k3s1
+        └── local
+            ├── bin
+            │   ├── crictl -> ./k3s
+            │   ├── ctr -> ./k3s
+            │   ├── k3s
+            │   └── kubectl -> ./k3s
+            └── lib
+                └── systemd
+                    └── system
+                        ├── k3s-agent.service
+                        └── k3s.service
+```
+
+Then you can use the `systemd-repart` tool to create the sysext image:
+```bash
+$ systemd-repart -S -s SOURCE_DIR NAME.sysext.raw --private-key=PRIVATE_KEY --certificate=CERTIFICATE
+```
+
+:::warning Warning
+Note that the extensions MUST have a `/usr/lib/extension-release.d/extension-release.NAME` file in which the NAME needs to match the sysext NAME (extension is ignored). This is an enforcement by systemd to ensure the sysext is correctly identified and some sanity checks are done with the info in that file.
+:::
+This will generate a signed+verity sysextension that can then be used by sysext to extend the system.
+
+Some extension examples are available under https://github.com/Itxaka/sysext-examples for k3s and sbctl.
 
 </TabItem>
 </Tabs>
@@ -258,7 +258,7 @@ Use `sysext` for system extensions and `confext` for config extensions. The comm
 
 Downloads/gets a system extension and stores it on the node.
 
-```
+```bash
 kairos-agent sysext install <URI>
 ```
 
@@ -280,7 +280,7 @@ kairos-agent sysext install <URI>
 
 Enable an extension for a specific boot profile:
 
-```
+```bash
 kairos-agent sysext enable --active my-extension
 ```
 
@@ -292,7 +292,7 @@ kairos-agent sysext enable --active my-extension
 
 #### 🔄 Use `--now` for Immediate Activation
 
-```
+```bash
 kairos-agent sysext enable --active --now my-extension
 ```
 
@@ -306,13 +306,13 @@ If the current boot mode matches, this also:
 
 Remove the symlink from the specified profile:
 
-```
+```bash
 kairos-agent sysext disable --common my-extension
 ```
 
 Add `--now` to also unload the extension if it's currently live:
 
-```
+```bash
 kairos-agent sysext disable --common --now my-extension
 ```
 
@@ -322,13 +322,13 @@ kairos-agent sysext disable --common --now my-extension
 
 Deletes the extension completely—including **all symlinks** from any profile.
 
-```
+```bash
 kairos-agent sysext remove my-extension
 ```
 
 Use `--now` to deactivate it immediately as well:
 
-```
+```bash
 kairos-agent sysext remove --now my-extension
 ```
 
@@ -341,7 +341,7 @@ kairos-agent sysext remove --now my-extension
 - Without flags: lists all installed extensions
 - With a profile flag: lists extensions enabled for that boot profile
 
-```
+```bash
 kairos-agent sysext list
 kairos-agent sysext list --recovery
 ```

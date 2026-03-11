@@ -1,6 +1,6 @@
 ---
-title: "Extending Hadron with system/config extensions"
-sidebar_label: "Extending Hadron with system/config extensions"
+title: "Extending Hadron with extensions"
+sidebar_label: "Extending Hadron with extensions"
 sidebar_position: 2
 ---
 
