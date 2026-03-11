@@ -16,6 +16,7 @@ import {
   heroTechnicalDescription,
   pressItems,
 } from '../components/designs/content';
+import ImageConfigBuilder from '../components/builder/ImageConfigBuilder';
 import styles from './design-a.module.css';
 
 export default function DesignThreePage(): ReactNode {
@@ -144,6 +145,8 @@ export default function DesignThreePage(): ReactNode {
             </div>
           </div>
         </section>
+
+        <ImageConfigBuilder />
 
         <section className={styles.catalog} id="download">
           <div className={styles.wrap}>
