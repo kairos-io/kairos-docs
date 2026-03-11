@@ -6,8 +6,13 @@ import Heading from '@theme/Heading';
 import {useVersionedCustomFields} from '@site/src/utils/versionedCustomFields';
 
 import {CONFIG_EXAMPLES, getExampleById} from './examples';
-import {generateDockerfile, hasInvalidHadronCombination} from './logic';
-import type {BaseFamily, BuilderOptions} from './types';
+import {
+  generateAuroraBootDockerCommand,
+  generateDockerBuildCommand,
+  generateDockerfile,
+  hasInvalidHadronCombination,
+} from './logic';
+import type {AuroraBootOptions, BaseFamily, BuilderOptions} from './types';
 import styles from './ImageConfigBuilder.module.css';
 
 type ActiveTab = 'dockerfile' | 'config';
@@ -25,9 +30,9 @@ const DEFAULT_BASE_TAGS: Record<BaseFamily, string> = {
 const DEFAULT_KAIROS_VERSION = 'v4.0.1';
 
 export default function ImageConfigBuilder(): ReactNode {
-  const {kairosInitVersion} = useVersionedCustomFields();
+  const {kairosInitVersion, auroraBootVersion} = useVersionedCustomFields();
   const [activeTab, setActiveTab] = useState<ActiveTab>('dockerfile');
-  const [copiedTab, setCopiedTab] = useState<ActiveTab | null>(null);
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [selectedExample, setSelectedExample] = useState<string>('blank');
   const [options, setOptions] = useState<BuilderOptions>({
     baseFamily: 'hadron',
@@ -51,6 +56,40 @@ export default function ImageConfigBuilder(): ReactNode {
   const [dockerfileDirty, setDockerfileDirty] = useState(false);
   const [configDirty, setConfigDirty] = useState(false);
 
+  const [dockerImageName, setDockerImageName] = useState('my-kairos-image');
+  const [dockerImageTag, setDockerImageTag] = useState(DEFAULT_KAIROS_VERSION);
+  const [dockerfilePath, setDockerfilePath] = useState('./Dockerfile');
+  const [buildContextPath, setBuildContextPath] = useState('.');
+
+  const [auroraOptions, setAuroraOptions] = useState<AuroraBootOptions>({
+    preset: 'iso',
+    auroraBootVersion,
+    outputDir: '$PWD/build',
+    stateDir: '/output',
+    cloudConfigPath: '/output/config.yaml',
+    diskStateSize: '',
+    netbootHttpPort: '',
+    netbootCmdline: '',
+    overlayIsoPath: '',
+    overlayRootfsPath: '',
+    additionalSet: '',
+  });
+
+  const imageRef = useMemo(() => `${dockerImageName}:${dockerImageTag}`, [dockerImageName, dockerImageTag]);
+  const generatedBuildCommand = useMemo(
+    () => generateDockerBuildCommand(dockerImageName, dockerImageTag, dockerfilePath, buildContextPath),
+    [dockerImageName, dockerImageTag, dockerfilePath, buildContextPath],
+  );
+  const generatedAuroraCommand = useMemo(
+    () => generateAuroraBootDockerCommand(imageRef, auroraOptions),
+    [imageRef, auroraOptions],
+  );
+
+  const [buildCommandText, setBuildCommandText] = useState(generatedBuildCommand);
+  const [auroraCommandText, setAuroraCommandText] = useState(generatedAuroraCommand);
+  const [buildCommandDirty, setBuildCommandDirty] = useState(false);
+  const [auroraCommandDirty, setAuroraCommandDirty] = useState(false);
+
   useEffect(() => {
     if (!dockerfileDirty) {
       setDockerfileText(generatedDockerfile);
@@ -64,12 +103,28 @@ export default function ImageConfigBuilder(): ReactNode {
   }, [generatedConfig, configDirty]);
 
   useEffect(() => {
-    if (copiedTab) {
-      const timeout = window.setTimeout(() => setCopiedTab(null), 1200);
+    if (copiedKey) {
+      const timeout = window.setTimeout(() => setCopiedKey(null), 1200);
       return () => window.clearTimeout(timeout);
     }
     return undefined;
-  }, [copiedTab]);
+  }, [copiedKey]);
+
+  useEffect(() => {
+    setAuroraOptions((prev) => ({...prev, auroraBootVersion}));
+  }, [auroraBootVersion]);
+
+  useEffect(() => {
+    if (!buildCommandDirty) {
+      setBuildCommandText(generatedBuildCommand);
+    }
+  }, [buildCommandDirty, generatedBuildCommand]);
+
+  useEffect(() => {
+    if (!auroraCommandDirty) {
+      setAuroraCommandText(generatedAuroraCommand);
+    }
+  }, [auroraCommandDirty, generatedAuroraCommand]);
 
   useEffect(() => {
     if (options.baseFamily !== 'hadron' && options.cloud) {
@@ -109,7 +164,12 @@ export default function ImageConfigBuilder(): ReactNode {
   const copyCurrentTab = async (): Promise<void> => {
     const content = activeTab === 'dockerfile' ? dockerfileText : configText;
     await navigator.clipboard.writeText(content);
-    setCopiedTab(activeTab);
+    setCopiedKey(activeTab);
+  };
+
+  const copyCommand = async (content: string, key: string): Promise<void> => {
+    await navigator.clipboard.writeText(content);
+    setCopiedKey(key);
   };
 
   const resetDockerfile = (): void => {
@@ -120,6 +180,16 @@ export default function ImageConfigBuilder(): ReactNode {
   const resetConfig = (): void => {
     setConfigText(generatedConfig);
     setConfigDirty(false);
+  };
+
+  const resetBuildCommand = (): void => {
+    setBuildCommandText(generatedBuildCommand);
+    setBuildCommandDirty(false);
+  };
+
+  const resetAuroraCommand = (): void => {
+    setAuroraCommandText(generatedAuroraCommand);
+    setAuroraCommandDirty(false);
   };
 
   return (
@@ -301,7 +371,7 @@ export default function ImageConfigBuilder(): ReactNode {
               </div>
               <div className={styles.tabActions}>
                 <button type="button" className={styles.ghostBtn} onClick={copyCurrentTab}>
-                  {copiedTab === activeTab ? 'Copied' : activeTab === 'dockerfile' ? 'Copy Dockerfile' : 'Copy config.yaml'}
+                  {copiedKey === activeTab ? 'Copied' : activeTab === 'dockerfile' ? 'Copy Dockerfile' : 'Copy config.yaml'}
                 </button>
                 {activeTab === 'dockerfile' ? (
                   <button type="button" className={styles.ghostBtn} onClick={resetDockerfile}>Regenerate Dockerfile</button>
@@ -330,6 +400,164 @@ export default function ImageConfigBuilder(): ReactNode {
                 }}
               />
             )}
+          </div>
+        </div>
+
+        <div className={styles.commandSection}>
+          <div className={styles.panel}>
+            <h3>Build Command</h3>
+            <div className={styles.rowSplit4}>
+              <div className={styles.row}>
+                <label htmlFor="dockerImageName">Image name</label>
+                <input id="dockerImageName" value={dockerImageName} onChange={(event) => setDockerImageName(event.target.value)} />
+              </div>
+              <div className={styles.row}>
+                <label htmlFor="dockerImageTag">Image tag</label>
+                <input id="dockerImageTag" value={dockerImageTag} onChange={(event) => setDockerImageTag(event.target.value)} />
+              </div>
+              <div className={styles.row}>
+                <label htmlFor="dockerfilePath">Dockerfile path</label>
+                <input id="dockerfilePath" value={dockerfilePath} onChange={(event) => setDockerfilePath(event.target.value)} />
+              </div>
+              <div className={styles.row}>
+                <label htmlFor="buildContextPath">Build context</label>
+                <input id="buildContextPath" value={buildContextPath} onChange={(event) => setBuildContextPath(event.target.value)} />
+              </div>
+            </div>
+            <div className={styles.inlineActions}>
+              <button type="button" className={styles.ghostBtn} onClick={() => copyCommand(buildCommandText, 'build-command')}>
+                {copiedKey === 'build-command' ? 'Copied' : 'Copy build command'}
+              </button>
+              <button type="button" className={styles.ghostBtn} onClick={resetBuildCommand}>Regenerate command</button>
+              {buildCommandDirty && <span className={styles.dirtyTag}>edited manually</span>}
+            </div>
+            <textarea
+              className={styles.commandArea}
+              value={buildCommandText}
+              onChange={(event) => {
+                setBuildCommandText(event.target.value);
+                setBuildCommandDirty(true);
+              }}
+            />
+          </div>
+
+          <div className={styles.panel}>
+            <h3>AuroraBoot Command Builder</h3>
+            <div className={styles.rowSplit4}>
+              <div className={styles.row}>
+                <label htmlFor="auroraPreset">Artifact type</label>
+                <select
+                  id="auroraPreset"
+                  value={auroraOptions.preset}
+                  onChange={(event) => setAuroraOptions((prev) => ({...prev, preset: event.target.value as AuroraBootOptions['preset']}))}>
+                  <option value="iso">ISO</option>
+                  <option value="raw-efi">RAW EFI</option>
+                  <option value="raw-bios">RAW BIOS</option>
+                  <option value="raw-gce">RAW GCE</option>
+                  <option value="raw-vhd">RAW VHD</option>
+                  <option value="netboot">Netboot</option>
+                  <option value="container">Container artifact</option>
+                  <option value="uki-iso">Trusted Boot UKI ISO</option>
+                  <option value="uki-container">Trusted Boot UKI Container</option>
+                </select>
+              </div>
+              <div className={styles.row}>
+                <label htmlFor="auroraVersion">AuroraBoot version</label>
+                <input
+                  id="auroraVersion"
+                  value={auroraOptions.auroraBootVersion}
+                  onChange={(event) => setAuroraOptions((prev) => ({...prev, auroraBootVersion: event.target.value}))}
+                />
+              </div>
+              <div className={styles.row}>
+                <label htmlFor="outputDir">Host output directory</label>
+                <input id="outputDir" value={auroraOptions.outputDir} onChange={(event) => setAuroraOptions((prev) => ({...prev, outputDir: event.target.value}))} />
+              </div>
+              <div className={styles.row}>
+                <label htmlFor="stateDir">state_dir</label>
+                <input id="stateDir" value={auroraOptions.stateDir} onChange={(event) => setAuroraOptions((prev) => ({...prev, stateDir: event.target.value}))} />
+              </div>
+            </div>
+
+            <div className={styles.rowSplit4}>
+              <div className={styles.row}>
+                <label htmlFor="cloudConfigPath">cloud_config path</label>
+                <input
+                  id="cloudConfigPath"
+                  value={auroraOptions.cloudConfigPath}
+                  onChange={(event) => setAuroraOptions((prev) => ({...prev, cloudConfigPath: event.target.value}))}
+                />
+              </div>
+              <div className={styles.row}>
+                <label htmlFor="diskStateSize">disk.state_size (MB)</label>
+                <input
+                  id="diskStateSize"
+                  value={auroraOptions.diskStateSize}
+                  onChange={(event) => setAuroraOptions((prev) => ({...prev, diskStateSize: event.target.value}))}
+                />
+              </div>
+              <div className={styles.row}>
+                <label htmlFor="netbootHttpPort">netboot_http_port</label>
+                <input
+                  id="netbootHttpPort"
+                  value={auroraOptions.netbootHttpPort}
+                  onChange={(event) => setAuroraOptions((prev) => ({...prev, netbootHttpPort: event.target.value}))}
+                />
+              </div>
+              <div className={styles.row}>
+                <label htmlFor="netbootCmdline">netboot.cmdline</label>
+                <input
+                  id="netbootCmdline"
+                  value={auroraOptions.netbootCmdline}
+                  onChange={(event) => setAuroraOptions((prev) => ({...prev, netbootCmdline: event.target.value}))}
+                />
+              </div>
+            </div>
+
+            <div className={styles.rowSplit2}>
+              <div className={styles.row}>
+                <label htmlFor="overlayIsoPath">iso.overlay_iso</label>
+                <input
+                  id="overlayIsoPath"
+                  value={auroraOptions.overlayIsoPath}
+                  onChange={(event) => setAuroraOptions((prev) => ({...prev, overlayIsoPath: event.target.value}))}
+                />
+              </div>
+              <div className={styles.row}>
+                <label htmlFor="overlayRootfsPath">iso.overlay_rootfs</label>
+                <input
+                  id="overlayRootfsPath"
+                  value={auroraOptions.overlayRootfsPath}
+                  onChange={(event) => setAuroraOptions((prev) => ({...prev, overlayRootfsPath: event.target.value}))}
+                />
+              </div>
+            </div>
+
+            <div className={styles.row}>
+              <label htmlFor="additionalSet">Additional --set entries (one key=value per line)</label>
+              <textarea
+                id="additionalSet"
+                className={styles.inputArea}
+                value={auroraOptions.additionalSet}
+                onChange={(event) => setAuroraOptions((prev) => ({...prev, additionalSet: event.target.value}))}
+              />
+            </div>
+
+            <div className={styles.inlineActions}>
+              <button type="button" className={styles.ghostBtn} onClick={() => copyCommand(auroraCommandText, 'aurora-command')}>
+                {copiedKey === 'aurora-command' ? 'Copied' : 'Copy AuroraBoot command'}
+              </button>
+              <button type="button" className={styles.ghostBtn} onClick={resetAuroraCommand}>Regenerate command</button>
+              {auroraCommandDirty && <span className={styles.dirtyTag}>edited manually</span>}
+            </div>
+            <textarea
+              className={styles.commandArea}
+              value={auroraCommandText}
+              onChange={(event) => {
+                setAuroraCommandText(event.target.value);
+                setAuroraCommandDirty(true);
+              }}
+            />
           </div>
         </div>
       </div>

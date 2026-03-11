@@ -1,4 +1,4 @@
-import type {BaseFamily, BuilderOptions} from './types';
+import type {AuroraBootOptions, BaseFamily, BuilderOptions} from './types';
 
 const BASE_IMAGE_REPOSITORIES: Record<Exclude<BaseFamily, 'hadron'>, string> = {
   ubuntu: 'ubuntu',
@@ -115,4 +115,95 @@ ${extensionCopy}`;
 
 export function hasInvalidHadronCombination(options: BuilderOptions): boolean {
   return options.baseFamily === 'hadron' && options.cloud && options.trustedBoot && options.fips;
+}
+
+export function generateDockerBuildCommand(
+  imageName: string,
+  imageTag: string,
+  dockerfilePath: string,
+  contextPath: string,
+): string {
+  return `docker build -t ${imageName}:${imageTag} -f ${dockerfilePath} ${contextPath}`;
+}
+
+function parseAdditionalSet(value: string): string[] {
+  return value
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .filter((line) => !line.startsWith('#'));
+}
+
+function appendSetArgs(lines: string[], key: string, value: string): void {
+  if (value.trim()) {
+    lines.push(`--set "${key}=${value.trim()}"`);
+  }
+}
+
+export function generateAuroraBootDockerCommand(imageRef: string, options: AuroraBootOptions): string {
+  const commonPrefix = [
+    'docker run --rm -ti',
+    '-v /var/run/docker.sock:/var/run/docker.sock',
+    `-v "${options.outputDir}":/output`,
+  ];
+
+  const additionalSetLines = parseAdditionalSet(options.additionalSet);
+
+  if (options.preset === 'uki-iso' || options.preset === 'uki-container') {
+    const outputType = options.preset === 'uki-iso' ? 'iso' : 'container';
+    const cmdParts = [
+      ...commonPrefix,
+      'quay.io/kairos/auroraboot:' + options.auroraBootVersion,
+      `build-uki -t ${outputType} -d /output/`,
+      options.cloudConfigPath.trim() ? `--cloud-config ${options.cloudConfigPath.trim()}` : '',
+      options.overlayIsoPath.trim() ? `--overlay-iso ${options.overlayIsoPath.trim()}` : '',
+      options.overlayRootfsPath.trim() ? `--overlay-rootfs ${options.overlayRootfsPath.trim()}` : '',
+      `oci:${imageRef}`,
+    ].filter(Boolean);
+    return cmdParts.join(' \\\n+  ');
+  }
+
+  const setArgs: string[] = [];
+  setArgs.push(`--set "container_image=oci:${imageRef}"`);
+
+  if (options.preset === 'netboot') {
+    setArgs.push('--set "disable_netboot=false"');
+  } else {
+    setArgs.push('--set "disable_netboot=true"');
+  }
+
+  appendSetArgs(setArgs, 'state_dir', options.stateDir);
+  appendSetArgs(setArgs, 'netboot_http_port', options.netbootHttpPort);
+  appendSetArgs(setArgs, 'netboot.cmdline', options.netbootCmdline);
+  appendSetArgs(setArgs, 'cloud_config', options.cloudConfigPath);
+  appendSetArgs(setArgs, 'disk.state_size', options.diskStateSize);
+  appendSetArgs(setArgs, 'iso.overlay_iso', options.overlayIsoPath);
+  appendSetArgs(setArgs, 'iso.overlay_rootfs', options.overlayRootfsPath);
+
+  if (options.preset === 'raw-efi') {
+    setArgs.push('--set "disk.efi=true"');
+  }
+  if (options.preset === 'raw-bios') {
+    setArgs.push('--set "disk.bios=true"');
+  }
+  if (options.preset === 'raw-gce') {
+    setArgs.push('--set "disk.gce=true"');
+  }
+  if (options.preset === 'raw-vhd') {
+    setArgs.push('--set "disk.vhd=true"');
+  }
+  if (options.preset === 'container') {
+    setArgs.push('--set "output=container"');
+  }
+
+  additionalSetLines.forEach((line) => setArgs.push(`--set "${line}"`));
+
+  const full = [
+    ...commonPrefix,
+    options.preset.startsWith('raw-') ? '--privileged' : '--net host',
+    'quay.io/kairos/auroraboot:' + options.auroraBootVersion,
+    ...setArgs,
+  ];
+
+  return full.join(' \\\n+  ');
 }

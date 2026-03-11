@@ -71,6 +71,21 @@
   gap: 0.6rem;
 }
 
+.rowSplit2,
+.rowSplit4 {
+  margin-top: 0.7rem;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.rowSplit2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.rowSplit4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
 .switch {
   display: flex;
   align-items: center;
@@ -171,6 +186,48 @@
   padding: 0.9rem;
 }
 
+.inputArea {
+  width: 100%;
+  min-height: 88px;
+  border: 1px solid #3d5788;
+  border-radius: 8px;
+  background: #0a142a;
+  color: #e5efff;
+  padding: 0.48rem 0.58rem;
+  resize: vertical;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+  font-size: 0.78rem;
+}
+
+.commandSection {
+  margin-top: 1rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.inlineActions {
+  margin-top: 0.7rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.commandArea {
+  width: 100%;
+  min-height: 142px;
+  margin-top: 0.7rem;
+  border: 1px solid #355385;
+  border-radius: 9px;
+  background: #0b1220;
+  color: #d8e7ff;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  padding: 0.7rem;
+  resize: vertical;
+}
+
 .dirtyTag {
   margin-left: 0.4rem;
   color: #ffbf9d;
@@ -179,7 +236,9 @@
 
 @media (max-width: 996px) {
   .layout,
-  .rowSplit {
+  .rowSplit,
+  .rowSplit2,
+  .rowSplit4 {
     grid-template-columns: 1fr;
   }
 }

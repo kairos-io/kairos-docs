@@ -29,3 +29,28 @@ export type ExampleTemplate = {
   docsPath: string;
   config: string;
 };
+
+export type AuroraBootPreset =
+  | 'iso'
+  | 'raw-efi'
+  | 'raw-bios'
+  | 'raw-gce'
+  | 'raw-vhd'
+  | 'netboot'
+  | 'uki-iso'
+  | 'uki-container'
+  | 'container';
+
+export type AuroraBootOptions = {
+  preset: AuroraBootPreset;
+  auroraBootVersion: string;
+  outputDir: string;
+  stateDir: string;
+  cloudConfigPath: string;
+  diskStateSize: string;
+  netbootHttpPort: string;
+  netbootCmdline: string;
+  overlayIsoPath: string;
+  overlayRootfsPath: string;
+  additionalSet: string;
+};
