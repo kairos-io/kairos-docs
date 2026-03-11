@@ -1,7 +1,8 @@
 import React from 'react';
 import clsx from 'clsx';
 import {useLocation} from '@docusaurus/router';
-import {FLAVOR_OPTIONS, useFlavor} from '@site/src/context/flavor';
+import {useFlavor} from '@site/src/context/flavor';
+import {useVersionedCustomFields} from '@site/src/utils/versionedCustomFields';
 
 type FlavorSelectorNavbarItemProps = {
   mobile?: boolean;
@@ -18,11 +19,13 @@ export default function FlavorSelectorNavbarItem({
 }: FlavorSelectorNavbarItemProps): React.JSX.Element {
   const location = useLocation();
   const {selection, setSelection} = useFlavor();
+  const {flavorOptions} = useVersionedCustomFields();
   const [showDropdown, setShowDropdown] = React.useState(false);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
   const selectedKey = optionKey(selection);
-  const isVersionedDocs = /^\/docs\/v\d+\.\d+\.\d+(\/|$)/.test(location.pathname);
-  const isV401Docs = /^\/docs\/v4\.0\.1(\/|$)/.test(location.pathname);
+  const isDocsRoute = /^\/docs(\/|$)/.test(location.pathname);
+  const options = flavorOptions;
+  const selectedOption = options.find((option) => optionKey(option) === selectedKey) ?? options[0] ?? selection;
 
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent | TouchEvent | FocusEvent): void => {
@@ -43,8 +46,24 @@ export default function FlavorSelectorNavbarItem({
     };
   }, []);
 
-  if (!isVersionedDocs || isV401Docs) {
+  if (!isDocsRoute || options.length === 0) {
     return <></>;
+  }
+
+  if (options.length === 1) {
+    if (mobile) {
+      return (
+        <li className={clsx('menu__list-item', className)}>
+          <span className="menu__link">{selectedOption.label}</span>
+        </li>
+      );
+    }
+
+    return (
+      <div className={clsx('navbar__item', className)}>
+        <span className="navbar__link">{selectedOption.label}</span>
+      </div>
+    );
   }
 
   if (mobile) {
@@ -58,10 +77,10 @@ export default function FlavorSelectorNavbarItem({
             e.preventDefault();
             setShowDropdown((v) => !v);
           }}>
-          {selection.label}
+          {selectedOption.label}
         </a>
         <ul className={clsx('menu__list')} style={showDropdown ? undefined : {display: 'none'}}>
-          {FLAVOR_OPTIONS.map((option) => {
+          {options.map((option) => {
             const key = optionKey(option);
             const isActive = key === selectedKey;
             return (
@@ -107,10 +126,10 @@ export default function FlavorSelectorNavbarItem({
             setShowDropdown((visible) => !visible);
           }
         }}>
-        {selection.label}
+        {selectedOption.label}
       </a>
       <ul className="dropdown__menu">
-        {FLAVOR_OPTIONS.map((option) => {
+        {options.map((option) => {
           const isActive = optionKey(option) === selectedKey;
           return (
             <li key={optionKey(option)}>

@@ -1,5 +1,5 @@
-import React, {createContext, useContext, useMemo, useState} from 'react';
-import {useLocation} from '@docusaurus/router';
+import React, {createContext, useContext, useEffect, useMemo, useState} from 'react';
+import {useVersionedCustomFields} from '@site/src/utils/versionedCustomFields';
 
 export type FlavorSelection = {
   family: string;
@@ -8,23 +8,12 @@ export type FlavorSelection = {
   label: string;
 };
 
-export const FLAVOR_OPTIONS: FlavorSelection[] = [
-  {family: 'alpine', flavor: 'alpine', flavorRelease: '3.19', label: 'Alpine 3.19'},
-  {family: 'debian', flavor: 'debian', flavorRelease: 'bookworm', label: 'Debian Bookworm'},
-  {family: 'debian', flavor: 'debian', flavorRelease: 'testing', label: 'Debian Testing'},
-  {family: 'rhel', flavor: 'fedora', flavorRelease: '40', label: 'Fedora 40'},
-  {family: 'opensuse', flavor: 'opensuse', flavorRelease: 'leap-15.6', label: 'openSUSE Leap-15.6'},
-  {family: 'opensuse', flavor: 'opensuse', flavorRelease: 'tumbleweed', label: 'openSUSE Tumbleweed'},
-  {family: 'rhel', flavor: 'rockylinux', flavorRelease: '9', label: 'Rockylinux 9'},
-  {family: 'ubuntu', flavor: 'ubuntu', flavorRelease: '25.10', label: 'Ubuntu 25.10'},
-  {family: 'ubuntu', flavor: 'ubuntu', flavorRelease: '24.04', label: 'Ubuntu 24.04'},
-  {family: 'ubuntu', flavor: 'ubuntu', flavorRelease: '22.04', label: 'Ubuntu 22.04'},
-  {family: 'ubuntu', flavor: 'ubuntu', flavorRelease: '20.04', label: 'Ubuntu 20.04'},
-];
-
-const DEFAULT_FLAVOR = FLAVOR_OPTIONS.find(
-  (option) => option.flavor === 'ubuntu' && option.flavorRelease === '24.04',
-) ?? FLAVOR_OPTIONS[0];
+const DEFAULT_FLAVOR: FlavorSelection = {
+  family: 'ubuntu',
+  flavor: 'ubuntu',
+  flavorRelease: '24.04',
+  label: 'Ubuntu 24.04',
+};
 
 type FlavorContextValue = {
   selection: FlavorSelection;
@@ -36,15 +25,11 @@ const FlavorContext = createContext<FlavorContextValue>({
   setSelection: () => {},
 });
 
-const STORAGE_KEY = 'selectedDistro';
-const CURRENT_DOCS_FLAVOR: FlavorSelection = {
-  family: 'hadron',
-  flavor: 'hadron',
-  flavorRelease: '0.0.3',
-  label: 'Hadron 0.0.3',
-};
+function optionKey(option: Pick<FlavorSelection, 'family' | 'flavor' | 'flavorRelease'>): string {
+  return `${option.family};${option.flavor};${option.flavorRelease}`;
+}
 
-function parseStoredSelection(raw: string | null): FlavorSelection | null {
+function parseStoredSelection(raw: string | null): string | null {
   if (!raw) {
     return null;
   }
@@ -54,29 +39,14 @@ function parseStoredSelection(raw: string | null): FlavorSelection | null {
     return null;
   }
 
-  return (
-    FLAVOR_OPTIONS.find(
-      (option) =>
-        option.family === family &&
-        option.flavor === flavor &&
-        option.flavorRelease === flavorRelease,
-    ) ?? null
-  );
+  return `${family};${flavor};${flavorRelease}`;
 }
 
 export function FlavorProvider({children}: {children: React.ReactNode}): React.JSX.Element {
-  const [selection, setSelectionState] = useState<FlavorSelection>(() => {
-    if (typeof window === 'undefined') {
-      return DEFAULT_FLAVOR;
-    }
-    return parseStoredSelection(window.localStorage.getItem(STORAGE_KEY)) ?? DEFAULT_FLAVOR;
-  });
+  const [selection, setSelectionState] = useState<FlavorSelection>(DEFAULT_FLAVOR);
 
   const setSelection = (next: FlavorSelection): void => {
     setSelectionState(next);
-    if (typeof window !== 'undefined') {
-      window.localStorage.setItem(STORAGE_KEY, `${next.family};${next.flavor};${next.flavorRelease}`);
-    }
   };
 
   const value = useMemo(
@@ -92,11 +62,40 @@ export function FlavorProvider({children}: {children: React.ReactNode}): React.J
 
 export function useFlavor(): FlavorContextValue {
   const context = useContext(FlavorContext);
-  const location = useLocation();
-  const isVersionedDocs = /^\/docs\/v\d+\.\d+\.\d+(\/|$)/.test(location.pathname);
+  const {docsVersion, flavorOptions} = useVersionedCustomFields();
+  const storageKey = `selectedDistro:${docsVersion}`;
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || flavorOptions.length === 0) {
+      return;
+    }
+
+    const storedKey = parseStoredSelection(window.localStorage.getItem(storageKey));
+    const nextSelection =
+      (storedKey && flavorOptions.find((option) => optionKey(option) === storedKey)) ?? flavorOptions[0];
+
+    if (optionKey(context.selection) !== optionKey(nextSelection)) {
+      context.setSelection(nextSelection);
+    }
+  }, [context, flavorOptions, storageKey]);
+
+  const selected =
+    flavorOptions.find((option) => optionKey(option) === optionKey(context.selection)) ??
+    flavorOptions[0] ??
+    context.selection;
+
+  const setSelection = (next: FlavorSelection): void => {
+    const nextSelection =
+      flavorOptions.find((option) => optionKey(option) === optionKey(next)) ?? flavorOptions[0] ?? selected;
+
+    context.setSelection(nextSelection);
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(storageKey, optionKey(nextSelection));
+    }
+  };
 
   return {
-    selection: isVersionedDocs ? context.selection : CURRENT_DOCS_FLAVOR,
-    setSelection: context.setSelection,
+    selection: selected,
+    setSelection,
   };
 }
