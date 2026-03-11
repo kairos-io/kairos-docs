@@ -14,7 +14,7 @@ export type EventItem = {
   url: string;
 };
 
-export const heroHeadline = 'The Immutable Linux Framework to Operate at Scale.';
+export const heroHeadline = 'The Immutable OS to Operate at Scale.';
 
 export const heroDescription =
   'Kairos is a Linux Framework managing the full lifecycle of machines — from installation to upgrades and recovery. It makes large numbers of machines predictable, reproducible, and easy to operate over time. Kairos brings strong operational guarantees to Linux — from the edge to the datacenter.';
