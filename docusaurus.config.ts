@@ -319,6 +319,19 @@ const config: Config = {
         }),
       },
     ],
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'hadron-docs',
+        path: 'hadron-docs',
+        routeBasePath: 'hadron-docs',
+        sidebarPath: './sidebarsHadron.ts',
+        remarkPlugins: [remarkShortcodeCode],
+        editUrl: 'https://github.com/kairos-io/kairos-docs/tree/main/',
+        showLastUpdateTime: true,
+        showLastUpdateAuthor: true,
+      },
+    ],
   ],
 
   themeConfig: {
