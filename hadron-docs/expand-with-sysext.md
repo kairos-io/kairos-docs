@@ -1,7 +1,7 @@
 ---
 title: "Extending Hadron with system/config extensions"
 sidebar_label: "Extending Hadron with system/config extensions"
-sidebar_position: 3
+sidebar_position: 2
 ---
 
 :::info Signing keys for system extensions under Trusted Boot
