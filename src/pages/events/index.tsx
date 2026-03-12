@@ -12,9 +12,23 @@ const events: EventItem[] = [
   {
     date: 'Mar 26',
     location: 'Amsterdam, NL',
+    title: 'Project Pavilion - Booth P18A (12:30-14:00)',
+    conference: 'KubeCon EU',
+    url: 'https://events.linuxfoundation.org/kubecon-cloudnativecon-europe/features-add-ons/project-engagement/#project-pavilion-directory',
+  },
+  {
+    date: 'Mar 26',
+    location: 'Amsterdam, NL',
     title: 'Cloud Native at the Far(m) Edge: Running Kubernetes and AI on Tractors',
     conference: 'KubeCon EU',
     url: 'https://kccnceu2026.sched.com/event/2CW75/cloud-native-at-the-farm-edge-running-kubernetes-and-ai-on-tractors-mauro-morales-spectro-cloud-jordan-karapanagiotis-aurea-imaging',
+  },
+  {
+    date: 'Mar 24',
+    location: 'Amsterdam, NL',
+    title: 'Project Pavilion - Booth P18A (10:15-14:40)',
+    conference: 'KubeCon EU',
+    url: 'https://events.linuxfoundation.org/kubecon-cloudnativecon-europe/features-add-ons/project-engagement/#project-pavilion-directory',
   },
   {
     date: 'Mar 23',
