@@ -2,6 +2,5 @@
 title: "Hadron"
 sidebar_label: "Hadron"
 slug: /
+sidebar_position: 0
 ---
-
-Hadron docs will be added here.
