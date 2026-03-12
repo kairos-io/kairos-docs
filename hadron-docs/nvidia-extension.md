@@ -7,7 +7,7 @@ sidebar_position: 3
 
 This NVIDIA Dockerfile builds a **final Hadron-based image** with NVIDIA drivers/tools already included. Users use it by selecting:
 
-- the Hadron version they want (via a build arg)
+- Hadron version (via a build arg)
 - NVIDIA driver version (via a build arg)
 - an output image name (their registry/repo)
 
