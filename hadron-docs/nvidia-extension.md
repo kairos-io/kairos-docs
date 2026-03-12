@@ -24,7 +24,9 @@ The Dockerfile supports:
 - `JOBS`  
   Parallelism for compilation.
 
-> Important: the Dockerfile uses the same `HADRON_VERSION` for both `hadron-toolchain` and `hadron`. This ensures kernel module compatibility.
+:::info
+The Dockerfile uses the same `HADRON_VERSION` for both `hadron-toolchain` and `hadron`. This ensures kernel module compatibility.
+:::
 
 ## Build the final “Hadron + NVIDIA” image
 
@@ -53,10 +55,12 @@ docker push "${IMAGE}"
 
 Users can now consume your custom Hadron image like any other image to build artifacts using [Auroraboot](/docs/reference/auroraboot) or to run K8s workloads with NVIDIA support
 
-## Quick validation
+:::tip
+Quick validation on your image:
 
 ```bash
 docker run --rm -it "${IMAGE}" nvidia-smi
 ```
 
-(Actual GPU access depends on how/where it runs, but this confirms the image contains the NVIDIA tooling and runtime wiring expected by your system.)
+Actual GPU access depends on how/where it runs, but this confirms the image contains the NVIDIA tooling and runtime wiring expected by your system.
+:::
