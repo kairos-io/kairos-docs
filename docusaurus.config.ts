@@ -517,6 +517,7 @@ const config: Config = {
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
+      additionalLanguages: ['docker', 'bash'],
     },
   } satisfies Preset.ThemeConfig,
 };

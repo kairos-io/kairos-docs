@@ -20,52 +20,42 @@ This feature works on both Trusted Boot and normal Kairos installations, the onl
 
 For more information on system extensions, please refer to the [System extensions documentation](https://www.freedesktop.org/software/systemd/man/latest/systemd-sysext.html).
 
+Confextensions are the a way to extend the system with additional configuration files that are mounted at boot time. They are similar to system extensions but they are used to extend the system with configuration files instead of files and directories, so they are mounted under `/etc` instead of `/usr`.
+
+
 **Requirement**: Base image of the OS needs to have at least systemd 252 or newer ( for example ubuntu >=23.10 or fedora >=38 )
 
-### Building system extensions manually
 
-To build a system extension, you need to create a directory with the files you want to add to the system. Then you can use the `systemd-repart` tool to create a system extension image which is signed and verity protected.
+### System/Config extensions under Kairos
 
-The directory with the sources needs to be structured in a way that the files are placed in the same path as they would be in the final system. For example, this is the dir tree for k3s:
-```text
-.
-└── v1.29.2+k3s1
-    └── usr
-        ├── lib
-        │   └── extension-release.d
-        │       └── extension-release.k3s-v1.29.2+k3s1
-        └── local
-            ├── bin
-            │   ├── crictl -> ./k3s
-            │   ├── ctr -> ./k3s
-            │   ├── k3s
-            │   └── kubectl -> ./k3s
-            └── lib
-                └── systemd
-                    └── system
-                        ├── k3s-agent.service
-                        └── k3s.service
-```
+Due to the nature of Kairos and its focus on immutability, the out of the box config for the extensions dir overrides do not work very well.
+Since it would override and make `/usr` fully RO, it would clash with our persistent partition management, preventing anything to write to persistent.
 
-Then you can use the `systemd-repart` tool to create the sysext image:
-```bash
-$ systemd-repart -S -s SOURCE_DIR NAME.sysext.raw --private-key=PRIVATE_KEY --certificate=CERTIFICATE
-```
+For this reason, we have specific directories under `/usr` that are used for the extensions instead of the full `/usr` hierarchy. These directories are:
+- /usr/local/bin
+- /usr/local/sbin
+- /usr/local/include
+- /usr/local/lib
+- /usr/local/share
+- /usr/local/src
+- /usr/bin
+- /usr/share
+- /usr/lib
+- /usr/include
+- /usr/src
+- /usr/sbin
 
-:::warning Warning
-Note that the extensions MUST have a `/usr/lib/extension-release.d/extension-release.NAME` file in which the NAME needs to match the sysext NAME (extension is ignored). This is an enforcement by systemd to ensure the sysext is correctly identified and some sanity checks are done with the info in that file.
-:::
-This will generate a signed+verity sysextension that can then be used by sysext to extend the system.
+This should cover all the use case for extensions, while preserving our ability to have persistent mounts.
 
-Some extension examples are available under https://github.com/Itxaka/sysext-examples for k3s and sbctl.
+In the case of config extensions, nothing is changed since they are mounted under `/etc` and do not interfere with our persistent partition management.
 
 
-### Building system extensions from a docker image with auroraboot
+### Building system extensions
 
-:::warning Warning
-This feature is in preview state and only available in Auroraboot from version v0.3.0
-:::
-You can also build a system extension from a docker image directly by using [auroraboot](https://github.com/kairos-io/AuroraBoot) and using a dockerfile to isolate the artifacts you want converted into a system extension.
+<Tabs>
+<TabItem value="auroraboot" label="With Auroraboot">
+
+You can also build a system/config extension from a docker image directly by using [auroraboot](https://github.com/kairos-io/AuroraBoot) and using a dockerfile to isolate the artifacts you want converted into a system extension.
 
 Notice that when converting a docker image into a system extension, the last layer is the only one converted (The last command in a given Dockerfile) so have that in mind. This is useful for packages that ONLY install things in /usr or manual installation under /usr.
 
@@ -119,7 +109,7 @@ The explanation of the auroraboot command flags is as follows:
  - `NAME`: Output and internal name of the sysext.
  - `CONTAINER_IMAGE`: Image from which we will extract the last layer and covert it to a system extension.
 
-Example of a successful run:
+Example of a successful run for a system and a config extension:
 ```bash
 $ docker run -v "$PWD":/build/ -v /tmp/keys/:/keys -v /var/run/docker.sock:/var/run/docker.sock --rm -ti {{< RegistryURL  >}}/auroraboot:{{< AuroraBootVersion  >}} sysext --private-key=/keys/db.key --certificate=/keys/db.pem --output /build grype sysext
 2024-09-16T14:59:36Z INF Starting auroraboot version
@@ -128,9 +118,63 @@ $ docker run -v "$PWD":/build/ -v /tmp/keys/:/keys -v /var/run/docker.sock:/var/
 2024-09-16T14:59:36Z INF 📤 Extracting archives from image layer
 2024-09-16T14:59:37Z INF 📦 Packing sysext into raw image
 2024-09-16T14:59:37Z INF 🎉 Done sysext creation output=/build/grype.sysext.raw
-$ ls -ltra *.raw
--rw-r--r-- 1 root root 64729088 sep 16 17:24 grype.sysext.raw
+$ docker run -v "$PWD":/build/ -v /tmp/keys/:/keys -v /var/run/docker.sock:/var/run/docker.sock --rm -ti {{< RegistryURL  >}}/auroraboot:{{< AuroraBootVersion  >}} confext --private-key=/keys/db.key --certificate=/keys/db.pem --output /build grype sysext
+2024-09-16T14:59:36Z INF Starting auroraboot version
+2024-09-16T14:59:36Z INF 🚀 Start confext creation
+2024-09-16T14:59:36Z INF 💿 Getting image info
+2024-09-16T14:59:36Z INF 📤 Extracting archives from image layer
+2024-09-16T14:59:37Z INF 📦 Packing confext into raw image
+2024-09-16T14:59:37Z INF 🎉 Done confext creation output=/build/grype.confext.raw
 ```
+
+</TabItem>
+<TabItem value="manually" label="Manually">
+
+To build a system extension, you need to create a directory with the files you want to add to the system. Then you can use the `systemd-repart` tool to create a system extension image which is signed and verity protected.
+
+The directory with the sources needs to be structured in a way that the files are placed in the same path as they would be in the final system. For example, this is the dir tree for k3s:
+```text
+.
+└── v1.29.2+k3s1
+    └── usr
+        ├── lib
+        │   └── extension-release.d
+        │       └── extension-release.k3s-v1.29.2+k3s1
+        └── local
+            ├── bin
+            │   ├── crictl -> ./k3s
+            │   ├── ctr -> ./k3s
+            │   ├── k3s
+            │   └── kubectl -> ./k3s
+            └── lib
+                └── systemd
+                    └── system
+                        ├── k3s-agent.service
+                        └── k3s.service
+```
+
+Then you can use the `systemd-repart` tool to create the sysext image:
+```bash
+$ systemd-repart -S -s SOURCE_DIR NAME.sysext.raw --private-key=PRIVATE_KEY --certificate=CERTIFICATE
+```
+
+:::warning Warning
+Note that the extensions MUST have a `/usr/lib/extension-release.d/extension-release.NAME` file in which the NAME needs to match the sysext NAME (extension is ignored). This is an enforcement by systemd to ensure the sysext is correctly identified and some sanity checks are done with the info in that file.
+:::
+This will generate a signed+verity sysextension that can then be used by sysext to extend the system.
+
+Some extension examples are available under https://github.com/Itxaka/sysext-examples for k3s and sbctl.
+
+</TabItem>
+</Tabs>
+
+:::warning Files and dirs for system/config extensions
+Since the system extensions are mounted under `/usr`, only the files and directories under those specific directories will be included in the system extension.
+
+Since the config extensions are mounted under `/etc`, only the files and directories under that specific directory will be included in the config extension.
+
+If your image ships files in other paths, they will be fully ignored and not included in the final system/config extension. So make sure to place the files you want to include in the correct paths as explained in the section "System/Config extensions under Kairos" above.
+:::
 
 
 ### Verifying the system extensions
@@ -166,7 +210,7 @@ ro root-verity-sig bdb3ee65-ed86-480c-a750-93015254f1a7 root-x86-64-verity-sig v
 ```
 
 
-# Managing System Extensions in Kairos
+# Managing System/Config Extensions in Kairos
 
 
 ## 📂 Where Extensions Live
@@ -177,14 +221,20 @@ All system extensions are stored in:
 /var/lib/kairos/extensions/
 ```
 
+All config extensions are stored in:
+
+```
+/var/lib/kairos/confexts/
+```
+
 From there, they’re symlinked into directories based on the system’s boot profile:
 
-| Directory     | Behavior                                                                |
-|---------------|-------------------------------------------------------------------------|
-| `active/`     | Loaded when booting into the *active* profile                            |
-| `passive/`    | Loaded during *passive* boot                                             |
-| `recovery/`   | Loaded in *recovery mode*                                                |
-| `common/`     | **Always loaded**, regardless of boot mode                               |
+| Directory   | Behavior                                      |
+|-------------|-----------------------------------------------|
+| `active/`   | Loaded when booting into the *active* profile |
+| `passive/`  | Loaded during *passive* boot                  |
+| `recovery/` | Loaded in *recovery mode*                     |
+| `common/`   | **Always loaded**, regardless of boot mode    |
 
 > 💡 These directories contain only **symlinks**—the actual disk image is stored once. This ensures there’s no duplication or leftover state between boots.
 
@@ -192,7 +242,9 @@ From there, they’re symlinked into directories based on the system’s boot pr
 
 ## 🛠️ CLI Usage
 
-Manage extensions using `kairos-agent sysext` commands.
+Manage extensions using `kairos-agent sysext|confext` commands.
+
+Use `sysext` for system extensions and `confext` for config extensions. The commands are the same for both, just replace `sysext` with `confext` in the examples below.
 
 
 > 📝 **Tip:** For enable, disable and remove commands, the extension name supports **regex matching**. You don’t need to type the full filename.
@@ -207,7 +259,7 @@ Manage extensions using `kairos-agent sysext` commands.
 
 Downloads/gets a system extension and stores it on the node.
 
-```
+```bash
 kairos-agent sysext install <URI>
 ```
 
@@ -229,7 +281,7 @@ kairos-agent sysext install <URI>
 
 Enable an extension for a specific boot profile:
 
-```
+```bash
 kairos-agent sysext enable --active my-extension
 ```
 
@@ -241,7 +293,7 @@ kairos-agent sysext enable --active my-extension
 
 #### 🔄 Use `--now` for Immediate Activation
 
-```
+```bash
 kairos-agent sysext enable --active --now my-extension
 ```
 
@@ -255,13 +307,13 @@ If the current boot mode matches, this also:
 
 Remove the symlink from the specified profile:
 
-```
+```bash
 kairos-agent sysext disable --common my-extension
 ```
 
 Add `--now` to also unload the extension if it's currently live:
 
-```
+```bash
 kairos-agent sysext disable --common --now my-extension
 ```
 
@@ -271,13 +323,13 @@ kairos-agent sysext disable --common --now my-extension
 
 Deletes the extension completely—including **all symlinks** from any profile.
 
-```
+```bash
 kairos-agent sysext remove my-extension
 ```
 
 Use `--now` to deactivate it immediately as well:
 
-```
+```bash
 kairos-agent sysext remove --now my-extension
 ```
 
@@ -290,7 +342,7 @@ kairos-agent sysext remove --now my-extension
 - Without flags: lists all installed extensions
 - With a profile flag: lists extensions enabled for that boot profile
 
-```
+```bash
 kairos-agent sysext list
 kairos-agent sysext list --recovery
 ```
@@ -325,19 +377,19 @@ kairos-agent sysext remove --now k3s
 
 ### Boot workflow
 
-During boot, Immucore will identify under which boot state is running (active, passive, recovery) and will link the found extensions to the /run/extensions dir during initramfs. Then it will enable the systemd-sysext service so they are loaded correctly.
+During boot, Immucore will identify under which boot state is running (active, passive, recovery) and will link the found extensions to the /run/extensions dir during initramfs. Then it will enable the systemd-sysext service so they are loaded correctly. Similar it will link the config extensions to /run/confexts and they will be loaded by systemd-confext as well.
 
 Under Trusted Boot, the extensions signature will be verified and if they dont match they will be ignored and a warning emitted under the logs at /run/immucore/.
 
 
 ### Known issues
 
-- Sysext images need to be named with the extension `.sysext.raw` to be identified correctly. This is a design choice to avoid conflicts with other files that could be present in the EFI partition and we don't expect this to change in the future.
+- Sysext images need to be named with the extension `.sysext.raw` to be identified correctly. This is a design choice to avoid conflicts with other files that could be present in the EFI partition and we don't expect this to change in the future. Auroraboot generates the extensions automatically with the correct name, but if you are building them manually with `systemd-repart` make sure to name them correctly.
+- Config extensions need to be named with the extension `.confext.raw` to be identified correctly. This is a design choice to avoid conflicts with other files that could be present in the EFI partition and we don't expect this to change in the future. Auroraboot generates the extensions automatically with the correct name, but if you are building them manually with `systemd-repart` make sure to name them correctly.
 - Any folder that is mounted as a system extension will be mounted as read-only. So if your sysext is mounting `/usr/local/bin` to add binaries, it will be mounted as read-only. Other sysexts can be added and they will be merged correctly, but the final dir will be read-only. This is a limitation of the current systemd version (lower than 256) and will be addressed in future releases.
-- Only `/usr` can be extended. This is a design choice and might change in the future to allow other directories to be extended.
 - System extensions provided binaries are only available after the `initramfs` stage.
 - Currently only signed+verity sysexts are supported under Trusted Boot (UKI). For non-uki Kairos, the signature is not enforced yet.
-- Sysexts need to be signed with the same key/cert as the ones used to sign the EFI files. As those are part of the system and available in the EFI firmware, we can extract the public part and verify the sysexts locally. Any of the PK, KEK or DB keys can be used to sign sysexts. This is planned to be expanded in the future to allow signing them with a different key/cert and provide the public keys as part of the install configuration so they can be verified.
+- Sysexts/confexts need to be signed with the same key/cert as the ones used to sign the EFI files. As those are part of the system and available in the EFI firmware, we can extract the public part and verify the sysexts locally. Any of the PK, KEK or DB keys can be used to sign sysexts. This is planned to be expanded in the future to allow signing them with a different key/cert and provide the public keys as part of the install configuration so they can be verified.
 - Sysexts are mounted by the name order by trying to parse the name as a version and comparing it to others. This is done directly by systemd so be aware of the naming of your extensions and try to keep them in a versioned format. And example from systemd source code is provided as a guide:
 ```text
 *  (older) 122.1
