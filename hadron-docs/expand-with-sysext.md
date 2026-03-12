@@ -4,62 +4,24 @@ sidebar_label: "Extending Hadron with extensions"
 sidebar_position: 2
 ---
 
-:::info Signing keys for system extensions under Trusted Boot
-Sysexts need to be signed with the same key/cert as the ones used to sign the EFI files. As those are part of the system and available in the EFI firmware, we can extract the public part and verify the sysexts locally. Any of the PK, KEK or DB keys can be used to sign sysexts. This only affects Trusted Boot.
+:::info Full sysext/confext info
+This page provides a strighforward example of using sysext/confext for Hadron.
+For more information on system and config extensions, how they work, how to build them and how to manage them with the CLI, refer to the official documentation: [Kairos extensions documentation](/docs/advanced/sys-extensions/).
 :::
 
-### Introduction
+### Building fwupd as a system+config extension with auroraboot
 
-System extensions are a way to extend the system with additional files and directories that are mounted at boot time. System extension images may – dynamically at runtime — extend the /usr/ directory hierarchies with additional files. This is particularly useful on immutable system images where a /usr/ hierarchy residing on a read-only file system shall be extended temporarily at runtime without making any persistent modifications.
-Or on a Trusted Boot system where the system is booted from a read-only EFI and cannot be extended easily without breaking the signature.
-
-This feature works on both Trusted Boot and normal Kairos installations, the only difference is the signature verification of the system extension images. On Trusted Boot, the system extension images are verified against the public keys stored in the firmware. This is done to ensure that only trusted extensions are loaded into the system.
-
-For more information on system extensions, please refer to the [System extensions documentation](https://www.freedesktop.org/software/systemd/man/latest/systemd-sysext.html).
-
-Confextensions are the a way to extend the system with additional configuration files that are mounted at boot time. They are similar to system extensions but they are used to extend the system with configuration files instead of files and directories, so they are mounted under `/etc` instead of `/usr`.
-
-
-
-### System/Config extensions under Kairos
-
-Due to the nature of Kairos and its focus on immutability, the out of the box config for the extensions dir overrides do not work very well.
-Since it would override and make `/usr` fully RO, it would clash with our persistent partition management, preventing anything to write to persistent.
-
-For this reason, we have specific directories under `/usr` that are used for the extensions instead of the full `/usr` hierarchy. These directories are:
-- /usr/local/bin
-- /usr/local/sbin
-- /usr/local/include
-- /usr/local/lib
-- /usr/local/share
-- /usr/local/src
-- /usr/bin
-- /usr/share
-- /usr/lib
-- /usr/include
-- /usr/src
-- /usr/sbin
-
-This should cover all the use case for extensions, while preserving our ability to have persistent mounts.
-
-In the case of config extensions, nothing is changed since they are mounted under `/etc` and do not interfere with our persistent partition management.
-
-### Building system extensions from a docker image with auroraboot
-
-You can also build a system extension from a docker image directly by using [auroraboot](https://github.com/kairos-io/AuroraBoot) and using a dockerfile to isolate the artifacts you want converted into a system extension.
+We will be building our sysext+confext from a docker image directly by using [auroraboot](https://github.com/kairos-io/AuroraBoot) and using a dockerfile to isolate the artifacts you want converted into a system extension.
 
 Notice that when converting a docker image into a system extension, the last layer is the only one converted (The last command in a given Dockerfile) so have that in mind. This is useful for packages that ONLY install things in /usr or manual installation under /usr.
 
-The `/usr/lib/extension-release.d/extension-release.NAME` file necessary for identifying the system extension is automatically created by the command so in this case you should not worry about that file.
-
-
-For example for a given Dockerfiles as our [fwupd example](https://github.com/kairos-io/hadron/blob/main/examples/add-packages/Dockerfile.fwupd):
+Using the existing example for [fwupd](https://github.com/kairos-io/hadron/blob/main/examples/add-packages/Dockerfile.fwupd):
 
 ```bash
 $ docker build -t quay.io/itxaka/test:fwupd -f Dockerfile.fwupd --target=default .
 ```
 
-After building the chosen Dockerfile, we would just need to run osbuilder with the `sysext` command and the key and certificate, like we would do with `systemd-repart`. Notice that we are binding the local `keys/` dir into the container `/keys` dir for ease of access to the given keys and the current dir under `/build` on the container so we set the `--output=/build` flag when calling auroraboot:
+After building the chosen Dockerfile, we would just need to run Auroraboot with the `sysext|confext` command and the key and certificate, like we would do with `systemd-repart`. Notice that we are binding the local `keys/` dir into the container `/keys` dir for ease of access to the given keys and the current dir under `/build` on the container so we set the `--output=/build` flag when calling auroraboot:
 
 ```bash
 $ docker run \
@@ -78,11 +40,11 @@ The explanation of the docker command flags is as follows:
 - `--rm`: Once the container exit, remove it so we dont leave stuff lying around.
 
 The explanation of the auroraboot command flags is as follows:
-- `sysext`: Subcommand to call, in this case we want to build a sysext
+- `sysext|confext`: Subcommand to call, in this case we want to build a sysext but we could be using confext as well if we wanted to build a config extension.
 - `--private-key`: Private key to sign the system extension.
 - `--certificate`: Certificate to sign the system extension.
 - `--output`: Dir where we will output the system extension. Make sure that this matches the directory that passed to the docker command to be able to keep the generated system extension once the container exists and its removed.
-- `fwupd`: Output and internal name of the sysext.
+- `fwupd`: Output and internal name of the sysext/confext.
 - `quay.io/itxaka/test:fwupd`: Image from which we will extract the last layer and covert it to a system extension.
 
 
@@ -96,12 +58,7 @@ $ docker run -v /var/run/docker.sock:/var/run/docker.sock  -v $PWD/tests/assets/
 2026-03-11T10:06:01Z INF 🎉 Done sysext creation output=/output/fwupd.sysext.raw
 ```
 
-:::info Files and dirs for system extensions
-Since the system extensions are mounted under `/usr`, only the files and directories under those specific directories will be included in the system extension.
-So even if your image ships files under `/opt` or `/var`, those files will not be included in the system extension and will not be available at runtime. Make sure that all the files you want to include in the system extension are under the specific directories mentioned above.
-:::
-
-In this case, as the dockerfile for `fwupd` also ships important configurations files under `/etc` (certificatesx and remote repos) we would need to construct a config extension as well to be able to ship those files. The process is the same, but instead of using the `sysext` subcommand we would use the `confext` one:
+In this case, as the dockerfile for `fwupd` also ships important configurations files under `/etc` (certificates and remote repos) we would need to construct a config extension as well to be able to ship those files. The process is the same, but instead of using the `sysext` subcommand we would use the `confext` one:
 
 ```bash
 $ docker run -v /var/run/docker.sock:/var/run/docker.sock  -v $PWD/tests/assets/keys:/keys -v ${PWD}/build:/output auroraboot confext --private-key=/keys/db.key --certificate=/keys/db.pem --output /output fwupd quay.io/itxaka/test:fwupd
@@ -112,9 +69,14 @@ $ docker run -v /var/run/docker.sock:/var/run/docker.sock  -v $PWD/tests/assets/
 2026-03-11T10:06:11Z INF 🎉 Done confext creation output=/output/fwupd.confext.raw
 ```
 
-:::info Files and dirs for config extensions
-Since the config extensions are mounted under `/etc`, only the files and directories under that specific directory will be included in the config extension. So even if your image ships files under `/opt` or `/var`, those files will not be included in the config extension and will not be available at runtime. Make sure that all the files you want to include in the config extension are under the `/etc` directory.
+:::warning Files and dirs for system/config extensions
+Since the system extensions are mounted under `/usr`, only the files and directories under those specific directories will be included in the system extension.
+
+Since the config extensions are mounted under `/etc`, only the files and directories under that specific directory will be included in the config extension.
+
+If your image ships files in other paths, they will be fully ignored and not included in the final system/config extension. So make sure to place the files you want to include in the correct paths as explained in the section "System/Config extensions under Kairos" above.
 :::
+
 
 ### Verifying the system/config extensions
 

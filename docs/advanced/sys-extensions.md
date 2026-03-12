@@ -127,14 +127,6 @@ $ docker run -v "$PWD":/build/ -v /tmp/keys/:/keys -v /var/run/docker.sock:/var/
 2024-09-16T14:59:37Z INF 🎉 Done confext creation output=/build/grype.confext.raw
 ```
 
-:::info Files and dirs for system/config extensions
-Since the system extensions are mounted under `/usr`, only the files and directories under those specific directories will be included in the system extension.
-
-Since the config extensions are mounted under `/etc`, only the files and directories under that specific directory will be included in the config extension.
-
-If your image ships files in other paths, they will be fully ignored and not included in the final system/config extension. So make sure to place the files you want to include in the correct paths as explained in the section "System/Config extensions under Kairos" above.
-:::
-
 </TabItem>
 <TabItem value="manually" label="Manually">
 
@@ -175,6 +167,15 @@ Some extension examples are available under https://github.com/Itxaka/sysext-exa
 
 </TabItem>
 </Tabs>
+
+:::warning Files and dirs for system/config extensions
+Since the system extensions are mounted under `/usr`, only the files and directories under those specific directories will be included in the system extension.
+
+Since the config extensions are mounted under `/etc`, only the files and directories under that specific directory will be included in the config extension.
+
+If your image ships files in other paths, they will be fully ignored and not included in the final system/config extension. So make sure to place the files you want to include in the correct paths as explained in the section "System/Config extensions under Kairos" above.
+:::
+
 
 ### Verifying the system extensions
 
