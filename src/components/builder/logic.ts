@@ -10,27 +10,24 @@ const BASE_IMAGE_REPOSITORIES: Record<Exclude<BaseFamily, 'hadron'>, string> = {
 };
 
 function getHadronBaseImage(options: BuilderOptions): string {
-  const version = options.hadronVersion;
+  const version = options.hadronVersion.startsWith('v') ? options.hadronVersion : `v${options.hadronVersion}`;
   const isCloud = options.cloud;
   const isTrusted = options.trustedBoot;
   const isFips = options.fips;
 
-  if (isCloud && isTrusted && isFips) {
-    return `ghcr.io/kairos-io/hadron-cloud-trusted:v${version}`;
-  }
   if (isCloud && isTrusted) {
-    return `ghcr.io/kairos-io/hadron-cloud-trusted:v${version}`;
+    return `ghcr.io/kairos-io/hadron-cloud-trusted:${version}`;
   }
   if (isCloud && isFips) {
-    return `ghcr.io/kairos-io/hadron-cloud-fips:v${version}`;
+    return `ghcr.io/kairos-io/hadron-cloud-fips:${version}`;
   }
   if (isCloud) {
-    return `ghcr.io/kairos-io/hadron-cloud:v${version}`;
+    return `ghcr.io/kairos-io/hadron-cloud:${version}`;
   }
   if (isTrusted) {
-    return `ghcr.io/kairos-io/hadron-trusted:v${version}`;
+    return `ghcr.io/kairos-io/hadron-trusted:${version}`;
   }
-  return `ghcr.io/kairos-io/hadron:v${version}`;
+  return `ghcr.io/kairos-io/hadron:${version}`;
 }
 
 export function resolveBaseImage(options: BuilderOptions): string {
@@ -87,7 +84,7 @@ export function generateDockerfile(options: BuilderOptions, kairosInitVersion: s
 
   const extensionStage = options.extendSystem
     ? `
-FROM ghcr.io/kairos-io/hadron-toolchain:v${options.hadronVersion} AS extension-toolchain
+FROM ghcr.io/kairos-io/hadron-toolchain:${options.hadronVersion.startsWith('v') ? options.hadronVersion : `v${options.hadronVersion}`} AS extension-toolchain
 # Use this stage to compile or download binaries.
 # Example:
 # RUN apk add --no-cache build-base
@@ -153,24 +150,20 @@ export function generateAuroraBootDockerCommand(imageRef: string, options: Auror
     const outputType = options.preset === 'uki-iso' ? 'iso' : 'container';
     const cmdParts = [
       ...commonPrefix,
-      'quay.io/kairos/auroraboot:' + options.auroraBootVersion,
+      `quay.io/kairos/auroraboot:${options.auroraBootVersion}`,
       `build-uki -t ${outputType} -d /output/`,
       options.cloudConfigPath.trim() ? `--cloud-config ${options.cloudConfigPath.trim()}` : '',
       options.overlayIsoPath.trim() ? `--overlay-iso ${options.overlayIsoPath.trim()}` : '',
       options.overlayRootfsPath.trim() ? `--overlay-rootfs ${options.overlayRootfsPath.trim()}` : '',
       `oci:${imageRef}`,
     ].filter(Boolean);
+
     return cmdParts.join(' \\\n+  ');
   }
 
   const setArgs: string[] = [];
   setArgs.push(`--set "container_image=oci:${imageRef}"`);
-
-  if (options.preset === 'netboot') {
-    setArgs.push('--set "disable_netboot=false"');
-  } else {
-    setArgs.push('--set "disable_netboot=true"');
-  }
+  setArgs.push(options.preset === 'netboot' ? '--set "disable_netboot=false"' : '--set "disable_netboot=true"');
 
   appendSetArgs(setArgs, 'state_dir', options.stateDir);
   appendSetArgs(setArgs, 'netboot_http_port', options.netbootHttpPort);
@@ -180,30 +173,27 @@ export function generateAuroraBootDockerCommand(imageRef: string, options: Auror
   appendSetArgs(setArgs, 'iso.overlay_iso', options.overlayIsoPath);
   appendSetArgs(setArgs, 'iso.overlay_rootfs', options.overlayRootfsPath);
 
-  if (options.preset === 'raw-efi') {
-    setArgs.push('--set "disk.efi=true"');
-  }
-  if (options.preset === 'raw-bios') {
-    setArgs.push('--set "disk.bios=true"');
-  }
-  if (options.preset === 'raw-gce') {
-    setArgs.push('--set "disk.gce=true"');
-  }
-  if (options.preset === 'raw-vhd') {
-    setArgs.push('--set "disk.vhd=true"');
-  }
-  if (options.preset === 'container') {
-    setArgs.push('--set "output=container"');
-  }
+  if (options.preset === 'raw-efi') setArgs.push('--set "disk.efi=true"');
+  if (options.preset === 'raw-bios') setArgs.push('--set "disk.bios=true"');
+  if (options.preset === 'raw-gce') setArgs.push('--set "disk.gce=true"');
+  if (options.preset === 'raw-vhd') setArgs.push('--set "disk.vhd=true"');
+  if (options.preset === 'container') setArgs.push('--set "output=container"');
 
   additionalSetLines.forEach((line) => setArgs.push(`--set "${line}"`));
 
   const full = [
     ...commonPrefix,
     options.preset.startsWith('raw-') ? '--privileged' : '--net host',
-    'quay.io/kairos/auroraboot:' + options.auroraBootVersion,
+    `quay.io/kairos/auroraboot:${options.auroraBootVersion}`,
     ...setArgs,
   ];
 
   return full.join(' \\\n+  ');
+}
+
+export function generateVmIsoDownloadCommand(hadronVersion: string, kairosVersion: string): string {
+  const hadronTag = hadronVersion.startsWith('v') ? hadronVersion : `v${hadronVersion}`;
+  const artifactName = `kairos-hadron-${hadronTag}-standard-amd64-generic-${kairosVersion}.iso`;
+  const url = `https://github.com/kairos-io/kairos/releases/download/${kairosVersion}/${artifactName}`;
+  return `curl -L "${url}" -o "${artifactName}"`;
 }

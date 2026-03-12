@@ -95,6 +95,7 @@ const docsVersionCustomFields = {
     registryURL: 'quay.io/kairos',
     hadronFlavorRelease: 'v0.0.4',
     k3sVersion: 'v1.35.1+k3s1',
+    k0sVersion: 'v1.35.1+k0s.0',
     flavorOptions: v401FlavorOptions,
     providerVersion: 'v2.14.0',
     auroraBootVersion: 'v0.14.0',
@@ -104,6 +105,7 @@ const docsVersionCustomFields = {
     registryURL: 'quay.io/kairos',
     hadronFlavorRelease: '0.0.1',
     k3sVersion: 'v1.35.0+k3s3',
+    k0sVersion: 'v1.34.3+k0s.0',
     flavorOptions: v372FlavorOptions,
     providerVersion: 'v2.14.0',
     auroraBootVersion: 'v0.14.0',
@@ -113,6 +115,7 @@ const docsVersionCustomFields = {
     registryURL: 'quay.io/kairos',
     hadronFlavorRelease: null,
     k3sVersion: 'v1.34.1+k3s1',
+    k0sVersion: 'v1.34.1+k0s.1',
     flavorOptions: v360FlavorOptions,
     providerVersion: 'v2.14.0',
     auroraBootVersion: 'v0.13.0',
@@ -158,12 +161,18 @@ for (const version of customFieldVersions) {
   if (!docsVersionCustomFields[version as keyof typeof docsVersionCustomFields].k3sVersion) {
     throw new Error(`docsVersionCustomFields[${version}] is missing k3sVersion`);
   }
+  if (!docsVersionCustomFields[version as keyof typeof docsVersionCustomFields].k0sVersion) {
+    throw new Error(`docsVersionCustomFields[${version}] is missing k0sVersion`);
+  }
   if (Number(docsVersionCustomFields[version as keyof typeof docsVersionCustomFields].flavorOptions.length) === 0) {
     throw new Error(`docsVersionCustomFields[${version}] is missing flavorOptions`);
   }
 }
 if (!latestVersionCustomFields.k3sVersion) {
   throw new Error(`latestVersion ${latestVersion} is missing k3sVersion in docsVersionCustomFields`);
+}
+if (!latestVersionCustomFields.k0sVersion) {
+  throw new Error(`latestVersion ${latestVersion} is missing k0sVersion in docsVersionCustomFields`);
 }
 
 // Operator docs versioning (separate lifecycle from Kairos OS docs)
@@ -248,6 +257,7 @@ const config: Config = {
     hadronFlavorRelease: 'v0.0.4',
     kairosVersion: latestVersion,
     k3sVersion: latestVersionCustomFields.k3sVersion,
+    k0sVersion: latestVersionCustomFields.k0sVersion,
     flavorOptions: latestVersionCustomFields.flavorOptions,
     providerVersion: 'v2.14.0',
     latestVersion,

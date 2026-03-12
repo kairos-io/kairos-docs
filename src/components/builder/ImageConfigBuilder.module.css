@@ -23,6 +23,240 @@
   max-width: 76ch;
 }
 
+.easyCard {
+  border: 1px solid #2f4367;
+  border-radius: 14px;
+  background: #0d1a34;
+  padding: 0.9rem;
+}
+
+.easyLayout {
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.easyLeftCol {
+  display: grid;
+  align-content: start;
+  gap: 0.75rem;
+}
+
+.easyConfigShell {
+  position: relative;
+  align-self: stretch;
+  display: flex;
+}
+
+.easyConfigShell .easyConfigArea {
+  margin-top: 0;
+  min-height: 0;
+  height: 100%;
+  padding-right: 2.35rem;
+}
+
+.easyDivider {
+  margin-top: 0.85rem;
+  border-top: 1px solid #2f4367;
+}
+
+.hadronHeader {
+  margin-bottom: 0.75rem;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.hadronTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.hadronTitleRow img {
+  width: 24px;
+  height: 24px;
+}
+
+.hadronTitleRow strong {
+  color: #f1f6ff;
+  font-size: 1.45rem;
+}
+
+.hadronTitleRow span {
+  color: #9cb4de;
+  font-size: 0.78rem;
+}
+
+.byoiAction {
+  border: 0;
+  padding: 0;
+  margin-left: 0;
+  background: transparent;
+  color: #ffb089;
+  text-align: left;
+  font-size: 0.74rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.byoiAction:hover {
+  color: #ffc39f;
+}
+
+.selectorLine {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.7rem;
+  margin-bottom: 0.75rem;
+}
+
+.compactControl {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.compactControl > span {
+  color: #cfe1ff;
+  font-size: 0.79rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.k8sNote {
+  color: #9cb4de;
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+
+.stepper {
+  display: inline-flex;
+  border: 1px solid #3d5788;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.stepBtn {
+  border: 0;
+  border-right: 1px solid #3d5788;
+  background: #0a142a;
+  color: #b9cdef;
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 0.28rem 0.55rem;
+  cursor: pointer;
+}
+
+.stepBtn:last-child {
+  border-right: 0;
+}
+
+.stepBtnActive {
+  background: #ee5007;
+  color: #fff;
+}
+
+.radioGroup {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.fakeSelect {
+  width: 100%;
+  border: 1px solid #3d5788;
+  border-radius: 8px;
+  background: #0a142a;
+  color: #e5efff;
+  padding: 0.48rem 0.58rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.88rem;
+}
+
+.downloadButtons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.installButtons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.installButton {
+  border: 1px solid #3d5788;
+  border-radius: 10px;
+  background: #0a142a;
+  color: #d0e0ff;
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.58rem 0.62rem;
+  text-align: center;
+}
+
+.installButton:hover {
+  border-color: #ff9f6e;
+  background: #2c1a12;
+  color: #ffe6d8;
+}
+
+.isoButton {
+  border: 1px solid #3d5788;
+  border-radius: 10px;
+  background: #0a142a;
+  text-decoration: none;
+  color: #d0e0ff;
+  text-align: left;
+  padding: 0.45rem 0.58rem;
+  display: grid;
+  gap: 0.1rem;
+  width: 100%;
+}
+
+.isoButton strong {
+  font-size: 0.78rem;
+}
+
+.isoButton small {
+  color: #9cb4de;
+  font-size: 0.69rem;
+}
+
+.isoButton:hover {
+  border-color: #ff9f6e;
+  background: #2c1a12;
+}
+
+.altInstallLinks {
+  margin: 0.45rem 0 0;
+  color: #9cb4de;
+  font-size: 0.74rem;
+}
+
+.altInstallLinks a {
+  color: #ffb089;
+  text-decoration: none;
+}
+
+.altInstallLinks a:hover {
+  color: #ffc39f;
+  text-decoration: underline;
+}
+
+.isoButtonDisabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .layout {
   display: grid;
   grid-template-columns: 0.95fr 1.05fr;
@@ -172,6 +406,47 @@
   cursor: pointer;
 }
 
+.iconCopyBtn {
+  position: absolute;
+  top: 0.52rem;
+  right: 0.52rem;
+  width: 1.65rem;
+  height: 1.65rem;
+  border: 1px solid #355385;
+  border-radius: 6px;
+  background: #0f1b34;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.iconCopyBtn:hover {
+  border-color: #ff9f6e;
+}
+
+.copyIcon {
+  position: relative;
+  width: 0.62rem;
+  height: 0.62rem;
+  border: 1px solid #cfe1ff;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.copyIcon::after {
+  content: '';
+  position: absolute;
+  width: 0.62rem;
+  height: 0.62rem;
+  border: 1px solid #cfe1ff;
+  border-radius: 2px;
+  top: -0.26rem;
+  left: -0.26rem;
+  background: transparent;
+}
+
 .codeArea {
   width: 100%;
   min-height: 430px;
@@ -234,11 +509,53 @@
   font-size: 0.76rem;
 }
 
+.drawerBackdrop {
+  position: fixed;
+  inset: 0;
+  background: #030914cc;
+  z-index: 1200;
+  display: flex;
+  align-items: flex-end;
+}
+
+.drawer {
+  width: 100%;
+  max-height: 92vh;
+  overflow: auto;
+  background: #07122a;
+  border-top: 1px solid #2f4367;
+  border-radius: 16px 16px 0 0;
+  padding: 0.9rem 1rem 1.2rem;
+}
+
+.drawerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin-bottom: 0.7rem;
+  color: #f3f8ff;
+}
+
 @media (max-width: 996px) {
+  .easyLayout,
   .layout,
   .rowSplit,
   .rowSplit2,
   .rowSplit4 {
     grid-template-columns: 1fr;
   }
+
+  .compactControl {
+    justify-content: space-between;
+  }
+
+  .downloadButtons {
+    grid-template-columns: 1fr;
+  }
+
+  .installButtons {
+    grid-template-columns: 1fr;
+  }
+
 }
