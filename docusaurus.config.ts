@@ -61,24 +61,59 @@ if (!latestVersion) {
   throw new Error('Unable to determine latest version from versions.json');
 }
 
+const v360FlavorOptions = [
+  {family: 'alpine', flavor: 'alpine', flavorRelease: '3.21', label: 'Alpine 3.21'},
+  {family: 'debian', flavor: 'debian', flavorRelease: '12', label: 'Debian 12'},
+  {family: 'rhel', flavor: 'fedora', flavorRelease: '40', label: 'Fedora 40'},
+  {family: 'opensuse', flavor: 'opensuse', flavorRelease: 'leap-15.6', label: 'openSUSE Leap-15.6'},
+  {family: 'rhel', flavor: 'rocky', flavorRelease: '9.6', label: 'Rocky 9.6'},
+  {family: 'ubuntu', flavor: 'ubuntu', flavorRelease: '25.10', label: 'Ubuntu 25.10'},
+  {family: 'ubuntu', flavor: 'ubuntu', flavorRelease: '24.04', label: 'Ubuntu 24.04'},
+  {family: 'ubuntu', flavor: 'ubuntu', flavorRelease: '22.04', label: 'Ubuntu 22.04'},
+  {family: 'ubuntu', flavor: 'ubuntu', flavorRelease: '20.04', label: 'Ubuntu 20.04'},
+] as const;
+
+const v372FlavorOptions = [
+  {family: 'alpine', flavor: 'alpine', flavorRelease: '3.21', label: 'Alpine 3.21'},
+  {family: 'debian', flavor: 'debian', flavorRelease: '13', label: 'Debian 13'},
+  {family: 'rhel', flavor: 'fedora', flavorRelease: '40', label: 'Fedora 40'},
+  {family: 'opensuse', flavor: 'opensuse', flavorRelease: 'leap-15.6', label: 'openSUSE Leap-15.6'},
+  {family: 'rhel', flavor: 'rocky', flavorRelease: '9.7', label: 'Rocky 9.7'},
+  {family: 'ubuntu', flavor: 'ubuntu', flavorRelease: '25.10', label: 'Ubuntu 25.10'},
+  {family: 'ubuntu', flavor: 'ubuntu', flavorRelease: '24.04', label: 'Ubuntu 24.04'},
+  {family: 'ubuntu', flavor: 'ubuntu', flavorRelease: '22.04', label: 'Ubuntu 22.04'},
+  {family: 'ubuntu', flavor: 'ubuntu', flavorRelease: '20.04', label: 'Ubuntu 20.04'},
+  {family: 'hadron', flavor: 'hadron', flavorRelease: '0.0.1', label: 'Hadron 0.0.1'},
+] as const;
+
+const v401FlavorOptions = [
+  {family: 'hadron', flavor: 'hadron', flavorRelease: 'v0.0.4', label: 'Hadron v0.0.4'},
+] as const;
+
 const docsVersionCustomFields = {
   'v4.0.1': {
     registryURL: 'quay.io/kairos',
-    k3sVersion: 'v1.35.0+k3s3',
+    hadronFlavorRelease: 'v0.0.4',
+    k3sVersion: 'v1.35.1+k3s1',
+    flavorOptions: v401FlavorOptions,
     providerVersion: 'v2.14.0',
     auroraBootVersion: 'v0.14.0',
     kairosInitVersion: 'v0.7.0',
   },
   'v3.7.2': {
     registryURL: 'quay.io/kairos',
+    hadronFlavorRelease: '0.0.1',
     k3sVersion: 'v1.35.0+k3s3',
+    flavorOptions: v372FlavorOptions,
     providerVersion: 'v2.14.0',
     auroraBootVersion: 'v0.14.0',
     kairosInitVersion: 'v0.7.0',
   },
   'v3.6.0': {
     registryURL: 'quay.io/kairos',
-    k3sVersion: 'v1.33.5+k3s1',
+    hadronFlavorRelease: null,
+    k3sVersion: 'v1.34.1+k3s1',
+    flavorOptions: v360FlavorOptions,
     providerVersion: 'v2.14.0',
     auroraBootVersion: 'v0.13.0',
     kairosInitVersion: 'v0.6.2',
@@ -118,6 +153,14 @@ if (missingCustomFieldVersions.length > 0 || extraCustomFieldVersions.length > 0
 const latestVersionCustomFields = docsVersionCustomFields[latestVersion as keyof typeof docsVersionCustomFields];
 if (!latestVersionCustomFields) {
   throw new Error(`latestVersion ${latestVersion} is missing in docsVersionCustomFields`);
+}
+for (const version of customFieldVersions) {
+  if (!docsVersionCustomFields[version as keyof typeof docsVersionCustomFields].k3sVersion) {
+    throw new Error(`docsVersionCustomFields[${version}] is missing k3sVersion`);
+  }
+  if (Number(docsVersionCustomFields[version as keyof typeof docsVersionCustomFields].flavorOptions.length) === 0) {
+    throw new Error(`docsVersionCustomFields[${version}] is missing flavorOptions`);
+  }
 }
 if (!latestVersionCustomFields.k3sVersion) {
   throw new Error(`latestVersion ${latestVersion} is missing k3sVersion in docsVersionCustomFields`);
@@ -202,8 +245,10 @@ const config: Config = {
 
   customFields: {
     registryURL: 'quay.io/kairos',
+    hadronFlavorRelease: 'v0.0.4',
     kairosVersion: latestVersion,
     k3sVersion: latestVersionCustomFields.k3sVersion,
+    flavorOptions: latestVersionCustomFields.flavorOptions,
     providerVersion: 'v2.14.0',
     latestVersion,
     latestOperatorVersion: latestOperatorVersion ?? null,
