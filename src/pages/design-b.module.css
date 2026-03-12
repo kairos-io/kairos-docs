@@ -1,0 +1,636 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@500;600;700;800&family=Instrument+Sans:wght@400;500;600;700&display=swap');
+
+.page {
+  background: #040915;
+  color: #d7e4ff;
+  font-family: 'Instrument Sans', 'Noto Sans', sans-serif;
+}
+
+.wrap,
+.wrapWide,
+.wrapTwo,
+.wrapGrid,
+.wrapFinal,
+.wrapTwoColumn {
+  width: min(1180px, calc(100% - 2.5rem));
+  margin: 0 auto;
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: 6rem 0 5rem;
+  background:
+    radial-gradient(circle at 18% -10%, #1baaff66 0%, transparent 36%),
+    radial-gradient(circle at 82% 18%, #ee500740 0%, transparent 42%),
+    linear-gradient(145deg, #030712 0%, #081f4d 48%, #0a3e95 100%);
+  border-bottom: 1px solid #2b436f;
+}
+
+.orbit {
+  position: absolute;
+  width: 560px;
+  height: 560px;
+  border-radius: 50%;
+  border: 1px solid #7bc9ff2a;
+  right: -180px;
+  top: -150px;
+  box-shadow: inset 0 0 80px #4db8ff21;
+  pointer-events: none;
+}
+
+.heroLayout {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 1rem;
+  align-items: center;
+}
+
+.kicker {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #8fd5ff;
+}
+
+.hero h1 {
+  margin: 1rem 0 0;
+  max-width: 12ch;
+  color: #fff;
+  font-family: 'Exo 2', 'Instrument Sans', sans-serif;
+  font-size: clamp(2.4rem, 5vw, 4.6rem);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+
+.lead {
+  margin: 1.2rem 0 0;
+  max-width: 72ch;
+  color: #d6e8ff;
+  font-size: 1.12rem;
+  line-height: 1.68;
+}
+
+.heroCtas {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.primary,
+.secondary,
+.ghost {
+  text-decoration: none;
+  border-radius: 999px;
+  padding: 0.58rem 1rem;
+  font-weight: 700;
+}
+
+.primary {
+  background: #ee5007;
+  color: #fff;
+}
+
+.secondary {
+  color: #fff;
+  border: 1px solid #8cb2ea;
+}
+
+.ghost {
+  color: #cfe6ff;
+  border: 1px solid #4f78b6;
+  background: #11295499;
+}
+
+.cncfHeroBadge {
+  margin-top: 1rem;
+}
+
+.cncfHeroBadge a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.95rem;
+  text-decoration: none;
+}
+
+.cncfHeroBadge img {
+  width: 183px;
+  height: auto;
+  object-fit: contain;
+}
+
+.cncfHeroBadge span {
+  color: #e2efff;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  font-family: 'Exo 2', 'Instrument Sans', sans-serif;
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.heroLogosPlain {
+  display: grid;
+  justify-items: center;
+  gap: 1.2rem;
+}
+
+.heroLogosPlain img:first-child {
+  width: min(360px, 100%);
+  height: auto;
+}
+
+.heroLogosPlain img:last-child {
+  width: min(300px, 100%);
+  height: auto;
+}
+
+.contract,
+.mission,
+.mediaBand,
+.proofGrid,
+.finalBand,
+.communityEnterprise {
+  padding: 4rem 0;
+}
+
+.contract {
+  background: #050c19;
+}
+
+.contract h2,
+.mission h2,
+.mediaBand h2,
+.proofGrid h2,
+.finalBand h2,
+.communityEnterprise h2 {
+  margin: 0;
+  color: #fff;
+  font-family: 'Exo 2', 'Instrument Sans', sans-serif;
+  letter-spacing: -0.01em;
+}
+
+.contractGrid {
+  margin-top: 1.1rem;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.contractGrid article {
+  border: 1px solid #244170;
+  background: linear-gradient(160deg, #0e1d3d 0%, #0b1a34 100%);
+  border-radius: 14px;
+  padding: 0.9rem;
+}
+
+.contractGrid h3,
+.contractGrid p {
+  margin: 0;
+}
+
+.contractGrid h3 {
+  color: #d8e8ff;
+  font-size: 1.03rem;
+}
+
+.contractGrid p {
+  margin-top: 0.45rem;
+  color: #9ebbe6;
+}
+
+.mission {
+  background:
+    radial-gradient(circle at 88% -5%, #1baaff2e 0%, transparent 38%),
+    linear-gradient(160deg, #07122a 0%, #0a1f4a 58%, #082f6f 100%);
+}
+
+.missionHead {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.missionHead p {
+  margin: 0;
+  color: #a8c2e8;
+}
+
+.missionLayout {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 0.8rem;
+}
+
+.missionStack {
+  display: grid;
+  gap: 0.72rem;
+}
+
+.missionCard {
+  border: 1px solid #3f6398;
+  background: #113069c4;
+  border-radius: 16px;
+  padding: 0.95rem;
+  text-decoration: none;
+  color: inherit;
+  display: grid;
+  gap: 0.42rem;
+}
+
+.missionCard strong {
+  color: #fff;
+  font-size: 1.04rem;
+}
+
+.missionCard span {
+  color: #b6d4ff;
+}
+
+.defaultBundle {
+  border: 1px solid #5d86c0;
+  background: #122f6499;
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+  align-self: start;
+}
+
+.defaultBundle strong {
+  color: #f7fbff;
+}
+
+.bundlePills {
+  margin-top: 0.7rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.bundlePills span {
+  border: 1px solid #6d90c6;
+  background: #174283;
+  color: #e1eeff;
+  border-radius: 999px;
+  padding: 0.34rem 0.68rem;
+  font-size: 0.85rem;
+  line-height: 1.35;
+}
+
+.downloadSubsection {
+  margin-top: 1.2rem;
+  border-top: 1px solid #2f4d7a;
+  padding-top: 1rem;
+}
+
+.downloadSubsection h3 {
+  margin: 0;
+  color: #d7e8ff;
+  font-size: 1.02rem;
+  font-weight: 700;
+}
+
+.altGrid {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.altCard {
+  border: 1px solid #33558a;
+  background: #0e2143;
+  border-radius: 14px;
+  padding: 0.72rem;
+  text-decoration: none;
+  color: inherit;
+  display: grid;
+  gap: 0.3rem;
+}
+
+.altCard strong {
+  color: #f2f7ff;
+  font-size: 0.86rem;
+}
+
+.altCard span {
+  color: #acc8f1;
+  line-height: 1.42;
+  font-size: 0.78rem;
+}
+
+.mediaBand {
+  background: linear-gradient(130deg, #071224 0%, #0f203f 42%, #1b3f7a 100%);
+}
+
+.wrapTwo {
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  gap: 0.9rem;
+  align-items: center;
+}
+
+.videoIntro {
+  border: 1px solid #2d4a7c;
+  background: #0b1730;
+  border-radius: 16px;
+  padding: 1rem;
+}
+
+.videoIntro p {
+  margin: 0.7rem 0 0;
+  color: #9ebbe6;
+}
+
+.subtle {
+  font-size: 0.95rem;
+  color: #7ea4db !important;
+}
+
+.hadronMark {
+  margin-top: 0.9rem;
+  width: min(260px, 100%);
+  height: auto;
+}
+
+.mediaBand iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: 14px;
+  box-shadow: 0 18px 50px -26px rgba(0, 0, 0, 0.58);
+}
+
+.proofGrid {
+  background: #050c18;
+}
+
+.wrapGrid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 0.7rem;
+}
+
+.wrapGrid > article {
+  border: 1px solid #213a63;
+  background: #0a1831;
+  border-radius: 16px;
+  padding: 0.95rem;
+}
+
+.pressList {
+  margin-top: 0.9rem;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.pressList a {
+  border: 1px solid #2f4d7d;
+  background: #0d1f3e;
+  border-radius: 12px;
+  padding: 0.75rem;
+  text-decoration: none;
+  color: inherit;
+  display: grid;
+  grid-template-columns: 30% 1fr;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.pressList img {
+  width: 100%;
+  max-height: 54px;
+  max-width: 100%;
+  background: #06112a;
+  border-radius: 7px;
+  padding: 0.32rem;
+  object-fit: contain;
+}
+
+.pressList span {
+  color: #c2dbff;
+  line-height: 1.42;
+}
+
+.pressLink {
+  display: inline-block;
+  margin-top: 0.9rem;
+  text-decoration: none;
+  color: #8bc1ff;
+  font-weight: 700;
+}
+
+.eventsList {
+  margin-top: 0.9rem;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.event {
+  border: 1px solid #2e4a79;
+  border-radius: 12px;
+  background: #0d1d39;
+  padding: 0.78rem;
+}
+
+.event strong {
+  color: #ff8a4f;
+}
+
+.event p {
+  margin: 0.44rem 0 0;
+  color: #d4e6ff;
+  font-weight: 600;
+}
+
+.event span {
+  display: block;
+  margin-top: 0.3rem;
+  color: #99b5e2;
+}
+
+.event a,
+.wrapGrid article > a {
+  display: inline-block;
+  margin-top: 0.5rem;
+  text-decoration: none;
+  color: #8bc1ff;
+  font-weight: 700;
+}
+
+.finalBand {
+  background: linear-gradient(125deg, #040d1c 0%, #102d66 44%, #ee5007 140%);
+  border-top: 1px solid #2b4676;
+}
+
+.wrapFinal {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.9rem;
+  align-items: start;
+}
+
+.finalBand p {
+  margin-top: 0.8rem;
+  max-width: 760px;
+  color: #cddcf6;
+}
+
+.carousel {
+  border: 1px solid #3d5f95;
+  background: #0e2551bf;
+  border-radius: 16px;
+  padding: 0.7rem;
+}
+
+.carouselTrack {
+  display: flex;
+  gap: 0.7rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+}
+
+.carouselCard {
+  min-width: 82%;
+  scroll-snap-align: start;
+  border: 1px solid #5274aa;
+  background: #132d5db3;
+  border-radius: 12px;
+  padding: 0.8rem;
+}
+
+.carouselCard h3,
+.carouselCard p {
+  margin: 0;
+}
+
+.carouselCard h3 {
+  color: #f2f7ff;
+  font-size: 1rem;
+}
+
+.carouselCard p {
+  margin-top: 0.4rem;
+  color: #c6dafc;
+}
+
+.communityEnterprise {
+  background: #050c18;
+  border-top: 1px solid #27426b;
+}
+
+.wrapTwoColumn {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.wrapTwoColumn article {
+  border: 1px solid #2c3f67;
+  background: #101b36;
+  border-radius: 14px;
+  padding: 1rem;
+}
+
+.wrapTwoColumn p {
+  color: #9aadd4;
+}
+
+.communityList {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.communityItem {
+  border-radius: 12px;
+  border: 1px solid #41619b;
+  background: #13274d;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.7rem;
+  text-decoration: none;
+}
+
+.communityItem svg {
+  width: 24px;
+  height: 24px;
+  fill: #ffffff;
+  flex-shrink: 0;
+}
+
+.communityItem strong {
+  color: #ffffff;
+  display: block;
+  font-size: 0.9rem;
+}
+
+.communityItem span {
+  color: #b9cdef;
+  font-size: 0.83rem;
+}
+
+.enterpriseActionRow {
+  margin-top: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.spectro {
+  max-width: 250px;
+  width: 100%;
+}
+
+.enterpriseLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ff9f6e;
+  text-decoration: none;
+  font-weight: 700;
+  border: 1px solid #ff9f6e;
+  border-radius: 999px;
+  padding: 0.46rem 0.9rem;
+}
+
+@media (max-width: 996px) {
+  .heroLayout,
+  .contractGrid,
+  .missionLayout,
+  .altGrid,
+  .wrapTwo,
+  .wrapGrid,
+  .wrapFinal,
+  .wrapTwoColumn,
+  .pressList a {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    padding-top: 4.8rem;
+  }
+
+  .hero h1 {
+    max-width: 16ch;
+  }
+
+  .orbit {
+    width: 360px;
+    height: 360px;
+    right: -130px;
+    top: -120px;
+  }
+
+  .carouselCard {
+    min-width: 100%;
+  }
+}
