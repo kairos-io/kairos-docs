@@ -183,6 +183,7 @@ spec:
 ```
 
 - **baseImage**: Base image for the build (e.g. `ubuntu:24.04` or a non-kairosified image like `ghcr.io/kairos-io/hadron:v0.0.4`). When set, the operator injects `FROM baseImage` at the top.
+- **model**: Hardware/platform target passed to `kairos-init` (`-m`). Determines device-specific boot and kernel configuration. Use **`generic`** for x86_64/AMD64 or generic ARM; use **`rpi3`** or **`rpi4`** when building images that will boot on Raspberry Pi 3 or 4. If you omit this or use `generic` for a Raspberry Pi, the image may not boot. See [Kairos Factory](/docs/reference/kairos-factory/) for the full flag reference.
 - **buildImage**: Registry, repository, and tag for the built image (useful for tools that bump tags).
 - **push** and **imageCredentialsSecretRef**: Push the built image to a registry; the Secret must contain `.dockerconfigjson` for the registry. The same secret is also used to pull the base image (see [Image credentials: when they are used](#image-credentials-when-they-are-used)).
 
@@ -220,9 +221,29 @@ spec:
   exporters: []
 ```
 
+### Building for Raspberry Pi
+
+When the target device is a Raspberry Pi 3 or 4, set **`spec.image.buildOptions.model`** to `rpi3` or `rpi4` and **`spec.artifacts.arch`** to `arm64`. With a custom OCI spec, pass the same model to `kairos-init` (e.g. `ARG MODEL=rpi4` and `-m "${MODEL}"` in your Dockerfile).
+
+```yaml
+spec:
+  image:
+    buildOptions:
+      version: v3.6.0
+      baseImage: ubuntu:24.04
+      model: rpi4
+      kubernetesDistro: k3s
+      kubernetesVersion: "v1.35.1+k3s1"
+  artifacts:
+    arch: arm64
+    iso: true
+    cloudImage: true
+    # ... cloudConfigRef, exporters, etc.
+```
+
 ### Build with your own OCI spec (full control)
 
-For full control, store your OCI spec (build definition) in a Secret and reference it with `spec.image.ociSpec.ref`. Your definition must include the base image (`FROM`) and any kairos-init logic; the operator does not modify it.
+For full control, store your OCI spec (build definition) in a Secret and reference it with `spec.image.ociSpec.ref`. Your definition must include the base image (`FROM`) and any kairos-init logic; the operator does not modify it. When building for Raspberry Pi, pass the correct **model** to `kairos-init` (e.g. `-m rpi4` or `ARG MODEL=rpi4` and `-m "${MODEL}"`); see [model](#build-with-options-only-default-oci-spec) above.
 
 ```yaml
 ---
