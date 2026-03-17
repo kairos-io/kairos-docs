@@ -775,6 +775,30 @@ The cloud image boots into recovery mode on first boot and partitions the disk. 
 
 ---
 
+## One-off builds: immutability and reusing manifests
+
+An OSArtifact represents a **single build run**. Its **spec is immutable** after creation: the API server rejects any update that changes `spec`. To run another build with different options (e.g. a new image tag or artifact set), create a **new** OSArtifact rather than editing the existing one.
+
+### Reusing the same manifest with generateName
+
+To run the same build configuration repeatedly without editing the YAML each time, use **metadata.generateName** instead of **metadata.name**. Kubernetes will assign a unique name (e.g. `my-build-7x2k9`) when the resource is created. Use **kubectl create** (not **apply**) so each run creates a new OSArtifact:
+
+```yaml
+metadata:
+  generateName: my-kairos-iso-
+  namespace: default
+# do not set metadata.name
+```
+
+```bash
+# Each command creates a new OSArtifact with a generated name.
+kubectl create -f examples/osartifact-importers.yaml
+```
+
+If you use **kubectl apply** with a manifest that has only `generateName`, the first run creates the resource; later runs update the same resource and will fail because **spec is immutable**. So for re-runs with the same file, use **kubectl create -f** so every run is a new resource.
+
+---
+
 ## Monitoring build status
 
 The OSArtifact resource reports status in **status.phase** (and optionally **status.message** for failure details). The phases match the controller logic:
@@ -789,6 +813,17 @@ The OSArtifact resource reports status in **status.phase** (and optionally **sta
 kubectl get osartifact my-kairos-iso
 kubectl describe osartifact my-kairos-iso
 ```
+
+### Streaming build logs
+
+The builder Pod is labeled **`build.kairos.io/artifact=<osartifact-name>`**. To stream logs from the build Pod (all containers, including init containers such as importers and the Kaniko build), use the label with the name of your OSArtifact:
+
+```bash
+# Replace <artifact-name> with the OSArtifact name (e.g. my-kairos-iso or a generated name like my-build-7x2k9).
+kubectl logs -f -l build.kairos.io/artifact=<artifact-name> --all-containers
+```
+
+If you used **generateName**, get the actual name from **`kubectl get osartifacts -n default`**, then use it in the label selector above. Exporter Jobs and their Pods are also labeled **`build.kairos.io/artifact=<artifact-name>`**, so the same selector can be used to stream or inspect exporter logs after the build Pod has finished.
 
 ---
 
