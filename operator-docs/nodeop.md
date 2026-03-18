@@ -35,7 +35,7 @@ metadata:
 kubectl create -f my-nodeop.yaml
 ```
 
-If you use **kubectl apply** with a manifest that has only `generateName`, the first run creates the resource; later runs try to update the same resource and will fail because **spec is immutable**. For re-runs with the same file, use **kubectl create -f** so every run is a new resource.
+If you use **kubectl apply** with a manifest that only sets `generateName` and omits `metadata.name`, it will fail because `apply` requires a fixed `metadata.name` to target a specific resource. For repeated runs with a `generateName` manifest, use **kubectl create -f** so every run creates a new NodeOp. If you instead want `apply` semantics (updating the same NodeOp over time), define an explicit `metadata.name` and avoid `generateName`.
 
 ## Basic Example
 

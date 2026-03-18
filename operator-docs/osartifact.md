@@ -792,10 +792,10 @@ metadata:
 
 ```bash
 # Each command creates a new OSArtifact with a generated name.
-kubectl create -f examples/osartifact-importers.yaml
+kubectl create -f my-osartifact.yaml
 ```
 
-If you use **kubectl apply** with a manifest that has only `generateName`, the first run creates the resource; later runs update the same resource and will fail because **spec is immutable**. So for re-runs with the same file, use **kubectl create -f** so every run is a new resource.
+Note: **kubectl apply** does not support manifests that rely only on `metadata.generateName`. Without `metadata.name`, `apply` cannot identify a stable resource to patch, so the command will fail rather than “create on first run, then update on later runs.” For repeated runs with the same manifest, continue to use **kubectl create -f** so every run creates a new OSArtifact with a fresh generated name.
 
 ---
 
