@@ -15,6 +15,28 @@ This is useful for tasks such as:
 - Running custom maintenance scripts
 - Any operation that requires host-level access
 
+## One-off operations: immutability and reusing manifests
+
+A `NodeOp` represents a **single run** of your command on the target nodes. Its **spec is immutable** after creation: the API server rejects any update that changes `spec`. To run another operation (e.g. a different command or node selector), create a **new** NodeOp rather than editing the existing one.
+
+### Reusing the same manifest with generateName
+
+To run the same operation repeatedly without editing the YAML each time, use **metadata.generateName** instead of **metadata.name**. Kubernetes will assign a unique name (e.g. `my-nodeop-7x2k9`) when the resource is created. Use **kubectl create** (not **apply**) so each run creates a new NodeOp:
+
+```yaml
+metadata:
+  generateName: my-nodeop-
+  namespace: default
+# do not set metadata.name
+```
+
+```bash
+# Each command creates a new NodeOp with a generated name.
+kubectl create -f my-nodeop.yaml
+```
+
+If you use **kubectl apply** with a manifest that has only `generateName`, the first run creates the resource; later runs try to update the same resource and will fail because **spec is immutable**. For re-runs with the same file, use **kubectl create -f** so every run is a new resource.
+
 ## Basic Example
 
 Here's a simple example of a NodeOp resource:
