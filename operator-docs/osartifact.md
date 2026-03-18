@@ -795,7 +795,9 @@ metadata:
 kubectl create -f my-osartifact.yaml
 ```
 
-Note: **kubectl apply** does not support manifests that rely only on `metadata.generateName`. Without `metadata.name`, `apply` cannot identify a stable resource to patch, so the command will fail rather than “create on first run, then update on later runs.” For repeated runs with the same manifest, continue to use **kubectl create -f** so every run creates a new OSArtifact with a fresh generated name.
+:::note
+**kubectl apply** does not support manifests that rely only on `metadata.generateName`. Without `metadata.name`, `apply` cannot identify a stable resource to patch, so the command will fail rather than “create on first run, then update on later runs.” For repeated runs with the same manifest, continue to use **kubectl create -f** so every run creates a new OSArtifact with a fresh generated name.
+:::
 
 ---
 
