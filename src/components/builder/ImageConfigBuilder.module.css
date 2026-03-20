@@ -1,5 +1,5 @@
 .section {
-  padding: 3.9rem 0;
+  padding: 2.2rem 0 2.6rem;
   background: #07122a;
 }
 
@@ -61,6 +61,14 @@
   border-top: 1px solid #2f4367;
 }
 
+.easySubRow {
+  margin-top: 0.55rem;
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  gap: 1rem;
+  align-items: start;
+}
+
 .hadronHeader {
   margin-bottom: 0.75rem;
   display: grid;
@@ -71,6 +79,7 @@
   display: flex;
   align-items: center;
   gap: 0.45rem;
+  flex-wrap: wrap;
 }
 
 .hadronTitleRow img {
@@ -83,17 +92,12 @@
   font-size: 1.45rem;
 }
 
-.hadronTitleRow span {
-  color: #9cb4de;
-  font-size: 0.78rem;
-}
-
 .byoiAction {
   border: 0;
   padding: 0;
   margin-left: 0;
   background: transparent;
-  color: #ffb089;
+  color: #9cb4de;
   text-align: left;
   font-size: 0.74rem;
   font-weight: 500;
@@ -104,7 +108,11 @@
 }
 
 .byoiAction:hover {
-  color: #ffc39f;
+  color: #c1d2ee;
+}
+
+.orAccent {
+  color: #ffb089;
 }
 
 .selectorLine {
@@ -148,7 +156,8 @@
   color: #b9cdef;
   font-size: 0.76rem;
   font-weight: 700;
-  padding: 0.28rem 0.55rem;
+  padding: 0.32rem 0.82rem;
+  white-space: nowrap;
   cursor: pointer;
 }
 
@@ -237,19 +246,37 @@
 }
 
 .altInstallLinks {
-  margin: 0.45rem 0 0;
+  margin: 0;
   color: #9cb4de;
   font-size: 0.74rem;
 }
 
 .altInstallLinks a {
-  color: #ffb089;
+  color: #d0e0ff;
   text-decoration: none;
 }
 
 .altInstallLinks a:hover {
-  color: #ffc39f;
+  color: #e5efff;
   text-decoration: underline;
+}
+
+.exampleConfigCta {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: #9cb4de;
+  text-align: left;
+  font-size: 0.74rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.exampleConfigCta:hover {
+  color: #c1d2ee;
 }
 
 .isoButtonDisabled {
@@ -357,6 +384,33 @@
   border-radius: 14px;
   overflow: hidden;
   background: #0b1220;
+}
+
+.exampleRow {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 0.7rem;
+  padding: 0.55rem;
+  border-bottom: 1px solid #2a3c5d;
+  background: #0d1a34;
+}
+
+.exampleRow .row {
+  margin-top: 0;
+}
+
+.exampleDocsLink {
+  color: #ffb089;
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.exampleDocsLink:hover {
+  color: #ffc39f;
+  text-decoration: underline;
 }
 
 .tabBar {
@@ -537,8 +591,15 @@
   color: #f3f8ff;
 }
 
+.editorHint {
+  margin: 0.45rem 0 0;
+  color: #9cb4de;
+  font-size: 0.75rem;
+}
+
 @media (max-width: 996px) {
   .easyLayout,
+  .easySubRow,
   .layout,
   .rowSplit,
   .rowSplit2,
@@ -548,6 +609,11 @@
 
   .compactControl {
     justify-content: space-between;
+  }
+
+  .exampleRow {
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .downloadButtons {

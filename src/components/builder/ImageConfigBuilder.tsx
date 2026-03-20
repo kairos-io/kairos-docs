@@ -12,6 +12,7 @@ import {
   generateDockerfile,
   hasInvalidHadronCombination,
 } from './logic';
+import {CONFIG_EXAMPLES, getExampleById} from './examples';
 import type {AuroraBootOptions, BaseFamily, BuilderOptions} from './types';
 import styles from './ImageConfigBuilder.module.css';
 
@@ -82,6 +83,7 @@ export default function ImageConfigBuilder(): ReactNode {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<ActiveTab>('dockerfile');
+  const [selectedExampleId, setSelectedExampleId] = useState('blank');
 
   const [easyProfile, setEasyProfile] = useState<EasyProfile>('none');
 
@@ -226,6 +228,7 @@ export default function ImageConfigBuilder(): ReactNode {
   }, [effectiveHadronVersion, effectiveKairosVersion, effectiveK0sVersion, effectiveK3sVersion]);
 
   const invalidCombo = hasInvalidHadronCombination(options);
+  const selectedExample = useMemo(() => getExampleById(selectedExampleId), [selectedExampleId]);
 
   const copyText = async (key: string, text: string): Promise<void> => {
     await navigator.clipboard.writeText(text);
@@ -241,12 +244,19 @@ export default function ImageConfigBuilder(): ReactNode {
     }));
   };
 
+  const applyConfigExample = (id: string): void => {
+    const example = getExampleById(id);
+    setSelectedExampleId(id);
+    setConfigText(example.config);
+    setConfigDirty(false);
+    setActiveTab('config');
+  };
+
   return (
     <section className={styles.section}>
       <div className={styles.wrap}>
         <div className={styles.head}>
-          <Heading as="h2">Image Builder</Heading>
-          <p>Start simple for VM quickstart. Switch to BYOI to open Medium mode, then expand to Expert mode when needed.</p>
+          <Heading as="h2">Download</Heading>
         </div>
 
         <div className={styles.easyCard}>
@@ -254,9 +264,8 @@ export default function ImageConfigBuilder(): ReactNode {
             <div className={styles.easyLeftCol}>
               <div className={styles.hadronHeader}>
                 <div className={styles.hadronTitleRow}>
-                  <strong>Hadron Linux</strong>
+                  <strong>Kairos comes with Hadron Linux</strong>
                   <img src="/img/hadron-linux-icon.svg" alt="Hadron logo" />
-                  <span>crafted for Kairos</span>
                 </div>
                 <button
                   type="button"
@@ -265,26 +274,25 @@ export default function ImageConfigBuilder(): ReactNode {
                     setMode('medium');
                     setDrawerOpen(true);
                   }}>
-                  Or build your own image based on your preferred Linux distribution.
+                  Or build your own image based on your preferred <span className={styles.orAccent}>Linux distribution</span>
                   <span aria-hidden="true">→</span>
                 </button>
               </div>
 
               <div className={styles.selectorLine}>
                 <div className={styles.compactControl}>
-                  <span>With Kubernetes</span>
                   <div className={styles.stepper} role="radiogroup" aria-label="Kubernetes profile">
                     <button
                       type="button"
                       className={`${styles.stepBtn} ${easyProfile === 'none' ? styles.stepBtnActive : ''}`}
                       onClick={() => onEasyProfileChange('none')}>
-                      No
+                      Without Kubernetes
                     </button>
                     <button
                       type="button"
                       className={`${styles.stepBtn} ${easyProfile === 'k3s' ? styles.stepBtnActive : ''}`}
                       onClick={() => onEasyProfileChange('k3s')}>
-                      Yes
+                      With Kubernetes
                     </button>
                   </div>
                 </div>
@@ -298,7 +306,7 @@ export default function ImageConfigBuilder(): ReactNode {
                   setMode('medium');
                   setDrawerOpen(true);
                 }}>
-                Or build your own image with k0s
+                Or build your own image <span className={styles.orAccent}>with k0s</span>
                 <span aria-hidden="true">→</span>
               </button>
 
@@ -314,12 +322,6 @@ export default function ImageConfigBuilder(): ReactNode {
                     <small>Apple Silicon, Ampere</small>
                   </a>
                 </div>
-                <p className={styles.altInstallLinks}>
-                  Or get images for{' '}
-                  <Link to="/docs/installation/cloud-servers/">Public Cloud</Link>
-                  {' '}or{' '}
-                  <Link to="/docs/installation/edge-devices/">Edge Devices</Link>
-                </p>
               </div>
             </div>
 
@@ -343,6 +345,23 @@ export default function ImageConfigBuilder(): ReactNode {
             </div>
           </div>
 
+          <div className={styles.easySubRow}>
+            <p className={styles.altInstallLinks}>
+              Or get images for <Link to="/docs/installation/cloud-servers/">Public Cloud</Link> or <Link to="/docs/installation/edge-devices/">Edge Devices</Link>
+            </p>
+            <button
+              type="button"
+              className={styles.exampleConfigCta}
+              onClick={() => {
+                setMode('medium');
+                setDrawerOpen(true);
+                setActiveTab('config');
+              }}>
+              Or pick one of our <span className={styles.orAccent}>example configs</span>
+              <span aria-hidden="true">→</span>
+            </button>
+          </div>
+
           <div className={styles.easyDivider} />
 
           <div className={styles.row}>
@@ -362,7 +381,7 @@ export default function ImageConfigBuilder(): ReactNode {
           <div className={styles.drawerBackdrop}>
             <div className={styles.drawer}>
               <div className={styles.drawerHeader}>
-                <strong>{mode === 'expert' ? 'Image Builder — Expert' : 'Image Builder — Medium'}</strong>
+                <strong>Image Builder</strong>
                 <div className={styles.inlineActions}>
                   <button type="button" className={styles.ghostBtn} onClick={() => setMode((prev) => (prev === 'expert' ? 'medium' : 'expert'))}>
                     {mode === 'expert' ? 'Less options' : 'More options'}
@@ -418,7 +437,16 @@ export default function ImageConfigBuilder(): ReactNode {
                     </div>
                   </div>
 
-                  <div className={styles.rowSplit2}>
+                  <div className={styles.row}>
+                    <label htmlFor="kairosVersion">Kairos version</label>
+                    <input
+                      id="kairosVersion"
+                      value={options.kairosVersion}
+                      onChange={(event) => setOptions((prev) => ({...prev, kairosVersion: event.target.value}))}
+                    />
+                  </div>
+
+                  {mode === 'expert' && (
                     <div className={styles.row}>
                       <label htmlFor="k8sVersion">Kubernetes version</label>
                       <input
@@ -427,56 +455,52 @@ export default function ImageConfigBuilder(): ReactNode {
                         onChange={(event) => setOptions((prev) => ({...prev, kubernetesVersion: event.target.value}))}
                       />
                     </div>
-                    <div className={styles.row}>
-                      <label htmlFor="kairosVersion">Kairos version</label>
-                      <input
-                        id="kairosVersion"
-                        value={options.kairosVersion}
-                        onChange={(event) => setOptions((prev) => ({...prev, kairosVersion: event.target.value}))}
-                      />
-                    </div>
-                  </div>
+                  )}
 
-                  <div className={styles.rowSplit2}>
-                    <label className={styles.switch}>
-                      <input
-                        type="checkbox"
-                        checked={options.trustedBoot}
-                        disabled={options.baseFamily === 'hadron' && options.cloud && options.fips}
-                        onChange={(event) => setOptions((prev) => ({...prev, trustedBoot: event.target.checked}))}
-                      />
-                      Trusted Boot
-                    </label>
-                    <label className={styles.switch}>
-                      <input
-                        type="checkbox"
-                        checked={options.fips}
-                        disabled={options.baseFamily === 'hadron' && options.cloud && options.trustedBoot}
-                        onChange={(event) => setOptions((prev) => ({...prev, fips: event.target.checked}))}
-                      />
-                      FIPS
-                    </label>
-                  </div>
+                  {mode === 'expert' && (
+                    <>
+                      <div className={styles.rowSplit2}>
+                        <label className={styles.switch}>
+                          <input
+                            type="checkbox"
+                            checked={options.trustedBoot}
+                            disabled={options.baseFamily === 'hadron' && options.cloud && options.fips}
+                            onChange={(event) => setOptions((prev) => ({...prev, trustedBoot: event.target.checked}))}
+                          />
+                          Trusted Boot
+                        </label>
+                        <label className={styles.switch}>
+                          <input
+                            type="checkbox"
+                            checked={options.fips}
+                            disabled={options.baseFamily === 'hadron' && options.cloud && options.trustedBoot}
+                            onChange={(event) => setOptions((prev) => ({...prev, fips: event.target.checked}))}
+                          />
+                          FIPS
+                        </label>
+                      </div>
 
-                  <div className={styles.rowSplit2}>
-                    <label className={styles.switch}>
-                      <input
-                        type="checkbox"
-                        checked={options.cloud}
-                        disabled={options.baseFamily !== 'hadron'}
-                        onChange={(event) => setOptions((prev) => ({...prev, cloud: event.target.checked}))}
-                      />
-                      Cloud variant
-                    </label>
-                    <label className={styles.switch}>
-                      <input
-                        type="checkbox"
-                        checked={options.extendSystem}
-                        onChange={(event) => setOptions((prev) => ({...prev, extendSystem: event.target.checked}))}
-                      />
-                      Extend system stage
-                    </label>
-                  </div>
+                      <div className={styles.rowSplit2}>
+                        <label className={styles.switch}>
+                          <input
+                            type="checkbox"
+                            checked={options.cloud}
+                            disabled={options.baseFamily !== 'hadron'}
+                            onChange={(event) => setOptions((prev) => ({...prev, cloud: event.target.checked}))}
+                          />
+                          Cloud variant
+                        </label>
+                        <label className={styles.switch}>
+                          <input
+                            type="checkbox"
+                            checked={options.extendSystem}
+                            onChange={(event) => setOptions((prev) => ({...prev, extendSystem: event.target.checked}))}
+                          />
+                          Extend system stage
+                        </label>
+                      </div>
+                    </>
+                  )}
 
                   {mode === 'expert' && (
                     <div className={styles.rowSplit2}>
@@ -495,6 +519,21 @@ export default function ImageConfigBuilder(): ReactNode {
                 </div>
 
                 <div className={styles.editorShell}>
+                  <div className={styles.exampleRow}>
+                    <div className={styles.row}>
+                      <label htmlFor="configExample">Example config</label>
+                      <select id="configExample" value={selectedExampleId} onChange={(event) => applyConfigExample(event.target.value)}>
+                        {CONFIG_EXAMPLES.map((example) => (
+                          <option key={example.id} value={example.id}>
+                            {example.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <Link className={styles.exampleDocsLink} to={selectedExample.docsPath}>
+                      View docs
+                    </Link>
+                  </div>
                   <div className={styles.tabBar}>
                     <div className={styles.tabs}>
                       <button
@@ -538,6 +577,7 @@ export default function ImageConfigBuilder(): ReactNode {
                     />
                   )}
                 </div>
+                <p className={styles.editorHint}>Edit config first, Dockerfile and commands update automatically.</p>
               </div>
 
               <div className={styles.commandSection}>

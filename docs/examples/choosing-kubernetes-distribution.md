@@ -19,7 +19,7 @@ FROM quay.io/kairos/kairos-init:{{< KairosInitVersion >}} AS kairos-init
 ARG VERSION=v1.0.0
 
 RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init \
-  /kairos-init -l debug -s install --version "${VERSION}" --provider k3s --provider-version latest && \
+  /kairos-init -l debug -s install --version "${VERSION}" --provider k3s --provider-k3s-version latest && \
   /kairos-init -l debug -s init --version "${VERSION}"
 ```
 
@@ -32,7 +32,7 @@ FROM quay.io/kairos/kairos-init:{{< KairosInitVersion >}} AS kairos-init
 ARG VERSION=v1.0.0
 
 RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init \
-  /kairos-init -l debug -s install --version "${VERSION}" --provider k0s --provider-version latest && \
+  /kairos-init -l debug -s install --version "${VERSION}" --provider k0s --provider-k0s-version latest && \
   /kairos-init -l debug -s init --version "${VERSION}"
 ```
 

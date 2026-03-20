@@ -89,8 +89,12 @@ In case you're using a standard image, with the Kairos provider, then these othe
 
 | **Stage**                                 | **Description**                                                    |
 |-------------------------------------------|--------------------------------------------------------------------|
-| _provider-kairos.bootstrap.before.<role>_ | The provider fires this stage before starting to bootstrap K3S.    |
-| _provider-kairos.bootstrap.after.<role>_  | The provider fires this stage after it finished bootstrapping K3S. |
+| _provider-kairos.bootstrap.before.<role>_ | The provider fires this stage before starting Kubernetes bootstrap. |
+| _provider-kairos.bootstrap.after.<role>_  | The provider fires this stage after Kubernetes bootstrap completes. |
+
+These are lifecycle hooks. They are tied to provider bootstrap flow and are not a generic replacement for every post-boot or post-upgrade action.
+
+For broader provider architecture context, see [Providers](/docs/architecture/providers/).
 
 
 ### System stages with after and before substages

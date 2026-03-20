@@ -270,6 +270,10 @@
   padding: 3.9rem 0;
 }
 
+.catalog {
+  padding: 1.2rem 0 3.2rem;
+}
+
 .catalog,
 .compareSection,
 .stackSection,
@@ -302,9 +306,8 @@
 }
 
 .downloadSubsection {
-  margin-top: 1.15rem;
-  border-top: 1px solid #2b3e63;
-  padding-top: 1.1rem;
+  margin-top: 0;
+  padding-top: 0;
 }
 
 .downloadSubsection h3 {
@@ -438,6 +441,29 @@
   margin: 0.9rem 0 0;
   max-width: 900px;
   color: #f1f6ff;
+}
+
+.uniqueInside {
+  margin-top: 1.2rem;
+}
+
+.uniqueInside h3 {
+  margin: 0;
+  color: #f1f6ff;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.uniqueInsideLead {
+  margin: 0.55rem 0 0;
+  max-width: 900px;
+  color: #f1f6ff;
+}
+
+.uniqueInsideFootnote {
+  margin: 0.55rem 0 0;
+  color: #9cb4de;
+  font-size: 0.78rem;
 }
 
 .distroLogos {

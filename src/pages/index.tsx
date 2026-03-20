@@ -8,12 +8,10 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 import {
   alternativeTracks,
   communityCopy,
-  downloadTracks,
   events,
   getNextEvent,
   heroDescription,
   heroHeadline,
-  heroTechnicalDescription,
   pressItems,
 } from '../components/designs/content';
 import ImageConfigBuilder from '../components/builder/ImageConfigBuilder';
@@ -64,35 +62,23 @@ export default function DesignThreePage(): ReactNode {
     },
   ];
 
-  const downloadTitleByKey: Record<string, string> = {
-    cloud: 'For Public Cloud',
-    edge: 'For Edge Devices',
-    baremetal: 'For Baremetal',
-  };
-
-  const downloadBadgesByKey: Record<string, string[]> = {
-    cloud: ['AWS', 'Azure', 'GCP'],
-    edge: ['RPI', 'NVIDIA'],
-    baremetal: ['x86', 'arm64'],
-  };
-
   const supportedDistributions = [
-    {name: 'Alpine', src: 'https://cdn.simpleicons.org/alpinelinux/0D597F'},
-    {name: 'Debian', src: 'https://cdn.simpleicons.org/debian/A81DFA'},
-    {name: 'Fedora', src: 'https://cdn.simpleicons.org/fedora/51A2DA'},
-    {name: 'Hadron', src: '/img/hadron-linux-icon.svg'},
-    {name: 'openSUSE', src: 'https://cdn.simpleicons.org/opensuse/73BA25'},
-    {name: 'Rocky', src: 'https://cdn.simpleicons.org/rockylinux/10B981'},
-    {name: 'Ubuntu', src: 'https://cdn.simpleicons.org/ubuntu/E95420'},
+    {name: 'Alpine', src: 'https://cdn.simpleicons.org/alpinelinux/0D597F', href: 'https://www.alpinelinux.org/'},
+    {name: 'Debian', src: 'https://cdn.simpleicons.org/debian/A81DFA', href: 'https://www.debian.org/'},
+    {name: 'Fedora', src: 'https://cdn.simpleicons.org/fedora/51A2DA', href: 'https://fedoraproject.org/'},
+    {
+      name: 'Hadron',
+      src: '/img/hadron-linux-icon.svg',
+      href: 'https://hadron-linux.io/',
+    },
+    {name: 'openSUSE', src: 'https://cdn.simpleicons.org/opensuse/73BA25', href: 'https://www.opensuse.org/'},
+    {name: 'Rocky', src: 'https://cdn.simpleicons.org/rockylinux/10B981', href: 'https://rockylinux.org/'},
+    {name: 'Ubuntu', src: 'https://cdn.simpleicons.org/ubuntu/E95420', href: 'https://ubuntu.com/'},
   ];
 
-  const stackFeatures = [
-    {
-      label: 'Hadron Linux',
-      to: '/blog/2025/12/17/introducing-hadron-the-minimal-upstream-first-linux-base-for-kairos/',
-    },
-    {label: 'k3s', href: 'https://docs.k3s.io/', newTab: true},
-    {label: 'P2P Network', to: '/docs/architecture/network/'},
+  const stackFeatures: Array<{label: string; to?: string; href?: string; newTab?: boolean}> = [
+    {label: 'Kubernetes*', to: '/docs/architecture/providers/'},
+    {label: 'P2P Network*', to: '/docs/architecture/network/'},
     {label: 'A/B atomic upgrades', href: 'https://kairos.io/docs/architecture/container/#ab-upgrades'},
     {label: 'Immutable root filesystem', to: '/docs/architecture/immutable/'},
     {label: 'Cloud Init Based', to: '/docs/architecture/cloud-init/'},
@@ -111,10 +97,6 @@ export default function DesignThreePage(): ReactNode {
               <div>
                 <Heading as="h1">{heroHeadline}</Heading>
                 <p>{heroDescription}</p>
-                <div className={styles.quickStartCta}>
-                  <span className={styles.quickStartText}>Spin up kairos on a VM in the time you drink a coffee.</span>
-                  <Link to="/quickstart/" className={styles.quickStartButton}>Quick Start</Link>
-                </div>
               </div>
               <div className={styles.heroLogoWrap}>
                 <img src={useBaseUrl('/img/kairos-horizontal-dark.svg')} alt="Kairos" className={styles.heroLogo} />
@@ -150,43 +132,6 @@ export default function DesignThreePage(): ReactNode {
 
         <section className={styles.catalog} id="download">
           <div className={styles.wrap}>
-            <Heading as="h2">Download Kairos</Heading>
-            <div className={styles.downloadLayout}>
-              {downloadTracks.map((track) => {
-                return (
-                  <Link
-                    key={track.key}
-                    to={track.href}
-                    id={track.key === 'baremetal' ? 'baremetal' : track.key}
-                    className={styles.downloadCardActive}>
-                    <header>
-                      <h3>{downloadTitleByKey[track.key] ?? track.title}</h3>
-                      <div className={styles.downloadBadges}>
-                        {(downloadBadgesByKey[track.key] ?? [track.key.toUpperCase()]).map((badge) => (
-                          <span key={badge}>{badge}</span>
-                        ))}
-                      </div>
-                    </header>
-                    <p>{track.description}</p>
-                  </Link>
-                );
-              })}
-              <aside className={styles.defaultStack}>
-                <strong>What's inside</strong>
-                <div className={styles.stackPills}>
-                  {stackFeatures.map((feature) => (
-                    <Link
-                      key={feature.label}
-                      to={feature.to}
-                      href={feature.href}
-                      target={feature.newTab ? '_blank' : undefined}
-                      rel={feature.newTab ? 'noreferrer' : undefined}>
-                      {feature.label}
-                    </Link>
-                  ))}
-                </div>
-              </aside>
-            </div>
             <div className={styles.downloadSubsection}>
               <h3>Download Alternatives</h3>
               <div className={styles.altGrid}>
@@ -210,11 +155,35 @@ export default function DesignThreePage(): ReactNode {
             </p>
             <div className={styles.distroLogos}>
               {supportedDistributions.map((item) => (
-                <div key={item.name} className={styles.distroLogoItem}>
+                <a
+                  key={item.name}
+                  href={item.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={styles.distroLogoItem}>
                   <img src={item.src} alt={`${item.name} logo`} loading="lazy" />
                   <span>{item.name}</span>
-                </div>
+                </a>
               ))}
+            </div>
+            <div className={styles.uniqueInside}>
+              <h3>What's Inside</h3>
+              <p className={styles.uniqueInsideLead}>
+                Under the hood, Kairos uses OCI image-based deployments, immutable root filesystems, and atomic upgrades distributed via image registries — without locking you to a specific Linux or Kubernetes distribution.
+              </p>
+              <div className={styles.stackPills}>
+                {stackFeatures.map((feature) => (
+                  <Link
+                    key={feature.label}
+                    to={feature.to}
+                    href={feature.href}
+                    target={feature.newTab ? '_blank' : undefined}
+                    rel={feature.newTab ? 'noreferrer' : undefined}>
+                    {feature.label}
+                  </Link>
+                ))}
+              </div>
+              <p className={styles.uniqueInsideFootnote}>* Optional components, enabled only when selected.</p>
             </div>
           </div>
         </section>
@@ -301,12 +270,6 @@ export default function DesignThreePage(): ReactNode {
               choosing which Kubernetes distribution to run on the same operating system model. Bottlerocket, for
               example, ships environment-specific variants rather than a bring-your-own Kubernetes distro approach.
             </p>
-          </div>
-        </section>
-
-        <section className={styles.techBand}>
-          <div className={styles.wrap}>
-            <p className={styles.techBandText}>{heroTechnicalDescription}</p>
           </div>
         </section>
 
