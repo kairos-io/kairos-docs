@@ -831,8 +831,70 @@ If you used **generateName**, get the actual name from **`kubectl get osartifact
 
 ## Accessing built artifacts
 
-- **Exporters**: Configure `spec.exporters` to run jobs that copy, upload, or process the built artifacts (e.g. upload to nginx or S3). Each exporter is a Job template; the artifacts volume is mounted at `/artifacts`.
-- **Direct PVC**: The controller creates a PersistentVolumeClaim for each OSArtifact. PVCs are namespaced: the artifacts PVC is created in the **same namespace as the OSArtifact**, named `<artifact-name>-artifacts`, and labeled `build.kairos.io/artifact=<artifact-name>`. Other pods in that namespace can mount it by name or by selecting that label.
+- **Exporters**: Configure `spec.exporters` to run jobs that copy, upload, or process the built artifacts (e.g. upload to nginx or S3). Each exporter is a Job template; the artifacts volume is mounted at `/artifacts` (read-only for exporter containers).
+- **Default (operator PVC)**: If **`spec.artifacts.volume`** is unset, the controller creates a PersistentVolumeClaim per OSArtifact. The PVC lives in the **same namespace** as the OSArtifact, is named **`<artifact-name>-artifacts`**, and is labeled **`build.kairos.io/artifact=<artifact-name>`**. Other pods in that namespace can mount it by name or by selecting that label. Optional **`spec.volume`** (PersistentVolumeClaimSpec) customizes size and access modes for that PVC.
+- **Custom artifacts volume (`spec.artifacts.volume`)**: Set this field to the **`name` of a volume listed in `spec.volumes`**. The operator then **does not** create the `<artifact-name>-artifacts` PVC. Instead, it uses that volume’s **`VolumeSource`** for all Stage 2 outputs: the builder pod and exporter jobs mount it at **`/artifacts`** (same layout as with the default PVC). Use this when you want artifacts on storage you control—e.g. a **PVC you created yourself**, **`hostPath`** on a bare-metal node, or **NFS**. The name must exist in **`spec.volumes`**; the API rejects references to undefined volumes. Choose a volume name that is **not** reserved (`artifacts`, `rootfs`, `config`, `ocispec`, `cloudconfig`); a common pattern is `host-artifacts` or `my-artifacts`.
+
+### Custom volume example (user PVC or hostPath)
+
+Reference a volume by name under **`spec.artifacts.volume`** and define it under **`spec.volumes`**:
+
+```yaml
+spec:
+  image:
+    ref: quay.io/kairos/hadron:v0.0.4-core-amd64-generic-v4.0.1
+  artifacts:
+    arch: amd64
+    iso: true
+    volume: my-artifacts
+  volumes:
+    - name: my-artifacts
+      persistentVolumeClaim:
+        claimName: my-precreated-pvc
+  exporters: []
+```
+
+For **`hostPath`** (only where your security and scheduling policy allow it), the shape is the same—only the volume source changes:
+
+```yaml
+  artifacts:
+    iso: true
+    volume: host-artifacts
+  volumes:
+    - name: host-artifacts
+      hostPath:
+        path: /mnt/kairos-artifacts
+        type: DirectoryOrCreate
+```
+
+:::caution `hostPath` and the node filesystem
+A **`hostPath`** path is always resolved on the **Kubernetes node** that runs the pod—not on your workstation unless the node *is* that machine. On **kind**, **minikube**, **Docker Desktop**, etc., the “node” is a VM or container with its **own** filesystem, so a path like `/home/you/out` inside the cluster is **not** the same as `/home/you/out` on your laptop.
+:::
+
+### kind: expose a host directory to the node
+
+To write artifacts to a directory on your **real** host while using [kind](https://kind.sigs.k8s.io/), add **`extraMounts`** when you create the cluster so the host path appears at a fixed path **inside** each kind node. Mount that path on **every node** that can run the builder (control-plane and workers). Then point **`hostPath.path`** in the OSArtifact at the **node** path (the `containerPath`), not your home directory inside the node image.
+
+```yaml
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+    extraMounts:
+      - hostPath: /home/you/kairos-out
+        containerPath: /mnt/host-artifacts
+  - role: worker
+    extraMounts:
+      - hostPath: /home/you/kairos-out
+        containerPath: /mnt/host-artifacts
+```
+
+```bash
+mkdir -p /home/you/kairos-out
+kind create cluster --config kind-config.yaml
+```
+
+Use **`/mnt/host-artifacts`** in the OSArtifact **`hostPath.path`**. Files written under `/artifacts` in the build pod will show up under **`/home/you/kairos-out`** on your machine. **`extraMounts`** are fixed at cluster creation; changing them requires recreating the kind cluster.
 
 ---
 
@@ -895,18 +957,22 @@ If nginx is in another namespace, set `NGINX_URL` to `http://kairos-operator-ngi
 - **Scoped bindings**:
   - **Stage 1**: `spec.image.ociSpec.buildContextVolume` — volume name for the OCI build context at `/workspace` (Kaniko). Only used when building from an OCI spec.
   - **Stage 1**: `spec.image.caCertificatesVolume` — volume name for custom CA certificates mounted at `/kaniko/ssl/certs` (Kaniko). Only used when building.
+  - **Stage 2**: `spec.artifacts.volume` — volume name (from `spec.volumes`) used for **build outputs** mounted at `/artifacts` in the builder pod and exporter jobs. When set, the operator does not create the default `<artifact-name>-artifacts` PVC.
   - **Stage 2**: `spec.artifacts.overlayISOVolume`, `spec.artifacts.overlayRootfsVolume` — volume names for AuroraBoot overlay-iso and overlay-rootfs.
   - **UKI**: `spec.artifacts.uki.keysVolume` — volume name for the directory containing UKI signing keys.
 
 :::info Note
-Do not use reserved volume names: `artifacts`, `rootfs`, `config`, `dockerfile`, `cloudconfig`. The controller rejects them.
+Do not use reserved volume names: `artifacts`, `rootfs`, `config`, `ocispec`, `cloudconfig`. The controller rejects them.
 :::
 
 ---
 
 ## Advanced configuration example
 
-Multiple artifact types, custom cloud-config, GRUB, bundles, image pull secrets, and a custom PVC size. The **volume** field is optional: it lets you override the [PersistentVolumeClaimSpec](https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#PersistentVolumeClaimSpec) for the artifacts PVC that the controller creates (name `<artifact-name>-artifacts`). If omitted, the controller uses a default of 10Gi and ReadWriteOnce. Use it when you need more space or different access modes.
+Multiple artifact types, custom cloud-config, GRUB, bundles, image pull secrets, and a custom PVC size.
+
+- **`spec.volume`** (optional): overrides the [PersistentVolumeClaimSpec](https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#PersistentVolumeClaimSpec) for the **operator-created** artifacts PVC (`<artifact-name>-artifacts`). If omitted, the controller defaults to 10Gi and ReadWriteOnce. Ignored when **`spec.artifacts.volume`** is set, because the operator does not create that PVC in that case.
+- **`spec.artifacts.volume`** (optional): use a **custom** volume from **`spec.volumes`** for outputs instead of the operator PVC—see [Accessing built artifacts](#accessing-built-artifacts).
 
 ```yaml
 apiVersion: build.kairos.io/v1alpha2

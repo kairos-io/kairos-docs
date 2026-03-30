@@ -538,7 +538,7 @@ The OSArtifact CRD supports **importers** — init containers that run before th
 For a detailed explanation of what the overlay options do, where files end up, and when to use each one, see [Customizing ISO contents](/docs/reference/auroraboot#customizing-iso-contents) in the AuroraBoot reference.
 
 :::info Note
-Volume names must not collide with names reserved for internal use: `artifacts`, `rootfs`, `config`, `dockerfile`, `cloudconfig`. The controller validates this and will reject specs that use reserved names.
+Volume names must not collide with names reserved for internal use: `artifacts`, `rootfs`, `config`, `ocispec`, `cloudconfig`. The controller validates this and will reject specs that use reserved names.
 :::
 
 ### Example: ISO with Overlay Files from a Remote Source
