@@ -15,9 +15,11 @@ This is useful for tasks such as:
 - Running custom maintenance scripts
 - Any operation that requires host-level access
 
-## One-off operations: immutability and reusing manifests
+## One-off operations and reusing manifests
 
-A `NodeOp` represents a **single run** of your command on the target nodes. Its **spec is immutable** after creation: the API server rejects any update that changes `spec`. To run another operation (e.g. a different command or node selector), create a **new** NodeOp rather than editing the existing one.
+A `NodeOp` represents a **single run** of your command on the target nodes. The controller is built around that lifecycle: it is **not** a `Deployment`-style reconciler where changing `spec` is guaranteed to re-run or fully re-drive the operation. The API **allows** `spec` updates, but you should **not** rely on “edit YAML and apply again to the same name” as a supported way to start a fresh run.
+
+To run another operation (e.g. a different command or node selector), create a **new** `NodeOp` (new name or `generateName` + `kubectl create` as below) instead of expecting an in-place spec change to behave like a new job.
 
 ### Reusing the same manifest with generateName
 
