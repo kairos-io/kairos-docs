@@ -8,13 +8,13 @@ description: Upgrade Kairos nodes using the NodeOpUpgrade custom resource
 
 The `NodeOpUpgrade` custom resource is a Kairos-specific resource for upgrading Kairos nodes. Under the hood, it creates a [NodeOp](../nodeop/) with the appropriate upgrade script and configuration, so you only need to specify the target image and a few options.
 
-## One-off operations: immutability and reusing manifests
+## One-off operations and reusing manifests
 
-A `NodeOpUpgrade` represents a **single upgrade run** on the target nodes. Its **spec is immutable** after creation: the API server rejects any update that changes `spec`. To run another upgrade (e.g. a different image or node selector), create a **new** NodeOpUpgrade rather than editing the existing one.
+A `NodeOpUpgrade` represents a **single upgrade run** on the target nodes. The operator drives one upgrade flow per object; changing `spec` on an existing resource is **not** a supported way to “start over” or switch to a different upgrade plan. The API **allows** `spec` updates, but behavior after an update is **undefined** from a product perspective—create a **new** `NodeOpUpgrade` for a new run.
 
 ### Reusing the same manifest with generateName
 
-To run the same upgrade configuration repeatedly, use **metadata.generateName** instead of **metadata.name** and **kubectl create** (not **apply**) so each run creates a new NodeOpUpgrade. See [NodeOp: One-off operations](../nodeop/#one-off-operations-immutability-and-reusing-manifests) for the same pattern and rationale.
+To run the same upgrade configuration repeatedly, use **metadata.generateName** instead of **metadata.name** and **kubectl create** (not **apply**) so each run creates a new NodeOpUpgrade. See [NodeOp: One-off operations and reusing manifests](../nodeop/#one-off-operations-and-reusing-manifests) for the same pattern and rationale.
 
 ## Basic Example
 

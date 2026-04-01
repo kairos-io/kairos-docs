@@ -775,9 +775,9 @@ The cloud image boots into recovery mode on first boot and partitions the disk. 
 
 ---
 
-## One-off builds: immutability and reusing manifests
+## One-off builds and reusing manifests
 
-An OSArtifact represents a **single build run**. Its **spec is immutable** after creation: the API server rejects any update that changes `spec`. To run another build with different options (e.g. a new image tag or artifact set), create a **new** OSArtifact rather than editing the existing one.
+An OSArtifact represents a **single build run**. The controller progresses that run (pending → building → exporting → ready/error); it does **not** treat arbitrary `spec` changes as “discard work and rebuild from the new spec.” The API **allows** `spec` updates, but you should **not** expect re-applying changed YAML to the **same** resource name to start a clean new build—create a **new** `OSArtifact` for a new build (different inputs, tags, artifact set, etc.).
 
 ### Reusing the same manifest with generateName
 
