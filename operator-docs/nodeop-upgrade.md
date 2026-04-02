@@ -10,7 +10,9 @@ The `NodeOpUpgrade` custom resource is a Kairos-specific resource for upgrading 
 
 ## One-off operations and reusing manifests
 
+:::warning Warning
 A `NodeOpUpgrade` represents a **single upgrade run** on the target nodes. The operator drives one upgrade flow per object; changing `spec` on an existing resource is **not** a supported way to “start over” or switch to a different upgrade plan. The API **allows** `spec` updates, but behavior after an update is **undefined** from a product perspective—create a **new** `NodeOpUpgrade` for a new run.
+:::
 
 ### Reusing the same manifest with generateName
 
