@@ -777,7 +777,9 @@ The cloud image boots into recovery mode on first boot and partitions the disk. 
 
 ## One-off builds and reusing manifests
 
+:::warning Warning
 An OSArtifact represents a **single build run**. The controller progresses that run (pending → building → exporting → ready/error); it does **not** treat arbitrary `spec` changes as “discard work and rebuild from the new spec.” The API **allows** `spec` updates, but you should **not** expect re-applying changed YAML to the **same** resource name to start a clean new build—create a **new** `OSArtifact` for a new build (different inputs, tags, artifact set, etc.).
+:::
 
 ### Reusing the same manifest with generateName
 

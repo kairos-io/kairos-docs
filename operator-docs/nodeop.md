@@ -17,9 +17,11 @@ This is useful for tasks such as:
 
 ## One-off operations and reusing manifests
 
+:::warning Warning
 A `NodeOp` represents a **single run** of your command on the target nodes. The controller is built around that lifecycle: it is **not** a `Deployment`-style reconciler where changing `spec` is guaranteed to re-run or fully re-drive the operation. The API **allows** `spec` updates, but you should **not** rely on “edit YAML and apply again to the same name” as a supported way to start a fresh run.
 
 To run another operation (e.g. a different command or node selector), create a **new** `NodeOp` (new name or `generateName` + `kubectl create` as below) instead of expecting an in-place spec change to behave like a new job.
+:::
 
 ### Reusing the same manifest with generateName
 
