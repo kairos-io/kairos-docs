@@ -13,6 +13,9 @@ type ConditionalVersionDropdownNavbarItemProps = {
   dropdownActiveClassDisabled?: boolean;
   className?: string;
   position?: 'left' | 'right';
+  items?: unknown[];
+  dropdownItemsBefore?: unknown[];
+  dropdownItemsAfter?: unknown[];
 };
 
 export default function ConditionalVersionDropdownNavbarItem({
@@ -36,6 +39,7 @@ export default function ConditionalVersionDropdownNavbarItem({
   const dropdown = (
     <DocsVersionDropdownNavbarItem
       {...dropdownProps}
+      items={dropdownProps.items ?? []}
       dropdownItemsBefore={dropdownProps.dropdownItemsBefore ?? []}
       dropdownItemsAfter={dropdownProps.dropdownItemsAfter ?? []}
     />

@@ -1,3 +1,4 @@
+import type {ReactNode} from 'react';
 import Layout from '@theme/Layout';
 
 type EventItem = {
@@ -60,7 +61,7 @@ const events: EventItem[] = [
   },
 ];
 
-export default function EventsPage(): JSX.Element {
+export default function EventsPage(): ReactNode {
   return (
     <Layout
       title="Events"
