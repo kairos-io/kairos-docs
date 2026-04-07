@@ -30,6 +30,69 @@
   padding: 0.9rem;
 }
 
+.superSimpleHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.45rem;
+}
+
+.osSwitches {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.osSwitch {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: #9cb4de;
+  font-size: 0.74rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.osSwitch:hover {
+  color: #c1d2ee;
+}
+
+.osSwitchActive {
+  color: #ffb089;
+}
+
+.superSimpleIntro {
+  margin: 0;
+  color: #b9cdef;
+  font-size: 0.82rem;
+}
+
+.superSimpleIntro a {
+  color: #ffb089;
+}
+
+.superSimpleShell {
+  position: relative;
+  margin-top: 0.55rem;
+}
+
+.superSimpleCommand {
+  min-height: 232px;
+  padding-right: 2.35rem;
+}
+
+.superSimpleShell .superSimpleCommand {
+  margin-top: 0;
+}
+
+.manualKairosLabCta {
+  margin-top: 0.75rem;
+}
+
 .easyLayout {
   display: grid;
   grid-template-columns: 0.95fr 1.05fr;

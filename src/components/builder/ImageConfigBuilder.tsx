@@ -19,6 +19,33 @@ import styles from './ImageConfigBuilder.module.css';
 type ActiveTab = 'dockerfile' | 'config';
 type BuilderMode = 'easy' | 'medium' | 'expert';
 type EasyProfile = 'k3s' | 'none';
+type HostOs = 'macos' | 'linux' | 'windows' | 'unknown';
+
+function detectHostOs(): HostOs {
+  if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+    return 'unknown';
+  }
+
+  const nav = navigator as Navigator & {userAgentData?: {platform?: string}};
+  const uaDataPlatform = nav.userAgentData?.platform?.toLowerCase() ?? '';
+  const platform = navigator.platform?.toLowerCase() ?? '';
+  const userAgent = navigator.userAgent?.toLowerCase() ?? '';
+  const source = `${uaDataPlatform} ${platform} ${userAgent}`;
+
+  if (source.includes('win')) {
+    return 'windows';
+  }
+
+  if (source.includes('mac') || source.includes('darwin')) {
+    return 'macos';
+  }
+
+  if (source.includes('linux') || source.includes('x11')) {
+    return 'linux';
+  }
+
+  return 'unknown';
+}
 
 const DEFAULT_BASE_TAGS: Record<BaseFamily, string> = {
   hadron: 'v0.0.4',
@@ -86,6 +113,9 @@ export default function ImageConfigBuilder(): ReactNode {
   const [selectedExampleId, setSelectedExampleId] = useState('blank');
 
   const [easyProfile, setEasyProfile] = useState<EasyProfile>('none');
+  const [hostOs, setHostOs] = useState<HostOs>('unknown');
+  const [hostOsOverride, setHostOsOverride] = useState<HostOs | null>(null);
+  const [preferManualFlow, setPreferManualFlow] = useState(false);
 
   const [options, setOptions] = useState<BuilderOptions>({
     baseFamily: 'hadron',
@@ -146,6 +176,28 @@ export default function ImageConfigBuilder(): ReactNode {
   const [auroraCommandDirty, setAuroraCommandDirty] = useState(false);
 
   const easyGeneratedConfig = useMemo(() => getEasyConfig(easyProfile), [easyProfile]);
+  const effectiveHostOs = hostOsOverride ?? hostOs;
+  const kairosLabCommand = useMemo(() => {
+    if (effectiveHostOs === 'macos') {
+      return `brew tap kairos-io/kairos
+brew install kairos-lab
+kairos-lab setup`;
+    }
+
+    if (effectiveHostOs === 'linux') {
+      const installScriptUrl = new URL('install-kairos-lab.sh', window.location.href).toString();
+      return `curl -fsSL "${installScriptUrl}" | sh
+kairos-lab setup`;
+    }
+
+    return '';
+  }, [effectiveHostOs]);
+  const showKairosLabFlow = (effectiveHostOs === 'macos' || effectiveHostOs === 'linux') && !preferManualFlow;
+  const showManualFlow = effectiveHostOs === 'windows' || effectiveHostOs === 'unknown' || preferManualFlow;
+  const canRestoreDetectedOs = hostOsOverride === 'windows' && (hostOs === 'macos' || hostOs === 'linux');
+  const isMacOsSelected = effectiveHostOs === 'macos';
+  const isLinuxSelected = effectiveHostOs === 'linux';
+  const isWindowsSelected = effectiveHostOs === 'windows';
   const easyIsoArtifacts = useMemo(() => {
     const hadronTag = options.hadronVersion.startsWith('v') ? options.hadronVersion : `v${options.hadronVersion}`;
     const variant = easyProfile === 'none' ? 'core' : 'standard';
@@ -196,6 +248,10 @@ export default function ImageConfigBuilder(): ReactNode {
   useEffect(() => {
     if (!easyConfigDirty) setEasyConfigText(easyGeneratedConfig);
   }, [easyConfigDirty, easyGeneratedConfig]);
+
+  useEffect(() => {
+    setHostOs(detectHostOs());
+  }, []);
 
   useEffect(() => {
     if (!copiedKey) return;
@@ -252,6 +308,16 @@ export default function ImageConfigBuilder(): ReactNode {
     setActiveTab('config');
   };
 
+  const onHostOsSelect = (value: Exclude<HostOs, 'unknown'>): void => {
+    setHostOsOverride(value);
+    setPreferManualFlow(value === 'windows');
+  };
+
+  const restoreDetectedOs = (): void => {
+    setHostOsOverride(null);
+    setPreferManualFlow(hostOs === 'windows' || hostOs === 'unknown');
+  };
+
   return (
     <section className={styles.section}>
       <div className={styles.wrap}>
@@ -260,121 +326,189 @@ export default function ImageConfigBuilder(): ReactNode {
         </div>
 
         <div className={styles.easyCard}>
-          <div className={styles.easyLayout}>
-            <div className={styles.easyLeftCol}>
-              <div className={styles.hadronHeader}>
-                <div className={styles.hadronTitleRow}>
-                  <strong>Kairos comes with Hadron Linux</strong>
-                  <img src="/img/hadron-linux-icon.svg" alt="Hadron logo" />
+          {showKairosLabFlow && (
+            <>
+              <div className={styles.superSimpleHeader}>
+                <div className={styles.osSwitches}>
+                  <button
+                    type="button"
+                    className={`${styles.osSwitch} ${isMacOsSelected ? styles.osSwitchActive : ''}`}
+                    onClick={() => onHostOsSelect('macos')}>
+                    macOS
+                  </button>
+                  <button
+                    type="button"
+                    className={`${styles.osSwitch} ${isLinuxSelected ? styles.osSwitchActive : ''}`}
+                    onClick={() => onHostOsSelect('linux')}>
+                    Linux
+                  </button>
+                  <button
+                    type="button"
+                    className={`${styles.osSwitch} ${isWindowsSelected ? styles.osSwitchActive : ''}`}
+                    onClick={() => onHostOsSelect('windows')}>
+                    Windows
+                  </button>
                 </div>
+              </div>
+
+              <p className={styles.superSimpleIntro}>
+                Install <a href="https://github.com/kairos-io/kairos-lab" target="_blank" rel="noreferrer">kairos-lab</a> and get a working local VM setup in a few commands.
+              </p>
+              <div className={styles.superSimpleShell}>
                 <button
                   type="button"
-                  className={styles.byoiAction}
+                  className={styles.iconCopyBtn}
+                  aria-label="Copy kairos-lab install command"
+                  title={copiedKey === 'kairos-lab' ? 'Copied' : 'Copy install command'}
+                  onClick={() => copyText('kairos-lab', kairosLabCommand)}>
+                  <span className={styles.copyIcon} aria-hidden="true" />
+                </button>
+                <textarea readOnly className={`${styles.commandArea} ${styles.superSimpleCommand}`} value={kairosLabCommand} />
+              </div>
+              <button type="button" className={styles.byoiAction} onClick={() => setPreferManualFlow(true)}>
+                Prefer your virtualization software instead
+                <span aria-hidden="true">→</span>
+              </button>
+            </>
+          )}
+
+          {showManualFlow && (
+            <>
+              <div className={styles.easyLayout}>
+                <div className={styles.easyLeftCol}>
+                  <div className={styles.hadronHeader}>
+                    <div className={styles.hadronTitleRow}>
+                      <strong>Kairos comes with Hadron Linux</strong>
+                      <img src="/img/hadron-linux-icon.svg" alt="Hadron logo" />
+                    </div>
+                    <button
+                      type="button"
+                      className={styles.byoiAction}
+                      onClick={() => {
+                        setMode('medium');
+                        setDrawerOpen(true);
+                      }}>
+                      Or build your own image based on your preferred <span className={styles.orAccent}>Linux distribution</span>
+                      <span aria-hidden="true">→</span>
+                    </button>
+                  </div>
+
+                  <div className={styles.selectorLine}>
+                    <div className={styles.compactControl}>
+                      <div className={styles.stepper} role="radiogroup" aria-label="Kubernetes profile">
+                        <button
+                          type="button"
+                          className={`${styles.stepBtn} ${easyProfile === 'none' ? styles.stepBtnActive : ''}`}
+                          onClick={() => onEasyProfileChange('none')}>
+                          Without Kubernetes
+                        </button>
+                        <button
+                          type="button"
+                          className={`${styles.stepBtn} ${easyProfile === 'k3s' ? styles.stepBtnActive : ''}`}
+                          onClick={() => onEasyProfileChange('k3s')}>
+                          With Kubernetes
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    className={styles.byoiAction}
+                    onClick={() => {
+                      setOptions((prev) => ({...prev, kubernetesDistro: 'k0s', kubernetesVersion: effectiveK0sVersion}));
+                      setMode('medium');
+                      setDrawerOpen(true);
+                    }}>
+                    Or build your own image <span className={styles.orAccent}>with k0s</span>
+                    <span aria-hidden="true">→</span>
+                  </button>
+
+                  <div className={styles.row}>
+                    <label>Download ISO</label>
+                    <div className={styles.downloadButtons}>
+                      <a className={styles.isoButton} href={easyIsoArtifacts.amd64Url}>
+                        <strong>x86_64</strong>
+                        <small>Intel / AMD processors</small>
+                      </a>
+                      <a className={styles.isoButton} href={easyIsoArtifacts.arm64Url}>
+                        <strong>ARM64</strong>
+                        <small>Apple Silicon, Ampere</small>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                <div className={styles.easyConfigShell}>
+                  <button
+                    type="button"
+                    className={styles.iconCopyBtn}
+                    aria-label="Copy config.yaml"
+                    title={copiedKey === 'easy-config' ? 'Copied' : 'Copy config.yaml'}
+                    onClick={() => copyText('easy-config', easyConfigText)}>
+                    <span className={styles.copyIcon} aria-hidden="true" />
+                  </button>
+                  <textarea
+                    className={`${styles.commandArea} ${styles.easyConfigArea}`}
+                    value={easyConfigText}
+                    onChange={(event) => {
+                      setEasyConfigText(event.target.value);
+                      setEasyConfigDirty(true);
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div className={styles.easySubRow}>
+                <p className={styles.altInstallLinks}>
+                  Or get images for <Link to="/docs/installation/cloud-servers/">Public Cloud</Link> or <Link to="/docs/installation/edge-devices/">Edge Devices</Link>
+                </p>
+                <button
+                  type="button"
+                  className={styles.exampleConfigCta}
                   onClick={() => {
                     setMode('medium');
                     setDrawerOpen(true);
+                    setActiveTab('config');
                   }}>
-                  Or build your own image based on your preferred <span className={styles.orAccent}>Linux distribution</span>
+                  Or pick one of our <span className={styles.orAccent}>example configs</span>
                   <span aria-hidden="true">→</span>
                 </button>
               </div>
 
-              <div className={styles.selectorLine}>
-                <div className={styles.compactControl}>
-                  <div className={styles.stepper} role="radiogroup" aria-label="Kubernetes profile">
-                    <button
-                      type="button"
-                      className={`${styles.stepBtn} ${easyProfile === 'none' ? styles.stepBtnActive : ''}`}
-                      onClick={() => onEasyProfileChange('none')}>
-                      Without Kubernetes
-                    </button>
-                    <button
-                      type="button"
-                      className={`${styles.stepBtn} ${easyProfile === 'k3s' ? styles.stepBtnActive : ''}`}
-                      onClick={() => onEasyProfileChange('k3s')}>
-                      With Kubernetes
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                className={styles.byoiAction}
-                onClick={() => {
-                  setOptions((prev) => ({...prev, kubernetesDistro: 'k0s', kubernetesVersion: effectiveK0sVersion}));
-                  setMode('medium');
-                  setDrawerOpen(true);
-                }}>
-                Or build your own image <span className={styles.orAccent}>with k0s</span>
-                <span aria-hidden="true">→</span>
-              </button>
+              <div className={styles.easyDivider} />
 
               <div className={styles.row}>
-                <label>Download ISO</label>
-                <div className={styles.downloadButtons}>
-                  <a className={styles.isoButton} href={easyIsoArtifacts.amd64Url}>
-                    <strong>x86_64</strong>
-                    <small>Intel / AMD processors</small>
-                  </a>
-                  <a className={styles.isoButton} href={easyIsoArtifacts.arm64Url}>
-                    <strong>ARM64</strong>
-                    <small>Apple Silicon, Ampere</small>
-                  </a>
+                <label>Install</label>
+                <div className={styles.installButtons}>
+                  <Link className={styles.installButton} to="/quickstart/">
+                    On a Virtual Machine
+                  </Link>
+                  <Link className={styles.installButton} to="/docs/installation/bare-metal/">
+                    On Bare-metal
+                  </Link>
                 </div>
               </div>
-            </div>
 
-            <div className={styles.easyConfigShell}>
-              <button
-                type="button"
-                className={styles.iconCopyBtn}
-                aria-label="Copy config.yaml"
-                title={copiedKey === 'easy-config' ? 'Copied' : 'Copy config.yaml'}
-                onClick={() => copyText('easy-config', easyConfigText)}>
-                <span className={styles.copyIcon} aria-hidden="true" />
-              </button>
-              <textarea
-                className={`${styles.commandArea} ${styles.easyConfigArea}`}
-                value={easyConfigText}
-                onChange={(event) => {
-                  setEasyConfigText(event.target.value);
-                  setEasyConfigDirty(true);
-                }}
-              />
-            </div>
-          </div>
+              {(effectiveHostOs === 'macos' || effectiveHostOs === 'linux') && (
+                <div className={styles.manualKairosLabCta}>
+                  <button type="button" className={styles.byoiAction} onClick={() => setPreferManualFlow(false)}>
+                    Use kairos-lab guided setup instead (only for macOS and Linux)
+                    <span aria-hidden="true">→</span>
+                  </button>
+                </div>
+              )}
 
-          <div className={styles.easySubRow}>
-            <p className={styles.altInstallLinks}>
-              Or get images for <Link to="/docs/installation/cloud-servers/">Public Cloud</Link> or <Link to="/docs/installation/edge-devices/">Edge Devices</Link>
-            </p>
-            <button
-              type="button"
-              className={styles.exampleConfigCta}
-              onClick={() => {
-                setMode('medium');
-                setDrawerOpen(true);
-                setActiveTab('config');
-              }}>
-              Or pick one of our <span className={styles.orAccent}>example configs</span>
-              <span aria-hidden="true">→</span>
-            </button>
-          </div>
-
-          <div className={styles.easyDivider} />
-
-          <div className={styles.row}>
-            <label>Install</label>
-            <div className={styles.installButtons}>
-              <Link className={styles.installButton} to="/quickstart/">
-                On a Virtual Machine
-              </Link>
-              <Link className={styles.installButton} to="/docs/installation/bare-metal/">
-                On Bare-metal
-              </Link>
-            </div>
-          </div>
+              {canRestoreDetectedOs && (
+                <div className={styles.manualKairosLabCta}>
+                  <button type="button" className={styles.byoiAction} onClick={restoreDetectedOs}>
+                    Use detected OS setup instead
+                    <span aria-hidden="true">→</span>
+                  </button>
+                </div>
+              )}
+            </>
+          )}
         </div>
 
         {drawerOpen && (
