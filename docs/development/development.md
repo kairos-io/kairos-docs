@@ -17,7 +17,7 @@ The main Kairos build process is managed by [kairos-init](https://github.com/kai
 
 - [The Kairos repository](https://github.com/kairos-io/kairos) - contains the build definitions for releasing Kairos artifacts and testing changes to Kairos.
 - [The kairos-agent repository](https://github.com/kairos-io/kairos-agent/) contains the `kairos-agent` code which is the Operations interface. IT deals with installing, upgrading, reseting and so on.
-- [The provider-kairos repository](https://github.com/kairos-io/provider-kairos) contains the kairos provider component which uses the SDK to bring up a Kubernetes cluster with `k3s`.
+- [The provider-kairos repository](https://github.com/kairos-io/provider-kairos) contains the official Kairos provider component used to bring up Kubernetes clusters with `k3s` or `k0s`.
 
 ## Build Kairos
 

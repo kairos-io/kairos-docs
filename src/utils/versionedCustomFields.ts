@@ -8,6 +8,7 @@ type DocsCustomFields = {
   flavorOptions: FlavorOption[];
   kairosVersion: string;
   k3sVersion: string;
+  k0sVersion: string;
   providerVersion: string;
   kairosInitVersion: string;
   auroraBootVersion: string;
@@ -29,6 +30,7 @@ const DEFAULT_FIELDS: DocsCustomFields = {
   flavorOptions: [],
   kairosVersion: 'master',
   k3sVersion: '',
+  k0sVersion: '',
   providerVersion: 'latest',
   kairosInitVersion: 'latest',
   auroraBootVersion: 'latest',
@@ -89,6 +91,7 @@ export function useVersionedCustomFields(): DocsCustomFields {
     flavorOptions?: unknown;
     kairosVersion?: unknown;
     k3sVersion?: unknown;
+    k0sVersion?: unknown;
     providerVersion?: unknown;
     kairosInitVersion?: unknown;
     auroraBootVersion?: unknown;
@@ -110,6 +113,10 @@ export function useVersionedCustomFields(): DocsCustomFields {
       typeof cf.k3sVersion === 'string' && cf.k3sVersion.length > 0
         ? cf.k3sVersion
         : DEFAULT_FIELDS.k3sVersion,
+    k0sVersion:
+      typeof cf.k0sVersion === 'string' && cf.k0sVersion.length > 0
+        ? cf.k0sVersion
+        : DEFAULT_FIELDS.k0sVersion,
     providerVersion: String(cf.providerVersion ?? DEFAULT_FIELDS.providerVersion),
     kairosInitVersion: String(cf.kairosInitVersion ?? DEFAULT_FIELDS.kairosInitVersion),
     auroraBootVersion: String(cf.auroraBootVersion ?? DEFAULT_FIELDS.auroraBootVersion),
@@ -117,6 +124,9 @@ export function useVersionedCustomFields(): DocsCustomFields {
 
   if (!base.k3sVersion) {
     throw new Error('Missing customFields.k3sVersion in docusaurus.config.ts');
+  }
+  if (!base.k0sVersion) {
+    throw new Error('Missing customFields.k0sVersion in docusaurus.config.ts');
   }
   if (base.flavorOptions.length === 0) {
     throw new Error('Missing customFields.flavorOptions in docusaurus.config.ts');
@@ -151,6 +161,10 @@ export function useVersionedCustomFields(): DocsCustomFields {
       typeof versionFields.k3sVersion === 'string' && versionFields.k3sVersion.length > 0
         ? versionFields.k3sVersion
         : base.k3sVersion,
+    k0sVersion:
+      typeof versionFields.k0sVersion === 'string' && versionFields.k0sVersion.length > 0
+        ? versionFields.k0sVersion
+        : base.k0sVersion,
     providerVersion: String(versionFields.providerVersion ?? base.providerVersion),
     kairosInitVersion: String(versionFields.kairosInitVersion ?? base.kairosInitVersion),
     auroraBootVersion: String(versionFields.auroraBootVersion ?? base.auroraBootVersion),
