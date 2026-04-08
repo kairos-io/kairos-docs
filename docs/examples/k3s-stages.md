@@ -11,6 +11,8 @@ This tutorial is based on Debian Bookworm. Unit file configurations vary across 
 
 Some use cases require a stage to run after the K3s servers are up, such as applying manifests to the Kubernetes cluster, sending health checks, or any other use case. Using systemd units, we are able to run a stage once a service is started, which can be used for K3s and K3s-server to run steps after the K3s server is up and ready to accept requests.
 
+For provider architecture context (official and community providers, event model, and lifecycle semantics), see [Providers](/docs/architecture/providers/).
+
 # Requirements
 
  - A custom image that adds a systemd unit file to run our stage

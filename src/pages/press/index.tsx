@@ -1,3 +1,4 @@
+import type {ReactNode} from 'react';
 import Layout from '@theme/Layout';
 
 type PressItem = {
@@ -67,7 +68,7 @@ const pressItems: PressItem[] = [
   },
 ];
 
-export default function PressPage(): JSX.Element {
+export default function PressPage(): ReactNode {
   return (
     <Layout
       title="Press"

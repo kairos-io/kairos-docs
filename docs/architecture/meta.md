@@ -12,7 +12,7 @@ We like to define Kairos as a meta-Linux Distribution, as its goal is to convert
 Kairos is a software stack is composed of the following:
 
 - A core OS image release for each flavor in ISO, qcow2, and other similar formats (see [the list of supported distributions](/docs/reference/image_matrix)) provided for user convenience
-- A release with K3s embedded (optional).
+- A standard release with provider-based Kubernetes support (officially maintained provider supports `k3s` and `k0s`, optional).
 - An agent installed into the nodes to manage the node lifecycle.
 
 Every component is extensible and modular such as it can be customized and replaced in the stack and built off either locally or with Kubernetes.
@@ -52,3 +52,5 @@ Optional/External:
 - [entangle-proxy](https://github.com/kairos-io/entangle-proxy) a CRD to control interconnected clusters
 - [osbuilder](https://github.com/kairos-io/osbuilder) is used to build bootable artifacts from container images
 - [AuroraBoot](https://github.com/kairos-io/AuroraBoot) is the Kairos Node bootstrapper
+
+For an architecture-focused overview of providers and how they integrate with kairos-agent, see [Providers](/docs/architecture/providers).

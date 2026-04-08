@@ -135,6 +135,8 @@ Kairos releases its own artifacts with our own cadence, as we are also consumers
 
 kairos-init can generate both core and standard images, and standard images can be bundled with provider plugins (e.g. k3s, k0s) and any version of the software that you want.
 
+For an architecture-focused explanation of providers and how `kairos-agent` integrates with them, see [Providers](/docs/architecture/providers/).
+
 It can also prepare OCI artifacts for [Trusted Boot](/docs/architecture/trustedboot/) which are slimmer than the usual ones, as they have size limitations plus we dont want to ship things like grub or dracut in them as they are useless.
 
 :::warning Breaking change (kairos-init v0.6.0+)

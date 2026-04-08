@@ -660,9 +660,11 @@ Providers are small binaries that can be used to extend the capabilities of Kair
 
 This allows to use the same configuration file to install different Kubernetes distributions or to enable additional features like p2p networking.
 
+For architecture details on provider integration and official vs community providers, see [Providers](/docs/architecture/providers/).
+
 Below is a list of the configurations available for the current providers.
 
-Note that there is currently more providers available but some are community maintained. You should refer to the provider documentation for more information on how to use them.
+Note that there is currently more providers available but some are community maintained. The official provider maintained by the Kairos project is `provider-kairos`.
 
 <Tabs>
 <TabItem value="k3s" label="k3s">

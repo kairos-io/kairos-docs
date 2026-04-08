@@ -36,7 +36,7 @@ More about naming conventions: [Artifact Naming Convention](/docs/reference/arti
 Notes:
 
 - **Core** images do not include a Kubernetes engine and are suitable as a base for customization.
-- **Standard** images include `k3s` and the [kairos provider](https://github.com/kairos-io/provider-kairos), with optional [p2p](/docs/installation/p2p).
+- **Standard** images include a Kubernetes provider. In the official path, [provider-kairos](https://github.com/kairos-io/provider-kairos) supports both `k3s` and `k0s`, with optional [p2p](/docs/installation/p2p).
 
 :::info Legacy flavor example
 Some docs still show concrete flavor/release examples (for example `ubuntu:22.04` or `opensuse:leap-15.6`) to illustrate commands and naming. Those flavor repositories are no longer actively updated by the Kairos release pipeline. Use them as templates and build/publish your own images with [BYOI](/docs/reference/byoi/).
@@ -78,7 +78,7 @@ Release changelogs are available for Kairos core and for each component. Below i
 
 | **Project**                                  	                                | **Release page**                                       	 |
 |-------------------------------------------------------------------------------|----------------------------------------------------------|
-| **Kairos core and standard (k3s support)**                                  	 | https://github.com/kairos-io/kairos/releases      	      |
+| **Kairos core and standard (k3s and k0s support)**                          	 | https://github.com/kairos-io/kairos/releases      	      |
 | **Kairos' provider**                                                          | https://github.com/kairos-io/provider-kairos/releases    |
 | **Immucore**                                                                  | https://github.com/kairos-io/Immucore/releases           |
 | **AuroraBoot**                                                                | https://github.com/kairos-io/AuroraBoot/releases         |
