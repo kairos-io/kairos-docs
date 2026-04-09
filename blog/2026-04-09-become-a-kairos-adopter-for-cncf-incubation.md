@@ -20,7 +20,7 @@ We also understand adoption takes time. If you are currently in a proof-of-conce
 
 <!-- truncate -->
 
-## Why this matters
+## Why Incubation?
 
 Incubation is where CNCF projects start demonstrating stronger maturity signals: more stability, broader production usage, and clearer evidence that the project is useful in real environments.
 
