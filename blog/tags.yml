@@ -2,3 +2,8 @@ kairos:
   label: Kairos
   permalink: /kairos
   description: Posts about Kairos, an open-source, cloud-native, and immutable Linux distribution
+
+cncf:
+  label: CNCF
+  permalink: /cncf
+  description: Posts about Kairos participation and milestones in the CNCF ecosystem
