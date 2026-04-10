@@ -12,7 +12,7 @@ Kairos community,
 
 We are preparing the next major step in our CNCF journey: applying to move from Sandbox to **Incubation**.
 
-To do that, we need to demonstrate healthy and diverse real-world adoption. As part of the CNCF TOC process, projects are expected to provide **5-7 adopters** willing to be interviewed during due diligence.
+To do that, we need to demonstrate healthy and diverse real-world adoption. As part of the [official CNCF TOC project lifecycle and process](https://github.com/cncf/toc/blob/main/process/README.md), projects are expected to provide **5-7 adopters** willing to be interviewed during due diligence.
 
 Today, we are inviting organizations using Kairos to participate as adopters and help us through this milestone.
 
