@@ -77,11 +77,12 @@
 
 .superSimpleShell {
   position: relative;
-  margin-top: 0.55rem;
+  display: flex;
 }
 
 .superSimpleCommand {
-  min-height: 232px;
+  height: 100%;
+  min-height: 0;
   padding-right: 2.35rem;
 }
 
@@ -89,8 +90,49 @@
   margin-top: 0;
 }
 
+.kairosLabGrid {
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  grid-template-rows: auto auto 200px auto;
+  column-gap: 1rem;
+  row-gap: 0.5rem;
+  align-items: start;
+}
+
+.kairosLabGrid .superSimpleShell {
+  height: 100%;
+}
+
+.kairosLabGrid .easyConfigShell {
+  height: 100%;
+  align-self: stretch;
+}
+
 .manualKairosLabCta {
   margin-top: 0.75rem;
+}
+
+.downloadConfigCol {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.downloadConfigCol .easyConfigShell {
+  flex: 1;
+}
+
+.configLabel {
+  margin: 0;
+  color: #b9cdef;
+  font-size: 0.82rem;
+}
+
+.kairosLabNote {
+  margin: 0;
+  color: #9cb4de;
+  font-size: 0.75rem;
+  line-height: 1.4;
 }
 
 .easyLayout {
@@ -101,8 +143,8 @@
 }
 
 .easyLeftCol {
-  display: grid;
-  align-content: start;
+  display: flex;
+  flex-direction: column;
   gap: 0.75rem;
 }
 
@@ -660,14 +702,39 @@
   font-size: 0.75rem;
 }
 
+.openBuilderBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border: 1px solid var(--ifm-color-primary);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ifm-color-primary);
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  margin-bottom: 1.5rem;
+}
+
+.openBuilderBtn:hover {
+  background: var(--ifm-color-primary);
+  color: #fff;
+}
+
 @media (max-width: 996px) {
   .easyLayout,
   .easySubRow,
+  .kairosLabGrid,
   .layout,
   .rowSplit,
   .rowSplit2,
   .rowSplit4 {
     grid-template-columns: 1fr;
+  }
+
+  .kairosLabGrid {
+    grid-template-rows: auto;
   }
 
   .compactControl {
