@@ -516,7 +516,7 @@ iso:
 
 A custom cloud configuration file can be passed either with the `--cloud-config` flag, or in the AuroraBoot configuration file under the `cloud_config` key.
 
-It is possible to apply templating to a cloud config. Indeed any value passed to `--set` is accessible as a template in the cloud config file with the `[[` and `]]` delimiter, for instance consider the following cloud config file, which allows to set a password for the `kairos` user and a GitHub handle allowed to login to the machine:
+It is possible to apply templating to a cloud config. Indeed any value passed to `--set` is accessible as a template in the cloud config file with the `[[[` and `]]]` delimiter, for instance consider the following cloud config file, which allows to set a password for the `kairos` user and a GitHub handle allowed to login to the machine:
 
 ```yaml
 #cloud-config
@@ -529,11 +529,11 @@ install:
 # Define the user accounts on the node.
 users:
 - name: "kairos"                       # The username for the user.
-  passwd: "[[.kairos.password]]"                      # The password for the user.
+  passwd: "[[[.kairos.password]]]"                      # The password for the user.
   groups:
   - admin
   ssh_authorized_keys:                  # A list of SSH keys to add to the user's authorized keys.
-  - github:[[.github.user]]
+  - github:[[[.github.user]]]
 ```
 
 We would then set the user to `mudler` and the password to `foobar` when running AuroraBoot like the following:
