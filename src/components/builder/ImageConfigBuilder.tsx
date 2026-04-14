@@ -1,5 +1,5 @@
 import type {ReactNode} from 'react';
-import {useEffect, useMemo, useState} from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
 import Link from '@docusaurus/Link';
 import Heading from '@theme/Heading';
 
@@ -76,6 +76,9 @@ export default function ImageConfigBuilder(): ReactNode {
   const [hostOs, setHostOs] = useState<HostOs>('unknown');
   const [hostOsOverride, setHostOsOverride] = useState<HostOs | null>(null);
   const [preferManualFlow, setPreferManualFlow] = useState(false);
+  const easyConfigRef = useRef<HTMLTextAreaElement | null>(null);
+  const kairosLabCommandRef = useRef<HTMLTextAreaElement | null>(null);
+  const kairosLabConfigRef = useRef<HTMLTextAreaElement | null>(null);
 
   const effectiveHostOs = hostOsOverride ?? hostOs;
   const kairosLabCommand = useMemo(() => {
@@ -151,6 +154,45 @@ kairos-lab setup`;
     return () => window.clearTimeout(timeout);
   }, [copiedKey]);
 
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const stackedMediaQuery = window.matchMedia('(max-width: 996px)');
+
+    const resizeTextarea = (textarea: HTMLTextAreaElement | null): void => {
+      if (!textarea) {
+        return;
+      }
+
+      if (!stackedMediaQuery.matches) {
+        textarea.style.height = '';
+        return;
+      }
+
+      textarea.style.height = 'auto';
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    };
+
+    const resizeAll = (): void => {
+      resizeTextarea(easyConfigRef.current);
+      resizeTextarea(kairosLabCommandRef.current);
+      resizeTextarea(kairosLabConfigRef.current);
+    };
+
+    resizeAll();
+
+    const onMediaChange = (): void => resizeAll();
+    stackedMediaQuery.addEventListener('change', onMediaChange);
+    window.addEventListener('resize', resizeAll);
+
+    return () => {
+      stackedMediaQuery.removeEventListener('change', onMediaChange);
+      window.removeEventListener('resize', resizeAll);
+    };
+  }, [easyConfigText, kairosLabCommand, kairosLabConfigText]);
+
   const copyText = async (key: string, text: string): Promise<void> => {
     await navigator.clipboard.writeText(text);
     setCopiedKey(key);
@@ -209,6 +251,7 @@ kairos-lab setup`;
           <span className={styles.copyIcon} aria-hidden="true" />
         </button>
         <textarea
+          ref={easyConfigRef}
           className={`${styles.commandArea} ${styles.easyConfigArea}`}
           value={easyConfigText}
           onChange={(event) => {
@@ -250,7 +293,12 @@ kairos-lab setup`;
                   onClick={() => copyText('kairos-lab', kairosLabCommand)}>
                   <span className={styles.copyIcon} aria-hidden="true" />
                 </button>
-                <textarea readOnly className={`${styles.commandArea} ${styles.superSimpleCommand}`} value={kairosLabCommand} />
+                <textarea
+                  ref={kairosLabCommandRef}
+                  readOnly
+                  className={`${styles.commandArea} ${styles.superSimpleCommand}`}
+                  value={kairosLabCommand}
+                />
               </div>
               <div className={styles.easyConfigShell}>
                 <button
@@ -262,6 +310,7 @@ kairos-lab setup`;
                   <span className={styles.copyIcon} aria-hidden="true" />
                 </button>
                 <textarea
+                  ref={kairosLabConfigRef}
                   className={`${styles.commandArea} ${styles.easyConfigArea}`}
                   value={kairosLabConfigText}
                   onChange={(event) => {

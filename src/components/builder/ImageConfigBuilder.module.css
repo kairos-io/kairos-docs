@@ -737,6 +737,26 @@
     grid-template-rows: auto;
   }
 
+  .kairosLabGrid .superSimpleShell,
+  .kairosLabGrid .easyConfigShell,
+  .downloadConfigCol .easyConfigShell {
+    height: auto;
+  }
+
+  .kairosLabGrid .easyConfigShell {
+    align-self: start;
+  }
+
+  .superSimpleCommand,
+  .easyConfigShell .easyConfigArea {
+    height: auto;
+  }
+
+  .commandArea {
+    resize: none;
+    overflow: hidden;
+  }
+
   .compactControl {
     justify-content: space-between;
   }
