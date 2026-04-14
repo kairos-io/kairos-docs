@@ -235,6 +235,19 @@ upgrade:
     - /data
     - /src
 
+# Various other fields that can be set.
+# They govern image verification, boot behavior, and TPM/krypt binding.
+config_url: <string>              # URL to fetch and merge config from (can be chained)
+fail_on_bundles_errors: <bool>    # If true, fail when bundle errors occur instead of continuing
+eject-cd: <bool>                  # Eject CD after boot when booted from CD
+cosign: <bool>                    # Enable cosign verification for container images
+verify: <bool>                    # Verify images (used with cosign)
+cosign-key: <string>              # Public key path or URL for cosign verification
+arch: <string>                    # Target architecture (e.g. amd64, arm64)
+squash-no-compression: <bool>     # Disable squashfs compression when building images
+bind-pcrs: <[]string>             # TPM PCR indices to bind kcrypt to
+bind-public-pcrs: <[]string>      # Expected PCR values for kcrypt binding (public)
+
 
 k3s:
   # Additional env/args for k3s server instances
