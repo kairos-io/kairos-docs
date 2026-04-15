@@ -889,6 +889,10 @@
     height: 1px;
   }
 
+  .heroLogoWrap {
+    display: none;
+  }
+
   .quickStartCta {
     flex-wrap: wrap;
   }

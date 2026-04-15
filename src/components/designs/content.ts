@@ -60,9 +60,14 @@ export const alternativeTracks = [
     href: '/quickstart/',
   },
   {
-    title: 'Development images',
-    description: 'Use development pipelines to build and iterate quickly.',
-    href: '/docs/development/',
+    title: 'Public Cloud',
+    description: 'Deploy reproducible images for cloud VMs and virtualized infrastructure.',
+    href: '/docs/installation/cloud-servers/',
+  },
+  {
+    title: 'Edge Devices',
+    description: 'Run on devices such as Raspberry Pi and Nvidia Orin with the same lifecycle model.',
+    href: '/docs/installation/edge-devices/',
   },
 ];
 
