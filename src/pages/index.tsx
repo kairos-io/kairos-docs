@@ -128,23 +128,7 @@ export default function DesignThreePage(): ReactNode {
           </div>
         </section>
 
-        <ImageConfigBuilder />
-
-        <section className={styles.catalog} id="download">
-          <div className={styles.wrap}>
-            <div className={styles.downloadSubsection}>
-              <h3>Download Alternatives</h3>
-              <div className={styles.altGrid}>
-                {design3AlternativeTracks.map((item) => (
-                  <Link key={item.title} to={item.href}>
-                    <strong>{item.title}</strong>
-                    <span>{item.description}</span>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
+        <ImageConfigBuilder alternatives={design3AlternativeTracks} />
 
         <section className={styles.unique}>
           <div className={styles.wrap}>

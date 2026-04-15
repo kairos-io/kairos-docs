@@ -23,6 +23,86 @@
   max-width: 76ch;
 }
 
+.downloadLayout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.downloadMain {
+  display: flex;
+  flex-direction: column;
+}
+
+.downloadAlternatives {
+  display: flex;
+  flex-direction: column;
+}
+
+.alternativesScroller {
+  border: 1px solid #2f4367;
+  border-radius: 14px;
+  background: #0d1a34;
+  padding: 0.9rem;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #3d5788 #0d1a34;
+}
+
+.alternativesScroller::-webkit-scrollbar {
+  width: 6px;
+}
+
+.alternativesScroller::-webkit-scrollbar-track {
+  background: #0d1a34;
+  border-radius: 3px;
+}
+
+.alternativesScroller::-webkit-scrollbar-thumb {
+  background: #3d5788;
+  border-radius: 3px;
+}
+
+.alternativesScroller::-webkit-scrollbar-thumb:hover {
+  background: #4a6a9a;
+}
+
+.altGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.altItem {
+  display: block;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #2f4367;
+  border-radius: 10px;
+  background: #0a142a;
+  text-decoration: none;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.altItem:hover {
+  border-color: #ff9f6e;
+  background: #2c1a12;
+}
+
+.altItem strong {
+  display: block;
+  color: #d0e0ff;
+  font-size: 0.82rem;
+  margin-bottom: 0.15rem;
+}
+
+.altItem span {
+  display: block;
+  color: #9cb4de;
+  font-size: 0.72rem;
+  line-height: 1.35;
+}
+
 .easyCard {
   border: 1px solid #2f4367;
   border-radius: 14px;
@@ -75,6 +155,22 @@
   color: #ffb089;
 }
 
+.inlineOsLink {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: #ffb089;
+  font-size: inherit;
+  font-weight: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.inlineOsLink:hover {
+  color: #ffc9a8;
+}
+
 .superSimpleShell {
   position: relative;
   display: flex;
@@ -82,7 +178,7 @@
 
 .superSimpleCommand {
   height: 100%;
-  min-height: 0;
+  min-height: 70px;
   padding-right: 2.35rem;
 }
 
@@ -91,12 +187,9 @@
 }
 
 .kairosLabGrid {
-  display: grid;
-  grid-template-columns: 0.95fr 1.05fr;
-  grid-template-rows: auto auto 200px auto;
-  column-gap: 1rem;
-  row-gap: 0.5rem;
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .kairosLabGrid .superSimpleShell {
@@ -411,7 +504,7 @@
 .row {
   margin-top: 0.7rem;
   display: grid;
-  gap: 0.35rem;
+  gap: 1rem;
 }
 
 .row label {
@@ -649,7 +742,7 @@
 
 .commandArea {
   width: 100%;
-  min-height: 142px;
+  min-height: 70px;
   margin-top: 0.7rem;
   border: 1px solid #355385;
   border-radius: 9px;
@@ -723,6 +816,7 @@
 }
 
 @media (max-width: 996px) {
+  .downloadLayout,
   .easyLayout,
   .easySubRow,
   .kairosLabGrid,
@@ -731,6 +825,11 @@
   .rowSplit2,
   .rowSplit4 {
     grid-template-columns: 1fr;
+  }
+
+  .alternativesScroller {
+    max-height: none;
+    overflow-y: visible;
   }
 
   .kairosLabGrid {
