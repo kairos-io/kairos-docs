@@ -379,6 +379,7 @@ while ((match = entryRegex.exec(existingBlock)) !== null) {
     registryURL: extractString(body, 'registryURL'),
     hadronFlavorRelease: extractNullable(body, 'hadronFlavorRelease'),
     k3sVersion: extractString(body, 'k3sVersion'),
+    k0sVersion: extractString(body, 'k0sVersion'),
     flavorOptions: extractIdentifier(body, 'flavorOptions'),
     providerVersion: extractString(body, 'providerVersion'),
     auroraBootVersion: extractString(body, 'auroraBootVersion'),
@@ -413,6 +414,7 @@ for (const version of parsedFolderVersions) {
       registryURL: template.registryURL,
       hadronFlavorRelease: coalesce(hadronVersion, template.hadronFlavorRelease),
       k3sVersion: coalesce(k3sVersion, template.k3sVersion),
+      k0sVersion: template.k0sVersion,
       flavorOptions: template.flavorOptions,
       providerVersion: coalesce(providerVersion, template.providerVersion),
       auroraBootVersion: coalesce(auroraBootVersion, template.auroraBootVersion),
@@ -427,6 +429,7 @@ for (const version of parsedFolderVersions) {
       registryURL: template.registryURL,
       hadronFlavorRelease: template.hadronFlavorRelease,
       k3sVersion: template.k3sVersion,
+      k0sVersion: template.k0sVersion,
       flavorOptions: template.flavorOptions,
       providerVersion: template.providerVersion,
       auroraBootVersion: template.auroraBootVersion,
@@ -448,6 +451,7 @@ for (const version of parsedFolderVersions) {
     lines.push(`    hadronFlavorRelease: '${cfg.hadronFlavorRelease}',`);
   }
   lines.push(`    k3sVersion: '${cfg.k3sVersion}',`);
+  lines.push(`    k0sVersion: '${cfg.k0sVersion}',`);
   lines.push(`    flavorOptions: ${cfg.flavorOptions},`);
   lines.push(`    providerVersion: '${cfg.providerVersion}',`);
   lines.push(`    auroraBootVersion: '${cfg.auroraBootVersion}',`);

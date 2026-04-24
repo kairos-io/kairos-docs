@@ -1,5 +1,29 @@
 #!/bin/bash
 
+# Helper function for curl with proper error handling and optional auth
+# Uses GH_TOKEN or GITHUB_TOKEN if available for authentication
+_curl_github() {
+    local url="$1"
+    local auth_header=""
+    
+    if [ -n "${GH_TOKEN:-}" ]; then
+        auth_header="Authorization: Bearer $GH_TOKEN"
+    elif [ -n "${GITHUB_TOKEN:-}" ]; then
+        auth_header="Authorization: Bearer $GITHUB_TOKEN"
+    fi
+    
+    if [ -n "$auth_header" ]; then
+        curl -fSs -H "Accept: application/vnd.github.v3+json" -H "$auth_header" "$url"
+    else
+        curl -fSs -H "Accept: application/vnd.github.v3+json" "$url"
+    fi
+}
+
+# Helper function for curl to raw content (no auth needed typically)
+_curl_raw() {
+    curl -fSs "$1"
+}
+
 # Function to fetch all release branches
 # Returns a list of all release branches sorted by version
 fetch_all_releases() {
@@ -16,9 +40,7 @@ get_latest_kairos_release() {
     local api_url="https://api.github.com/repos/kairos-io/kairos/releases/latest"
     local response
     
-    response=$(curl -s -H "Accept: application/vnd.github.v3+json" "$api_url")
-    
-    if [ $? -ne 0 ]; then
+    if ! response=$(_curl_github "$api_url"); then
         echo "Error: Failed to fetch latest release from GitHub API" >&2
         return 1
     fi
@@ -53,9 +75,7 @@ get_kairos_init_version() {
     local dockerfile_url="https://raw.githubusercontent.com/kairos-io/kairos/refs/tags/$version/images/Dockerfile"
     local response
     
-    response=$(curl -s "$dockerfile_url")
-    
-    if [ $? -ne 0 ]; then
+    if ! response=$(_curl_raw "$dockerfile_url"); then
         echo "Error: Failed to fetch Dockerfile for version $version" >&2
         return 1
     fi
@@ -79,9 +99,7 @@ get_k3s_version_from_release() {
     local api_url="https://api.github.com/repos/kairos-io/kairos/releases/tags/$kairos_version"
     local response
     
-    response=$(curl -s -H "Accept: application/vnd.github.v3+json" "$api_url")
-    
-    if [ $? -ne 0 ]; then
+    if ! response=$(_curl_github "$api_url"); then
         echo "Error: Failed to fetch release data for version $kairos_version" >&2
         return 1
     fi
@@ -115,9 +133,7 @@ get_latest_auroraboot_version() {
     local api_url="https://api.github.com/repos/kairos-io/AuroraBoot/releases/latest"
     local response
     
-    response=$(curl -s -H "Accept: application/vnd.github.v3+json" "$api_url")
-    
-    if [ $? -ne 0 ]; then
+    if ! response=$(_curl_github "$api_url"); then
         echo "Error: Failed to fetch latest AuroraBoot release from GitHub API" >&2
         return 1
     fi
@@ -141,9 +157,7 @@ get_hadron_version_from_release() {
     local api_url="https://api.github.com/repos/kairos-io/kairos/releases/tags/$kairos_version"
     local response
     
-    response=$(curl -s -H "Accept: application/vnd.github.v3+json" "$api_url")
-    
-    if [ $? -ne 0 ]; then
+    if ! response=$(_curl_github "$api_url"); then
         echo "Error: Failed to fetch release data for version $kairos_version" >&2
         return 1
     fi
@@ -158,7 +172,7 @@ get_hadron_version_from_release() {
     
     # Extract Hadron version from artifact names
     # Pattern: extract v0.0.4 from "kairos-hadron-v0.0.4-core-amd64-generic-v4.0.3.iso"
-    local extracted_version=$(echo "$hadron_artifacts" | grep -oE 'hadron-v[0-9]+\.[0-9]+\.[0-9]+' | sed 's/hadron-//' | sort -u | head -n1)
+    local extracted_version=$(echo "$hadron_artifacts" | grep -oE 'hadron-v[0-9]+\.[0-9]+\.[0-9]+' | sed 's/hadron-//' | sort -Vu | tail -n1)
     
     if [ -z "$extracted_version" ]; then
         echo "Error: Could not extract Hadron version from artifact names" >&2
@@ -179,9 +193,7 @@ get_component_versions() {
     local makefile_url="https://raw.githubusercontent.com/kairos-io/kairos-init/refs/tags/$kairos_init_version/Makefile"
     local response
     
-    response=$(curl -s "$makefile_url")
-    
-    if [ $? -ne 0 ]; then
+    if ! response=$(_curl_raw "$makefile_url"); then
         echo "Error: Failed to fetch Makefile for kairos-init version $kairos_init_version" >&2
         return 1
     fi
