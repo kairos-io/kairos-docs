@@ -82,15 +82,6 @@ log() {
     esac
 }
 
-version_key() {
-    local version="$1"
-    if [[ "$version" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
-        echo "${BASH_REMATCH[1]}.${BASH_REMATCH[2]}"
-        return 0
-    fi
-    return 1
-}
-
 list_local_doc_versions() {
     shopt -s nullglob
     local path
