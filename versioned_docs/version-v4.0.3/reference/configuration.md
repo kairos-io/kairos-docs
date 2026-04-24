@@ -235,6 +235,19 @@ upgrade:
     - /data
     - /src
 
+# Various other fields that can be set.
+# They govern image verification, boot behavior, and TPM/krypt binding.
+config_url: <string>              # URL to fetch and merge config from (can be chained)
+fail_on_bundles_errors: <bool>    # If true, fail when bundle errors occur instead of continuing
+eject-cd: <bool>                  # Eject CD after boot when booted from CD
+cosign: <bool>                    # Enable cosign verification for container images
+verify: <bool>                    # Verify images (used with cosign)
+cosign-key: <string>              # Public key path or URL for cosign verification
+arch: <string>                    # Target architecture (e.g. amd64, arm64)
+squash-no-compression: <bool>     # Disable squashfs compression when building images
+bind-pcrs: <[]string>             # TPM PCR indices to bind kcrypt to
+bind-public-pcrs: <[]string>      # Expected PCR values for kcrypt binding (public)
+
 
 k3s:
   # Additional env/args for k3s server instances
@@ -660,9 +673,11 @@ Providers are small binaries that can be used to extend the capabilities of Kair
 
 This allows to use the same configuration file to install different Kubernetes distributions or to enable additional features like p2p networking.
 
+For architecture details on provider integration and official vs community providers, see [Providers](/docs/architecture/providers/).
+
 Below is a list of the configurations available for the current providers.
 
-Note that there is currently more providers available but some are community maintained. You should refer to the provider documentation for more information on how to use them.
+Note that there is currently more providers available but some are community maintained. The official provider maintained by the Kairos project is `provider-kairos`.
 
 <Tabs>
 <TabItem value="k3s" label="k3s">
