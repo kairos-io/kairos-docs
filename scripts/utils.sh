@@ -152,6 +152,44 @@ get_latest_auroraboot_version() {
 # Arguments:
 #   $1: kairos_version (e.g., v4.0.3)
 # Returns: Hadron version (e.g., v0.0.4) or empty string on error
+# Function to extract k0s version from GitHub release artifacts
+# Arguments:
+#   $1: kairos_version (e.g., v4.0.1)
+# Returns: k0s version (e.g., v1.34.4+k0s.0) or empty string if not found
+get_k0s_version_from_release() {
+    local kairos_version="$1"
+    local api_url="https://api.github.com/repos/kairos-io/kairos/releases/tags/$kairos_version"
+    local response
+    
+    if ! response=$(_curl_github "$api_url"); then
+        echo "Error: Failed to fetch release data for version $kairos_version" >&2
+        return 1
+    fi
+    
+    # Extract artifact names that contain "+k0s"
+    local k0s_versions=$(echo "$response" | jq -r '.assets[] | select(.name | contains("+k0s")) | .name' 2>/dev/null)
+    
+    if [ -z "$k0s_versions" ]; then
+        # k0s artifacts not found in this release - return empty (not an error)
+        echo ""
+        return 0
+    fi
+    
+    # Extract k0s versions from artifact names
+    # Pattern: extract v1.34.4+k0s.0 from "kairos-hadron-v0.0.4-standard-amd64-generic-v4.0.1-k0sv1.34.4+k0s.0.iso"
+    local extracted_versions=$(echo "$k0s_versions" | grep -oE 'k0sv[0-9]+\.[0-9]+\.[0-9]+\+k0s\.[0-9]+' | sed 's/k0s//' | sort -u)
+    
+    if [ -z "$extracted_versions" ]; then
+        echo ""
+        return 0
+    fi
+    
+    # Get the highest semantic version
+    local highest_version=$(echo "$extracted_versions" | sort -V | tail -n1)
+    
+    echo "$highest_version"
+}
+
 get_hadron_version_from_release() {
     local kairos_version="$1"
     local api_url="https://api.github.com/repos/kairos-io/kairos/releases/tags/$kairos_version"
@@ -211,13 +249,20 @@ get_component_versions() {
         return 1
     fi
     
-    # Get K3s and Hadron versions from GitHub release artifacts (kairos_version is required)
+    # Get K3s, k0s, and Hadron versions from GitHub release artifacts (kairos_version is required)
     local k3s_version=""
+    local k0s_version=""
     local hadron_version=""
     if [ -n "$kairos_version" ]; then
         k3s_version=$(get_k3s_version_from_release "$kairos_version")
         if [ $? -ne 0 ]; then
             echo "Error: Failed to get K3s version from release for version $kairos_version" >&2
+            return 1
+        fi
+        
+        k0s_version=$(get_k0s_version_from_release "$kairos_version")
+        if [ $? -ne 0 ]; then
+            echo "Error: Failed to get k0s version from release for version $kairos_version" >&2
             return 1
         fi
         
@@ -227,7 +272,7 @@ get_component_versions() {
             return 1
         fi
     else
-        echo "Error: kairos_version is required to extract K3s and Hadron versions from release" >&2
+        echo "Error: kairos_version is required to extract K3s, k0s, and Hadron versions from release" >&2
         return 1
     fi
     
@@ -239,7 +284,8 @@ get_component_versions() {
   "provider_version": "$provider_version",
   "auroraboot_version": "$auroraboot_version",
   "hadron_version": "$hadron_version",
-  "k3s_version": "$k3s_version"
+  "k3s_version": "$k3s_version",
+  "k0s_version": "$k0s_version"
 }
 EOF
 }

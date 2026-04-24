@@ -270,10 +270,12 @@ update_docusaurus_config() {
     local auroraboot_version
     local hadron_version
     local k3s_version
+    local k0s_version
     provider_version=$(echo "$component_versions_json" | jq -r '.provider_version')
     auroraboot_version=$(echo "$component_versions_json" | jq -r '.auroraboot_version')
     hadron_version=$(echo "$component_versions_json" | jq -r '.hadron_version')
     k3s_version=$(echo "$component_versions_json" | jq -r '.k3s_version')
+    k0s_version=$(echo "$component_versions_json" | jq -r '.k0s_version')
 
     if [ "$DRY_RUN" = true ]; then
         log "INFO" "[DRY RUN] Would sync docsVersionCustomFields in docusaurus.config.ts"
@@ -287,6 +289,7 @@ update_docusaurus_config() {
     AURORABOOT_VERSION="$auroraboot_version" \
     HADRON_VERSION="$hadron_version" \
     K3S_VERSION="$k3s_version" \
+    K0S_VERSION="$k0s_version" \
     node - <<'NODE'
 const fs = require('node:fs');
 const path = require('node:path');
@@ -300,6 +303,7 @@ const providerVersion = process.env.PROVIDER_VERSION;
 const auroraBootVersion = process.env.AURORABOOT_VERSION;
 const hadronVersion = process.env.HADRON_VERSION;
 const k3sVersion = process.env.K3S_VERSION;
+const k0sVersion = process.env.K0S_VERSION;
 
 function coalesce(value, fallback) {
   return typeof value === 'string' && value.length > 0 ? value : fallback;
@@ -405,7 +409,7 @@ for (const version of parsedFolderVersions) {
       registryURL: template.registryURL,
       hadronFlavorRelease: coalesce(hadronVersion, template.hadronFlavorRelease),
       k3sVersion: coalesce(k3sVersion, template.k3sVersion),
-      k0sVersion: template.k0sVersion,
+      k0sVersion: coalesce(k0sVersion, template.k0sVersion),
       flavorOptions: template.flavorOptions,
       providerVersion: coalesce(providerVersion, template.providerVersion),
       auroraBootVersion: coalesce(auroraBootVersion, template.auroraBootVersion),
