@@ -1,5 +1,29 @@
 #!/bin/bash
 
+# Helper function for curl with proper error handling and optional auth
+# Uses GH_TOKEN or GITHUB_TOKEN if available for authentication
+_curl_github() {
+    local url="$1"
+    local auth_header=""
+    
+    if [ -n "${GH_TOKEN:-}" ]; then
+        auth_header="Authorization: Bearer $GH_TOKEN"
+    elif [ -n "${GITHUB_TOKEN:-}" ]; then
+        auth_header="Authorization: Bearer $GITHUB_TOKEN"
+    fi
+    
+    if [ -n "$auth_header" ]; then
+        curl -fSs -H "Accept: application/vnd.github.v3+json" -H "$auth_header" "$url"
+    else
+        curl -fSs -H "Accept: application/vnd.github.v3+json" "$url"
+    fi
+}
+
+# Helper function for curl to raw content (no auth needed typically)
+_curl_raw() {
+    curl -fSs "$1"
+}
+
 # Function to fetch all release branches
 # Returns a list of all release branches sorted by version
 fetch_all_releases() {
@@ -16,9 +40,7 @@ get_latest_kairos_release() {
     local api_url="https://api.github.com/repos/kairos-io/kairos/releases/latest"
     local response
     
-    response=$(curl -s -H "Accept: application/vnd.github.v3+json" "$api_url")
-    
-    if [ $? -ne 0 ]; then
+    if ! response=$(_curl_github "$api_url"); then
         echo "Error: Failed to fetch latest release from GitHub API" >&2
         return 1
     fi
@@ -53,9 +75,7 @@ get_kairos_init_version() {
     local dockerfile_url="https://raw.githubusercontent.com/kairos-io/kairos/refs/tags/$version/images/Dockerfile"
     local response
     
-    response=$(curl -s "$dockerfile_url")
-    
-    if [ $? -ne 0 ]; then
+    if ! response=$(_curl_raw "$dockerfile_url"); then
         echo "Error: Failed to fetch Dockerfile for version $version" >&2
         return 1
     fi
@@ -79,9 +99,7 @@ get_k3s_version_from_release() {
     local api_url="https://api.github.com/repos/kairos-io/kairos/releases/tags/$kairos_version"
     local response
     
-    response=$(curl -s -H "Accept: application/vnd.github.v3+json" "$api_url")
-    
-    if [ $? -ne 0 ]; then
+    if ! response=$(_curl_github "$api_url"); then
         echo "Error: Failed to fetch release data for version $kairos_version" >&2
         return 1
     fi
@@ -109,6 +127,99 @@ get_k3s_version_from_release() {
     echo "$highest_version"
 }
 
+# Function to get the latest AuroraBoot release from GitHub API
+# Returns: latest AuroraBoot version tag (e.g., v0.4.5)
+get_latest_auroraboot_version() {
+    local api_url="https://api.github.com/repos/kairos-io/AuroraBoot/releases/latest"
+    local response
+    
+    if ! response=$(_curl_github "$api_url"); then
+        echo "Error: Failed to fetch latest AuroraBoot release from GitHub API" >&2
+        return 1
+    fi
+    
+    local tag_name=$(echo "$response" | jq -r '.tag_name // empty')
+    
+    if [ -z "$tag_name" ] || [ "$tag_name" = "null" ]; then
+        echo "Error: No tag name found in AuroraBoot API response" >&2
+        return 1
+    fi
+    
+    echo "$tag_name"
+}
+
+# Function to extract Hadron version from GitHub release artifacts
+# Arguments:
+#   $1: kairos_version (e.g., v4.0.3)
+# Returns: Hadron version (e.g., v0.0.4) or empty string on error
+# Function to extract k0s version from GitHub release artifacts
+# Arguments:
+#   $1: kairos_version (e.g., v4.0.1)
+# Returns: k0s version (e.g., v1.34.4+k0s.0) or empty string if not found
+get_k0s_version_from_release() {
+    local kairos_version="$1"
+    local api_url="https://api.github.com/repos/kairos-io/kairos/releases/tags/$kairos_version"
+    local response
+    
+    if ! response=$(_curl_github "$api_url"); then
+        echo "Error: Failed to fetch release data for version $kairos_version" >&2
+        return 1
+    fi
+    
+    # Extract artifact names that contain "+k0s"
+    local k0s_versions=$(echo "$response" | jq -r '.assets[] | select(.name | contains("+k0s")) | .name' 2>/dev/null)
+    
+    if [ -z "$k0s_versions" ]; then
+        # k0s artifacts not found in this release - return empty (not an error)
+        echo ""
+        return 0
+    fi
+    
+    # Extract k0s versions from artifact names
+    # Pattern: extract v1.34.4+k0s.0 from "kairos-hadron-v0.0.4-standard-amd64-generic-v4.0.1-k0sv1.34.4+k0s.0.iso"
+    local extracted_versions=$(echo "$k0s_versions" | grep -oE 'k0sv[0-9]+\.[0-9]+\.[0-9]+\+k0s\.[0-9]+' | sed 's/k0s//' | sort -u)
+    
+    if [ -z "$extracted_versions" ]; then
+        echo ""
+        return 0
+    fi
+    
+    # Get the highest semantic version
+    local highest_version=$(echo "$extracted_versions" | sort -V | tail -n1)
+    
+    echo "$highest_version"
+}
+
+get_hadron_version_from_release() {
+    local kairos_version="$1"
+    local api_url="https://api.github.com/repos/kairos-io/kairos/releases/tags/$kairos_version"
+    local response
+    
+    if ! response=$(_curl_github "$api_url"); then
+        echo "Error: Failed to fetch release data for version $kairos_version" >&2
+        return 1
+    fi
+    
+    # Extract artifact names that contain "hadron"
+    local hadron_artifacts=$(echo "$response" | jq -r '.assets[] | select(.name | contains("hadron")) | .name' 2>/dev/null)
+    
+    if [ -z "$hadron_artifacts" ]; then
+        echo "Error: No Hadron artifacts found in release $kairos_version" >&2
+        return 1
+    fi
+    
+    # Extract Hadron version from artifact names
+    # Pattern: extract v0.0.4 from "kairos-hadron-v0.0.4-core-amd64-generic-v4.0.3.iso"
+    local extracted_version=$(echo "$hadron_artifacts" | grep -oE 'hadron-v[0-9]+\.[0-9]+\.[0-9]+' | sed 's/hadron-//' | sort -Vu | tail -n1)
+    
+    if [ -z "$extracted_version" ]; then
+        echo "Error: Could not extract Hadron version from artifact names" >&2
+        return 1
+    fi
+    
+    echo "$extracted_version"
+}
+
 # Function to fetch subcomponent versions from kairos-init Makefile and kairos release
 # Arguments:
 #   $1: kairos_init_version (e.g., v0.5.20)
@@ -120,9 +231,7 @@ get_component_versions() {
     local makefile_url="https://raw.githubusercontent.com/kairos-io/kairos-init/refs/tags/$kairos_init_version/Makefile"
     local response
     
-    response=$(curl -s "$makefile_url")
-    
-    if [ $? -ne 0 ]; then
+    if ! response=$(_curl_raw "$makefile_url"); then
         echo "Error: Failed to fetch Makefile for kairos-init version $kairos_init_version" >&2
         return 1
     fi
@@ -131,18 +240,39 @@ get_component_versions() {
     local agent_version=$(echo "$response" | grep -E '^AGENT_VERSION\s*:?=' | sed 's/.*:=\s*//' | tr -d '\r\n')
     local immucore_version=$(echo "$response" | grep -E '^IMMUCORE_VERSION\s*:?=' | sed 's/.*:=\s*//' | tr -d '\r\n')
     local provider_version=$(echo "$response" | grep -E '^PROVIDER_KAIROS_VERSION\s*:?=' | sed 's/.*:=\s*//' | tr -d '\r\n')
-    local auroraboot_version=$(echo "$response" | grep -E '^AURORABOOT_VERSION\s*:?=' | sed 's/.*:=\s*//' | tr -d '\r\n')
     
-    # Get K3s version from GitHub release artifacts if kairos_version is provided
+    # Get latest AuroraBoot version from its own releases
+    local auroraboot_version
+    auroraboot_version=$(get_latest_auroraboot_version)
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to get AuroraBoot version" >&2
+        return 1
+    fi
+    
+    # Get K3s, k0s, and Hadron versions from GitHub release artifacts (kairos_version is required)
     local k3s_version=""
+    local k0s_version=""
+    local hadron_version=""
     if [ -n "$kairos_version" ]; then
         k3s_version=$(get_k3s_version_from_release "$kairos_version")
         if [ $? -ne 0 ]; then
             echo "Error: Failed to get K3s version from release for version $kairos_version" >&2
             return 1
         fi
+        
+        k0s_version=$(get_k0s_version_from_release "$kairos_version")
+        if [ $? -ne 0 ]; then
+            echo "Error: Failed to get k0s version from release for version $kairos_version" >&2
+            return 1
+        fi
+        
+        hadron_version=$(get_hadron_version_from_release "$kairos_version")
+        if [ $? -ne 0 ]; then
+            echo "Error: Failed to get Hadron version from release for version $kairos_version" >&2
+            return 1
+        fi
     else
-        echo "Error: kairos_version is required to extract K3s version from release" >&2
+        echo "Error: kairos_version is required to extract K3s, k0s, and Hadron versions from release" >&2
         return 1
     fi
     
@@ -153,7 +283,9 @@ get_component_versions() {
   "immucore_version": "$immucore_version",
   "provider_version": "$provider_version",
   "auroraboot_version": "$auroraboot_version",
-  "k3s_version": "$k3s_version"
+  "hadron_version": "$hadron_version",
+  "k3s_version": "$k3s_version",
+  "k0s_version": "$k0s_version"
 }
 EOF
 }
