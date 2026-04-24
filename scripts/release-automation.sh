@@ -523,12 +523,13 @@ commit_push_and_open_pr() {
         return 0
     fi
 
-    if git diff --quiet && git diff --cached --quiet; then
-        log "INFO" "No changes detected after processing $version"
+    git add versions.json docusaurus.config.ts versioned_docs versioned_sidebars
+
+    if git diff --cached --quiet; then
+        log "INFO" "No changes to commit for $version - docs already up to date"
         return 0
     fi
 
-    git add versions.json docusaurus.config.ts versioned_docs versioned_sidebars
     git commit -m "chore: update docs versions for $version"
 
     if [ "$PUSH_CHANGES" = false ]; then
