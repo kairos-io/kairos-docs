@@ -88,11 +88,11 @@ The same credentials Secret (`spec.image.imageCredentialsSecretRef`) is used in 
 
 | Use case | Where credentials are used | Why |
 |----------|----------------------------|-----|
-| **Pulling the tool image** (AuroraBoot, Kaniko, etc.) from a private registry | Pod-level **ImagePullSecrets** | The Kubernetes kubelet uses `spec.imagePullSecrets` to pull the builder pod’s container images. When `imageCredentialsSecretRef` is set, the operator also adds that secret to the pod’s ImagePullSecrets so the same credentials can pull the tool image if it lives in your private registry. |
+| **Pulling the tool image** (AuroraBoot, Buildah, etc.) from a private registry | Pod-level **ImagePullSecrets** | The Kubernetes kubelet uses `spec.imagePullSecrets` to pull the builder pod’s container images. When `imageCredentialsSecretRef` is set, the operator also adds that secret to the pod’s ImagePullSecrets so the same credentials can pull the tool image if it lives in your private registry. |
 | **Pulling a pre-built image** (`spec.image.ref`) from a private registry | Unpack container (AuroraBoot) | When using a pre-built image, the operator runs an init container that uses AuroraBoot to unpack `image.ref`. AuroraBoot uses go-containerregistry’s default keychain, which reads from `DOCKER_CONFIG`. The operator mounts the credentials at `/root/.docker` and sets `DOCKER_CONFIG` so the unpack container can pull private `image.ref`. |
-| **Pulling the base image** when building with **buildOptions** | Kaniko build container | The operator injects `FROM buildOptions.baseImage`; Kaniko must pull that image. The operator mounts the credentials in the Kaniko container and sets `DOCKER_CONFIG` so Kaniko can pull from private registries. |
-| **Pulling the `FROM` image** when building with **ociSpec** | Kaniko build container | Your OCI spec’s first line is typically `FROM <some-image>`. Kaniko must pull that image. The same mount and `DOCKER_CONFIG` in the Kaniko container allow pulls from private registries. |
-| **Pushing the built image** when `spec.image.push: true` | Kaniko build container | When you enable push, Kaniko pushes the built image to the registry. The same credentials mount is used for push. |
+| **Pulling the base image** when building with **buildOptions** | Buildah build container | The operator injects `FROM buildOptions.baseImage`; Buildah must pull that image. The operator mounts the credentials in the Buildah container and sets `DOCKER_CONFIG` so Buildah can pull from private registries. |
+| **Pulling the `FROM` image** when building with **ociSpec** | Buildah build container | Your OCI spec’s first line is typically `FROM <some-image>`. Buildah must pull that image. The same mount and `DOCKER_CONFIG` in the Buildah container allow pulls from private registries. |
+| **Pushing the built image** when `spec.image.push: true` | Buildah build container | When you enable push, Buildah pushes the built image to the registry. The same credentials mount is used for push. |
 
 You can also set **`spec.imagePullSecrets`** (a list of Secret names) if you need additional pull secrets only for the pod’s container images (e.g. a different registry for the tool image). For pulling `image.ref`, the FROM/base image, and for push, use **`spec.image.imageCredentialsSecretRef`**.
 
@@ -112,7 +112,8 @@ You can also set **`spec.imagePullSecrets`** (a list of Secret names) if you nee
 3. **Full control (your OCI spec including FROM and kairos-init)?** → Set `spec.image.ociSpec.ref` to a Secret holding your OCI build definition. The operator does not modify it. Use this method when you want full control, for example when you want to perform some action between the kairos-init installation and init stages.
 4. **Your OCI spec fragment + operator adds base image and kairos-init?** → Set both `spec.image.ociSpec` (template, no `FROM`) and `spec.image.buildOptions`. The operator injects `FROM buildOptions.baseImage` at the top and the kairos-init block at the bottom. Use this method when you want to add steps to the used ociSpec (e.g. install or remove packages, enable services etc) but you don't need to intercept the "kairosification" steps.
 5. **Push the built image to a registry?** → When building, set `spec.image.push: true` and `spec.image.imageCredentialsSecretRef` (and optionally `spec.image.buildImage` for registry/repository/tag).
-6. **Build behind a proxy or use a custom CA for the registry?** → When building, set `spec.image.buildEnv` (e.g. `HTTP_PROXY`, `HTTPS_PROXY`, `NO_PROXY`) and/or `spec.image.caCertificatesVolume` (volume with CA certs). See [Build environment and CA certificates (Kaniko)](#build-environment-and-ca-certificates-kaniko).
+6. **Build behind a proxy or use a custom CA for the registry?** → When building, set `spec.image.buildEnv` (e.g. `HTTP_PROXY`, `HTTPS_PROXY`, `NO_PROXY`) and/or `spec.image.caCertificatesVolume` (volume with CA certs). See [Build environment and CA certificates](#build-environment-and-ca-certificates).
+7. **Pulling the base image or pushing to a registry that uses HTTP or a self-signed cert?** → Set `spec.image.pullInsecureRegistry: true` and/or `spec.image.pushInsecureRegistry: true`. See [Insecure registries](../private-registries/#insecure-registries).
 
 ---
 
@@ -371,22 +372,22 @@ spec:
   # No artifacts: only build and push the OCI image.
 ```
 
-### Build environment and CA certificates (Kaniko)
+### Build environment and CA certificates
 
-When building (with `buildOptions` or `ociSpec`), the operator runs Kaniko to build the Stage 1 image. You can pass environment variables and custom CA certificates to the Kaniko container.
+When building (with `buildOptions` or `ociSpec`), the operator runs Buildah to build the Stage 1 image. You can pass environment variables and custom CA certificates to the Buildah container.
 
-**`spec.image.buildEnv`** — Environment variables for the Kaniko build container. Use this for:
+**`spec.image.buildEnv`** — Environment variables for the Buildah build container. Use this for:
 
-- **Proxy settings**: Set `HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY` when the cluster uses an HTTP proxy to reach the internet. Kaniko (and any `RUN` steps that use the network) will use these. Exclude registries and in-cluster hosts in `NO_PROXY` so image pull/push still works (e.g. `NO_PROXY=localhost,127.0.0.1,.cluster.local,.svc,quay.io`).
+- **Proxy settings**: Set `HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY` when the cluster uses an HTTP proxy to reach the internet. Buildah (and any `RUN` steps that use the network) will use these. Exclude registries and in-cluster hosts in `NO_PROXY` so image pull/push still works (e.g. `NO_PROXY=localhost,127.0.0.1,.cluster.local,.svc,quay.io`).
 - **Any other build-time env**: Any standard Kubernetes EnvVar entry is supported (either with `name` and `value`, or with `name` and `valueFrom` for ConfigMap or Secret references).
 
 Only used when building (Stage 1); ignored when `spec.image.ref` is set (pre-built image).
 
-**`spec.image.caCertificatesVolume`** — Name of a volume (from `spec.volumes`) that contains custom CA certificates. The operator mounts this volume at `/kaniko/ssl/certs` in the Kaniko container (read-only). Use it when pulling or pushing images from a registry that uses a private or corporate CA (e.g. TLS for private registries). Only used when building; ignored when using a pre-built image. The volume must exist in `spec.volumes` (e.g. a Secret with `ca.crt` or a ConfigMap with PEM files).
+**`spec.image.caCertificatesVolume`** — Name of a volume (from `spec.volumes`) that contains custom CA certificates. The operator mounts this volume at `/etc/ssl/buildah/certs` in the Buildah container (read-only). Use it when pulling or pushing images from a registry that uses a private or corporate CA (e.g. TLS for private registries). Only used when building; ignored when using a pre-built image. The volume must exist in `spec.volumes` (e.g. a Secret with `ca.crt` or a ConfigMap with PEM files).
 
 Example: build behind a proxy with custom CA for the registry.
 
-Create a Secret that contains your registry’s CA certificate(s) (PEM format). Use any key name; the whole Secret is mounted as a directory at `/kaniko/ssl/certs`, so Kaniko will use all PEM files it finds there:
+Create a Secret that contains your registry’s CA certificate(s) (PEM format). Use any key name; the whole Secret is mounted as a directory at `/etc/ssl/buildah/certs`, so Buildah will use all PEM files it finds there:
 
 ```yaml
 apiVersion: v1
@@ -565,7 +566,7 @@ UKI outputs use distinct names (e.g. `<artifact-name>-uki.iso`) so they do not c
 
 ## Build context volume (OCISpec)
 
-When building from a custom OCI spec which uses `COPY` from the build context, set **spec.image.ociSpec.buildContextVolume** to a volume name from `spec.volumes`. Importers can populate that volume; Kaniko will see it at `/workspace`.
+When building from a custom OCI spec which uses `COPY` from the build context, set **spec.image.ociSpec.buildContextVolume** to a volume name from `spec.volumes`. Importers can populate that volume; Buildah will see it at `/workspace`.
 
 ```yaml
 ---
@@ -820,7 +821,7 @@ kubectl describe osartifact my-kairos-iso
 
 ### Streaming build logs
 
-The builder Pod is labeled **`build.kairos.io/artifact=<osartifact-name>`**. To stream logs from the build Pod (all containers, including init containers such as importers and the Kaniko build), use the label with the name of your OSArtifact:
+The builder Pod is labeled **`build.kairos.io/artifact=<osartifact-name>`**. To stream logs from the build Pod (all containers, including init containers such as importers and the OCI build), use the label with the name of your OSArtifact:
 
 ```bash
 # Replace <artifact-name> with the OSArtifact name (e.g. my-kairos-iso or a generated name like my-build-7x2k9).
@@ -957,8 +958,8 @@ If nginx is in another namespace, set `NGINX_URL` to `http://kairos-operator-ngi
 - **spec.volumes**: Standard Kubernetes volumes (emptyDir, ConfigMap, Secret, PVC, etc.) available to importers and to the build/artifact stages via the scoped bindings below.
 - **spec.importers**: Init containers that run in order before the build. They can mount any `spec.volumes` volume. Use them to fetch files, generate config, or populate overlay/build-context directories.
 - **Scoped bindings**:
-  - **Stage 1**: `spec.image.ociSpec.buildContextVolume` — volume name for the OCI build context at `/workspace` (Kaniko). Only used when building from an OCI spec.
-  - **Stage 1**: `spec.image.caCertificatesVolume` — volume name for custom CA certificates mounted at `/kaniko/ssl/certs` (Kaniko). Only used when building.
+  - **Stage 1**: `spec.image.ociSpec.buildContextVolume` — volume name for the OCI build context at `/workspace` (Buildah). Only used when building from an OCI spec.
+  - **Stage 1**: `spec.image.caCertificatesVolume` — volume name for custom CA certificates mounted at `/etc/ssl/buildah/certs` (Buildah). Only used when building.
   - **Stage 2**: `spec.artifacts.volume` — volume name (from `spec.volumes`) used for **build outputs** mounted at `/artifacts` in the builder pod and exporter jobs. When set, the operator does not create the default `<artifact-name>-artifacts` PVC.
   - **Stage 2**: `spec.artifacts.overlayISOVolume`, `spec.artifacts.overlayRootfsVolume` — volume names for AuroraBoot overlay-iso and overlay-rootfs.
   - **UKI**: `spec.artifacts.uki.keysVolume` — volume name for the directory containing UKI signing keys.
