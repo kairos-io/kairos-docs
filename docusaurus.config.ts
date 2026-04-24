@@ -254,16 +254,16 @@ const config: Config = {
 
   customFields: {
     registryURL: 'quay.io/kairos',
-    hadronFlavorRelease: 'v0.0.4',
+    hadronFlavorRelease: latestVersionCustomFields.hadronFlavorRelease,
     kairosVersion: latestVersion,
     k3sVersion: latestVersionCustomFields.k3sVersion,
     k0sVersion: latestVersionCustomFields.k0sVersion,
     flavorOptions: latestVersionCustomFields.flavorOptions,
-    providerVersion: 'v2.14.0',
+    providerVersion: latestVersionCustomFields.providerVersion,
     latestVersion,
     latestOperatorVersion: latestOperatorVersion ?? null,
-    auroraBootVersion: 'v0.14.0',
-    kairosInitVersion: 'v0.6.2',
+    auroraBootVersion: latestVersionCustomFields.auroraBootVersion,
+    kairosInitVersion: latestVersionCustomFields.kairosInitVersion,
     docsVersionCustomFields: {
       ...docsVersionCustomFields,
     },
