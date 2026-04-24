@@ -16,9 +16,6 @@ on:
         type: boolean
         default: false
 
-env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
 jobs:
   check-releases:
     runs-on: ubuntu-latest
@@ -29,6 +26,15 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
       - name: Set up environment
         run: |
           chmod +x scripts/*.sh
@@ -37,17 +43,18 @@ jobs:
 
       - name: Run release automation
         run: |
+          ARGS="--verbose"
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             if [ -n "${{ github.event.inputs.version }}" ]; then
-              ./scripts/release-automation.sh --version "${{ github.event.inputs.version }}" $([ "${{ github.event.inputs.dry_run }}" = "true" ] && echo "--dry-run")
-            else
-              ./scripts/release-automation.sh $([ "${{ github.event.inputs.dry_run }}" = "true" ] && echo "--dry-run")
+              ARGS="$ARGS --version ${{ github.event.inputs.version }}"
             fi
-          else
-            ./scripts/release-automation.sh
+            if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+              ARGS="$ARGS --dry-run"
+            fi
           fi
+          ./scripts/release-automation.sh $ARGS
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Notify on failure
         if: failure()
