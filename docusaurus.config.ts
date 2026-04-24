@@ -86,7 +86,7 @@ const v372FlavorOptions = [
   {family: 'hadron', flavor: 'hadron', flavorRelease: '0.0.1', label: 'Hadron 0.0.1'},
 ] as const;
 
-const v401FlavorOptions = [
+const hadronFlavorOptions = [
   {family: 'hadron', flavor: 'hadron', flavorRelease: 'v0.0.4', label: 'Hadron v0.0.4'},
 ] as const;
 
@@ -96,7 +96,7 @@ const docsVersionCustomFields = {
     hadronFlavorRelease: 'v0.0.4',
     k3sVersion: 'v1.35.2+k3s1',
     k0sVersion: 'v1.34.3+k0s.0',
-    flavorOptions: v372FlavorOptions,
+    flavorOptions: hadronFlavorOptions,
     providerVersion: 'v2.14.2',
     auroraBootVersion: 'v0.20.0',
     kairosInitVersion: 'v0.8.4',
