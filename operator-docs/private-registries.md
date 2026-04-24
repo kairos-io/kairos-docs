@@ -101,13 +101,42 @@ spec:
 
 For **OSArtifact** resources, two mechanisms apply:
 
-1. **`spec.imagePullSecrets`** — Used by the Kubernetes kubelet to pull the **builder pod’s container images** (e.g. the AuroraBoot or Kaniko image). If your tool image is in a private registry, list the pull secret(s) here.
+1. **`spec.imagePullSecrets`** — Used by the Kubernetes kubelet to pull the **builder pod’s container images** (e.g. the AuroraBoot or Buildah image). If your tool image is in a private registry, list the pull secret(s) here.
 2. **`spec.image.imageCredentialsSecretRef`** — A single Secret reference used for **pull and push** of the Stage 1 image. It is used when:
    - Pulling a **pre-built image** (`spec.image.ref`) from a private registry (unpack container),
-   - Pulling the **base image** when building with `buildOptions` or the **FROM image** when building with `ociSpec` (Kaniko),
-   - **Pushing** the built image when `spec.image.push: true` (Kaniko).
+   - Pulling the **base image** when building with `buildOptions` or the **FROM image** when building with `ociSpec` (Buildah),
+   - **Pushing** the built image when `spec.image.push: true` (Buildah).
 
 When `imageCredentialsSecretRef` is set, the operator also adds that secret to the pod’s ImagePullSecrets, so one Secret can cover both the tool image and the Stage 1 image when they share the same registry. For the full table of use cases, see [Image credentials: when they are used](../osartifact/#image-credentials-when-they-are-used) in the OSArtifact documentation.
+
+## Insecure registries
+
+For **OSArtifact** builds, you can disable TLS verification when pulling or pushing to registries that use HTTP or a self-signed certificate:
+
+- **`spec.image.pullInsecureRegistry: true`** — Passes `--tls-verify=false` to `buildah bud` when pulling the base image during the OCI build step. Use this when the base image registry (`FROM` image or `buildOptions.baseImage`) does not have a trusted TLS certificate.
+- **`spec.image.pushInsecureRegistry: true`** — Passes `--tls-verify=false` to `buildah push` when pushing the built image to the registry. Use this when the destination registry (set in `spec.image.buildImage`) does not have a trusted TLS certificate. Only relevant when `spec.image.push: true`.
+
+Example:
+
+```yaml
+spec:
+  image:
+    ociSpec:
+      ref:
+        name: my-ocispec
+        key: ociSpec
+    pullInsecureRegistry: true
+    push: true
+    pushInsecureRegistry: true
+    buildImage:
+      registry: my-registry.internal:5000
+      repository: myorg/myimage
+      tag: latest
+```
+
+:::caution
+Disabling TLS verification removes protection against man-in-the-middle attacks. Use only in controlled environments (e.g. a local registry inside the cluster) and not against public registries.
+:::
 
 ## Notes
 
