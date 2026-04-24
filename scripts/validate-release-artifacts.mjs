@@ -5,8 +5,10 @@ import path from 'node:path';
 import {execSync} from 'node:child_process';
 
 const REPO = 'kairos-io/kairos';
-const TARGET_VERSIONS = ['v3.6.0', 'v3.7.2', 'v4.0.1'];
+const VERSIONS_PATH = path.join(process.cwd(), 'versions.json');
 const CONFIG_PATH = path.join(process.cwd(), 'docusaurus.config.ts');
+
+const TARGET_VERSIONS = JSON.parse(fs.readFileSync(VERSIONS_PATH, 'utf8'));
 
 function extractConstArray(source, constName) {
   const pattern = new RegExp(`const\\s+${constName}\\s*=\\s*(\\[[\\s\\S]*?\\])\\s+as\\s+const;`);
