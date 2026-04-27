@@ -9,39 +9,64 @@ import TabItem from '@theme/TabItem';
 
 
 :::tip Objective
-This guide shows how easy it is to deploy a Kubernetes cluster using Hadron by Kairos. To keep things quick and effective, we’ll pre-select a few choices for you. You’ll perform a traditional, interactive installation of a single-node cluster on an x86_64 virtual machine. At the end, you’ll find links to explore many other setup options.
+This guide shows how easy it is to deploy a Kubernetes cluster using Hadron by Kairos. To keep things quick and effective, we'll pre-select a few choices for you. You'll perform a traditional, interactive installation of a single-node cluster on a virtual machine. At the end, you'll find links to explore many other setup options.
 :::
 
-Ready to launch your Kubernetes cluster with ease? Hadron by Kairos makes it simple: download the ISO, start a virtual machine (VM), and follow a few guided steps. Whether you use Linux, Windows, or macOS, you’ll have a cluster running in no time.
+Ready to launch your Kubernetes cluster with ease? Hadron by Kairos makes it simple: download the ISO, start a virtual machine (VM), and follow a few guided steps. Whether you use Linux, Windows, or macOS, you'll have a cluster running in no time.
 
 ## Prerequisites
 
 :::tip Alternatives
-This tutorial uses the recommended virtualization tools to keep the instructions simple. Other alternatives should work as well, but they’re not documented here. If you successfully follow the tutorial using different tools, please consider opening a PR so others can benefit from your steps.
+This tutorial uses the recommended virtualization tools to keep the instructions simple. Other alternatives should work as well, but they're not documented here. If you successfully follow the tutorial using different tools, please consider opening a PR so others can benefit from your steps.
 :::
 
-To run Hadron Trusted Boot, you’ll need virtualization software that can run or emulate the amd64 architecture. In this guide, we’ll be using:
+In this guide, we'll be using [kairos-lab](https://github.com/kairos-io/kairos-lab), a simple tool to create and manage Kairos virtual machines.
 
-- [VirtualBox](https://www.virtualbox.org/)
+:::warning Windows
+kairos-lab does not run on Windows. If you're on Windows, use VirtualBox or another virtualization software instead.
+:::
+
+### Installing kairos-lab
+
+<Tabs>
+<TabItem value="macos" label="macOS" default>
+
+```bash
+brew tap kairos-io/kairos
+brew install kairos-lab
+```
+
+</TabItem>
+<TabItem value="linux" label="Linux">
+
+Download the binary from the [releases page](https://github.com/kairos-io/kairos-lab/releases) and place it in your PATH.
+
+</TabItem>
+</Tabs>
+
+Once installed, run the setup command to install any required dependencies (like QEMU):
+
+```bash
+kairos-lab setup
+```
 
 ## Prefer to watch a video?
 
-<YouTube id="0avUNGAjMVw" title="Hadron Quickstart" />
+<YouTube id="HDArpKdUl58" title="Hadron Quickstart" />
 
 ## Download an ISO
 
-:::warning arm64
-Hadron is still in beta, and for now only `amd64` images are available. If your host system is `arm64`, you can still run `amd64` virtual machines, but expect a performance hit. Keep this in mind for the demo.
-
-For production setups, you can either use one of the other Kairos flavors or wait for the [upcoming arm64 release](https://github.com/kairos-io/kairos/issues/2133).
-:::
-
 :::info Kairos Flavor
-Kairos offers multiple flavors — different Linux distributions that power the immutable OS. Hadron is the default, engineered for image-based workflows, but you can also use Alpine, Debian, Fedora, Rocky, Ubuntu, and many more. In this quickstart, we’ll be using Hadron.
+Kairos offers multiple flavors — different Linux distributions that power the immutable OS. Hadron is the default, engineered for image-based workflows, but you can also use Alpine, Debian, Fedora, Rocky, Ubuntu, and many more. In this quickstart, we'll be using Hadron.
 :::
 
+Download the latest Kairos ISO using kairos-lab:
 
-Click the following link to download: [kairos-hadron-0.0.1-standard-amd64-generic-v3.6.1-beta2-k3sv1.34.2+k3s1.iso](https://github.com/kairos-io/kairos/releases/download/v3.6.1-beta2/kairos-hadron-0.0.1-standard-amd64-generic-v3.6.1-beta2-k3sv1.34.2+k3s1.iso)
+```bash
+kairos-lab download
+```
+
+If you prefer to download an artifact manually, visit the [latest releases page](https://github.com/kairos-io/kairos/releases/latest).
 
 ## Create a Virtual Machine (VM)
 
@@ -61,12 +86,25 @@ Hadron Single-Node Demo Requirements (with k3s)
 :::
 
 <Tabs>
-<TabItem value="virtualbox" label="VirtualBox">
+<TabItem value="kairos-lab" label="kairos-lab" default>
+
+Start a new VM with kairos-lab:
+
+```bash
+kairos-lab start
+```
+
+You will be prompted to provide a name for your VM (or press Enter to use the default). You can then configure the VM resources as you prefer, or accept the defaults.
+
+**Important:** Keep the bridged network option enabled, as this is required for the VM to obtain an IP address accessible from your browser. Before the VM can start, `kairos-lab` will need to create a bridged network, which requires sudo privileges.
+
+</TabItem>
+<TabItem value="virtualbox" label="VirtualBox / Generic Instructions">
 
 1. Click **New** to create a virtual machine.
 2. Fill in the VM details:
    - **Name:** Hadron  
-   - **ISO Image:** `/FULL/PATH/kairos-hadron-0.0.1-standard-amd64-generic-v3.6.1-beta2-k3sv1.34.2+k3s1.iso`
+   - **ISO Image:** `/path/to/kairos.iso`
    - **OS:** Linux
    - **OS Distribution:** Other Linux
    - **OS Version:** Other Linux (64-bit)
@@ -81,14 +119,6 @@ Hadron Single-Node Demo Requirements (with k3s)
    - **Attached to:** Bridged Adapter
 7. Click **OK** to save your changes.
 8. With the Hadron VM selected, click **Start**.
-
-</TabItem>
-<TabItem value="generic-instructions" label="Generic Instructions">
-
-1. Create a new VM.
-2. Assign the downloaded ISO to the CD-ROM and set it as the boot media.
-3. Configure the VM hardware according to the requirements.
-4. Start the VM.
 
 </TabItem>
 </Tabs>
@@ -188,7 +218,7 @@ Congratulations :tada: You have successfully deployed a Kubernetes cluster using
 
 ### Continue the quickstart (recommended)
 
-If you’re new to Kairos, follow these in order to learn the full workflow: extend the image, upgrade atomically, then harden the system.
+If you're new to Kairos, follow these in order to learn the full workflow: extend the image, upgrade atomically, then harden the system.
 
 <a class="btn btn-lg btn-primary me-3 mb-4" href="/quickstart/extending-the-system-dockerfile/">
     Extend Hadron using a Dockerfile
@@ -204,7 +234,7 @@ If you’re new to Kairos, follow these in order to learn the full workflow: ext
 
 ### Deep dive docs
 
-If you’re already comfortable with Kairos and want details, jump straight to the reference docs.
+If you're already comfortable with Kairos and want details, jump straight to the reference docs.
 
 <a class="btn btn-lg btn-outline-primary me-3 mb-4" href="/docs/reference/configuration/">
     Cloud-config reference
@@ -245,12 +275,12 @@ Yes, you can download the standard image with k0s. Both k3s and k0s are equally 
         {
           '@type': 'HowToStep',
           name: 'Download a Hadron ISO',
-          text: 'Download the Hadron amd64 ISO from the releases link on this page.',
+          text: 'Download the Hadron ISO using kairos-lab download or from the releases page.',
         },
         {
           '@type': 'HowToStep',
           name: 'Create a virtual machine',
-          text: 'Create a VM (for example in VirtualBox), attach the ISO, configure CPU/RAM/disk, and boot the VM.',
+          text: 'Create a VM using kairos-lab start or manually (for example in VirtualBox), attach the ISO, configure CPU/RAM/disk, and boot the VM.',
         },
         {
           '@type': 'HowToStep',
