@@ -970,6 +970,90 @@ Do not use reserved volume names: `artifacts`, `rootfs`, `config`, `ocispec`, `c
 
 ---
 
+## Pod scheduling and placement
+
+By default the builder Pod is scheduled onto any available node. In heterogeneous clusters—especially mixed `amd64`/`arm64` clusters where you want builds to run natively—you can constrain placement with the standard Kubernetes scheduling primitives.
+
+All fields are optional and sit directly under `spec`:
+
+| Field | Type | Purpose |
+|---|---|---|
+| `nodeSelector` | `map[string]string` | Schedule only on nodes that carry **all** listed labels |
+| `tolerations` | `[]Toleration` | Allow the Pod to land on tainted nodes |
+| `affinity` | `Affinity` | Full node/pod affinity and anti-affinity rules |
+| `podLabels` | `map[string]string` | Extra labels added to the builder Pod metadata |
+| `podAnnotations` | `map[string]string` | Extra annotations added to the builder Pod metadata |
+
+### Pinning a build to a specific architecture
+
+The most common use case for a mixed-arch cluster is pairing `spec.artifacts.arch` (which tells the build tools what to produce) with a `nodeSelector` (which ensures the build actually runs on a native node of that architecture):
+
+```yaml
+apiVersion: build.kairos.io/v1alpha2
+kind: OSArtifact
+metadata:
+  name: my-artifact-arm64
+  namespace: default
+spec:
+  image:
+    ref: quay.io/kairos/opensuse:leap-15.6-core-arm64-generic-v3.6.0
+  artifacts:
+    arch: arm64
+    iso: true
+  nodeSelector:
+    kubernetes.io/arch: arm64
+```
+
+Create a matching `OSArtifact` with `arch: amd64` and `nodeSelector: kubernetes.io/arch: amd64` for the other architecture. The two builds are fully independent and can run in parallel.
+
+### Tolerating tainted nodes
+
+If your build nodes carry a taint (e.g. to keep them dedicated to builds), add a matching toleration:
+
+```yaml
+spec:
+  tolerations:
+    - key: "build-node"
+      operator: "Exists"
+      effect: "NoSchedule"
+```
+
+### Affinity rules
+
+`spec.affinity` accepts the full Kubernetes [Affinity](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#NodeAffinity) object. Use it when label-based `nodeSelector` is not expressive enough, for example to prefer (but not require) a particular node pool:
+
+```yaml
+spec:
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          preference:
+            matchExpressions:
+              - key: node-pool
+                operator: In
+                values: ["build-pool"]
+```
+
+:::info Note
+`nodeSelector` and `affinity` are both applied; a node must satisfy **all** constraints. If they contradict each other, no node will match and the Pod will stay `Pending`.
+:::
+
+### Pod labels and annotations
+
+`podLabels` and `podAnnotations` are merged into the builder Pod's `metadata`. Use them to integrate with monitoring, cost-allocation, or policy tooling:
+
+```yaml
+spec:
+  podLabels:
+    team: platform
+    cost-center: infra
+  podAnnotations:
+    prometheus.io/scrape: "false"
+```
+
+---
+
 ## Advanced configuration example
 
 Multiple artifact types, custom cloud-config, GRUB, bundles, image pull secrets, and a custom PVC size.
