@@ -49,9 +49,16 @@ strict: false
 
 # The install block is to drive automatic installations without user interaction.
 install:
-  # Device for automated installs
-  # This can be either a full device path (so /dev/sda) or you can use the udev facility to identify the disk by UUID, path, label, diskseq or id (/dev/disk/by-{uuid,label,path,diskseq})
-  # Note that to use a disk by UUID or label, it has first to have that added from userspace, for example with `mkfs.ext4 -L LABEL -U UUID /dev/sda` otherwise disks dont come with UUID/label if they are empty
+  # Device for automated installs.
+  # Accepted values:
+  #   - A full device path:            /dev/sda
+  #   - A udev by-* symlink:           /dev/disk/by-{uuid,label,path,diskseq}/<value>
+  #     (Note: the disk must already carry the UUID/label, e.g. set with mkfs.ext4 -L LABEL /dev/sda)
+  #   - A script:// URI:               script:///path/to/script.sh
+  #     The script is executed at install time; its stdout (trimmed) is used as
+  #     the device path. Use this when the target device name is not known ahead
+  #     of time (e.g. varies across hardware). The script must exit 0 and print
+  #     exactly one device path. A non-zero exit code or empty output is an error.
   device: "/dev/sda"
   # Reboot after installation
   reboot: true

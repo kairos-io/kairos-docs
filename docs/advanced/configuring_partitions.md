@@ -138,4 +138,59 @@ stages:
 ```
 
 
+## Dynamic disk selection with `script://`
+
+When the target device name is not known ahead of time — for example because the same image is deployed to machines with different hardware — you can use a `script://` URI in place of a literal device path for both `install.device` and `layout.device.path`.
+
+The value after `script://` is executed as a command. Its stdout (whitespace-trimmed) is used as the device path. A non-zero exit code or empty output is treated as a fatal error.
+
+**Example: dynamic `install.device`**
+
+```yaml
+#cloud-config
+
+install:
+  device: "script:///usr/local/bin/pick-disk.sh"
+  auto: true
+```
+
+Where `/usr/local/bin/pick-disk.sh` might look like:
+
+```sh
+#!/bin/sh
+# Install to the first disk that is present on this machine.
+for dev in /dev/vda /dev/sda /dev/nvme0n1; do
+  [ -b "$dev" ] && echo "$dev" && exit 0
+done
+echo "no suitable disk found" >&2
+exit 1
+```
+
+**Example: dynamic `layout.device.path`**
+
+```yaml
+#cloud-config
+
+stages:
+  kairos-install.pre.before:
+    - name: "Partition the dynamically selected disk"
+      layout:
+        device:
+          path: "script:///usr/local/bin/pick-disk.sh"
+        add_partitions:
+          - fsLabel: COS_STATE
+            size: 18000
+            pLabel: state
+          - fsLabel: COS_PERSISTENT
+            pLabel: persistent
+            size: 0
+            filesystem: "ext4"
+```
+
+The script can be any executable (shell script with a shebang, compiled binary, etc.). Arguments are supported: `script:///usr/local/bin/pick-disk.sh arg1 arg2`.
+
+:::warning Script must exist in the live environment
+The `script://` command is resolved at install time, before any partitions are created and before there is any persistent storage to write to. This means the script **cannot** be written by the same cloud-config that references it (e.g. via `write_files`). The script must already be present in the live/installation environment — either baked into a custom Kairos image or included on the installation media.
+:::
+
 For more information about the full config available for partitions and extra partitions see the full [cloud-config page](/docs/reference/configuration)
