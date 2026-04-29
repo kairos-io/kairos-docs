@@ -392,8 +392,11 @@ stages:
           # or partition label (filesystem label matches first) or the device
           # provided in 'path'. The label check has precedence over path when
           # both are provided.
-          # 'path' also accepts a "script://<command>" value: the command is
-          # executed and its stdout is used as the device path at runtime.
+          # 'path' also accepts a "script:///path/to/script.sh [args...]"
+          # value: everything after the "script://" prefix is treated as the
+          # command, which is executed and whose stdout is used as the device
+          # path at runtime. If the command includes spaces or arguments,
+          # quote the entire YAML value.
           label: "COS_RECOVERY"
           path: "/dev/sda"
         # Only last partition can be expanded and it happens after all the other

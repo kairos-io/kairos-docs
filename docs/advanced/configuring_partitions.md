@@ -187,7 +187,7 @@ stages:
             filesystem: "ext4"
 ```
 
-The script can be any executable (shell script with a shebang, compiled binary, etc.). Arguments are supported: `script:///usr/local/bin/pick-disk.sh arg1 arg2`.
+The script can be any executable (shell script with a shebang, compiled binary, etc.). The value is a `script://` resolver string/command prefix, not a strict URI. Arguments are supported; when including them, quote the entire YAML value, for example: `"script:///usr/local/bin/pick-disk.sh arg1 arg2"`.
 
 :::warning Script must exist in the live environment
 The `script://` command is resolved at install time, before any partitions are created and before there is any persistent storage to write to. This means the script **cannot** be written by the same cloud-config that references it (e.g. via `write_files`). The script must already be present in the live/installation environment — either baked into a custom Kairos image or included on the installation media.
