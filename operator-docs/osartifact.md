@@ -1020,7 +1020,7 @@ spec:
 
 ### Affinity rules
 
-`spec.affinity` accepts the full Kubernetes [Affinity](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#NodeAffinity) object. Use it when label-based `nodeSelector` is not expressive enough, for example to prefer (but not require) a particular node pool:
+`spec.affinity` accepts the full Kubernetes [Affinity](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/) configuration. Use it when label-based `nodeSelector` is not expressive enough, for example to prefer (but not require) a particular node pool:
 
 ```yaml
 spec:
