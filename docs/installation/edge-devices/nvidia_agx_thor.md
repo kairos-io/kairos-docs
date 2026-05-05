@@ -22,7 +22,7 @@ This page describes the AGX Thor-specific image flow. After you have a Kairos Th
 <TabItem value="hadron" label="Hadron" default>
 
 
-Build your Thor base image using t he reference file at the [Hadron repo](https://raw.githubusercontent.com/kairos-io/hadron/refs/heads/main/examples/add-packages/Dockerfile.thor)
+Build your Thor base image using the reference file at the [Hadron repo](https://raw.githubusercontent.com/kairos-io/hadron/refs/heads/main/examples/add-packages/Dockerfile.thor)
 
 This dockerfile builds an image that includes:
 - A build-from-scratch Tegra-compatible kernel
