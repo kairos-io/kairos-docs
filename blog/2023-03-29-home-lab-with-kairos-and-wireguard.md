@@ -14,7 +14,7 @@ title: Access your home-lab Kairos cluster over a Wireguard VPN
 You got yourself a Raspberry Pi (or more), and you want to put them to good use.
 You decide to make a Kubernetes cluster out of them, so that you can utilise the resources better, use familiar tools and implement infrastructure-as-code.
 
-<!--truncate-->
+{/* truncate */}
 
 
 Up to this point, kudos to you for demanding no less than a real cloud from your home infra.

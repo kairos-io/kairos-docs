@@ -11,7 +11,7 @@ title: How I Automated My Doorbell with Kairos (and You Can Too)
 
 Picture this: You’re deep in focus, coding away, and the doorbell rings. Except… you never hear it. The mailman leaves, and now your package is on an adventure you didn't plan for. That’s exactly what happened to me, so I did what any geek would do—turn my dumb doorbell into a smart one using Kairos.
 
-<!--truncate-->
+{/* truncate */}
 
 
 :::warning Disclaimer

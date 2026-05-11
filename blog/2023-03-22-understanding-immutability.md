@@ -18,7 +18,7 @@ title: 'Understanding Immutable Linux OS: Benefits, Architecture, and Challenges
 
 :::
 
-<!--truncate-->
+{/* truncate */}
 
 
 For years, the traditional Linux operating system has been a top pick for its flexibility and ability to be customized. But as great as it is, there are use cases in which stricter security rules and higher reliability standards are needed. That's where immutable Linux operating systems come in - offering a more secure and reliable option, especially in settings where security is paramount.
