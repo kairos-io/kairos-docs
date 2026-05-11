@@ -13,7 +13,7 @@ We’re thrilled to announce that since April 2024, Kairos has been officially p
 
 You might be wondering - what does being part of the CNCF mean for you? The CNCF is known for backing the most innovative, reliable, and secure projects in the cloud-native space, and having their support brings a number of crucial benefits. Let’s dive into why this matters.
 
-<!--truncate-->
+{/* truncate */}
 
 
 ## Stability and Long-Term Support

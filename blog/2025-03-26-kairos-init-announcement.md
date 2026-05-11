@@ -24,7 +24,7 @@ In this post, we’ll take you behind the scenes:
 
 This is the story of how we rebuilt the foundation of Kairos, one layer at a time.
 
-<!--truncate-->
+{/* truncate */}
 
 
 ## 🐳 The Early Days: Building with Dockerfiles

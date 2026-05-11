@@ -20,7 +20,7 @@ At the same time, distro flexibility remains core to Kairos. This is visible in 
 
 For additional migration and build context, read [Hadron-Only Artifacts with Ongoing Distro Support](/blog/2026/02/25/kairos-v4-hadron-artifacts-and-distro-flexibility/).
 
-<!--truncate-->
+{/* truncate */}
 
 ## What v4 delivers in practice
 

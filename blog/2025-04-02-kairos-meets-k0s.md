@@ -17,7 +17,7 @@ Then there’s the [`provider-kairos`](https://github.com/kairos-io/provider-kai
 
 That is... until now.
 
-<!--truncate-->
+{/* truncate */}
 
 
 ## Enter k0s: The Zero Friction Kubernetes
