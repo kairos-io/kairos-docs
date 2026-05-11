@@ -86,7 +86,7 @@ const v372FlavorOptions = [
   {family: 'hadron', flavor: 'hadron', flavorRelease: '0.0.1', label: 'Hadron 0.0.1'},
 ] as const;
 
-const v401FlavorOptions = [
+const hadronFlavorOptions = [
   {family: 'hadron', flavor: 'hadron', flavorRelease: 'v0.0.4', label: 'Hadron v0.0.4'},
 ] as const;
 
@@ -192,7 +192,13 @@ const config: Config = {
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
-    v4: true, // Improve compatibility with the upcoming Docusaurus v4
+    v4: {
+      removeLegacyPostBuildHeadAttribute: true,
+      useCssCascadeLayers: true,
+      siteStorageNamespacing: true,
+      fasterByDefault: true,
+      mdx1CompatDisabledByDefault: false, // Keep MDX v1 compat for HTML comments, heading IDs, etc.
+    },
   },
 
   // Set the production url of your site here
@@ -254,16 +260,16 @@ const config: Config = {
 
   customFields: {
     registryURL: 'quay.io/kairos',
-    hadronFlavorRelease: 'v0.0.4',
+    hadronFlavorRelease: latestVersionCustomFields.hadronFlavorRelease,
     kairosVersion: latestVersion,
     k3sVersion: latestVersionCustomFields.k3sVersion,
     k0sVersion: latestVersionCustomFields.k0sVersion,
     flavorOptions: latestVersionCustomFields.flavorOptions,
-    providerVersion: 'v2.14.0',
+    providerVersion: latestVersionCustomFields.providerVersion,
     latestVersion,
     latestOperatorVersion: latestOperatorVersion ?? null,
-    auroraBootVersion: 'v0.14.0',
-    kairosInitVersion: 'v0.6.2',
+    auroraBootVersion: latestVersionCustomFields.auroraBootVersion,
+    kairosInitVersion: latestVersionCustomFields.kairosInitVersion,
     docsVersionCustomFields: {
       ...docsVersionCustomFields,
     },
