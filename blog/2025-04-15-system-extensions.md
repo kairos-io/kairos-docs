@@ -17,7 +17,7 @@ Today, we’re introducing a much cleaner answer: **the new system extension man
 
 ---
 
-<!--truncate-->
+{/* truncate */}
 
 
 ## 💡 What's New

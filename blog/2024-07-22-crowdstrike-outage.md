@@ -16,7 +16,7 @@ The recent CrowdStrike update fiasco that wreaked havoc across industries, causi
 
 CrowdStrike's faulty update led to massive system crashes. Kairos's immutable and decentralized architecture offers a robust alternative, ensuring system integrity and swift recovery in such scenarios.
 
-<!--truncate-->
+{/* truncate */}
 
 
 ## CrowdStrike Update: What Went Wrong

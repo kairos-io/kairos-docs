@@ -18,7 +18,7 @@ Today, we're excited to share a new milestone in that journey:
 
 Before we dive into what that means, let's take a step back and talk about what makes an open-source project *reliable*—especially when the stakes are high.
 
-<!--truncate-->
+{/* truncate */}
 
 
 ---
