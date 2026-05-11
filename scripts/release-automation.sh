@@ -188,6 +188,18 @@ ensure_release_branch() {
     log "INFO" "Using branch $branch_name"
 }
 
+sync_build_files_from_main() {
+    if [ "$DRY_RUN" = true ]; then
+        log "INFO" "[DRY RUN] Would sync build files, config, and blog from main"
+        return 0
+    fi
+
+    log "INFO" "Syncing build configuration files, docusaurus config, and blog from main branch"
+    git checkout origin/main -- package.json package-lock.json docusaurus.config.ts blog/
+    npm ci
+    log "INFO" "Build files synced and dependencies installed"
+}
+
 create_docs_version_if_missing() {
     local version="$1"
     if [ -d "versioned_docs/version-$version" ]; then
@@ -590,6 +602,7 @@ process_version() {
     log "INFO" "Retention keep list (latest patch of last 3 major.minor): $(format_csv "${KEEP_VERSIONS[@]}")"
 
     ensure_release_branch "$version"
+    sync_build_files_from_main
 
     local kairos_init_version
     kairos_init_version=$(get_kairos_init_version "$version")
