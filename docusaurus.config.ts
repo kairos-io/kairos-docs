@@ -86,8 +86,12 @@ const v372FlavorOptions = [
   {family: 'hadron', flavor: 'hadron', flavorRelease: '0.0.1', label: 'Hadron 0.0.1'},
 ] as const;
 
-const hadronFlavorOptions = [
+const hadronFlavorOptionsV403 = [
   {family: 'hadron', flavor: 'hadron', flavorRelease: 'v0.0.4', label: 'Hadron v0.0.4'},
+] as const;
+
+const hadronFlavorOptionsV410 = [
+  {family: 'hadron', flavor: 'hadron', flavorRelease: 'v0.2.0', label: 'Hadron v0.2.0'},
 ] as const;
 
 const docsVersionCustomFields = {
@@ -96,7 +100,7 @@ const docsVersionCustomFields = {
     hadronFlavorRelease: 'v0.2.0',
     k3sVersion: 'v1.36.0+k3s1',
     k0sVersion: 'v1.35.4+k0s.0',
-    flavorOptions: hadronFlavorOptions,
+    flavorOptions: hadronFlavorOptionsV410,
     providerVersion: 'v2.16.0',
     auroraBootVersion: 'v0.20.1',
     kairosInitVersion: 'v0.13.0',
@@ -106,7 +110,7 @@ const docsVersionCustomFields = {
     hadronFlavorRelease: 'v0.0.4',
     k3sVersion: 'v1.35.2+k3s1',
     k0sVersion: 'v1.34.3+k0s.0',
-    flavorOptions: hadronFlavorOptions,
+    flavorOptions: hadronFlavorOptionsV403,
     providerVersion: 'v2.14.2',
     auroraBootVersion: 'v0.20.0',
     kairosInitVersion: 'v0.8.4',
