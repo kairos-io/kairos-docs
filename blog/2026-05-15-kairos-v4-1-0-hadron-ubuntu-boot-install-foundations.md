@@ -1,28 +1,38 @@
 ---
 authors:
   - mauro-morales
-description: Kairos v4.1.0 updates Hadron to v0.2.0, adds Ubuntu 26.04 in kairos-init, and improves boot flows, install reliability, and release automation.
+description: Kairos v4.1.0 tightens the path from image build to managed nodes via kairos-agent phone-home and AuroraBoot v0.20.0’s web UI and fleet server mode, with supporting updates across Hadron, Ubuntu 26.04, boot, install, distros, and release automation.
 slug: 2026/05/15/kairos-v4-1-0-hadron-ubuntu-boot-install-foundations
 tags:
   - kairos
-title: "Kairos v4.1.0: Hadron v0.2.0, Ubuntu 26.04, and stronger boot/install foundations"
+title: "Kairos v4.1.0: From Image Build to Managed Nodes with AuroraBoot"
 ---
 
 Kairos v4.1.0 is now available.
 
-This release continues work across the lower layers that matter for running an image-based operating system in Kubernetes environments: base image updates, broader OS support, boot improvements, install reliability, and release automation.
+This release improves the path from building a Kairos image to deploying and managing real nodes. **`kairos-agent` now includes phone-home support**, which works together with **[AuroraBoot](https://github.com/kairos-io/AuroraBoot) v0.20.0** and its web UI when you run it in fleet server mode. Nodes produced through that flow can come online, report back after first boot using phone-home, and show up in AuroraBoot’s node manager.
 
-A key part of this release is the update of the Hadron-based Kairos images to **Hadron v0.2.0**, bringing in a newer kernel, security mitigation work, GPU-related enablement, and continued multi-architecture groundwork. Kairos v4.1.0 also adds Ubuntu 26.04 support in `kairos-init`, improves several install and disk workflows, and includes updates across core components such as `kairos-agent`, `immucore`, `provider-kairos`, `yip`, and `edgevpn`.
+Behind that story, v4.1.0 also ships **Hadron v0.2.0** for Hadron-based Kairos images, **Ubuntu 26.04** support in `kairos-init`, boot and install/disk hardening, broader distro compatibility, and release automation improvements. These layers all support the same operational direction: a dependable lifecycle around immutable images.
 
 {/* truncate */}
 
+## From image creation to managed nodes
+
+Kairos v4.1.0 adds phone-home support in `kairos-agent`. On its own, that gives nodes a way to signal back after installation or first boot. **AuroraBoot v0.20.0**, which is a separate project that works alongside Kairos, adds an end-to-end node build and deployment flow through its **web UI**.
+
+AuroraBoot can run as a **self-hosted fleet server**: a single deployment that brings together a **dashboard**, **REST API**, **node manager**, **SecureBoot key store**, and **netboot** server. The web UI walks you through building an artifact, deploying it, and managing nodes after they appear.
+
+Nodes built through AuroraBoot can **phone home automatically on first boot** (via `kairos-agent`) and land in the **Nodes** list in AuroraBoot. From there, you can drive actions such as upgrade, reboot, reset, applying cloud-config, or running allowed commands.
+
+That combination matters because image-based systems are not only about producing a bootable image. They also need a **reliable operational path** from image creation through installation, first boot, registration, and ongoing lifecycle management. `kairos-agent` and AuroraBoot address that gap as complementary pieces: Kairos on the node, AuroraBoot in the control plane you choose to run.
+
 ## Hadron-based images now use Hadron v0.2.0
 
-Kairos v4.1.0 updates the Hadron-based images to **Hadron v0.2.0**.
+Hadron-based Kairos images move to **Hadron v0.2.0**, updating the minimal Linux foundation those images are built on. This is an important supporting change for anyone using the official Hadron-based artifacts, but it sits alongside the broader provisioning and lifecycle work above.
 
-Hadron is the minimal Linux foundation we are building for image-based Kubernetes systems. In Kairos, it gives us a smaller and more controlled base while still keeping the lifecycle, provisioning, and Kubernetes integration in the Kairos layer.
+Hadron remains the upstream-first base we use for a smaller, more controlled foundation while lifecycle, provisioning, and Kubernetes integration stay in the Kairos layer.
 
-Hadron v0.2.0 brings several notable updates:
+Hadron v0.2.0 includes updates such as:
 
 - Linux kernel updated to `7.0.6`
 - DirtyFrag mitigation by blocklisting the affected `nf_defrag_ipv4` and `nf_defrag_ipv6` kernel modules by default
@@ -32,7 +42,7 @@ Hadron v0.2.0 brings several notable updates:
 - Parameterized Dockerfile base image and tag support
 - RISC-V images included in Hadron’s multi-architecture manifests
 
-The RISC-V work is worth calling out carefully. Hadron v0.2.0 now includes RISC-V images in its multi-architecture manifests, which is an important foundation for future Kairos work. Kairos RISC-V artifacts are not published yet, so this should be understood as groundwork rather than a user-testable Kairos target today.
+**RISC-V caveat:** Hadron v0.2.0 publishes RISC-V in its multi-architecture manifests as groundwork for the ecosystem. **Kairos does not publish RISC-V artifacts yet**, so this is not a user-testable Kairos target today—only preparation for future work.
 
 ## Ubuntu 26.04 support
 
@@ -78,12 +88,6 @@ This includes:
 
 This is part of the ongoing work to keep Kairos usable across different base distributions and operating environments.
 
-## New phone-home capability in kairos-agent
-
-`kairos-agent` v2.29.1 includes a new phone-home feature.
-
-This opens the door to better first-boot and provisioning workflows, where a node can signal back after installation or initialization. For image-based systems, this kind of capability is useful because installation, boot, and registration often need to be coordinated across infrastructure and management layers.
-
 ## Release and automation improvements
 
 Kairos v4.1.0 also improves the release process itself.
@@ -101,13 +105,9 @@ This kind of work is not always visible to end users, but it improves the reliab
 
 ## Looking ahead
 
-Kairos v4.1.0 is not a release built around one large user-facing feature. It is a foundation release.
+Kairos v4.1.0 puts a **clearer path from building images to deploying and managing nodes** at the center of the story. **`kairos-agent` phone-home support** and **AuroraBoot v0.20.0’s web UI and fleet server mode** are the most visible parts of that arc.
 
-It updates the Hadron-based images, adds Ubuntu 26.04 support, improves boot and install behavior, expands distro compatibility, and continues hardening the release machinery behind the project.
-
-That matters because an image-based operating system is not only an image. It is the full lifecycle around that image: how it is built, installed, booted, upgraded, recovered, and operated.
-
-Kairos v4.1.0 continues that work.
+**Hadron v0.2.0**, **Ubuntu 26.04** support in `kairos-init`, boot improvements, disk and install fixes, distro compatibility, and release automation all push in the same direction: an image-based OS is **not only an image**. It is the **lifecycle** around that image—**build**, **install**, **boot**, **register**, **upgrade**, **recover**, and **operate**—and v4.1.0 advances each of those layers.
 
 You can find the full release notes here: [Kairos v4.1.0 on GitHub](https://github.com/kairos-io/kairos/releases/tag/v4.1.0).
 
