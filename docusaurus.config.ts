@@ -91,6 +91,16 @@ const hadronFlavorOptions = [
 ] as const;
 
 const docsVersionCustomFields = {
+  'v4.1.0': {
+    registryURL: 'quay.io/kairos',
+    hadronFlavorRelease: 'v0.2.0',
+    k3sVersion: 'v1.36.0+k3s1',
+    k0sVersion: 'v1.35.4+k0s.0',
+    flavorOptions: hadronFlavorOptions,
+    providerVersion: 'v2.16.0',
+    auroraBootVersion: 'v0.20.1',
+    kairosInitVersion: 'v0.13.0',
+  },
   'v4.0.3': {
     registryURL: 'quay.io/kairos',
     hadronFlavorRelease: 'v0.0.4',
@@ -110,16 +120,6 @@ const docsVersionCustomFields = {
     providerVersion: 'v2.14.0',
     auroraBootVersion: 'v0.14.0',
     kairosInitVersion: 'v0.7.0',
-  },
-  'v3.6.0': {
-    registryURL: 'quay.io/kairos',
-    hadronFlavorRelease: null,
-    k3sVersion: 'v1.34.1+k3s1',
-    k0sVersion: 'v1.34.1+k0s.1',
-    flavorOptions: v360FlavorOptions,
-    providerVersion: 'v2.14.0',
-    auroraBootVersion: 'v0.13.0',
-    kairosInitVersion: 'v0.6.2',
   },
 } as const;
 
@@ -400,7 +400,7 @@ const config: Config = {
     image: 'img/Kairos_800x419.png',
     announcementBar: {
       id: 'hadron-linux-out',
-      content: '<a href="https://github.com/kairos-io/kairos/releases/tag/v4.0.3">Kairos v4.0.3</a> is out! 🚀',
+      content: '<a href="https://github.com/kairos-io/kairos/releases/tag/v4.1.0">Kairos v4.1.0</a> is out! 🚀',
       backgroundColor: '#1baaff',
       textColor: '#000000',
       isCloseable: true,
