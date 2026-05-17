@@ -29,6 +29,10 @@ Hetzner Cloud does not allow direct ISO uploads. Instead, follow the [Hetzner FA
 3. In the **Image** section, select any standard Linux OS (e.g., Ubuntu). This is only used for the initial provisioning — it will be overwritten by Kairos during installation as we’re gonna select the iso uploaded over the Ubuntu one.
 4. Finish configuring the server and click **Create & Buy now**.
 
+:::warning Hostname must match the server name
+The Hetzner Cloud Controller Manager looks up each Kubernetes Node by name in the Hetzner Cloud API. If your Kairos `hostname:` (set in the cloud-config below) does not match the **name you gave the server in the Hetzner console**, the CCM cannot identify the node and skips lifecycle reconciliation — you'll see no `providerID`, no `topology.kubernetes.io/region` label, and `Service type=LoadBalancer` attachments can silently fail. Decide on a server name now and use the **same** string in the cloud-config's `hostname:` field in Step 4.
+:::
+
 ## Step 3: Mount the Kairos ISO and reboot
 
 Once the server is created and running:
@@ -121,7 +125,7 @@ Copy the output — you will paste it as the `content` value of the first `write
 
 ```yaml
 #cloud-config
-hostname: kairos-{{ trunc 4 .MachineID }}
+hostname: <YOUR_HETZNER_SERVER_NAME>   # must match the name set in the Hetzner Cloud console (see Step 2 warning)
 
 users:
   - name: kairos
