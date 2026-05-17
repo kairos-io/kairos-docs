@@ -25,7 +25,7 @@ Hetzner Cloud does not allow direct ISO uploads. Instead, follow the [Hetzner FA
 ## Step 2: Create a server
 
 1. In the Hetzner Cloud console, click **Create Server**.
-2. Choose your region, server type, and disk size. Make sure the disk is large enough: Kairos requires space for the active, passive, and recovery partitions. A disk of at least 30 GB is recommended (3 times the size of the Kairos image, plus room for persistent storage).
+2. Choose your region, server type, and disk size. Make sure the disk is large enough: Kairos requires space for the active, passive, and recovery partitions. A disk of at least 30 GB is recommended (3 times the size of the Kairos image, to accommodate the active, passive and recovery partition, plus room for persistent storage).
 3. In the **Image** section, select any standard Linux OS (e.g., Ubuntu). This is only used for the initial provisioning — it will be overwritten by Kairos during installation as we’re gonna select the iso uploaded over the Ubuntu one.
 4. Finish configuring the server and click **Create & Buy now**.
 
@@ -153,18 +153,53 @@ write_files:
     content: YXBpVmVyc2lvbjogaGVsbS5jYXR0bGUuaW8vdjEKa2luZDogSGVsbUNoYXJ0Cm1ldGFkYXRhOgogIG5hbWU6IGhjbG91ZC1jbG91ZC1jb250cm9sbGVyLW1hbmFnZXIKICBuYW1lc3BhY2U6IGt1YmUtc3lzdGVtCnNwZWM6CiAgY2hhcnQ6IGhjbG91ZC1jbG91ZC1jb250cm9sbGVyLW1hbmFnZXIKICByZXBvOiBodHRwczovL2NoYXJ0cy5oZXR6bmVyLmNsb3VkCiAgdGFyZ2V0TmFtZXNwYWNlOiBrdWJlLXN5c3RlbQogIGJvb3RzdHJhcDogdHJ1ZQogIHZhbHVlc0NvbnRlbnQ6IHwtCiAgICBuZXR3b3JraW5nOgogICAgICBlbmFibGVkOiBmYWxzZQo=
 ```
 
-:::tip Private networking
-If you have configured a Hetzner private network for your servers, add the network name or ID to the secret before encoding it:
-```yaml
-stringData:
-  token: "<HETZNER_API_TOKEN>"
-  network: "<HETZNER_NETWORK_NAME_OR_ID>"
-```
-And regenerate the base64 content.
-:::
-
 For more details on the available configuration options, refer to the [hcloud-cloud-controller-manager documentation](https://github.com/hetznercloud/hcloud-cloud-controller-manager).
+
+### Using a Hetzner private network
+
+If your Hetzner Cloud servers are attached to a private network, three additional settings make the CCM use that private network as the node's primary plane — `InternalIP` becomes the private address, and pod-to-pod traffic between nodes stays off the public internet.
+
+**1. Add the network name to the secret.** When you regenerate the base64 in [Step 1](#step-1-generate-the-base64-content-for-the-secret), include the network field:
+
+```bash
+printf 'apiVersion: v1\nkind: Secret\nmetadata:\n  name: hcloud\n  namespace: kube-system\nstringData:\n  token: "<HETZNER_API_TOKEN>"\n  network: "<HETZNER_NETWORK_NAME_OR_ID>"\n' | base64 -w0
+```
+
+The CCM reads `HCLOUD_NETWORK` from this secret and uses the matching Hetzner private network for `InternalIP` assignment.
+
+**2. Set `networking.enabled: true` and `networking.clusterCIDR` in the CCM HelmChart values.** Replace the values block (`networking: {enabled: false}`) with:
+
+```yaml
+valuesContent: |-
+  networking:
+    enabled: true
+    clusterCIDR: 10.42.0.0/16   # k3s's default pod CIDR; must match the value passed to `k3s server --cluster-cidr`
+```
+
+The `clusterCIDR` value is **critical when running on k3s**. The chart's default (`10.244.0.0/16`) matches vanilla Kubernetes / kubeadm, but k3s uses `10.42.0.0/16`. A mismatch makes the CCM's route-controller emit a `ClusterCIDRMisconfigured` event and exit; the unrelated service-controller in the same process then never runs, so `Service type=LoadBalancer` resources stay `<pending>` indefinitely.
+
+**3. Tell kubelet to use the private IP as its node IP, before k3s starts.** The CCM moves `InternalIP` to the private address only after kubelet has already generated its TLS certificate. Without intervention the certificate's SAN only covers the public IP, and any API → kubelet path (`kubectl logs / exec / top`, metrics-server) fails with `x509: certificate is valid for …, not <private-ip>`.
+
+Add a Kairos `stages.boot` block that detects the private IP and writes `node-ip:` to `/etc/rancher/k3s/config.yaml` before k3s starts:
+
+```yaml
+stages:
+  boot:
+    - name: "detect hetzner private ip"
+      if: '[ ! -f /etc/rancher/k3s/config.yaml ]'
+      commands:
+        - mkdir -p /etc/rancher/k3s
+        - |
+          PRIVATE_IP=$(ip -4 -o addr show | awk '$4 ~ /^10\./ {print $4}' | cut -d/ -f1 | head -1)
+          [ -n "$PRIVATE_IP" ] && printf 'node-ip: %s\n' "$PRIVATE_IP" > /etc/rancher/k3s/config.yaml
+```
+
+k3s reads `/etc/rancher/k3s/config.yaml` at startup; setting `node-ip` there is equivalent to passing `--node-ip` on the command line, and makes kubelet include the IP in its certificate's SAN from the very first registration.
 
 ## See also
 
-The same `write_files` + base64 pattern shown above can drop any `HelmChart` (or other YAML) into k3s's auto-deploy directory at first boot — it isn't specific to the Hetzner CCM. Combined with the Kairos `stages.boot` block, you can also fetch external manifests from the network before k3s starts. A common follow-up is replacing k3s's default CNI; the [Cilium k3s installation guide](https://docs.cilium.io/en/stable/installation/k3s/) describes the corresponding k3s flags and Helm values.
+The `write_files` + base64 pattern shown above can drop any `HelmChart` (or other YAML) into k3s's auto-deploy directory at first boot — it isn't specific to the Hetzner CCM. Combined with the Kairos `stages.boot` block, you can also fetch external manifests from the network before k3s starts.
+
+**Ready-to-deploy cloud-config variants** for Hetzner Cloud — bundling the fixes documented above (`clusterCIDR`, private-IP detection, optional Gateway API CRDs) into copy-paste files — are maintained in the [Hadron repository's `examples/` directory](https://github.com/kairos-io/hadron/tree/main/examples).
+
+**Modern ingress.** The Kubernetes `Ingress` resource has been feature-frozen since the Gateway API reached GA. k3s 1.32+ bundles Traefik v3, which has a native [Gateway API](https://gateway-api.sigs.k8s.io/) provider — you can enable it without replacing the bundled chart by *not* passing `--disable=traefik` and dropping a small `HelmChartConfig` that sets `providers.kubernetesGateway.enabled: true`. The `examples/` directory above includes a ready-made variant. For other CNI choices the [Cilium k3s installation guide](https://docs.cilium.io/en/stable/installation/k3s/) describes the corresponding k3s flags and Helm values.
