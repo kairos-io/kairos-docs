@@ -26,7 +26,7 @@ Hetzner Cloud does not allow direct ISO uploads. Instead, follow the [Hetzner FA
 
 1. In the Hetzner Cloud console, click **Create Server**.
 2. Choose your region, server type, and disk size. Make sure the disk is large enough: Kairos requires space for the active, passive, and recovery partitions. A disk of at least 30 GB is recommended (3 times the size of the Kairos image, to accommodate the active, passive and recovery partition, plus room for persistent storage).
-3. In the **Image** section, select any standard Linux OS (e.g., Ubuntu). This is only used for the initial provisioning — it will be overwritten by Kairos during installation as we’re gonna select the iso uploaded over the Ubuntu one.
+3. In the **Image** section, select any standard Linux OS (for example, Ubuntu). This image is used only for the initial provisioning of the server. In Step 3, you will mount the Kairos ISO and boot from it, and the Kairos installation will overwrite the initially provisioned OS.
 4. Finish configuring the server and click **Create & Buy now**.
 
 :::warning Hostname must match the server name
