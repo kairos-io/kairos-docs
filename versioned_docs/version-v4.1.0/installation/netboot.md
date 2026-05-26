@@ -6,67 +6,15 @@ date: 2022-12-01
 description: Install Kairos from network
 ---
 
-Most hardware these days, supports booting an operating system from the network.
+Most modern hardware supports booting an operating system from the network.
 The technology behind this is called [Preboot Execution Environment](https://en.wikipedia.org/wiki/Preboot_Execution_Environment).
-Kairos releases include artifacts to allow booting from the network. In general, the following files are needed:
+PXE booting Kairos needs three files: a kernel, an initrd and a squashfs rootfs. These are not shipped as standalone release assets — they are extracted from a Kairos OCI image at the moment of netboot.
 
-- The initrd image: It's the system that loads first. It's responsible to load the kernel.
-- The kernel: This is the kernel of the operating system that will boot.
-- The squashfs: The filesystem of the operating system that will boot.
+The recommended way to do this is with [AuroraBoot](/docs/reference/auroraboot), which pulls the OCI image, extracts the netboot artifacts and serves them over HTTP, with built-in ProxyDHCP so a target machine on the same network can boot directly.
 
-Booting using these files can happen in multiple ways:
-
-- Either with direct support from the machine BIOS plus network configuration (DHCP server etc).
-- Software based network booting. This works with a special ISO, built with
-  [ipxe](https://ipxe.org/) project. Kairos releases include pre-built ISOs for
-  netbooting (named like `*.ipxe.iso.ipxe`).
-- Use [AuroraBoot](/docs/reference/auroraboot)
-
-Generic hardware based netbooting is out of scope for this document.
-Below we give instructions on how to use the Kairos release artifacts to netboot and how to use [AuroraBoot](/docs/reference/auroraboot) to boot from network.
-
-## Boot with pre-built ISOs
-
-The ipxe ISOs from the Kairos release artifacts, were built with a ipxe script that points directly to the
-`kernel`, `initrd` and `squashfs` artifacts of the same release on GitHub.
-
-E.g.:
-
-```bash
-#!ipxe
-set url https://github.com/kairos-io/kairos/releases/download/{{< KairosVersion  >}}
-set kernel {{< Image variant="standard" suffix="-kernel"  >}}
-set initrd {{< Image variant="standard" suffix="-initrd"  >}}
-set rootfs {{< Image variant="standard" suffix=".squashfs"  >}}
-
-# Configure interface
-ifconf
-
-# set config https://example.com/machine-config
-# set cmdline extra.values=1
-kernel ${url}/${kernel} initrd=${initrd} rd.neednet=1 ip=dhcp rd.cos.disable root=live:${url}/${rootfs} netboot install-mode config_url=${config} console=tty1 console=ttyS0 ${cmdline}
-initrd ${url}/${initrd}
-boot
-```
-
-Booting the ISO will automatically download and boot those artifacts. E.g. using qemu:
-
-```bash
-#!/bin/bash
-
-qemu-img create -f qcow2 disk.img 40g
-qemu-system-x86_64 \
-    -m 4096 \
-    -smp cores=2 \
-    -nographic \
-    -drive if=virtio,media=disk,file=disk.img \
-    -drive if=ide,media=cdrom,file=${1:-kairos.iso}
-
-```
+Generic hardware-based netboot setup (PXE BIOS configuration, DHCP, etc.) is out of scope for this document.
 
 ## Use AuroraBoot
-
-[AuroraBoot](/docs/reference/auroraboot) is a Kairos convinience tool that can be used to quickly deploy Kairos from Network with zero-touch configuration, for instance:
 
 ```bash
 docker run --rm -ti --net host quay.io/kairos/auroraboot \
@@ -75,49 +23,29 @@ docker run --rm -ti --net host quay.io/kairos/auroraboot \
                     # --cloud-config ....
 ```
 
-Will netboot the <OCICode variant="standard" /> image. You can find more details in the [AuroraBoot documentation section](/docs/reference/auroraboot).
+This will netboot the <OCICode variant="standard" /> image. AuroraBoot listens for PXE requests on the host network and serves the boot artifacts to any machine on that network configured to boot from the network. See the [AuroraBoot documentation](/docs/reference/auroraboot) for more options (cloud-config, custom command line, disabling DHCP if you already have one, etc.).
 
-## Notes on booting from network
+If your hardware doesn't support PXE booting from firmware, you can use our [generic iPXE ISO](https://github.com/kairos-io/ipxe-dhcp/releases) to bootstrap iPXE, which will then look for AuroraBoot (or any other ProxyDHCP server) on the network.
 
-Another way to boot with the release artifacts is using [pixiecore](https://github.com/danderson/netboot/tree/master/pixiecore).
-`pixiecore` acts as a server which offers net boot files over the network and it's automatically discovered on a network where a DHCP server is running and is compatible with [the pixiecore architecture](https://github.com/danderson/netboot/blob/master/pixiecore/README.booting.md).
+## Use your own netboot server
 
+If you'd rather plug Kairos into an existing netboot setup (pixiecore, dnsmasq, a PXE/TFTP server you already run), AuroraBoot exposes two subcommands to support that workflow.
 
-Assuming the current directory has the `kernel`, `initrd` and `squashfs` artifacts,
-`pixiecore` server can be started with `docker` like this:
+First, extract the kernel, initrd and squashfs from a Kairos ISO:
 
 ```bash
-#!/bin/bash
-
-wget "https://github.com/kairos-io/kairos/releases/download/{{< KairosVersion  >}}/{{< Image variant="standard" suffix="-kernel" >}}"
-wget "https://github.com/kairos-io/kairos/releases/download/{{< KairosVersion  >}}/{{< Image variant="standard" suffix="-initrd"  >}}"
-wget "https://github.com/kairos-io/kairos/releases/download/{{< KairosVersion  >}}/{{< Image variant="standard" suffix=".squashfs"  >}}"
-
-cat << EOF > config.yaml
-#cloud-config
-
-hostname: "hostname.domain.tld"
-users:
-- name: "kairos"
-  passwd: "kairos"
-EOF
-
-# This will start the pixiecore server.
-# Any machine that depends on DHCP to netboot will be send the specified files and the cmd boot line.
-docker run \
-  -d --name pixiecore --net=host -v $PWD:/files quay.io/pixiecore/pixiecore \
-    boot /files/{{< Image variant="standard" suffix="-kernel"  >}} /files/{{< Image variant="standard" suffix="-initrd"  >}} --cmdline="rd.neednet=1 ip=dhcp rd.cos.disable root=live:{{ ID \"/files/{{< Image variant="standard" suffix=".squashfs"  >}}\" }} netboot install-mode config_url={{ ID \"/files/config.yaml\" }} console=tty1 console=ttyS0 console=tty0"
+docker run --rm -v $PWD:/work quay.io/kairos/auroraboot \
+    netboot /work/kairos.iso /work/out kairos
 ```
 
-If your machine doesn't support netbooting, you can use our [generic image](https://github.com/kairos-io/ipxe-dhcp/releases), which is built using an ipxe script [from the pixiecore project](https://github.com/danderson/netboot/blob/master/pixiecore/boot.ipxe). The ISO will wait for a DHCP proxy response from pixiecore.
+This writes `kairos-kernel`, `kairos-initrd` and `kairos.squashfs` into `./out`. Feed those files into your existing server.
 
-If pixiecore is successfully reached, you should see an output similar to this in the `pixiecore` docker container:
+If you don't have a netboot server yet, AuroraBoot can be one. The `start-pixie` subcommand runs Pixiecore directly against the artifacts above:
 
+```bash
+docker run --rm --net host -v $PWD:/work quay.io/kairos/auroraboot \
+    start-pixie /work/cloud-config.yaml /work/out/kairos.squashfs 0.0.0.0 8090 \
+                /work/out/kairos-initrd /work/out/kairos-kernel
 ```
-$ docker logs pixiecore
-[DHCP] Offering to boot 08:00:27:e5:22:8c
-[DHCP] Offering to boot 08:00:27:e5:22:8c
-[HTTP] Sending ipxe boot script to 192.168.1.49:4371
-[HTTP] Sent file "kernel" to 192.168.1.49:4371
-[HTTP] Sent file "initrd-0" to 192.168.1.49:4371
-```
+
+Pixiecore acts as a ProxyDHCP server, so it integrates with whatever DHCP server is already on the network — target machines configured to PXE-boot will pick up the kernel and initrd served on the address and port you passed.
