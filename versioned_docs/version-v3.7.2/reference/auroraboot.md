@@ -577,29 +577,6 @@ docker run -v "$PWD"/config.yaml:/config.yaml \
 
 See the [Airgap example](/docs/v3.7.2/examples/airgap/) in the [examples section](/docs/v3.7.2/examples/).
 
-### Netboot with core images from Github releases
-
-```bash
-docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos/auroraboot \
-        --set "artifact_version=v3.7.2" \
-        --set "release_version=v3.7.2" \
-        --set "flavor={{< FlavorCode  >}}" \
-        --set repository="kairos-io/kairos" \
-        --cloud-config /config.yaml
-```
-
-### Netboot with k3s images from Github releases
-
-```bash
-docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos/auroraboot \
-        --set "artifact_version=v3.7.2-{{< K3sVersionOCI  >}}" \
-        --set "release_version=v3.7.2" \
-        --set "flavor={{< FlavorCode  >}}" \
-        --set "flavor_release={{< FlavorReleaseCode  >}}" \
-        --set "repository=kairos-io/provider-kairos" \
-        --cloud-config /config.yaml
-```
-
 ### Netboot from container images
 
 ```bash
@@ -607,6 +584,40 @@ docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos
         --set container_image={{< OCI variant="core" kairosVersion="v3.7.2"  >}}
         --cloud-config /config.yaml
 ```
+
+### Extract netboot artifacts from an ISO
+
+The `netboot` subcommand pulls the kernel, initrd and squashfs out of a Kairos ISO so they can be served by any netboot infrastructure (pixiecore, dnsmasq, an existing TFTP server, etc.).
+
+```bash
+docker run --rm -v $PWD:/work quay.io/kairos/auroraboot \
+    netboot /work/kairos.iso /work/out kairos
+```
+
+Positional arguments:
+- `iso-file` — path to a Kairos ISO inside the container.
+- `output-dir` — directory the extracted artifacts are written to.
+- `output-artifact-prefix` — filename prefix for the extracted files. With prefix `kairos` you get `kairos-kernel`, `kairos-initrd` and `kairos.squashfs`.
+
+### Serve existing netboot artifacts with start-pixie
+
+The `start-pixie` subcommand runs Pixiecore against a kernel, initrd and squashfs you already have — for example, the files produced by `netboot` above, or files built by your own pipeline.
+
+```bash
+docker run --rm --net host -v $PWD:/work quay.io/kairos/auroraboot \
+    start-pixie /work/cloud-config.yaml /work/out/kairos.squashfs 0.0.0.0 8090 \
+                /work/out/kairos-initrd /work/out/kairos-kernel
+```
+
+Positional arguments, in order:
+1. `cloud-config-file` — cloud-config served to the booted machine.
+2. `squashfs-file` — root filesystem.
+3. `address` — IP to bind the netboot server (e.g. `0.0.0.0`).
+4. `port` — HTTP port (e.g. `8090`).
+5. `initrd-file` — initrd image.
+6. `kernel-file` — kernel image.
+
+Pixiecore acts as a ProxyDHCP server, so it integrates with whatever DHCP server is already on the network rather than replacing it.
 
 ### Generate RAW disk images
 
