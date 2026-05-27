@@ -8,9 +8,9 @@ description: Install Kairos from network
 
 Most modern hardware supports booting an operating system from the network.
 The technology behind this is called [Preboot Execution Environment](https://en.wikipedia.org/wiki/Preboot_Execution_Environment).
-PXE booting Kairos needs three files: a kernel, an initrd and a squashfs rootfs. These are not shipped as standalone release assets — they are extracted from a Kairos OCI image at the moment of netboot.
+PXE booting Kairos needs three files: a kernel, an initrd and a squashfs rootfs. These are not shipped as standalone release assets — you obtain them from a Kairos OCI image or ISO.
 
-The recommended way to do this is with [AuroraBoot](/docs/v3.7.2/reference/auroraboot/), which pulls the OCI image, extracts the netboot artifacts and serves them over HTTP, with built-in ProxyDHCP so a target machine on the same network can boot directly.
+The recommended way to do this is with [AuroraBoot](/docs/v3.7.2/reference/auroraboot/), which pulls a Kairos OCI image, extracts the netboot artifacts and serves them over HTTP, with built-in ProxyDHCP so a target machine on the same network can boot directly. If you'd rather plug Kairos into an existing PXE/TFTP setup, AuroraBoot can also extract the same artifacts ahead of time from a Kairos ISO so you can serve them yourself.
 
 Generic hardware-based netboot setup (PXE BIOS configuration, DHCP, etc.) is out of scope for this document.
 

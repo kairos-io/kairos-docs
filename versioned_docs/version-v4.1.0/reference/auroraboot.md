@@ -84,10 +84,7 @@ For example, to netboot a machine with the latest version of Kairos and <FlavorC
 
 ```bash
 docker run --rm -ti --net host quay.io/kairos/auroraboot \
-                    --set "artifact_version={{< KairosVersion  >}}" \
-                    --set "release_version={{< KairosVersion  >}}" \
-                    --set "flavor={{< FlavorCode  >}}" \
-                    --set repository="kairos-io/kairos" \
+                    --set "container_image={{< OCI variant="standard" >}}" \
                     --cloud-config https://...
 ```
 
@@ -105,25 +102,16 @@ There are only 3 steps involved in the process:
 
 #### 1. Selecting a release
 
-AuroraBoot can bootstrap container images or released assets from our GitHub release process.
-
-To use GitHub releases set a release version with `--set release_version` (the GitHub release), an artifact version with `--set artifact_version` (the artifact version) a flavor with `--set flavor` and a repository with `--set repository`.
-Kairos has releases with (standard) and without (core) k3s both can be downloaded in the [release page at kairos](https://github.com/kairos-io/kairos/releases).
-
-To use a container image, you can use [the Kairos released images](/docs/reference/image_matrix) or [customized](/docs/advanced/customizing) by specifying `--set container_image` instead with the container image of choice.
+AuroraBoot bootstraps machines from a Kairos container image. You can use [the Kairos released images](/docs/reference/image_matrix) or [build your own](/docs/advanced/customizing) and pass it with `--set container_image`.
 
 #### 2. Run AuroraBoot
 
-Now we can run AuroraBoot with the version we selected, either from GitHub releases or directly from a container image.
-
-In the example below we selected <code><KairosVersion />-<K3sVersion /></code>, <FlavorCode /> flavor, so we would run either one of the following:
+Now we can run AuroraBoot with the container image we selected:
 
 <Tabs>
 <TabItem value="container-image" label="Container image">
 
 By indicating a `container_image`, AuroraBoot will pull the image locally and start to serve it for network booting.
-
-You can use [the Kairos released images](/docs/reference/image_matrix) or [your own](/docs/advanced/customizing).
 
 ```bash
 docker run --rm -ti --net host quay.io/kairos/auroraboot \
@@ -142,19 +130,6 @@ docker pull {{< OCI variant="standard" >}}
 # This will use the container image from the host's docker daemon
 docker run --rm -ti -v /var/run/docker.sock:/var/run/docker.sock --net host quay.io/kairos/auroraboot \
                     --set "container_image=oci:{{< OCI variant="standard" >}}"
-```
-</TabItem>
-<TabItem value="github-releases" label="Github releases">
-
-By indicating a `artifact_version`, a `release_version`, a `flavor` and a `repository`, AuroraBoot will use GitHub released assets.
-
-```bash
-docker run --rm -ti --net host quay.io/kairos/auroraboot \
-                    --set "artifact_version={{< KairosVersion  >}}-{{< K3sVersionOCI  >}}" \
-                    --set "release_version={{< KairosVersion  >}}" \
-                    --set "flavor={{< FlavorCode  >}}" \
-                    --set "flavor_release={{< FlavorReleaseCode  >}}" \
-                    --set "repository=kairos-io/provider-kairos"
 ```
 </TabItem>
 </Tabs>
@@ -672,7 +647,7 @@ See the [Airgap example](/docs/examples/airgap) in the [examples section](/docs/
 
 ```bash
 docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos/auroraboot \
-        --set container_image={{< OCI variant="core" >}}
+        --set container_image={{< OCI variant="core" >}} \
         --cloud-config /config.yaml
 ```
 
