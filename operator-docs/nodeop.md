@@ -119,6 +119,7 @@ spec:
 | `backoffLimit` | `int` | `3` | Number of retries before marking the job failed |
 | `concurrency` | `int` | `0` | Max nodes running the operation simultaneously (0 = all at once) |
 | `stopOnFailure` | `bool` | `false` | Stop creating new jobs when a job fails |
+| `skipNodesAlreadyAtImage` | `bool` | `false` | When true, skip nodes whose `kairos.io/image-repo` annotation already matches `spec.image` — they are recorded as `Completed` with a skip message and no Job is created. Used primarily by [NodeOpUpgrade](../nodeop-upgrade/#skipping-nodes-already-at-the-target-image) to avoid re-upgrading nodes that are already at the target image. |
 
 ## Example: Upgrading Firmware
 
