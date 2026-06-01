@@ -657,7 +657,7 @@ div[class*='announcementBar_'] button {
   align-items: center;
   justify-content: flex-start;
   gap: 0.65rem;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   width: 100%;
 }
 
@@ -678,6 +678,26 @@ div[class*='announcementBar_'] button {
 .footer-copyright-text {
   border-left: 0;
   margin-left: auto;
+}
+
+.footer-subfooter {
+  flex-basis: 100%;
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 116, 66, 0.15);
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  line-height: 1.4;
+}
+
+.footer-subfooter a {
+  color: rgba(255, 255, 255, 0.65);
+  text-decoration: underline;
+}
+
+.footer-subfooter a:hover {
+  color: var(--kairos-orange);
 }
 
 @media (max-width: 996px) {
