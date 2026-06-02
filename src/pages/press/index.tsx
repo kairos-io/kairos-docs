@@ -1,7 +1,7 @@
 import type {ReactNode} from 'react';
 import Layout from '@theme/Layout';
 
-import {pressItems} from '../components/designs/content';
+import {pressItems} from '../../components/designs/content';
 
 export default function PressPage(): ReactNode {
   return (
