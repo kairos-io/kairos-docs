@@ -11,6 +11,13 @@ type PressItem = {
 
 const pressItems: PressItem[] = [
   {
+    dateISO: '2026-05-13',
+    dateLabel: 'May 13, 2026',
+    source: 'CNCF Blog',
+    text: 'Building a cloud-native platform from the ground up with Kairos, k0rdent, and Bindy',
+    url: 'https://www.cncf.io/blog/2026/05/13/building-a-cloud-native-platform-from-the-ground-up-with-kairos-k0rdent-and-bindy/',
+  },
+  {
     dateISO: '2026-01-28',
     dateLabel: 'Jan 28, 2026',
     source: 'Business Wire',
