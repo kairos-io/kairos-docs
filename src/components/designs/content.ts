@@ -95,6 +95,14 @@ export const pressItems: PressItem[] = [
 
 export const events: EventItem[] = [
   {
+    dateISO: '2026-06-16',
+    dateLabel: 'Jun 16, 2026',
+    location: 'Barcelona, ES',
+    title: 'Ver, no tocar, y mucho menos desconfigurar: sistemas operativos inmutables',
+    conference: 'DevBCN',
+    url: 'https://www.devbcn.com/2026/talks/1148879',
+  },
+  {
     dateISO: '2026-03-23',
     dateLabel: 'Mar 23, 2026',
     location: 'Amsterdam, NL',

@@ -11,6 +11,13 @@ type EventItem = {
 
 const events: EventItem[] = [
   {
+    date: 'Jun 16',
+    location: 'Barcelona, ES',
+    title: 'Ver, no tocar, y mucho menos desconfigurar: sistemas operativos inmutables',
+    conference: 'DevBCN',
+    url: 'https://www.devbcn.com/2026/talks/1148879',
+  },
+  {
     date: 'Mar 26',
     location: 'Amsterdam, NL',
     title: 'Project Pavilion - Booth P18A (12:30-14:00)',
