@@ -1,72 +1,6 @@
 import type {ReactNode} from 'react';
 import Layout from '@theme/Layout';
-
-type EventItem = {
-  date: string;
-  location: string;
-  title: string;
-  conference: string;
-  url: string;
-};
-
-const events: EventItem[] = [
-  {
-    date: 'Jun 16',
-    location: 'Barcelona, ES',
-    title: 'Ver, no tocar, y mucho menos desconfigurar: sistemas operativos inmutables',
-    conference: 'DevBCN',
-    url: 'https://www.devbcn.com/2026/talks/1148879',
-  },
-  {
-    date: 'Mar 26',
-    location: 'Amsterdam, NL',
-    title: 'Project Pavilion - Booth P18A (12:30-14:00)',
-    conference: 'KubeCon EU',
-    url: 'https://events.linuxfoundation.org/kubecon-cloudnativecon-europe/features-add-ons/project-engagement/#project-pavilion-directory',
-  },
-  {
-    date: 'Mar 26',
-    location: 'Amsterdam, NL',
-    title: 'Cloud Native at the Far(m) Edge: Running Kubernetes and AI on Tractors',
-    conference: 'KubeCon EU',
-    url: 'https://kccnceu2026.sched.com/event/2CW75/cloud-native-at-the-farm-edge-running-kubernetes-and-ai-on-tractors-mauro-morales-spectro-cloud-jordan-karapanagiotis-aurea-imaging',
-  },
-  {
-    date: 'Mar 24',
-    location: 'Amsterdam, NL',
-    title: 'Project Pavilion - Booth P18A (10:15-14:40)',
-    conference: 'KubeCon EU',
-    url: 'https://events.linuxfoundation.org/kubecon-cloudnativecon-europe/features-add-ons/project-engagement/#project-pavilion-directory',
-  },
-  {
-    date: 'Mar 23',
-    location: 'Amsterdam, NL',
-    title: "Project Lightning Talk: What's New In Kairos, 2026 Edition",
-    conference: 'KubeCon EU',
-    url: 'https://kccnceu2026.sched.com/event/2EFx4/project-lightning-talk-whats-new-in-kairos-2026-edition-mauro-morales-maintainer',
-  },
-  {
-    date: 'Feb 04',
-    location: 'Ghent, BE',
-    title: 'From Zero to Immutable Kubernetes',
-    conference: 'CfgMgmtCamp',
-    url: 'https://cfp.cfgmgmtcamp.org/ghent2026/talk/W9LUC3/',
-  },
-  {
-    date: 'Feb 02',
-    location: 'Ghent, BE',
-    title: 'Cloud Native at the Far(m) Edge: Running Kubernetes and AI on Tractors',
-    conference: 'CfgMgmtCamp',
-    url: 'https://cfp.cfgmgmtcamp.org/ghent2026/talk/UYXXAQ/',
-  },
-  {
-    date: 'Jan 31',
-    location: 'Brussels, BE',
-    title: 'What Image-Based Systems Taught Us About Linux Distributions',
-    conference: 'FOSDEM',
-    url: 'https://fosdem.org/2026/schedule/event/YQRYB7-hadron-linux/',
-  },
-];
+import {events} from '@site/src/components/designs/content';
 
 export default function EventsPage(): ReactNode {
   return (
@@ -81,9 +15,9 @@ export default function EventsPage(): ReactNode {
           </div>
           <div className="events-list">
             {events.map((event) => (
-              <div className="events-list-item" key={`${event.date}-${event.title}`}>
+              <div className="events-list-item" key={`${event.dateISO}-${event.title}`}>
                 <div className="events-list-meta">
-                  <span className="events-date">{event.date}</span>
+                  <span className="events-date">{event.dateLabel}</span>
                   <span className="events-location">{event.location}</span>
                 </div>
                 <div className="events-list-text">
