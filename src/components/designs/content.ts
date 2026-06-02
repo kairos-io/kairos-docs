@@ -73,6 +73,12 @@ export const alternativeTracks = [
 
 export const pressItems: PressItem[] = [
   {
+    title: 'Building a cloud-native platform from the ground up with Kairos, k0rdent, and Bindy',
+    logo: '/img/logo_cloudnative.png',
+    logoAlt: 'CNCF logo',
+    href: 'https://www.cncf.io/blog/2026/05/13/building-a-cloud-native-platform-from-the-ground-up-with-kairos-k0rdent-and-bindy/',
+  },
+  {
     title: 'How to integrate Kairos architecturally into an edge AI platform',
     logo: '/img/logo_cloudnative.png',
     logoAlt: 'CNCF logo',
@@ -83,13 +89,6 @@ export const pressItems: PressItem[] = [
     logo: '/img/logo_cloudnative.png',
     logoAlt: 'CNCF logo',
     href: 'https://www.cncf.io/blog/2025/03/25/building-secure-kubernetes-edge-images-with-kairos-and-k0s/',
-  },
-  {
-    title:
-      'Spectro Cloud announces Hadron, a lightweight, security-first Linux base for modern enterprise edge deployments',
-    logo: '/img/spectro-intel.png',
-    logoAlt: 'Spectro Cloud and Intel logo',
-    href: 'https://www.businesswire.com/news/home/20260128584925/en/Spectro-Cloud-Announces-Hadron-A-Lightweight-Security-First-Linux-Base-for-Modern-Enterprise-Edge-Deployments',
   },
 ];
 
