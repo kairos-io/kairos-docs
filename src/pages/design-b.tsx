@@ -21,6 +21,7 @@ export default function DesignSixPage(): ReactNode {
 
   const latestPressItems = useMemo(() => {
     return [...pressItems]
+      .filter((item) => !item.hideFromHomepage)
       .sort((a, b) => b.dateISO.localeCompare(a.dateISO))
       .slice(0, 3);
   }, []);

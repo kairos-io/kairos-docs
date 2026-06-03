@@ -6,6 +6,7 @@ export type PressItem = {
   url: string;
   logo: string;
   logoAlt: string;
+  hideFromHomepage?: boolean;
 };
 
 export type EventItem = {
@@ -92,6 +93,7 @@ export const pressItems: PressItem[] = [
     url: 'https://www.businesswire.com/news/home/20260128584925/en/Spectro-Cloud-Announces-Hadron-A-Lightweight-Security-First-Linux-Base-for-Modern-Enterprise-Edge-Deployments',
     logo: '/img/spectrocloud-dark.svg',
     logoAlt: 'Spectro Cloud logo',
+    hideFromHomepage: true,
   },
   {
     dateISO: '2026-01-28',
@@ -101,6 +103,7 @@ export const pressItems: PressItem[] = [
     url: 'https://www.spectrocloud.com/news/announcing-hadron-a-lightweight-security-first-linux-distribution',
     logo: '/img/spectrocloud-dark.svg',
     logoAlt: 'Spectro Cloud logo',
+    hideFromHomepage: true,
   },
   {
     dateISO: '2025-12-29',
