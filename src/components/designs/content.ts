@@ -1,8 +1,12 @@
 export type PressItem = {
-  title: string;
+  dateISO: string;
+  dateLabel: string;
+  source: string;
+  text: string;
+  url: string;
   logo: string;
   logoAlt: string;
-  href: string;
+  hideFromHomepage?: boolean;
 };
 
 export type EventItem = {
@@ -73,23 +77,87 @@ export const alternativeTracks = [
 
 export const pressItems: PressItem[] = [
   {
-    title: 'How to integrate Kairos architecturally into an edge AI platform',
+    dateISO: '2026-05-13',
+    dateLabel: 'May 13, 2026',
+    source: 'CNCF Blog',
+    text: 'Building a cloud-native platform from the ground up with Kairos, k0rdent, and Bindy',
+    url: 'https://www.cncf.io/blog/2026/05/13/building-a-cloud-native-platform-from-the-ground-up-with-kairos-k0rdent-and-bindy/',
     logo: '/img/logo_cloudnative.png',
     logoAlt: 'CNCF logo',
-    href: 'https://www.cncf.io/blog/2025/12/29/how-to-integrate-kairos-architecturally-into-an-edge-ai-platform/',
   },
   {
-    title: 'Building secure Kubernetes edge images with Kairos and K0s',
+    dateISO: '2026-01-28',
+    dateLabel: 'Jan 28, 2026',
+    source: 'Business Wire',
+    text: 'Spectro Cloud announces Hadron, a lightweight, security-first Linux base for modern enterprise edge deployments',
+    url: 'https://www.businesswire.com/news/home/20260128584925/en/Spectro-Cloud-Announces-Hadron-A-Lightweight-Security-First-Linux-Base-for-Modern-Enterprise-Edge-Deployments',
+    logo: '/img/spectrocloud-dark.svg',
+    logoAlt: 'Spectro Cloud logo',
+    hideFromHomepage: true,
+  },
+  {
+    dateISO: '2026-01-28',
+    dateLabel: 'Jan 28, 2026',
+    source: 'Spectro Cloud',
+    text: 'Spectro Cloud announces Hadron, a lightweight, security-first Linux base for modern enterprise edge deployments',
+    url: 'https://www.spectrocloud.com/news/announcing-hadron-a-lightweight-security-first-linux-distribution',
+    logo: '/img/spectrocloud-dark.svg',
+    logoAlt: 'Spectro Cloud logo',
+    hideFromHomepage: true,
+  },
+  {
+    dateISO: '2025-12-29',
+    dateLabel: 'Dec 29, 2025',
+    source: 'CNCF Blog',
+    text: 'How to integrate Kairos architecturally into an edge AI platform',
+    url: 'https://www.cncf.io/blog/2025/12/29/how-to-integrate-kairos-architecturally-into-an-edge-ai-platform/',
     logo: '/img/logo_cloudnative.png',
     logoAlt: 'CNCF logo',
-    href: 'https://www.cncf.io/blog/2025/03/25/building-secure-kubernetes-edge-images-with-kairos-and-k0s/',
   },
   {
-    title:
-      'Spectro Cloud announces Hadron, a lightweight, security-first Linux base for modern enterprise edge deployments',
-    logo: '/img/spectro-intel.png',
-    logoAlt: 'Spectro Cloud and Intel logo',
-    href: 'https://www.businesswire.com/news/home/20260128584925/en/Spectro-Cloud-Announces-Hadron-A-Lightweight-Security-First-Linux-Base-for-Modern-Enterprise-Edge-Deployments',
+    dateISO: '2025-03-25',
+    dateLabel: 'Mar 25, 2025',
+    source: 'CNCF Blog',
+    text: 'Building secure Kubernetes edge images with Kairos and K0s',
+    url: 'https://www.cncf.io/blog/2025/03/25/building-secure-kubernetes-edge-images-with-kairos-and-k0s/',
+    logo: '/img/logo_cloudnative.png',
+    logoAlt: 'CNCF logo',
+  },
+  {
+    dateISO: '2025-03-10',
+    dateLabel: 'Mar 10, 2025',
+    source: 'Palark Blog',
+    text: 'CNCF Sandbox 2024 H1: Kairos in the CNCF Sandbox roundup',
+    url: 'https://palark.com/blog/cncf-sandbox-2024-h1/',
+    logo: '/img/logo_cloudnative.png',
+    logoAlt: 'CNCF logo',
+  },
+  {
+    dateISO: '2024-03-14',
+    dateLabel: 'Mar 14, 2024',
+    source: 'The New Stack',
+    text: 'Check us out in this The New Stack article by our maintainer, Ettore di Giacinto',
+    url: 'https://thenewstack.io/honey-i-secured-your-boot-edge-trusted-boot-with-kairos/',
+    logo: '/img/theNewStack.png',
+    logoAlt: 'The New Stack logo',
+  },
+  {
+    dateISO: '2023-04-18',
+    dateLabel: 'Apr 18, 2023',
+    source: 'Spectro Cloud',
+    text: "See how we're collaborating with Intel and Spectro Cloud on the new Secure Edge-Native Architecture",
+    url: 'https://www.spectrocloud.com/news/spectro-cloud-launches-the-secure-edge-native-architecture-sena',
+    logo: '/img/spectrocloud-dark.svg',
+    logoAlt: 'Spectro Cloud logo',
+  },
+  {
+    dateISO: '2023-03-28',
+    dateLabel: 'Mar 28, 2023',
+    source: 'The New Stack',
+    text: 'Learn how to use the famous OSS project, LocalAI, with Kairos and K3s on your nodes',
+    url: 'https://thenewstack.io/looking-for-a-k3os-alternative-choosing-a-container-os-for-edge-k8s/',
+    logo: '/img/theNewStack.png',
+    logoAlt: 'The New Stack logo',
   },
 ];
 
