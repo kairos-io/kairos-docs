@@ -19,6 +19,12 @@ export default function DesignSixPage(): ReactNode {
       .slice(0, 3);
   }, []);
 
+  const latestPressItems = useMemo(() => {
+    return [...pressItems]
+      .sort((a, b) => b.dateISO.localeCompare(a.dateISO))
+      .slice(0, 3);
+  }, []);
+
   return (
     <Layout
       title="Design 6 — Hadron + Kairos = The Cloud Native OS"
@@ -146,18 +152,14 @@ export default function DesignSixPage(): ReactNode {
             <article>
               <Heading as="h2">Hot off the press</Heading>
               <div className={styles.pressList}>
-                {pressItems.map((item) => (
-                  <a key={item.title} href={item.href} target="_blank" rel="noreferrer">
+                {latestPressItems.map((item) => (
+                  <a key={item.url} href={item.url} target="_blank" rel="noreferrer">
                     <img
-                      src={
-                        item.title.includes('Spectro Cloud announces Hadron')
-                          ? useBaseUrl('/img/spectrocloud-dark.svg')
-                          : `${base}${item.logo.replace(/^\//, '')}`
-                      }
+                      src={`${base}${item.logo.replace(/^\//, '')}`}
                       alt={item.logoAlt}
                     />
                     <div>
-                      <span>{item.title}</span>
+                      <span>{item.text}</span>
                     </div>
                   </a>
                 ))}
