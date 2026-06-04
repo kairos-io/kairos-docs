@@ -130,7 +130,7 @@ For operations where some nodes don't actually need any work — for example "up
 
 When `preflight` is set, the controller runs an extra short-lived Pod on each target node ahead of the main Job:
 
-1. The preflight Pod is scheduled on the target node (`spec.nodeName`), runs `preflight.command` inside `preflight.image` (defaulting to `spec.image`), and has the host root mounted read-only at `spec.hostMountPath` (default `/host`).
+1. The preflight Pod is scheduled on the target node (via the Pod’s `spec.nodeName`), runs `preflight.command` inside `preflight.image` (defaulting to `spec.image`), and has the host root mounted read-only at `spec.hostMountPath` (default `/host`).
 2. The Pod uses `restartPolicy: OnFailure` and `activeDeadlineSeconds: 120` (configurable). Transient failures (image pull blips, OOM, etc.) get auto-retried inside the deadline window.
 3. The controller waits for the Pod's container to terminate, then inspects its **termination message** (`Pod.Status.ContainerStatuses[0].State.Terminated.Message`, populated from `/dev/termination-log`).
 
@@ -180,8 +180,8 @@ spec:
       - -c
       - |
         # Look up the firmware version already installed on the host.
-        installed=$(chroot /host fwupdtool get-devices --json \
-                     | jq -r '.Devices[] | select(.Name=="System Firmware") | .Version')
+        apk add --no-cache fwupd jq >/dev/null
+        installed=$(fwupdtool get-devices --json | jq -r '.Devices[] | select(.Name=="System Firmware") | .Version')
         if [ "$installed" = "2.4.0" ]; then
             # Skip this node: report the reason via the termination log.
             echo "system firmware is already at 2.4.0" > /dev/termination-log
