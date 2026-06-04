@@ -63,7 +63,7 @@ Only 4 fields is all it takes to safely upgrade the whole cluster.
 | `stopOnFailure` | `bool` | `false` | Stop creating new jobs when a job fails (canary mode) |
 | `upgradeActive` | `bool` | `true` | Whether to upgrade the active partition |
 | `upgradeRecovery` | `bool` | `false` | Whether to upgrade the recovery partition |
-| `force` | `bool` | `false` | Whether to force the upgrade without version checks |
+| `force` | `bool` | `false` | When true, run the upgrade on every targeted node regardless of whether it is already at `spec.image`. Disables the preflight skip — see [Skipping no-op upgrades](#skipping-no-op-upgrades). |
 
 ## Additional Options
 
@@ -93,7 +93,9 @@ spec:
   # Whether to upgrade the recovery partition (defaults to false)
   upgradeRecovery: false
 
-  # Whether to force the upgrade without version checks
+  # Whether to force the upgrade. When true, the controller skips the
+  # preflight version check and runs the upgrade on every targeted node
+  # even if it is already at spec.image. See "Skipping no-op upgrades" below.
   force: false
 ```
 
@@ -106,17 +108,49 @@ spec:
   upgradeRecovery: true
 ```
 
+## Skipping no-op upgrades
+
+By default, NodeOpUpgrade avoids cordoning, draining, and rebooting nodes that are already running the requested `spec.image`. This is useful for staggered rollouts — for example, upgrading just the control plane first and then a cluster-wide `NodeOpUpgrade` with the same image: control-plane nodes are detected as already up-to-date and left alone, while worker nodes go through the normal flow.
+
+This works by leveraging the generic [NodeOp preflight mechanism](../nodeop/#preflight-checks). When the NodeOpUpgrade controller creates the underlying NodeOp, it populates `spec.preflight` with a short script that:
+
+1. Runs in the **upgrade image** (the one you set in `spec.image`), so the script can read the target `/etc/kairos-release` directly from inside that image without pulling anything else.
+2. Mounts the host's `/etc` read-only at `/host/etc`, so the same script can also read the **currently installed** `/etc/kairos-release` on the node.
+3. Computes the version triple — `${KAIROS_VERSION}-${KAIROS_SOFTWARE_VERSION_PREFIX}${KAIROS_SOFTWARE_VERSION}` — from each side and compares them.
+4. If both versions are known and equal, writes the skip reason to `/dev/termination-log` (e.g. `node is already at v4.0.3-k3sv1.32.4-k3s1`).
+5. If versions differ, can't be determined, or anything else, exits 0 silently → the controller proceeds with the normal cordon → drain → upgrade Job → reboot flow on that node.
+
+The controller honors the preflight verdict by **not creating a Job, not cordoning, and not rebooting** any node the preflight skipped. The node's entry in `status.nodeStatuses` is marked `Completed` with the skip reason from `/dev/termination-log`, and the per-node concurrency slot is freed immediately for the next node.
+
+### When the skip kicks in (and when it doesn't)
+
+The preflight comparison runs the script against the **actual `/etc/kairos-release` contents on both sides**, so it's reliable across:
+
+- **Image mirrors / re-tags.** It doesn't matter that you mirror `quay.io/kairos/fedora:0.7.1` to your own registry; the script reads the file contents, not the image reference.
+- **Nodes that were bootstrapped from a particular image** (you didn't have to install via the operator first).
+
+It won't fire when:
+
+- **The image has been rebuilt with the same `KAIROS_VERSION` values but different content** (e.g. a CI re-run with the same tag but a different commit). Version-triple equality is the only signal the script uses; if the metadata is the same, the script will mark the node as already up-to-date. Use `spec.force: true` to override.
+- **The host's `/etc/kairos-release` is missing or doesn't carry `KAIROS_VERSION`.** The script treats either side as "unknown" and falls through to "proceed" rather than wrongly skip — the in-Pod upgrade flow then runs and the user will see whatever it reports.
+
+### Forcing the upgrade
+
+Set `spec.force: true` to disable the preflight entirely. The controller creates the NodeOp without `spec.preflight`, so every targeted node goes straight through cordon → drain → upgrade Job → reboot, regardless of what version is already installed. Use this when you want to re-run an upgrade with the same image but different flags, or to recover from a previous run that ended in a weird state.
+
 ## How Upgrade Is Performed
 
 Before you attempt an upgrade, it's good to know what to expect. Here is how the process works:
 
-1. The operator is notified about the NodeOpUpgrade resource and creates a NodeOp with the appropriate script and options.
-2. The operator creates a list of matching Nodes using the provided label selector. If no selector is provided, all Nodes will match.
-3. The list is sorted with master nodes first, and based on the `concurrency` value, the first batch of Nodes will be upgraded (could be just 1 Node).
-4. Before the upgrade Job is created, the operator creates a Pod that will perform the reboot when the Job completes. Then a `Job` is created that performs the upgrade.
-5. The Job has one InitContainer, which performs the upgrade and a container which runs only if the upgrade script completes successfully. When the InitContainer exits, the container creates a sentinel file on the host's filesystem which is what the "reboot" Pod waits for, in order to perform the reboot. This way the Job completes successfully before the Node is rebooted. This is important because it prevents the Job from re-creating its Pod after reboot (which would be the case if the Job performed the reboot before it exited gracefully).
-6. After the reboot of the Node, the "reboot Pod" will be restarted but it will detect that reboot has already happened (using an annotation on itself that works as a sentinel) and will exit with `0`.
-7. If everything worked successfully, the operator will create another Job to replace the one that finished, resulting in `concurrency` number of Nodes being upgraded in parallel.
+1. The operator is notified about the NodeOpUpgrade resource and creates a NodeOp with the appropriate script, options, and (unless `spec.force` is `true`) a `spec.preflight` that compares the image's `/etc/kairos-release` against the host's.
+2. The NodeOp controller lists matching Nodes using the provided label selector. If no selector is provided, all Nodes will match.
+3. The list is sorted with master nodes first, and based on the `concurrency` value, the first batch of Nodes will be processed (could be just 1 Node).
+4. For each targeted node, the controller first runs a **preflight Pod** on that node — a short-lived, non-disruptive Pod (no cordon, no drain) using the upgrade image. The preflight script writes a skip reason to `/dev/termination-log` when the node is already at the target version, or stays silent otherwise. See [Skipping no-op upgrades](#skipping-no-op-upgrades).
+5. **If preflight says skip**, the node is recorded as `Completed` with the skip reason and the controller moves on to the next node. No cordon, no drain, no reboot for that node.
+6. **If preflight says proceed**, the controller creates a reboot Pod and then the upgrade Job (the Job's InitContainer performs the upgrade and the main container creates a sentinel file once it succeeds, which the reboot Pod is watching for).
+7. When the InitContainer exits successfully, the sentinel file appears; the reboot Pod patches itself with a completion annotation and reboots the node via `nsenter`. This way the Job completes successfully before the Node is rebooted, preventing the Job from re-creating its Pod after reboot.
+8. After reboot, the "reboot Pod" is restarted but detects via its own annotation that reboot already happened and exits with `0`.
+9. If everything worked successfully, the operator advances to the next batch of nodes, respecting `concurrency` and `stopOnFailure`.
 
 The result of the above process is that each upgrade Job finishes successfully, with no unnecessary restarts. The upgrade logs can be found in the Job's Pod logs.
 

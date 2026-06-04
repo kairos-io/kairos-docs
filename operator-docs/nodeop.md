@@ -119,6 +119,78 @@ spec:
 | `backoffLimit` | `int` | `3` | Number of retries before marking the job failed |
 | `concurrency` | `int` | `0` | Max nodes running the operation simultaneously (0 = all at once) |
 | `stopOnFailure` | `bool` | `false` | Stop creating new jobs when a job fails |
+| `preflight` | `PreflightSpec` | (none) | Optional per-node check that runs **before** cordon/drain/Job. If it reports "skip", the node is recorded as `Completed` with no Job ever created. See [Preflight checks](#preflight-checks). |
+| `preflight.command` | `[]string` | (required if `preflight` is set) | Command run inside the preflight container |
+| `preflight.image` | `string` | `spec.image` | Image for the preflight Pod (defaults to the main `spec.image`) |
+| `preflight.activeDeadlineSeconds` | `int` | `120` | Bound on total preflight Pod lifetime; on expiry the Pod is killed and the node is marked `Failed` |
+
+## Preflight checks
+
+For operations where some nodes don't actually need any work — for example "upgrade only if the running version isn't already X", "flash firmware only if the installed version is older than Y", "apply a config only if it's missing or out of date" — `spec.preflight` lets you decide that on a per-node basis **before** the node is cordoned and drained.
+
+When `preflight` is set, the controller runs an extra short-lived Pod on each target node ahead of the main Job:
+
+1. The preflight Pod is scheduled on the target node (`spec.nodeName`), runs `preflight.command` inside `preflight.image` (defaulting to `spec.image`), and has the host root mounted read-only at `spec.hostMountPath` (default `/host`).
+2. The Pod uses `restartPolicy: OnFailure` and `activeDeadlineSeconds: 120` (configurable). Transient failures (image pull blips, OOM, etc.) get auto-retried inside the deadline window.
+3. The controller waits for the Pod's container to terminate, then inspects its **termination message** (`Pod.Status.ContainerStatuses[0].State.Terminated.Message`, populated from `/dev/termination-log`).
+
+The script-to-controller contract is a single signal:
+
+| Preflight outcome | Result |
+|---|---|
+| Container exit 0, `/dev/termination-log` **non-empty** | **Skip this node.** NodeStatus = `Completed`, `JobName` empty, `Message = "Skipped by preflight: <your text>"`. No cordon, no drain, no main Job. |
+| Container exit 0, `/dev/termination-log` **empty** | **Proceed.** The controller runs the normal cordon → drain → main Job → reboot flow exactly as if `preflight` weren't set. |
+| Pod ends in `Failed` (non-zero exits exhausted retries, or `activeDeadlineSeconds` expired) | **Fail this node.** NodeStatus = `Failed` with the reason. `spec.stopOnFailure` applies as it would for a Job failure. |
+
+So writing a preflight script means: "compute whatever you need, `echo` a one-line *reason* to `/dev/termination-log` if you want to skip this node, exit 0 otherwise." Real failures (non-zero exits, timeouts) intentionally don't get conflated with "I decided to skip" — if your preflight is broken, the controller surfaces it rather than silently skipping.
+
+The preflight Pod counts against `spec.concurrency` the same way an in-flight main Job does, so `concurrency: 1` means one node at a time across both preflight and the actual operation.
+
+### Example
+
+A NodeOp that only flashes firmware on nodes that aren't already at the desired version:
+
+```yaml
+apiVersion: operator.kairos.io/v1alpha1
+kind: NodeOp
+metadata:
+  name: firmware-flash
+  namespace: default
+spec:
+  nodeSelector:
+    matchLabels:
+      kairos.io/managed: "true"
+  image: alpine:latest
+  command:
+    - sh
+    - -ec
+    - |
+      echo "Flashing firmware to v2.4.0..."
+      # ...real flashing work...
+  hostMountPath: /host
+  cordon: true
+  drainOptions:
+    enabled: true
+  rebootOnSuccess: true
+  concurrency: 1
+
+  preflight:
+    command:
+      - sh
+      - -c
+      - |
+        # Look up the firmware version already installed on the host.
+        installed=$(chroot /host fwupdtool get-devices --json \
+                     | jq -r '.Devices[] | select(.Name=="System Firmware") | .Version')
+        if [ "$installed" = "2.4.0" ]; then
+            # Skip this node: report the reason via the termination log.
+            echo "system firmware is already at 2.4.0" > /dev/termination-log
+        fi
+        # Empty termination log => proceed with the main Job.
+        exit 0
+```
+
+On any node that already runs firmware v2.4.0 the controller records `Completed` with `"Skipped by preflight: system firmware is already at 2.4.0"` and never cordons, drains, or reboots it.
 
 ## Example: Upgrading Firmware
 
