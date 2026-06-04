@@ -7,7 +7,7 @@ sidebar_position: 9
 
 :::info Confidential Containers on Kairos
 
-Kairos works with [Confidential Containers](https://confidentialcontainers.org/) on AMD SEV-SNP hardware today, using an Ubuntu-based Kairos image. Support for the Hadron-based image is on the roadmap and coming soon.
+Kairos works with [Confidential Containers](https://confidentialcontainers.org/) on AMD SEV-SNP hardware today, using various Kairos flavors — including Ubuntu and [Hadron](https://github.com/kairos-io/hadron). Hadron support is available on AWS (SEV-SNP) since [Hadron v0.3.0](https://github.com/kairos-io/hadron/releases/tag/v0.3.0).
 
 As long as the necessary virtualization and memory-encryption options are enabled on your hardware (e.g. SEV / SEV-SNP / SNP Memory Coverage in BIOS on AMD platforms, or the equivalent TDX settings on Intel), the upstream Confidential Containers project can be installed on a Kairos cluster the same way it is on any Kubernetes distribution — see the [upstream installation guide](https://confidentialcontainers.org/docs/getting-started/installation/) — and workloads then opt in by selecting the appropriate [runtime class](https://confidentialcontainers.org/docs/getting-started/workload/).
 
