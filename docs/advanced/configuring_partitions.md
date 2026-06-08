@@ -82,6 +82,9 @@ Note that there are some caveats in the `extra partitions` setup:
         - mount -o rw /dev/disk/by-label/PARTITION_TWO /opt/extra
 ```
 
+If not filesystem is wanted for a given partitions, the `fs` field whould be set to `none`, otherwise it will interpreted as an error and the installation will fail.
+
+
 ## Manual partitioning
 
 In some cases, it's desired that the user has full control over the partitioning of the disk.
