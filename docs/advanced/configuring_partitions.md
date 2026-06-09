@@ -71,7 +71,8 @@ install:
 
 Note that there are some caveats in the `extra partitions` setup:
  - Only `size`, `fs`, `name` and `label` are used for the partition creation, the name is currently used for the partition label.
- - If a partition has no fs set, the partition will be created, but it will not be formatted.
+ - If `fs` is not set for an extra partition, it defaults to `ext2`.
+ - If a partition should be created without formatting, set `fs` to `none`.
  - No mounting of any type is done during installation to the extra partitions. That part should be done on the stages of the cloud-config manually, with something like the following step:
 
 ```yaml
@@ -81,9 +82,6 @@ Note that there are some caveats in the `extra partitions` setup:
         - mkdir -p /opt/extra
         - mount -o rw /dev/disk/by-label/PARTITION_TWO /opt/extra
 ```
-
-If not filesystem is wanted for a given partitions, the `fs` field whould be set to `none`, otherwise it will interpreted as an error and the installation will fail.
-
 
 ## Manual partitioning
 
