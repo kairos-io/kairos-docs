@@ -201,7 +201,7 @@ The real question I am trying to answer is the one in the trade-offs section: is
 Kubernetes layer from the OS worth giving up fully-atomic upgrades? My own hunch is that for a
 lot of people it is, but I would much rather hear it from you than guess.
 
-I have opened [a discussion thread](DISCUSSION_URL_PLACEHOLDER) to collect feedback in one place,
+I have opened [a discussion thread](https://github.com/kairos-io/kairos/discussions) to collect feedback in one place,
 so please leave your thoughts there rather than scattering them around. You are of course also
 welcome in the wider [Kairos community](https://kairos.io/community/). If there is appetite for
 the direction, the upstream pieces above are small and well scoped, and they would make this
