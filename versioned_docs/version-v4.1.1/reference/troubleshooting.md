@@ -98,6 +98,16 @@ By default, there is no root user set. A default user (`kairos`) is created and 
 
 On all nodes, which are deployed with the P2P full-mesh feature of the cluster, it's possible to invoke `kairos get-kubeconfig` to recover the kubeconfig file.
 
+## Debugging cloud config issues
+
+If a machine does not behave as expected after applying a cloud config (users not created, a stage not running, `k3s`/`k0s` not configured), the cause is often a malformed configuration file or a stage that is not doing what you think it does.
+
+A few things to check before reinstalling:
+
+- Validate the syntax and schema of your cloud config before deploying it. See [Validate Your Cloud Config](/docs/reference/configuration#validate-your-cloud-config).
+- Test what a given stage actually does by running it locally in a container instead of reinstalling the machine. See [Test your cloud configs](/docs/reference/configuration#test-your-cloud-configs).
+- Inspect the configuration the running system actually loaded with `kairos-agent config`, which prints the merged cloud config currently in use (redact any sensitive values before sharing it).
+
 ## Reporting issues
 
 If you are reporting a bug, please open an issue on the [Kairos GitHub repository](https://github.com/kairos-io/kairos)

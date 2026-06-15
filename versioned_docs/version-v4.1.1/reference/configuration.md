@@ -100,7 +100,8 @@ install:
   # extra partitions to create during install
   # only size, label and fs are used
   # name is used for the partition label, but it's not really used during the kairos lifecycle. No spaces allowed.
-  # if no fs is given the partition will be created but not formatted
+  # if fs is not set, it defaults to "ext2"
+  # if a partition should be created but not formatted, set fs to "none"
   # These partitions are not automounted only created and formatted
   extra-partitions:
     - name: myPartition
