@@ -136,6 +136,9 @@ To install on Google Cloud, follow the [Google Cloud Installation Guide](/docs/i
 ### Microsoft Azure
 For Azure deployments, see the [Azure Installation Guide](/docs/installation/azure/).
 
+### Hetzner Cloud
+For Hetzner Cloud deployments, see the [Hetzner Cloud Installation Guide](/docs/installation/hetzner/).
+
 ## Troubleshooting
 
 Common issues and solutions:
