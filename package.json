@@ -13,7 +13,8 @@
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "typecheck": "tsc",
-    "validate:release-artifacts": "node scripts/validate-release-artifacts.mjs"
+    "validate:release-artifacts": "node scripts/validate-release-artifacts.mjs",
+    "test:scripts": "node --test scripts/*.test.mjs"
   },
   "dependencies": {
     "@cmfcmf/docusaurus-search-local": "^2.0.1",
