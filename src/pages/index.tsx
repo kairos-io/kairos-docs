@@ -18,9 +18,11 @@ import ImageConfigBuilder from '../components/builder/ImageConfigBuilder';
 import styles from './design-a.module.css';
 
 export default function DesignThreePage(): ReactNode {
-  const base = useBaseUrl('/');
   const {siteConfig} = useDocusaurusContext();
-  const latestVersion = siteConfig.customFields?.latestVersion as string;
+  const latestVersion = siteConfig.customFields?.latestVersion;
+  if (typeof latestVersion !== 'string' || !/^v\d+\.\d+\.\d+$/.test(latestVersion)) {
+    throw new Error('customFields.latestVersion must be defined as vX.Y.Z');
+  }
   const nextEvent = getNextEvent();
   const mottoWords = ['Edge', 'Baremetal', 'Public Cloud', 'VMs'];
 
