@@ -4,9 +4,9 @@ import Link from '@docusaurus/Link';
 import Layout from '@theme/Layout';
 import Heading from '@theme/Heading';
 import useBaseUrl from '@docusaurus/useBaseUrl';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 
 import {
-  alternativeTracks,
   communityCopy,
   events,
   getNextEvent,
@@ -19,6 +19,11 @@ import styles from './design-a.module.css';
 
 export default function DesignThreePage(): ReactNode {
   const base = useBaseUrl('/');
+  const {siteConfig} = useDocusaurusContext();
+  const latestVersion = siteConfig.customFields?.latestVersion;
+  if (typeof latestVersion !== 'string' || !/^v\d+\.\d+\.\d+$/.test(latestVersion)) {
+    throw new Error('customFields.latestVersion must be defined as vX.Y.Z');
+  }
   const nextEvent = getNextEvent();
   const mottoWords = ['Edge', 'Baremetal', 'Public Cloud', 'VMs'];
 
@@ -38,34 +43,40 @@ export default function DesignThreePage(): ReactNode {
   }, []);
 
   const design3AlternativeTracks = [
-    ...alternativeTracks.map((item) => {
-      if (item.title === 'Trusted Boot') {
-        return {
-          ...item,
-          description: 'The most secured way to run Kairos when your device includes a TPM.',
-        };
-      }
-
-      if (item.title === 'Kairos without Kubernetes') {
-        return {
-          ...item,
-          title: 'Without Kubernetes',
-          description: 'Run Kairos as an immutable Linux framework when your workload does not need Kubernetes.',
-          href: '/docs/examples/without-kubernetes/',
-        };
-      }
-
-      return item;
-    }),
+    {
+      title: 'Bring Your Own OS',
+      description: 'Kairos Ubuntu, Kairos Fedora, Kairos Alpine, and more with BYOI.',
+      href: `/docs/${latestVersion}/reference/byoi/`,
+    },
+    {
+      title: 'Trusted Boot',
+      description: 'The most secured way to run Kairos when your device includes a TPM.',
+      href: `/docs/${latestVersion}/installation/trustedboot/`,
+    },
+    {
+      title: 'Without Kubernetes',
+      description: 'Run Kairos as an immutable Linux framework when your workload does not need Kubernetes.',
+      href: `/docs/${latestVersion}/examples/without-kubernetes/`,
+    },
+    {
+      title: 'Public Cloud',
+      description: 'Deploy reproducible images for cloud VMs and virtualized infrastructure.',
+      href: `/docs/${latestVersion}/installation/cloud-servers/`,
+    },
+    {
+      title: 'Edge Devices',
+      description: 'Run on devices such as Raspberry Pi and Nvidia Orin with the same lifecycle model.',
+      href: `/docs/${latestVersion}/installation/edge-devices/`,
+    },
     {
       title: 'k0s edition',
       description: 'Prefer k0s as your Kubernetes distribution? We got your back.',
-      href: '/docs/examples/choosing-kubernetes-distribution/#k0s',
+      href: `/docs/${latestVersion}/examples/choosing-kubernetes-distribution/#k0s`,
     },
     {
       title: 'FIPS ready',
       description: 'Build Kairos images with FIPS 140-2 compliance packages enabled.',
-      href: '/docs/examples/fips/',
+      href: `/docs/${latestVersion}/examples/fips/`,
     },
   ];
 
