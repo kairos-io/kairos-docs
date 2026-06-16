@@ -18,6 +18,7 @@ import ImageConfigBuilder from '../components/builder/ImageConfigBuilder';
 import styles from './design-a.module.css';
 
 export default function DesignThreePage(): ReactNode {
+  const base = useBaseUrl('/');
   const {siteConfig} = useDocusaurusContext();
   const latestVersion = siteConfig.customFields?.latestVersion;
   if (typeof latestVersion !== 'string' || !/^v\d+\.\d+\.\d+$/.test(latestVersion)) {
