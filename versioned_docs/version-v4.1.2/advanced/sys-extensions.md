@@ -23,7 +23,7 @@ For more information on system extensions, please refer to the [System extension
 Confextensions are the a way to extend the system with additional configuration files that are mounted at boot time. They are similar to system extensions but they are used to extend the system with configuration files instead of files and directories, so they are mounted under `/etc` instead of `/usr`.
 
 
-**Requirement**: Base image of the OS needs to have at least systemd 252 or newer ( for example ubuntu >=23.10 or fedora >=38 )
+**Requirement**: Base image of the OS needs to have at least systemd 255 or newer
 
 
 ### System/Config extensions under Kairos
