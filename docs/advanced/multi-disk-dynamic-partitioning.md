@@ -209,10 +209,11 @@ vdb    253:16   0   30G  0 disk
   `pick-disk.sh` is called once per block. For a script with side effects or significant
   latency, consider caching the result in a file and reading from it instead.
 - This example uses UEFI. For legacy BIOS the EFI partition must be replaced with a
-  BIOS boot partition (GPT type `EF02`), which requires a `commands` block using
-  `parted` and `sgdisk` since the layout plugin does not support setting partition type
-  codes. See [Configuring partitions](/docs/advanced/configuring_partitions) for the
-  BIOS variant.
+  BIOS boot partition. You can create one directly with the `layout` plugin by adding a
+  small `ext*` partition with `bootable: true`, which sets the GPT BIOS Boot type for
+  you (see the [`layout` stage module reference](/docs/reference/stage_modules#layout)
+  for the `bootable` flag). The `COS_GRUB` partition above can likewise be marked
+  `bootable: true` to make it a proper EFI System Partition.
 - The `small`/`large` selection is based purely on disk size in bytes. If two disks
   have the same size the result is deterministic but arbitrary — add more specific
   logic to `pick-disk.sh` if your hardware requires it.
