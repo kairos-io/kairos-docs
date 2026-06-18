@@ -460,3 +460,45 @@ stages:
           size: 25000
           filesystem: "ext4"
 ```
+
+#### `device` options
+
+The `device` block selects the disk the plugin operates on and, optionally, initializes it.
+
+| Field | Description |
+|---|---|
+| `path` | Path to the block device, for example `/dev/sda`. Also accepts a `script:///path/to/script.sh [args...]` value: everything after the `script://` prefix is run as a command and its stdout is used as the device path at runtime. Quote the whole YAML value when it contains spaces or arguments. |
+| `label` | Selects the device by the filesystem label or partition label of a partition it contains, instead of by `path`. When both `label` and `path` are set, the label match takes precedence. |
+| `init_disk` | When `true`, wipes the device and creates a fresh GPT partition table before adding any partitions. Requires `path` to be set, and `label` must be omitted (initializing a disk selected by label is not allowed). Use this to partition a brand-new, empty disk from scratch. |
+| `disk_name` | Only used together with `init_disk`. The plugin derives a deterministic disk GUID from this name, so re-running the same config always produces the same GUID. Defaults to `YIP_DISK` when omitted. |
+
+#### `add_partitions` options
+
+Each entry under `add_partitions` describes one partition to create in the free space of the device:
+
+| Field | Description |
+|---|---|
+| `fsLabel` | Filesystem label applied when the partition is formatted. For XFS this is limited to 12 characters. |
+| `pLabel` | GPT partition label (the partition name). No label is applied if omitted. |
+| `size` | Size in MiB. `size: 0` means "use all remaining free space" and is only valid for the last partition. |
+| `filesystem` | Filesystem to create. Supported values: `ext2` (the default if omitted), `ext3`, `ext4`, `xfs`, `btrfs`, `vfat`/`fat`/`fat16`/`fat32`, and `swap`. Use `none` (or `-`) to create the partition without formatting it. |
+| `bootable` | When `true`, marks the partition as bootable and sets its GPT partition type accordingly: a `vfat`/`fat` partition becomes an **EFI System Partition** (for UEFI boot), while an `ext*`/`xfs`/`btrfs` partition becomes a **BIOS Boot** partition (for legacy BIOS boot). Only one partition per device may be marked bootable. |
+
+:::tip Creating boot partitions without `parted`/`sgdisk`
+Because `bootable: true` sets the correct GPT type code, you can create both EFI System Partitions and BIOS Boot partitions with the `layout` plugin alone, without falling back to a `commands` block that calls `parted` or `sgdisk`.
+
+```yaml
+add_partitions:
+  # UEFI: an EFI System Partition
+  - fsLabel: COS_GRUB
+    pLabel: efi
+    size: 64
+    filesystem: vfat
+    bootable: true
+  # Legacy BIOS: a BIOS Boot partition
+  - pLabel: bios
+    size: 1
+    filesystem: ext4
+    bootable: true
+```
+:::
