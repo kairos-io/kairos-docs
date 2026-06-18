@@ -480,6 +480,28 @@ This example builds a Kairos image based on Ubuntu 24.04 with K3s, generates an 
 - **Cloud config support**: Integration with cloud-init configurations
 - **GitHub integration**: Rich build summaries and optional release creation
 
+### Insecure registries
+
+If your base image lives on a registry served over plain HTTP, or one that presents an untrusted or self-signed TLS certificate (for example a local registry on a self-hosted runner), set the `allow_insecure_registries` input. It is passed to AuroraBoot as `--allow-insecure-registries` when generating the artifacts (ISO, UKI, and RAW).
+
+```yaml
+jobs:
+  build:
+    uses: kairos-io/kairos-factory-action/.github/workflows/reusable-factory.yaml@main
+    with:
+      version: "v1.0.0"
+      base_image: "my-registry.internal:5000/myorg/ubuntu:24.04"
+      model: "generic"
+      iso: true
+      allow_insecure_registries: true
+```
+
+This input affects only the pulling of images while building the artifacts; there is no corresponding option for pushing.
+
+:::caution
+Disabling TLS verification removes protection against man-in-the-middle attacks. Use it only in controlled environments, not against public registries.
+:::
+
 For complete documentation, configuration options, and advanced examples, visit the [Kairos Factory Action repository](https://github.com/kairos-io/kairos-factory-action).
 
 ## Web UI

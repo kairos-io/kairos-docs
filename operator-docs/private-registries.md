@@ -111,9 +111,12 @@ When `imageCredentialsSecretRef` is set, the operator also adds that secret to t
 
 ## Insecure registries
 
-For **OSArtifact** builds, you can allow Buildah to communicate with registries that are either plain HTTP or HTTPS with a self-signed/untrusted certificate:
+For **OSArtifact** builds, you can allow the operator to communicate with registries that are either plain HTTP or HTTPS with a self-signed/untrusted certificate:
 
-- **`spec.image.pullInsecureRegistry: true`** — Passes `--tls-verify=false` to `buildah bud` when pulling the base image during the OCI build step. Use this when the base image registry (`FROM` image or `buildOptions.baseImage`) is plain HTTP or HTTPS with an untrusted certificate.
+- **`spec.image.pullInsecureRegistry: true`** — Allows pulling images over plain HTTP or with an untrusted/self-signed certificate. It applies wherever the operator pulls an image during a build:
+  - the Buildah base-image pull during the OCI build step — `buildah bud --tls-verify=false` (the `FROM` image with `ociSpec`, or `buildOptions.baseImage`);
+  - the AuroraBoot unpack of a pre-built image (`spec.image.ref`) — `auroraboot unpack --allow-insecure-registries`;
+  - the AuroraBoot unpack of each entry in `spec.artifacts.bundles` — `auroraboot unpack --allow-insecure-registries`.
 - **`spec.image.pushInsecureRegistry: true`** — Passes `--tls-verify=false` to `buildah push` when pushing the built image to the registry. Use this when the destination registry (set in `spec.image.buildImage`) is plain HTTP or HTTPS with an untrusted certificate. Only relevant when `spec.image.push: true`.
 
 Example:

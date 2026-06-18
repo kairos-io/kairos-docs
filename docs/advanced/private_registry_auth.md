@@ -36,3 +36,29 @@ You can also just generate that file yourself with the proper auth parameters li
 The auths map has an entry per registry, and the auth field contains your username and password encoded as HTTP 'Basic' Auth.
 
 NOTE: This means that your credentials are stored in plaintext. Have a look at the docker docs for the [credentials-store](https://docs.docker.com/engine/reference/commandline/login/#credentials-store)
+
+## Insecure registries
+
+The source for an install or upgrade can be an OCI image. If the registry is served over plain HTTP, or presents an untrusted or self-signed TLS certificate, pass the `--allow-insecure-registries` flag to `kairos-agent`:
+
+```bash
+# Upgrade from an image on a plain-HTTP or self-signed-cert registry
+kairos-agent upgrade --source oci:my-registry.internal:5000/kairos/ubuntu:24.04 --allow-insecure-registries
+
+# Install from such a registry
+kairos-agent install --allow-insecure-registries
+```
+
+You can also set it in the cloud config, under `install` for installs and under `upgrade` for upgrades:
+
+```yaml
+#cloud-config
+install:
+  allow-insecure-registries: true
+upgrade:
+  allow-insecure-registries: true
+```
+
+:::caution
+Disabling TLS verification removes protection against man-in-the-middle attacks. Use it only in controlled environments (such as a local registry you operate), not against public registries.
+:::
