@@ -573,6 +573,34 @@ kairos:
 EOF
 ```
 
+## Insecure registries
+
+AuroraBoot pulls container images both when it builds artifacts and when it unpacks an image to a directory. By default it requires the registry to be served over HTTPS with a trusted certificate. To pull from a registry served over plain HTTP, or one that presents an untrusted or self-signed TLS certificate, pass the `--allow-insecure-registries` flag:
+
+```bash
+# Build an ISO from an image on a plain-HTTP registry
+auroraboot build-iso --allow-insecure-registries my-registry.internal:5000/kairos/ubuntu:24.04-core-amd64-generic-v3.5.0
+
+# Unpack an image from a registry with a self-signed certificate to a directory
+auroraboot unpack --allow-insecure-registries my-registry.internal:5000/kairos/ubuntu:24.04 /tmp/rootfs
+```
+
+The flag is supported by the subcommands that pull images:
+
+- `auroraboot build-iso`
+- `auroraboot build-uki`
+- `auroraboot unpack`
+
+This is most useful with a local or in-cluster registry, for example `localhost:5000/...`.
+
+:::caution
+Disabling TLS verification removes protection against man-in-the-middle attacks. Use it only in controlled environments (such as a local registry you operate), not against public registries.
+:::
+
+:::info Note
+`--insecure` is a deprecated alias for `--allow-insecure-registries`, kept for backward compatibility. Prefer `--allow-insecure-registries`.
+:::
+
 ## Examples
 
 :::tip Note
