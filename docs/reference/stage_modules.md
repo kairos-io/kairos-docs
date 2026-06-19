@@ -485,20 +485,23 @@ Each entry under `add_partitions` describes one partition to create in the free 
 | `bootable` | When `true`, marks the partition as bootable and sets its GPT partition type accordingly: a `vfat`/`fat` partition becomes an **EFI System Partition** (for UEFI boot), while an `ext*`/`xfs`/`btrfs` partition becomes a **BIOS Boot** partition (for legacy BIOS boot). Only one partition per device may be marked bootable. |
 
 :::tip Creating boot partitions without `parted`/`sgdisk`
-Because `bootable: true` sets the correct GPT type code, you can create both EFI System Partitions and BIOS Boot partitions with the `layout` plugin alone, without falling back to a `commands` block that calls `parted` or `sgdisk`.
+Because `bootable: true` sets the correct GPT type code, you can create either an **EFI System Partition** (for `vfat`/`fat`) or a **BIOS Boot** partition (for `ext*`/`xfs`/`btrfs`) with the `layout` plugin alone, without falling back to a `commands` block that calls `parted` or `sgdisk`.
 
 ```yaml
 add_partitions:
+  # Choose ONE boot partition per device:
+
   # UEFI: an EFI System Partition
   - fsLabel: COS_GRUB
     pLabel: efi
     size: 64
     filesystem: vfat
     bootable: true
-  # Legacy BIOS: a BIOS Boot partition
-  - pLabel: bios
-    size: 1
-    filesystem: ext4
-    bootable: true
+
+  # Legacy BIOS: replace the ESP above with a BIOS Boot partition
+  # - pLabel: bios
+  #   size: 1
+  #   filesystem: ext4
+  #   bootable: true
 ```
 :::
