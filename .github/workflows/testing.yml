@@ -44,3 +44,6 @@ jobs:
 
       - name: Run release automation script tests
         run: npm run test:scripts
+
+      - name: Run component tests
+        run: npm run test:components
