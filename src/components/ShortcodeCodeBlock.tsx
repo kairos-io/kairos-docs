@@ -1,7 +1,7 @@
 import React from 'react';
 import CodeBlock from '@theme/CodeBlock';
 import {useFlavor} from '@site/src/context/flavor';
-import {buildKairosImageName} from '@site/src/components/kairos-image-name';
+import {buildKairosImageName, buildKairosOciImageName} from '@site/src/components/kairos-image-name';
 import {useVersionedCustomFields} from '@site/src/utils/versionedCustomFields';
 
 type ShortcodeCodeBlockProps = {
@@ -65,15 +65,17 @@ function renderTemplate(
       if (!attrs.variant) {
         return _full;
       }
-      const variant = attrs.variant;
-      const arch = attrs.arch ?? 'amd64';
-      const model = attrs.model ?? 'generic';
-      const kairosVersion = attrs.kairosVersion ?? defaultKairosVersion;
-      const k3sVersion = (attrs.k3sVersion ?? defaultK3sVersion).replaceAll('+', '-');
-      const suffix = attrs.suffix ? `-${attrs.suffix}` : '';
-      const k3sSegment = variant === 'standard' ? `-k3s${k3sVersion}` : '';
-      const tag = `${flavorRelease}-${variant}-${arch}-${model}-${kairosVersion}${k3sSegment}${suffix}`;
-      return `${registryURL}/${flavor}:${tag}`;
+      return buildKairosOciImageName({
+        registryURL,
+        flavor,
+        flavorRelease,
+        variant: attrs.variant,
+        arch: attrs.arch ?? 'amd64',
+        model: attrs.model ?? 'generic',
+        suffix: attrs.suffix,
+        kairosVersion: attrs.kairosVersion ?? defaultKairosVersion,
+        k3sVersion: attrs.k3sVersion ?? defaultK3sVersion,
+      });
     })
     .replace(IMAGE_SHORTCODE_GLOBAL_PATTERN, (_full, rawAttrs) => {
       const attrs = parseAttributes(rawAttrs);
