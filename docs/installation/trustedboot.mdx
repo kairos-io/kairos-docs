@@ -222,7 +222,7 @@ The .auth format in Secure Boot refers to EFI Signature Lists (ESLs) wrapped in 
 :::
 For a more secure process you can use a hardware key to generate and sign the certificate and sign the EFI files, so you dont need to keep the private key in the filesystem.
 
-To do so, `--sb-key` accepts a pkcs11 url, for example:
+To do so, `--sb-key` and `--tpm-pcr-private-key` accept a pkcs11 url, for example:
 
 ```bash
 docker run -ti --rm -v /run/pcscd:/run/pcscd -v $PWD/build:/result -v $PWD/keys/:/keys quay.io/kairos/auroraboot:{{< AuroraBootVersion  >}} build-uki -t iso -d /result/ --public-keys /keys --tpm-pcr-private-key $PATH_TO_TPM_KEY --sb-key "pkcs11:slot-id=1;id=%01" --sb-cert $PATH_TO_SB_CERT $CONTAINER_IMAGE
