@@ -231,6 +231,7 @@ docker run -ti --rm -v /run/pcscd:/run/pcscd -v $PWD/build:/result -v $PWD/keys/
 :::warning Warning
 Notice that for this to work you need to have the `pcscd` service running in your system, and the hardware key must be connected to the system.
 The command mounts the `/run/pcscd` directory to the container, so that the container can access the hardware key.
+Using a pkcs11 URL with `--tpm-pcr-private-key` requires AuroraBoot v0.25.0 or newer.
 :::
 For more info about pkcs11 urls, see the [RFC 7512](https://www.rfc-editor.org/rfc/rfc7512.html) which describes the format of the pkcs11 urls.
 
