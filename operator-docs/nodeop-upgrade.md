@@ -64,6 +64,8 @@ Only 4 fields is all it takes to safely upgrade the whole cluster.
 | `upgradeActive` | `bool` | `true` | Whether to upgrade the active partition |
 | `upgradeRecovery` | `bool` | `false` | Whether to upgrade the recovery partition |
 | `force` | `bool` | `false` | When true, run the upgrade on every targeted node regardless of whether it is already at `spec.image`. Disables the preflight skip — see [Skipping no-op upgrades](#skipping-no-op-upgrades). |
+| `debug` | `bool` | `false` | Run `kairos-agent` with the global `--debug` flag for verbose upgrade output. See [Debugging upgrades](#debugging-upgrades). |
+| `uncordonOnFailure` | `bool` | `false` | Uncordon a node if its upgrade fails, instead of leaving it unschedulable. Passed through to the underlying NodeOp. See [Recovering nodes after a failed upgrade](#recovering-nodes-after-a-failed-upgrade). |
 
 ## Additional Options
 
@@ -97,6 +99,12 @@ spec:
   # preflight version check and runs the upgrade on every targeted node
   # even if it is already at spec.image. See "Skipping no-op upgrades" below.
   force: false
+
+  # Run kairos-agent with --debug for verbose upgrade output (defaults to false)
+  debug: false
+
+  # Uncordon a node if its upgrade fails (defaults to false)
+  uncordonOnFailure: false
 ```
 
 To upgrade the "recovery" partition instead of the active one, set `upgradeRecovery: true` and `upgradeActive: false`:
@@ -137,6 +145,28 @@ It won't fire when:
 ### Forcing the upgrade
 
 Set `spec.force: true` to disable the preflight entirely. The controller creates the NodeOp without `spec.preflight`, so every targeted node goes straight through cordon → drain → upgrade Job → reboot, regardless of what version is already installed. Use this when you want to re-run an upgrade with the same image but different flags, or to recover from a previous run that ended in a weird state.
+
+## Debugging upgrades
+
+When an upgrade fails and the Job logs don't explain why, set `spec.debug: true`. The controller then runs `kairos-agent` with its global `--debug` flag, so the upgrade Job produces verbose output. Because `--debug` is a global flag, it is placed before the `upgrade` subcommand in the generated script (`kairos-agent --debug upgrade ...`).
+
+```yaml
+spec:
+  # ... other fields ...
+  debug: true
+```
+
+## Recovering nodes after a failed upgrade
+
+When an upgrade fails, the affected node stays cordoned (unschedulable) by default so you can inspect it. On a cluster with a single control plane node this can leave the control plane unschedulable until you intervene manually.
+
+Set `spec.uncordonOnFailure: true` to have the operator uncordon a node whose upgrade failed, returning it to a schedulable state automatically. The value is passed through to the underlying NodeOp, and the operator only uncordons nodes it cordoned itself. Kairos applies upgrades to a separate partition, so a failed upgrade generally leaves the running system intact and safe to schedule again.
+
+```yaml
+spec:
+  # ... other fields ...
+  uncordonOnFailure: true
+```
 
 ## How Upgrade Is Performed
 
