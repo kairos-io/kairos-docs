@@ -49,9 +49,52 @@ function detectHostOs(): HostOs {
 const DEFAULT_KAIROS_VERSION = 'v4.0.1';
 const DEFAULT_K3S_VERSION = 'latest';
 const DEFAULT_HADRON_VERSION = '0.0.4';
+const MOBILE_STACKED_QUERY = '(max-width: 996px)';
+const VISIBLE_MOBILE_ITEMS = 3;
+const AUTO_SCROLL_BASE_SPEED = 0.5;
+const AUTO_SCROLL_MAX_BOOST = 6;
+
+function getStackedMediaQuery(): MediaQueryList | null {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  return window.matchMedia(MOBILE_STACKED_QUERY);
+}
+
+function getGridGapPx(grid: HTMLElement): number {
+  const rowGap = getComputedStyle(grid).rowGap;
+  const parsed = Number.parseFloat(rowGap);
+  return Number.isFinite(parsed) ? parsed : 8;
+}
+
+function measureItemSetHeight(grid: HTMLElement, itemCount: number): number {
+  const items = Array.from(grid.children) as HTMLElement[];
+  if (items.length === 0 || itemCount === 0) {
+    return 0;
+  }
+
+  const gap = getGridGapPx(grid);
+  let height = 0;
+
+  for (let index = 0; index < itemCount; index += 1) {
+    height += items[index]?.offsetHeight ?? 0;
+    if (index < itemCount - 1) {
+      height += gap;
+    }
+  }
+
+  return height;
+}
+
+function measureScrollerPaddingY(scroller: HTMLElement): number {
+  const styles = getComputedStyle(scroller);
+  return Number.parseFloat(styles.paddingTop) + Number.parseFloat(styles.paddingBottom);
+}
 
 export default function ImageConfigBuilder({alternatives = []}: ImageConfigBuilderProps): ReactNode {
   const alternativesRef = useRef<HTMLDivElement | null>(null);
+  const altGridRef = useRef<HTMLDivElement | null>(null);
   const easyCardRef = useRef<HTMLDivElement | null>(null);
   const {
     k3sVersion,
@@ -114,6 +157,11 @@ kairos-lab setup`;
     };
   }, [effectiveK3sVersion, effectiveHadronVersion, effectiveKairosVersion]);
 
+  const carouselAlternatives = useMemo(
+    () => (alternatives.length > 0 ? [...alternatives, ...alternatives] : []),
+    [alternatives],
+  );
+
   useEffect(() => {
     setHostOs(detectHostOs());
   }, []);
@@ -162,31 +210,45 @@ kairos-lab setup`;
   }, [kairosLabCommand]);
 
   useEffect(() => {
-    if (!easyCardRef.current || !alternativesRef.current) return;
+    if (!easyCardRef.current || !alternativesRef.current || !altGridRef.current || alternatives.length === 0) {
+      return;
+    }
 
-    const stackedMediaQuery = window.matchMedia('(max-width: 996px)');
+    const stackedMediaQuery = getStackedMediaQuery();
+    if (!stackedMediaQuery) {
+      return;
+    }
 
-    const syncHeight = (): void => {
-      if (!easyCardRef.current || !alternativesRef.current) return;
-
-      if (stackedMediaQuery.matches) {
-        alternativesRef.current.style.height = 'auto';
+    const updateScrollerHeight = (): void => {
+      if (!easyCardRef.current || !alternativesRef.current || !altGridRef.current) {
         return;
       }
 
-      const easyCardHeight = easyCardRef.current.offsetHeight;
-      alternativesRef.current.style.height = `${easyCardHeight}px`;
+      if (stackedMediaQuery.matches) {
+        const visibleCount = Math.min(VISIBLE_MOBILE_ITEMS, alternatives.length);
+        const itemsHeight = measureItemSetHeight(altGridRef.current, visibleCount);
+        const paddingY = measureScrollerPaddingY(alternativesRef.current);
+        alternativesRef.current.style.height = `${itemsHeight + paddingY}px`;
+        return;
+      }
+
+      alternativesRef.current.style.height = `${easyCardRef.current.offsetHeight}px`;
     };
 
-    syncHeight();
-    stackedMediaQuery.addEventListener('change', syncHeight);
-    window.addEventListener('resize', syncHeight);
+    updateScrollerHeight();
+
+    const resizeObserver = new ResizeObserver(updateScrollerHeight);
+    resizeObserver.observe(easyCardRef.current);
+    resizeObserver.observe(altGridRef.current);
+    stackedMediaQuery.addEventListener('change', updateScrollerHeight);
+    window.addEventListener('resize', updateScrollerHeight);
 
     return () => {
-      stackedMediaQuery.removeEventListener('change', syncHeight);
-      window.removeEventListener('resize', syncHeight);
+      resizeObserver.disconnect();
+      stackedMediaQuery.removeEventListener('change', updateScrollerHeight);
+      window.removeEventListener('resize', updateScrollerHeight);
     };
-  }, [showKairosLabFlow, showManualFlow]);
+  }, [alternatives.length, showKairosLabFlow, showManualFlow]);
 
   const copyText = async (key: string, text: string): Promise<void> => {
     await navigator.clipboard.writeText(text);
@@ -204,31 +266,51 @@ kairos-lab setup`;
   };
 
   useEffect(() => {
-    if (!alternativesRef.current || alternatives.length === 0) return;
+    if (!alternativesRef.current || !altGridRef.current || alternatives.length === 0) {
+      return;
+    }
 
     const container = alternativesRef.current;
-    const stackedMediaQuery = window.matchMedia('(max-width: 996px)');
+    const grid = altGridRef.current;
+    const stackedMediaQuery = getStackedMediaQuery();
+    if (!stackedMediaQuery) {
+      return;
+    }
+
     let animationId: number | undefined;
     let isPaused = false;
+    let scrollBoost = 0;
+    let isTouching = false;
+
+    const getLoopHeight = (): number => measureItemSetHeight(grid, alternatives.length);
+
+    const wrapScrollPosition = (): void => {
+      const loopHeight = getLoopHeight();
+      if (loopHeight <= 0) {
+        return;
+      }
+
+      while (container.scrollTop >= loopHeight) {
+        container.scrollTop -= loopHeight;
+      }
+
+      while (container.scrollTop < 0) {
+        container.scrollTop += loopHeight;
+      }
+    };
 
     const stopScroll = (): void => {
       if (animationId !== undefined) {
         cancelAnimationFrame(animationId);
         animationId = undefined;
       }
-      container.scrollTop = 0;
     };
 
     const scroll = (): void => {
-      if (isPaused) {
-        animationId = requestAnimationFrame(scroll);
-        return;
-      }
-
-      container.scrollTop += 0.5;
-
-      if (container.scrollTop >= container.scrollHeight - container.clientHeight) {
-        container.scrollTop = 0;
+      if (!isPaused && !isTouching) {
+        container.scrollTop += AUTO_SCROLL_BASE_SPEED + scrollBoost;
+        scrollBoost = Math.max(0, scrollBoost * 0.92);
+        wrapScrollPosition();
       }
 
       animationId = requestAnimationFrame(scroll);
@@ -236,21 +318,47 @@ kairos-lab setup`;
 
     const startScroll = (): void => {
       stopScroll();
-      if (!stackedMediaQuery.matches) {
-        animationId = requestAnimationFrame(scroll);
-      }
+      container.scrollTop = 0;
+      scrollBoost = 0;
+      animationId = requestAnimationFrame(scroll);
     };
 
     const handleMouseEnter = (): void => {
-      isPaused = true;
+      if (!stackedMediaQuery.matches) {
+        isPaused = true;
+      }
     };
 
     const handleMouseLeave = (): void => {
-      isPaused = false;
+      if (!stackedMediaQuery.matches) {
+        isPaused = false;
+      }
+    };
+
+    const handleWheel = (event: WheelEvent): void => {
+      scrollBoost = Math.min(AUTO_SCROLL_MAX_BOOST, scrollBoost + Math.abs(event.deltaY) * 0.03);
+    };
+
+    const handleTouchStart = (): void => {
+      isTouching = true;
+    };
+
+    const handleTouchEnd = (): void => {
+      isTouching = false;
+      wrapScrollPosition();
+    };
+
+    const handleScroll = (): void => {
+      wrapScrollPosition();
     };
 
     container.addEventListener('mouseenter', handleMouseEnter);
     container.addEventListener('mouseleave', handleMouseLeave);
+    container.addEventListener('wheel', handleWheel, {passive: true});
+    container.addEventListener('touchstart', handleTouchStart, {passive: true});
+    container.addEventListener('touchend', handleTouchEnd, {passive: true});
+    container.addEventListener('touchcancel', handleTouchEnd, {passive: true});
+    container.addEventListener('scroll', handleScroll, {passive: true});
     stackedMediaQuery.addEventListener('change', startScroll);
     startScroll();
 
@@ -258,6 +366,11 @@ kairos-lab setup`;
       stopScroll();
       container.removeEventListener('mouseenter', handleMouseEnter);
       container.removeEventListener('mouseleave', handleMouseLeave);
+      container.removeEventListener('wheel', handleWheel);
+      container.removeEventListener('touchstart', handleTouchStart);
+      container.removeEventListener('touchend', handleTouchEnd);
+      container.removeEventListener('touchcancel', handleTouchEnd);
+      container.removeEventListener('scroll', handleScroll);
       stackedMediaQuery.removeEventListener('change', startScroll);
     };
   }, [alternatives]);
@@ -365,9 +478,9 @@ kairos-lab setup`;
                 <Heading as="h2">Alternatives</Heading>
               </div>
               <div className={styles.alternativesScroller} ref={alternativesRef}>
-                <div className={styles.altGrid}>
-                  {alternatives.map((item) => (
-                    <Link key={item.title} to={item.href} className={styles.altItem}>
+                <div className={styles.altGrid} ref={altGridRef}>
+                  {carouselAlternatives.map((item, index) => (
+                    <Link key={`${item.title}-${index}`} to={item.href} className={styles.altItem}>
                       <strong>{item.title}</strong>
                       <span>{item.description}</span>
                     </Link>
