@@ -75,6 +75,10 @@ spec:
   # Whether to cordon the node before running the operation
   cordon: true
 
+  # Whether to uncordon the node if its operation fails
+  # (only applies when cordon is true)
+  uncordonOnFailure: false
+
   # Drain options for pod eviction
   drainOptions:
     enabled: true
@@ -109,6 +113,7 @@ spec:
 | `command` | `[]string` | (required) | Command to execute in the container |
 | `hostMountPath` | `string` | `/host` | Path where the node's root filesystem is mounted |
 | `cordon` | `bool` | `false` | Whether to cordon the node before running the operation |
+| `uncordonOnFailure` | `bool` | `false` | Uncordon the node if its operation fails. Only applies when `cordon` is true, and only for nodes this NodeOp cordoned. See [Uncordoning nodes after failure](#uncordoning-nodes-after-failure). |
 | `drainOptions.enabled` | `bool` | `false` | Enable draining pods before the operation |
 | `drainOptions.force` | `bool` | `false` | Force eviction of pods without a controller |
 | `drainOptions.gracePeriodSeconds` | `int` | `30` | Grace period for pod termination |
@@ -123,6 +128,12 @@ spec:
 | `preflight.command` | `[]string` | (required if `preflight` is set) | Command run inside the preflight container |
 | `preflight.image` | `string` | `spec.image` | Image for the preflight Pod (defaults to the main `spec.image`) |
 | `preflight.activeDeadlineSeconds` | `int` | `120` | Bound on total preflight Pod lifetime; on expiry the Pod is killed and the node is marked `Failed` |
+
+## Uncordoning nodes after failure
+
+When `cordon` is enabled, the operator cordons each node before running the operation and uncordons it again once the operation completes successfully. If the operation **fails**, the default behavior is to leave the node cordoned so you can inspect it before returning it to service.
+
+Set `uncordonOnFailure: true` to have the operator uncordon a node whose operation failed. The operator only uncordons nodes that it cordoned itself: a node that was already cordoned before the NodeOp ran, or one cordoned by a different NodeOp, is left untouched. Failed operations are never rebooted, so the node is uncordoned as soon as the failure is observed.
 
 ## Preflight checks
 
