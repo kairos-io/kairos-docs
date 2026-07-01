@@ -830,6 +830,7 @@
   .alternativesScroller {
     max-height: none;
     overflow-y: visible;
+    height: auto !important;
   }
 
   .kairosLabGrid {

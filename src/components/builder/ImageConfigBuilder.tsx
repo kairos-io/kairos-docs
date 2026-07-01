@@ -164,16 +164,26 @@ kairos-lab setup`;
   useEffect(() => {
     if (!easyCardRef.current || !alternativesRef.current) return;
 
+    const stackedMediaQuery = window.matchMedia('(max-width: 996px)');
+
     const syncHeight = (): void => {
       if (!easyCardRef.current || !alternativesRef.current) return;
+
+      if (stackedMediaQuery.matches) {
+        alternativesRef.current.style.height = 'auto';
+        return;
+      }
+
       const easyCardHeight = easyCardRef.current.offsetHeight;
       alternativesRef.current.style.height = `${easyCardHeight}px`;
     };
 
     syncHeight();
+    stackedMediaQuery.addEventListener('change', syncHeight);
     window.addEventListener('resize', syncHeight);
 
     return () => {
+      stackedMediaQuery.removeEventListener('change', syncHeight);
       window.removeEventListener('resize', syncHeight);
     };
   }, [showKairosLabFlow, showManualFlow]);
@@ -197,8 +207,17 @@ kairos-lab setup`;
     if (!alternativesRef.current || alternatives.length === 0) return;
 
     const container = alternativesRef.current;
-    let animationId: number;
+    const stackedMediaQuery = window.matchMedia('(max-width: 996px)');
+    let animationId: number | undefined;
     let isPaused = false;
+
+    const stopScroll = (): void => {
+      if (animationId !== undefined) {
+        cancelAnimationFrame(animationId);
+        animationId = undefined;
+      }
+      container.scrollTop = 0;
+    };
 
     const scroll = (): void => {
       if (isPaused) {
@@ -215,6 +234,13 @@ kairos-lab setup`;
       animationId = requestAnimationFrame(scroll);
     };
 
+    const startScroll = (): void => {
+      stopScroll();
+      if (!stackedMediaQuery.matches) {
+        animationId = requestAnimationFrame(scroll);
+      }
+    };
+
     const handleMouseEnter = (): void => {
       isPaused = true;
     };
@@ -225,12 +251,14 @@ kairos-lab setup`;
 
     container.addEventListener('mouseenter', handleMouseEnter);
     container.addEventListener('mouseleave', handleMouseLeave);
-    animationId = requestAnimationFrame(scroll);
+    stackedMediaQuery.addEventListener('change', startScroll);
+    startScroll();
 
     return () => {
-      cancelAnimationFrame(animationId);
+      stopScroll();
       container.removeEventListener('mouseenter', handleMouseEnter);
       container.removeEventListener('mouseleave', handleMouseLeave);
+      stackedMediaQuery.removeEventListener('change', startScroll);
     };
   }, [alternatives]);
 
