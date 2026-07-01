@@ -157,11 +157,6 @@ kairos-lab setup`;
     };
   }, [effectiveK3sVersion, effectiveHadronVersion, effectiveKairosVersion]);
 
-  const carouselAlternatives = useMemo(
-    () => (alternatives.length > 0 ? [...alternatives, ...alternatives] : []),
-    [alternatives],
-  );
-
   useEffect(() => {
     setHostOs(detectHostOs());
   }, []);
@@ -266,12 +261,11 @@ kairos-lab setup`;
   };
 
   useEffect(() => {
-    if (!alternativesRef.current || !altGridRef.current || alternatives.length === 0) {
+    if (!alternativesRef.current || alternatives.length === 0) {
       return;
     }
 
     const container = alternativesRef.current;
-    const grid = altGridRef.current;
     const stackedMediaQuery = getStackedMediaQuery();
     if (!stackedMediaQuery) {
       return;
@@ -282,20 +276,10 @@ kairos-lab setup`;
     let scrollBoost = 0;
     let isTouching = false;
 
-    const getLoopHeight = (): number => measureItemSetHeight(grid, alternatives.length);
-
-    const wrapScrollPosition = (): void => {
-      const loopHeight = getLoopHeight();
-      if (loopHeight <= 0) {
-        return;
-      }
-
-      while (container.scrollTop >= loopHeight) {
-        container.scrollTop -= loopHeight;
-      }
-
-      while (container.scrollTop < 0) {
-        container.scrollTop += loopHeight;
+    const resetIfAtEnd = (): void => {
+      const maxScrollTop = container.scrollHeight - container.clientHeight;
+      if (maxScrollTop <= 0 || container.scrollTop >= maxScrollTop) {
+        container.scrollTop = 0;
       }
     };
 
@@ -310,7 +294,7 @@ kairos-lab setup`;
       if (!isPaused && !isTouching) {
         container.scrollTop += AUTO_SCROLL_BASE_SPEED + scrollBoost;
         scrollBoost = Math.max(0, scrollBoost * 0.92);
-        wrapScrollPosition();
+        resetIfAtEnd();
       }
 
       animationId = requestAnimationFrame(scroll);
@@ -345,11 +329,7 @@ kairos-lab setup`;
 
     const handleTouchEnd = (): void => {
       isTouching = false;
-      wrapScrollPosition();
-    };
-
-    const handleScroll = (): void => {
-      wrapScrollPosition();
+      resetIfAtEnd();
     };
 
     container.addEventListener('mouseenter', handleMouseEnter);
@@ -358,7 +338,6 @@ kairos-lab setup`;
     container.addEventListener('touchstart', handleTouchStart, {passive: true});
     container.addEventListener('touchend', handleTouchEnd, {passive: true});
     container.addEventListener('touchcancel', handleTouchEnd, {passive: true});
-    container.addEventListener('scroll', handleScroll, {passive: true});
     stackedMediaQuery.addEventListener('change', startScroll);
     startScroll();
 
@@ -370,7 +349,6 @@ kairos-lab setup`;
       container.removeEventListener('touchstart', handleTouchStart);
       container.removeEventListener('touchend', handleTouchEnd);
       container.removeEventListener('touchcancel', handleTouchEnd);
-      container.removeEventListener('scroll', handleScroll);
       stackedMediaQuery.removeEventListener('change', startScroll);
     };
   }, [alternatives]);
@@ -479,8 +457,8 @@ kairos-lab setup`;
               </div>
               <div className={styles.alternativesScroller} ref={alternativesRef}>
                 <div className={styles.altGrid} ref={altGridRef}>
-                  {carouselAlternatives.map((item, index) => (
-                    <Link key={`${item.title}-${index}`} to={item.href} className={styles.altItem}>
+                  {alternatives.map((item) => (
+                    <Link key={item.title} to={item.href} className={styles.altItem}>
                       <strong>{item.title}</strong>
                       <span>{item.description}</span>
                     </Link>
