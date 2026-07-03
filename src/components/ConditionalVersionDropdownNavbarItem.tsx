@@ -21,6 +21,7 @@ type ConditionalVersionDropdownNavbarItemProps = {
 export default function ConditionalVersionDropdownNavbarItem({
   routeBasePath,
   label,
+  mobile,
   ...dropdownProps
 }: ConditionalVersionDropdownNavbarItemProps): React.JSX.Element | null {
   const location = useLocation();
@@ -39,13 +40,14 @@ export default function ConditionalVersionDropdownNavbarItem({
   const dropdown = (
     <DocsVersionDropdownNavbarItem
       {...dropdownProps}
+      mobile={mobile}
       items={dropdownProps.items ?? []}
       dropdownItemsBefore={dropdownProps.dropdownItemsBefore ?? []}
       dropdownItemsAfter={dropdownProps.dropdownItemsAfter ?? []}
     />
   );
 
-  if (!label) {
+  if (!label || mobile) {
     return dropdown;
   }
 

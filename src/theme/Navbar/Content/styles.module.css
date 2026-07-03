@@ -1,0 +1,26 @@
+@media (max-width: 996px) {
+  .colorModeToggle {
+    display: none;
+  }
+
+  .mobileNavScroll {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    align-items: center;
+  }
+
+  .mobileNavScroll::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+:global(.navbar__items--right) > :last-child {
+  padding-right: 0;
+}
