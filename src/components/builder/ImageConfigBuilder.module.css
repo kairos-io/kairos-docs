@@ -828,8 +828,11 @@
   }
 
   .alternativesScroller {
-    max-height: none;
-    overflow-y: visible;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
   }
 
   .kairosLabGrid {

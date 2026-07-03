@@ -497,9 +497,18 @@
   font-weight: 700;
 }
 
+.compareTableWrap {
+  margin-top: 0.7rem;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+
 .compareTable {
   width: 100%;
-  margin-top: 0.7rem;
+  min-width: 42rem;
+  margin-top: 0;
   border-collapse: separate;
   border-spacing: 0;
   border: 1px solid #304466;
@@ -557,6 +566,7 @@
   background: #111c38;
   color: #b3c4e8;
   width: 28%;
+  min-width: 11rem;
 }
 
 .compareTable td:nth-child(2) {
@@ -867,11 +877,6 @@
   .wrapTwoColumn,
   .pressList a {
     grid-template-columns: 1fr;
-  }
-
-  .compareTable td {
-    display: block;
-    width: 100%;
   }
 
   .distroLogos {

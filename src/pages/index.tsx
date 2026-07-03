@@ -197,7 +197,8 @@ export default function DesignThreePage(): ReactNode {
               Kairos combines the operational model of an immutable image-based OS with the openness of a
               distro-agnostic build system and the ergonomics of Kubernetes-native lifecycle management.
             </p>
-            <table className={styles.compareTable}>
+            <div className={styles.compareTableWrap}>
+              <table className={styles.compareTable}>
               <thead>
                 <tr>
                   <th>Capability</th>
@@ -245,6 +246,7 @@ export default function DesignThreePage(): ReactNode {
                 </tr>
               </tbody>
             </table>
+            </div>
             <p className={styles.compareNotes}>
               * Yes for CMS because they can manage many distros and apply ongoing config, but they do it by mutating
               the running host rather than by shipping a new immutable machine image. Puppet and Salt describe keeping
