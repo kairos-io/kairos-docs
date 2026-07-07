@@ -65,7 +65,7 @@ Only 4 fields is all it takes to safely upgrade the whole cluster.
 | `upgradeRecovery` | `bool` | `false` | Whether to upgrade the recovery partition |
 | `force` | `bool` | `false` | When true, run the upgrade on every targeted node regardless of whether it is already at `spec.image`. Disables the preflight skip — see [Skipping no-op upgrades](#skipping-no-op-upgrades). |
 | `debug` | `bool` | `false` | Run `kairos-agent` with the global `--debug` flag for verbose upgrade output. See [Debugging upgrades](#debugging-upgrades). |
-| `uncordonOnFailure` | `bool` | `false` | Uncordon a node if its upgrade fails, instead of leaving it unschedulable. Passed through to the underlying NodeOp. See [Recovering nodes after a failed upgrade](#recovering-nodes-after-a-failed-upgrade). |
+| `uncordonOnFailure` | `bool` | `false` | Uncordon a node if its upgrade fails, instead of leaving it unschedulable. Passed through to the underlying NodeOp. See [Recovering nodes after a failed upgrade](#recovering-nodes-after-a-failed-upgrade) and [How cordoning works](../nodeop/#how-cordoning-works) for the full lifecycle. |
 
 ## Additional Options
 
@@ -158,9 +158,11 @@ spec:
 
 ## Recovering nodes after a failed upgrade
 
-When an upgrade fails, the affected node stays cordoned (unschedulable) by default so you can inspect it. On a cluster with a single control plane node this can leave the control plane unschedulable until you intervene manually.
+Every NodeOpUpgrade cordons each targeted node before running the upgrade and uncordons it once the upgrade has completed and the node has rebooted. If the upgrade **fails**, the affected node stays cordoned (unschedulable) by default so you can inspect it. On a cluster with a single control plane node this can leave the control plane unschedulable until you intervene manually.
 
-Set `spec.uncordonOnFailure: true` to have the operator uncordon a node whose upgrade failed, returning it to a schedulable state automatically. The value is passed through to the underlying NodeOp, and the operator only uncordons nodes it cordoned itself. Kairos applies upgrades to a separate partition, so a failed upgrade generally leaves the running system intact and safe to schedule again.
+Set `spec.uncordonOnFailure: true` to have the operator uncordon a node whose upgrade failed, returning it to a schedulable state automatically. The value is passed through to the underlying NodeOp, and the operator only uncordons nodes it cordoned itself, so any pre-existing cordon (from a human or a different NodeOp) is left alone. Kairos applies upgrades to a separate partition, so a failed upgrade generally leaves the running system intact and safe to schedule again.
+
+For the full cordon lifecycle (how cordon ownership is claimed, when the uncordon happens after a successful upgrade, and what the operator does with cordons it did not set), see [How cordoning works](../nodeop/#how-cordoning-works) in the NodeOp docs.
 
 ```yaml
 spec:
