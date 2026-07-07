@@ -252,18 +252,76 @@ export const enterpriseIntroCopy =
 export const enterpriseBodyCopy =
   'Spectro Cloud is the main supporter behind Kairos and provides enterprise-grade Kubernetes management through its platform, Palette, which allows organizations to deploy, manage, and scale Kubernetes across various environments, including public clouds, data centers, bare metal, and edge computing.';
 
-export const adopterLogos = [
+export type AdopterItem = {
+  id: string;
+  name: string;
+  /** The company's original, unmodified logo */
+  logo: string;
+  /** Background the logo is designed for — determines the container shade */
+  logoBg: 'light' | 'dark';
+  website: string;
+  useCase: string;
+  issueUrl?: string;
+  isServiceProvider?: boolean;
+  serviceProviderNotice?: string;
+};
+
+export const ADOPTER_APPLICATION_URL =
+  'https://github.com/kairos-io/kairos/issues/new?template=adopter-application.yml';
+
+export const adopters: AdopterItem[] = [
   {
-    src: '/img/deeep-network.png',
-    alt: 'DeEEP Network',
-    href: 'https://www.deeep.network',
+    id: 'clastix',
+    name: 'CLASTIX',
+    logo: '/img/adopters/clastix.svg',
+    logoBg: 'light',
+    website: 'https://clastix.io',
+    issueUrl: 'https://github.com/kairos-io/kairos/issues/4051',
+    useCase:
+      'CLASTIX builds kMetal, a multi-tenant bare-metal Kubernetes platform, on Kairos for cloud-native immutable OS provisioning — using the Kairos Operator, Kubeadm provider, and Cluster API without vendor lock-in.',
   },
   {
-    src: '/img/logo.svg',
-    alt: 'Kairos logo',
-    href: 'mailto:members@kairos.io',
+    id: 'deeep-network',
+    name: 'DeEEP Network',
+    logo: '/img/adopters/deeep.png',
+    logoBg: 'dark',
+    website: 'https://www.deeep.network',
+    useCase:
+      'DeEEP Network operates a distributed edge hosting fleet on dedicated devices. Kairos delivers OCI-based immutable OS provisioning and lifecycle management for reproducible operations at the edge.',
+  },
+  {
+    id: 'imec',
+    name: 'Imec',
+    logo: '/img/adopters/imec.svg',
+    logoBg: 'light',
+    website: 'https://www.imec.be',
+    issueUrl: 'https://github.com/kairos-io/kairos/issues/4096',
+    useCase:
+      'Imec runs secure edge test infrastructure across heterogeneous hardware. Kairos provisions immutable OS images with BYOI flexibility and A/B upgrades — even on devices without BMC or PXE boot.',
+  },
+  {
+    id: 'spectro-cloud',
+    name: 'Spectro Cloud',
+    logo: '/img/adopters/spectro.svg',
+    logoBg: 'light',
+    website: 'https://www.spectrocloud.com',
+    isServiceProvider: true,
+    serviceProviderNotice:
+      'Spectro Cloud, the original sponsoring company for Kairos and employer of several maintainers, uses Kairos as part of its edge Kubernetes offering and is listed as a service-provider adopter.',
+    useCase:
+      'Spectro Cloud uses Kairos as the immutable OS layer in Palette, its Kubernetes management platform for edge and distributed infrastructure at scale.',
   },
 ];
+
+/** @deprecated Use adopters instead */
+export const adopterLogos = adopters.map((adopter) => ({
+  src: adopter.logo,
+  alt: adopter.name,
+  href: adopter.website,
+}));
+
+export const endUserAdopters = adopters.filter((adopter) => !adopter.isServiceProvider);
+export const serviceProviderAdopters = adopters.filter((adopter) => adopter.isServiceProvider);
 
 export function getNextEvent(): EventItem | null {
   const now = new Date();
