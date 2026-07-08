@@ -86,7 +86,7 @@ Three things to note:
 - The second custom manager handles `metadata.name`. `currentValueTemplate` converts the dash-format slug (`v0-3-0` → `v0.3.0`) so Renovate can compare it against the docker datasource. `autoReplaceStringTemplate` writes the new version back in dash-format. Both managers share the same `depNameTemplate`, so Renovate updates `spec.image` and `metadata.name` atomically in one PR.
 - **Do not use `extractVersionTemplate`** to parse the dash-format in `metadata.name` — it is not a valid field for Renovate custom managers and is silently ignored. The result is that `spec.image` gets bumped but `metadata.name` stays at the old version, so the operator sees no new CR and does nothing.
 
-The pattern is not superior to `generateName` — it's a different tradeoff. Pick `generateName` when you drive upgrades from a CLI or CI job. Pick static-name bump when the desired state lives in git and every change goes through a merged PR.
+`generateName` and static-name bump are equivalent in semantics — both produce a new one-shot CR. The difference is operational: `generateName` suits imperative workflows (CLI, CI job) where the run doesn't need to live in git. Static-name bump suits GitOps where every change is a reviewed commit.
 
 ## Basic Example
 
