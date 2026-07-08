@@ -221,10 +221,12 @@ and refuses to install cross-node pod routes. Symptom in the cluster: pods on an
 
 ```yaml
 routingMode: native
-ipv4NativeRoutingCIDR: 10.0.0.0/8         # your Hetzner private network CIDR
+ipv4NativeRoutingCIDR: 10.0.0.0/8         # matches the Hetzner Private Network you created (ip_range); covers all subnets across locations
 autoDirectNodeRoutes: true
 directRoutingSkipUnreachable: true         # required on Hetzner private networks
 ```
+
+`ipv4NativeRoutingCIDR` must cover the full private network range — not just the subnet — so that Cilium applies native routing to all node-to-node traffic regardless of which subnet a node lands in. See the [Cilium native routing docs](https://docs.cilium.io/en/stable/network/concepts/routing/#native-routing) and [`directRoutingSkipUnreachable`](https://docs.cilium.io/en/stable/helm-reference/) in the Helm reference.
 
 Setting it via kubectl on an already-deployed cluster (recovery path):
 
