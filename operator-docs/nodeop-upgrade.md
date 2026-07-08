@@ -82,7 +82,7 @@ For [Renovate](https://docs.renovatebot.com/), a custom regex manager targeting 
 
 Three things to note:
 
-- `allowedVersions` clamps updates to a single k3s minor line. This prevents a Renovate PR from silently proposing a k3s minor bump alongside a Kairos patch bump. To cross a k3s minor, edit the regex in a separate PR — forces an explicit decision.
+- `allowedVersions` pins updates to the current k3s minor line (`1.35.x`). This prevents Renovate from silently bundling a k3s minor upgrade with a Kairos patch bump. To adopt a new k3s minor, update the regex explicitly.
 - The second custom manager handles `metadata.name`. `currentValueTemplate` converts the dash-format slug (`v0-3-0` → `v0.3.0`) so Renovate can compare it against the docker datasource. `autoReplaceStringTemplate` writes the new version back in dash-format. Both managers share the same `depNameTemplate`, so Renovate updates `spec.image` and `metadata.name` atomically in one PR.
 - **Do not use `extractVersionTemplate`** to parse the dash-format in `metadata.name` — it is not a valid field for Renovate custom managers and is silently ignored. The result is that `spec.image` gets bumped but `metadata.name` stays at the old version, so the operator sees no new CR and does nothing.
 
