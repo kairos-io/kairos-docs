@@ -291,7 +291,7 @@ export const adopters: AdopterItem[] = [
   },
   {
     id: 'imec',
-    name: 'Imec',
+    name: 'imec',
     logo: '/img/adopters/imec.svg',
     logoBg: 'light',
     website: 'https://www.imec.be',
