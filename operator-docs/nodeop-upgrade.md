@@ -18,6 +18,76 @@ A `NodeOpUpgrade` represents a **single upgrade run** on the target nodes. The o
 
 To run the same upgrade configuration repeatedly, use **metadata.generateName** instead of **metadata.name** and **kubectl create** (not **apply**) so each run creates a new NodeOpUpgrade. See [NodeOp: One-off operations and reusing manifests](../nodeop/#one-off-operations-and-reusing-manifests) for the same pattern and rationale.
 
+### GitOps alternative: static-name bump with a versioned suffix
+
+`generateName` + `kubectl create` is an imperative workflow — the CR name is unknown ahead of time and the run doesn't live in git. In a GitOps setup (ArgoCD / Flux / etc.) both properties are inverted: every resource has a known static name that git owns, and drift-detection expects the same name to describe the same object across reconciliations.
+
+The GitOps equivalent of "new run = new object" is to make the **version part of the name**, and bump the name and the image reference in the same commit. Each merged commit produces a new named resource, which the operator treats as a new one-shot run. Same semantic guarantee as `generateName`, but declarative and reviewable.
+
+```yaml
+apiVersion: operator.kairos.io/v1alpha1
+kind: NodeOpUpgrade
+# The version fragment in the name is REQUIRED. Same name across two commits
+# would look like a spec update to the operator (behavior undefined per the
+# warning above). Bumping the name makes the new commit a new object.
+metadata:
+  name: kairos-upgrade-v3-4-2                     # <-- bumped alongside spec.image
+  namespace: default
+spec:
+  image: quay.io/kairos/opensuse:leap-15.6-standard-amd64-generic-v3.4.2-k3sv1.30.11-k3s1
+  concurrency: 1
+  stopOnFailure: true
+```
+
+Bumping the name by hand at every release defeats the point of GitOps. A dependency-update bot (Renovate, dependabot, etc.) can watch the image tag and open a PR that rewrites **both** the `image:` line and the version fragment in `metadata.name:`.
+
+For [Renovate](https://docs.renovatebot.com/), a custom regex manager targeting a composite tag (Kairos + k8s version) looks like:
+
+```json
+{
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["^upgrades/.*\\.ya?ml$"],
+      "matchStrings": [
+        "image:\\s+quay\\.io/kairos/hadron:(?<currentValue>v\\d+\\.\\d+\\.\\d+-standard-(?:amd64|arm64)-generic-v\\d+\\.\\d+\\.\\d+-k3s-v\\d+\\.\\d+\\.\\d+-k3s1)"
+      ],
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "quay.io/kairos/hadron",
+      "versioningTemplate": "regex:^v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-standard-(?:amd64|arm64)-generic-v\\d+\\.\\d+\\.\\d+-k3s-v\\d+\\.\\d+\\.\\d+-k3s1$"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["^upgrades/.*\\.ya?ml$"],
+      "matchStrings": [
+        "name:\\s+hadron-(?<cluster>[a-z]+)-v(?<major>\\d+)-(?<minor>\\d+)-(?<patch>\\d+)"
+      ],
+      "currentValueTemplate": "v{{{major}}}.{{{minor}}}.{{{patch}}}",
+      "autoReplaceStringTemplate": "name: hadron-{{{cluster}}}-v{{{newMajor}}}-{{{newMinor}}}-{{{newPatch}}}",
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "quay.io/kairos/hadron",
+      "versioningTemplate": "regex:^v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-standard-(?:amd64|arm64)-generic-v\\d+\\.\\d+\\.\\d+-k3s-v\\d+\\.\\d+\\.\\d+-k3s1$"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchPackageNames": ["quay.io/kairos/hadron"],
+      "allowedVersions": "/.*-k3s-v1\\.35\\.\\d+-k3s1$/",
+      "minimumReleaseAge": "24 hours",
+      "automerge": false
+    }
+  ]
+}
+```
+
+Three things to note:
+
+- `allowedVersions` clamps updates to a single k3s minor line. This prevents a Renovate PR from silently proposing a k3s minor bump alongside a Kairos patch bump. To cross a k3s minor, edit the regex in a separate PR — forces an explicit decision.
+- The second custom manager handles `metadata.name`. `currentValueTemplate` converts the dash-format slug (`v0-3-0` → `v0.3.0`) so Renovate can compare it against the docker datasource. `autoReplaceStringTemplate` writes the new version back in dash-format. Both managers share the same `depNameTemplate`, so Renovate updates `spec.image` and `metadata.name` atomically in one PR.
+- **Do not use `extractVersionTemplate`** to parse the dash-format in `metadata.name` — it is not a valid field for Renovate custom managers and is silently ignored. The result is that `spec.image` gets bumped but `metadata.name` stays at the old version, so the operator sees no new CR and does nothing.
+
+The pattern is not superior to `generateName` — it's a different tradeoff. Pick `generateName` when you drive upgrades from a CLI or CI job. Pick static-name bump when the desired state lives in git and every change goes through a merged PR.
+
 ## Basic Example
 
 The following is an example of a "canary upgrade", which upgrades Kairos nodes one-by-one (master nodes first). It will stop upgrading if one of the nodes doesn't complete the upgrade and reboot successfully.
