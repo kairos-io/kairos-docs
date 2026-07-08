@@ -17,7 +17,7 @@ Neither policy is shipped by the operator itself. This page documents the recipe
 
 ## Prerequisites
 
-- A Kubernetes cluster with the [Kairos operator](installation) installed.
+- A Kubernetes cluster with the [Kairos operator](../installation) installed.
 - [Kyverno](https://kyverno.io/) installed, with the `verifyImages` webhook enabled (default in recent releases).
 - Access to the [Sigstore public infrastructure](https://docs.sigstore.dev/) (`fulcio.sigstore.dev`, `rekor.sigstore.dev`) from within the cluster, OR a local Sigstore stack if you run air-gapped.
 
@@ -58,7 +58,7 @@ spec:
             image: "quay.io/kairos/hadron:*"
 ```
 
-- `SkipDryRunOnMissingResource=true` is only needed if you deploy this policy alongside the operator via ArgoCD before its CRDs are registered — see the [CRD race condition note](installation#crd-race-condition-when-applying-downstream-crs) in the installation page.
+- `SkipDryRunOnMissingResource=true` is only needed if you deploy this policy alongside the operator via ArgoCD before its CRDs are registered — see the [CRD race condition note](../installation#crd-race-condition-when-applying-downstream-crs) in the installation page.
 - Adapt the allow-listed path to the image family you actually rely on. If you build your own upgrade image via [BYOI](/docs/reference/byoi/) or [Kairos Factory](/docs/reference/kairos-factory/), point the pattern at your own registry path instead.
 - Because Kyverno cannot re-evaluate `spec.image` under a `generateName` create (the CR does not yet have a fully-qualified name), match on `CREATE` and `UPDATE` as above.
 
@@ -149,6 +149,6 @@ Without this ordering there is a window during first bootstrap in which the oper
 
 ## See also
 
-- [NodeOpUpgrade — GitOps static-name-bump pattern](nodeop-upgrade#gitops-alternative-static-name-bump-with-a-versioned-suffix) — pairs well with Policy 2, because Renovate PRs re-verify the tag signature before merge.
-- [Using Private Registries](private-registries) — for authenticated registries in front of the trusted image path.
+- [NodeOpUpgrade — GitOps static-name-bump pattern](../nodeop-upgrade#gitops-alternative-static-name-bump-with-a-versioned-suffix) — pairs well with Policy 2, because Renovate PRs re-verify the tag signature before merge.
+- [Using Private Registries](../private-registries) — for authenticated registries in front of the trusted image path.
 - [Kyverno verifyImages documentation](https://kyverno.io/docs/writing-policies/verify-images/)
