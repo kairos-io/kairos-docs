@@ -1,0 +1,91 @@
+.section {
+  padding: 3.9rem 0;
+  background: linear-gradient(130deg, #0b275f 0%, #1d4ca5 50%, #ee5007 120%);
+  color: #fff;
+}
+
+.wrap {
+  width: min(1160px, calc(100% - 2.4rem));
+  margin: 0 auto;
+}
+
+.section h2 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+}
+
+.lead {
+  margin: 0.9rem 0 0;
+  max-width: 900px;
+  color: #f1f6ff;
+  line-height: 1.55;
+}
+
+.logos {
+  margin-top: 1.4rem;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.logoItem {
+  border-radius: 12px;
+  padding: 1.4rem 1.2rem;
+  min-height: 96px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  box-shadow: 0 12px 30px rgba(4, 16, 40, 0.22);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.logoItemLight {
+  background: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.logoItemDark {
+  background: #0a1020;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.logoItem:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 36px rgba(4, 16, 40, 0.3);
+  text-decoration: none;
+}
+
+.logoImg {
+  height: 40px;
+  max-width: 170px;
+  width: auto;
+  object-fit: contain;
+}
+
+.more {
+  display: inline-block;
+  margin-top: 1.3rem;
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+.more:hover {
+  color: #fff;
+  border-bottom-color: #fff;
+}
+
+@media (max-width: 996px) {
+  .logos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .logos {
+    grid-template-columns: 1fr;
+  }
+}
