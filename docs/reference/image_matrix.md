@@ -55,6 +55,31 @@ docker build --platform linux/arm64 --build-arg BASE_IMG=almalinux:9 --build-arg
 :::tip Note
 See [Kairos Factory](/docs/reference/kairos-factory/) for a production-ready path to automate this in CI.
 :::
+
+### Extracting a raw image from a container image
+
+Raw disk images (for example the Raspberry Pi `.raw`) are not attached to GitHub releases, because they exceed GitHub's 2 GiB per-file asset limit. Instead they are published as an OCI artifact whose tag ends in `-img`.
+
+That artifact is built from [`images/Dockerfile.img`](https://github.com/kairos-io/kairos/blob/master/images/Dockerfile.img), which simply carries the raw file:
+
+```dockerfile
+FROM scratch
+ARG ARTIFACT
+COPY $ARTIFACT /$ARTIFACT
+```
+
+Because it is a `scratch` image, you can pull the raw file out with plain Docker — no extra tooling:
+
+```bash
+export IMAGE=<registry>/<repository>:<tag>-img
+# scratch images have no default command, so pass a throwaway one (it is never executed)
+container=$(docker create "$IMAGE" noop)
+docker cp "$container:/artifacts/." .
+docker rm "$container"
+```
+
+The `.raw` image is now in the current directory, ready to flash.
+
 ## Versioning policy
 
 Kairos follows [Semantic Versioning](https://semver.org/) and our releases signal changes to Kairos components, rather than changes to the underlying OS and package versions. Flavors are pinned to specific upstream OS branches (e.g. `opensuse` to `leap 15.4`) and major version bumps will be reflected through new flavors in our build matrix or through specific releases to follow upstream with regard to minor version bumps (e.g. `leap 15.3` and `leap 15.4`).
