@@ -48,7 +48,7 @@ sudo dd if=build/{{< Image variant="standard" model="rpi4" arch="arm64" suffix="
 
 ### Download
 
-Extract the `img` file from a container image as described [in this page](/docs/reference/image_matrix)
+Extract the raw image from the published `-img` container image as described in [Extracting a raw image from a container image](/docs/reference/image_matrix#extracting-a-raw-image-from-a-container-image).
 
 ### Flash the image
 
