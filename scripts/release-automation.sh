@@ -190,12 +190,21 @@ ensure_release_branch() {
 
 sync_build_files_from_main() {
     if [ "$DRY_RUN" = true ]; then
-        log "INFO" "[DRY RUN] Would sync build files, config, and blog from main"
+        log "INFO" "[DRY RUN] Would sync build files, config, blog, and site-wide pages from main"
         return 0
     fi
 
-    log "INFO" "Syncing build configuration files, docusaurus config, and blog from main branch"
-    git checkout origin/main -- package.json package-lock.json docusaurus.config.ts blog/
+    log "INFO" "Syncing build configuration files, docusaurus config, blog, and site-wide pages from main branch"
+    git checkout origin/main -- \
+        package.json \
+        package-lock.json \
+        docusaurus.config.ts \
+        blog/ \
+        src/pages/adopters/ \
+        src/pages/index.tsx \
+        src/components/adopters/ \
+        src/components/designs/content.ts \
+        static/img/adopters/
     npm ci
     log "INFO" "Build files synced and dependencies installed"
 }
