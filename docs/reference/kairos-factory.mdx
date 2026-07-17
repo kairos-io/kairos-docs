@@ -149,7 +149,7 @@ Here is a list of flags, explanation and what are the possible and default value
 | -v                         | Set version of the artifact that we are building                  | Any                        | None (REQUIRED) |
 | -l                         | Sets the log level                                                | info,warn,debug,trace      | info            |
 | -s                         | Sets the stage to run                                             | install, init, all         | all             |
-| -m                         | Sets the model                                                    | generic, rpi3, rpi4        | generic         |
+| -m                         | Sets the model — pulls in board-specific packages, kernels and cloud-configs. See [Supported device targets](#supported-device-targets). | generic, rpi3, rpi4, nvidia-jetson-agx-orin, nvidia-jetson-orin-nx, nvidia-jetson-thor | generic         |
 | -p / --provider            | Provider plugin name (repeatable for multiple providers)          | e.g. k3s, k0s              | None            |
 | --provider-&lt;NAME&gt;-version | Version for the given provider (e.g. `--provider-k3s-version`)     | Release tag from provider (e.g. k3s: [v1.35.1+k3s1](https://github.com/k3s-io/k3s/releases), k0s: [v1.35.1+k0s.1](https://github.com/k0sproject/k0s/releases)) | None            |
 | --provider-&lt;NAME&gt;-config  | Config file for the given provider (e.g. `--provider-k3s-config`)  | Path to config file        | None            |
@@ -169,6 +169,30 @@ You can provide a generic Dockerfile that gets all this values and passes them d
 :::info K8s versions
 When selecting a provider (e.g. with `--provider k3s`), you can pin the version using `--provider-k3s-version` or `--provider-k0s-version`. The value **must be an existing release tag** from the provider's release page (e.g. [k3s releases](https://github.com/k3s-io/k3s/releases) such as `v1.35.1+k3s1`, [k0s releases](https://github.com/k0sproject/k0s/releases) such as `v1.35.1+k0s.1`). If you omit the version, the provider plugin typically installs its default or latest. The Kairos provider for Kubernetes is included when you use a k8s provider.
 :::
+
+## Supported device targets
+
+The `--model` (`-m`) flag tells `kairos-init` which hardware it is building for. The default is
+`generic` — no board-specific packages, kernels or cloud-configs, suitable for x86_64 / arm64
+VMs, bare metal servers and cloud instances. Selecting a specific model pulls in the appropriate
+apt/dnf repos, kernel packages, cloud-configs and workarounds so the resulting image is bootable
+on that hardware without extra work in your Dockerfile.
+
+| `--model`                    | Target hardware                                                    | Build guide |
+|------------------------------|--------------------------------------------------------------------|-------------|
+| `generic` *(default)*        | x86_64 / arm64 VMs, bare metal servers, cloud instances            | This page   |
+| `rpi3`                       | Raspberry Pi 3                                                     | [RaspberryPi](/docs/installation/raspberry/) |
+| `rpi4`                       | Raspberry Pi 4                                                     | [RaspberryPi](/docs/installation/raspberry/) |
+| `nvidia-jetson-agx-orin`     | NVIDIA Jetson AGX Orin (L4T r36.x)                                 | [NVIDIA Jetson (build image)](/docs/installation/nvidia-jetson-images/) |
+| `nvidia-jetson-orin-nx`      | NVIDIA Jetson Orin NX (L4T r36.x)                                  | [NVIDIA Jetson (build image)](/docs/installation/nvidia-jetson-images/) |
+| `nvidia-jetson-thor`         | NVIDIA Jetson AGX Thor / T264 (L4T r38.x)                          | [NVIDIA Jetson (build image)](/docs/installation/nvidia-jetson-images/) |
+
+The Jetson build guide covers all three NVIDIA models in one place; per-board flashing and
+install steps stay on the existing device pages
+([AGX Orin](/docs/installation/nvidia_agx_orin/),
+[Orin NX](/docs/installation/nvidia_orin_nx/),
+[AGX Thor](/docs/installation/nvidia_agx_thor/)).
+
 ## Phases
 
 kairos-init is divided in 2 phases, one its the install phase which install all needed packages and binaries and the other is the init phase, which gets the system ready. This are the main parts of each phase:

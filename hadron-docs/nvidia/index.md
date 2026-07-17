@@ -16,8 +16,9 @@ in **driver-less mode** so Kubernetes can schedule `nvidia.com/gpu` workloads.
 | Your hardware | Follow |
 |---|---|
 | Discrete NVIDIA GPU on x86_64 (data-center, workstation) | [Discrete NVIDIA GPU on x86_64](discrete-x86.md) |
-| NVIDIA Jetson AGX Thor (Tegra SoC, ARM64) | Build the base image with [Nvidia AGX Thor](/docs/installation/nvidia_agx_thor/), then set up the cluster with [GPU Operator on Jetson Thor](thor-cluster.md) |
-| Older NVIDIA Jetson (Orin, Xavier, Nano) | Not currently covered — open an issue on [`kairos-io/kairos`](https://github.com/kairos-io/kairos/issues) |
+| NVIDIA Jetson AGX Thor (Tegra SoC, ARM64) | Build the base image with [Nvidia AGX Thor](/docs/installation/nvidia_agx_thor/) (or the model-agnostic [NVIDIA Jetson build guide](/docs/installation/nvidia-jetson-images/)), then set up the cluster with [GPU Operator on Jetson Thor](thor-cluster.md) |
+| NVIDIA Jetson AGX Orin / Orin NX (L4T r36.x) | Build with [`kairos-init --model nvidia-jetson-*`](/docs/installation/nvidia-jetson-images/); flash per [AGX Orin](/docs/installation/nvidia_agx_orin/) or [Orin NX](/docs/installation/nvidia_orin_nx/). Cluster-side GPU Operator on these boards is not yet documented — open an issue on [`kairos-io/kairos`](https://github.com/kairos-io/kairos/issues) if you need it. |
+| Older NVIDIA Jetson (Xavier, Nano) | Not currently covered — open an issue on [`kairos-io/kairos`](https://github.com/kairos-io/kairos/issues) |
 
 The two paths share a few pieces of infrastructure explained once here; the platform-specific
 pages assume you have read this overview.
