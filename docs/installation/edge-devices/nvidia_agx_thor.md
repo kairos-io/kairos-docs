@@ -85,3 +85,8 @@ From this point on, AGX Thor follows normal Kairos operations:
 - [Manual installation](../manual.md)
 - [Manual upgrades](../../upgrade/manual.md)
 - [Reset reference](../../reference/reset.md)
+
+## Deploy the GPU Operator
+
+Once the node is booted and joined to the cluster, wire up Kubernetes so pods can request
+`nvidia.com/gpu` — see [GPU Operator on Jetson AGX Thor](/hadron-docs/nvidia/thor-cluster/).

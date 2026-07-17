@@ -27,6 +27,16 @@ to = "/quickstart/"
 status = 302
 
 [[redirects]]
+from = "/hadron-docs/nvidia-extension"
+to = "/hadron-docs/nvidia/discrete-x86/"
+status = 301
+
+[[redirects]]
+from = "/hadron-docs/nvidia-extension/"
+to = "/hadron-docs/nvidia/discrete-x86/"
+status = 301
+
+[[redirects]]
 from = "/docs/operator"
 to = "/operator-docs/"
 status = 302
