@@ -37,7 +37,7 @@ paths (`/usr/bin`, `/usr/lib`, ...). Current layers include:
 
 Check the releases page above for the up-to-date list.
 
-## Option 1: Bundle a layer into your Hadron image
+## Bundle a layer into your Hadron image
 
 Same pattern as the [firmware images](linux-firmware.md#option-1-bundle-firmware-into-your-hadron-image-oci-images):
 build a derived image `FROM` your Hadron base and `COPY` the layer's whole root into your image
@@ -74,35 +74,13 @@ Tips:
   immutable digest listed on the [releases page](https://kairos-io.github.io/hadron-layers/).
 - Only add the layers you actually need — each `COPY --from` grows the final image.
 
-## Option 2: Turn a layer into a system extension
-
-Layers can also be converted into a signed [sysext](expand-with-sysext.md) with
-[AuroraBoot](https://github.com/kairos-io/AuroraBoot) so they can be added to or removed from a
-running system without rebuilding the OS image:
-
-```bash
-docker run \
-  -v "$PWD"/keys:/keys \
-  -v "$PWD":/build \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  --rm \
-  {{< RegistryURL >}}/auroraboot:{{< AuroraBootVersion >}} sysext \
-    --private-key=/keys/PRIVATE_KEY \
-    --certificate=/keys/CERTIFICATE \
-    --output=/build \
-    git \
-    ghcr.io/kairos-io/hadron-layers/git:latest
-```
-
-Install and enable the resulting `*.sysext.raw` on a node with `kairos-agent sysext install ...`
-— see [Extending Hadron with extensions](expand-with-sysext.md) for the full walkthrough and
-[Adding Linux firmware](linux-firmware.md#option-2-add-firmware-as-a-sysext) for the same flow
-applied to firmware.
-
-:::info Only the last image layer is packed
-When AuroraBoot converts a docker image into a sysext, only the **last** image layer is included.
-The `hadron-layers` images are `FROM scratch` with a single `COPY`, so their whole content is
-already in that last layer — nothing extra to do.
+:::warning Layers are not sysext-ready
+The `hadron-layers` images are meant to be layered into a Hadron image with `COPY --from`, not
+converted directly into a [system extension](expand-with-sysext.md). Sysexts only ship files
+under `/usr` (and confexts under `/etc`), and layers may place files outside those paths — a
+direct sysext conversion would silently drop them. If you need a sysext, build a dedicated
+image whose last layer contains only `/usr` content and feed that to AuroraBoot; see
+[Extending Hadron with extensions](expand-with-sysext.md) for the flow.
 :::
 
 ## Kernel-module layers
