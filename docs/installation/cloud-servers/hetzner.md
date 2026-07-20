@@ -200,6 +200,44 @@ stages:
 
 k3s reads `/etc/rancher/k3s/config.yaml` at startup; setting `node-ip` there is equivalent to passing `--node-ip` on the command line, and makes kubelet include the IP in its certificate's SAN from the very first registration.
 
+### Cilium CNI with native routing on Hetzner private networks
+
+If you replace the default k3s CNI (Flannel) with [Cilium](https://cilium.io/) in `routingMode: native` and rely on Cilium to install pod-CIDR routes between nodes via `auto-direct-node-routes: true`, you may need one extra Cilium flag on Hetzner Cloud: **`direct-routing-skip-unreachable: true`**.
+
+**When it's needed.** The failure mode surfaces on **multi-location** Hetzner private networks — nodes spread across datacenters (`nbg1` / `fsn1` / `hel1` / ...) attached to the same private network. Hetzner routes cross-location traffic through a virtual gateway (typically `10.0.0.1`), so nodes in different DCs are not L2-adjacent from Cilium's perspective and `auto-direct-node-routes` refuses the route. A single-location deployment (all nodes on the same vSwitch, same DC) is L2-direct and generally does not hit this — but the flag is safe to set anyway and costs nothing at runtime, so it's reasonable to treat it as always-on for any Hetzner private network that spans DCs or that may grow to. This documentation was tested on a 3-node cluster with one node per DC.
+
+**Why it's needed.** Cilium's `auto-direct-node-routes` installer refuses to program a route whose next hop is not directly reachable on the same L2 segment. On multi-location Hetzner private networks the virtual gateway sits between nodes and breaks that assumption. Without the flag, Cilium logs errors like:
+
+```
+Unable to install direct node route
+route to destination 10.0.1.5 contains gateway 10.0.0.1,
+must be directly reachable.
+Add `direct-routing-skip-unreachable` to skip unreachable routes
+```
+
+and refuses to install cross-node pod routes. Symptom in the cluster: pods on any given node can only reach pods on the same node; cross-node DNS, `kubernetes.default.svc`, and any workload that relies on cross-node traffic silently time out. `cilium status` reports `Cluster health: 1/N reachable`.
+
+**Fix.** Pass the flag in the Cilium Helm values:
+
+```yaml
+routingMode: native
+ipv4NativeRoutingCIDR: 10.0.0.0/8         # matches the Hetzner Private Network you created (ip_range); covers all subnets across locations
+autoDirectNodeRoutes: true
+directRoutingSkipUnreachable: true         # required on Hetzner private networks
+```
+
+`ipv4NativeRoutingCIDR` must cover the full private network range — not just the subnet — so that Cilium applies native routing to all node-to-node traffic regardless of which subnet a node lands in. See the [Cilium native routing docs](https://docs.cilium.io/en/stable/network/concepts/routing/#native-routing) and [`directRoutingSkipUnreachable`](https://docs.cilium.io/en/stable/helm-reference/) in the Helm reference.
+
+Setting it via kubectl on an already-deployed cluster (recovery path):
+
+```bash
+kubectl patch configmap cilium-config -n kube-system \
+  --type=merge -p '{"data":{"direct-routing-skip-unreachable":"true"}}'
+kubectl rollout restart daemonset/cilium daemonset/cilium-envoy -n kube-system
+```
+
+**Cascading failure to be aware of.** If Cilium loses cross-node routing (agent restart, node event, or first bootstrap without the flag), the Hetzner CCM pod scheduled on a non-API-server node also loses reachability to `kubernetes.default.svc`. The CCM crashes with `invalid CIDR address` on the route-provider init path and skips the `node-route-controller` entirely — creating a circular dependency where CCM needs pod networking to program Hetzner routes, and pod networking needs the flag above. Fix Cilium first; the CCM recovers on its own once cross-node traffic is restored.
+
 ## See also
 
 The `write_files` + base64 pattern shown above can drop any `HelmChart` (or other YAML) into k3s's auto-deploy directory at first boot — it isn't specific to the Hetzner CCM. Combined with the Kairos `stages.boot` block, you can also fetch external manifests from the network before k3s starts.
