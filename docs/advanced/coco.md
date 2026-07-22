@@ -5,9 +5,23 @@ sidebar_position: 9
 ---
 
 
+:::info Confidential Containers on Kairos
+
+Kairos works with [Confidential Containers](https://confidentialcontainers.org/) on AMD SEV-SNP hardware today, using various Kairos flavors — including Ubuntu and [Hadron](https://github.com/kairos-io/hadron). Hadron support is available on AWS (SEV-SNP) since [Hadron v0.3.0](https://github.com/kairos-io/hadron/releases/tag/v0.3.0).
+
+As long as the necessary virtualization and memory-encryption options are enabled on your hardware (e.g. SEV / SEV-SNP / SNP Memory Coverage in BIOS on AMD platforms, or the equivalent TDX settings on Intel), the upstream Confidential Containers project can be installed on a Kairos cluster the same way it is on any Kubernetes distribution — see the [upstream installation guide](https://confidentialcontainers.org/docs/getting-started/installation/) — and workloads then opt in by selecting the appropriate [runtime class](https://confidentialcontainers.org/docs/getting-started/workload/).
+
+Because Kairos no longer ships prebuilt Ubuntu images by default, you'll want to build your own Kairos image with the kernel command-line flags and any vendor packages (Intel TDX/SGX attestation libraries, container image decryption tooling, etc.) that your scenario needs. See:
+
+- [Bring Your Own Image (BYOI)](/docs/reference/byoi/) — the recommended path for Ubuntu and other non-Hadron bases.
+- [The Kairos Factory](/docs/reference/kairos-factory/) — how to turn a customized base image into a Kairos-ready artifact.
+
+:::
+
+
 :::warning Warning
 
-This page describes features that are still experimental in Kairos. There are a lot of things that can be improved and might be more streamlined in the future.
+The remainder of this page describes an earlier, experimental integration based on [`enclave-cc`](https://github.com/confidential-containers/enclave-cc) and the `coco` community bundle. It is kept for historical reference and does not reflect the current recommended approach described above.
 
 :::
 
