@@ -18,7 +18,7 @@ firmware files, so you can pick whichever way of consuming them fits your workfl
 
 1. **Firmware container images** (OCI images) — one image per firmware folder, meant to be copied
    on top of your Hadron image with a small `Dockerfile`. Use this to bake firmware into a custom
-   image, the same way the [NVIDIA drivers](nvidia-extension.md) page extends Hadron.
+   image, the same way the [NVIDIA drivers](nvidia/discrete-x86.md) page extends Hadron.
 2. **System extensions (sysexts)** — `*.sysext.raw` files that are loaded at boot by
    `systemd-sysext` and can be added/removed on a running system, without rebuilding the OS image.
    This is the same mechanism described in [Extending Hadron with extensions](expand-with-sysext.md)
