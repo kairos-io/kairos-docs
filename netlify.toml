@@ -48,3 +48,15 @@ status = 200
 force = true # COMMENT: ensure that we always redirect
 headers = {X-From = "Netlify"}
 signed = "API_SIGNATURE_TOKEN"
+
+[[redirects]]
+  from = "/start"
+  to = "/docs/start/"
+  status = 302
+  force = false
+
+[[redirects]]
+  from = "/products"
+  to = "/docs/products/"
+  status = 302
+  force = false
