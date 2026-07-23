@@ -610,6 +610,32 @@ Or to either load a config url from network:
 
 Usually secret gists are used to share such config files.
 
+### Namespaced `kairos.config` options
+
+:::note
+The `kairos.config`, `kairos.config_url` and `cos.setup` options described below are available starting with the next release of `immucore`, `kairos-agent`, `kairos-init` and `kairos`. On older versions, use the bare dot-notation form (for example `config_url=http://...`) shown above.
+:::
+
+To avoid clashing with unrelated kernel arguments, Kairos also recognises a dedicated `kairos.config` namespace. These options are parsed exclusively by Kairos and never leak into the rest of the configuration, so they are the recommended way to inject cloud config from the cmdline.
+
+There are three token forms, and they can be combined freely on the same cmdline:
+
+- `kairos.config=KEY=VALUE` — sets `KEY` to `VALUE`. `KEY` supports dot notation for nested maps and numeric segments for list indices. The option is repeatable and later occurrences of the same key win. Values may contain spaces if the whole token is quoted. All values are stored as strings and coerced by the schema downstream.
+- `kairos.config_url=URL` — convenience form that sets the top-level `config_url` key. The `URL` is stored verbatim (no `KEY=VALUE` parsing), so it can safely contain `=` characters (for example query-string tokens).
+- `cos.setup=X` — legacy alias, kept so existing installs keep booting. If `X` contains `=` it is treated exactly like `kairos.config=X`; otherwise the bare value is routed into `config_url`. Prefer `kairos.config` / `kairos.config_url` in new deployments.
+
+For example, to set the hostname, enable automatic install and add a user:
+
+```
+kairos.config=hostname=box kairos.config=install.auto=true kairos.config=users.0.name=kairos
+```
+
+To load a remote config that contains `=` in its URL:
+
+```
+kairos.config_url=https://example.com/config.yaml?token=abc=def
+```
+
 ## Additional users
 
 Kairos comes with the `kairos` user pre-configured, however, it is possible to configure additional users to the system via the cloud-init config mechanism

@@ -81,6 +81,10 @@ This security feature is only enabled when the system boots in trusted boot mode
 
 Another way to supply your Kairos configuration file is to specify a URL as a boot argument during startup. To do this, add `config_url=<URL>` as a boot argument. This will allow the machine to download your configuration from the specified URL and perform the installation using the provided settings.
 
+:::note
+On the next release of `immucore`, `kairos-agent`, `kairos-init` and `kairos`, you can also use the namespaced `kairos.config_url=<URL>` boot argument, which is parsed exclusively by Kairos and keeps `=` characters in the URL intact. See [Kernel boot parameters](/docs/reference/configuration/#namespaced-kairosconfig-options) for details.
+:::
+
 After installation, the configuration will be available on the system at `/oem/90_custom.yaml`.
 
 If you're not sure where to host your configuration file, a common option is to upload it as a GitHub gist.
