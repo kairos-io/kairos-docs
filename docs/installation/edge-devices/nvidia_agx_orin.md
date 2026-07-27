@@ -15,6 +15,12 @@ Nvidia AGX Orin currently only works with Ubuntu 22.04-based images.
 :::
 This page describes how to install Kairos on [Nvidia AGX Orin](https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/jetson-orin/) in the eMMC.
 
+:::tip Building your own AGX Orin image
+The image tags referenced below are examples. To build a fresh Kairos image for AGX Orin from
+Ubuntu 22.04, use [`kairos-init --model nvidia-jetson-agx-orin`](/docs/installation/nvidia-jetson-images/).
+That guide replaces the old `Dockerfile.nvidia`.
+:::
+
 
 ## Prerequisites
 

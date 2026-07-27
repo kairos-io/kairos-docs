@@ -530,6 +530,10 @@ const config: Config = {
               to: '/blog',
             },
             {
+              label: 'Adopters',
+              to: '/adopters',
+            },
+            {
               label: 'GitHub',
               href: 'https://github.com/kairos-io/kairos',
             },

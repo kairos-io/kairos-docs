@@ -112,8 +112,8 @@ spec:
 | `imagePullSecrets` | `[]LocalObjectReference` | (none) | Secrets for pulling from private registries ([details](../private-registries/)) |
 | `command` | `[]string` | (required) | Command to execute in the container |
 | `hostMountPath` | `string` | `/host` | Path where the node's root filesystem is mounted |
-| `cordon` | `bool` | `false` | Whether to cordon the node before running the operation |
-| `uncordonOnFailure` | `bool` | `false` | Uncordon the node if its operation fails. Only applies when `cordon` is true, and only for nodes this NodeOp cordoned. See [Uncordoning nodes after failure](#uncordoning-nodes-after-failure). |
+| `cordon` | `bool` | `false` | Whether to cordon the node before running the operation. The operator only manages cordons it set itself: see [How cordoning works](#how-cordoning-works). |
+| `uncordonOnFailure` | `bool` | `false` | Uncordon the node if its operation fails. Only applies when `cordon` is true, and only for nodes this NodeOp cordoned. See [How cordoning works](#how-cordoning-works). |
 | `drainOptions.enabled` | `bool` | `false` | Enable draining pods before the operation |
 | `drainOptions.force` | `bool` | `false` | Force eviction of pods without a controller |
 | `drainOptions.gracePeriodSeconds` | `int` | `30` | Grace period for pod termination |
@@ -129,11 +129,49 @@ spec:
 | `preflight.image` | `string` | `spec.image` | Image for the preflight Pod (defaults to the main `spec.image`) |
 | `preflight.activeDeadlineSeconds` | `int` | `120` | Bound on total preflight Pod lifetime; on expiry the Pod is killed and the node is marked `Failed` |
 
-## Uncordoning nodes after failure
+## How cordoning works
 
-When `cordon` is enabled, the operator cordons each node before running the operation and uncordons it again once the operation completes successfully. If the operation **fails**, the default behavior is to leave the node cordoned so you can inspect it before returning it to service.
+When `cordon: true`, the operator manages the schedulable state of each targeted node around the operation. The design goal is that the operator never removes a cordon it did not set, and never adopts a cordon that someone else set.
 
-Set `uncordonOnFailure: true` to have the operator uncordon a node whose operation failed. The operator only uncordons nodes that it cordoned itself: a node that was already cordoned before the NodeOp ran, or one cordoned by a different NodeOp, is left untouched. Failed operations are never rebooted, so the node is uncordoned as soon as the failure is observed.
+### Claiming a cordon (before the operation)
+
+Before the operation runs on a node, the operator looks at the node's current cordon state:
+
+- **Node is not cordoned.** The operator cordons it and stamps it with an `operator.kairos.io/cordoned-by` annotation whose value identifies this NodeOp (`<namespace>/<name>@<uid>`). That annotation is how the operator records "this cordon is mine".
+- **Node is already cordoned by this same NodeOp.** Nothing to do; the annotation is already in place.
+- **Node is already cordoned by a human, by another controller, or by a different NodeOp.** The operator does not overwrite the annotation and does not claim ownership. The operation still proceeds on that node, but the operator will not lift the cordon at any point in the lifecycle.
+
+You can inspect the ownership record with `kubectl`:
+
+```bash
+kubectl describe node <name> | grep cordoned-by
+```
+
+The value includes the NodeOp UID, so a recreated NodeOp with the same name cannot inherit a stale annotation.
+
+### Releasing a cordon (after the operation)
+
+On the way out, the operator only uncordons a node when the `operator.kairos.io/cordoned-by` annotation still matches this NodeOp. Concretely, this means:
+
+- A cordon that was in place before this NodeOp ran is left alone.
+- A cordon set by a different NodeOp is left alone.
+- If a human re-cordons the node after the operator releases it, the operator does not touch that new cordon (the annotation is gone, so the operator no longer sees it as its own).
+
+When the operator does uncordon, it also clears the annotation, so ownership is not carried past that point.
+
+### When uncordon happens
+
+Assuming `cordon: true` and a node whose cordon this NodeOp actually owns:
+
+| Outcome of the operation | `rebootOnSuccess` | When the node is uncordoned |
+|---|---|---|
+| Completed successfully | `false` | As soon as the Job reaches `Completed`. |
+| Completed successfully | `true` | After the reboot completes and the node comes back online. |
+| Failed | any | Only if `uncordonOnFailure: true`. Otherwise the node stays cordoned so you can inspect it. Failed operations never trigger a reboot, so the uncordon happens as soon as the failure is observed. |
+
+Set `uncordonOnFailure: true` to have the operator uncordon a node whose operation failed, returning it to a schedulable state automatically. The same ownership rule applies: only cordons this NodeOp set are removed.
+
+This ownership model makes it safe to run a NodeOp against a cluster where humans, other operators, or other NodeOps may also be cordoning nodes: the controller never lifts a cordon it did not set.
 
 ## Preflight checks
 

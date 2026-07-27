@@ -339,6 +339,35 @@ div[class*='announcementBar_'] button {
     width: 100%;
     margin: 8px 0;
   }
+
+  .navbar__toggle,
+  .navbar__brand {
+    flex: 0 0 auto;
+  }
+
+  /* Version dropdowns, flavor selector, stars, and search live in the burger menu */
+  .navbar__items--right {
+    display: none !important;
+  }
+
+  .navbar__items:not(.navbar__items--right) > .navbar__item.navbar__link {
+    display: inline-block !important;
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .navbar-sidebar__search-item [class*='navbarSearchContainer'] {
+    display: block !important;
+    position: static;
+    width: 100%;
+    padding: 0.35rem 0.75rem 0.75rem;
+  }
+
+  .navbar-sidebar__search-item .navbar__search-input,
+  .navbar-sidebar__search-item .navbar-search-input {
+    width: 100%;
+    margin: 0;
+  }
 }
 
 /* Sidebar styling - Match navbar color scheme */

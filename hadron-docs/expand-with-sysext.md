@@ -1,7 +1,7 @@
 ---
 title: "Extending Hadron with extensions"
 sidebar_label: "Extending Hadron with extensions"
-sidebar_position: 2
+sidebar_position: 3
 ---
 
 :::info Full sysext/confext info

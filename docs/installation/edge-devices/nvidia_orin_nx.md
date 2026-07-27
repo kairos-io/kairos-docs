@@ -14,6 +14,12 @@ The Ubuntu versions supported on the Orin NX depend on the JetPack release. Chec
 :::
 This page describes how to install Kairos on an [Nvidia Orin NX](https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/jetson-orin/) on the NVMe.
 
+:::tip Building your own Orin NX image
+The image tags referenced below are examples. To build a fresh Kairos image for Orin NX from
+Ubuntu 22.04, use [`kairos-init --model nvidia-jetson-orin-nx`](/docs/installation/nvidia-jetson-images/).
+That guide replaces the old `Dockerfile.nvidia`.
+:::
+
 
 ## Prerequisites
 

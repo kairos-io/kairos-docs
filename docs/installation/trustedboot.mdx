@@ -345,10 +345,7 @@ To test the ISO file locally QEMU can be used. In order to test Secure Boot comp
 ```bash
 docker build -t fedora-qemu -<<DOCKER
 FROM fedora
-RUN dnf install -y dnf-plugins-core
-RUN dnf config-manager --add-repo http://www.kraxel.org/repos/firmware.repo
-RUN dnf install -y edk2.git-ovmf-x64 qemu
-RUN dnf install -y swtpm wget
+RUN dnf install -y edk2-ovmf qemu swtpm wget
 WORKDIR /
 RUN wget -q https://github.com/mudler/cos-demo-labs/raw/tests/efivars.fd -O /efivars.fd
 WORKDIR /work

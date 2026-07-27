@@ -14,6 +14,7 @@ import {
   heroHeadline,
   pressItems,
 } from '../components/designs/content';
+import {AdoptersHomeSection} from '../components/adopters/AdoptersHomeSection';
 import ImageConfigBuilder from '../components/builder/ImageConfigBuilder';
 import styles from './design-a.module.css';
 
@@ -346,6 +347,8 @@ export default function DesignThreePage(): ReactNode {
             </article>
           </div>
         </section>
+
+        <AdoptersHomeSection />
 
         <section className={styles.cncf}>
           <div className={styles.wrap}>

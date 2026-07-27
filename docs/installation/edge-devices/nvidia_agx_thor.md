@@ -11,6 +11,13 @@ import TabItem from '@theme/TabItem';
 
 This page describes the AGX Thor-specific image flow. After you have a Kairos Thor image, installation and lifecycle operations are the same as standard Kairos.
 
+:::tip Prefer a plain Ubuntu 24.04 base?
+The Ubuntu tab below shows the shortest path — a bare `kairos-init --model nvidia-jetson-thor`
+build. The [NVIDIA Jetson (build image)](/docs/installation/nvidia-jetson-images/) guide covers
+the same flow for all three Jetson models side by side; use it if you want to compare against
+AGX Orin / Orin NX.
+:::
+
 :::warning Minimum versions
 - `kairos-init` with Thor support requires `v0.9.0` or newer.
 - `AuroraBootISO` with Thor support requires ` v0.20.0` or newer.
@@ -85,3 +92,8 @@ From this point on, AGX Thor follows normal Kairos operations:
 - [Manual installation](../manual.md)
 - [Manual upgrades](../../upgrade/manual.md)
 - [Reset reference](../../reference/reset.md)
+
+## Deploy the GPU Operator
+
+Once the node is booted and joined to the cluster, wire up Kubernetes so pods can request
+`nvidia.com/gpu` — see [GPU Operator on Jetson AGX Thor](/hadron-docs/nvidia/thor-cluster/).
