@@ -159,7 +159,7 @@ Set `spec.force: true` to disable the preflight entirely. The controller creates
 A NodeOpUpgrade runs `kairos-agent upgrade --source dir:/`, which rsyncs the upgrade Pod's rootfs onto the host. Kubernetes injects a Pod-specific `/etc/hostname` and `/etc/hosts` into every Pod, so without protection the upgrade would copy those Pod-scoped files over the node's real ones and the node would fail to rejoin the cluster after reboot.
 
 The operator therefore always passes `--exclude-path /etc/hostname` and `--exclude-path /etc/hosts` to `kairos-agent upgrade`. Those two are not configurable through the CRD.
-
+You cannot remove or override these exclusions via the CRD (they are always enforced).
 Use `spec.excludePaths` to preserve additional host paths:
 
 ```yaml
@@ -182,7 +182,7 @@ kairos-agent upgrade --source dir:/ --exclude-path '/etc/hostname' --exclude-pat
 
 ### Overwriting /etc/hostname on purpose
 
-If you actually want the upgrade to replace the node's `/etc/hostname` (for example, to reset a hostname that Kubernetes has tainted), you cannot do it through `NodeOpUpgrade`. Author a manual [NodeOp](../nodeop/) that runs `kairos-agent upgrade --source oci:<your-image>` instead. Using an OCI source pulls the image freshly rather than rsyncing the running Pod's rootfs, so no Kubernetes-injected files are involved.
+If you actually want the upgrade to replace the node's `/etc/hostname` (for example, to correct a hostname that no longer matches the Kubernetes Node name), you cannot do it through `NodeOpUpgrade`. Author a manual [NodeOp](../nodeop/) that runs `kairos-agent upgrade --source oci:<your-image>` instead. Using an OCI source pulls the image freshly rather than rsyncing the running Pod's rootfs, so no Kubernetes-injected files are involved.
 
 ## Debugging upgrades
 
