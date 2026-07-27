@@ -202,7 +202,27 @@ k3s reads `/etc/rancher/k3s/config.yaml` at startup; setting `node-ip` there is 
 
 ### Cilium CNI with native routing on Hetzner private networks
 
-If you replace the default k3s CNI (Flannel) with [Cilium](https://cilium.io/) in `routingMode: native` and rely on Cilium to install pod-CIDR routes between nodes via `auto-direct-node-routes: true`, you may need one extra Cilium flag on Hetzner Cloud: **`direct-routing-skip-unreachable: true`**.
+If you replace the default k3s CNI (Flannel) with [Cilium](https://cilium.io/) in `routingMode: native` and rely on Cilium to install pod-CIDR routes between nodes via `auto-direct-node-routes: true`, two Hetzner-specific settings are required. Skip either one and you get silent connection timeouts that are hard to attribute.
+
+#### `ipv4NativeRoutingCIDR` must be the pod CIDR — not the full private network range
+
+:::danger
+Do **not** set `ipv4NativeRoutingCIDR` to the Hetzner private network CIDR (e.g. `10.0.0.0/8`). Set it to the pod CIDR only (e.g. `10.42.0.0/16`).
+
+Using the broad network CIDR looks harmless but triggers silent packet drops on all pod-to-external-host traffic — no ICMP unreachable, only connection timeouts. The root cause is Hetzner's [unicast reverse path forwarding (uRPF)](https://docs.hetzner.com/networking/networks/faq/#why-do-packets-with-source-ips-not-related-to-the-server-get-dropped) enforcement at the virtual network gateway.
+:::
+
+**Why this matters.** Hetzner Cloud private networks implement uRPF at the gateway (`10.0.0.1`). For every packet, the gateway validates the source IP against IP prefixes *registered to the originating server* (assigned IPs, alias IPs, or routes designating the server as a gateway). Pod IPs (e.g. `10.42.x.x`) are not registered server prefixes — so any pod packet that must pass through the gateway is **silently dropped**.
+
+`ipv4NativeRoutingCIDR` controls which destinations Cilium does **not** masquerade: if the destination is inside the CIDR, Cilium sends the packet with the pod's source IP unchanged. Set it to `10.0.0.0/8` and any pod traffic to a non-cluster host in the same private network (e.g. another VM, the gateway node, a database server) will leave the node with an unregistered pod source IP and be dropped by uRPF.
+
+This failure is easily masked during testing: `autoDirectNodeRoutes` installs direct host routes for intra-cluster pod CIDRs, so pod-to-pod cross-node traffic bypasses the Hetzner gateway entirely and succeeds. Only pod traffic to *non-cluster* hosts in the private network is affected.
+
+**Fix:** set `ipv4NativeRoutingCIDR` to the pod CIDR only. Cilium then masquerades pod traffic to all other destinations to the node's registered IP, satisfying uRPF. Pod-to-pod intra-cluster routing continues natively via `autoDirectNodeRoutes`.
+
+#### `direct-routing-skip-unreachable: true` for multi-location deployments
+
+You may need one extra Cilium flag on Hetzner Cloud: **`direct-routing-skip-unreachable: true`**.
 
 **When it's needed.** The failure mode surfaces on **multi-location** Hetzner private networks — nodes spread across datacenters (`nbg1` / `fsn1` / `hel1` / ...) attached to the same private network. Hetzner routes cross-location traffic through a virtual gateway (typically `10.0.0.1`), so nodes in different DCs are not L2-adjacent from Cilium's perspective and `auto-direct-node-routes` refuses the route. A single-location deployment (all nodes on the same vSwitch, same DC) is L2-direct and generally does not hit this — but the flag is safe to set anyway and costs nothing at runtime, so it's reasonable to treat it as always-on for any Hetzner private network that spans DCs or that may grow to. This documentation was tested on a 3-node cluster with one node per DC.
 
@@ -217,22 +237,22 @@ Add `direct-routing-skip-unreachable` to skip unreachable routes
 
 and refuses to install cross-node pod routes. Symptom in the cluster: pods on any given node can only reach pods on the same node; cross-node DNS, `kubernetes.default.svc`, and any workload that relies on cross-node traffic silently time out. `cilium status` reports `Cluster health: 1/N reachable`.
 
-**Fix.** Pass the flag in the Cilium Helm values:
+**Fix.** Pass both flags in the Cilium Helm values:
 
 ```yaml
 routingMode: native
-ipv4NativeRoutingCIDR: 10.0.0.0/8         # matches the Hetzner Private Network you created (ip_range); covers all subnets across locations
+ipv4NativeRoutingCIDR: 10.42.0.0/16       # pod CIDR only — NOT the full Hetzner private network CIDR (see uRPF warning above)
 autoDirectNodeRoutes: true
-directRoutingSkipUnreachable: true         # required on Hetzner private networks
+directRoutingSkipUnreachable: true         # required on multi-location Hetzner private networks
 ```
 
-`ipv4NativeRoutingCIDR` must cover the full private network range — not just the subnet — so that Cilium applies native routing to all node-to-node traffic regardless of which subnet a node lands in. See the [Cilium native routing docs](https://docs.cilium.io/en/stable/network/concepts/routing/#native-routing) and [`directRoutingSkipUnreachable`](https://docs.cilium.io/en/stable/helm-reference/) in the Helm reference.
+See the [Cilium native routing docs](https://docs.cilium.io/en/stable/network/concepts/routing/#native-routing) and [`directRoutingSkipUnreachable`](https://docs.cilium.io/en/stable/helm-reference/) in the Helm reference.
 
-Setting it via kubectl on an already-deployed cluster (recovery path):
+Setting both via kubectl on an already-deployed cluster (recovery path):
 
 ```bash
 kubectl patch configmap cilium-config -n kube-system \
-  --type=merge -p '{"data":{"direct-routing-skip-unreachable":"true"}}'
+  --type=merge -p '{"data":{"ipv4-native-routing-cidr":"10.42.0.0/16","direct-routing-skip-unreachable":"true"}}'
 kubectl rollout restart daemonset/cilium daemonset/cilium-envoy -n kube-system
 ```
 
