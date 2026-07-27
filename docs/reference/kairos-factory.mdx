@@ -560,6 +560,77 @@ From there you can access the web UI by visiting `http://localhost:8080` in your
 
 ![Kairos Web UI running on localhost:8080](https://github.com/user-attachments/assets/685e85b4-9559-48c6-973c-221b43883baa)
 
+### Delegating builds to the Kairos Operator
+
+The `web` command can run builds in one of two backends:
+
+- `local` (default): every build runs inside the AuroraBoot container itself.
+- `operator`: AuroraBoot submits each build to a Kubernetes cluster and delegates the actual work to the [Kairos Operator](/operator-docs/). Builds run as [`OSArtifact`](/operator-docs/osartifact/) custom resources, and the finished files are pushed back to AuroraBoot so the UI serves them the same way as local builds.
+
+For now, AuroraBoot and the operator run separately: you start the AuroraBoot web UI on one machine (a laptop, a VM, a bastion host) and it talks to a Kubernetes cluster where the operator is already installed. Running AuroraBoot itself inside the cluster alongside the operator is a follow-up we plan to document later.
+
+#### Prerequisites
+
+- A Kubernetes cluster with the [Kairos Operator](/operator-docs/installation/) installed.
+- A kubeconfig that lets the AuroraBoot host create, get, list, watch, and delete `OSArtifact` resources, Secrets, Pods, Pod logs, and Jobs in the target namespace.
+- Network reachability from the cluster to the AuroraBoot web server. The exporter Job the operator runs at the end of every build uploads the finished artifacts back to AuroraBoot over the URL you pass with `--url`, so any Pod in the cluster must be able to resolve and reach that URL.
+
+#### Running the web UI with the operator backend
+
+Pass `--builder=operator`, point AuroraBoot at your kubeconfig, and tell the cluster how to reach the AuroraBoot server back:
+
+```bash
+docker run --rm \
+           -v $PWD/kubeconfig:/kubeconfig:ro \
+           -v $PWD/data:/data \
+           -p 8080:8080 \
+           quay.io/kairos/auroraboot:{{< AuroraBootVersion  >}} web \
+           --builder=operator \
+           --kubeconfig=/kubeconfig \
+           --builder-namespace=kairos-builds \
+           --data-dir=/data \
+           --url=https://auroraboot.example.com
+```
+
+Docker socket and privileged mode are not required in this mode: the actual build work happens on the cluster, not inside the AuroraBoot container.
+
+The flags relevant to the operator backend are:
+
+| Flag | Default | Purpose |
+| --- | --- | --- |
+| `--builder` | `local` | Backend to use. Set to `operator` to delegate builds to a Kubernetes cluster. |
+| `--kubeconfig` | (empty) | Path to a single kubeconfig file. When empty, AuroraBoot tries in-cluster config first and then falls back to the standard client-go loading rules (which honor a multi-file `KUBECONFIG` env value and `~/.kube/config`). |
+| `--builder-namespace` | `default` | Namespace in which the operator's `OSArtifact` resources are created. Used only when `--builder=operator`. |
+| `--url` | (empty) | External URL of this AuroraBoot instance. Every build's exporter Pod uses this URL to PUT the finished artifact files (and a per-build upload token) back to AuroraBoot. Also settable through the `AURORABOOT_URL` environment variable. |
+
+:::caution Use HTTPS for `--url` in production
+The exporter Pods ship each build's upload token and finished artifact bytes back to AuroraBoot over the URL configured with `--url`. If that URL is plain `http://`, the token and the artifact bytes traverse the cluster network unencrypted, so anyone with pod-network access can capture the token and overwrite artifacts. AuroraBoot prints a warning at startup when it detects this. For anything beyond a local development iteration, terminate `--url` with HTTPS.
+:::
+
+#### What happens during a build
+
+1. A user submits a build through the web UI or the REST API.
+2. AuroraBoot creates an `OSArtifact` in the configured namespace, along with any supporting Secrets it needs (for the cloud-config and, when applicable, the OCI build spec). The Secrets are owned by the `OSArtifact`, so they are garbage collected when the `OSArtifact` is deleted.
+3. The operator reconciles the `OSArtifact` as usual (see [OSArtifact](/operator-docs/osartifact/) for the full lifecycle): it builds the OCI image, produces the requested outputs (ISO, cloud image, netboot, UKI, and so on), and moves the resource through `Pending`, `Building`, `Exporting`, and finally `Ready` or `Error`.
+4. AuroraBoot streams live logs from every builder Pod, and from the exporter Pod that ships the artifacts back, into the log window in the web UI.
+5. When the build reaches `Ready`, the exporter Pod PUTs each artifact file back to AuroraBoot at `PUT /api/v1/artifacts/:id/upload/:file`, authenticated with a per-build upload token. The files land in AuroraBoot's on-disk artifact store, and the Download button in the UI serves them exactly like local builds.
+6. Cancelling a build from the UI deletes the `OSArtifact` on the cluster and marks the build as cancelled in the AuroraBoot database.
+
+#### Checking which backend is active
+
+The web UI reads `GET /api/v1/system/builder` on load. The response reports which backend is wired in and, for the operator backend, the target cluster and namespace:
+
+```json
+{
+  "backend": "operator",
+  "cluster": "https://kubernetes.example.com",
+  "namespace": "kairos-builds",
+  "downloadSupported": true
+}
+```
+
+Any credentials that a kubeconfig may embed in the server URL (userinfo, query parameters, fragments) are stripped before the response is returned.
+
 ## Factory API
 
 The Kairos Factory exposes a REST API that allows you to programmatically interact with the factory. The API documentation is available through a [ReDoc](https://github.com/Redocly/redoc) page that is served alongside the web UI.
