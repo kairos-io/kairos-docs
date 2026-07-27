@@ -66,6 +66,7 @@ Only 4 fields is all it takes to safely upgrade the whole cluster.
 | `force` | `bool` | `false` | When true, run the upgrade on every targeted node regardless of whether it is already at `spec.image`. Disables the preflight skip — see [Skipping no-op upgrades](#skipping-no-op-upgrades). |
 | `debug` | `bool` | `false` | Run `kairos-agent` with the global `--debug` flag for verbose upgrade output. See [Debugging upgrades](#debugging-upgrades). |
 | `uncordonOnFailure` | `bool` | `false` | Uncordon a node if its upgrade fails, instead of leaving it unschedulable. Passed through to the underlying NodeOp. See [Recovering nodes after a failed upgrade](#recovering-nodes-after-a-failed-upgrade) and [How cordoning works](../nodeop/#how-cordoning-works) for the full lifecycle. |
+| `excludePaths` | `[]string` | (none) | Additional host paths preserved during the upgrade, passed to `kairos-agent upgrade` as `--exclude-path`. The operator always excludes `/etc/hostname` and `/etc/hosts` on top of these. Requires kairos-agent v3.6.0+ in `spec.image`. See [Preserving host paths from the upgrade](#preserving-host-paths-from-the-upgrade). |
 
 ## Additional Options
 
@@ -105,6 +106,13 @@ spec:
 
   # Uncordon a node if its upgrade fails (defaults to false)
   uncordonOnFailure: false
+
+  # Extra host paths to preserve during the upgrade, on top of the
+  # always-excluded /etc/hostname and /etc/hosts. Requires
+  # kairos-agent v3.6.0+ in spec.image.
+  excludePaths:
+    - /var/lib/mystuff
+    - /opt/keep
 ```
 
 To upgrade the "recovery" partition instead of the active one, set `upgradeRecovery: true` and `upgradeActive: false`:
@@ -145,6 +153,36 @@ It won't fire when:
 ### Forcing the upgrade
 
 Set `spec.force: true` to disable the preflight entirely. The controller creates the NodeOp without `spec.preflight`, so every targeted node goes straight through cordon → drain → upgrade Job → reboot, regardless of what version is already installed. Use this when you want to re-run an upgrade with the same image but different flags, or to recover from a previous run that ended in a weird state.
+
+## Preserving host paths from the upgrade
+
+A NodeOpUpgrade runs `kairos-agent upgrade --source dir:/`, which rsyncs the upgrade Pod's rootfs onto the host. Kubernetes injects a Pod-specific `/etc/hostname` and `/etc/hosts` into every Pod, so without protection the upgrade would copy those Pod-scoped files over the node's real ones and the node would fail to rejoin the cluster after reboot.
+
+The operator therefore always passes `--exclude-path /etc/hostname` and `--exclude-path /etc/hosts` to `kairos-agent upgrade`. Those two are not configurable through the CRD.
+
+Use `spec.excludePaths` to preserve additional host paths:
+
+```yaml
+spec:
+  # ... other fields ...
+  excludePaths:
+    - /var/lib/mystuff
+    - /opt/keep
+```
+
+The listed paths are appended after the always-excluded pair, so the generated upgrade command looks like:
+
+```
+kairos-agent upgrade --source dir:/ --exclude-path '/etc/hostname' --exclude-path '/etc/hosts' --exclude-path '/var/lib/mystuff' --exclude-path '/opt/keep'
+```
+
+### Requirements
+
+`--exclude-path` was added in kairos-agent v3.6.0. Older versions of `kairos-agent` do not recognize the flag and the upgrade Job will fail with `unknown flag: --exclude-path`. This only affects users who pin `spec.image` to a pre-v3.6.0 Kairos release. The `kairos-agent` that runs during the upgrade is the one shipped in `spec.image`, not the one on the current node, so upgrading a very old node to a v3.6.0 or newer image works fine.
+
+### Overwriting /etc/hostname on purpose
+
+If you actually want the upgrade to replace the node's `/etc/hostname` (for example, to reset a hostname that Kubernetes has tainted), you cannot do it through `NodeOpUpgrade`. Author a manual [NodeOp](../nodeop/) that runs `kairos-agent upgrade --source oci:<your-image>` instead. Using an OCI source pulls the image freshly rather than rsyncing the running Pod's rootfs, so no Kubernetes-injected files are involved.
 
 ## Debugging upgrades
 
