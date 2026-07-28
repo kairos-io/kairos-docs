@@ -659,14 +659,6 @@
             <filename> oem.img </filename>
             <description>  </description>
         </partition>
-        <partition name="COS_STATE" type="data">
-            <allocation_policy> sequential </allocation_policy>
-            <filesystem_type> basic </filesystem_type>
-            <size> 26738688000 </size>
-            <allocation_attribute>  0x8 </allocation_attribute>
-            <filename> state_partition.img </filename>
-            <description>  </description>
-        </partition>
         <partition name="secondary_gpt" type="secondary_gpt">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>

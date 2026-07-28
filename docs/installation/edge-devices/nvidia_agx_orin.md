@@ -7,9 +7,6 @@ description: Install Kairos on Nvidia AGX Orin
 slug: /installation/nvidia_agx_orin
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 :::warning Warning
 Nvidia AGX Orin currently only works with Ubuntu 22.04-based images.
 :::
@@ -78,52 +75,37 @@ The Ubuntu image tags in this page are valid examples for AGX Orin workflows, bu
 You can find Kairos core ubuntu images based on Ubuntu `22.04` here: https://quay.io/repository/kairos/ubuntu
 (search for `nvidia` in the tags)
 
-<Tabs>
-<TabItem value="build-partition-images-from-a-container-image" label="Build partition images from a container image">
+AuroraBoot can emit the EFI, OEM, and recovery files directly. The following
+command uses the same raw-disk path as other Kairos targets, but stops before
+merging the partitions into a single disk:
 
-If you are customizing the image, or either modifying the default partition sizes you can build the images by running:
 ```bash
 IMAGE=quay.io/kairos/ubuntu:22.04-core-arm64-nvidia-jetson-agx-orin-{{< KairosVersion  >}}
-docker run --privileged --platform=linux/arm64 \
-        -e container_image=$IMAGE \
-        -e STATE_SIZE="25500" \
-        -e RECOVERY_SIZE="21000" \
-        -e DEFAULT_ACTIVE_SIZE="7000" \
-        -v $PWD/bootloader:/bootloader --entrypoint /prepare_nvidia_orin_images.sh -ti --rm quay.io/kairos/auroraboot:{{< AuroraBootVersion  >}}
+docker run --rm --privileged --platform=linux/arm64 \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v "$PWD/bootloader:/output" \
+  quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
+  --set "arch=arm64" \
+  --set "container_image=$IMAGE" \
+  --set "state_dir=/output" \
+  --set "disable_http_server=true" \
+  --set "disable_netboot=true" \
+  --set "disk.partitions=true"
 ```
 
-</TabItem>
-<TabItem value="build-partition-images-from-a-directory" label="Build partition images from a directory">
+The generated files are `bootloader/efi.img`, `bootloader/oem.img`, and
+`bootloader/recovery_partition.img`. On the first boot, Kairos creates
+`COS_STATE` and `COS_PERSISTENT` from the remaining disk space through the
+standard reset flow. This is the tested AGX Orin flow and avoids flashing large,
+mostly empty state and persistent images.
 
-If you have instead the rootfs as a directory, you can create the required partitions with:
-```bash
-ROOTFS=/rootfs/path
-docker run --privileged --platform=linux/arm64 \
-        -e directory=/rootfs \
-        -e STATE_SIZE="25500" \
-        -e RECOVERY_SIZE="21000" \
-        -e DEFAULT_ACTIVE_SIZE="7000" \
-	-v $ROOTFS:/rootfs \
-        -v $PWD/bootloader:/bootloader --entrypoint /prepare_nvidia_orin_images.sh -ti --rm quay.io/kairos/auroraboot:{{< AuroraBootVersion  >}}
-```
-
-</TabItem>
-</Tabs>
-
-After running any of the commands above, the generated images files required for flashing will be inside the `bootloader` directory (`bootloader/efi.img`, `bootloader/recovery_partition.img`, `bootloader/state_partition.img`, `bootloader/oem.img`, `bootloader/persistent.img` ).
-
-:::tip Note
-The persistent image is optional, as you can store the system persistent data rather in an SD card or an NVME disk. The default `persistent.img` is of 2GB size. To create a persistent image manually of the size you prefer instead you can run:
-
-```
-# Create a 2GB filesystem for COS_PERSISTENT volume
-truncate -s $((2048*1024*1024)) bootloader/persistent.img
-mkfs.ext2 -L "COS_PERSISTENT" bootloader/persistent.img
-```
-
-Note that the size of the partitions you modify should be duly reported in the partition layout (see below).
+:::tip Filesystem choice
+The reset flow creates the Kairos data partitions as ext2. This is intentional:
+the immutable system does not benefit from journaling, and ext2 keeps the
+existing, tested partition expansion behavior.
 :::
-### Edit the parition layout
+
+### Edit the partition layout
 
 We are going now to modify the partition layout in `bootloader/generic/cfg/flash_t234_qspi_sdmmc.xml` which corresponds to the partitioning of the AGX Orin board. An example config file can be found in [here](https://kairos.io/examples/board-configs/flash_t234_qspi_sdmmc.xml). Note that the file might change across Nvidia jetson releases, so if flashing fails, use this file as baseline.
 
@@ -133,7 +115,7 @@ wget 'https://kairos.io/examples/board-configs/flash_t234_qspi_sdmmc.xml' -O ./b
 
 If you are editing the partition sizes and generating the images manually, use the example config file as a baseline and edit the `size` accordingly to the corresponding partitions (find the respective `filename` and compare the file size, see the notes below).
 
-:::tip Note on editing the parition layout manually
+:::tip Note on editing the partition layout manually
 If you want to use the original file, identify the `sdmmc_user` section ( e.g. `<device type="sdmmc_user" instance="3" sector_size="512" num_sectors="INT_NUM_SECTORS" >` ), inside there is an "APP" partition ( `<partition name="APP" id="1" type="data">` ), remove it , and add the following instead:
 
 ```xml      
@@ -145,29 +127,12 @@ If you want to use the original file, identify the `sdmmc_user` section ( e.g. `
             <filename> recovery_partition.img </filename>
             <description>  </description>
         </partition>
-        <partition name="COS_STATE" type="data">
-            <allocation_policy> sequential </allocation_policy>
-            <filesystem_type> basic </filesystem_type>
-            <size> 14680064000 </size>
-            <allocation_attribute>  0x8 </allocation_attribute>
-            <filename> state_partition.img </filename>
-            <description>  </description>
-        </partition>
         <partition name="COS_OEM" type="data">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
             <size> 67108864 </size>
             <allocation_attribute>  0x8 </allocation_attribute>
             <filename> oem.img </filename>
-            <description>  </description>
-        </partition>
-        <!-- Optional. COS_PERSISTENT can be provided by an NVME or via SD card -->
-        <partition name="COS_PERSISTENT" type="data">
-            <allocation_policy> sequential </allocation_policy>
-            <filesystem_type> basic </filesystem_type>
-            <size> 2147483648 </size>
-            <allocation_attribute>  0x8 </allocation_attribute>
-            <filename> persistent.img </filename>
             <description>  </description>
         </partition>
 ```
@@ -191,17 +156,12 @@ Be mindful also to change the esp partition or add it if required:
 You can also remove the other partitions under `sdmmc_user` as not effectively used by Kairos during boot.
 :::
 :::tip Note
-The `COS_PERSISTENT` partition is optional. You can also use an SD card, or an nvme drive instead. The only requirement is to have the partition labeled as `COS_PERSISTENT`.
-:::
-:::tip Note
-If modifiying the parition sizes, you need to replace the size inside the `<size></size>` tags of each partition in the XML:
+If modifying the partition sizes, replace the size inside the `<size></size>` tags of each partition in the XML:
 
 ```
 stat -c %s bootloader/efi.img
 stat -c %s bootloader/recovery_partition.img
-stat -c %s bootloader/state_partition.img
 stat -c %s bootloader/oem.img
-stat -c %s bootloader/persistent.img
 ```
 :::
 ### Flash
@@ -247,12 +207,18 @@ To customize the default cloud config of the board, generate the images mounting
 ```bash
 IMAGE=quay.io/kairos/ubuntu:22.04-core-arm64-nvidia-jetson-agx-orin-{{< KairosVersion  >}}
 CLOUD_CONFIG=/cloud/config.yaml
-docker run -v $CLOUD_CONFIG:/defaults.yaml --privileged \
-        -e container_image=$IMAGE \
-        -e STATE_SIZE="25500" \
-        -e RECOVERY_SIZE="21000" \
-        -e DEFAULT_ACTIVE_SIZE="7000" \
-        -v $PWD/bootloader:/bootloader --entrypoint /prepare_nvidia_orin_images.sh -ti --rm quay.io/kairos/auroraboot:{{< AuroraBootVersion  >}}
+docker run --rm --privileged --platform=linux/arm64 \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v "$CLOUD_CONFIG:/config.yaml:ro" \
+  -v "$PWD/bootloader:/output" \
+  quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
+  --set "arch=arm64" \
+  --set "container_image=$IMAGE" \
+  --set "state_dir=/output" \
+  --set "disable_http_server=true" \
+  --set "disable_netboot=true" \
+  --set "disk.partitions=true" \
+  --cloud-config /config.yaml
 ```
 
 ### Debugging
