@@ -67,6 +67,15 @@ destroys all data on the selected disk.
 With AuroraBoot, put the same options in `netboot.cmdline`. With another PXE
 server, add them to the kernel command line in its boot entry.
 
+Because in-RAM mode does not install the system, provide [cloud
+config](/docs/reference/configuration) on every boot. This is especially
+important on the first boot, when the machine needs user data such as login
+credentials. Bundle the config with the boot artifacts, use a supported metadata
+source, or add `kairos.config_url=<URL>` to the kernel command line to fetch it
+from a central server. `kairos.config_url` is particularly useful with PXE
+because the server can keep both the boot configuration and machine
+configuration centralized.
+
 An in-RAM boot is reported as `active_boot`, so both of these sentinel files
 exist after immucore finishes:
 
