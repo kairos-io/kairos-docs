@@ -14,6 +14,76 @@ The recommended way to do this is with [AuroraBoot](/docs/reference/auroraboot),
 
 Generic hardware-based netboot setup (PXE BIOS configuration, DHCP, etc.) is out of scope for this document.
 
+## Run Kairos from RAM with local persistent data
+
+The in-RAM workflow is useful for machines that load the Kairos root filesystem
+into memory from live media or PXE, but still need machine-specific
+configuration and persistent data on a local disk. The machine does not need
+`COS_STATE` or `COS_ACTIVE` partitions. It mounts:
+
+- `COS_OEM` at `/oem` for cloud config and user data
+- `COS_PERSISTENT` at `/usr/local` for persistent state
+
+Add a `kairos.ram.*` option to the kernel command line to select this workflow.
+Use the bare `kairos.ram` option if you do not need any of the partition
+options:
+
+```text
+kairos.ram
+```
+
+For first boot on an empty disk, let Kairos create the local partitions:
+
+```text
+kairos.ram.create_partitions
+```
+
+Kairos selects the largest eligible empty disk. Removable media, CD-ROMs, and
+virtual block devices such as loop and device-mapper devices are excluded. To
+select a disk yourself, pass its path:
+
+```text
+kairos.ram.create_partitions=/dev/vda
+```
+
+The default `COS_OEM` size is 64 MiB. `COS_PERSISTENT` uses the rest of the
+disk. Override either size with a plain integer in MiB:
+
+```text
+kairos.ram.create_partitions=/dev/vda kairos.ram.oem=128 kairos.ram.persistent=10240
+```
+
+If one of the partitions already exists, Kairos keeps it and creates only the
+missing partition. Kairos refuses to repartition a disk that contains unrelated
+partitions unless you add `kairos.ram.wipe`.
+
+:::danger
+
+`kairos.ram.wipe` allows Kairos to replace an existing partition table and
+destroys all data on the selected disk.
+
+:::
+
+With AuroraBoot, put the same options in `netboot.cmdline`. With another PXE
+server, add them to the kernel command line in its boot entry.
+
+An in-RAM boot is reported as `active_boot`, so both of these sentinel files
+exist after immucore finishes:
+
+```text
+/run/cos/active_mode
+/run/cos/in_ram_mode
+```
+
+Use `/run/cos/in_ram_mode` when a script must distinguish an in-RAM root
+filesystem from a regular active boot:
+
+```bash
+if [ -e /run/cos/in_ram_mode ]; then
+  echo "Kairos is running from RAM"
+fi
+```
+
 ## Use AuroraBoot
 
 ```bash
