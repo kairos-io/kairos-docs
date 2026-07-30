@@ -58,6 +58,23 @@ Initramfs can be instructed to drop a shell in various phases of the boot proces
 - `rd.break=pre-mount rd.shell`: Drops a shell before setting up mount points.
 - `rd.break=pre-pivot rd.shell`: Drops a shell before switch-root
 
+## In-RAM boot failures
+
+See [Run Kairos from RAM with local persistent data](/docs/installation/netboot#run-kairos-from-ram-with-local-persistent-data)
+for the supported kernel options and disk-selection rules.
+
+In-RAM mode stops before cloud config runs when `COS_OEM` or
+`COS_PERSISTENT` is missing and partition creation is not enabled. It also
+stops when the selected disk is unavailable, the requested sizes are invalid,
+or an existing partition table requires explicit wipe consent.
+
+Immucore prints a full-screen error on every available console with the failed
+condition and the kernel option needed to correct it. On systemd systems, press
+any key to reboot immediately. With no input, the machine reboots after 90
+seconds so boot assessment records a failed boot. On non-systemd systems,
+immucore prints the message and the boot fails without the timed reboot. Check
+`/run/immucore/` for the full immucore logs on the next boot.
+
 ## Disable immutability
 
 It is possible to disable immutability by adding `rd.cos.debugrw` to the kernel boot commands.
