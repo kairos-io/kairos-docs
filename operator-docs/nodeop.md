@@ -1,7 +1,7 @@
 ---
 title: "NodeOp"
 linkTitle: "NodeOp"
-weight: 2
+weight: 3
 date: 2025-07-25
 description: Run generic operations on Kubernetes nodes using the NodeOp custom resource
 ---

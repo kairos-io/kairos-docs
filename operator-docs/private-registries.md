@@ -1,7 +1,7 @@
 ---
 title: "Using Private Registries"
 linkTitle: "Private Registries"
-weight: 5
+weight: 6
 date: 2025-07-25
 description: Configure the Kairos operator to pull images from private container registries
 ---

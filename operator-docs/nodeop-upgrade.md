@@ -1,7 +1,7 @@
 ---
 title: "NodeOpUpgrade"
 linkTitle: "NodeOpUpgrade"
-weight: 3
+weight: 4
 date: 2025-07-25
 description: Upgrade Kairos nodes using the NodeOpUpgrade custom resource
 ---
