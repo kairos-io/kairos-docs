@@ -126,10 +126,15 @@ partition at install time, so there is nothing to pull. An in-RAM boot never
 runs an installation, though — without further action the machine comes up
 with no per-machine configuration at all.
 
-To pull configuration from a datasource in this mode, also bake
-`kairos.pull_datasources` into the signed kernel command line. The pulled user
-data is stored at `/oem/95_userdata` on the (TPM-encrypted) `COS_OEM`
-partition, so it persists across reboots and later boots skip the pull.
+The recommended approach is to bundle the configuration into the image at
+build time: it becomes part of the signed, measured artifact and the machine
+never needs to reach out to a datasource at boot.
+
+When the configuration must be per-machine and cannot be bundled, bake
+`kairos.pull_datasources` into the signed kernel command line to pull it from
+a datasource instead. The pulled user data is stored at `/oem/95_userdata` on
+the (TPM-encrypted) `COS_OEM` partition, so it persists across reboots and
+later boots skip the pull.
 :::
 
 ## Use AuroraBoot
