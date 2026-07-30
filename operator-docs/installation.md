@@ -48,3 +48,7 @@ To remove the operator installed via bundle, you need to delete the `kairos-oper
 
 - **k0s**: `/var/lib/k0s/manifests/kairos-operator/`
 - **k3s**: `/var/lib/rancher/k3s/server/manifests/`
+
+## Next step
+
+The operator handles reconciliation of custom resources but does not provide a web UI. If you want a browser-accessible dashboard for kicking off builds, enrolling nodes, and driving fleet operations, see [Installing AuroraBoot alongside the operator](../auroraboot-helm/) to deploy the AuroraBoot web UI into the same cluster.

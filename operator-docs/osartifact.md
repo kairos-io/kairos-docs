@@ -1,7 +1,7 @@
 ---
 title: "OSArtifact"
 linkTitle: "OSArtifact"
-weight: 4
+weight: 5
 date: 2025-07-25
 description: Build OS artifacts (ISOs, cloud images, netboot, UKI) from container images using the two-stage OSArtifact API
 ---
