@@ -66,7 +66,11 @@ for the supported kernel options and disk-selection rules.
 In-RAM mode stops before cloud config runs when `COS_OEM` or
 `COS_PERSISTENT` is missing and partition creation is not enabled. It also
 stops when the selected disk is unavailable, the requested sizes are invalid,
-or an existing partition table requires explicit wipe consent.
+or an existing partition table requires explicit wipe consent. Under [Trusted
+Boot](/docs/installation/trustedboot), it additionally stops when a freshly
+created partition cannot be encrypted with the TPM PCR policy — check the TPM
+prerequisites, or wipe the disk and retry, since the partition table may be
+left partially initialized at that point.
 
 Immucore prints a full-screen error on every available console with the failed
 condition and the kernel option needed to correct it. On systemd systems, press
