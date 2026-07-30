@@ -67,14 +67,20 @@ destroys all data on the selected disk.
 With AuroraBoot, put the same options in `netboot.cmdline`. With another PXE
 server, add them to the kernel command line in its boot entry.
 
-Because in-RAM mode does not install the system, provide [cloud
-config](/docs/reference/configuration) on every boot. This is especially
+Because in-RAM mode does not run an installation, nothing seeds the machine
+configuration for you: provide [cloud
+config](/docs/reference/configuration) yourself. This is especially
 important on the first boot, when the machine needs user data such as login
 credentials. Bundle the config with the boot artifacts, use a supported metadata
 source, or add `kairos.config_url=<URL>` to the kernel command line to fetch it
 from a central server. `kairos.config_url` is particularly useful with PXE
 because the server can keep both the boot configuration and machine
 configuration centralized.
+
+User data pulled from a metadata source (NoCloud/cidata, cloud provider
+metadata, …) is written to `/oem/95_userdata` on the local `COS_OEM`
+partition, so it survives reboots and is not fetched again on later boots.
+Config fetched through `kairos.config_url` is read on every boot instead.
 
 An in-RAM boot is reported as `active_boot`, so both of these sentinel files
 exist after immucore finishes:
@@ -92,6 +98,44 @@ if [ -e /run/cos/in_ram_mode ]; then
   echo "Kairos is running from RAM"
 fi
 ```
+
+### In-RAM boot with Trusted Boot (UKI)
+
+The same `kairos.ram.*` options work under [Trusted
+Boot](/docs/installation/trustedboot). A UKI already runs entirely from RAM, so
+the regular UKI boot flow applies, with a few differences:
+
+- The kernel command line is part of the signed UKI (or a signed addon), so the
+  `kairos.ram.*` options must be baked in when the image is built and signed —
+  they cannot be added or edited interactively at boot time.
+- `kairos.ram.create_partitions` encrypts the partitions it creates with the
+  TPM PCR policy — the same `systemd-cryptenroll` enrollment kairos-agent
+  performs during a trusted-boot installation — so every later boot unlocks
+  them through the TPM. There is no plaintext fallback: if encryption fails,
+  the boot halts with a full-screen error. Remote key management
+  (kcrypt-challenger) is not supported in this flow, because the UKI initramfs
+  has no network yet when the partitions are created and unlocked.
+- The boot is marked with the `/run/cos/uki_boot_mode` sentinel (not
+  `uki_install_mode`), so the installer cloud-init stages do not run.
+
+:::warning Datasources are not pulled by default under Trusted Boot
+The stock datasource configuration skips pulling providers (NoCloud/cidata,
+cloud provider metadata services, …) when `/run/cos/uki_boot_mode` is present:
+on an installed trusted-boot system the configuration was baked into the OEM
+partition at install time, so there is nothing to pull. An in-RAM boot never
+runs an installation, though — without further action the machine comes up
+with no per-machine configuration at all.
+
+The recommended approach is to bundle the configuration into the image at
+build time: it becomes part of the signed, measured artifact and the machine
+never needs to reach out to a datasource at boot.
+
+When the configuration must be per-machine and cannot be bundled, bake
+`kairos.pull_datasources` into the signed kernel command line to pull it from
+a datasource instead. The pulled user data is stored at `/oem/95_userdata` on
+the (TPM-encrypted) `COS_OEM` partition, so it persists across reboots and
+later boots skip the pull.
+:::
 
 ## Use AuroraBoot
 
