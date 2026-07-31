@@ -107,14 +107,14 @@ users:
   ssh_authorized_keys:
     - github:<YOUR_GITHUB_USER> # replace with your github user
 
-k0s-worker:
+k0s:
   enabled: true
   args:
     - --token-file /etc/k0s/token
 
 write_files:
   - path: /etc/k0s/token
-    permissions: 0644
+    permissions: 0600
     content: |
       <TOKEN> # generate it on your cluster init node by running `k0s token create --role=controller`
 ```
