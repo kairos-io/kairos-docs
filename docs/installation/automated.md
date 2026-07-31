@@ -85,6 +85,37 @@ After installation, the configuration will be available on the system at `/oem/9
 
 If you're not sure where to host your configuration file, a common option is to upload it as a GitHub gist.
 
+### Templated URLs
+
+The `config_url` value is rendered as a Go template before the fetch, so per-machine identifiers can be embedded in the URL itself. This is convenient for discovery services that return a different cloud-config per host.
+
+Example: register the machine with a discovery service using its SMBIOS UUID and primary MAC address.
+
+```yaml
+#cloud-config
+config_url: "http://discover.example.com/register?uuid={{ .Values.product.uuid }}&mac={{ .Values.network[0].macaddress }}"
+```
+
+Values come from the same sysinfo-based context that yip already exposes to cloud-config stages under `{{ .Values.* }}`. The fields most commonly useful for URL templating are:
+
+| Variable                              | Description                                                                |
+|---------------------------------------|----------------------------------------------------------------------------|
+| `{{ .Values.product.uuid }}`          | SMBIOS product UUID                                                        |
+| `{{ .Values.product.serial }}`        | SMBIOS product serial number                                               |
+| `{{ .Values.network[0].macaddress }}` | MAC of the first sysinfo-enumerated network interface (virtual ones skipped) |
+| `{{ .Values.node.hostname }}`         | Machine hostname                                                           |
+| `{{ .Values.os.architecture }}`       | CPU architecture                                                           |
+
+The full `sysinfo.SysInfo` tree from [zcalusic/sysinfo](https://github.com/zcalusic/sysinfo) is available; consult the upstream sample output for the complete field list. [Sprig functions](http://masterminds.github.io/sprig/) can also be applied, for example `{{ .Values.product.uuid | lower }}`.
+
+Rendering semantics:
+
+- Substituted scalar values are URL-encoded, so characters like `+`, spaces, or `&` in a field value cannot corrupt query strings.
+- Rendering fails loudly. If a referenced field is undefined or resolves to an empty value on the current host, the boot errors out instead of fetching a mangled URL such as `.../register?uuid=`.
+- Templating runs on every cmdline-driven or config-file-driven fetch: the initramfs stage handled by immucore, `kairos-agent start/install/upgrade/reset`, and every `cos-setup-*` stage.
+
+The same variable set is available in the rest of the cloud-config; see [Using templates](/docs/reference/configuration#using-templates) for details.
+
 ## ISO remastering
 
 It is possible to create custom ISOs with an embedded cloud configuration. This allows the machine to automatically boot with a pre-specified configuration file, which will be installed on the system after provisioning is complete. See also [AuroraBoot](/docs/reference/auroraboot) for documentation.
