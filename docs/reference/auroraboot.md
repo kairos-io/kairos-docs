@@ -792,13 +792,13 @@ docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock \
   -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot \
   --debug \
   --set "disable_http_server=true" \
-  --set "container_image={{< OCI variant="standard" >}}" \
+  --set 'container_image={{< OCI variant="standard" >}}' \
   --set "disable_netboot=true" \
   --set "disk.maas=true" \
   --set "state_dir=/aurora"
 ```
 
-The output is `kairos-*.raw.gz` in the mounted directory.
+AuroraBoot writes two artifacts to the mounted directory: the uncompressed `kairos-*.raw` and the compressed `kairos-*.raw.gz`. The `.raw.gz` is the one you upload to MaaS.
 
 :::warning Note
 Note that for creating raw images, the `--privileged` flag is used as the process creates loop devices, which
