@@ -25,7 +25,7 @@ On first boot, the Kairos MaaS datasource provider (part of yip, enabled by defa
 
 ## Building a MaaS image
 
-Use AuroraBoot with `disk.maas=true`. AuroraBoot produces a raw disk image with the extra `COS_CURTIN` partition and compresses it with gzip into the `ddgz` filetype that MaaS uploads accept.
+Use AuroraBoot with `disk.maas=true`. AuroraBoot produces a raw disk image with the extra `COS_CURTIN` partition and compresses it with gzip. MaaS accepts the compressed image as a custom uploaded image with `filetype=ddgz`.
 
 ```bash
 docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock \
@@ -33,11 +33,11 @@ docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock \
   --set "disable_http_server=true" \
   --set "disable_netboot=true" \
   --set "disk.maas=true" \
-  --set "container_image={{< OCI variant="standard" >}}" \
+  --set 'container_image={{< OCI variant="standard" >}}' \
   --set "state_dir=/aurora"
 ```
 
-The output is a single `kairos-*.raw.gz` file in the mounted directory. Both the raw and gzipped file are kept, but the `.gz` is the one MaaS wants.
+AuroraBoot writes two artifacts to the mounted directory: the uncompressed `kairos-*.raw` and the compressed `kairos-*.raw.gz`. Upload the `.raw.gz` to MaaS.
 
 Pick the Kairos flavour and version you want to ship by pointing `container_image` at any image from the [image matrix](/docs/reference/image_matrix).
 
