@@ -372,6 +372,7 @@ cloud_config: |
 | `disk.bios`           | Generate a BIOS-compatible raw disk image. When set to `true`, the image will be created with legacy BIOS boot support instead of EFI.                                                                                                                                                                |
 | `disk.vhd`            | Generate an Azure-compatible VHD image. When set to `true`, the image will be created in VHD format suitable for Azure cloud platform.                                                                                                                                                                |
 | `disk.gce`            | Generate a Google Cloud Engine (GCE) compatible image. When set to `true`, the image will be created in a format suitable for Google Cloud Platform.                                                                                                                                                  |
+| `disk.maas`           | Generate a Canonical MaaS compatible image. Adds a small `COS_CURTIN` partition containing the curtin hook that MaaS runs after writing the image to disk, and compresses the raw output into the `ddgz` format that MaaS `boot-resources create` accepts. See [Installation with Canonical MaaS](/docs/installation/maas). |
 To use the configuration file with AuroraBoot, run AuroraBoot specifying the file or URL of the config as first argument:
 
 ```bash
@@ -779,6 +780,25 @@ docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock \
   --set "state_dir=/aurora"
 ```
 
+To generate a Canonical MaaS image (a raw disk gzipped into the `ddgz` format
+that MaaS accepts as a custom uploaded image), set `disk.maas=true`. The image
+carries an extra `COS_CURTIN` partition with the curtin hook that MaaS runs
+after the write. See [Installation with Canonical MaaS](/docs/installation/maas)
+for the end-to-end deployment guide.
+
+```bash
+# Build a MaaS-ready image
+docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock \
+  -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot \
+  --debug \
+  --set "disable_http_server=true" \
+  --set "container_image={{< OCI variant="standard" >}}" \
+  --set "disable_netboot=true" \
+  --set "disk.maas=true" \
+  --set "state_dir=/aurora"
+```
+
+The output is `kairos-*.raw.gz` in the mounted directory.
 
 :::warning Note
 Note that for creating raw images, the `--privileged` flag is used as the process creates loop devices, which
