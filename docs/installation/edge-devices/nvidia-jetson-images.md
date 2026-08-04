@@ -26,7 +26,7 @@ replacement.
 |--------------------------|-------------------------------------------|------------|-------------------|
 | `nvidia-jetson-agx-orin` | [Jetson AGX Orin](/docs/installation/nvidia_agx_orin/)   | r36.x      | `ubuntu:22.04`    |
 | `nvidia-jetson-orin-nx`  | [Jetson Orin NX](/docs/installation/nvidia_orin_nx/)     | r36.x      | `ubuntu:22.04`    |
-| `nvidia-jetson-thor`     | [Jetson AGX Thor](/docs/installation/nvidia_agx_thor/)   | r38.x      | `ubuntu:24.04` or Hadron |
+| `nvidia-jetson-thor`     | [Jetson AGX Thor](/docs/installation/nvidia_agx_thor/)   | r39.2      | `ubuntu:24.04` or Hadron |
 
 For the full list of `--model` values (including `generic`, `rpi3`, `rpi4`) see
 [The Kairos Factory](/docs/reference/kairos-factory/#supported-device-targets).
@@ -112,6 +112,21 @@ For any of the Jetson models, `kairos-init`:
   cloud-config (disables `nv-l4t-boot-fw-update-in-preinstall`, sets up the Tegra rootfs prep,
   etc.).
 - Enables the required systemd services for the board.
+
+For Thor, the model also keeps QSPI boot firmware aligned with the image's L4T release:
+
+- The current Thor L4T pin and its matching UEFI capsule are installed together. Renovate
+  tracks new Thor L4T releases in `kairos-init` so the pair is updated together.
+- The live initramfs omits the proprietary NVIDIA drivers. This lets the installer boot on
+  boards with older, updatable QSPI firmware.
+- The same version check runs after installation and after every OCI upgrade. When the board
+  firmware is older, Kairos stages the capsule on the EFI System Partition and UEFI applies
+  it on the next boot. Matching versions are left unchanged.
+- A board with firmware newer than the image is rejected because UEFI capsules cannot
+  downgrade firmware. Firmware older than L4T 38.0 requires a USB host flash.
+
+See [Nvidia AGX Thor](/docs/installation/nvidia_agx_thor/#qspi-firmware-compatibility) for the
+full compatibility and lifecycle behavior.
 
 None of this needs to be written by hand — the flag pulls in everything the old
 `Dockerfile.nvidia` used to do, and stays current with L4T releases as `kairos-init` is
