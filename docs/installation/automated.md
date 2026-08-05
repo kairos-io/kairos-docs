@@ -111,7 +111,14 @@ The full `sysinfo.SysInfo` tree from [zcalusic/sysinfo](https://github.com/zcalu
 Rendering semantics:
 
 - Substituted scalar values are URL-encoded, so characters like `+`, spaces, or `&` in a field value cannot corrupt query strings.
-- Rendering fails loudly. If a referenced field is undefined or resolves to an empty value on the current host, the boot errors out instead of fetching a mangled URL such as `.../register?uuid=`.
+- Undefined fields fail loudly: referencing a name that does not exist in the context aborts the boot rather than fetching a mangled URL.
+- Fields that resolve to an empty string are **not** rejected automatically. The user may have intended empty (through a pipe, conditional, or `default`). To require a non-empty value, wrap the field with the Helm-style `required` helper:
+
+```yaml
+#cloud-config
+config_url: "http://discover.example.com/register?uuid={{ required \"uuid is required for discovery\" .Values.product.uuid }}"
+```
+
 - Templating runs on every cmdline-driven or config-file-driven fetch: the initramfs stage handled by immucore, `kairos-agent start/install/upgrade/reset`, and every `cos-setup-*` stage.
 
 The same variable set is available in the rest of the cloud-config; see [Using templates](/docs/reference/configuration#using-templates) for details.
