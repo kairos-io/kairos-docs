@@ -105,6 +105,8 @@ Values come from the same sysinfo-based context that yip already exposes to clou
 | `{{ .Values.network[0].macaddress }}` | MAC of the first sysinfo-enumerated network interface (virtual ones skipped) |
 | `{{ .Values.node.hostname }}`         | Machine hostname                                                           |
 | `{{ .Values.os.architecture }}`       | CPU architecture                                                           |
+| `{{ .Values.Random }}`                | 32-character random string, freshly generated on each render. Useful as a cache-buster or one-shot nonce. |
+| `{{ .Values.ProtectedID }}`           | HMAC-SHA256 of the host's machine-id (from `/etc/machine-id`), keyed with an app-specific string. Stable across reboots, unique per machine, and not reversible to the raw machine-id. Useful as an anonymized per-machine identifier for discovery-service registration when you do not want to expose SMBIOS UUID, MAC, or the raw machine-id. |
 
 The full `sysinfo.SysInfo` tree from [zcalusic/sysinfo](https://github.com/zcalusic/sysinfo) is available; consult the upstream sample output for the complete field list. [Sprig functions](http://masterminds.github.io/sprig/) can also be applied, for example `{{ .Values.product.uuid | lower }}`.
 
