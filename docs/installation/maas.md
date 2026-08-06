@@ -12,7 +12,7 @@ Kairos can be deployed onto machines managed by [Canonical MaaS](https://maas.io
 
 MaaS deploys custom images by writing them to disk with `dd` and then chrooting into a partition that contains a `curtin` hook script, which finalises the install in the MaaS ephemeral environment.
 
-The MaaS-flavoured Kairos raw image differs from a regular Kairos raw image in one thing only: an additional small `COS_CURTIN` partition that carries the curtin hook. Curtin picks that partition as its target because it is the one that contains `/curtin`, and the hook then:
+The Kairos raw image built for MaaS differs from a regular Kairos raw image in one thing only: an additional small `COS_CURTIN` partition that carries the curtin hook. Curtin picks that partition as its target because it is the one that contains `/curtin`, and the hook then:
 
 1. Mounts `COS_OEM` by label.
 2. Extracts the MaaS datasource block (metadata URL and OAuth credentials) from the curtin config that MaaS passes in and writes it to `/oem/maas/datasource.yaml`.
@@ -21,7 +21,7 @@ The MaaS-flavoured Kairos raw image differs from a regular Kairos raw image in o
 
 The hook does not install a kernel, GRUB, EFI entries, or an `fstab`. The Kairos image is already bootable, so once the write is done MaaS reboots the machine and Kairos takes over.
 
-On first boot, the Kairos MaaS datasource provider (part of yip, enabled by default in the Kairos datasource list) reads `/oem/maas/datasource.yaml`, authenticates against the MaaS metadata API with OAuth 1.0, writes the hostname and `authorized_keys`, and passes the MaaS `user-data` to Kairos as cloud-config. The `90_maas_network.yaml` written by the curtin hook applies the network configuration during the `initramfs` stage.
+On first boot, the Kairos MaaS datasource provider (part of yip, enabled by default in the Kairos datasource list) reads `/oem/maas/datasource.yaml`, authenticates against the MaaS metadata API with OAuth 1.0, writes the hostname and `authorized_keys`, and passes the MaaS `user-data` to Kairos as cloud-config. The `90_maas_network.yaml` written by the [curtin](https://github.com/canonical/curtin) hook applies the network configuration during the `initramfs` stage.
 
 ## Building a MaaS image
 
