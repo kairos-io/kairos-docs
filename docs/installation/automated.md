@@ -93,7 +93,7 @@ Example: register the machine with a discovery service using its SMBIOS UUID and
 
 ```yaml
 #cloud-config
-config_url: "http://discover.example.com/register?uuid={{ .Values.product.uuid }}&mac={{ .Values.network[0].macaddress }}"
+config_url: "http://discover.example.com/register?uuid={{ .Values.product.uuid }}&mac={{ (index .Values.network 0).macaddress }}"
 ```
 
 Values come from the same sysinfo-based context that yip already exposes to cloud-config stages under `{{ .Values.* }}`. The fields most commonly useful for URL templating are:
@@ -102,7 +102,7 @@ Values come from the same sysinfo-based context that yip already exposes to clou
 |---------------------------------------|----------------------------------------------------------------------------|
 | `{{ .Values.product.uuid }}`          | SMBIOS product UUID                                                        |
 | `{{ .Values.product.serial }}`        | SMBIOS product serial number                                               |
-| `{{ .Values.network[0].macaddress }}` | MAC of the first sysinfo-enumerated network interface (virtual ones skipped) |
+| `{{ (index .Values.network 0).macaddress }}` | MAC of the first sysinfo-enumerated network interface (virtual ones skipped) |
 | `{{ .Values.node.hostname }}`         | Machine hostname                                                           |
 | `{{ .Values.os.architecture }}`       | CPU architecture                                                           |
 | `{{ .Values.Random }}`                | 32-character random string, freshly generated on each render. Useful as a cache-buster or one-shot nonce. |
