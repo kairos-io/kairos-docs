@@ -1054,6 +1054,82 @@ spec:
 
 ---
 
+## Resource specification
+
+By default the builder Pod and its containers run with no resource requests or limits. You can use `spec.resources` to set resource constraints per artifact kind and at the pod level. This is useful for controlling resource consumption on shared clusters or ensuring builds have sufficient CPU and memory.
+
+The `spec.resources` field accepts the following optional sub-fields:
+
+| Field | Applies to | Description |
+| ------- | ------------ | ------------- |
+| `iso` | ISO builder container | CPU/memory limits for the ISO build step |
+| `cloudImage` | Cloud image builder container | CPU/memory limits for cloud image generation |
+| `azureImage` | Azure VHD builder container | CPU/memory limits for Azure VHD generation |
+| `gceImage` | GCE image builder container | CPU/memory limits for GCE image generation |
+| `netboot` | Netboot builder container | CPU/memory limits for netboot artifact generation |
+| `uki` | UKI builder containers | CPU/memory limits for UKI (Secure Boot) artifact generation |
+| `pod` | Builder Pod | Pod-level resource requests/limits; applies to all containers in the pod |
+
+### Per-kind resources
+
+Set resource constraints for specific artifact builders. For example, to limit the ISO build container:
+
+```yaml
+apiVersion: build.kairos.io/v1alpha2
+kind: OSArtifact
+metadata:
+  name: limited-iso-build
+  namespace: default
+spec:
+  image:
+    ref: quay.io/kairos-io/kairos:v3.6.0
+
+  artifacts:
+    arch: amd64
+    iso: true
+  resources:
+    iso:
+      requests:
+        memory: "2Gi"
+        cpu: "500m"
+      limits:
+        memory: "4Gi"
+        cpu: "2"
+```
+
+### Pod-level resources
+
+Set resource constraints for the entire builder Pod. This is useful when you want to cap total resource consumption across all containers in a single build:
+
+```yaml
+apiVersion: build.kairos.io/v1alpha2
+kind: OSArtifact
+metadata:
+  name: pod-limited-build
+  namespace: default
+spec:
+  image:
+    ref: quay.io/kairos-io/kairos:v3.6.0
+  artifacts:
+    arch: amd64
+    iso: true
+    cloudImage: true
+  resources:
+    pod:
+      requests:
+        memory: "4Gi"
+        cpu: "1"
+      limits:
+        memory: "8Gi"
+        cpu: "4"
+```
+
+:::caution Pod-level resources
+The **PodLevelResources** feature gate must be enabled on your cluster (beta since Kubernetes 1.32). If the gate is not present, the `pod` field is silently ignored by the API server. When both `pod` and per-kind resources are set, Kubernetes enforces that pod-level limits are at least the sum of all container-level limits.
+:::
+
+---
+
 ## Advanced configuration example
 
 Multiple artifact types, custom cloud-config, GRUB, bundles, image pull secrets, and a custom PVC size.
