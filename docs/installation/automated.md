@@ -53,7 +53,7 @@ p2p:
 The token `p2p.network_token` is a base64 encoded string which
 contains an [`edgevpn` token](https://github.com/mudler/edgevpn/blob/master/docs/content/en/docs/Concepts/Token/_index.md). For more information, [check out the architecture section](/docs/architecture/network).
 
-Save this file as `cloud_init.yaml`, then create an ISO with the following steps:
+Save this file as `cloud-config.yaml`, then create an ISO with the following steps:
 
 1. Create a new directory and navigate to it:
 ```bash
@@ -63,7 +63,7 @@ $ cd build
 1. Create empty `meta-data` and copy your config as `user-data`:
 ```bash
 $ touch meta-data
-$ cp -rfv cloud_init.yaml user-data
+$ cp -rfv cloud-config.yaml user-data
 ```
 1. Use `mkisofs` to create the ISO file:
 ```bash
@@ -149,14 +149,14 @@ We can use [AuroraBoot](/docs/reference/auroraboot) to handle the the ISO build 
 $ IMAGE=<scheme://host[:port]/path[:tag]>
 $ docker pull $IMAGE
 # Build the ISO
-$ docker run -v $PWD/cloud_init.yaml:/cloud_init.yaml \
+$ docker run -v $PWD/cloud-config.yaml:/cloud-config.yaml \
                     -v $PWD/build:/tmp/auroraboot \
                     -v /var/run/docker.sock:/var/run/docker.sock \
                     --rm -ti quay.io/kairos/auroraboot \
                     --set container_image=oci:$IMAGE \
                     --set "disable_http_server=true" \
                     --set "disable_netboot=true" \
-                    --cloud-config /cloud_init.yaml \
+                    --cloud-config /cloud-config.yaml \
                     --set "state_dir=/tmp/auroraboot"
 # Artifacts are under build/
 $ sudo ls -liah build/iso
@@ -177,7 +177,7 @@ $ mkdir -p files-iso/boot/grub2
 $ wget https://raw.githubusercontent.com/kairos-io/packages/main/packages/livecd/grub2/config/grub_live_bios.cfg -O files-iso/boot/grub2/grub.cfg
 
 # Copy the config file
-$ cp -rfv cloud_init.yaml files-iso/cloud_config.yaml
+$ cp -rfv cloud-config.yaml files-iso/cloud-config.yaml
 # Pull the image locally
 $ docker pull $IMAGE
 # Optionally, modify the image here!
@@ -190,7 +190,7 @@ $ docker run -v $PWD:/cOS -v /var/run/docker.sock:/var/run/docker.sock -i --rm q
 </Tabs>
 
 :::tip Cloud config
-In the case of Auroraboot, make sure that the cloud config that you are mounting in the container (`-v $PWD/cloud_init.yaml:/cloud_init.yaml`) exists. Otherwise docker will create an empty directory to mount it on the container without any warnings and you will end up with an empty cloud config.
+In the case of Auroraboot, make sure that the cloud config that you are mounting in the container (`-v $PWD/cloud-config.yaml:/cloud-config.yaml`) exists. Otherwise docker will create an empty directory to mount it on the container without any warnings and you will end up with an empty cloud config.
 :::
 This will create a new ISO with your specified cloud configuration embedded in it. You can then use this ISO to boot your machine and automatically install Kairos with your desired settings.
 

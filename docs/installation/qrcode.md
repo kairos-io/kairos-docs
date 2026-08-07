@@ -60,7 +60,7 @@ The CLI allows to register a node with a screenshot, an image, or a token. Durin
 In a terminal window from your desktop/workstation, run:
 
 ```
-kairosctl register --reboot --device /dev/sda --config config.yaml
+kairosctl register --reboot --device /dev/sda --config cloud-config.yaml
 ```
 
 - The `--reboot` flag will make the node reboot automatically after the installation is completed.

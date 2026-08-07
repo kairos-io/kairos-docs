@@ -41,7 +41,7 @@ generateEfiKeys() {
 
 generateConfig() {
   mkdir -p $OUTDIR/config
-  cat << EOF > "$OUTDIR/config/config.yaml"
+  cat << EOF > "$OUTDIR/config/cloud-config.yaml"
 #cloud-config
 
 users:

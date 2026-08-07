@@ -14,7 +14,7 @@ Kairos supports takeover installations. Here are a few summarized steps:
 ```bash
 export DEVICE=/dev/sda
 export IMAGE={{< OCI variant="core" >}}
-cat <<'EOF' > config.yaml
+cat <<'EOF' > cloud-config.yaml
 #cloud-config
 users:
 - name: "kairos"
@@ -24,7 +24,7 @@ users:
   ssh_authorized_keys:
   - github:mudler
 EOF
-export CONFIG_FILE=config.yaml
+export CONFIG_FILE=cloud-config.yaml
 docker run --privileged -v $PWD:/data -v /dev:/dev -ti $IMAGE kairos-agent manual-install --device $DEVICE --source dir:/ /data/$CONFIG_FILE
 ```
 

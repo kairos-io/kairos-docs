@@ -83,7 +83,7 @@ Use the following Bash script to generate raw bootable images using QEMU. This s
 #!/bin/bash
 # Generates raw bootable images with qemu
 set -ex
-CLOUD_INIT=${1:-cloud_init.yaml}
+CLOUD_INIT=${1:-cloud-config.yaml}
 QEMU=${QEMU:-qemu-system-x86_64}
 ISO=${2:-iso.iso}
 
@@ -127,7 +127,7 @@ To customize your installation:
 2. Pass the modified configuration as an argument to the script (optionally, pass the Kairos ISO as the second argument):
 
 ```bash
-./build_image.sh my_custom_cloud_config.yaml
+./build_image.sh my-custom-cloud-config.yaml
 ```
 
 This script will generate a raw disk image with the specified cloud configuration.

@@ -51,7 +51,7 @@ Unfortunately for macOS systems we cannot run the netboot through docker as it's
 Building ISOs still works as long as you mount the container `/tmp` disk to a local dir so its exported there like so:
 
 ```bash
-docker run --rm -ti -v "$PWD"/config.yaml:/config.yaml -v ${PWD}:/tmp quay.io/kairos/auroraboot \
+docker run --rm -ti -v "$PWD"/cloud-config.yaml:/cloud-config.yaml -v ${PWD}:/tmp quay.io/kairos/auroraboot \
                     --set "artifact_version={{< KairosVersion  >}}" \
                     --set "release_version={{< KairosVersion  >}}" \
                     --set "flavor={{< FlavorCode  >}}" \
@@ -59,7 +59,7 @@ docker run --rm -ti -v "$PWD"/config.yaml:/config.yaml -v ${PWD}:/tmp quay.io/ka
                     --set "repository=kairos-io/kairos" \
                     --set "disable_http_server=true" \
                     --set "disable_netboot=true" \
-                    --cloud-config /config.yaml
+                    --cloud-config /cloud-config.yaml
 ```
 
 This will build the ISO and put the generated artifacts in the current dir under the `${PWD}/iso` dir.
@@ -203,18 +203,18 @@ Run AuroraBoot with a cloud-config to create an ISO with the embedded configurat
 Check we have the cloud config file:
 ```bash
 ls
-# config.yaml
+# cloud-config.yaml
 ```
 
 Build the ISO:
 ```bash
-docker run -v "$PWD"/config.yaml:/config.yaml \
+docker run -v "$PWD"/cloud-config.yaml:/cloud-config.yaml \
                     -v "$PWD"/build:/tmp/auroraboot \
                     --rm -ti quay.io/kairos/auroraboot \
                     --set container_image={{< OCI variant="core" >}} \
                     --set "disable_http_server=true" \
                     --set "disable_netboot=true" \
-                    --cloud-config /config.yaml \
+                    --cloud-config /cloud-config.yaml \
                     --set "state_dir=/tmp/auroraboot"
 ```
 
@@ -236,7 +236,7 @@ sudo ls -liah build/iso
 Check we have the cloud config file:
 ```bash
 ls
-# config.yaml
+# cloud-config.yaml
 ```
 
 Build the ISO:
@@ -249,7 +249,7 @@ docker run -v "$PWD"/build:/tmp/auroraboot -v /var/run/docker.sock:/var/run/dock
                     --set "repository=kairos-io/provider-kairos" \
                     --set "disable_http_server=true" \
                     --set "disable_netboot=true" \
-                    --cloud-config /config.yaml \
+                    --cloud-config /cloud-config.yaml \
                     --set "state_dir=/tmp/auroraboot"
 ```
 
@@ -376,7 +376,7 @@ cloud_config: |
 To use the configuration file with AuroraBoot, run AuroraBoot specifying the file or URL of the config as first argument:
 
 ```bash
-docker run --rm -ti -v "$PWD"/config.yaml:/config.yaml --net host quay.io/kairos/auroraboot /config.yaml
+docker run --rm -ti -v "$PWD"/cloud-config.yaml:/cloud-config.yaml --net host quay.io/kairos/auroraboot /cloud-config.yaml
 ```
 
 The CLI options can be used in place of specifying a file, and to set fields of it. Any field of the YAML file, excluding `cloud_config` can be configured with the `--set` for instance, to disable netboot we can run AuroraBoot with:
@@ -388,7 +388,7 @@ docker run --rm -ti --net host quay.io/kairos/auroraboot ....  --set "disable_ne
 To specify a cloud config file instead, use `--cloud-config` (can be also url):
 
 ```bash
-docker run --rm -ti -v "$PWD"/config.yaml:/config.yaml --net host quay.io/kairos/auroraboot .... --cloud-config /config.yaml
+docker run --rm -ti -v "$PWD"/cloud-config.yaml:/cloud-config.yaml --net host quay.io/kairos/auroraboot .... --cloud-config /cloud-config.yaml
 ```
 
 Both the config file and the cloud-config file can be a URL.
@@ -515,9 +515,9 @@ users:
 We would then set the user to `mudler` and the password to `foobar` when running AuroraBoot like the following:
 
 ```bash
-docker run --rm -ti -v "$PWD"/config.yaml:/config.yaml --net host \
+docker run --rm -ti -v "$PWD"/cloud-config.yaml:/cloud-config.yaml --net host \
                                 quay.io/kairos/auroraboot \
-                                --cloud-config /config.yaml \
+                                --cloud-config /cloud-config.yaml \
                                 --set "github.user=mudler" \
                                 --set "kairos.password=foobar"
 ```
@@ -605,7 +605,7 @@ Disabling TLS verification removes protection against man-in-the-middle attacks.
 ## Examples
 
 :::tip Note
-The example below are implying a `config.yaml` cloud config file to be present in the current directory.
+The example below are implying a `cloud-config.yaml` cloud config file to be present in the current directory.
 :::
 ### Offline ISO build from local container image
 
@@ -618,14 +618,14 @@ docker pull <IMAGE>
 Build the custom ISO with the cloud config:
 
 ```bash
-docker run -v "$PWD"/config.yaml:/config.yaml \
+docker run -v "$PWD"/cloud-config.yaml:/cloud-config.yaml \
              -v "$PWD"/build:/tmp/auroraboot \
              -v /var/run/docker.sock:/var/run/docker.sock \
              --rm -ti quay.io/kairos/auroraboot \
              --set container_image=oci:<IMAGE> \
              --set "disable_http_server=true" \
              --set "disable_netboot=true" \
-             --cloud-config /config.yaml \
+             --cloud-config /cloud-config.yaml \
              --set "state_dir=/tmp/auroraboot"
 ```
 
@@ -634,13 +634,13 @@ docker run -v "$PWD"/config.yaml:/config.yaml \
 Build the custom ISO with the cloud config:
 
 ```bash
-docker run -v "$PWD"/config.yaml:/config.yaml \
+docker run -v "$PWD"/cloud-config.yaml:/cloud-config.yaml \
              -v "$PWD"/build:/tmp/auroraboot \
              --rm -ti quay.io/kairos/auroraboot \
              --set container_image=oci:{{< OCI variant="core" >}} \
              --set "disable_http_server=true" \
              --set "disable_netboot=true" \
-             --cloud-config /config.yaml \
+             --cloud-config /cloud-config.yaml \
              --set "state_dir=/tmp/auroraboot"
 ```
 
@@ -656,14 +656,14 @@ mkdir -p data/boot/grub2
 # You can replace this step with your own grub config. This GRUB configuration is the boot menu of the ISO
 wget https://raw.githubusercontent.com/kairos-io/packages/main/packages/livecd/grub2/config/grub_live_bios.cfg -O data/boot/grub2/grub.cfg
 
-docker run -v "$PWD"/config.yaml:/config.yaml \
+docker run -v "$PWD"/cloud-config.yaml:/cloud-config.yaml \
              -v "$PWD"/data:/tmp/data \
              -v "$PWD"/build:/tmp/auroraboot \
              --rm -ti quay.io/kairos/auroraboot \
              --set container_image={{< OCI variant="core" >}} \
              --set "disable_http_server=true" \
              --set "disable_netboot=true" \
-             --cloud-config /config.yaml \
+             --cloud-config /cloud-config.yaml \
              --set "state_dir=/tmp/auroraboot" \
              --set "iso.overlay_iso=/tmp/data"
 ```
@@ -675,9 +675,9 @@ See the [Airgap example](/docs/examples/airgap) in the [examples section](/docs/
 ### Netboot from container images
 
 ```bash
-docker run -v "$PWD"/config.yaml:/config.yaml --rm -ti --net host quay.io/kairos/auroraboot \
+docker run -v "$PWD"/cloud-config.yaml:/cloud-config.yaml --rm -ti --net host quay.io/kairos/auroraboot \
         --set container_image={{< OCI variant="core" >}} \
-        --cloud-config /config.yaml
+        --cloud-config /cloud-config.yaml
 ```
 
 ### Extract netboot artifacts from an ISO
@@ -760,7 +760,7 @@ docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock \
   --set "disable_http_server=true" \
   --set "container_image={{< OCI variant="standard" >}}" \
   --set "disable_netboot=true" \
-  --cloud-config /aurora/config.yaml \
+  --cloud-config /aurora/cloud-config.yaml \
   --set "disk.gce=true" \
   --set "state_dir=/aurora"
 ```
@@ -775,7 +775,7 @@ docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock \
   --set "disable_http_server=true" \
   --set "container_image={{< OCI variant="standard" >}}" \
   --set "disable_netboot=true" \
-  --cloud-config /aurora/config.yaml \
+  --cloud-config /aurora/cloud-config.yaml \
   --set "disk.vhd=true" \
   --set "state_dir=/aurora"
 ```
