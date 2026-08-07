@@ -5,16 +5,25 @@ sidebar_position: 9
 ---
 
 
-:::info Confidential Containers on Kairos
+:::info Confidential Containers on Kairos (non-Hadron)
 
-Kairos works with [Confidential Containers](https://confidentialcontainers.org/) on AMD SEV-SNP hardware today, using various Kairos flavors — including Ubuntu and [Hadron](https://github.com/kairos-io/hadron). Hadron support is available on AWS (SEV-SNP) since [Hadron v0.3.0](https://github.com/kairos-io/hadron/releases/tag/v0.3.0).
+Kairos works with [Confidential Containers](https://confidentialcontainers.org/) on AMD SEV-SNP hardware today, using non-Hadron Kairos flavors (Ubuntu and other glibc-based bases).
 
-As long as the necessary virtualization and memory-encryption options are enabled on your hardware (e.g. SEV / SEV-SNP / SNP Memory Coverage in BIOS on AMD platforms, or the equivalent TDX settings on Intel), the upstream Confidential Containers project can be installed on a Kairos cluster the same way it is on any Kubernetes distribution — see the [upstream installation guide](https://confidentialcontainers.org/docs/getting-started/installation/) — and workloads then opt in by selecting the appropriate [runtime class](https://confidentialcontainers.org/docs/getting-started/workload/).
+As long as the necessary virtualization and memory-encryption options are enabled on your hardware (e.g. SEV / SEV-SNP / SNP Memory Coverage in BIOS on AMD platforms, or the equivalent TDX settings on Intel), the upstream Confidential Containers project can be installed on a Kairos cluster the same way it is on any Kubernetes distribution (see the [upstream installation guide](https://confidentialcontainers.org/docs/getting-started/installation/)), and workloads then opt in by selecting the appropriate [runtime class](https://confidentialcontainers.org/docs/getting-started/workload/).
 
 Because Kairos no longer ships prebuilt Ubuntu images by default, you'll want to build your own Kairos image with the kernel command-line flags and any vendor packages (Intel TDX/SGX attestation libraries, container image decryption tooling, etc.) that your scenario needs. See:
 
-- [Bring Your Own Image (BYOI)](/docs/reference/byoi/) — the recommended path for Ubuntu and other non-Hadron bases.
-- [The Kairos Factory](/docs/reference/kairos-factory/) — how to turn a customized base image into a Kairos-ready artifact.
+- [Bring Your Own Image (BYOI)](/docs/reference/byoi/): the recommended path for Ubuntu and other non-Hadron bases.
+- [The Kairos Factory](/docs/reference/kairos-factory/): how to turn a customized base image into a Kairos-ready artifact.
+
+:::
+
+
+:::warning Hadron is not yet supported
+
+[Hadron](https://github.com/kairos-io/hadron) is musl-only, and the Kata Containers host binaries shipped by the Confidential Containers operator (`kata-runtime`, `kata-monitor`, `containerd-shim-kata-v2`, `containerd-nydus-grpc`) are still dynamically linked against glibc, so they fail to `execve` on a Hadron node and the pod sandbox never comes up.
+
+Upstream Kata has added an opt-in static build ([kata-containers#13243](https://github.com/kata-containers/kata-containers/pull/13243)), and Kata 4.0.0 additionally ships a static-pie Rust shim (`runtime-rs`), but no released Kata payload yet builds the full host-binary set statically. This page will be updated once such a release is available so the standard Confidential Containers install works on Hadron unchanged.
 
 :::
 
