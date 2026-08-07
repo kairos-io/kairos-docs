@@ -481,9 +481,14 @@ By default, all artifacts use the OSArtifact resource's `metadata.name` as the b
 | `spec.nameOverride.azureImage` | string | Override the Azure VHD filename (without `.vhd` extension). |
 | `spec.nameOverride.gceImage` | string | Override the GCE archive filename (without `.gce.tar.gz` extension). |
 | `spec.nameOverride.netboot` | string | Override the netboot artifact filename. |
-| `spec.nameOverride.uki` | string | Override the UKI signed artifact filename (without extension). |
+| `spec.nameOverride.uki` | string | Override the UKI signed artifact base filename. The actual output appends a `-uki` suffix (e.g. `<nameOverride.uki>-uki.iso`). |
 
-Each name must be 1–253 characters long and can contain only lowercase letters, numbers, and hyphens `-`. It must start and end with a letter or number, and must not contain dots `.` or slashes `/`. If a specific name is not set, the artifact uses the resource's `metadata.name`
+Each name must be 1–253 characters long and can contain only lowercase letters, numbers, and hyphens `-`. It must start and end with a letter or number. If a specific name is not set, the artifact uses the resource's `metadata.name`.
+
+
+:::warning Warning
+When `spec.artifacts.netboot` is enabled together with `spec.artifacts.iso`, the netboot artifact resolves its source ISO path using `nameOverride.netboot` (falling back to `metadata.name`), while the ISO itself is written using `nameOverride.iso`. If these two overrides differ, the netboot step cannot locate the ISO on disk. When both `iso` and `netboot` are enabled, `nameOverride.netboot` must equal `nameOverride.iso`.
+:::
 
 #### Example
 
@@ -496,6 +501,7 @@ metadata:
 spec:
   image:
     buildOptions:
+      baseImage: ubuntu:24.04
       version: v3.6.0
 
   nameOverride:
