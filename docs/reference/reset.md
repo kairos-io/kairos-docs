@@ -142,7 +142,7 @@ metadata:
   namespace: system-upgrade
 type: Opaque
 stringData:
-  config.yaml: |
+  cloud-config.yaml: |
     #cloud-config
     hostname: testcluster-{{ trunc 4 .MachineID }}
     k3s:
@@ -157,12 +157,12 @@ stringData:
   add-config-file.sh: |
     #!/bin/sh
     set -e
-    if diff /host/run/system-upgrade/secrets/custom-script/config.yaml /host/oem/90_custom.yaml >/dev/null; then
+    if diff /host/run/system-upgrade/secrets/custom-script/cloud-config.yaml /host/oem/90_custom.yaml >/dev/null; then
         echo config present
         exit 0
     fi
     # we can't cp, that's a symlink!
-    cat /host/run/system-upgrade/secrets/custom-script/config.yaml > /host/oem/90_custom.yaml
+    cat /host/run/system-upgrade/secrets/custom-script/cloud-config.yaml > /host/oem/90_custom.yaml
     kairos-agent bootentry --select statereset
     sync
 

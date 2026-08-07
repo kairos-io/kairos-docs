@@ -43,7 +43,7 @@ What do these settings do?
 
 [Check out the full configuration reference](/docs/reference/configuration).
 
-Save this file as config.yaml and pass it to the kairos agent during the installation process.
+Save this file as cloud-config.yaml and pass it to the kairos agent during the installation process.
 
 
 :::warning Warning
@@ -54,7 +54,7 @@ The command is disruptive and will erase any content on the drive.
 
 
 ```bash
-sudo kairos-agent manual-install --device "auto" config.yaml
+sudo kairos-agent manual-install --device "auto" cloud-config.yaml
 ```
 
 This will configure the node as a single-node Kubernetes cluster and set the default password and SSH keys as specified in the configuration file.

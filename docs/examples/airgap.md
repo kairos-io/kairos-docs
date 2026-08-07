@@ -57,7 +57,7 @@ $ docker save images-bundle -o data/bundle.tar
 
 Now that we have created the bundle, we can use it to build an offline ISO for the airgap installation.
 
-1. Create a cloud config for the ISO and save it as config.yaml. The config.yaml file should contain your cloud configuration for Kairos and is used to set up the system when it is installed. An example can be:
+1. Create a cloud config for the ISO and save it as cloud-config.yaml. The cloud-config.yaml file should contain your cloud configuration for Kairos and is used to set up the system when it is installed. An example can be:
 ```yaml
 #cloud-config
 
@@ -93,7 +93,7 @@ IMAGE={{< OCI variant="standard" >}}
 
 docker pull $IMAGE
 
-docker run -v $PWD/config.yaml:/config.yaml \
+docker run -v $PWD/cloud-config.yaml:/cloud-config.yaml \
              -v $PWD/build:/tmp/auroraboot \
              -v /var/run/docker.sock:/var/run/docker.sock \
              -v $PWD/data:/tmp/data \
@@ -102,7 +102,7 @@ docker run -v $PWD/config.yaml:/config.yaml \
              --set "disable_netboot=true" \
              --set "container_image=oci:$IMAGE" \
              --set "iso.overlay_iso=/tmp/data" \
-             --cloud-config /config.yaml \
+             --cloud-config /cloud-config.yaml \
              --set "state_dir=/tmp/auroraboot"
 ```
 

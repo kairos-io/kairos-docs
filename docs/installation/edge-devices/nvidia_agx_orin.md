@@ -206,10 +206,10 @@ To customize the default cloud config of the board, generate the images mounting
 
 ```bash
 IMAGE=quay.io/kairos/ubuntu:22.04-core-arm64-nvidia-jetson-agx-orin-{{< KairosVersion  >}}
-CLOUD_CONFIG=/cloud/config.yaml
+CLOUD_CONFIG=/cloud/cloud-config.yaml
 docker run --rm --privileged --platform=linux/arm64 \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  -v "$CLOUD_CONFIG:/config.yaml:ro" \
+  -v "$CLOUD_CONFIG:/cloud-config.yaml:ro" \
   -v "$PWD/bootloader:/output" \
   quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
   --set "arch=arm64" \
@@ -218,7 +218,7 @@ docker run --rm --privileged --platform=linux/arm64 \
   --set "disable_http_server=true" \
   --set "disable_netboot=true" \
   --set "disk.partitions=true" \
-  --cloud-config /config.yaml
+  --cloud-config /cloud-config.yaml
 ```
 
 ### Debugging

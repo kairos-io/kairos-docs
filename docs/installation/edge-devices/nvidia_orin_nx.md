@@ -271,7 +271,7 @@ To customize the default cloud config of the board, generate the images mounting
 
 ```bash
 IMAGE=quay.io/kairos/ubuntu:22.04-core-arm64-nvidia-jetson-orin-nx-{{< KairosVersion  >}}
-CLOUD_CONFIG=/cloud/config.yaml
+CLOUD_CONFIG=/cloud/cloud-config.yaml
 docker run -v $CLOUD_CONFIG:/defaults.yaml --privileged \
         -e container_image=$IMAGE \
         -e STATE_SIZE="25500" \
