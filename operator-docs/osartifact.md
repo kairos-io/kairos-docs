@@ -1125,7 +1125,14 @@ spec:
 ```
 
 :::caution Pod-level resources
-The **PodLevelResources** feature gate must be enabled on your cluster (beta since Kubernetes 1.32). If the gate is not present, the `pod` field is silently ignored by the API server. When both `pod` and per-kind resources are set, Kubernetes enforces that pod-level limits are at least the sum of all container-level limits.
+The **PodLevelResources** feature gate must be enabled on your cluster. It went alpha in Kubernetes 1.32 and beta (on by default) in 1.34. If the gate is disabled, the pod field is silently dropped by the API server.
+
+When both pod and per-kind resources are set, Kubernetes will reject the pod at creation if either of these is true:
+
+- the sum of container requests is greater than the pod's requests, or
+- any single container's limit is greater than the pod's limit.
+
+The sum of container limits is allowed to exceed the pod's limit. That will not cause a rejection; the pod's limit still caps total usage at runtime.
 :::
 
 ---
