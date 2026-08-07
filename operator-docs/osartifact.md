@@ -468,6 +468,60 @@ spec:
       key: userdata
 ```
 
+### Artifact Name Overrides
+
+By default, all artifacts use the OSArtifact resource's `metadata.name` as the base filename. You can override the name per artifact kind using `spec.nameOverride`. This is useful when you want to produce multiple artifacts from the same build with distinct, meaningful names.
+
+#### Fields
+
+| Field | Type | Purpose |
+| --- | --- | --- |
+| `spec.nameOverride.iso` | string | Override the ISO image filename (without `.iso` extension). |
+| `spec.nameOverride.cloudImage` | string | Override the cloud image filename (without `.raw` extension). |
+| `spec.nameOverride.azureImage` | string | Override the Azure VHD filename (without `.vhd` extension). |
+| `spec.nameOverride.gceImage` | string | Override the GCE archive filename (without `.gce.tar.gz` extension). |
+| `spec.nameOverride.netboot` | string | Override the netboot artifact filename. |
+| `spec.nameOverride.uki` | string | Override the UKI signed artifact filename (without extension). |
+
+Each name must be 1–253 characters long and can contain only lowercase letters, numbers, and hyphens `-`. It must start and end with a letter or number, and must not contain dots `.` or slashes `/`. If a specific name is not set, the artifact uses the resource's `metadata.name`
+
+#### Example
+
+```yaml
+apiVersion: build.kairos.io/v1alpha2
+kind: OSArtifact
+metadata:
+  name: kairos-build
+  namespace: default
+spec:
+  image:
+    buildOptions:
+      version: v3.6.0
+
+  nameOverride:
+    iso: production
+    cloudImage: stable-v1
+    azureImage: production-vhd
+    gceImage: gcp-stable
+
+  artifacts:
+    arch: amd64
+    iso: true
+    cloudImage: true
+    azureImage: true
+    gceImage: true
+
+  exporters: []
+```
+
+In this example:
+
+- The ISO output is named `production.iso` instead of `kairos-build.iso`.
+- The cloud image is named `stable-v1.raw` instead of `kairos-build.raw`.
+- The Azure VHD is named `production-vhd.vhd` instead of `kairos-build.vhd`.
+- The GCE archive is named `gcp-stable.gce.tar.gz` instead of `kairos-build.gce.tar.gz`.
+- Any artifact kind not listed (e.g., netboot, UKI) falls back to `kairos-build`.
+
 ### Overlay volumes (scoped under artifacts)
 
 To inject files into the ISO or the OS rootfs, use **volumes** and **importers**, then reference the volume names under `spec.artifacts`. The operator passes these to [AuroraBoot](https://github.com/kairos-io/AuroraBoot) when building the ISO:
