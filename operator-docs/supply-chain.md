@@ -26,7 +26,7 @@ Neither policy is shipped by the operator itself. This page documents the recipe
 The following `ClusterPolicy` refuses any `NodeOpUpgrade` whose `spec.image` does not match the trusted upstream Hadron path.
 
 ```yaml
-apiVersion: kyverno.io/v2beta1
+apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
   name: restrict-nodeopupgrade-image
@@ -69,7 +69,7 @@ Upstream Kairos images ([Hadron](https://github.com/kairos-io/hadron)) are cosig
 The Kyverno policy below reproduces that trust chain at pod admission time and blocks any `quay.io/kairos/hadron:*` pod whose image is unsigned or whose signature does not chain to the Hadron CI identity.
 
 ```yaml
-apiVersion: kyverno.io/v2beta1
+apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
   name: verify-hadron-cosign-signature

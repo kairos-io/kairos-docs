@@ -31,10 +31,10 @@ kind: NodeOpUpgrade
 # would look like a spec update to the operator (behavior undefined per the
 # warning above). Bumping the name makes the new commit a new object.
 metadata:
-  name: kairos-upgrade-v3-4-2                     # <-- bumped alongside spec.image
+  name: hadron-mgmt-v0-4-0                         # <-- bumped alongside spec.image
   namespace: default
 spec:
-  image: quay.io/kairos/opensuse:leap-15.6-standard-amd64-generic-v3.4.2-k3sv1.30.11-k3s1
+  image: quay.io/kairos/hadron:v0.4.0-standard-amd64-generic-v1.31.0-k3s-v1.31.0-k3s1
   concurrency: 1
   stopOnFailure: true
 ```
