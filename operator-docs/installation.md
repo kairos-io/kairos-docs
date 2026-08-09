@@ -131,7 +131,7 @@ To remove the operator installed via bundle, delete the `kairos-operator.yaml` f
 
 ## Installing via GitOps (ArgoCD)
 
-The operator does not currently publish a Helm chart, so GitOps deployments point directly at the upstream `config/default` kustomize source and let ArgoCD render it. A minimal `Application` looks like:
+A minimal `Application` pointing at the upstream `config/default` kustomize source:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -202,6 +202,93 @@ spec:
 | `0` (default) | `NodeOpUpgrade`, `NodeOp`, `OSArtifact` CRs |
 
 `SkipDryRunOnMissingResource=true` is the actual mechanism that unblocks the sync; sync-wave ordering just reduces how many times ArgoCD retries before the CRD shows up.
+
+## Installing via GitOps (Flux)
+
+Flux splits install into a **source** CR (where to pull from) and a **reconciler** CR (how to apply it). Two approaches are supported.
+
+### Option A — HelmRelease (recommended)
+
+Uses the OCI Helm chart published on each release to GHCR:
+
+```yaml
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: OCIRepository
+metadata:
+  name: kairos-operator
+  namespace: flux-system
+spec:
+  interval: 12h
+  url: oci://ghcr.io/kairos-io/helm-charts/kairos-operator
+  ref:
+    tag: "0.1.0"          # pin to a release; bump via Renovate or PR
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kairos-operator
+  namespace: flux-system
+spec:
+  interval: 12h
+  chartRef:
+    kind: OCIRepository
+    name: kairos-operator
+    namespace: flux-system
+  targetNamespace: kairos-operator
+  install:
+    createNamespace: true
+```
+
+### Option B — Kustomization (same source as `kubectl apply -k`)
+
+Points at the upstream `config/default` kustomization directly — equivalent to `kubectl apply -k config/default`, but kept reconciled by Flux:
+
+```yaml
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: kairos-operator
+  namespace: flux-system
+spec:
+  interval: 12h
+  url: https://github.com/kairos-io/kairos-operator
+  ref:
+    tag: v0.1.0          # pin to a release; bump via Renovate or PR
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: kairos-operator
+  namespace: flux-system
+spec:
+  interval: 12h
+  path: ./config/default
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: kairos-operator
+  targetNamespace: kairos-operator
+```
+
+### CRD race condition when applying downstream CRs
+
+Flux retries `NotFound` errors automatically on each `retryInterval` (default: 30s), so no annotation equivalent to ArgoCD's `SkipDryRunOnMissingResource` is needed. For explicit sequencing, use `dependsOn` on the `Kustomization` or `HelmRelease` that contains your downstream CRs:
+
+```yaml
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: kairos-upgrades       # contains your NodeOpUpgrade / NodeOp / OSArtifact CRs
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: kairos-operator   # waits until kairos-operator Kustomization is Ready
+  path: ./upgrades
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: my-gitops-repo
+```
 
 ## Next step
 
