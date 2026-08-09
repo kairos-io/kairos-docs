@@ -44,7 +44,7 @@ helm install kairos-operator \
 ```bash
 helm install kairos-operator kairos-operator/kairos-operator \
   --namespace kairos-operator --create-namespace \
-  --set leaderElect=true \
+  --set leaderElect=false \
   --set toolImage=my-registry.example.com/auroraboot:v0.24.0 \
   --set sentinelImage=my-registry.example.com/busybox:latest
 ```
