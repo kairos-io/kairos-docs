@@ -160,7 +160,7 @@ In this file, you can specify various settings for your debugging station. For e
 To automatically boot and install the debugging station, we can use [Auroraboot](/docs/reference/auroraboot). The following example shows how to use the cloud config above with it:
 
 ```bash
-cat <<EOF | docker run --rm -i --net host quay.io/kairos/auroraboot \
+cat <<EOF | docker run --rm -i --net host quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
                     --cloud-config - \
                     --set "container_image={{< OCI variant="standard" >}}"
 #cloud-config

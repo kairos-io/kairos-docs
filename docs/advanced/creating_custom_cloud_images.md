@@ -90,7 +90,7 @@ By default, AuroraBoot sets the state partition size to 3 times the size of the 
 ```bash
 docker run -v "$PWD"/build:/tmp/auroraboot \
              -v /var/run/docker.sock:/var/run/docker.sock \
-             --rm -ti quay.io/kairos/auroraboot \
+             --rm -ti quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
              --set container_image=my-custom-image \
              --set "disable_http_server=true" \
              --set "disable_netboot=true" \

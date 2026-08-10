@@ -96,7 +96,7 @@ docker run --rm -ti \
   -v "$PWD":/build \
   -v "$PWD/keys":/keys \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  quay.io/kairos/auroraboot \
+  quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
   sysext \
   --private-key=/keys/db.key \
   --certificate=/keys/db.pem \

@@ -140,7 +140,7 @@ later boots skip the pull.
 ## Use AuroraBoot
 
 ```bash
-docker run --rm -ti --net host quay.io/kairos/auroraboot \
+docker run --rm -ti --net host quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
                     --set "container_image={{< OCI variant="standard" >}}"
                     # Optionally:
                     # --cloud-config ....
@@ -157,7 +157,7 @@ If you'd rather plug Kairos into an existing netboot setup (pixiecore, dnsmasq, 
 First, extract the kernel, initrd and squashfs from a Kairos ISO:
 
 ```bash
-docker run --rm -v $PWD:/work quay.io/kairos/auroraboot \
+docker run --rm -v $PWD:/work quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
     netboot /work/kairos.iso /work/out kairos
 ```
 
@@ -166,7 +166,7 @@ This writes `kairos-kernel`, `kairos-initrd` and `kairos.squashfs` into `./out`.
 If you don't have a netboot server yet, AuroraBoot can be one. The `start-pixie` subcommand runs Pixiecore directly against the artifacts above:
 
 ```bash
-docker run --rm --net host -v $PWD:/work quay.io/kairos/auroraboot \
+docker run --rm --net host -v $PWD:/work quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
     start-pixie /work/cloud-config.yaml /work/out/kairos.squashfs 0.0.0.0 8090 \
                 /work/out/kairos-initrd /work/out/kairos-kernel
 ```

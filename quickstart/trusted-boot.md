@@ -36,7 +36,7 @@ If you've got SELinux Enabled, you will get a "Permission denied" error. To avoi
 :::
 
 ```bash
-docker run -v $PWD/keys:/work/keys -ti --rm quay.io/kairos/auroraboot:v0.16.2 genkey --expiration-in-days 365 -o /work/keys "E-corp"
+docker run -v $PWD/keys:/work/keys -ti --rm quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} genkey --expiration-in-days 365 -o /work/keys "E-corp"
 ```
 
 If everything went correctly you should see similar output to this:
@@ -107,7 +107,7 @@ If you've got SELinux Enabled, you will get a "Permission denied" error. To avoi
 docker run -v /var/run/docker.sock:/var/run/docker.sock \
  -v ${PWD}/build/:/output \
  -v ${PWD}/keys:/keys \
- quay.io/kairos/auroraboot:v0.16.2 \
+ quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
  build-uki \
  --output-dir /output/ \
  --public-keys /keys \

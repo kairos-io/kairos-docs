@@ -29,7 +29,7 @@ Use AuroraBoot with `disk.maas=true`. AuroraBoot produces a raw disk image with 
 
 ```bash
 docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock \
-  -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot \
+  -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
   --set "disable_http_server=true" \
   --set "disable_netboot=true" \
   --set "disk.maas=true" \
