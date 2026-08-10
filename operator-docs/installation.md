@@ -212,7 +212,7 @@ Flux splits install into a **source** CR (where to pull from) and a **reconciler
 Uses the OCI Helm chart published on each release to GHCR:
 
 ```yaml
-apiVersion: source.toolkit.fluxcd.io/v1beta2
+apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
   name: kairos-operator
