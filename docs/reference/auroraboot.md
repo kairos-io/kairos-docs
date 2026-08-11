@@ -51,7 +51,7 @@ Unfortunately for macOS systems we cannot run the netboot through docker as it's
 Building ISOs still works as long as you mount the container `/tmp` disk to a local dir so its exported there like so:
 
 ```bash
-docker run --rm -ti -v "$PWD"/cloud-config.yaml:/cloud-config.yaml -v ${PWD}:/tmp quay.io/kairos/auroraboot \
+docker run --rm -ti -v "$PWD"/cloud-config.yaml:/cloud-config.yaml -v ${PWD}:/tmp quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
                     --set "artifact_version={{< KairosVersion  >}}" \
                     --set "release_version={{< KairosVersion  >}}" \
                     --set "flavor={{< FlavorCode  >}}" \
@@ -83,7 +83,7 @@ AuroraBoot will download the artifacts required for bootstrapping the nodes, and
 For example, to netboot a machine with the latest version of Kairos and <FlavorCode /> using a cloud config, you would run the following command:
 
 ```bash
-docker run --rm -ti --net host quay.io/kairos/auroraboot \
+docker run --rm -ti --net host quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
                     --set "container_image={{< OCI variant="standard" >}}" \
                     --cloud-config https://...
 ```
@@ -114,7 +114,7 @@ Now we can run AuroraBoot with the container image we selected:
 By indicating a `container_image`, AuroraBoot will pull the image locally and start to serve it for network booting.
 
 ```bash
-docker run --rm -ti --net host quay.io/kairos/auroraboot \
+docker run --rm -ti --net host quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
                     --set "container_image={{< OCI variant="standard" >}}"
 ```
 
@@ -128,7 +128,7 @@ This implies that the host has a docker daemon, and we have to give access to it
 ```bash
 docker pull {{< OCI variant="standard" >}}
 # This will use the container image from the host's docker daemon
-docker run --rm -ti -v /var/run/docker.sock:/var/run/docker.sock --net host quay.io/kairos/auroraboot \
+docker run --rm -ti -v /var/run/docker.sock:/var/run/docker.sock --net host quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
                     --set "container_image=oci:{{< OCI variant="standard" >}}"
 ```
 </TabItem>
@@ -210,7 +210,7 @@ Build the ISO:
 ```bash
 docker run -v "$PWD"/cloud-config.yaml:/cloud-config.yaml \
                     -v "$PWD"/build:/tmp/auroraboot \
-                    --rm -ti quay.io/kairos/auroraboot \
+                    --rm -ti quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
                     --set container_image={{< OCI variant="core" >}} \
                     --set "disable_http_server=true" \
                     --set "disable_netboot=true" \
@@ -241,7 +241,7 @@ ls
 
 Build the ISO:
 ```bash
-docker run -v "$PWD"/build:/tmp/auroraboot -v /var/run/docker.sock:/var/run/docker.sock --rm -ti quay.io/kairos/auroraboot \
+docker run -v "$PWD"/build:/tmp/auroraboot -v /var/run/docker.sock:/var/run/docker.sock --rm -ti quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
                     --set "artifact_version={{< KairosVersion  >}}-{{< K3sVersionOCI  >}}" \
                     --set "release_version={{< KairosVersion  >}}" \
                     --set "flavor={{< FlavorCode  >}}" \
@@ -376,19 +376,19 @@ cloud_config: |
 To use the configuration file with AuroraBoot, run AuroraBoot specifying the file or URL of the config as first argument:
 
 ```bash
-docker run --rm -ti -v "$PWD"/cloud-config.yaml:/cloud-config.yaml --net host quay.io/kairos/auroraboot /cloud-config.yaml
+docker run --rm -ti -v "$PWD"/cloud-config.yaml:/cloud-config.yaml --net host quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} /cloud-config.yaml
 ```
 
 The CLI options can be used in place of specifying a file, and to set fields of it. Any field of the YAML file, excluding `cloud_config` can be configured with the `--set` for instance, to disable netboot we can run AuroraBoot with:
 
 ```bash
-docker run --rm -ti --net host quay.io/kairos/auroraboot ....  --set "disable_netboot=true"
+docker run --rm -ti --net host quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} ....  --set "disable_netboot=true"
 ```
 
 To specify a cloud config file instead, use `--cloud-config` (can be also url):
 
 ```bash
-docker run --rm -ti -v "$PWD"/cloud-config.yaml:/cloud-config.yaml --net host quay.io/kairos/auroraboot .... --cloud-config /cloud-config.yaml
+docker run --rm -ti -v "$PWD"/cloud-config.yaml:/cloud-config.yaml --net host quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} .... --cloud-config /cloud-config.yaml
 ```
 
 Both the config file and the cloud-config file can be a URL.
@@ -421,7 +421,7 @@ cp my-installer-script.sh files-iso/extra/
 
 docker run -v "$PWD"/files-iso:/files-iso \
              -v "$PWD"/build:/tmp/auroraboot \
-             --rm -ti quay.io/kairos/auroraboot \
+             --rm -ti quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
              build-iso --overlay-iso /files-iso \
              --output /tmp/auroraboot $IMAGE
 ```
@@ -432,7 +432,7 @@ docker run -ti --rm \
              -v $PWD/system-extensions:/system-extensions \
              -v $PWD/build:/result \
              -v $PWD/keys/:/keys \
-             quay.io/kairos/auroraboot \
+             quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
              build-uki -t iso -d /result/ \
              --overlay-iso /system-extensions \
              $CONTAINER_IMAGE
@@ -464,7 +464,7 @@ cp my-custom-tool rootfs-overlay/usr/local/bin/
 
 docker run -v "$PWD"/rootfs-overlay:/rootfs-overlay \
              -v "$PWD"/build:/tmp/auroraboot \
-             --rm -ti quay.io/kairos/auroraboot \
+             --rm -ti quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
              build-iso --overlay-rootfs /rootfs-overlay \
              --output /tmp/auroraboot $IMAGE
 ```
@@ -475,7 +475,7 @@ docker run -ti --rm \
              -v $PWD/rootfs-overlay:/rootfs-overlay \
              -v $PWD/build:/result \
              -v $PWD/keys/:/keys \
-             quay.io/kairos/auroraboot \
+             quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
              build-uki -t iso -d /result/ \
              --overlay-rootfs /rootfs-overlay \
              $CONTAINER_IMAGE
@@ -516,7 +516,7 @@ We would then set the user to `mudler` and the password to `foobar` when running
 
 ```bash
 docker run --rm -ti -v "$PWD"/cloud-config.yaml:/cloud-config.yaml --net host \
-                                quay.io/kairos/auroraboot \
+                                quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
                                 --cloud-config /cloud-config.yaml \
                                 --set "github.user=mudler" \
                                 --set "kairos.password=foobar"
@@ -528,7 +528,7 @@ We can indeed use the template in the example folder with the command above:
 
 ```bash
 docker run --rm -ti --net host \
-                        quay.io/kairos/auroraboot \
+                        quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
                         --cloud-config https://raw.githubusercontent.com/kairos-io/kairos/master/examples/auroraboot/master-template.yaml \
                         --set "github.user=mudler" \
                         --set "kairos.password=foobar"
@@ -537,7 +537,7 @@ docker run --rm -ti --net host \
 To pass-by a cloud-config via pipes, set `--cloud-config -`, for example:
 
 ```yaml
-cat <<EOF | docker run --rm -i --net host quay.io/kairos/auroraboot \
+cat <<EOF | docker run --rm -i --net host quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
                     --cloud-config - \
                     --set "container_image={{< OCI variant="standard" >}}"
 #cloud-config
@@ -621,7 +621,7 @@ Build the custom ISO with the cloud config:
 docker run -v "$PWD"/cloud-config.yaml:/cloud-config.yaml \
              -v "$PWD"/build:/tmp/auroraboot \
              -v /var/run/docker.sock:/var/run/docker.sock \
-             --rm -ti quay.io/kairos/auroraboot \
+             --rm -ti quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
              --set container_image=oci:<IMAGE> \
              --set "disable_http_server=true" \
              --set "disable_netboot=true" \
@@ -636,7 +636,7 @@ Build the custom ISO with the cloud config:
 ```bash
 docker run -v "$PWD"/cloud-config.yaml:/cloud-config.yaml \
              -v "$PWD"/build:/tmp/auroraboot \
-             --rm -ti quay.io/kairos/auroraboot \
+             --rm -ti quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
              --set container_image=oci:{{< OCI variant="core" >}} \
              --set "disable_http_server=true" \
              --set "disable_netboot=true" \
@@ -659,7 +659,7 @@ wget https://raw.githubusercontent.com/kairos-io/packages/main/packages/livecd/g
 docker run -v "$PWD"/cloud-config.yaml:/cloud-config.yaml \
              -v "$PWD"/data:/tmp/data \
              -v "$PWD"/build:/tmp/auroraboot \
-             --rm -ti quay.io/kairos/auroraboot \
+             --rm -ti quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
              --set container_image={{< OCI variant="core" >}} \
              --set "disable_http_server=true" \
              --set "disable_netboot=true" \
@@ -675,7 +675,7 @@ See the [Airgap example](/docs/examples/airgap) in the [examples section](/docs/
 ### Netboot from container images
 
 ```bash
-docker run -v "$PWD"/cloud-config.yaml:/cloud-config.yaml --rm -ti --net host quay.io/kairos/auroraboot \
+docker run -v "$PWD"/cloud-config.yaml:/cloud-config.yaml --rm -ti --net host quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
         --set container_image={{< OCI variant="core" >}} \
         --cloud-config /cloud-config.yaml
 ```
@@ -685,7 +685,7 @@ docker run -v "$PWD"/cloud-config.yaml:/cloud-config.yaml --rm -ti --net host qu
 The `netboot` subcommand pulls the kernel, initrd and squashfs out of a Kairos ISO so they can be served by any netboot infrastructure (pixiecore, dnsmasq, an existing TFTP server, etc.).
 
 ```bash
-docker run --rm -v $PWD:/work quay.io/kairos/auroraboot \
+docker run --rm -v $PWD:/work quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
     netboot /work/kairos.iso /work/out kairos
 ```
 
@@ -699,7 +699,7 @@ Positional arguments:
 The `start-pixie` subcommand runs Pixiecore against a kernel, initrd and squashfs you already have — for example, the files produced by `netboot` above, or files built by your own pipeline.
 
 ```bash
-docker run --rm --net host -v $PWD:/work quay.io/kairos/auroraboot \
+docker run --rm --net host -v $PWD:/work quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
     start-pixie /work/cloud-config.yaml /work/out/kairos.squashfs 0.0.0.0 8090 \
                 /work/out/kairos-initrd /work/out/kairos-kernel
 ```
@@ -723,7 +723,7 @@ Consider the following example:
 
 ```bash
 docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock \
-  -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot \
+  -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
   --debug \
   --set "disable_http_server=true" \
   --set "disable_netboot=true" \
@@ -738,7 +738,7 @@ If you need to ensure the state partition can accommodate larger future images, 
 
 ```bash
 docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock \
-  -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot \
+  -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
   --debug \
   --set "disable_http_server=true" \
   --set "disable_netboot=true" \
@@ -755,7 +755,7 @@ To generate GCE and VHD images set `disk.gce=true` or `disk.vhd=true` respective
 ```bash
 # Build a GCE-compatible image
 docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock \
-  -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot \
+  -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
   --debug \
   --set "disable_http_server=true" \
   --set "container_image={{< OCI variant="standard" >}}" \
@@ -770,7 +770,7 @@ or for VHD images:
 ```bash
 # Build a VHD image compatible with Azure
 docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock \
-  -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot \
+  -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
   --debug \
   --set "disable_http_server=true" \
   --set "container_image={{< OCI variant="standard" >}}" \
@@ -789,7 +789,7 @@ for the end-to-end deployment guide.
 ```bash
 # Build a MaaS-ready image
 docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock \
-  -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot \
+  -v $PWD:/aurora --rm -ti quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
   --debug \
   --set "disable_http_server=true" \
   --set 'container_image={{< OCI variant="standard" >}}' \
@@ -833,7 +833,7 @@ cloud_config: |
 And then run:
 
 ```bash
-docker run -v "$PWD"/aurora.yaml:/aurora.yaml --rm -ti --net host quay.io/kairos/auroraboot /aurora.yaml
+docker run -v "$PWD"/aurora.yaml:/aurora.yaml --rm -ti --net host quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} /aurora.yaml
 ```
 
 
@@ -868,7 +868,7 @@ You must provide:
 For example if your ISO is at `/opt/images/kairos-uki.iso`, start AuroraBoot with:
 
 ```bash
-docker run --privileged -v /opt/images/:/aurora --rm -ti quay.io/kairos/auroraboot uki-pxe /aurora/kairos-uki.iso
+docker run --privileged -v /opt/images/:/aurora --rm -ti quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} uki-pxe /aurora/kairos-uki.iso
 ```
 
 ---

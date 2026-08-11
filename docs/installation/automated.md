@@ -152,7 +152,7 @@ $ docker pull $IMAGE
 $ docker run -v $PWD/cloud-config.yaml:/cloud-config.yaml \
                     -v $PWD/build:/tmp/auroraboot \
                     -v /var/run/docker.sock:/var/run/docker.sock \
-                    --rm -ti quay.io/kairos/auroraboot \
+                    --rm -ti quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
                     --set container_image=oci:$IMAGE \
                     --set "disable_http_server=true" \
                     --set "disable_netboot=true" \

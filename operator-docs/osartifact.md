@@ -603,7 +603,7 @@ spec:
 
   importers:
     - name: generate-uki-keys
-      image: quay.io/kairos/auroraboot:latest
+      image: quay.io/kairos/auroraboot:{{< AuroraBootVersion >}}
       command: ["/bin/sh", "-c"]
       args:
         - auroraboot genkey my-uki -o /keys

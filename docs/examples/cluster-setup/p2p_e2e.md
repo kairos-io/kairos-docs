@@ -99,7 +99,7 @@ We now can run [AuroraBoot](/docs/reference/auroraboot) with <OCICode variant="s
 AuroraBoot takes `cloud-config` files also from _STDIN_, so we will pipe the configuration file to it, and specify the container image that we want to use for our nodes:
 
 ``` bash
-cat <<EOF | docker run --rm -i --net host quay.io/kairos/auroraboot \
+cat <<EOF | docker run --rm -i --net host quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
                     --cloud-config - \
                     --set "container_image={{< OCI variant="standard" >}}"
 #cloud-config

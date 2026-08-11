@@ -121,7 +121,7 @@ docker build -t my-kairos-multidisk .
 docker run --rm \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v "$PWD/output:/output" \
-  quay.io/kairos/auroraboot:v0.19.4 --debug \
+  quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} --debug \
   build-iso --output /output/ \
   docker:my-kairos-multidisk
 ```
