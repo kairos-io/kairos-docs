@@ -77,6 +77,15 @@ export const alternativeTracks = [
 
 export const pressItems: PressItem[] = [
   {
+    dateISO: '2026-08-14',
+    dateLabel: 'Aug 14, 2026',
+    source: 'CNCF Blog',
+    text: 'Eleven minutes, zero humans: Building a self-healing Kubernetes upgrade pipeline on Kairos',
+    url: 'TODO',
+    logo: '/img/logo_cloudnative.png',
+    logoAlt: 'CNCF logo',
+  },
+  {
     dateISO: '2026-05-13',
     dateLabel: 'May 13, 2026',
     source: 'CNCF Blog',
