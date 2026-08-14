@@ -30,6 +30,8 @@ replacement.
 
 For the full list of `--model` values (including `generic`, `rpi3`, `rpi4`) see
 [The Kairos Factory](/docs/reference/kairos-factory/#supported-device-targets).
+NVIDIA DGX Spark uses a separate UEFI/SBSA flow. See
+[NVIDIA DGX Spark](/docs/installation/nvidia_dgx_spark/).
 
 ## Prerequisites
 
