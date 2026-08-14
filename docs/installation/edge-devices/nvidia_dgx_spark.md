@@ -55,9 +55,27 @@ repository in a derived image if you need host CUDA packages.
 
 ## Create installable artifacts
 
-Pass the pushed image to [AuroraBoot](/docs/reference/auroraboot/) to create an
-ISO or another Kairos artifact. DGX Spark uses the standard Kairos installation
-and upgrade flow because it boots with UEFI.
+Create an output directory:
+
+```bash
+mkdir -p build
+```
+
+Run AuroraBoot with the image that you pushed:
+
+```bash
+docker run --rm -v "$PWD/build:/output" \
+  quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} \
+  build-iso --output /output/ \
+  oci:my-registry.example.com/kairos-dgx-spark:v1.0.0
+```
+
+AuroraBoot writes the installable ISO and its checksum to the `build` directory.
+See the [AuroraBoot reference](/docs/reference/auroraboot/) for other artifact
+types and configuration options.
+
+DGX Spark uses the standard Kairos installation and upgrade flow because it
+boots with UEFI.
 
 You can use providers, Trusted Boot, and stage extensions with this model. See
 the [Kairos Factory reference](/docs/reference/kairos-factory/) for the available
