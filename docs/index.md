@@ -6,6 +6,17 @@ sidebar_position: 2
 slug: /
 ---
 
+## Start here
+
+Two entry points, depending on how you like to explore Kairos:
+
+- **[By job / persona](/docs/start/)** — pick a persona (edge AI fleet, regulated platform, greenfield evaluator, factory / OEM shipper, trusted-hardware gateway) and get a curated set of Level 1 / Level 2 / Level 3 links.
+- **[By product](/docs/products/)** — pick a product (Factory, Builder, Provision, Fleet, Operator, Installer, Lab) and see how the pieces compose.
+
+The rest of this site is organised by section — installation, upgrade, architecture, reference, examples. Both entry points above link into that content.
+
+---
+
 Welcome to the Kairos Documentation
 
 Kairos is the open-source project that simplifies Edge, cloud, and bare metal OS lifecycle management. With a unified Cloud Native API, Kairos is community-driven, open source, and distro agnostic.

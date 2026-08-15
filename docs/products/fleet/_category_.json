@@ -1,0 +1,10 @@
+{
+  "label": "Kairos Fleet",
+  "position": 4,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "products/fleet/index"
+  }
+}

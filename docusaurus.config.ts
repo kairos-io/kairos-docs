@@ -428,15 +428,14 @@ const config: Config = {
       },
       items: [
         {
-          to: '/quickstart',
+          to: '/docs/',
+          label: 'Docs',
           position: 'left',
-          label: 'Quick Start',
         },
         {
-          type: 'docSidebar',
-          sidebarId: 'tutorialSidebar',
+          to: '/docs/developer-docs',
+          label: 'Developer docs',
           position: 'left',
-          label: 'Docs',
         },
         {to: '/blog', label: 'Blog', position: 'left'},
         {
