@@ -81,7 +81,7 @@ export const pressItems: PressItem[] = [
     dateLabel: 'Aug 14, 2026',
     source: 'CNCF Blog',
     text: 'Eleven minutes, zero humans: Building a self-healing Kubernetes upgrade pipeline on Kairos',
-    url: 'TODO',
+    url: 'https://www.cncf.io/blog/2026/08/14/eleven-minutes-zero-humans-building-a-self-healing-kubernetes-upgrade-pipeline-on-kairos/',
     logo: '/img/logo_cloudnative.png',
     logoAlt: 'CNCF logo',
   },
