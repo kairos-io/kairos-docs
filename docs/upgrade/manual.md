@@ -35,12 +35,35 @@ To specify an image, use the `--source` flag:
 ```bash
 sudo kairos-agent upgrade --source <type>:<address>
 ```
-Where type can be `dir` or `oci` and address is the path to the directory in the `dir` case or the `<repo/image:tag>` combination in the `oci` case.
 
-For example, if you wanted to upgrade to the latest available stable release you could run the following command:
+The `type` selects where the artifact comes from and how it is consumed by `kairos-agent`. Four types are supported:
+
+| Type      | Address                          | Expected artifact                                                                                                                                                              |
+| --------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `oci`     | `repo/image:tag`                 | An OCI image pulled from a container registry. If the tag is omitted, `:latest` is assumed.                                                                                    |
+| `ocifile` | Path to a local tarball          | An OCI or Docker image archive already on the node, for example the output of `docker save`.                                                                                   |
+| `dir`     | Path to a local directory        | An already extracted root filesystem. Its contents are copied into the target slot, excluding runtime mounts like `/proc`, `/sys`, `/dev`, `/run`, `/tmp`, `/mnt` and `/host`. |
+| `file`    | Path to a single local file      | A prebuilt filesystem image (for example a `.img` blob) copied byte for byte into the target slot. This is the low level path and is not the format produced by `docker save`. |
+
+For example, to upgrade to the latest available stable release from the default Kairos registry:
 
 ```bash
 sudo kairos-agent upgrade --source oci:{{< OCI variant="standard" >}}
+```
+
+To upgrade offline from a container image previously saved with `docker save` and copied to the node:
+
+```bash
+# On a machine with registry access:
+docker save {{< OCI variant="standard" >}} -o kairos-upgrade.tar
+# Copy kairos-upgrade.tar to the target node, then on the node:
+sudo kairos-agent upgrade --source ocifile:/var/share/kairos-upgrade.tar
+```
+
+To upgrade from an already extracted root filesystem on the node:
+
+```bash
+sudo kairos-agent upgrade --source dir:/tmp/extracted-rootfs
 ```
 
 Once you have tested the new system and are happy with it, you can upgrade the recovery system.
