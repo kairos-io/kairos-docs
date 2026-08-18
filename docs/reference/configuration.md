@@ -122,6 +122,34 @@ install:
   # force can be used to force installation.
   force: false
 
+  # Enforce the DevSec ssh-baseline (https://github.com/dev-sec/ssh-baseline)
+  # auth-mode controls on the installed system:
+  #   PasswordAuthentication no
+  #   AuthenticationMethods publickey
+  #   ChallengeResponseAuthentication no
+  # The crypto / forwarding / timeouts / moduli parts of the baseline are
+  # already applied by kairos-init on every image; this flag opts into the
+  # stricter key-only login policy on top.
+  #
+  # Requirements enforced by kairos-agent at install time:
+  #   - At least one user must have ssh_authorized_keys set. If none does, the
+  #     installed system would be unreachable over SSH and the install is
+  #     refused. To install a console-only system without any SSH access, leave
+  #     ssh_hardening unset.
+  #   - A passwd on the same user is honoured for console login, but the
+  #     installer prints a warning because it will not be usable over SSH.
+  #
+  # To relax a specific directive (e.g. re-enable keyboard-interactive), drop
+  # a higher-priority sshd_config.d file such as 01-my-override.conf on the
+  # installed system. sshd loads drop-ins in lexical order under first-value-
+  # wins semantics, so a lower prefix beats the 50- file this flag installs.
+  #
+  # Skipped without effect on base images shipping OpenSSH < 8.5 (Ubuntu 20.04):
+  # the drop-in's KexAlgorithms list uses sntrup761x25519-sha512@openssh.com
+  # which older sshd rejects at config parse. Any base with OpenSSH >= 8.5
+  # (Hadron, Ubuntu 22.04+, Debian 12+, RHEL 9+, Alpine 3.17+) is covered.
+  ssh_hardening: false
+
   # Creates these dirs in the rootfs during installation. As the rootfs is RO from boot, sometimes we find that we
   # some applications want to write to non-standard paths like /data
   # If that dir is not already in the rootfs it makes it difficult to create that path on an RO system
