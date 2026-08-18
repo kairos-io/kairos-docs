@@ -1,0 +1,11 @@
+{
+  "label": "Cloud servers",
+  "link": {
+    "type": "generated-index",
+    "slug": "/installation/cloud-servers",
+    "title": "Cloud server Installation",
+    "description": "Learn how to install Kairos on different cloud providers."
+  },
+  "collapsible": true,
+  "collapsed": true
+}
