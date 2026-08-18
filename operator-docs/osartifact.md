@@ -485,11 +485,6 @@ By default, all artifacts use the OSArtifact resource's `metadata.name` as the b
 
 Each name must be 1–253 characters long and can contain only lowercase letters, numbers, and hyphens `-`. It must start and end with a letter or number. If a specific name is not set, the artifact uses the resource's `metadata.name`.
 
-
-:::warning Warning
-When `spec.artifacts.netboot` is enabled together with `spec.artifacts.iso`, the netboot artifact resolves its source ISO path using `nameOverride.netboot` (falling back to `metadata.name`), while the ISO itself is written using `nameOverride.iso`. If these two overrides differ, the netboot step cannot locate the ISO on disk. When both `iso` and `netboot` are enabled, `nameOverride.netboot` must equal `nameOverride.iso`.
-:::
-
 #### Example
 
 ```yaml
