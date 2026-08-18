@@ -16,7 +16,6 @@ export default function ContainerRepoLink({
   return (
     <a
       href={href}
-      className={`plausible-event-flavor=${trimmedFlavor}`}
       target="_blank"
       rel="noreferrer"
     >

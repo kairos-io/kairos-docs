@@ -219,26 +219,8 @@ const config: Config = {
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
   trailingSlash: true,
-  scripts: isNetlifyProduction
-    ? [
-        {
-          src: 'https://plausible.io/js/script.outbound-links.tagged-events.js',
-          defer: true,
-          'data-domain': 'kairos.io',
-        },
-      ]
-    : [],
+  scripts: [],
   headTags: [
-    ...(isNetlifyProduction
-      ? [
-          {
-            tagName: 'script',
-            attributes: {},
-            innerHTML:
-              'window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }',
-          },
-        ]
-      : []),
     ...(!isNetlifyProduction
       ? [
           {
