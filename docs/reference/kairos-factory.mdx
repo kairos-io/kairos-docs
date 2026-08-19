@@ -149,7 +149,7 @@ Here is a list of flags, explanation and what are the possible and default value
 | -v                         | Set version of the artifact that we are building                  | Any                        | None (REQUIRED) |
 | -l                         | Sets the log level                                                | info,warn,debug,trace      | info            |
 | -s                         | Sets the stage to run                                             | install, init, all         | all             |
-| -m                         | Sets the model — pulls in board-specific packages, kernels and cloud-configs. See [Supported device targets](#supported-device-targets). | generic, rpi3, rpi4, nvidia-jetson-agx-orin, nvidia-jetson-orin-nx, nvidia-jetson-thor | generic         |
+| -m                         | Sets the model — pulls in board-specific packages, kernels and cloud-configs. See [Supported device targets](#supported-device-targets). | generic, rpi3, rpi4, nvidia-jetson-agx-orin, nvidia-jetson-orin-nx, nvidia-jetson-thor, nvidia-dgx-spark | generic         |
 | -p / --provider            | Provider plugin name (repeatable for multiple providers)          | e.g. k3s, k0s              | None            |
 | --provider-&lt;NAME&gt;-version | Version for the given provider (e.g. `--provider-k3s-version`)     | Release tag from provider (e.g. k3s: [v1.35.1+k3s1](https://github.com/k3s-io/k3s/releases), k0s: [v1.35.1+k0s.1](https://github.com/k0sproject/k0s/releases)) | None            |
 | --provider-&lt;NAME&gt;-config  | Config file for the given provider (e.g. `--provider-k3s-config`)  | Path to config file        | None            |
@@ -186,12 +186,16 @@ on that hardware without extra work in your Dockerfile.
 | `nvidia-jetson-agx-orin`     | NVIDIA Jetson AGX Orin (L4T r36.x)                                 | [NVIDIA Jetson (build image)](/docs/installation/nvidia-jetson-images/) |
 | `nvidia-jetson-orin-nx`      | NVIDIA Jetson Orin NX (L4T r36.x)                                  | [NVIDIA Jetson (build image)](/docs/installation/nvidia-jetson-images/) |
 | `nvidia-jetson-thor`         | NVIDIA Jetson AGX Thor / T264 (L4T r38.x)                          | [NVIDIA Jetson (build image)](/docs/installation/nvidia-jetson-images/) |
+| `nvidia-dgx-spark`           | NVIDIA DGX Spark / GB10 (ARM64 UEFI/SBSA)                          | [NVIDIA DGX Spark](/docs/installation/nvidia_dgx_spark/) |
 
 The Jetson build guide covers all three NVIDIA models in one place; per-board flashing and
 install steps stay on the existing device pages
 ([AGX Orin](/docs/installation/nvidia_agx_orin/),
 [Orin NX](/docs/installation/nvidia_orin_nx/),
 [AGX Thor](/docs/installation/nvidia_agx_thor/)).
+
+DGX Spark is not a Jetson/L4T device. Use its
+[separate build guide](/docs/installation/nvidia_dgx_spark/).
 
 ## Phases
 
