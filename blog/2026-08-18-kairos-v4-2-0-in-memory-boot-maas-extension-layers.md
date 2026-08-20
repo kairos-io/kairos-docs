@@ -42,7 +42,7 @@ Kairos now supports deployment through **Canonical MaaS (Metal as a Service)**, 
 
 Kairos adds initial support for **NVIDIA DGX Spark** boards (GB10 Grace-Blackwell), including bundled signing keys, board-specific console options, and package mappings in `kairos-init`.
 
-This lands alongside a broader cleanup of how Kairos builds NVIDIA images: AuroraBoot now emits individual partition images for flashing directly, replacing per-board custom scripts with one standard flow — the same work that already made building for boards like the AGX Orin more uniform. A dedicated DGX Spark build guide is on its way; watch the [NVIDIA docs section](https://kairos.io/docs/installation/edge-devices) for it to land.
+This lands alongside a broader cleanup of how Kairos builds NVIDIA images: AuroraBoot now emits individual partition images for flashing directly, replacing per-board custom scripts with one standard flow — the same work that already made building for boards like the AGX Orin more uniform. See the [DGX Spark build guide](https://kairos.io/docs/installation/nvidia_dgx_spark) for the steps.
 
 ## A hardening baseline for Hadron
 
