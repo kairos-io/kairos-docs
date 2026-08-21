@@ -225,7 +225,7 @@ spec:
   interval: 12h
   url: oci://ghcr.io/kairos-io/helm-charts/kairos-operator
   ref:
-    tag: "0.1.0"          # pin to a release; bump via Renovate or PR
+    tag: "0.1.3"          # pin to a release; bump via Renovate or PR
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -257,7 +257,7 @@ spec:
   interval: 12h
   url: https://github.com/kairos-io/kairos-operator
   ref:
-    tag: v0.1.0          # pin to a release; bump via Renovate or PR
+    tag: v0.1.3          # pin to a release; bump via Renovate or PR
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -285,6 +285,7 @@ metadata:
   name: kairos-upgrades       # contains your NodeOpUpgrade / NodeOp / OSArtifact CRs
   namespace: flux-system
 spec:
+  interval: 12h
   dependsOn:
     - name: kairos-operator   # waits until kairos-operator Kustomization is Ready
   path: ./upgrades
