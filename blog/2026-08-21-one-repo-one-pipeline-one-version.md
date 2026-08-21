@@ -13,11 +13,11 @@ If you've built Kairos from source in the last few days, you've noticed: `kairos
 
 **TL;DR, if you just need to keep building:**
 
-- The five repos are archived, not deleted. Their code, full git history, and existing published tags all still work — see below if you want proof.
+- The five repos are archived, not deleted. Their code, full git history, and existing published tags all still work — receipts at the bottom if you want them.
 - Using the SDK: import `github.com/kairos-io/kairos/sdk/...` (e.g. `sdk/bus`, `sdk/collector`, `sdk/machine`) instead of `github.com/kairos-io/kairos-sdk`. Code pinned to old `kairos-sdk` tags keeps building unchanged.
-- Using kairos-init: same container image, same tag pattern — `quay.io/kairos/kairos-init:vX.Y.Z` — just built from the monorepo now.
-- The next `kairos-init` tag will jump from `v0.16.x` to something like `v4.x.x`. That is **not** four major versions of breaking change — see "About that version jump" below before you panic.
-- Everything else here is the why, the pipeline, and the git-history receipts, for anyone who wants them.
+- Using kairos-init, kairos-agent, immucore, kcrypt-discovery-challenger: same binaries, same container images, same tag pattern — just built from the monorepo now, versioned off `kairos-io/kairos`'s own tag instead of their own.
+- Their next release will jump from their own `v0.x` / `v2.x` number straight to the shared `v4.x.x` line. That is **not** a wall of breaking changes compressed into one release — see "About that version jump" at the bottom before you panic.
+- The SDK doesn't get this jump at all — it's not an independently tagged artifact anymore, so there's no "next sdk version" to be surprised by. Details below.
 
 {/* truncate */}
 
@@ -34,34 +34,6 @@ So: monorepo. Not because monorepos are fashionable, but because it's the most d
 Each component came in with [`git subtree add`](https://github.com/kairos-io/kairos/commit/1b6014b33929163a64ccad5fdf242a0a70bd7d70), one PR per component — [kairos-sdk](https://github.com/kairos-io/kairos/pull/4343), then [agent, immucore, kairos-init, and kcrypt together](https://github.com/kairos-io/kairos/pull/4344). The five source repos are archived, with a banner pointing here.
 
 Nothing published from them stops working. Every Go module tag (`go get github.com/kairos-io/kairos-agent/v2@v2.31.1`) still resolves through the Go module proxy forever, because the proxy caches it independently of the source repo's state. Every container tag on `quay.io` stays pullable. Archived just means read-only on GitHub, not gone.
-
-## Does the git history survive?
-
-We checked, rather than assumed. Short answer: yes, but with one real wrinkle worth knowing about.
-
-`git subtree add` grafts the entire source repo as a second parent of the merge commit — it doesn't rewrite or truncate anything. We verified this per component by walking the ancestry of the commit each subtree merge points at:
-
-| Component | Commits in the original repo | Commits reachable from the graft point |
-|---|---|---|
-| `kairos-agent` → `agent/` | 2,031 | 2,030 |
-| `immucore` → `immucore/` | 648 | 645 |
-| `kairos-sdk` → `sdk/` | 922 | 921 |
-| `kairos-init` → `kairos-init/` | 505 | 504 |
-| `kcrypt-discovery-challenger` → `kcrypt/` | 347 | 344 |
-
-(The handful missing per component are the "add archive notice" commits made on each repo after the graft — nothing from before it.) Every one of those commits is a real, permanent, unreachable-by-`git gc` part of `kairos-io/kairos`'s history now.
-
-`git blame` finds it without help. Blame a line in `agent/internal/agent/agent.go` today and it correctly walks past the merge into `kairos-agent`'s original commit from 2022, author and all.
-
-The wrinkle: `git log -- agent/some/file.go` does *not* walk through automatically. `git subtree add` merges the foreign tree in at a prefix; it doesn't rewrite the foreign history's paths to match, so git's default path-history simplification — which drives `git log <path>` and GitHub's "History" button on a file — doesn't connect the two sides on its own. If you want the pre-move commit log for something now under `agent/`, go to the graft commit directly:
-
-```sh
-git log 14f0d3bf68b60c86efbfd1dd857a0d9087bac7b1 -- some/file.go
-```
-
-(Swap in the commit named in `agent/`'s "Add 'agent/' from commit '...'" merge — [immucore](https://github.com/kairos-io/kairos/commit/00b8fb5c11595dc019be749293222be920cb3155), [sdk](https://github.com/kairos-io/kairos/commit/1b6014b33929163a64ccad5fdf242a0a70bd7d70), [kairos-init](https://github.com/kairos-io/kairos/commit/108c45182d318da0c118513e4b3567f021380b04), [kcrypt](https://github.com/kairos-io/kairos/commit/eb51205c693c09bbd7f3db8e8295abc8128637b1) each have their own.) Or just clone the archived repo — it isn't going anywhere either.
-
-So: nothing was lost. Something did get a little harder to find, and now you know where to look.
 
 ## The pipeline finally looks like one
 
@@ -92,10 +64,47 @@ One tag on `kairos-io/kairos`, e.g. `v4.3.0`, now produces everything: the `kair
 
 ## About that version jump
 
-If you build your own images against `kairos-init`, you're about to see it go from `v0.16.3` to something like `v4.3.0` in one release. That number, on its own, looks like a scare jump — four majors in one bump usually means "expect everything to be different."
+If you build your own images, four components are about to jump straight to the shared `v4.x.x` line, all at once:
 
-It doesn't mean that here. It's the same code, the same maintainers, the same review process, doing what would have shipped as `v0.16.4` or `v0.17.0` under the old numbering — just carrying the shared Kairos version instead of its own independent one, for exactly the reason in the first section: so you stop having to know that `kairos-init 0.16.3` and `Kairos 4.2.0` were ever "the same release" in disguise. Check the changelog for what actually changed, not the size of the version jump — the jump itself carries no compatibility signal, this once.
+| Component | Current standalone version | Next release |
+|---|---|---|
+| `kairos-agent` | `v2.31.4` | `v4.x.x` |
+| `immucore` | `v0.20.4` | `v4.x.x` |
+| `kairos-init` | `v0.16.3` | `v4.x.x` |
+| `kcrypt-discovery-challenger` | `v0.13.4` | `v4.x.x` |
+
+On their own, those numbers look like a scare jump — two, or four, majors in one bump usually means "expect everything to be different." It doesn't mean that here. It's the same code, the same maintainers, the same review process, doing what would otherwise have shipped as `v2.32.0` or `v0.16.4` or `v0.13.5` under each component's old numbering — just carrying the shared Kairos version instead of its own independent one, for exactly the reason in the first section: so nobody has to keep a private table mapping `immucore 0.20.4` to `Kairos 4.2.0` in their head. Check the changelog for what actually changed, not the size of the version jump — the jump itself carries no compatibility signal, this once.
+
+**The SDK is a different case, and doesn't get a version jump at all.** `kairos-sdk` was already a `v0.x` Go module with no independent artifact beyond its module tag — no container image, no release binary. Now that `sdk/` is a plain subpackage of `github.com/kairos-io/kairos`, it has no version of its own to bump: you pin the whole `kairos` module (`go get github.com/kairos-io/kairos@v4.3.0`) and the SDK code comes along at whatever that resolves to. There's no `kairos-sdk v4.x.x` release to look out for, because `kairos-sdk` as a separately versioned thing stops existing at this move, not just at this jump.
 
 ## Try it
 
 Clone `kairos-io/kairos`, and `agent/`, `immucore/`, `sdk/`, `kairos-init/`, and `kcrypt/` are all right there, building from the same `go.mod`. If something looks wrong, the tracking issue is [#4301](https://github.com/kairos-io/kairos/issues/4301) and the pipeline work is ongoing in the open — come poke at it.
+
+## Does the git history survive?
+
+Least important part of this story if you just build against Kairos, but we checked rather than assumed, so here's the receipt. Short answer: yes, but with one real wrinkle worth knowing about.
+
+`git subtree add` grafts the entire source repo as a second parent of the merge commit — it doesn't rewrite or truncate anything. We verified this per component by walking the ancestry of the commit each subtree merge points at:
+
+| Component | Commits in the original repo | Commits reachable from the graft point |
+|---|---|---|
+| `kairos-agent` → `agent/` | 2,031 | 2,030 |
+| `immucore` → `immucore/` | 648 | 645 |
+| `kairos-sdk` → `sdk/` | 922 | 921 |
+| `kairos-init` → `kairos-init/` | 505 | 504 |
+| `kcrypt-discovery-challenger` → `kcrypt/` | 347 | 344 |
+
+(The handful missing per component are the "add archive notice" commits made on each repo after the graft — nothing from before it.) Every one of those commits is a real, permanent, unreachable-by-`git gc` part of `kairos-io/kairos`'s history now.
+
+`git blame` finds it without help. Blame a line in `agent/internal/agent/agent.go` today and it correctly walks past the merge into `kairos-agent`'s original commit from 2022, author and all.
+
+The wrinkle: `git log -- agent/some/file.go` does *not* walk through automatically. `git subtree add` merges the foreign tree in at a prefix; it doesn't rewrite the foreign history's paths to match, so git's default path-history simplification — which drives `git log <path>` and GitHub's "History" button on a file — doesn't connect the two sides on its own. If you want the pre-move commit log for something now under `agent/`, go to the graft commit directly:
+
+```sh
+git log 14f0d3bf68b60c86efbfd1dd857a0d9087bac7b1 -- some/file.go
+```
+
+(Swap in the commit named in `agent/`'s "Add 'agent/' from commit '...'" merge — [immucore](https://github.com/kairos-io/kairos/commit/00b8fb5c11595dc019be749293222be920cb3155), [sdk](https://github.com/kairos-io/kairos/commit/1b6014b33929163a64ccad5fdf242a0a70bd7d70), [kairos-init](https://github.com/kairos-io/kairos/commit/108c45182d318da0c118513e4b3567f021380b04), [kcrypt](https://github.com/kairos-io/kairos/commit/eb51205c693c09bbd7f3db8e8295abc8128637b1) each have their own.) Or just clone the archived repo — it isn't going anywhere either.
+
+So: nothing was lost. Something did get a little harder to find, and now you know where to look.
