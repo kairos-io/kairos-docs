@@ -35,6 +35,10 @@ Each component came in with [`git subtree add`](https://github.com/kairos-io/kai
 
 Nothing published from them stops working. Every Go module tag (`go get github.com/kairos-io/kairos-agent/v2@v2.31.1`) still resolves through the Go module proxy forever, because the proxy caches it independently of the source repo's state. Every container tag on `quay.io` stays pullable. Archived just means read-only on GitHub, not gone.
 
+**Why these five, and not repos like `AuroraBoot` or `kairos-operator`?** Because these five never actually had a release cadence of their own to protect. Every one of them released to serve a specific Kairos release, not on a schedule that made sense by itself. During v4.2.0's RC cycle alone (August 10 to August 18), `kairos-agent` shipped four releases: `v2.31.1` the day RC1 went out, `v2.31.4` the day the final tag did. That's not a library with its own users on its own timeline. That's the same release, wearing a second number.
+
+`AuroraBoot` and `kairos-operator` are different in kind, not degree. They shipped zero releases during that same eight-day window, both last touched before the RC cycle even started, both went on to release again afterward without a new Kairos tag anywhere nearby. People build with them independently of whether Kairos itself shipped anything new that week. Folding them in would take away a cadence they actually use, so they stayed where they are.
+
 ## The pipeline finally looks like one
 
 This is the part we're most glad to be rid of. Before the move, a change to Kairos touched up to six separate CI systems that didn't know about each other: `kairos`'s own `binaries.yaml`, `image-master*.yaml`, `uki.yaml`, `lint.yaml`, and `unit-tests.yaml`, plus whatever each of `kairos-agent`, `immucore`, `kairos-sdk`, `kairos-init`, and `kcrypt-discovery-challenger` ran on their own. A red build in `kairos-init` didn't stop a green `kairos` release from shipping against it. Finding out *why* something broke meant checking six Actions tabs.
