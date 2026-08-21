@@ -60,7 +60,7 @@ spec:
 
 - `SkipDryRunOnMissingResource=true` is only needed if you deploy this policy alongside the operator via ArgoCD before its CRDs are registered — see the [CRD race condition note](../installation#crd-race-condition-when-applying-downstream-crs) in the installation page.
 - Adapt the allow-listed path to the image family you actually rely on. If you build your own upgrade image via [BYOI](/docs/reference/byoi/) or [Kairos Factory](/docs/reference/kairos-factory/), point the pattern at your own registry path instead.
-- Because Kyverno cannot re-evaluate `spec.image` under a `generateName` create (the CR does not yet have a fully-qualified name), match on `CREATE` and `UPDATE` as above.
+- Match both `CREATE` and `UPDATE` to catch initial creation and any subsequent image edits on an existing CR. Note that the pattern `hadron:*` matches tag references only — if you pin to a digest (`hadron@sha256:…`), add a second pattern entry `"quay.io/kairos/hadron@*"` to cover that form.
 
 ## Policy 2 — verify cosign signature at pod admission
 
@@ -109,7 +109,7 @@ spec:
 A few subtleties:
 
 - `mutateDigest: true` rewrites the pod's `image: quay.io/kairos/hadron:vX` reference to its resolved digest at admission. This prevents a tag-swap attack after the signature check runs.
-- `webhookTimeoutSeconds: 30` and `failurePolicy: Fail` mean a Sigstore outage will block hadron pod admission. On air-gapped clusters point `rekor.url` at your local Rekor instance and drop `attestors.entries.keyless.rekor` to the private CA equivalent.
+- `webhookTimeoutSeconds: 30` and `failurePolicy: Fail` mean a Sigstore outage blocks all `quay.io/kairos/hadron:*` pod admission — including the operator's own upgrade pods, so an outage mid-upgrade will stall it. On air-gapped clusters point `rekor.url` at a local Rekor instance. For non-safety-critical clusters where availability outweighs the signature-bypass risk, `failurePolicy: Ignore` is a valid trade-off.
 - If kairos-io moves or renames the `reusable-factory.yaml` workflow inside `kairos-factory-action`, the `subject` glob must move with it. Track upstream at [github.com/kairos-io/kairos-factory-action](https://github.com/kairos-io/kairos-factory-action/tree/main/.github/workflows).
 
 You can also verify manually from a laptop before signing off on an upgrade:
@@ -137,12 +137,13 @@ Without this ordering there is a window during first bootstrap in which the oper
 
 **Gated:**
 
-- Attacker with cluster-admin who tries to point `NodeOpUpgrade.spec.image` at their own registry — blocked by Policy 1.
+- Attacker who can create `NodeOpUpgrade` CRs but cannot modify cluster policy, trying to point `spec.image` at their own registry — blocked by Policy 1.
 - Attacker who takes over `quay.io/kairos/hadron` at the registry layer and pushes a tampered image with the correct tag — blocked by Policy 2 (no valid Sigstore signature).
 - Tag-swap after signature check — blocked by `mutateDigest: true`.
 
 **Not gated:**
 
+- Attacker with cluster-admin or RBAC write on `ClusterPolicy` — they can delete or modify these policies directly. Defense: restrict `ClusterPolicy` write access via RBAC, or use GitOps-owned policies with deletion protection so out-of-band changes are reverted.
 - Attacker who compromises the `kairos-factory-action` CI or the `kairos-io/kairos` release workflow (they can produce signatures with the expected OIDC subject). Defense: watch for anomalous release cadence, verify SBOMs, and pin `subject` to a specific commit SHA rather than `@*` when your risk tolerance requires it.
 - Attacker with node-level root (the upgrade image runs as root by design; if the attacker is already there, the operator is not the weakest link).
 - Attacker who compromises the Sigstore infrastructure. Defense: run a private Sigstore stack for air-gapped or high-assurance deployments.
