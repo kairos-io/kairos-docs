@@ -64,9 +64,9 @@ spec:
 
 ## Policy 2 — verify cosign signature at pod admission
 
-Upstream Kairos images ([Hadron](https://github.com/kairos-io/hadron)) are cosign-signed at release time by the [Hadron CI](https://github.com/kairos-io/hadron/actions) using a GitHub Actions OIDC identity. The signature is issued by [Sigstore Fulcio](https://docs.sigstore.dev/certificate_authority/overview/) as a short-lived certificate and logged in [Rekor](https://docs.sigstore.dev/logging/overview/). There is no long-lived key material; the trust anchor is the OIDC issuer + subject pair.
+Upstream Kairos images are cosign-signed at release time by the [kairos-factory-action](https://github.com/kairos-io/kairos-factory-action) reusable workflow, called from the `kairos-io/kairos` release CI. The signature is issued by [Sigstore Fulcio](https://docs.sigstore.dev/certificate_authority/overview/) as a short-lived certificate and logged in [Rekor](https://docs.sigstore.dev/logging/overview/). There is no long-lived key material; the trust anchor is the OIDC issuer + subject pair.
 
-The Kyverno policy below reproduces that trust chain at pod admission time and blocks any `quay.io/kairos/hadron:*` pod whose image is unsigned or whose signature does not chain to the Hadron CI identity.
+The Kyverno policy below reproduces that trust chain at pod admission time and blocks any `quay.io/kairos/hadron:*` pod whose image is unsigned or whose signature does not chain to the kairos-factory-action identity.
 
 ```yaml
 apiVersion: kyverno.io/v1
@@ -101,7 +101,7 @@ spec:
               entries:
                 - keyless:
                     issuer: "https://token.actions.githubusercontent.com"
-                    subject: "https://github.com/kairos-io/hadron/.github/workflows/build-multiarch-images.yml@refs/tags/*"
+                    subject: "https://github.com/kairos-io/kairos-factory-action/.github/workflows/reusable-factory.yaml@*"
                     rekor:
                       url: https://rekor.sigstore.dev
 ```
@@ -110,14 +110,14 @@ A few subtleties:
 
 - `mutateDigest: true` rewrites the pod's `image: quay.io/kairos/hadron:vX` reference to its resolved digest at admission. This prevents a tag-swap attack after the signature check runs.
 - `webhookTimeoutSeconds: 30` and `failurePolicy: Fail` mean a Sigstore outage will block hadron pod admission. On air-gapped clusters point `rekor.url` at your local Rekor instance and drop `attestors.entries.keyless.rekor` to the private CA equivalent.
-- If the upstream Hadron CI moves its workflow file or renames the repo, the `subject` regex must move with it. Track upstream at [github.com/kairos-io/hadron](https://github.com/kairos-io/hadron/tree/main/.github/workflows).
+- If kairos-io moves or renames the `reusable-factory.yaml` workflow inside `kairos-factory-action`, the `subject` glob must move with it. Track upstream at [github.com/kairos-io/kairos-factory-action](https://github.com/kairos-io/kairos-factory-action/tree/main/.github/workflows).
 
 You can also verify manually from a laptop before signing off on an upgrade:
 
 ```bash
 cosign verify \
   --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
-  --certificate-identity-regexp='^https://github.com/kairos-io/hadron/' \
+  --certificate-identity-regexp='^https://github.com/kairos-io/kairos-factory-action/' \
   quay.io/kairos/hadron:<tag>
 ```
 
@@ -143,7 +143,7 @@ Without this ordering there is a window during first bootstrap in which the oper
 
 **Not gated:**
 
-- Attacker who compromises the Hadron CI itself (they can produce signatures with the expected OIDC subject). Defense: watch for anomalous release cadence, verify SBOMs, and pin `subject` to specific tag patterns rather than `refs/tags/*` when your risk tolerance requires it.
+- Attacker who compromises the `kairos-factory-action` CI or the `kairos-io/kairos` release workflow (they can produce signatures with the expected OIDC subject). Defense: watch for anomalous release cadence, verify SBOMs, and pin `subject` to a specific commit SHA rather than `@*` when your risk tolerance requires it.
 - Attacker with node-level root (the upgrade image runs as root by design; if the attacker is already there, the operator is not the weakest link).
 - Attacker who compromises the Sigstore infrastructure. Defense: run a private Sigstore stack for air-gapped or high-assurance deployments.
 
