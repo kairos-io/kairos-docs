@@ -2,10 +2,8 @@
 
 The Kairos documentation is built with [Docusaurus](https://docusaurus.io/) and deployed with [Netlify](https://app.netlify.com/projects/kairos-io/deploys).
 
-> **Found a bug, or want to request a feature?** Open it on
-> [kairos-io/kairos](https://github.com/kairos-io/kairos/issues), including
-> issues about this repository. Every Kairos issue lives in one place, so you
-> never have to work out which repository to file against.
+> **Found a bug?** Open it on [kairos-io/kairos](https://github.com/kairos-io/kairos/issues).
+> Every Kairos issue lives there, whichever repository it is about.
 
 ## Prerequisites
 
