@@ -11,6 +11,14 @@ title: "One Repo, One Pipeline, One Version"
 
 If you've built Kairos from source in the last few days, you've noticed: `kairos-agent`, `immucore`, `kairos-sdk`, `kairos-init`, and `kcrypt-discovery-challenger` are gone. Not deleted — moved. They now live inside [kairos-io/kairos](https://github.com/kairos-io/kairos), as `agent/`, `immucore/`, `sdk/`, `kairos-init/`, and `kcrypt/`.
 
+**TL;DR, if you just need to keep building:**
+
+- The five repos are archived, not deleted. Their code, full git history, and existing published tags all still work — see below if you want proof.
+- Using the SDK: import `github.com/kairos-io/kairos/sdk/...` (e.g. `sdk/bus`, `sdk/collector`, `sdk/machine`) instead of `github.com/kairos-io/kairos-sdk`. Code pinned to old `kairos-sdk` tags keeps building unchanged.
+- Using kairos-init: same container image, same tag pattern — `quay.io/kairos/kairos-init:vX.Y.Z` — just built from the monorepo now.
+- The next `kairos-init` tag will jump from `v0.16.x` to something like `v4.x.x`. That is **not** four major versions of breaking change — see "About that version jump" below before you panic.
+- Everything else here is the why, the pipeline, and the git-history receipts, for anyone who wants them.
+
 {/* truncate */}
 
 ## The problem this actually solves
@@ -81,6 +89,12 @@ The tag-triggered `release.yaml` mirrors the same shape for `v*` tags: scratch t
 ## Where things get released, concretely
 
 One tag on `kairos-io/kairos`, e.g. `v4.3.0`, now produces everything: the `kairos-agent`, `immucore`, `kcrypt-discovery-challenger`, `provider-kairos`, and `kairos-installer` binaries, plus `kairos-init`, all built from `VERSION := git describe --tags`, all linked with the same `-X .../internal/version.Version=$(VERSION)`. Every one of them reports `v4.3.0` when you ask. That's [#4301](https://github.com/kairos-io/kairos/issues/4301)'s ask, done — not as a policy anyone has to remember to follow, but as a Makefile variable everything shares because it's now one `git describe` away.
+
+## About that version jump
+
+If you build your own images against `kairos-init`, you're about to see it go from `v0.16.3` to something like `v4.3.0` in one release. That number, on its own, looks like a scare jump — four majors in one bump usually means "expect everything to be different."
+
+It doesn't mean that here. It's the same code, the same maintainers, the same review process, doing what would have shipped as `v0.16.4` or `v0.17.0` under the old numbering — just carrying the shared Kairos version instead of its own independent one, for exactly the reason in the first section: so you stop having to know that `kairos-init 0.16.3` and `Kairos 4.2.0` were ever "the same release" in disguise. Check the changelog for what actually changed, not the size of the version jump — the jump itself carries no compatibility signal, this once.
 
 ## Try it
 
