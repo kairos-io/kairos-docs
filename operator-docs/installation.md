@@ -209,6 +209,10 @@ Flux splits install into a **source** CR (where to pull from) and a **reconciler
 
 ### Option A — HelmRelease (recommended)
 
+:::note
+The Helm chart was added in [kairos-operator#137](https://github.com/kairos-io/kairos-operator/pull/137) and will be published to GHCR starting from **v0.1.4**. If you are pinning to an earlier release, use Option B instead.
+:::
+
 Uses the OCI Helm chart published on each release to GHCR:
 
 ```yaml
