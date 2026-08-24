@@ -45,6 +45,42 @@ For netbooting:
 - `ProxyDHCP` supported by the `DHCP` network attempting to netboot (see also [pixiecore architecture](https://github.com/danderson/netboot/blob/master/pixiecore/README.booting.md#step-1-dhcpproxydhcp)).
    There should be an already running `DHCP` server on your network. AuroraBoot doesn't take over the `DHCP` server, neither require you to do any specific configuration, however a `DHCP` server which is compliant to `ProxyDHCP` requests should be present in the same network running **AuroraBoot** and the machines to boot.
 
+### Enable netboot in Kubernetes
+
+The AuroraBoot Helm chart disables netboot permissions and host networking by default.
+Enable each option separately, based on the pod network:
+
+```yaml
+netboot:
+  enabled: true
+
+hostNetwork:
+  enabled: true
+  dnsPolicy: ClusterFirstWithHostNet
+```
+
+The `netboot.enabled` value adds the `NET_RAW` and `NET_BIND_SERVICE` capabilities to the AuroraBoot container.
+These capabilities let the netboot server use the ProxyDHCP socket and bind its service ports.
+The chart keeps all capabilities that you set in `securityContext.capabilities.add`.
+
+The `hostNetwork.enabled` value places the pod on the host network.
+Enable it when the pod network cannot receive PXE broadcast traffic from the target machines.
+Keep it disabled when another interface, such as a Multus macvlan interface, connects the pod to the required layer 2 network.
+
+The default DNS policy for host networking is `ClusterFirstWithHostNet`.
+Set `hostNetwork.dnsPolicy` if your cluster requires a different policy.
+
+For an existing release, enable both options with Helm:
+
+```bash
+helm upgrade auroraboot ./deploy/helm/auroraboot \
+  --reuse-values \
+  --set netboot.enabled=true \
+  --set hostNetwork.enabled=true
+```
+
+Only grant these network capabilities to a trusted AuroraBoot deployment.
+
 ## MacOS
 
 Unfortunately for macOS systems we cannot run the netboot through docker as it's run inside a VM, as it can't see the host network.
