@@ -172,6 +172,14 @@ export const pressItems: PressItem[] = [
 
 export const events: EventItem[] = [
   {
+    dateISO: '2026-09-22',
+    dateLabel: 'Sep 22, 2026',
+    location: 'Online',
+    title: 'Ver, no tocar, y mucho menos desconfigurar: sistemas operativos inmutables',
+    conference: 'Nerdearla',
+    url: 'https://nerdearla.com/argentina/schedule/ver-no-tocar-y-mucho-menos-desconfigurar-sistemas-operativos-inmutables/',
+  },
+  {
     dateISO: '2026-06-16',
     dateLabel: 'Jun 16, 2026',
     location: 'Barcelona, ES',
