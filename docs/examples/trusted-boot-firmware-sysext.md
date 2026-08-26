@@ -163,6 +163,35 @@ $ kairos-agent sysext install file:/tmp/firmware-ubuntu-2404.sysext.raw
 $ kairos-agent sysext enable --common --now firmware-ubuntu-2404
 ```
 
+You can also publish the signed sysext in an OCI image. The image layer must
+contain the `.sysext.raw` file itself. Create this `Dockerfile.sysext` next to
+the generated file:
+
+```dockerfile
+FROM scratch
+COPY firmware-ubuntu-2404.sysext.raw /
+```
+
+Build and push the image to an OCI-compatible registry:
+
+```bash
+docker build -f Dockerfile.sysext \
+  -t registry.example.com/firmware/ubuntu-2404:2025.09.01 .
+docker push registry.example.com/firmware/ubuntu-2404:2025.09.01
+```
+
+Install the sysext from the OCI image. Then enable the name of the embedded
+`.sysext.raw` file:
+
+```bash
+kairos-agent sysext install \
+  oci:registry.example.com/firmware/ubuntu-2404:2025.09.01
+kairos-agent sysext enable --common --now firmware-ubuntu-2404
+```
+
+The `oci:` install source is an alpha feature. Pin each image to an immutable
+version tag or digest instead of using a moving tag such as `latest`.
+
 ---
 
 ## Step 4 — **Trusted Boot** specifics and signatures
