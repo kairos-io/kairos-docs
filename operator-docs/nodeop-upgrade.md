@@ -67,6 +67,9 @@ Only 4 fields is all it takes to safely upgrade the whole cluster.
 | `debug` | `bool` | `false` | Run `kairos-agent` with the global `--debug` flag for verbose upgrade output. See [Debugging upgrades](#debugging-upgrades). |
 | `uncordonOnFailure` | `bool` | `false` | Uncordon a node if its upgrade fails, instead of leaving it unschedulable. Passed through to the underlying NodeOp. See [Recovering nodes after a failed upgrade](#recovering-nodes-after-a-failed-upgrade) and [How cordoning works](../nodeop/#how-cordoning-works) for the full lifecycle. |
 | `excludePaths` | `[]string` | (none) | Additional host paths preserved during the upgrade, passed to `kairos-agent upgrade` as `--exclude-path`. The operator always excludes `/etc/hostname` and `/etc/hosts` on top of these. Requires kairos-agent v3.6.0+ in `spec.image`. See [Preserving host paths from the upgrade](#preserving-host-paths-from-the-upgrade). |
+| `resources` | `ResourceRequirements` | (none) | Resource requests/limits for the main `nodeop` container of the generated NodeOp. See [Resource specification](#resource-specification). |
+| `preflightResources` | `ResourceRequirements` | (built-in) | Resource requests/limits for the preflight Pod of the generated NodeOp. See [Resource specification](#resource-specification). |
+| `rebootResources` | `ResourceRequirements` | (built-in) | Resource requests/limits for the reboot Pod of the generated NodeOp. See [Resource specification](#resource-specification). |
 
 ## Additional Options
 
@@ -239,6 +242,58 @@ $ kubectl get nodeopupgrades
 NAME             AGE
 kairos-upgrade   5s
 ```
+
+## Resource specification
+
+The three resource fields of `NodeOpUpgrade` are passed through to the NodeOp the operator generates, so they have exactly the same semantics as their `NodeOp` counterparts:
+
+| Field | Applies to | Description |
+| ------- | ------------ | ------------- |
+| `resources` | Main `nodeop` container | The upgrade Job container (its init container in reboot mode, alongside the unconstrained `sentinel-creator` container). |
+| `preflightResources` | Preflight Pod container | The preflight Pod that compares the target version against the running one (always created, unless `force: true` skips preflight). |
+| `rebootResources` | Reboot Pod container | The long-lived reboot Pod that watches for the sentinel and reboots the node. |
+
+Semantics differ slightly per field:
+
+- **`resources`** - unset means **no resource constraints** on the main container; set means the given requests and limits are used.
+- **`preflightResources` / `rebootResources`** - tri-state:
+  - **unset** (nil): a built-in default of **200m CPU / 128Mi memory** is applied to both requests and limits (Guaranteed QoS).
+  - **explicit empty** (`preflightResources: {}`): opt-out - no resources are set at all.
+  - **set**: the given requests and limits are used (requests and limits are independent).
+
+Example: cap the upgrade Job container and tune the auxiliary Pods:
+
+```yaml
+apiVersion: operator.kairos.io/v1alpha1
+kind: NodeOpUpgrade
+metadata:
+  name: kairos-upgrade
+  namespace: default
+spec:
+  image: quay.io/kairos-io/kairos:v4.2.0
+  concurrency: 1
+  stopOnFailure: true
+  resources:
+    requests:
+      memory: "2Gi"
+      cpu: "1"
+    limits:
+      memory: "4Gi"
+  preflightResources:
+    requests:
+      cpu: "50m"
+    limits:
+      memory: "64Mi"
+  rebootResources: {}
+```
+
+In this example:
+
+- The upgrade `nodeop` container requests 2Gi memory and is capped at 4Gi - useful on shared clusters where a large rsync-based upgrade should not starve other workloads.
+- The preflight Pod (a small version-comparison script) gets a smaller custom allocation than the built-in default.
+- The reboot Pod opts out of any resource constraints entirely (the built-in 200m/128Mi default is skipped).
+
+See [NodeOp: Resource specification](../nodeop/#resource-specification) for the general description of the fields and the tri-state behavior.
 
 ## What's next?
 

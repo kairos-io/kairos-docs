@@ -128,6 +128,9 @@ spec:
 | `preflight.command` | `[]string` | (required if `preflight` is set) | Command run inside the preflight container |
 | `preflight.image` | `string` | `spec.image` | Image for the preflight Pod (defaults to the main `spec.image`) |
 | `preflight.activeDeadlineSeconds` | `int` | `120` | Bound on total preflight Pod lifetime; on expiry the Pod is killed and the node is marked `Failed` |
+| `resources` | `ResourceRequirements` | (none) | Resource requests/limits for the main `nodeop` container (the Job container, or its init container in reboot mode). See [Resource specification](#resource-specification). |
+| `preflightResources` | `ResourceRequirements` | (built-in) | Resource requests/limits for the preflight Pod's container. See [Resource specification](#resource-specification). |
+| `rebootResources` | `ResourceRequirements` | (built-in) | Resource requests/limits for the reboot Pod's container. See [Resource specification](#resource-specification). |
 
 ## How cordoning works
 
@@ -311,6 +314,73 @@ spec:
 - The EFI System Partition (`/boot/efi`) is mounted, enabling capsule staging if firmware allows it. This could be skipped as the udisksd would mount it eventually, but it can be really slow to do so.
 - The script refreshes LVFS metadata, finds updatable firmware, and installs any pending update (for instance, the UEFI dbx capsule).
 - After completion, the node is cordoned, updated, and rebooted by the operator once the Job succeeds.
+
+## Resource specification
+
+The operator's Pods run with default resource settings unless you override them. You can use `spec.resources`, `spec.preflightResources`, and `spec.rebootResources` to set resource requests and limits on the workloads the operator creates per node. This is useful for controlling resource consumption on shared clusters or ensuring operations have sufficient CPU and memory.
+
+| Field | Applies to | Description |
+| ------- | ------------ | ------------- |
+| `resources` | Main `nodeop` container | The Job container that runs `spec.command` (or its init container in reboot mode, alongside the unconstrained `sentinel-creator` container). |
+| `preflightResources` | Preflight Pod container | Only when `spec.preflight` is set (or is set automatically by NodeOpUpgrade). |
+| `rebootResources` | Reboot Pod container | Only when `rebootOnSuccess` is true (always the case for NodeOpUpgrade). |
+
+Semantics differ slightly per field:
+
+- **`resources`** - unset means **no resource constraints** on the main container (the pre-existing behavior); set means the given requests and limits are used.
+- **`preflightResources` / `rebootResources`** - tri-state:
+  - **unset** (nil): a built-in default of **200m CPU / 128Mi memory** is applied to both requests and limits (Guaranteed QoS).
+  - **explicit empty** (`preflightResources: {}`): opt-out - no resources are set at all.
+  - **set**: the given requests and limits are used (requests and limits are independent).
+
+Example: cap the main operation container and relax the built-in default for the preflight and reboot Pods:
+
+```yaml
+apiVersion: operator.kairos.io/v1alpha1
+kind: NodeOp
+metadata:
+  name: limited-nodeop
+  namespace: default
+spec:
+  image: alpine:latest
+  command:
+    - sh
+    - -c
+    - |
+      # ... your operation ...
+  concurrency: 1
+  rebootOnSuccess: true
+  preflight:
+    command:
+      - sh
+      - -c
+      - |
+        exit 0
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "200m"
+    limits:
+      memory: "512Mi"
+  preflightResources:
+    requests:
+      cpu: "50m"
+    limits:
+      memory: "64Mi"
+  rebootResources: {}
+```
+
+In this example:
+
+- The main `nodeop` container is capped at 512Mi memory.
+- The preflight Pod gets a custom, asymmetric request/limit (independent values are honored).
+- The reboot Pod opts out of any resource constraints entirely (the built-in 200m/128Mi default is skipped).
+
+If `preflight` is not set, `preflightResources` has no effect. If `rebootOnSuccess` is false, `rebootResources` has no effect.
+
+:::info NodeOpUpgrade
+The same three fields exist on `NodeOpUpgrade` and are passed through to the underlying NodeOp the operator generates - see [NodeOpUpgrade: Resource specification](../nodeop-upgrade/#resource-specification).
+:::
 
 ## What's next?
 
