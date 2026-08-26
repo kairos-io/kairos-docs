@@ -43,8 +43,9 @@ Internal (all live in the [`kairos-io/kairos`](https://github.com/kairos-io/kair
 - [system packages](https://github.com/kairos-io/packages) contains additional packages, cross-distro.
 - [`kcrypt/discovery/`](https://github.com/kairos-io/kairos/tree/master/kcrypt/discovery) is the component responsible for encryption and decryption of data at rest.
 - [`kcrypt/challenger/`](https://github.com/kairos-io/kairos/tree/master/kcrypt/challenger) is the KMS side that pairs with the TPM chip to unlock LUKS partitions.
+- [`installer/`](https://github.com/kairos-io/kairos/tree/master/installer) is the interactive terminal-UI installer that `kairos-agent interactive-install` execs into on livecd boot.
 
-The runtime `kairos-agent`, `immucore` and `kcrypt-discovery-challenger` binaries are all served by one multi-call `kairos` executable that dispatches on `argv[0]`; the historical binary names are symlinks to it. See the [monorepo README](https://github.com/kairos-io/kairos#repository-layout) for the full layout.
+The runtime `kairos-agent`, `immucore` and `kcrypt-discovery-challenger` binaries are all served by one multi-call `kairos` executable that dispatches on `argv[0]`; the historical binary names are symlinks to it. The `kairos-installer` binary is separate (it runs as its own process, invoked by `kairos-agent interactive-install`, and lives at `/system/installer/kairos-installer` inside the image). See the [monorepo README](https://github.com/kairos-io/kairos#repository-layout) for the full layout.
 
 Optional/External:
 - [K3s](https://k3s.io) as a Kubernetes distribution
