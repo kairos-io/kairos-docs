@@ -25,7 +25,7 @@ Before starting, ensure you have:
 
 ## Step 1: Creating a Base Image with kairos-init
 
-The first step is to create a base container image using [`kairos-init`](https://github.com/kairos-io/kairos-init). This tool allows you to create a custom base image from popular distributions.
+The first step is to create a base container image using [`kairos-init`](https://github.com/kairos-io/kairos/tree/master/kairos-init). This tool allows you to create a custom base image from popular distributions.
 
 Here's a basic example of creating a base image:
 

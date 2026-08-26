@@ -35,9 +35,9 @@ Provider integration is event-driven.
 Reference implementation points in source code:
 
 - Agent bus initialization and provider autoload:
-  - [kairos-agent/internal/bus/bus.go](https://github.com/kairos-io/kairos-agent/blob/main/internal/bus/bus.go)
+  - [agent/internal/bus/bus.go](https://github.com/kairos-io/kairos/blob/master/agent/internal/bus/bus.go)
 - Agent startup and event publishing:
-  - [kairos-agent/main.go](https://github.com/kairos-io/kairos-agent/blob/main/main.go)
+  - [agent/main.go](https://github.com/kairos-io/kairos/blob/master/agent/main.go)
 - Provider event registration:
   - [provider-kairos/internal/provider/start.go](https://github.com/kairos-io/provider-kairos/blob/main/internal/provider/start.go)
 - Plugin framework used by agent/provider:

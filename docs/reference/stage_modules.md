@@ -10,7 +10,7 @@ For each stage in the cloud-init file, various modules are available that
 implement different functionality each. This page describes what each one does
 and how to use it.
 
-The order in this document is also [the order in which they are executed](https://github.com/kairos-io/kairos-agent/blob/fbb64f2a826f3fcf9584ed65d59e5bd8eb0c26e8/pkg/cloudinit/cloudinit.go#L44).
+The order in this document is also [the order in which they are executed](https://github.com/kairos-io/kairos/blob/master/agent/pkg/cloudinit/cloudinit.go).
 
 ### `dns`
 

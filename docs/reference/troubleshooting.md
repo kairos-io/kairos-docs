@@ -28,7 +28,7 @@ In case logs can't be acquired, taking screenshot or videos while opening up iss
 Another option that can be enabled is immucore debug logs with `rd.immucore.debug`
 
 After booting, you can find the logs from immucore under `/run/immucore/` (whether you enabled debug output or not).
-Check the [immucore README](https://github.com/kairos-io/immucore/) for more configuration parameters.
+Check the [immucore README](https://github.com/kairos-io/kairos/tree/master/immucore) for more configuration parameters.
 
 In order to gather the logs, you can use the `kairos-agent logs` command:
 

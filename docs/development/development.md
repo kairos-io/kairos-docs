@@ -13,10 +13,9 @@ Here you can find development notes intended for maintainers and guidance for ne
 
 Kairos uses Docker as its primary build system, allowing you to build Kairos images seamlessly in any environment—there is no need for a top-level Makefile. However, individual components within Kairos may use their own build systems or Makefiles as needed.
 
-The main Kairos build process is managed by [kairos-init](https://github.com/kairos-io/kairos-init), a tool that transforms a typical (non-immutable) OS image into a Kairos image. Within kairos-init, you'll find all the essential building blocks that make up a Kairos system, such as [immucore](https://github.com/kairos-io/immucore), the [kairos-agent](https://github.com/kairos-io/kairos-agent), and more. Each of these components is included at a specific, pinned version, since they are developed and released on their own schedule. The combination of these pinned versions is what defines a particular Kairos release.
+Starting with the v4.3 release Kairos is a single monorepo. The main Kairos build process is managed by [`kairos-init/`](https://github.com/kairos-io/kairos/tree/master/kairos-init), a tool that transforms a typical (non-immutable) OS image into a Kairos image. Its building blocks -- [`immucore/`](https://github.com/kairos-io/kairos/tree/master/immucore), [`agent/`](https://github.com/kairos-io/kairos/tree/master/agent), the [`sdk/`](https://github.com/kairos-io/kairos/tree/master/sdk), and [`kcrypt/`](https://github.com/kairos-io/kairos/tree/master/kcrypt) -- all live alongside it and ship as a single multi-call `kairos` binary. See the [monorepo README](https://github.com/kairos-io/kairos#repository-layout) for the full layout.
 
-- [The Kairos repository](https://github.com/kairos-io/kairos) - contains the build definitions for releasing Kairos artifacts and testing changes to Kairos.
-- [The kairos-agent repository](https://github.com/kairos-io/kairos-agent/) contains the `kairos-agent` code which is the Operations interface. IT deals with installing, upgrading, reseting and so on.
+- [The Kairos repository](https://github.com/kairos-io/kairos) - the monorepo. Contains every device-runtime component (`immucore/`, `agent/`, `kcrypt/`, `sdk/`, `kairos-init/`), the build definitions for releasing Kairos artifacts, and the qemu/e2e test suite.
 - [The provider-kairos repository](https://github.com/kairos-io/provider-kairos) contains the official Kairos provider component used to bring up Kubernetes clusters with `k3s` or `k0s`.
 
 ## Build Kairos
@@ -38,7 +37,7 @@ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $PWD/build/:/out
   quay.io/kairos/auroraboot:{{< AuroraBootVersion >}} build-iso --output /output/ oci:myBaseKairos:v1.0.0
 ```
 
-You can see some example of builds in either the [kairos-init repo](https://github.com/kairos-io/kairos-init/blob/main/.github/workflows/test.yml), which builds a series of OCI containers of different base images, variants and platforms or on the [Kairos repo](https://github.com/kairos-io/kairos/tree/master/.github/workflows) itself which generates not only different types of platforms and variants and base images but also generates different types of artifacts, like ISOs, Trusted Boot ISOs, Trusted Boot upgrade artifacts, raw disk images and so on.
+You can see example builds in the [monorepo's workflows directory](https://github.com/kairos-io/kairos/tree/master/.github/workflows). `pr.yaml` / `master.yaml` / `release.yaml` at the top level are the three entry points; underneath they compose reusable workflows (`_build-kairos.yaml`, `_build-kairos-init.yaml`, `_build-iso.yaml`, ...) that produce OCI containers across base images, variants and platforms, then convert those into ISOs, Trusted Boot ISOs, Trusted Boot upgrade artifacts, raw disk images and so on.
 
 For more information on kairos-init, see the [kairos factory documentation](/docs/reference/kairos-factory/)
 

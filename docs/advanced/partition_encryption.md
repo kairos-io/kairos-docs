@@ -74,9 +74,9 @@ The host machine must have a TPM chip version 2.0 or higher to use encryption wi
 
 The Kairos encryption design involves three components to manage partitions encryption and decryption lifecycle:
 
-- [kcrypt](https://github.com/kairos-io/kcrypt) runs on the machine and attempts to unlock partitions by using plugins to delegate encryption/decryption business logic.
-- [kcrypt-discovery-challenger](https://github.com/kairos-io/kcrypt-challenger) runs on the machine, it is called by `kcrypt` and uses the TPM chip to retrieve the passphrase as described below.
-- [kcrypt-challenger](https://github.com/kairos-io/kcrypt-challenger) is the KMS (Key Management Server) component, deployed in Kubernetes, which manages secrets and partitions of the nodes.
+- [kcrypt](https://github.com/kairos-io/kairos/tree/master/kcrypt) runs on the machine and attempts to unlock partitions by using plugins to delegate encryption/decryption business logic.
+- [kcrypt-discovery-challenger](https://github.com/kairos-io/kairos/tree/master/kcrypt/discovery) runs on the machine, it is called by `kcrypt` and uses the TPM chip to retrieve the passphrase as described below.
+- [kcrypt-challenger](https://github.com/kairos-io/kairos/tree/master/kcrypt/challenger) is the KMS (Key Management Server) component, deployed in Kubernetes, which manages secrets and partitions of the nodes.
 
 ## Offline mode
 
@@ -310,7 +310,7 @@ There may be tools that can be configured for the job, but we also provide a lit
 utility that does exactly that: https://github.com/kairos-io/simple-mdns-server/
 
 The process to deploy the KMS is similar to the [Online mode](#online-mode).
-An example on how to test this feature locally, can be found [in this document](https://github.com/kairos-io/kcrypt-challenger/blob/main/mdns-notes.md).
+An example on how to test this feature locally, can be found [in this document](https://github.com/kairos-io/kairos/blob/master/kcrypt/mdns-notes.md).
 
 ## Troubleshooting
 - Invoking `/system/discovery/kcrypt-discovery-challenger` without arguments returns the TPM pubhash.

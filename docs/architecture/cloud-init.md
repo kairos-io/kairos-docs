@@ -151,12 +151,12 @@ To execute a block using the sentinel files you can specify: `if: '[ -f "/run/co
 
 We have a set of default cloud-init configs that are shipped with the base image, and can be found in `/system/oem/`. These configs are executed during the various boot stages and can be overridden by user-provided configs in `/oem` or `/usr/local/cloud-config`.
 
-You can check the default configs in the [kairos-init repository](https://github.com/kairos-io/kairos-init/tree/main/pkg/bundled/cloudconfigs).
+You can check the default configs in the [kairos-init source tree](https://github.com/kairos-io/kairos/tree/master/kairos-init/pkg/bundled/cloudconfigs).
 
 
 ## Overriding default configs
 
-You can override the default configs by creating a new file in `/oem` and adding your custom configuration. For example, if you want to override the [default sysctl configuration](https://github.com/kairos-io/kairos-init/blob/e23d3947934c5af3de4069eff3ed650f0c5f8e6d/pkg/bundled/cloudconfigs/09_systemd_services.yaml#L7) provided by Kairos on the `boot` stage you would create a file under /oem with the following content:
+You can override the default configs by creating a new file in `/oem` and adding your custom configuration. For example, if you want to override the [default sysctl configuration](https://github.com/kairos-io/kairos/blob/master/kairos-init/pkg/bundled/cloudconfigs/09_systemd_services.yaml) provided by Kairos on the `boot` stage you would create a file under /oem with the following content:
 
 ```yaml
 name: "Override"

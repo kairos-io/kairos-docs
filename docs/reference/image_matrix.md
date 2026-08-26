@@ -11,11 +11,12 @@ As a small open-source team, we now focus official prebuilt artifacts and docs d
 
 ## Tested distribution matrix
 
-The current list of tested base distributions and releases is maintained in the `kairos-init` CI workflow:
+The current list of tested base distributions and releases is maintained in the monorepo's `build-iso` matrix, which lives in the top-level workflows:
 
-- https://github.com/kairos-io/kairos-init/blob/main/.github/workflows/test.yml#L22-L39
+- https://github.com/kairos-io/kairos/blob/master/.github/workflows/master.yaml (the `build-iso` job's `matrix.include`)
+- https://github.com/kairos-io/kairos/blob/master/.github/workflows/release.yaml (release-time matrix)
 
-This workflow is the source of truth for what is continuously tested.
+These are the source of truth for what is continuously tested.
 
 ## What this means for users
 

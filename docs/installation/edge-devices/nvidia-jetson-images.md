@@ -39,7 +39,7 @@ NVIDIA DGX Spark uses a separate UEFI/SBSA flow. See
 - Build platform is `linux/arm64` — either a native ARM host, cross-build via QEMU
   (`--platform linux/arm64`) or an ARM GitHub Actions runner.
 - `kairos-init` `v0.9.0` or newer for AGX Orin / Orin NX; `v0.9.0`+ is also the minimum for
-  Thor support. Check [Kairos releases](https://github.com/kairos-io/kairos-init/releases) for
+  Thor support. Check [Kairos releases](https://github.com/kairos-io/kairos/releases) for
   the newest tag; this page uses `{{< KairosInitVersion >}}`.
 
 ## Build the image
@@ -110,7 +110,7 @@ For any of the Jetson models, `kairos-init`:
   multimedia, tools, etc.) matching the L4T family.
 - Wires up the Tegra kernel and initrd so `/boot/vmlinuz` and `/boot/initrd` point at the
   Tegra artifacts, not the generic Ubuntu ones.
-- Applies the [`12_nvidia.yaml`](https://github.com/kairos-io/kairos-init/blob/main/pkg/bundled/cloudconfigs/12_nvidia.yaml)
+- Applies the [`12_nvidia.yaml`](https://github.com/kairos-io/kairos/blob/master/kairos-init/pkg/bundled/cloudconfigs/12_nvidia.yaml)
   cloud-config (disables `nv-l4t-boot-fw-update-in-preinstall`, sets up the Tegra rootfs prep,
   etc.).
 - Enables the required systemd services for the board.

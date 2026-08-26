@@ -72,7 +72,7 @@ Some specific distros have additional paths, for example:
 - For Red Hat/Fedora/Rockylinux/Almalinux `/usr/share/pki/trust` and `/usr/share/pki/trust/anchors` 
 
 
-For the most up-to-date list of paths, please refer to the [default rootfs configuration](https://github.com/kairos-io/kairos-init/blob/main/pkg/bundled/cloudconfigs/00_rootfs.yaml#L13) and the [extra bind mounts configuration](https://github.com/kairos-io/kairos-init/blob/main/pkg/bundled/cloudconfigs/01_extra_binds.yaml) files.
+For the most up-to-date list of paths, please refer to the [default rootfs configuration](https://github.com/kairos-io/kairos/blob/master/kairos-init/pkg/bundled/cloudconfigs/00_rootfs.yaml) and the [extra bind mounts configuration](https://github.com/kairos-io/kairos/blob/master/kairos-init/pkg/bundled/cloudconfigs/01_extra_binds.yaml) files.
 
 
 :::info

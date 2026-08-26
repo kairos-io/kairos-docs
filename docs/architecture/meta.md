@@ -36,13 +36,15 @@ To build Kairos from scratch, see [the documentation](/docs/reference/build-from
 
 The Kairos artifacts are composed by a base OS (an upstream Linux distribution, like _Ubuntu_, _Alpine_, ...) and a set of components that are installed on top of it. The components are:
 
-Internal:
-- [kairos](https://github.com/kairos-io/kairos) is the main repository, building the `kairos-agent` and containing the image definitions which runs on our CI pipelines.
-- [immucore](https://github.com/kairos-io/immucore) is the immutability management interface.
-- [kairos-agent](https://github.com/kairos-io/kairos-agent) manages the installation, reset, and upgrade of the Kairos nodes.
-- [system packages](https://github.com/kairos-io/packages) contains additional packages, cross-distro
-- [kcrypt](https://github.com/kairos-io/kcrypt) is the component responsible for encryption and decryption of data at rest
-- [kcrypt-challenger](https://github.com/kairos-io/kcrypt-challenger) is the `kairos` plugin that works with the TPM chip to unlock LUKS partitions
+Internal (all live in the [`kairos-io/kairos`](https://github.com/kairos-io/kairos) monorepo starting with the v4.3 release):
+- [`kairos-init/`](https://github.com/kairos-io/kairos/tree/master/kairos-init) builds Kairos OS images on top of a stock upstream distribution and pins the components below at build time.
+- [`immucore/`](https://github.com/kairos-io/kairos/tree/master/immucore) is the immutability management interface.
+- [`agent/`](https://github.com/kairos-io/kairos/tree/master/agent) manages the installation, reset, and upgrade of the Kairos nodes.
+- [system packages](https://github.com/kairos-io/packages) contains additional packages, cross-distro.
+- [`kcrypt/discovery/`](https://github.com/kairos-io/kairos/tree/master/kcrypt/discovery) is the component responsible for encryption and decryption of data at rest.
+- [`kcrypt/challenger/`](https://github.com/kairos-io/kairos/tree/master/kcrypt/challenger) is the KMS side that pairs with the TPM chip to unlock LUKS partitions.
+
+The runtime `kairos-agent`, `immucore` and `kcrypt-discovery-challenger` binaries are all served by one multi-call `kairos` executable that dispatches on `argv[0]`; the historical binary names are symlinks to it. See the [monorepo README](https://github.com/kairos-io/kairos#repository-layout) for the full layout.
 
 Optional/External:
 - [K3s](https://k3s.io) as a Kubernetes distribution
