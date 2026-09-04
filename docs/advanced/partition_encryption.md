@@ -49,6 +49,9 @@ kcrypt:
     challenger_server: "http://192.168.68.109:30000"
     # (optional) Instructs the client to lookup the KMS using mdns
     mdns: false
+    # (optional) PEM certificate the node uses to verify the KMS.
+    # Only for an https challenger_server. See "Verifying the KMS" below.
+    certificate: ""
   # (optional) Custom Non-Volatile index to use to store encoded blobs
   nv_index: ""
   # (optional) Custom Index for the RSA Key pair
@@ -62,6 +65,7 @@ kcrypt:
 | `install.encrypted_partitions` | Label of partitions to encrypt |
 | `kcrypt.challenger.challenger_server` | External KMS Server address |
 | `kcrypt.challenger.mdns` | Discover KMS using mdns. Defaults to `false` |
+| `kcrypt.challenger.certificate` | PEM certificate used to verify the KMS. See [Verifying the KMS](#verifying-the-kms) |
 | `kcrypt.nv_index` | Custom Non-Volatile index to use to store encoded blobs |
 | `kcrypt.c_index` | Custom Index for the RSA Key pair |
 | `kcrypt.tpm_device` | Custom TPM device |
@@ -290,6 +294,41 @@ users:
   # Replace with your github user and un-comment the line below:
   # - github:mudler
 ```
+
+## Verifying the KMS
+
+The examples above reach the KMS over plain `http`. On that path the node sends
+its TPM attestation, and receives the passphrase that unlocks its disk, to
+whatever answers on that address. Nothing proves the answer came from your KMS.
+
+Set `kcrypt.challenger.certificate` to close that. The node then verifies the
+KMS against the certificate you pin, and refuses to talk to anything else:
+
+```yaml
+#cloud-config
+
+kcrypt:
+  challenger:
+    challenger_server: "https://kms.example.com"
+    certificate: |
+      -----BEGIN CERTIFICATE-----
+      MIIBkTCB+wIJAJ...
+      -----END CERTIFICATE-----
+```
+
+Three things to know about the value:
+
+- It is the **PEM text itself**, not a path to a file. The node appends it to
+  its system CA pool, so it can be either the KMS server certificate or the CA
+  that signed it.
+- It only takes effect when `challenger_server` is an `https` URL. With `http`
+  there is no TLS handshake to verify and the setting does nothing.
+- The `kcrypt-challenger` deployment serves plain HTTP itself. TLS is terminated
+  by whatever fronts it, typically an Ingress, and the certificate you pin here
+  is the one that endpoint presents.
+
+Without this setting the connection is unauthenticated. Treat it as required for
+any KMS that is not on a network you fully control.
 
 ## Discoverable Key Management Server (KMS)
 
