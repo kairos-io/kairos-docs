@@ -5,8 +5,8 @@ sidebar_position: 3
 ---
 
 :::warning Warning
-This feature is in preview state and only available in Kairos v3.4.x releases and alphas.
-Please check the section "Known issues" at the bottom for more information.
+System extensions have caveats around naming, signing and read-only merging.
+Please check the section "Known issues" at the bottom before you build or ship one.
 :::
 :::info Signing keys for system extensions under Trusted Boot
 Sysexts need to be signed with the same key/cert as the ones used to sign the EFI files. As those are part of the system and available in the EFI firmware, we can extract the public part and verify the sysexts locally. Any of the PK, KEK or DB keys can be used to sign sysexts. This only affects Trusted Boot.
