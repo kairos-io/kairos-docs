@@ -8,6 +8,16 @@ description: Reference documentation for AuroraBoot, a tool for generating boota
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
+:::info AuroraBoot is the engine behind three products
+This page is the CLI reference for the AuroraBoot binary. AuroraBoot powers three job-oriented product surfaces in Kairos:
+
+- **[Kairos Builder](/docs/products/builder/)** — produce boot artifacts (ISO, UKI, cloud, raw).
+- **[Kairos Provision](/docs/products/provision/)** — install machines at scale (netboot, USB, P2P).
+- **[Kairos Fleet](/docs/products/fleet/)** — track and operate nodes (roadmap).
+
+If you are looking for guided walkthroughs organised by job, start there. This page stays authoritative for CLI flags and subcommands.
+:::
+
 :::info Note
 This is the reference documentation for AuroraBoot. For a complete guide on creating custom cloud images, including how to use AuroraBoot in the context of a full workflow, see [Creating Custom Cloud Images](/docs/advanced/creating_custom_cloud_images/).
 :::
