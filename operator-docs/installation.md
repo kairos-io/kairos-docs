@@ -147,7 +147,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/kairos-io/kairos-operator.git
-    targetRevision: v0.0.7                # pin to a released tag; bump via a PR
+    targetRevision: {{< OperatorVersion >}}                # pin to a released tag; bump via a PR
     path: config/default
   destination:
     server: https://kubernetes.default.svc
