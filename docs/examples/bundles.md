@@ -54,6 +54,6 @@ metallb:
 There are a few key points to note in the configuration file:
 
 - The `metallb` block is provided by the MetalLB bundle and allows us to specify the version of MetalLB that we want to deploy, as well as the `address_pool` available for our services.
-- The `bundles` block enables the `run` [bundle](/docs/advanced/bundles) type. The bundle we are using is part of the [community-bundles](https://github.com/kairos-io/community-bundles) repository.
+- The `bundles` block enables the `run` [bundle](/docs/advanced/bundles) type. The bundle we are using is part of the [community-bundles](https://github.com/kairos-community/bundles) repository.
 
 And that's it! With these steps, you should now have MetalLB configured and ready to use on your Kairos cluster. If you have any questions or run into any issues, don't hesitate to check out the [bundle documentation](/docs/advanced/bundles) or reach out to the community for support.
