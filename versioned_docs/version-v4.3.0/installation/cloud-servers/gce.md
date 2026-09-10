@@ -27,7 +27,7 @@ Unfortunately Google Cloud [doesn't allow users to search among public images in
 1. Create a VM using the latest Kairos image:
 
 :::warning Note
-As described below, it is possible to reset to any desired image on first boot. That's the reason only one Kairos flavor is published in Google Cloud (Ubuntu 24.04). This allows us to save costs and time by not pushing unnecessary artifacts.
+As described below, it is possible to reset to any desired image on first boot. That's the reason only one Kairos image is published in Google Cloud (Hadron, core, amd64, generic). This allows us to save costs and time by not pushing unnecessary artifacts.
 :::
 ## Verify the Image
 
@@ -42,11 +42,11 @@ gcloud compute images describe <IMAGE_NAME> --project palette-kairos --format="t
 Replace `<IMAGE_NAME>` with the name of the image. The output will show you the name, description, and status of the image. If the image doesn't belong to the Kairos project, no image will be found.
 
 :::warning Note
-As described below, it is possible to reset to any desired image on first boot. That's the reason only one Kairos flavor is published in Google Cloud (Ubuntu 24.04). This allows us to save costs and time by not pushing unnecessary artifacts.
+As described below, it is possible to reset to any desired image on first boot. That's the reason only one Kairos image is published in Google Cloud (Hadron, core, amd64, generic). This allows us to save costs and time by not pushing unnecessary artifacts.
 :::
-```bash {class="only-flavors=Ubuntu+24.04"}
+```bash
 gcloud --project  <your_project_here> compute instances create kairos-vm-test \
-  --image=projects/palette-kairos/global/images/kairos-ubuntu-24-04-core-amd64-generic-{{< GoogleVersion  >}} \
+  --image=projects/palette-kairos/global/images/{{< GoogleImage >}} \
   --image-project=palette-kairos \
   --zone=europe-central2-c \
   --metadata-from-file=user-data=<path_to_your_cloud_config> \
