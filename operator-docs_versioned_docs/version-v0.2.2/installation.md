@@ -24,7 +24,7 @@ helm install kairos-operator kairos-operator/kairos-operator \
 ```bash
 helm install kairos-operator \
   oci://ghcr.io/kairos-io/helm-charts/kairos-operator \
-  --version 0.1.0 \
+  --version {{< OperatorChartVersion >}} \
   --namespace kairos-operator --create-namespace
 ```
 
@@ -91,7 +91,7 @@ Each release publishes a pre-built `install.yaml` as a GitHub Release asset:
 kubectl apply -f https://github.com/kairos-io/kairos-operator/releases/latest/download/install.yaml
 
 # Pin to a specific version
-kubectl apply -f https://github.com/kairos-io/kairos-operator/releases/download/v0.1.0/install.yaml
+kubectl apply -f https://github.com/kairos-io/kairos-operator/releases/download/{{< OperatorVersion >}}/install.yaml
 ```
 
 Alternatively, render from source using Kustomize directly (requires `git`):
@@ -225,7 +225,7 @@ spec:
   interval: 12h
   url: oci://ghcr.io/kairos-io/helm-charts/kairos-operator
   ref:
-    tag: "0.1.3"          # pin to a release; bump via Renovate or PR
+    tag: "{{< OperatorChartVersion >}}"          # pin to a release; bump via Renovate or PR
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -257,7 +257,7 @@ spec:
   interval: 12h
   url: https://github.com/kairos-io/kairos-operator
   ref:
-    tag: v0.1.3          # pin to a release; bump via Renovate or PR
+    tag: {{< OperatorVersion >}}          # pin to a release; bump via Renovate or PR
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
