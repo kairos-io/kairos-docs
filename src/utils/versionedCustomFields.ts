@@ -1,5 +1,9 @@
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import {useLocation} from '@docusaurus/router';
+import {
+  getDocsVersionFromPath,
+  getOperatorVersionFromPath,
+} from '@site/src/utils/versionedCustomFields.helpers';
 
 type DocsCustomFields = {
   docsVersion: string;
@@ -12,6 +16,7 @@ type DocsCustomFields = {
   providerVersion: string;
   kairosInitVersion: string;
   auroraBootVersion: string;
+  operatorVersion: string;
 };
 
 export type FlavorOption = {
@@ -34,29 +39,8 @@ const DEFAULT_FIELDS: DocsCustomFields = {
   providerVersion: 'latest',
   kairosInitVersion: 'latest',
   auroraBootVersion: 'latest',
+  operatorVersion: 'main',
 };
-
-function normalizePathname(pathname: string): string {
-  if (!pathname) {
-    return '/';
-  }
-  return pathname.startsWith('/') ? pathname : `/${pathname}`;
-}
-
-function getDocsVersionFromPath(pathname: string): string | null {
-  const normalized = normalizePathname(pathname);
-  const match = normalized.match(/^\/docs\/([^/]+)(?:\/|$)/);
-  if (!match) {
-    return null;
-  }
-
-  const candidate = match[1];
-  if (/^v\d+\.\d+\.\d+$/.test(candidate)) {
-    return candidate;
-  }
-
-  return null;
-}
 
 function parseFlavorOptions(value: unknown): FlavorOption[] {
   if (!Array.isArray(value)) {
@@ -85,6 +69,7 @@ export function useVersionedCustomFields(): DocsCustomFields {
   const {siteConfig} = useDocusaurusContext();
   const {pathname} = useLocation();
   const docsVersion = getDocsVersionFromPath(pathname);
+  const operatorDocsVersion = getOperatorVersionFromPath(pathname);
   const cf = (siteConfig.customFields ?? {}) as {
     registryURL?: unknown;
     hadronFlavorRelease?: unknown;
@@ -95,8 +80,14 @@ export function useVersionedCustomFields(): DocsCustomFields {
     providerVersion?: unknown;
     kairosInitVersion?: unknown;
     auroraBootVersion?: unknown;
+    latestOperatorVersion?: unknown;
     docsVersionCustomFields?: unknown;
   };
+
+  const baseOperatorVersion =
+    typeof cf.latestOperatorVersion === 'string' && cf.latestOperatorVersion.length > 0
+      ? cf.latestOperatorVersion
+      : DEFAULT_FIELDS.operatorVersion;
 
   const base: DocsCustomFields = {
     docsVersion: docsVersion ?? 'current',
@@ -120,6 +111,7 @@ export function useVersionedCustomFields(): DocsCustomFields {
     providerVersion: String(cf.providerVersion ?? DEFAULT_FIELDS.providerVersion),
     kairosInitVersion: String(cf.kairosInitVersion ?? DEFAULT_FIELDS.kairosInitVersion),
     auroraBootVersion: String(cf.auroraBootVersion ?? DEFAULT_FIELDS.auroraBootVersion),
+    operatorVersion: operatorDocsVersion ?? baseOperatorVersion,
   };
 
   if (!base.k3sVersion) {
@@ -168,5 +160,6 @@ export function useVersionedCustomFields(): DocsCustomFields {
     providerVersion: String(versionFields.providerVersion ?? base.providerVersion),
     kairosInitVersion: String(versionFields.kairosInitVersion ?? base.kairosInitVersion),
     auroraBootVersion: String(versionFields.auroraBootVersion ?? base.auroraBootVersion),
+    operatorVersion: base.operatorVersion,
   };
 }

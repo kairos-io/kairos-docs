@@ -14,6 +14,7 @@ import KairosVersion from '@site/src/components/KairosVersion';
 import K3sVersion from '@site/src/components/K3sVersion';
 import OciCode from '@site/src/components/OciCode';
 import OnlyFlavors from '@site/src/components/OnlyFlavors';
+import OperatorVersion from '@site/src/components/OperatorVersion';
 import ProviderVersion from '@site/src/components/ProviderVersion';
 import ShortcodeCodeBlock from '@site/src/components/ShortcodeCodeBlock';
 import YouTube from '@site/src/components/YouTube';
@@ -35,6 +36,7 @@ const components: MDXComponentsObject = {
   OciCode,
   OCICode: OciCode,
   OnlyFlavors,
+  OperatorVersion,
   ProviderVersion,
   ShortcodeCodeBlock,
   YouTube,
