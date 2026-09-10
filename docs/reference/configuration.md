@@ -1025,9 +1025,30 @@ Read more about them in this page: [Stage modules](/docs/reference/stage_modules
 
 ## Running commands on different shells
 
-By default, all commands are executed in the `sh` shell. However, it is possible to run commands in a different shell by prefixing the command with the executable.
+By default, every command runs under `sh`.
 
-For example, to run a command in the `bash` shell, you can use the following syntax:
+To run a whole block under another interpreter, start the command with a shebang line:
+
+```yaml
+#cloud-config
+stages:
+  boot.after:
+    - name: "do something"
+      commands:
+        - |
+          #!/bin/bash
+          if [[ -d /oem ]]; then
+            echo "running under bash ${BASH_VERSION}"
+          fi
+```
+
+Kairos writes a command that begins with `#!` to a temporary file, marks it executable and runs it, so the kernel starts the interpreter the shebang names. Without this, `sh` would read the shebang as a comment and run the body itself, and bash-only syntax such as `[[` would fail with `[[: not found`.
+
+:::warning
+The shebang has to be the very first thing in the command, with no blank line or leading space before it. Use a `|` literal block, as above. A `>` folded block does not preserve the newline after the shebang line.
+:::
+
+To run an existing script file under another interpreter, prefix the path with it instead:
 
 ```yaml
 #cloud-config
@@ -1037,3 +1058,9 @@ stages:
       commands:
         - bash /path/to/script.sh
 ```
+
+This form works on every version and is unaffected by the note above.
+
+:::tip Version
+Shebang support landed in yip `v1.26.1`. On Kairos `v4.3.0` and earlier, a shebang at the start of a command is only a comment and the body runs under `sh`, so use the interpreter prefix on those releases.
+:::
