@@ -32,3 +32,13 @@ test('renderTemplate substitutes OperatorVersion in older-version contexts', () 
   const template = 'chart: kairos-operator@{{< OperatorVersion >}}';
   assert.equal(render(template, {operatorVersion: 'v0.0.7'}), 'chart: kairos-operator@v0.0.7');
 });
+
+test('renderTemplate strips the leading v for OperatorChartVersion', () => {
+  const template = '--version {{< OperatorChartVersion >}}';
+  assert.equal(render(template), '--version 0.2.2');
+});
+
+test('renderTemplate leaves OperatorChartVersion unchanged if the operator version has no v prefix', () => {
+  const template = 'tag: "{{< OperatorChartVersion >}}"';
+  assert.equal(render(template, {operatorVersion: '0.3.0'}), 'tag: "0.3.0"');
+});
