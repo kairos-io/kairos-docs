@@ -118,7 +118,7 @@ const docsVersionCustomFields = {
     k0sVersion: 'v1.36.4+k0s.0',
     flavorOptions: hadronFlavorOptionsV430,
     providerVersion: 'v2.16.4',
-    auroraBootVersion: 'v0.27.0',
+    auroraBootVersion: 'v0.27.1',
     kairosInitVersion: 'v0.17.3',
   },
   'v4.2.0': {
