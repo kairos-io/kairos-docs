@@ -97,7 +97,7 @@ stages:
       EOF
 ```
 
-For a worker, write the same file and use the `k3s-agent` block.
+For a worker, keep the stage identical and replace the top-level `k3s:` block with `k3s-agent:`.
 
 Label values must follow the [Kubernetes syntax rules for labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set).
 A value is 63 characters or fewer, and it accepts alphanumerics, `-`, `_` and
