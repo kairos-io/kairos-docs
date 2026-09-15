@@ -310,3 +310,39 @@ kairosctl get-kubeconfig > kubeconfig
 Note that you must run kairos bridge in a separate window as act like `kubectl proxy` and access the Kubernetes cluster VPN. Keep the kairos bridge command running to operate the cluster.
 
 :::
+
+## Troubleshooting
+
+### Nodes do not discover each other on a link with MTU below 1500
+
+If the physical link between your nodes has an MTU smaller than 1500 (for
+example a tunnel with `MTUBytes=1450` in `/etc/systemd/network/*.network`),
+peers may fail to complete the p2p handshake and never see each other. Logs
+usually show no clear error, only that discovery does not converge.
+
+The default `edgevpn` packet size is 1420 bytes, which fits inside a 1500-byte
+link with room to spare for the libp2p, transport, IP and Ethernet headers.
+On a 1450-byte link that same 1420-byte payload plus overhead does not fit,
+so packets are dropped end to end.
+
+Lower the edgevpn packet size below your physical MTU minus roughly 150 bytes
+of headroom. Pass it through `p2p.vpn.env`, which Kairos writes to the
+`edgevpn` systemd environment file:
+
+```yaml
+#cloud-config
+p2p:
+  network_token: "YOUR_TOKEN_GOES_HERE"
+  vpn:
+    env:
+      # Physical link MTU is 1450; leave ~150 bytes for libp2p + transport
+      # + IP + link headers. 1300 is a safe starting value.
+      EDGEVPNPACKETMTU: "1300"
+```
+
+`EDGEVPNMTU` sets the MTU of the `edgevpn0` tun interface (default 1200) and
+does not need to change for this case. Only `EDGEVPNPACKETMTU` affects the
+size of frames placed on the underlying link.
+
+Apply the same value to every node in the cluster. Nodes with different
+packet sizes will still fail to talk to each other.
