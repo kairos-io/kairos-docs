@@ -147,7 +147,7 @@ RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init \
       --provider-k3s-version v1.35.1+k3s1
 ```
 
-`--fips`, `--trusted-boot`, `--skip-steps` and stage extensions (`-x`) all work identically.
+`--fips`, `--trusted-boot`, `--skip-step` and stage extensions (`-x`) all work identically.
 See [The Kairos Factory](/docs/reference/kairos-factory/) for the full flag reference.
 
 ## Turn the OCI image into installable artifacts
