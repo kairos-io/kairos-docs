@@ -53,7 +53,7 @@ on a Kairos node (kubeadm static pod manifests under k3s/k0s), or where satisfyi
 break the product (`kernel.modules_disabled=1`, `ip_forward=0` on a Kubernetes node).
 "Kairos happens not to install this package" is `Open`, not `Not applicable`.
 
-## Three things to settle before publishing
+## Four things to settle before publishing
 
 1. **PR #4650 is not merged.** The three CIS DIL sections Kairos cites in its own code
    (1.1.1.x, 1.7, 6.1) live only on `triage/4626-cis-l1-initial-setup`. No released image
@@ -74,3 +74,20 @@ break the product (`kernel.modules_disabled=1`, `ip_forward=0` on a Kubernetes n
    That is directly in scope for CIS DIL section 6.1, which this matrix documents. It is a
    one-character production-code fix in a different repo than this ticket's deliverable, so
    it belongs in its own kairos-io/kairos issue rather than smuggled into a docs PR.
+
+4. **Verification pass (tester, round 0): dataset holds up, with one fixed citation and a
+   minor systemic imprecision to watch.** ~25 citations were independently re-read against
+   `upstream/master` (tip `dac37dc4`) and `triage/4626-cis-l1-initial-setup` (tip `9d0b3b8e`,
+   confirmed NOT-MERGED again independently), covering every `Not applicable` row's
+   "artifact does not exist" claim, all three `Implemented (unmerged)` rows, both
+   `os_spec.rb`/`sysctl_spec.rb` product-incompatibility NAs, and all eight negative-grep
+   `Open` claims (`hosts.equiv`, `login.defs`, `telnet`, `ypserv`, `tftp`, `prelink`,
+   `ip_forward`, `rsh-server` all reconfirmed empty). Every factual claim checked out.
+   One citation was wrong and has been corrected in `linux-baseline-l1-controls.md`:
+   `os-03b` pointed at `10_accounting.yaml:19` for the `kairos` user's `passwd: "!"` line;
+   the line is actually `:14` (`:19` is the start of an unrelated adjacent stage). Separately,
+   the `steps_cis_hardening.go` line pointers in `os-02`/`os-03`/`os-10` run 1-2 lines short
+   throughout (e.g. the `test -f` guard cited as `:97` is actually `:99`) - content at each
+   citation is still correct, just the exact line number drifts by a small constant. Not
+   worth a row-by-row fix; a reviewer diffing against the branch should expect a small offset
+   rather than treat it as a wrong citation.
