@@ -31,14 +31,14 @@ The following table summarizes CIS v1.9.0 coverage by section. Sections 1.x, 2 a
 
 | CIS Section | Control IDs | Controls | Implemented | Not Applicable | Open | Path Forward |
 |---|---|---|---|---|---|---|
-| 1.1 Control Plane Node Configuration Files | 1.1.1–1.1.21 | 21 | 0 | 14 | 7 | k3s/k0s distro configuration via operator `k3s.args` or `k0s.args` |
+| 1.1 Control Plane Node Configuration Files | 1.1.1–1.1.21 | 21 | 0 | 14 | 7 | All 7 open controls are file mode and ownership checks (1.1.9–1.1.12, 1.1.19–1.1.21) on paths Kairos persists; they need a mode or owner set in the image, not a k3s or k0s argument |
 | 1.2 API Server | 1.2.1–1.2.29 | 29 | 0 | 0 | 29 | k3s/k0s distro configuration via operator `k3s.args` or `k0s.args` |
 | 1.3 Controller Manager | 1.3.1–1.3.7 | 7 | 0 | 0 | 7 | k3s/k0s distro configuration via operator `k3s.args` or `k0s.args` |
 | 1.4 Scheduler | 1.4.1–1.4.2 | 2 | 0 | 0 | 2 | k3s/k0s distro configuration via operator `k3s.args` or `k0s.args` |
 | 2 Etcd Node Configuration | 2.1–2.7 | 7 | 0 | 0 | 7 | k3s/k0s distro configuration via operator `k3s.args` or `k0s.args` |
 | 3.1 Authentication and Authorization | 3.1.1–3.1.3 | 3 | 0 | 0 | 3 | Cluster-level policy applied post-bootstrap |
 | 3.2 Logging | 3.2.1–3.2.2 | 2 | 0 | 0 | 2 | Cluster-level policy applied post-bootstrap |
-| 4.1 Worker Node Configuration Files | 4.1.1–4.1.10 | 10 | 0 | 2 | 8 | k3s/k0s distro configuration via operator `k3s.args` or `k0s.args` |
+| 4.1 Worker Node Configuration Files | 4.1.1–4.1.10 | 10 | 0 | 2 | 8 | All 8 open controls are file mode and ownership checks (4.1.3–4.1.10) on paths Kairos persists; they need a mode or owner set in the image, not a k3s or k0s argument |
 | 4.2 Kubelet | 4.2.1–4.2.13 | 13 | 0 | 0 | 13 | k3s/k0s distro configuration via operator `k3s.args` or `k0s.args` |
 | 4.3 kube-proxy | 4.3.1 | 1 | 0 | 0 | 1 | k3s/k0s distro configuration via operator `k3s.args` or `k0s.args` |
 | 5.1 RBAC and Service Accounts | 5.1.1–5.1.13 | 13 | 0 | 0 | 13 | Cluster-level policy applied post-bootstrap |
