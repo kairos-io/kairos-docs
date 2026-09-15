@@ -156,7 +156,7 @@ Here is a list of flags, explanation and what are the possible and default value
 | -t                         | Sets Trusted Boot on                                              | true,false                 | false           |
 | --fips                     | Use FIPS 140-2 compliance packages for images                     | bool                       | false           |
 | -x                         | Enable the loading of stage extensions                            | bool                       | false           |
-| --skip-steps                | Skip the given steps during the image build                       | Steps or Stages            | None            |
+| --skip-step                 | Skip the given steps during the image build                       | Steps or Stages            | None            |
 
 When you pass `--provider k3s` (or `-p k3s`), kairos-init registers the provider and expects you to pass the version via `--provider-k3s-version` and optionally a config path via `--provider-k3s-config`. Same pattern applies for other providers (e.g. k0s).
 
@@ -228,11 +228,11 @@ The separation it's also very useful for caching, as once the install phase has 
 
 ## Skipping steps and stages
 
-We recognize that one size does not fit all, and sometimes you may want to skip certain steps or stages during the image build process. To accommodate this, kairos-init provides the `--skip-steps` flag. 
+We recognize that one size does not fit all, and sometimes you may want to skip certain steps or stages during the image build process. To accommodate this, kairos-init provides the `--skip-step` flag. 
 
 This is useful if you want to customize the image yourself and find that some steps collide with your customization. You can choose between `install` and `init` to skip those full stages or go into specific steps.
 
-Run `kairos-init steps-info` to see the available steps and their descriptions. You can pass more than one step, separated by comma, to skip multiple steps, for example: `--skip-steps installPackages,kernel`.
+Run `kairos-init steps-info` to see the available steps and their descriptions. You can pass more than one step, separated by comma, to skip multiple steps, for example: `--skip-step installPackages,kernel`.
 
 This is an example output of the stages and steps available. We recommend you run `kairos-init steps-info` to see the updated list of steps and stages available, as this is subject to change:
 
@@ -387,7 +387,7 @@ $ docker build --platform=linux/arm64 -t ubuntu-rpi:22.04 --build-arg MODEL=rpi4
 FROM quay.io/kairos/kairos-init:{{< KairosInitVersion  >}} AS kairos-init
 
 FROM ubuntu:24.04
-RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init /kairos-init -l debug -s install --version "v0.0.1" --skip-steps installKernel
+RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init /kairos-init -l debug -s install --version "v0.0.1" --skip-step installKernel
 # Install Smaller virtual kernel, useful for testing things in VMS
 RUN apt-get install -y linux-image-virtual
 # Run the init phase as normal, it will find the new kernel and link it + generate initrd
