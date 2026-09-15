@@ -13,39 +13,41 @@ This page documents the implementation status of CIS (Center for Internet Securi
 - **CIS Kubernetes Benchmark v1.9.0**: sourced from [`aquasecurity/kube-bench`](https://github.com/aquasecurity/kube-bench) (`cfg/cis-1.9/`, Apache-2.0)
 - **CIS Distribution Independent Linux L1**: sourced from [`dev-sec/linux-baseline`](https://github.com/dev-sec/linux-baseline) (Apache-2.0)
 
-CIS's own benchmark PDF text is not reproduced here. See [research notes](/docs/security/_research/README.md) for sourcing details, caveats, and methodology.
+**Important sourcing notes**: kube-bench's `cfg/cis-1.9/` files carry no CIS profile-level field, so the 130 Kubernetes controls listed below represent the complete v1.9.0 set rather than a derived Level 1 subset—the Level 1 split is not guessed at. Additionally, `dev-sec/linux-baseline` carries no CIS control-ID tags at all, so the Linux table is keyed on devsec control IDs and maps to CIS numbering in only three cases (os-10, package-09, os-09), which is what "(none in source)" means in the CIS Reference column.
+
+CIS's own benchmark PDF text is not reproduced here. Sourcing details, caveats, and methodology are in the [research notes](https://github.com/kairos-io/kairos-docs/tree/main/docs/security/_research) kept alongside this page in the repository.
 
 ## CIS Kubernetes Benchmark v1.9.0
 
 ### Overview
 
-Kairos is an OS image builder and does not include a Kubernetes control plane. It installs k3s or k0s from those projects' own installers and applies no Kairos-owned CIS-specific flags. The Kubernetes benchmark is therefore operator territory: CIS hardening is addressed through the k3s or k0s `--profile=cis` flag (or equivalent per-control arguments) passed by the operator via the cluster configuration.
+Kairos is an OS image builder and does not include a Kubernetes control plane. It installs k3s or k0s from those projects' own installers and applies no Kairos-owned CIS-specific flags. The Kubernetes benchmark is therefore operator territory: hardening is configured where the operator configures the distribution, following k3s's or k0s's own CIS hardening guide.
 
 Kairos itself does not set `protect-kernel-defaults`, `tls-cipher-suites`, `anonymous-auth`, `audit-log`, `secrets-encryption`, or other CIS-relevant flags. Every flag-shaped control is reachable only through the operator's `k3s.args` or `k0s.args` configuration, which Kairos appends verbatim without modification.
 
 ### Control Summary by Section
 
-The following table summarizes CIS v1.9.0 coverage by section. All 114 "Open" controls are addressable via k3s or k0s's native CIS profile flags or per-control arguments; none require Kairos image changes.
+The following table summarizes CIS v1.9.0 coverage by section. Sections 1.x, 2 and 4.x are reachable through the arguments the operator passes to k3s or k0s. Sections 3.x and 5.x are cluster-level policy—RBAC, Pod Security Admission, NetworkPolicy, audit policy—applied after the cluster bootstraps, not flags. The file permission and ownership controls 1.1.9–1.1.12, 1.1.19–1.1.21 and 4.1.3–4.1.10 target paths Kairos persists but never sets a mode or owner on, so those could be addressed in the image and currently are not.
 
-| CIS Section | Controls | Implemented | Not Applicable | Open | Path Forward |
-|---|---|---|---|---|---|
-| 1.1 Control Plane Node Configuration Files | 21 | 0 | 8 | 13 | k3s/k0s distro configuration via operator `k3s.args` or `k0s.args` |
-| 1.2 API Server | 29 | 0 | 0 | 29 | k3s/k0s distro configuration via operator `k3s.args` or `k0s.args` |
-| 1.3 Controller Manager | 7 | 0 | 0 | 7 | k3s/k0s distro configuration via operator `k3s.args` or `k0s.args` |
-| 1.4 Scheduler | 2 | 0 | 0 | 2 | k3s/k0s distro configuration via operator `k3s.args` or `k0s.args` |
-| 2 Etcd Node Configuration | 7 | 0 | 0 | 7 | k3s/k0s distro configuration via operator `k3s.args` or `k0s.args` |
-| 3.1 Authentication and Authorization | 3 | 0 | 0 | 3 | Cluster-level policy applied post-bootstrap |
-| 3.2 Logging | 2 | 0 | 0 | 2 | Cluster-level policy applied post-bootstrap |
-| 4.1 Worker Node Configuration Files | 10 | 0 | 2 | 8 | k3s/k0s distro configuration via operator `k3s.args` or `k0s.args` |
-| 4.2 Kubelet | 13 | 0 | 0 | 13 | k3s/k0s distro configuration via operator `k3s.args` or `k0s.args` |
-| 4.3 kube-proxy | 1 | 0 | 0 | 1 | k3s/k0s distro configuration via operator `k3s.args` or `k0s.args` |
-| 5.1 RBAC and Service Accounts | 13 | 0 | 0 | 13 | Cluster-level policy applied post-bootstrap |
-| 5.2 Pod Security Standards | 12 | 0 | 0 | 12 | Cluster-level policy applied post-bootstrap |
-| 5.3 Network Policies and CNI | 2 | 0 | 0 | 2 | Cluster-level policy applied post-bootstrap |
-| 5.4 Secrets Management | 2 | 0 | 0 | 2 | Cluster-level policy applied post-bootstrap |
-| 5.5 Extensible Admission Control | 1 | 0 | 0 | 1 | Cluster-level policy applied post-bootstrap |
-| 5.7 General Policies | 4 | 0 | 0 | 4 | Cluster-level policy applied post-bootstrap |
-| **Total** | **130** | **0** | **16** | **114** | |
+| CIS Section | Control IDs | Controls | Implemented | Not Applicable | Open | Path Forward |
+|---|---|---|---|---|---|---|
+| 1.1 Control Plane Node Configuration Files | 1.1.1–1.1.21 | 21 | 0 | 14 | 7 | k3s/k0s distro configuration via operator `k3s.args` or `k0s.args` |
+| 1.2 API Server | 1.2.1–1.2.29 | 29 | 0 | 0 | 29 | k3s/k0s distro configuration via operator `k3s.args` or `k0s.args` |
+| 1.3 Controller Manager | 1.3.1–1.3.7 | 7 | 0 | 0 | 7 | k3s/k0s distro configuration via operator `k3s.args` or `k0s.args` |
+| 1.4 Scheduler | 1.4.1–1.4.2 | 2 | 0 | 0 | 2 | k3s/k0s distro configuration via operator `k3s.args` or `k0s.args` |
+| 2 Etcd Node Configuration | 2.1–2.7 | 7 | 0 | 0 | 7 | k3s/k0s distro configuration via operator `k3s.args` or `k0s.args` |
+| 3.1 Authentication and Authorization | 3.1.1–3.1.3 | 3 | 0 | 0 | 3 | Cluster-level policy applied post-bootstrap |
+| 3.2 Logging | 3.2.1–3.2.2 | 2 | 0 | 0 | 2 | Cluster-level policy applied post-bootstrap |
+| 4.1 Worker Node Configuration Files | 4.1.1–4.1.10 | 10 | 0 | 2 | 8 | k3s/k0s distro configuration via operator `k3s.args` or `k0s.args` |
+| 4.2 Kubelet | 4.2.1–4.2.13 | 13 | 0 | 0 | 13 | k3s/k0s distro configuration via operator `k3s.args` or `k0s.args` |
+| 4.3 kube-proxy | 4.3.1 | 1 | 0 | 0 | 1 | k3s/k0s distro configuration via operator `k3s.args` or `k0s.args` |
+| 5.1 RBAC and Service Accounts | 5.1.1–5.1.13 | 13 | 0 | 0 | 13 | Cluster-level policy applied post-bootstrap |
+| 5.2 Pod Security Standards | 5.2.1–5.2.13 | 13 | 0 | 0 | 13 | Cluster-level policy applied post-bootstrap |
+| 5.3 Network Policies and CNI | 5.3.1–5.3.2 | 2 | 0 | 0 | 2 | Cluster-level policy applied post-bootstrap |
+| 5.4 Secrets Management | 5.4.1–5.4.2 | 2 | 0 | 0 | 2 | Cluster-level policy applied post-bootstrap |
+| 5.5 Extensible Admission Control | 5.5.1 | 1 | 0 | 0 | 1 | Cluster-level policy applied post-bootstrap |
+| 5.7 General Policies | 5.7.1–5.7.4 | 4 | 0 | 0 | 4 | Cluster-level policy applied post-bootstrap |
+| **Total** | | **130** | **0** | **16** | **114** | |
 
 ### Not Applicable Controls
 
@@ -92,7 +94,7 @@ No released Kairos image yet contains these changes. This page will be updated w
 **os-12** (Detect vulnerabilities in the cpu-vulnerability-directory)
 - **Reason**: A property of the host CPU's microcode and the base image's kernel mitigations, not configurable by the image builder.
 
-### Not Implemented: Architectural Notes
+### Permanent Exclusions: squashfs and vfat
 
 **os-10 (Filesystem Modules)** is implemented for six of eight filesystems; two are permanently excluded:
 
