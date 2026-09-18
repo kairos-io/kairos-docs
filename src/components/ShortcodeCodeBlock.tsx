@@ -15,6 +15,7 @@ export default function ShortcodeCodeBlock({
 }: ShortcodeCodeBlockProps): React.JSX.Element {
   const {selection} = useFlavor();
   const {
+    hadronFlavorRelease,
     registryURL,
     kairosVersion,
     k3sVersion,
@@ -27,6 +28,7 @@ export default function ShortcodeCodeBlock({
     template,
     flavor: selection.flavor,
     flavorRelease: selection.flavorRelease,
+    hadronFlavorRelease,
     registryURL,
     defaultKairosVersion: kairosVersion,
     defaultK3sVersion: k3sVersion,

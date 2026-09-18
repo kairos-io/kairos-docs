@@ -56,3 +56,39 @@ export function buildKairosOciImageName({
     `${flavorRelease}-${variantValue}-${arch}-${model}-${kairosVersion}${k3sSegment}${suffixSegment}`
   );
 }
+
+export type GoogleImageNameParams = {
+  hadronFlavorRelease: string;
+  kairosVersion: string;
+};
+
+/**
+ * Build the Google Compute Engine image name the release pipeline publishes.
+ *
+ * The pipeline derives the image name from the artifact filename, not from the
+ * version: `upload-cloud-images.yaml` resolves the hadron container image the
+ * release was built with, AuroraBoot names the raw disk
+ * `kairos-<FLAVOR>-<FLAVOR_RELEASE>-<VARIANT>-<ARCH>-<MODEL>-<VERSION>.raw`
+ * from `/etc/kairos-release`, and `upload-image-to-gcp.sh` (`sanitizeString`)
+ * runs that through `tr '.' '-'` because GCE resource names cannot contain
+ * dots.
+ *
+ * Only one image is published, so the variant, arch and model are fixed here
+ * rather than taken from the page's flavor selector: a reader switching flavor
+ * must not be handed the name of an image that does not exist. The flavor is
+ * hadron for every release the pipeline currently builds, and its release comes
+ * from `hadronFlavorRelease`, which already tracks the hadron version per docs
+ * version.
+ */
+export function buildGoogleImageName({
+  hadronFlavorRelease,
+  kairosVersion,
+}: GoogleImageNameParams): string {
+  return buildKairosImageName({
+    variant: 'core',
+    kairosVersion,
+    k3sVersion: '',
+    flavor: 'hadron',
+    flavorRelease: hadronFlavorRelease,
+  }).replaceAll('.', '-');
+}
