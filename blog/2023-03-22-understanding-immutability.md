@@ -159,6 +159,18 @@ In conclusion, an immutable Linux OS, provides a more secure and reliable enviro
 
 Immutable Linux OSes offer a higher degree of reliability, security, and fault tolerance compared to traditional Linux systems. By using read-only file systems, separate update partitions and A/B partitioning, Immutable Linux OSes provide a safe, reliable way to update the system without downtime or the risk of breaking the system. Immutable Linux OSes are particularly well-suited for critical systems such as cloud container platforms, embedded systems, or IoT devices, where stability, security and scalability are of the utmost importance.
 
+## Try it on your own hardware
+
+Kairos is one of the immutable Linux OSes described above, and it is free to
+try. The quickstart boots a live image and installs a node in a few minutes,
+and the architecture pages explain how the read-only rootfs and the A/B
+partition layout discussed here are actually implemented.
+
+<div class="buttons">
+    <a href="/quickstart">Get started with Kairos</a>
+    <a href="/docs/architecture/immutable/">How Kairos does immutability</a>
+</div>
+
 ## Footnotes
 
 [^1]: (Author note) As I dislike marketing buzzwords, I prefer to describe the Edge as the last-mile of computing. It involves a dedicated hardware that needs to be controlled by the Cloud in some way, such as a small server running Kubernetes, performing measurements and communicating with the Cloud. The term "Edge" is a broad, generic term that encompasses various computing scenarios, such as near-edge and far-edge computing, each with its own specialized deployment solution.
