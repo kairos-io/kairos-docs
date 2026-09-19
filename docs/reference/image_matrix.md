@@ -37,7 +37,7 @@ More about naming conventions: [Artifact Naming Convention](/docs/reference/arti
 Notes:
 
 - **Core** images do not include a Kubernetes engine and are suitable as a base for customization.
-- **Standard** images include a Kubernetes provider. In the official path, [provider-kairos](https://github.com/kairos-io/provider-kairos) supports both `k3s` and `k0s`, with optional [p2p](/docs/installation/p2p).
+- **Standard** images include a Kubernetes provider. In the official path, the [`provider/`](https://github.com/kairos-io/kairos/tree/master/provider) component supports both `k3s` and `k0s`, with optional [p2p](/docs/installation/p2p).
 
 :::info Legacy flavor example
 Some docs still show concrete flavor/release examples (for example `ubuntu:22.04` or `opensuse:leap-15.6`) to illustrate commands and naming. Those flavor repositories are no longer actively updated by the Kairos release pipeline. Use them as templates and build/publish your own images with [BYOI](/docs/reference/byoi/).
@@ -100,15 +100,12 @@ If you need to further customize images, including changes to the base image, pa
 
 Our changelog is published as part of the release process and contains all the changes, highlights, and release notes that are relevant to the release. We strongly recommend checking the changelog for each release before upgrading or building a customized version of Kairos.
 
-Release changelogs are available for Kairos core and for each component. Below is a list of the components that are part of a Kairos release and their respective release pages with changelogs.
+Since v4.3 every device-runtime component ships from the Kairos monorepo, so the Kairos changelog covers `immucore`, the `agent`, the `sdk`, `kcrypt`, `kairos-init` and the `provider` as well. AuroraBoot is released on its own. Below are the two release pages that carry a changelog.
 
 | **Project**                                  	                                | **Release page**                                       	 |
 |-------------------------------------------------------------------------------|----------------------------------------------------------|
 | **Kairos core and standard (k3s and k0s support)**                          	 | https://github.com/kairos-io/kairos/releases      	      |
-| **Kairos' provider**                                                          | https://github.com/kairos-io/provider-kairos/releases    |
-| **Immucore**                                                                  | https://github.com/kairos-io/Immucore/releases           |
 | **AuroraBoot**                                                                | https://github.com/kairos-io/AuroraBoot/releases         |
-| **OSBuilder**                                                                 | https://github.com/kairos-io/osbuilder/releases          |
 
 ## Service Billing Of Materials (SBOM)
 

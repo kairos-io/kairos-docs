@@ -346,7 +346,8 @@ the client's broadcast message.
 A server is needed that runs in the same network as the Kairos node and responds
 with the IP address and port where the KMS is reachable.
 There may be tools that can be configured for the job, but we also provide a little
-utility that does exactly that: https://github.com/kairos-io/simple-mdns-server/
+utility that does exactly that: https://github.com/kairos-io/simple-mdns-server/ (archived, but its
+releases are still downloadable and the tool still works).
 
 The process to deploy the KMS is similar to the [Online mode](#online-mode).
 An example on how to test this feature locally, can be found [in this document](https://github.com/kairos-io/kairos/blob/master/kcrypt/mdns-notes.md).
