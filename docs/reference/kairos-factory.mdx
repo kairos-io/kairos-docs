@@ -468,7 +468,16 @@ $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
 
 ## GitHub Actions Integration
 
-For users who prefer to automate their Kairos image builds using GitHub Actions, the [Kairos Factory Action](https://github.com/kairos-io/kairos-factory-action) provides a reusable workflow that simplifies the build process.
+For users who prefer to automate their Kairos image builds using GitHub Actions, Kairos ships [`reusable-factory.yaml`](https://github.com/kairos-io/kairos/blob/master/.github/workflows/reusable-factory.yaml), a reusable workflow that simplifies the build process.
+
+It used to live in `kairos-io/kairos-factory-action`. That repository was archived on 2026-08-26 and the workflow moved into the `kairos-io/kairos` monorepo, so the `uses:` lines below name the monorepo. If your workflows still call the old repository, rewrite them:
+
+```bash
+find .github/workflows -type f \( -name '*.yaml' -o -name '*.yml' \) -exec sed -i \
+  's|kairos-io/kairos-factory-action/\.github/workflows/|kairos-io/kairos/.github/workflows/|g' {} +
+```
+
+The inputs did not change, so that rewrite plus a ref is the whole migration. The old repository still resolves, but it takes no new commits, and Renovate stops proposing bumps for a `uses:` line that points at an archived repository.
 
 ### What is the Kairos Factory Action?
 
@@ -488,7 +497,7 @@ The Kairos Factory Action is a GitHub Actions reusable workflow that automates t
 ```yaml
 jobs:
   build:
-    uses: kairos-io/kairos-factory-action/.github/workflows/reusable-factory.yaml@main
+    uses: kairos-io/kairos/.github/workflows/reusable-factory.yaml@v4.3.0
     with:
       version: "v1.0.0"
       base_image: "ubuntu:24.04"
@@ -499,6 +508,15 @@ jobs:
 ```
 
 This example builds a Kairos image based on Ubuntu 24.04 with K3s, generates an ISO artifact, and provides a rich build summary with artifact links.
+
+### Choosing a ref
+
+The examples pin at `v4.3.0`, the first Kairos release that carries the workflow. Every subsequent release tags it again, so a tag pin follows the Kairos release cadence. Two other refs are valid:
+
+- `@<sha>` pins at one commit and is the pattern Kairos itself uses for third-party actions. Renovate keeps it current.
+- `@master` always runs the newest version, at the cost of reproducible builds.
+
+Nothing older than `v4.3.0` has the file, so do not pin at `v4.2.0` or earlier.
 
 ### Key Features
 
@@ -515,7 +533,7 @@ If your base image lives on a registry served over plain HTTP, or one that prese
 ```yaml
 jobs:
   build:
-    uses: kairos-io/kairos-factory-action/.github/workflows/reusable-factory.yaml@main
+    uses: kairos-io/kairos/.github/workflows/reusable-factory.yaml@v4.3.0
     with:
       version: "v1.0.0"
       base_image: "my-registry.internal:5000/myorg/ubuntu:24.04"
@@ -530,7 +548,7 @@ This input affects only the pulling of images while building the artifacts; ther
 Disabling TLS verification removes protection against man-in-the-middle attacks. Use it only in controlled environments, not against public registries.
 :::
 
-For complete documentation, configuration options, and advanced examples, visit the [Kairos Factory Action repository](https://github.com/kairos-io/kairos-factory-action).
+Every input is documented in the `workflow_call` block at the top of [`reusable-factory.yaml`](https://github.com/kairos-io/kairos/blob/master/.github/workflows/reusable-factory.yaml), which is the authoritative list.
 
 ## Web UI
 
