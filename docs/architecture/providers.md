@@ -39,7 +39,7 @@ Reference implementation points in source code:
 - Agent startup and event publishing:
   - [agent/main.go](https://github.com/kairos-io/kairos/blob/master/agent/main.go)
 - Provider event registration:
-  - [provider-kairos/internal/provider/start.go](https://github.com/kairos-io/provider-kairos/blob/main/internal/provider/start.go)
+  - [provider/internal/provider/start.go](https://github.com/kairos-io/kairos/blob/master/provider/internal/provider/start.go)
 - Plugin framework used by agent/provider:
   - [mudler/go-pluggable](https://github.com/mudler/go-pluggable)
 
