@@ -130,19 +130,20 @@ quay.io/kairos/<flavor>:<flavor_release>-<variant>-<arch>-<device>-<version>-img
 ## Binaries
 
 ```
-<name>-<version>-<os>-<arch>.<extension>
+<name>-<version>-<os>-<arch>[-fips].<extension>
 ```
 
 Where:
 
-- `<name>`: the name of the binary e.g. `kairosctl`, `kairos-agent`, `provider-kairos`, etc
-- `<version>`: the version of the binary e.g. `v1.0.0`
-- `<os>`: `Linux`, `Windows`, `Darwin`, etc
-- `<arch>`: `amd64`, `arm64`, `386`, etc
-- `<extension>`: `tar.gz`, `zip`, etc
+- `<name>`: the name of the binary e.g. `kairos`, `provider-kairos`, `kairos-init`, `kairos-installer`, `kcrypt-challenger`
+- `<version>`: the version of the binary, which is the Kairos release e.g. `v4.3.0`
+- `<os>`: `linux`
+- `<arch>`: `amd64`, `arm64`, `riscv64`
+- `-fips`: present on the FIPS variant of a binary, where one is published
+- `<extension>`: `tar.gz`
 
 ### Examples
 
-- kairosctl-v2.3.0-Linux-386.tar.gz
-- provider-kairos-2.3.0-Windows-amd64.tar.gz
-- kairos-agent-v2.1.10-Linux-arm64.tar.gz
+- kairos-v4.3.0-linux-amd64.tar.gz
+- provider-kairos-v4.3.0-linux-arm64.tar.gz
+- kairos-installer-v4.3.0-linux-amd64-fips.tar.gz
