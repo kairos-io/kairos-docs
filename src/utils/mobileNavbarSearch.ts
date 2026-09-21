@@ -3,6 +3,7 @@ const DOC_MOBILE_SEARCH_PREFIXES = [
   '/operator-docs',
   '/quickstart',
   '/hadron-docs',
+  '/provider-kubernetes-docs',
 ] as const;
 
 export function isDocsMobileSearchRoute(pathname: string): boolean {
