@@ -395,6 +395,19 @@ const config: Config = {
         showLastUpdateAuthor: true,
       },
     ],
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'provider-kubernetes-docs',
+        path: 'provider-kubernetes-docs',
+        routeBasePath: 'provider-kubernetes-docs',
+        sidebarPath: './sidebarsProviderKubernetes.ts',
+        remarkPlugins: [remarkShortcodeCode],
+        editUrl: 'https://github.com/kairos-io/kairos-docs/tree/main/',
+        showLastUpdateTime: true,
+        showLastUpdateAuthor: true,
+      },
+    ],
   ],
 
   themeConfig: {
@@ -488,6 +501,10 @@ const config: Config = {
             {
               label: 'Operator Docs',
               to: '/operator-docs/',
+            },
+            {
+              label: 'Kubernetes Provider Docs',
+              to: '/provider-kubernetes-docs/',
             },
           ],
         },
