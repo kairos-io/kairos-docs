@@ -172,6 +172,14 @@ export const pressItems: PressItem[] = [
 
 export const events: EventItem[] = [
   {
+    dateISO: '2026-11-10',
+    dateLabel: 'Nov 10, 2026',
+    location: 'Salt Lake City, US',
+    title: 'Project Pavilion Kiosk - Booth P-15B (10:30-14:30)',
+    conference: 'KubeCon NA',
+    url: 'https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/features-add-ons/project-engagement/#project-pavilion-kiosk-directory',
+  },
+  {
     dateISO: '2026-09-22',
     dateLabel: 'Sep 22, 2026',
     location: 'Online',
