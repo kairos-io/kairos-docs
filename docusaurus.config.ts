@@ -414,8 +414,8 @@ const config: Config = {
     // Replace with your project's social card
     image: 'img/Kairos_800x419.png',
     announcementBar: {
-      id: 'hadron-linux-out',
-      content: '<a href="https://github.com/kairos-io/kairos/releases/tag/v4.3.0">Kairos v4.3.0</a> is out! 🚀',
+      id: 'kubecon-na-2026',
+      content: '🎉️ Meet us in Salt Lake City for KubeCon + CloudNativeCon North America · Nov 9-12 · <b><a href="https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/register/?utm_source=kairos&utm_medium=ribbon-banner&utm_campaign=KubeCon-CloudNativeCon-NA-2026&utm_content=hero">Register Today!</a></b> 🥳️',
       backgroundColor: '#1baaff',
       textColor: '#000000',
       isCloseable: true,
