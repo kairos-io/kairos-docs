@@ -297,7 +297,7 @@ users:
 
 ## Encrypting on first boot (templates and cloud images)
 
-The scenarios above encrypt partitions during installation, which requires a TPM to be present at install time. Since Kairos v4.x, a node can instead encrypt its partitions on the first boot: the image carries only the encryption policy, and the LUKS material is created on each machine against that machine's own TPM.
+The scenarios above encrypt partitions during installation, which requires a TPM to be present at install time. A node can instead encrypt its partitions on the first boot: the image carries only the encryption policy, and the LUKS material is created on each machine against that machine's own TPM.
 
 This is aimed at golden images and templates. A typical flow on a virtualization platform looks like this:
 
