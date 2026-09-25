@@ -47,6 +47,47 @@ a non-bootable system. This section describes those measure and how they work.
 - "Trusted boot" installations:
   While [a similar solution exists](https://systemd.io/AUTOMATIC_BOOT_ASSESSMENT/) in systemd to automatically reboot to a fallback entry, it's not yet implemented in Kairos. You can monitor [the tracking issue](https://github.com/kairos-io/kairos/issues/2864) for updates.
 
+### What counts as a successful boot
+
+The sentinels are cleared in the `boot.before` cloud-init stage on the active
+slot. A boot therefore counts as successful once Kairos has mounted the active
+image and cloud-init has reached that stage; it does not wait for your workload,
+for Kubernetes, or for any of your own cloud-config stages. A boot that reaches
+a login prompt but leaves your application broken is a successful boot as far as
+boot assessment is concerned, and will not roll back.
+
+Automatic rollback is a GRUB-only feature. The stage that manages the sentinels
+is skipped when the kernel cmdline contains `rd.immucore.uki`, which is the case
+for every "Trusted boot" installation.
+
+## Rolling back manually
+
+Automatic rollback only triggers on a boot that fails. To go back to the previous
+version on purpose, for example after an upgrade that boots fine but misbehaves,
+select the fallback entry yourself:
+
+```bash
+$ kairos-agent bootentry --select fallback
+$ reboot
+```
+
+Run `kairos-agent bootentry` with no arguments to list the entries available on
+the node and pick one interactively.
+
+:::warning
+The selection lasts for one boot only.
+
+On GRUB installations the agent writes `next_entry`, which the boot config
+consumes and clears as it applies it. On "Trusted boot" installations it writes
+the `LoaderEntryOneShot` EFI variable, which systemd-boot clears the same way.
+Either way, the boot after the next one goes back to the default entry, so a
+node left running on the fallback slot will return to the upgraded slot at its
+next reboot.
+:::
+
+To stay on the previous version, downgrade with a normal upgrade to that version
+rather than relying on the fallback selection.
+
 ## Validating the image signatures (Trusted boot installations)
 
 When Kairos is installed [in trusted boot mode](/docs/installation/trustedboot), the OS image comes as a single signed file. The certificate signing the image has to be enrolled in the system's firmware database otherwise the system won't allow booting it. This is also true when Kairos is being upgraded to a new version (which is a new image). For this reason, when upgrading, the `kairos-agent` will perform a check to see if the certificate that signs the new image is enrolled (and not blacklisted) in the firmware database. If not, the upgrade will be aborted to avoid a situation where booting is not possible.
