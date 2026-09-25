@@ -4,6 +4,21 @@ linkTitle: A Minimal Single-Node Kubernetes with Kubeadm
 description: Learn how to build a Kairos image for a single-node Kubernetes cluster using the provider-kubeadm.
 ---
 
+:::warning Superseded provider
+`provider-kubeadm` is archived and no longer accepts changes. Its kubeadm
+support continues in
+[provider-kubernetes](https://github.com/kairos-io/provider-kubernetes), which
+tracks the three most recent in-support upstream Kubernetes minors and supports
+externally-managed control planes. See
+[kairos-io/kairos#4099](https://github.com/kairos-io/kairos/issues/4099) for the
+handover.
+
+The walkthrough below still describes `provider-kubeadm` and its released
+artifacts remain downloadable, so it is kept as a reference for existing
+deployments. Start new clusters on `provider-kubernetes` instead; its
+configuration is not the same as the cloud-config on this page.
+:::
+
 Kairos is all about giving you the power to customize your operating system just the way you need it—declaratively, reproducibly, and predictably. Today, we're walking through how to build and boot a Kairos image using the [provider-kubeadm](https://github.com/kairos-io/provider-kubeadm) to set up a Kubernetes cluster with `kubeadm`.
 
 This guide is focused on a simple use case: booting a **single-node Kubernetes cluster** with role `init`, version `v1.30.0`.
@@ -210,6 +225,6 @@ And, of course, all of this benefits from the immutability and reproducibility t
 
 ---
 
-If you want to see more examples or contribute to the `provider-kubeadm`, check out the [GitHub repo](https://github.com/kairos-io/provider-kubeadm) or hop into our community channels.
+The `provider-kubeadm` [GitHub repo](https://github.com/kairos-io/provider-kubeadm) still holds more examples, but it is archived and takes no contributions. Send those to [provider-kubernetes](https://github.com/kairos-io/provider-kubernetes), or hop into our community channels.
 
 Let us know how you're bootstrapping Kubernetes with Kairos—we'd love to feature your use case!
