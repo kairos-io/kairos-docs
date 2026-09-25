@@ -295,6 +295,44 @@ users:
   # - github:mudler
 ```
 
+## Encrypting on first boot (templates and cloud images)
+
+The scenarios above encrypt partitions during installation, which requires a TPM to be present at install time. A node can instead encrypt its partitions on the first boot: the image carries only the encryption policy, and the LUKS material is created on each machine against that machine's own TPM.
+
+This is aimed at golden images and templates. A typical flow on a virtualization platform looks like this:
+
+1. Install Kairos once in a VM, without a TPM attached and without `encrypted_partitions` in the install config. Power the VM off and mark it as a template.
+2. Add the encryption policy below to the template's OEM partition, for example as `/oem/91_encrypt_on_boot.yaml`. The policy is plain configuration and contains no key material, so the template stays safe to copy, snapshot and export.
+3. For each new node, clone the template, attach a fresh virtual TPM and boot.
+
+On the first boot of each clone, Kairos notices that partitions configured for encryption are still plaintext, encrypts them against the clone's own TPM before they are mounted, unlocks them and continues booting. Every later boot detects the partitions are already encrypted and does nothing.
+
+```yaml
+#cloud-config
+
+install:
+  # Same key the install time scenarios use.
+  encrypted_partitions:
+  - COS_PERSISTENT
+
+kcrypt:
+  # Explicit opt-in for encrypting on boot. Defaults to false.
+  encrypt_on_boot: true
+```
+
+Without a KMS configured the passphrase is stored in the local TPM, as in offline mode. The online scenarios apply too: add the usual `kcrypt.challenger` block to the policy and the passphrase is managed by the KMS instead.
+
+:::warning
+Encrypting a partition destroys the data on it. The boot time step only runs when `kcrypt.encrypt_on_boot` is explicitly set to `true`, but enabling it on an existing node whose listed partitions hold plaintext data will destroy that data on the next boot. In the template flow this is what you want, since a fresh template holds nothing of value in its persistent partition.
+:::
+
+There is no plaintext fallback. If the configuration says a partition must be encrypted and the machine cannot do it, for example because no TPM is attached or the KMS cannot be reached, the boot halts with a message describing the problem, and the partition is left untouched. The same applies when the configuration itself cannot be read on boot: since the node might have opted in, the boot stops rather than continue with a policy it cannot see.
+
+Notes:
+
+- Partitions the running boot depends on cannot be encrypted this way: the OEM partition (the policy itself is read from it), the state and recovery partitions (they hold the system that is booting) and the EFI partition. Listing one of them halts the boot with a message saying so. Encrypt OEM at install time if you need it encrypted.
+- Trusted Boot (UKI) images always encrypt during installation, so this flow does not apply to them.
+
 ## Verifying the KMS
 
 The examples above reach the KMS over plain `http`. On that path the node sends
