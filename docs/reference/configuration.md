@@ -793,7 +793,7 @@ stages:
 |-------------------------|--------------------------|
 |`kubevip.enable`         | Enables kubevip. Accepted: `true`, `false`.  |
 |`kubevip.eip`            | VIP address to use |
-|`kubevip.manifest_url`   | Download and use the manifest from that url. You can see the default used otherwise [here](https://github.com/kairos-io/provider-kairos/blob/main/internal/assets/static/kube_vip_rbac.yaml)|
+|`kubevip.manifest_url`   | Download and use the manifest from that url. You can see the default used otherwise [here](https://github.com/kairos-io/kairos/blob/master/provider/internal/assets/static/kube_vip_rbac.yaml)|
 |`kubevip.interface`      | Interface to use for the Kubevip EIP to attach to |
 |`kubevip.static_pod`     | Use a pod deployment for Kubevip instead of a daemonset. Accepted: `true`, `false` |
 |`kubevip.version`        | Set the specific Kubevip version to use |
