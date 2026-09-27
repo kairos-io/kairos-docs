@@ -198,6 +198,10 @@ This command will register the node on the KMS.
 
 A node can use the following during deployment, specifying the address of the challenger server:
 
+:::warning Trusted Boot uses a different cmdline mechanism
+`install.grub_options` is read on GRUB installations only. On [Trusted Boot](/docs/installation/trustedboot/) the cmdline is part of the signed EFI artifact, so `rd.neednet=1` set this way is discarded, the initramfs comes up without networking, and the node cannot reach the challenger server. Build the artifact with the parameter instead, as described in [Additional efi entries](/docs/installation/trustedboot/#additional-efi-entries).
+:::
+
 ``` yaml
 #cloud-config
 
@@ -262,6 +266,10 @@ EOF
 ```
 
 The node doesn't need any specific configuration beside the kcrypt challenger, so for instance:
+
+:::warning Trusted Boot uses a different cmdline mechanism
+As in the scenario above, `install.grub_options` does not apply on [Trusted Boot](/docs/installation/trustedboot/). Put `rd.neednet=1` in the signed artifact at build time, see [Additional efi entries](/docs/installation/trustedboot/#additional-efi-entries).
+:::
 
 ```yaml
 #cloud-config

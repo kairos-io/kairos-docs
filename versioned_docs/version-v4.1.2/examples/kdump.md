@@ -100,6 +100,10 @@ Then we burn the resulting ISO to a dvd or usb stick and boot it normally.
 
 This values need to be passed to the kernel in the cmdline so kdump knows what memory it has to work with. The easiest way is to set the `install.grub_options.extra_cmdline` value in the [cloud-config](/docs/reference/configuration/) during install.
 
+:::warning Trusted Boot uses a different cmdline mechanism
+`install.grub_options` is read on GRUB installations only. On [Trusted Boot](/docs/installation/trustedboot/) the cmdline is part of the signed EFI artifact, so the `crashkernel` values below are discarded and no memory is reserved. Pass them at build time instead, see [Additional efi entries](/docs/installation/trustedboot/#additional-efi-entries).
+:::
+
 ```yaml
 #cloud-config
 
