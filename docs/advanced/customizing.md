@@ -8,6 +8,9 @@ description: Learn how to customize Kairos images to suit your needs
 :::info Note
 This guide focuses on customizing Kairos images. For a complete guide on creating custom cloud images from scratch, including when and how to apply these customizations, see [Creating Custom Cloud Images](/docs/advanced/creating_custom_cloud_images/).
 :::
+:::tip Is a Dockerfile the right mechanism?
+Rebuilding the image is one of four ways to extend a node, next to system extensions, bundles and providers. See [Choosing how to extend Kairos](/docs/advanced/choosing-how-to-extend/) for a comparison.
+:::
 Kairos is an open source, container-based operating system. To modify Kairos and add a package, you'll need to build a container image from the [Kairos images](/docs/reference/image_matrix). Here's an example with Docker which adds `figlet`:
 
 ```dockerfile

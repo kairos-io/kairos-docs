@@ -8,6 +8,9 @@ sidebar_position: 3
 This feature is in preview state and only available in Kairos v3.4.x releases and alphas.
 Please check the section "Known issues" at the bottom for more information.
 :::
+:::tip Are system extensions the right mechanism?
+Extensions require systemd, and they contribute files rather than run code. See [Choosing how to extend Kairos](/docs/advanced/choosing-how-to-extend/) for a comparison with Dockerfiles, bundles and providers, and for what to use on an image that runs OpenRC.
+:::
 :::info Signing keys for system extensions under Trusted Boot
 Sysexts need to be signed with the same key/cert as the ones used to sign the EFI files. As those are part of the system and available in the EFI firmware, we can extract the public part and verify the sysexts locally. Any of the PK, KEK or DB keys can be used to sign sysexts. This only affects Trusted Boot.
 :::
