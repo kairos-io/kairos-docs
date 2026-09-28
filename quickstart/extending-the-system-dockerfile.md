@@ -14,7 +14,7 @@ By the end of this quickstart, you will be able to:
 :::
 
 Now that you've launched your [first Kubernetes cluster on Hadron](/quickstart/), you might want to extend the system.
-Kairos supports multiple approaches for this—Dockerfiles, systemd system extensions, and bundles. There isn’t a single “best” option: each has trade-offs, and the right choice depends on your needs. In this quickstart, we’ll extend the system using a Dockerfile.
+Kairos supports multiple approaches for this: Dockerfiles, systemd system extensions, bundles, and providers. There isn’t a single “best” option: each acts at a different moment in the life of a node, and [Choosing how to extend Kairos](/docs/advanced/choosing-how-to-extend/) compares them side by side so you can pick one. In this quickstart, we’ll extend the system using a Dockerfile.
 
 ## Prerequisites
 
@@ -121,6 +121,10 @@ Congratulations—you’ve successfully extended a Hadron image.
 ## What's Next?
 
 ### Other ways to extend the system
+
+<a class="btn btn-lg btn-outline-primary me-3 mb-4" href="/docs/advanced/choosing-how-to-extend/">
+    Compare all four mechanisms
+</a>
 
 <a class="btn btn-lg btn-outline-primary me-3 mb-4" href="/docs/advanced/sys-extensions/">
     Extend with systemd extensions

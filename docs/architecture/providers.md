@@ -9,6 +9,10 @@ Kairos providers are plugin binaries used to extend node behavior through lifecy
 
 In practice, many users use providers for Kubernetes bootstrap, but providers are not limited to Kubernetes. A provider gives you a mechanism to react to lifecycle events and execute your own logic for system components.
 
+:::tip Is a provider the right mechanism?
+A provider keeps reacting for the life of the node, and its binary ships in the image. If you only need to act once, or only need extra files, see [Choosing how to extend Kairos](/docs/advanced/choosing-how-to-extend/) for a comparison with Dockerfiles, system extensions and bundles.
+:::
+
 ## Why providers exist
 
 Providers let Kairos keep a modular architecture:

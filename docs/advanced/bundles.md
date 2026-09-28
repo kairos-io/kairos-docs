@@ -7,6 +7,10 @@ description: Bundles are a powerful feature of Kairos that let you customize and
 
 Whether you need to add custom logic, install extra packages, or make other modifications to your system, bundles simplify the process. They can be applied after installation or before bootstrapping a node.
 
+:::tip Is a bundle the right mechanism?
+A bundle runs once and can read the cloud config. If you need files on every boot instead, or a reaction to lifecycle events, see [Choosing how to extend Kairos](/docs/advanced/choosing-how-to-extend/) for a comparison with Dockerfiles, system extensions and providers.
+:::
+
 Bundles are container images containing only files (and not full OS) that can be used to install new software or extend the cloud-init syntax. You can find community-supported bundles in the [community-bundles](https://github.com/kairos-io/community-bundles) repository.
 
 ## Consuming Bundles
