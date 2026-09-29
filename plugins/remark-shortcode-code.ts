@@ -42,6 +42,32 @@ function visitAndTransform(node: MarkdownNode): void {
       continue;
     }
 
+    // Inline code carries the same shortcodes as a fenced block: prose that
+    // names an image or a version writes it as `quay.io/kairos/kairos-init:{{<
+    // KairosInitVersion >}}` in the middle of a sentence. Without this branch
+    // the shortcode reaches the page verbatim and a reader who copies the
+    // command gets an invalid reference. An inline node is phrasing content,
+    // so it becomes a text element, not a flow one.
+    if (
+      child.type === 'inlineCode' &&
+      typeof child.value === 'string' &&
+      SUPPORTED_SHORTCODE_PATTERN.test(child.value)
+    ) {
+      node.children[i] = {
+        type: 'mdxJsxTextElement',
+        name: 'ShortcodeInlineCode',
+        attributes: [
+          {
+            type: 'mdxJsxAttribute',
+            name: 'template',
+            value: child.value,
+          },
+        ],
+        children: [],
+      } as unknown as MarkdownNode;
+      continue;
+    }
+
     visitAndTransform(child);
   }
 }

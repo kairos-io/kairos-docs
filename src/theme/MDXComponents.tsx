@@ -17,6 +17,7 @@ import OnlyFlavors from '@site/src/components/OnlyFlavors';
 import OperatorVersion from '@site/src/components/OperatorVersion';
 import ProviderVersion from '@site/src/components/ProviderVersion';
 import ShortcodeCodeBlock from '@site/src/components/ShortcodeCodeBlock';
+import ShortcodeInlineCode from '@site/src/components/ShortcodeInlineCode';
 import YouTube from '@site/src/components/YouTube';
 
 const components: MDXComponentsObject = {
@@ -39,6 +40,7 @@ const components: MDXComponentsObject = {
   OperatorVersion,
   ProviderVersion,
   ShortcodeCodeBlock,
+  ShortcodeInlineCode,
   YouTube,
 };
 

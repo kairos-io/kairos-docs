@@ -16,7 +16,8 @@
     "validate:release-artifacts": "node scripts/validate-release-artifacts.mjs",
     "test:scripts": "node --test scripts/*.test.mjs",
     "test:components": "node --test 'src/**/*.test.mjs'",
-    "test": "npm run test:scripts && npm run test:components"
+    "test:plugins": "node --test 'plugins/*.test.mjs'",
+    "test": "npm run test:scripts && npm run test:components && npm run test:plugins"
   },
   "dependencies": {
     "@cmfcmf/docusaurus-search-local": "^2.0.1",
