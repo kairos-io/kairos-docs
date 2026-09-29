@@ -48,11 +48,9 @@ RUN mkdir -p /system/providers && curl -L https://github.com/kairos-io/provider-
 Or with the modern [Kairos Factory](/docs/reference/kairos-factory/) method:
 
 ```Dockerfile
-FROM quay.io/kairos/kairos-init:{{< KairosInitVersion  >}} AS kairos-init
-
 FROM ubuntu:24.04
 ARG VERSION=1.0.0
-RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init /kairos-init --version "${VERSION}"
+RUN --mount=type=bind,from=quay.io/kairos/kairos-init:{{< KairosInitVersion  >}},src=/kairos-init,dst=/kairos-init /kairos-init --version "${VERSION}"
 RUN curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 RUN echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /' | tee /etc/apt/sources.list.d/kubernetes.list
 

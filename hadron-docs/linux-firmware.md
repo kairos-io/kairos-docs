@@ -91,12 +91,10 @@ For example, run `kairos-init` as a build stage on top of the image above so the
 proper Kairos image you can deploy or upgrade to:
 
 ```dockerfile
-FROM quay.io/kairos/kairos-init:latest AS kairos-init
-
 # Turn the Hadron image with firmware into a bootable Kairos image.
 FROM my-registry.example.com/my-hadron:latest
 ARG VERSION=1.0.0
-RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init /kairos-init --version "${VERSION}"
+RUN --mount=type=bind,from=quay.io/kairos/kairos-init:latest,src=/kairos-init,dst=/kairos-init /kairos-init --version "${VERSION}"
 ```
 
 ```bash

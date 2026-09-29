@@ -38,12 +38,10 @@ Hadron by itself is not immutable. To get the full Kairos experience—immutabil
 Create a `Dockerfile` with the following content:
 
 ```dockerfile
-FROM quay.io/kairos/kairos-init:v0.6.8 AS kairos-init
-
 FROM ghcr.io/kairos-io/hadron:v0.0.1-beta2 AS base
 ARG VERSION
 
-RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init \
+RUN --mount=type=bind,from=quay.io/kairos/kairos-init:v0.6.8,src=/kairos-init,dst=/kairos-init \
     eval /kairos-init -l debug -s install --model generic --provider k3s --version \"${VERSION}\" && \
     eval /kairos-init -l debug -s init --model generic --provider k3s --version \"${VERSION}\"
 ```
@@ -84,8 +82,6 @@ In this example we use the Hadron `hadron-toolchain` image as a build stage. It 
 :::
 
 ```dockerfile
-FROM quay.io/kairos/kairos-init:v0.6.4 AS kairos-init
-
 FROM ghcr.io/kairos-io/hadron-toolchain:v0.0.1-beta1 AS bottom
 RUN curl -L -o bottom.tar.gz https://github.com/ClementTsang/bottom/releases/download/0.11.4/bottom_x86_64-unknown-linux-musl.tar.gz
 RUN tar xvzf bottom.tar.gz
@@ -93,7 +89,7 @@ RUN tar xvzf bottom.tar.gz
 FROM ghcr.io/kairos-io/hadron:v0.0.1-beta1 AS base
 ARG VERSION
 
-RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init \
+RUN --mount=type=bind,from=quay.io/kairos/kairos-init:v0.6.4,src=/kairos-init,dst=/kairos-init \
     eval /kairos-init -l debug -s install --provider k3s --version \"${VERSION}\" && \
     eval /kairos-init -l debug -s init --provider k3s --version \"${VERSION}\"
 
