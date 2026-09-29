@@ -546,6 +546,12 @@ This will set the hostname for each machine based on the first 4 characters of t
 
 The `install.grub_options` field in the Kairos configuration file allows you to set key/value pairs for GRUB options that will be set in the GRUB environment after installation.
 
+:::warning GRUB installations only
+This field applies to GRUB installations. It has no effect on [Trusted Boot](/docs/installation/trustedboot/), where the cmdline is part of the signed EFI artifact and the GRUB environment is never read. Every key in the table below is discarded on such a system, and the installer does not report it.
+
+To set cmdline parameters on Trusted Boot, put them in the artifact at build time. See [Additional efi entries](/docs/installation/trustedboot/#additional-efi-entries) for the `auroraboot build-uki` flags that do this.
+:::
+
 Here's an example of how you can use this field to set the `panic=0` boot argument:
 
 ```yaml
@@ -585,6 +591,8 @@ If you want to change the GRUB options after installation, you can do so by sett
 ```bash
 grub2-editenv /oem/grubenv set extra_cmdline="rd.neednet=1"
 ```
+
+This recipe writes the same GRUB environment, so it is also GRUB only. A Trusted Boot system does not read `/oem/grubenv`, and changing the cmdline there requires a new signed artifact and an upgrade.
 
 As a final note, just a reminder that during GRUB menu selection, you can press `e` to edit the cmdline for that boot only, which is useful for testing purposes. That allows to test extra cmdline parameters during a single boot before making them permanent.
 
