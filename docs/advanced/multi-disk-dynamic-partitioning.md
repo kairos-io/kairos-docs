@@ -102,7 +102,7 @@ ARG BASE_IMAGE=ghcr.io/kairos-io/kairos-core-hadron:latest
 FROM ${BASE_IMAGE}
 ARG VERSION=v0.0.0-dev
 
-RUN --mount=type=bind,from=quay.io/kairos/kairos-init:v0.8.4,src=/kairos-init,dst=/kairos-init \
+RUN --mount=type=bind,from=quay.io/kairos/kairos-init:{{< KairosInitVersion >}},src=/kairos-init,dst=/kairos-init \
     /kairos-init -l debug -s install --version "${VERSION}" && \
     /kairos-init -l debug -s init --version "${VERSION}"
 

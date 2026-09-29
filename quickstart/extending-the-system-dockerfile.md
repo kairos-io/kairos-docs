@@ -41,7 +41,7 @@ Create a `Dockerfile` with the following content:
 FROM ghcr.io/kairos-io/hadron:v0.0.1-beta2 AS base
 ARG VERSION
 
-RUN --mount=type=bind,from=quay.io/kairos/kairos-init:v0.6.8,src=/kairos-init,dst=/kairos-init \
+RUN --mount=type=bind,from=quay.io/kairos/kairos-init:{{< KairosInitVersion >}},src=/kairos-init,dst=/kairos-init \
     eval /kairos-init -l debug -s install --model generic --provider k3s --version \"${VERSION}\" && \
     eval /kairos-init -l debug -s init --model generic --provider k3s --version \"${VERSION}\"
 ```
@@ -89,7 +89,7 @@ RUN tar xvzf bottom.tar.gz
 FROM ghcr.io/kairos-io/hadron:v0.0.1-beta1 AS base
 ARG VERSION
 
-RUN --mount=type=bind,from=quay.io/kairos/kairos-init:v0.6.4,src=/kairos-init,dst=/kairos-init \
+RUN --mount=type=bind,from=quay.io/kairos/kairos-init:{{< KairosInitVersion >}},src=/kairos-init,dst=/kairos-init \
     eval /kairos-init -l debug -s install --provider k3s --version \"${VERSION}\" && \
     eval /kairos-init -l debug -s init --provider k3s --version \"${VERSION}\"
 

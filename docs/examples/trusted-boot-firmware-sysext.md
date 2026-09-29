@@ -46,7 +46,7 @@ Create `Dockerfile.kairos-ubuntu-slim` that “Kairosifies” Ubuntu and strips 
 FROM ubuntu:24.04
 
 # Run kairos-init to turn this into a Kairos-ready base
-RUN --mount=type=bind,from=quay.io/kairos/kairos-init:v0.5.19,src=/kairos-init,dst=/kairos-init \
+RUN --mount=type=bind,from=quay.io/kairos/kairos-init:{{< KairosInitVersion >}},src=/kairos-init,dst=/kairos-init \
     /kairos-init -l debug -t true --version 1.0.0 && /kairos-init validate -t true
 
 # Ensure the base rootfs contains NO firmware
