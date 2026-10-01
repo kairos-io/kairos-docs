@@ -321,7 +321,7 @@ The operator's Pods run with default resource settings unless you override them.
 
 | Field | Applies to | Description |
 | ------- | ------------ | ------------- |
-| `resources` | Main `nodeop` container | The Job container that runs `spec.command` (or its init container in reboot mode, alongside the unconstrained `sentinel-creator` container). |
+| `resources` | Main `nodeop` container | The Job container that runs `spec.command` (or its init container in reboot mode, alongside the small `boot-id-reporter` container, which uses fixed resources). |
 | `preflightResources` | Preflight Pod container | Only when `spec.preflight` is set (or is set automatically by NodeOpUpgrade). |
 | `rebootResources` | Reboot Pod container | Only when `rebootOnSuccess` is true (always the case for NodeOpUpgrade). |
 
