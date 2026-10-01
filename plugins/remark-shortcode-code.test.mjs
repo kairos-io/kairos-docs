@@ -68,6 +68,7 @@ test('every shortcode the fenced branch accepts is accepted inline too', () => {
   const shortcodes = [
     '{{< Image variant="core" >}}',
     '{{< OCI variant="core" >}}',
+    '{{< OCITag variant="core" >}}',
     '{{< FlavorCode >}}',
     '{{< FlavorReleaseCode >}}',
     '{{< RegistryURL >}}',
@@ -114,4 +115,47 @@ test('inline code nested below a paragraph is reached', () => {
     tree.children[0].children[0].children[0].children[0].name,
     'ShortcodeInlineCode',
   );
+});
+
+test('a shortcode carrying an attribute is matched for every supported name', () => {
+  // The gate decides whether renderTemplate ever sees the node, so a name it
+  // misses is printed verbatim on the page. OCITag was the one name written
+  // without the argument-tolerant form, and the four reset reference pages
+  // call it with a variant. Assert the property for the whole list so the
+  // next name added cannot regress the same way.
+  const names = [
+    'Image',
+    'OCI',
+    'OCITag',
+    'FlavorCode',
+    'FlavorReleaseCode',
+    'RegistryURL',
+    'KairosVersion',
+    'K3sVersion',
+    'K3sVersionOCI',
+    'ProviderVersion',
+    'KairosInitVersion',
+    'AuroraBootVersion',
+    'OperatorVersion',
+    'OperatorChartVersion',
+    'GoogleImage',
+  ];
+  for (const name of names) {
+    const tree = {
+      type: 'root',
+      children: [{type: 'code', lang: 'yaml', value: `v: "{{< ${name} variant="standard" >}}"`}],
+    };
+    transform(tree);
+    assert.equal(tree.children[0].name, 'ShortcodeCodeBlock', `not matched with an attribute: ${name}`);
+  }
+});
+
+test('a name that only prefixes a supported shortcode is not matched', () => {
+  // The alternation must not let OCI swallow OCITagged, or Image swallow
+  // ImageFoo, now that the word boundary is shared by the whole list.
+  for (const value of ['{{< OCITagged variant="core" >}}', '{{< ImageFoo >}}', '{{< Nope >}}']) {
+    const tree = {type: 'root', children: [{type: 'code', lang: 'yaml', value}]};
+    transform(tree);
+    assert.equal(tree.children[0].type, 'code', `wrongly matched: ${value}`);
+  }
 });

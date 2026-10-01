@@ -7,7 +7,13 @@ type MarkdownNode = {
 
 type MarkdownTree = MarkdownNode;
 
-const SUPPORTED_SHORTCODE_PATTERN = /(\{\{<\s*(Image\b[^>]*|OCI\b[^>]*|FlavorCode|FlavorReleaseCode|RegistryURL|KairosVersion|K3sVersion|K3sVersionOCI|ProviderVersion|KairosInitVersion|AuroraBootVersion|OperatorVersion|OperatorChartVersion|GoogleImage|OCITag)\s*>\}\}|<\s*ProviderVersion\s*\/>)/;
+// Every name is argument-tolerant. Written per alternative, as this list used
+// to be, a name added without the `[^>]*` silently stops matching the moment
+// someone passes it an attribute: OCITag was spelled bare, so the reset pages
+// that call it with a variant fell out of the match. Longer names come first
+// where one prefixes another, so the alternation picks the whole name.
+const SUPPORTED_SHORTCODE_PATTERN =
+  /(\{\{<\s*(Image|OCITag|OCI|FlavorCode|FlavorReleaseCode|RegistryURL|KairosVersion|K3sVersionOCI|K3sVersion|ProviderVersion|KairosInitVersion|AuroraBootVersion|OperatorVersion|OperatorChartVersion|GoogleImage)\b[^>]*\s*>\}\}|<\s*ProviderVersion\s*\/>)/;
 
 function visitAndTransform(node: MarkdownNode): void {
   if (!node.children || node.children.length === 0) {
