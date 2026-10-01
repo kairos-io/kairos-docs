@@ -291,12 +291,72 @@ Before you attempt an upgrade, it's good to know what to expect. Here is how the
 3. The list is sorted with master nodes first, and based on the `concurrency` value, the first batch of Nodes will be processed (could be just 1 Node).
 4. For each targeted node, the controller first runs a **preflight Pod** on that node — a short-lived, non-disruptive Pod (no cordon, no drain) using the upgrade image. The preflight script writes a skip reason to `/dev/termination-log` when the node is already at the target version, or stays silent otherwise. See [Skipping no-op upgrades](#skipping-no-op-upgrades).
 5. **If preflight says skip**, the node is recorded as `Completed` with the skip reason and the controller moves on to the next node. No cordon, no drain, no reboot for that node.
-6. **If preflight says proceed**, the controller creates a reboot Pod and then the upgrade Job (the Job's InitContainer performs the upgrade and the main container creates a sentinel file once it succeeds, which the reboot Pod is watching for).
-7. When the InitContainer exits successfully, the sentinel file appears; the reboot Pod patches itself with a completion annotation and reboots the node via `nsenter`. This way the Job completes successfully before the Node is rebooted, preventing the Job from re-creating its Pod after reboot.
-8. After reboot, the "reboot Pod" is restarted but detects via its own annotation that reboot already happened and exits with `0`.
-9. If everything worked successfully, the operator advances to the next batch of nodes, respecting `concurrency` and `stopOnFailure`.
+6. **If preflight says proceed**, the controller starts a reboot Pod on the node. Once the reboot Pod is ready, the controller cordons and drains the node and starts the upgrade Job.
+7. The Job upgrades the node and finishes. The reboot Pod then reboots the node, and the controller confirms the reboot before it uncordons the node. See [How the Reboot Works](#how-the-reboot-works).
+8. If everything worked successfully, the operator advances to the next batch of nodes, respecting `concurrency` and `stopOnFailure`.
 
 The result of the above process is that each upgrade Job finishes successfully, with no unnecessary restarts. The upgrade logs can be found in the Job's Pod logs.
+
+### How the Reboot Works
+
+Every time Linux starts, it picks a new random **boot ID**. Kubernetes shows it on each Node (`status.nodeInfo.bootID`). If the boot ID changed, the machine rebooted. The operator uses this to confirm the reboot after an upgrade.
+
+For each node:
+
+1. The operator starts a **reboot Pod** on the node and tells it the name of the upgrade Job it is about to create.
+2. Once the reboot Pod is ready, the operator cordons and drains the node.
+3. The operator starts the **upgrade Job** on the node.
+4. The Job upgrades the node. As its last step it reads the node's current boot ID (say `A`) and reports it in its final status.
+5. The operator sees the Job finish and stores `A` for this node.
+6. The reboot Pod sees the Job finish and reads `A` from the Job's final status. The node is still on `A`, so it reboots the node.
+7. The node boots into the new version with a new boot ID (say `B`). The reboot Pod starts again, reads `A`, sees `B`, and exits.
+8. The operator sees the Node report `B` and Ready. `B` is not `A`, so the reboot is confirmed. The operator uncordons the node and moves on to the next one.
+
+Steps 5 and 6 do not depend on each other: the node reboots even if the operator is unavailable at that moment (for example, because its own node is rebooting in the same batch). The operator stores `A` when it is back.
+
+```mermaid
+sequenceDiagram
+    participant O as Operator
+    participant R as Reboot Pod
+    participant J as Upgrade Job
+    participant N as Node
+
+    O->>R: start, watching for Job "X"
+    R-->>O: ready
+    O->>N: cordon and drain
+    O->>J: start Job "X"
+    J->>J: upgrade the node
+    J-->>O: finished, boot ID "A"
+    J-->>R: finished, boot ID "A"
+    O->>O: store "A" for this node
+    R->>N: node is still on "A": reboot
+    N-->>O: back up with boot ID "B", Ready
+    R->>R: restarted: node is on "B", exit
+    O->>O: "B" is not "A": reboot confirmed
+    O->>N: uncordon
+```
+
+The reboot Pod only reads from the Kubernetes API: its own upgrade Job and that Job's Pods, in its own namespace.
+
+#### Edge cases
+
+These are handled automatically:
+
+- **The reboot command fails.** The reboot Pod exits with an error and Kubernetes restarts it. The node is still on `A`, so it tries again. A node that refuses to reboot shows up as a reboot Pod that keeps restarting, and the node stays cordoned.
+- **The reboot command reports success but nothing happens.** The reboot Pod waits 5 minutes, exits with an error, and tries again.
+- **The node reboots for an unrelated reason during the upgrade.** The upgrade attempt is lost and the Job retries it. Only the attempt that succeeds reports a boot ID, so that reboot is not mistaken for the upgrade reboot.
+- **The node reboots for an unrelated reason after the upgrade finished, before the reboot Pod acts.** The reboot Pod sees a new boot ID and does not reboot again. The operator counts it as the reboot, which is correct: the upgrade is already in place.
+- **The Kubernetes API is unreachable when the upgrade finishes** (for example, the control plane node is rebooting in the same batch). The node waits to reboot until the API is back. Nothing is lost.
+- **The operator is down when the upgrade finishes.** The Job's final status stays in the cluster. The reboot happens without the operator, and the operator confirms it when it is back.
+- **The reboot Pod cannot start again after the reboot** (for example, the upgraded kubelet cannot start containers yet). Nothing depends on it after the reboot. The operator already has the old boot ID and reads the new one from the Node.
+
+These need a human:
+
+- **The reboot Pod cannot start at all** (for example, its image cannot be pulled). The operator does not cordon the node or start the upgrade until the reboot Pod is ready. The node keeps running workloads, but it holds one of the batch's slots, and the NodeOp status says it is waiting for the reboot Pod.
+- **The Job finishes without reporting a valid boot ID** (for example, a custom `sentinelImage` without a shell). The reboot Pod does not reboot without it, and the operator cannot confirm a reboot. The node stays cordoned, with the upgrade on disk but not active.
+- **The operator is upgraded from v0.2.x while a node is mid-upgrade.** Jobs created by the older version do not report a boot ID, so that node stays cordoned. Upgrade the operator while no upgrade is running.
+
+Sandboxed container runtimes (for example, Kata Containers or gVisor) are not supported for the upgrade Job. Inside them the Job reads the sandbox's boot ID instead of the node's.
 
 The NodeOpUpgrade stores the statuses of the various Jobs it creates so it can be used to monitor the summary of the operation.
 
@@ -320,9 +380,9 @@ The three resource fields of `NodeOpUpgrade` are passed through to the NodeOp th
 
 | Field | Applies to | Description |
 | ------- | ------------ | ------------- |
-| `resources` | Main `nodeop` container | The upgrade Job container (its init container in reboot mode, alongside the unconstrained `sentinel-creator` container). |
+| `resources` | Main `nodeop` container | The upgrade Job container (its init container in reboot mode, alongside the small `boot-id-reporter` container, which uses fixed resources). |
 | `preflightResources` | Preflight Pod container | The preflight Pod that compares the target version against the running one (always created, unless `force: true` skips preflight). |
-| `rebootResources` | Reboot Pod container | The long-lived reboot Pod that watches for the sentinel and reboots the node. |
+| `rebootResources` | Reboot Pod container | The reboot Pod that waits for the upgrade Job to finish and reboots the node. |
 
 Semantics differ slightly per field:
 
