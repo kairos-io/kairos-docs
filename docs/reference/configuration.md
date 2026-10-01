@@ -284,6 +284,11 @@ squash-no-compression: <bool>     # Disable squashfs compression when building i
 bind-pcrs: <[]string>             # TPM PCR indices to bind kcrypt to
 bind-public-pcrs: <[]string>      # Expected PCR values for kcrypt binding (public)
 
+# Set GRUB environment variables on the first boot of the installed system.
+# Accepts the same keys as install.grub_options, see "Grub options" below.
+grub_options:
+  extra_cmdline: <string>
+
 
 k3s:
   # Additional env/args for k3s server instances
@@ -544,10 +549,17 @@ This will set the hostname for each machine based on the first 4 characters of t
 
 ### Grub options
 
-The `install.grub_options` field in the Kairos configuration file allows you to set key/value pairs for GRUB options that will be set in the GRUB environment after installation.
+There are two `grub_options` keys, and they are read at different points:
+
+| Key | Read by | When |
+|-------------------------|---------------|-----------------------------------------|
+| `install.grub_options` | the installer | during the installation |
+| `grub_options` (top level) | the agent | on the first boot of the installed system |
+
+Both set key/value pairs in the GRUB environment, both accept the keys in the table below, and both write the same `grubenv`. Use `install.grub_options` unless you need the values written after the installation has finished. Only `install.grub_options` also carries the SELinux variables and, when the OEM partition is encrypted, the kcrypt challenger settings.
 
 :::warning GRUB installations only
-This field applies to GRUB installations. It has no effect on [Trusted Boot](/docs/installation/trustedboot/), where the cmdline is part of the signed EFI artifact and the GRUB environment is never read. Every key in the table below is discarded on such a system, and the installer does not report it.
+Both keys apply to GRUB installations. They have no effect on [Trusted Boot](/docs/installation/trustedboot/), where the cmdline is part of the signed EFI artifact and the GRUB environment is never read. Every key in the table below is discarded on such a system, and the log does not tell you so.
 
 To set cmdline parameters on Trusted Boot, put them in the artifact at build time. See [Additional efi entries](/docs/installation/trustedboot/#additional-efi-entries) for the `auroraboot build-uki` flags that do this.
 :::
@@ -562,7 +574,7 @@ install:
     extra_cmdline: "panic=0"
 ```
 
-The table below lists all the available options for the `install.grub_options` field:
+The table below lists all the available options. It applies to both keys:
 
 | Variable               | Description                                             |
 |------------------------|---------------------------------------------------------|
@@ -585,7 +597,7 @@ Note that usually parameters for dracut and such are overridable, as they use th
 
 For example, the `rd.neednet=0` parameter is shipped with Kairos by default, but if you set `rd.neednet=1` in `extra_cmdline`, it will override the default value and enable networking during the initramfs stage.
 
-Also note that the `grub_options` for cmdline are only applied during installation. Changing them after installation won't have any effect.
+Also note that both keys are applied once, by the installer or by the first boot. Changing them on a running system has no effect.
 If you want to change the GRUB options after installation, you can do so by setting those values under the `/oem/grubenv` file as follows:
 
 ```bash
