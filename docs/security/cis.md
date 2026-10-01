@@ -74,6 +74,10 @@ To build an image without them, skip the step:
 kairos-init --skip-steps cisHardening ...
 ```
 
+:::note Release status
+The controls below are on kairos master and ship with the next kairos release after v4.3.0. Images built with v4.3.0 (kairos-init v0.17.3) do not have the `cisHardening` step at all; they only carry the earlier sshd hardening drop-in.
+:::
+
 ### Controls in place {#linux-controls-in-place}
 
 Grouped the way [kairos-io/kairos#4626](https://github.com/kairos-io/kairos/issues/4626) tracks them.
@@ -107,6 +111,10 @@ Grouped the way [kairos-io/kairos#4626](https://github.com/kairos-io/kairos/issu
 | openSUSE Tumbleweed | Wired through `pam-config` (replaces `pam_cracklib`) | Not wired. `pam-config` has no faillock module, and hand-editing the `common-*` files would be overwritten the next time `pam-config` runs. |
 | openSUSE Leap 15.6 | Not changed, keeps the default `pam_cracklib` | Not wired |
 | Alpine | Not applicable. Alpine images ship no `/etc/pam.d` and PAM is not in the login path. | Not applicable |
+
+The wiring landed in [kairos-io/kairos#5096](https://github.com/kairos-io/kairos/pull/5096).
+
+**Lockout during first boot.** On first boot sshd starts before the `users:` cloud-config stage sets user passwords, and on some bases that window lasts a minute or more. Password logins attempted in it fail, and enough of them would lock the account for `unlock_time` even after the real password is in place. To avoid that, kairos-init ships `/system/oem/34_cis_faillock_reset.yaml`, which clears the faillock tally under `/run/faillock` at the `boot.after` stage, once users are provisioned. Failed attempts made during that window are therefore not carried past `boot.after`. Lockout applies normally from then on.
 
 ### SSH server {#linux-ssh}
 
