@@ -110,3 +110,43 @@ test('renderTemplate substitutes every GoogleImage occurrence, not just the firs
       'kairos-hadron-v0-5-1-core-amd64-generic-v4-3-0',
   );
 });
+
+test('renderTemplate replaces OCITag with the tag half of the OCI reference', () => {
+  // The reset page's Plan takes the repository in upgrade.image and the tag in
+  // spec.version, so the tag has to be available on its own.
+  assert.equal(
+    render('version: "{{< OCITag variant="standard" >}}"'),
+    'version: "24.04-standard-amd64-generic-v4.2.0-k3s-v1.36.3-k3s1"',
+  );
+});
+
+test('renderTemplate renders OCITag and OCI consistently in one template', () => {
+  assert.equal(
+    render('{{< OCI variant="standard" >}} splits as {{< RegistryURL >}}/{{< FlavorCode >}}:{{< OCITag variant="standard" >}}'),
+    'quay.io/kairos/ubuntu:24.04-standard-amd64-generic-v4.2.0-k3s-v1.36.3-k3s1 splits as ' +
+      'quay.io/kairos/ubuntu:24.04-standard-amd64-generic-v4.2.0-k3s-v1.36.3-k3s1',
+  );
+});
+
+test('renderTemplate leaves OCITag alone when no variant is given', () => {
+  // Same contract as Image and OCI: without a variant there is no image to
+  // name, so showing the shortcode beats inventing a tag.
+  assert.equal(render('{{< OCITag >}}'), '{{< OCITag >}}');
+  assert.equal(render('{{< OCITag arch="arm64" >}}'), '{{< OCITag arch="arm64" >}}');
+});
+
+test('renderTemplate substitutes every OCITag occurrence, not just the first', () => {
+  assert.equal(
+    render('{{< OCITag variant="core" >}} {{< OCITag variant="core" >}}'),
+    '24.04-core-amd64-generic-v4.2.0 24.04-core-amd64-generic-v4.2.0',
+  );
+});
+
+test('renderTemplate does not let the OCI rule swallow OCITag', () => {
+  // OCI is a prefix of OCITag: an OCI pattern without the trailing whitespace
+  // requirement would consume the OCITag shortcode and emit a full reference
+  // where the page asked for a tag.
+  const rendered = render('{{< OCITag variant="core" >}}');
+  assert.equal(rendered, '24.04-core-amd64-generic-v4.2.0');
+  assert.ok(!rendered.includes('quay.io'), 'OCITag must not render a registry');
+});
