@@ -16,22 +16,22 @@ CIS L1 hardening and SELinux are on kairos master and ship with the next kairos 
 
 ## By base distribution
 
-| Base | [amd64](./image_matrix.md) | [arm64](./image_matrix.md) | [Trusted Boot (UKI)](../installation/trustedboot.mdx) | [SELinux](#selinux) | [CIS L1](../security/cis.md) | [FIPS](../examples/fips.md) | [NVIDIA GPU](#nvidia-gpu) | [System extensions](../advanced/sys-extensions.md) |
-|---|---|---|---|---|---|---|---|---|
-| Hadron | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | ⚠️ Driver modules through an example build | ✅ |
-| Ubuntu 20.04 | ✅ | ✅ | 🧪 | ❌ | ✅ | ⚠️ Needs Ubuntu Pro | ❓ | ❌ |
-| Ubuntu 22.04 | ✅ | ✅ | 🧪 | ❌ | ✅ | ⚠️ Needs Ubuntu Pro | ❓ | ❌ |
-| Ubuntu 24.04 | ✅ | ✅ | ✅ | ❌ | ✅ | ⚠️ Needs Ubuntu Pro | ❓ | ✅ |
-| Ubuntu 25.10 | ✅ | ✅ | ✅ | ❌ | ✅ | ⚠️ Needs Ubuntu Pro | ❓ | ✅ |
-| Ubuntu 26.04 | ✅ | ✅ | ✅ | ❌ | ✅ | ⚠️ Needs Ubuntu Pro | ❓ | ✅ |
-| Debian 12 | ✅ | ✅ | 🧪 | ❌ | ✅ | 🧪 | ❓ | ❌ |
-| Debian 13 | ✅ | ✅ | 🧪 | ❌ | ✅ | 🧪 | ❓ | ✅ |
-| Fedora 41 | ✅ | 🧪 | ✅ | ✅ | ✅ | ✅ | ❓ | ✅ |
-| Fedora 42, 43 | ✅ | ✅ | 🧪 | ✅ | ✅ | 🧪 | ❓ | ✅ |
-| Rocky, AlmaLinux, Oracle Linux, CentOS Stream 9 | ✅ | ✅ | 🧪 | ✅ | ✅ | 🧪 | ❓ | ❌ |
-| Rocky, AlmaLinux, Oracle Linux, CentOS Stream 10 | ✅ | ✅ | 🧪 | ✅ | ✅ | 🧪 | ❓ | ✅ |
-| openSUSE Leap 16.0 | ✅ | ✅ | 🧪 | ✅ | ✅ | 🧪 | ❓ | ✅ |
-| Alpine 3.21, 3.23 | ✅ | ✅ | 🧪 | ❌ | ✅ | 🧪 | ❓ | ❌ |
+| Base | [Trusted Boot (UKI)](../installation/trustedboot.mdx) | [SELinux](#selinux) | [CIS L1](../security/cis.md) | [FIPS](../examples/fips.md) | [System extensions](../advanced/sys-extensions.md) | [Arches](./image_matrix.md) |
+|---|---|---|---|---|---|---|
+| Hadron | ✅ | ❌ | ✅ | ✅ | ✅ | amd64, arm64 |
+| Ubuntu 20.04 | 🧪 | ❌ | ✅ | ⚠️ Needs Ubuntu Pro | ❌ | amd64, arm64 |
+| Ubuntu 22.04 | 🧪 | ❌ | ✅ | ⚠️ Needs Ubuntu Pro | ❌ | amd64, arm64 |
+| Ubuntu 24.04 | ✅ | ❌ | ✅ | ⚠️ Needs Ubuntu Pro | ✅ | amd64, arm64 |
+| Ubuntu 25.10 | ✅ | ❌ | ✅ | ⚠️ Needs Ubuntu Pro | ✅ | amd64, arm64 |
+| Ubuntu 26.04 | ✅ | ❌ | ✅ | ⚠️ Needs Ubuntu Pro | ✅ | amd64, arm64 |
+| Debian 12 | 🧪 | ❌ | ✅ | 🧪 | ❌ | amd64, arm64 |
+| Debian 13 | 🧪 | ❌ | ✅ | 🧪 | ✅ | amd64, arm64 |
+| Fedora 41 | ✅ | ✅ | ✅ | ✅ | ✅ | amd64[^fedora-arm64] |
+| Fedora 42, 43 | 🧪 | ✅ | ✅ | 🧪 | ✅ | amd64, arm64 |
+| Rocky, AlmaLinux, Oracle Linux, CentOS Stream 9 | 🧪 | ✅ | ✅ | 🧪 | ❌ | amd64, arm64 |
+| Rocky, AlmaLinux, Oracle Linux, CentOS Stream 10 | 🧪 | ✅ | ✅ | 🧪 | ✅ | amd64, arm64 |
+| openSUSE Leap 16.0 | 🧪 | ✅ | ✅ | 🧪 | ✅ | amd64, arm64 |
+| Alpine 3.21, 3.23 | 🧪 | ❌ | ✅ | 🧪 | ❌ | amd64, arm64 |
 
 ## Boards
 
@@ -42,7 +42,7 @@ All boards are arm64 only. Each column links to the board's install page.
 | Hadron | ✅ | ✅ | ❌ | ❌ | ✅ | ❌ |
 | Ubuntu 20.04 | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
 | Ubuntu 22.04 | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
-| Ubuntu 24.04 | [❌](#ubuntu-on-raspberry-pi) | [❌](#ubuntu-on-raspberry-pi) | ❌ | ❌ | ✅ | ✅ |
+| Ubuntu 24.04 | ❌[^ubuntu-rpi] | ❌[^ubuntu-rpi] | ❌ | ❌ | ✅ | ✅ |
 | openSUSE Leap 15.6, Tumbleweed | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
 | Alpine 3.19 | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
 
@@ -52,7 +52,6 @@ All boards are arm64 only. Each column links to the board's install page.
 - ❌ **No**: not supported, or not documented for that base.
 - ⚠️ **With conditions**: works, with the condition written in the cell.
 - 🧪 **Not tested**: `kairos-init` does not block it, but CI does not build or test that combination.
-- ❓ **Not documented**: no code, CI job or docs page covers it.
 
 ### SELinux
 
@@ -66,10 +65,5 @@ install:
     mode: enforcing
 ```
 
-### NVIDIA GPU
-
-GPU workloads on generic hardware, as opposed to the boards above. Hadron has an example that builds the NVIDIA kernel modules for amd64 ([`examples/add-packages/Dockerfile.nvidia`](https://github.com/kairos-io/hadron/blob/main/examples/add-packages/Dockerfile.nvidia)); it does not add the NVIDIA container toolkit. `kairos-init` has no NVIDIA driver handling outside the Jetson and DGX models.
-
-### Ubuntu on Raspberry Pi
-
-Ubuntu releases newer than 22.04 do not work on Raspberry Pi. Ubuntu turned off `CONFIG_EFI` in its `linux-raspi` kernel, and Kairos boots the Pi through U-Boot and GRUB, which needs an EFI-capable kernel. Ubuntu closed the request to turn it back on, see [kairos-io/kairos#2249](https://github.com/kairos-io/kairos/issues/2249) and [Launchpad bug 2053147](https://bugs.launchpad.net/ubuntu/+source/linux-raspi/+bug/2053147). Use Ubuntu 22.04 or another base on Raspberry Pi.
+[^fedora-arm64]: arm64 is not built or tested in CI for Fedora 41.
+[^ubuntu-rpi]: Ubuntu releases newer than 22.04 do not work on Raspberry Pi. Ubuntu turned off `CONFIG_EFI` in its `linux-raspi` kernel, and Kairos boots the Pi through U-Boot and GRUB, which needs an EFI-capable kernel. Ubuntu closed the request to turn it back on, see [kairos-io/kairos#2249](https://github.com/kairos-io/kairos/issues/2249) and [Launchpad bug 2053147](https://bugs.launchpad.net/ubuntu/+source/linux-raspi/+bug/2053147). Use Ubuntu 22.04 or another base on Raspberry Pi.
