@@ -37,7 +37,7 @@ helm install kairos-operator \
 | `leaderElect` | `true` | Disable for single-replica dev installs |
 | `toolImage` | *(built-in)* | Override `auroraboot` image — useful for air-gapped environments |
 | `buildahImage` | *(built-in)* | Override `buildah` image — useful for air-gapped environments |
-| `sentinelImage` | *(built-in)* | Image for the reboot sentinel container (NodeOp `rebootOnSuccess` flow). Only needs `sh` + `tee`; defaults to `NodeOp.spec.image`, then `busybox:latest`. Override for air-gapped environments. |
+| `sentinelImage` | *(built-in)* | Image for the `boot-id-reporter` container, the last step of a NodeOp `rebootOnSuccess` Job, which reports the node's boot ID. Only needs `sh`; defaults to `NodeOp.spec.image`, then `busybox:latest`. Override for air-gapped environments. |
 | `nodeops.defaultImage` | `busybox:latest` | Fallback image for NodeOp Jobs |
 | `tolerations` | control-plane + etcd | Scheduling tolerations for the operator Deployment |
 
