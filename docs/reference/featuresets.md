@@ -42,7 +42,7 @@ All boards are arm64 only. Each column links to the board's install page.
 | Hadron | ✅ | ✅ | ❌ | ❌ | ✅ | ❌ |
 | Ubuntu 20.04 | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
 | Ubuntu 22.04 | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
-| Ubuntu 24.04 | ❓ | ❓ | ❌ | ❌ | ✅ | ✅ |
+| Ubuntu 24.04 | [❌](#ubuntu-on-raspberry-pi) | [❌](#ubuntu-on-raspberry-pi) | ❌ | ❌ | ✅ | ✅ |
 | openSUSE Leap 15.6, Tumbleweed | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
 | Alpine 3.19 | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
 
@@ -69,3 +69,7 @@ install:
 ### NVIDIA GPU
 
 GPU workloads on generic hardware, as opposed to the boards above. Hadron has an example that builds the NVIDIA kernel modules for amd64 ([`examples/add-packages/Dockerfile.nvidia`](https://github.com/kairos-io/hadron/blob/main/examples/add-packages/Dockerfile.nvidia)); it does not add the NVIDIA container toolkit. `kairos-init` has no NVIDIA driver handling outside the Jetson and DGX models.
+
+### Ubuntu on Raspberry Pi
+
+Ubuntu releases newer than 22.04 do not work on Raspberry Pi. Ubuntu turned off `CONFIG_EFI` in its `linux-raspi` kernel, and Kairos boots the Pi through U-Boot and GRUB, which needs an EFI-capable kernel. Ubuntu closed the request to turn it back on, see [kairos-io/kairos#2249](https://github.com/kairos-io/kairos/issues/2249) and [Launchpad bug 2053147](https://bugs.launchpad.net/ubuntu/+source/linux-raspi/+bug/2053147). Use Ubuntu 22.04 or another base on Raspberry Pi.
