@@ -19,11 +19,11 @@ CIS L1 hardening and SELinux are on kairos master and ship with the next kairos 
 | Base | [Trusted Boot (UKI)](../installation/trustedboot.mdx) | [SELinux](#selinux) | [CIS L1](../security/cis.md) | [FIPS](../examples/fips.md) | [System extensions](../advanced/sys-extensions.md) | [Arches](./image_matrix.md) |
 |---|---|---|---|---|---|---|
 | Hadron | ✅ | ❌ | ✅ | ✅ | ✅ | amd64, arm64 |
-| Ubuntu 20.04 | 🧪 | ❌ | ✅ | ⚠️ Needs Ubuntu Pro | ❌ | amd64, arm64 |
-| Ubuntu 22.04 | 🧪 | ❌ | ✅ | ⚠️ Needs Ubuntu Pro | ❌ | amd64, arm64 |
-| Ubuntu 24.04 | ✅ | ❌ | ✅ | ⚠️ Needs Ubuntu Pro | ✅ | amd64, arm64 |
-| Ubuntu 25.10 | ✅ | ❌ | ✅ | ⚠️ Needs Ubuntu Pro | ✅ | amd64, arm64 |
-| Ubuntu 26.04 | ✅ | ❌ | ✅ | ⚠️ Needs Ubuntu Pro | ✅ | amd64, arm64 |
+| Ubuntu 20.04 | 🧪 | ❌ | ✅ | ⚠️[^ubuntu-pro] | ❌ | amd64, arm64 |
+| Ubuntu 22.04 | 🧪 | ❌ | ✅ | ⚠️[^ubuntu-pro] | ❌ | amd64, arm64 |
+| Ubuntu 24.04 | ✅ | ❌ | ✅ | ⚠️[^ubuntu-pro] | ✅ | amd64, arm64 |
+| Ubuntu 25.10 | ✅ | ❌ | ✅ | ⚠️[^ubuntu-pro] | ✅ | amd64, arm64 |
+| Ubuntu 26.04 | ✅ | ❌ | ✅ | ⚠️[^ubuntu-pro] | ✅ | amd64, arm64 |
 | Debian 12 | 🧪 | ❌ | ✅ | 🧪 | ❌ | amd64, arm64 |
 | Debian 13 | 🧪 | ❌ | ✅ | 🧪 | ✅ | amd64, arm64 |
 | Fedora 41 | ✅ | ✅ | ✅ | ✅ | ✅ | amd64[^fedora-arm64] |
@@ -50,8 +50,8 @@ All boards are arm64 only. Each column links to the board's install page.
 
 - ✅ **Yes**: supported and built or tested in CI, or documented on the linked page.
 - ❌ **No**: not supported, or not documented for that base.
-- ⚠️ **With conditions**: works, with the condition written in the cell.
-- 🧪 **Not tested**: `kairos-init` does not block it, but CI does not build or test that combination.
+- ⚠️ **With conditions**: works, with the condition in the footnote.
+- 🧪 **Not tested**: supported by `kairos-init`, but CI does not build or test that combination.
 
 ### SELinux
 
@@ -65,5 +65,6 @@ install:
     mode: enforcing
 ```
 
+[^ubuntu-pro]: FIPS on Ubuntu needs an Ubuntu Pro subscription and extra packages, so `kairos-init --fips` refuses Ubuntu. Build it from the [Ubuntu FIPS example](https://github.com/kairos-io/kairos/blob/master/examples/builds/ubuntu-fips/Dockerfile) instead.
 [^fedora-arm64]: arm64 is not built or tested in CI for Fedora 41.
 [^ubuntu-rpi]: Ubuntu releases newer than 22.04 do not work on Raspberry Pi. Ubuntu turned off `CONFIG_EFI` in its `linux-raspi` kernel, and Kairos boots the Pi through U-Boot and GRUB, which needs an EFI-capable kernel. Ubuntu closed the request to turn it back on, see [kairos-io/kairos#2249](https://github.com/kairos-io/kairos/issues/2249) and [Launchpad bug 2053147](https://bugs.launchpad.net/ubuntu/+source/linux-raspi/+bug/2053147). Use Ubuntu 22.04 or another base on Raspberry Pi.
