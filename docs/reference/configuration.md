@@ -150,6 +150,13 @@ install:
   # (Hadron, Ubuntu 22.04+, Debian 12+, RHEL 9+, Alpine 3.17+) is covered.
   ssh_hardening: false
 
+  # SELinux on the installed system, RHEL and SUSE families only. GRUB only:
+  # on Trusted Boot the mode is set when the UKI is built.
+  # mode is permissive (default) or enforcing. See /security/selinux
+  selinux:
+    enabled: false
+    mode: permissive
+
   # Creates these dirs in the rootfs during installation. As the rootfs is RO from boot, sometimes we find that we
   # some applications want to write to non-standard paths like /data
   # If that dir is not already in the rootfs it makes it difficult to create that path on an RO system

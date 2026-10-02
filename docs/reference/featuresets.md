@@ -16,7 +16,7 @@ CIS L1 hardening and SELinux are on kairos master and ship with the next kairos 
 
 ## By base distribution
 
-| Base | [Trusted Boot (UKI)](../installation/trustedboot.mdx) | [SELinux](#selinux) | [CIS L1](../security/cis.md) | [FIPS](../examples/fips.md) | [System extensions](../advanced/sys-extensions.md) | [Arches](./image_matrix.md) |
+| Base | [Trusted Boot (UKI)](../installation/trustedboot.mdx) | [SELinux](../security/selinux.md) | [CIS L1](../security/cis.md) | [FIPS](../examples/fips.md) | [System extensions](../advanced/sys-extensions.md) | [Arches](./image_matrix.md) |
 |---|---|---|---|---|---|---|
 | Hadron | ✅ | ❌ | ✅ | ✅ | ✅ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
 | Ubuntu 20.04 | 🧪 | ❌ | ✅ | ⚠️[^ubuntu-pro] | ❌ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
@@ -52,18 +52,6 @@ All boards are arm64 only. Each column links to the board's install page.
 - ❌ **No**: not supported, or not documented for that base.
 - ⚠️ **With conditions**: works, with the condition in the footnote.
 - 🧪 **Not tested**: supported by `kairos-init`, but CI does not build or test that combination.
-
-### SELinux
-
-Set at install time with the `install.selinux` cloud-config block, `mode` is `permissive` or `enforcing`. The policy packages are installed on the RHEL and SUSE families only; CI tests Rocky 9 and openSUSE Leap 16.0. SELinux on Trusted Boot (UKI) images is added for Fedora in AuroraBoot ([kairos-io/AuroraBoot#846](https://github.com/kairos-io/AuroraBoot/pull/846)), merged after the latest AuroraBoot release.
-
-```yaml
-#cloud-config
-install:
-  selinux:
-    enabled: true
-    mode: enforcing
-```
 
 [^ubuntu-pro]: FIPS on Ubuntu needs an Ubuntu Pro subscription and extra packages, so `kairos-init --fips` refuses Ubuntu. Build it from the [Ubuntu FIPS example](https://github.com/kairos-io/kairos/blob/master/examples/builds/ubuntu-fips/Dockerfile) instead.
 [^fedora-arm64]: arm64 is not built or tested in CI for Fedora 41.

@@ -85,7 +85,7 @@ Grouped the way [kairos-io/kairos#4626](https://github.com/kairos-io/kairos/issu
 | Area | What Kairos ships | Status |
 |---|---|---|
 | Filesystem modules (1.1.1.x) | `/etc/modprobe.d/cis-blocklist.conf` makes cramfs, freevxfs, jffs2, hfs, hfsplus and udf unloadable. squashfs and vfat are required for boot and stay loadable. | In place |
-| Mandatory access control (1.6) | SELinux enforcing on RHEL-family images. | Not yet. Needs its own follow-up. |
+| Mandatory access control (1.6) | [SELinux](./selinux.md) is available on RHEL and SUSE family images, off by default and turned on with `install.selinux`. CIS hardening does not turn it on. | Not yet. Needs its own follow-up. |
 | Warning banner (1.7) | `/etc/issue.net` carries a generic authorized-use banner with no OS or version details. sshd prints it through `Banner /etc/issue.net`. | In place |
 | Network parameters (3.x) | `/etc/sysctl.d/99-kairos-cis.conf`: `kernel.randomize_va_space=2`, `tcp_syncookies=1`, source routing and redirects off, IPv6 router advertisements off, and `rp_filter=2`. | In place (see note) |
 | Auditing (4.x) | auditd installed and enabled on every base, baseline rules in `/etc/audit/rules.d/50-kairos.rules` (time changes, identity files, network environment, MAC policy, logins, sessions, permission changes, failed access, mounts, deletions, sudoers, kernel modules; each syscall rule paired for 64-bit and 32-bit), rules locked with `-e 2`. immucore bind-mounts `/var/log/audit` from the persistent partition. | In place |
