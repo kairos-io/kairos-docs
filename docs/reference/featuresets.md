@@ -72,22 +72,14 @@ GPU workloads on generic hardware, as opposed to the boards above. Hadron has an
 
 ### System extensions
 
-System extensions need systemd 255 or newer. Alpine uses OpenRC, so it has no system extensions.
+System extensions need systemd 255 or newer. Older releases of each base ship an older systemd and are not supported.
 
-| Base | systemd | System extensions |
+| Base | Supported from | systemd |
 |---|---|---|
-| Hadron | 262 | ✅ |
-| Ubuntu 20.04 | 245 | ❌ |
-| Ubuntu 22.04 | 249 | ❌ |
-| Ubuntu 24.04 | 255 | ✅ |
-| Ubuntu 25.10 | 257 | ✅ |
-| Ubuntu 26.04 | 259 | ✅ |
-| Debian 12 | 252 | ❌ |
-| Debian 13 | 257 | ✅ |
-| Fedora 41 | 256 | ✅ |
-| Fedora 42 | 257 | ✅ |
-| Fedora 43 | 258 | ✅ |
-| Rocky, AlmaLinux, Oracle Linux, CentOS Stream 9 | 252 | ❌ |
-| Rocky, AlmaLinux, Oracle Linux, CentOS Stream 10 | 257 | ✅ |
-| openSUSE Leap 16.0 | 257 | ✅ |
-| Alpine 3.21, 3.23 | None (OpenRC) | ❌ |
+| Hadron | All releases | 262+ |
+| Ubuntu | 24.04 | 255+ |
+| Debian | 13 | 257+ |
+| Fedora | 41 | 256+ |
+| Rocky, AlmaLinux, Oracle Linux, CentOS Stream | 10 | 257+ |
+| openSUSE Leap | 16.0 | 257+ |
+| Alpine | Not supported, uses OpenRC | None |
