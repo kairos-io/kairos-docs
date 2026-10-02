@@ -46,8 +46,6 @@ All boards are arm64 only. Each column links to the board's install page.
 | openSUSE Leap 15.6, Tumbleweed | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
 | Alpine 3.19 | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
 
-Raspberry Pi 5 is not supported. The `kairos-init --model` values are `rpi3`, `rpi4`, `nvidia-jetson-agx-orin`, `nvidia-jetson-orin-nx`, `nvidia-jetson-thor` and `nvidia-dgx-spark`; see [Jetson images](../installation/edge-devices/nvidia-jetson-images.md) for the JetPack release each Jetson board needs.
-
 ## Key
 
 - ✅ **Yes**: supported and built or tested in CI, or documented on the linked page.
@@ -74,4 +72,22 @@ GPU workloads on generic hardware, as opposed to the boards above. Hadron has an
 
 ### System extensions
 
-Need systemd 255 or newer. Versions shipped by each base: Hadron 262; Ubuntu 20.04 245, 22.04 249, 24.04 255, 25.10 257, 26.04 259; Debian 12 252, 13 257; Fedora 41 256, 42 257, 43 258; the 9 family 252, the 10 family 257; openSUSE Leap 16.0 257. Alpine uses OpenRC.
+System extensions need systemd 255 or newer. Alpine uses OpenRC, so it has no system extensions.
+
+| Base | systemd | System extensions |
+|---|---|---|
+| Hadron | 262 | ✅ |
+| Ubuntu 20.04 | 245 | ❌ |
+| Ubuntu 22.04 | 249 | ❌ |
+| Ubuntu 24.04 | 255 | ✅ |
+| Ubuntu 25.10 | 257 | ✅ |
+| Ubuntu 26.04 | 259 | ✅ |
+| Debian 12 | 252 | ❌ |
+| Debian 13 | 257 | ✅ |
+| Fedora 41 | 256 | ✅ |
+| Fedora 42 | 257 | ✅ |
+| Fedora 43 | 258 | ✅ |
+| Rocky, AlmaLinux, Oracle Linux, CentOS Stream 9 | 252 | ❌ |
+| Rocky, AlmaLinux, Oracle Linux, CentOS Stream 10 | 257 | ✅ |
+| openSUSE Leap 16.0 | 257 | ✅ |
+| Alpine 3.21, 3.23 | None (OpenRC) | ❌ |
