@@ -69,17 +69,3 @@ install:
 ### NVIDIA GPU
 
 GPU workloads on generic hardware, as opposed to the boards above. Hadron has an example that builds the NVIDIA kernel modules for amd64 ([`examples/add-packages/Dockerfile.nvidia`](https://github.com/kairos-io/hadron/blob/main/examples/add-packages/Dockerfile.nvidia)); it does not add the NVIDIA container toolkit. `kairos-init` has no NVIDIA driver handling outside the Jetson and DGX models.
-
-### System extensions
-
-System extensions need systemd 255 or newer. Older releases of each base ship an older systemd and are not supported.
-
-| Base | Supported from | systemd |
-|---|---|---|
-| Hadron | All releases | 262+ |
-| Ubuntu | 24.04 | 255+ |
-| Debian | 13 | 257+ |
-| Fedora | 41 | 256+ |
-| Rocky, AlmaLinux, Oracle Linux, CentOS Stream | 10 | 257+ |
-| openSUSE Leap | 16.0 | 257+ |
-| Alpine | Not supported, uses OpenRC | None |
