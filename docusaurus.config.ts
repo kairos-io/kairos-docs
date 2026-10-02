@@ -365,17 +365,22 @@ const config: Config = {
         editUrl: 'https://github.com/kairos-io/kairos-docs/tree/main/',
         showLastUpdateTime: true,
         showLastUpdateAuthor: true,
+        // The released version owns /operator-docs/, because that is what every
+        // entry point links to: the "Operator" sidebar item, the footer, the
+        // /docs/operator* redirects in netlify.toml and the in-page links under
+        // docs/. Giving the route base to `current` sent all of them to the
+        // development docs (kairos-io/kairos#4860).
         ...(latestOperatorVersion && {
           lastVersion: latestOperatorVersion,
           versions: {
             current: {
               label: 'Next 🚧',
-              path: '',
+              path: 'next',
               banner: 'unreleased',
             },
             [latestOperatorVersion]: {
               label: latestOperatorVersion,
-              path: latestOperatorVersion,
+              path: '',
               banner: 'none',
             },
           },
