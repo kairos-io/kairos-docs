@@ -48,11 +48,11 @@ max_message_size: 20971520
 
 For more information about EdgeVPN, [check out the architecture section](/docs/architecture/network).
 
-To trigger the installation process via QR code, you need to use the Kairos CLI and provide a Cloud Config, as described in the [Quick Start guide](/quickstart/). You can also see some Cloud Config examples in our [Examples section](/docs/examples/). The CLI is currently available only for Linux and Windows. It can be downloaded from the release artifact:
+To trigger the installation process via QR code, you need to use the [provider CLI](/docs/reference/kairosctl/) and provide a Cloud Config, as described in the [Quick Start guide](/quickstart/). You can also see some Cloud Config examples in our [Examples section](/docs/examples/). The CLI is the `provider-kairos` binary, published with every Kairos release for Linux on `amd64`, `arm64` and `riscv64`. It can be downloaded from the release artifact:
 
 ```bash
-VERSION=$(wget -q -O- https://api.github.com/repos/kairos-io/provider-kairos/releases/latest | jq -r '.tag_name')
-curl -L https://github.com/kairos-io/provider-kairos/releases/download/${VERSION}/kairosctl-${VERSION}-linux-amd64.tar.gz -o - | tar -xvzf - -C .
+VERSION=$(wget -q -O- https://api.github.com/repos/kairos-io/kairos/releases/latest | jq -r '.tag_name')
+curl -L https://github.com/kairos-io/kairos/releases/download/${VERSION}/provider-kairos-${VERSION}-linux-amd64.tar.gz -o - | tar -xvzf - -C .
 ```
 
 The CLI allows to register a node with a screenshot, an image, or a token. During pairing, the configuration is sent over, and the node will continue the installation process.
@@ -60,7 +60,7 @@ The CLI allows to register a node with a screenshot, an image, or a token. Durin
 In a terminal window from your desktop/workstation, run:
 
 ```
-kairosctl register --reboot --device /dev/sda --config cloud-config.yaml
+./provider-kairos register --reboot --device /dev/sda --config cloud-config.yaml
 ```
 
 - The `--reboot` flag will make the node reboot automatically after the installation is completed.
@@ -70,7 +70,7 @@ kairosctl register --reboot --device /dev/sda --config cloud-config.yaml
 
 :::note Note
 
-By default, the CLI will automatically take a screenshot to get the QR code. Make sure it fits into the screen. Alternatively, an image path or a token can be supplied via arguments (e.g. `kairosctl register /img/path` or `kairosctl register <token>`).
+By default, the CLI will automatically take a screenshot to get the QR code. Make sure it fits into the screen. Alternatively, an image path or a token can be supplied via arguments (e.g. `./provider-kairos register /img/path` or `./provider-kairos register <token>`).
 
 :::
 
