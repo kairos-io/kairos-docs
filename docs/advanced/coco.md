@@ -44,7 +44,7 @@ in order to run confidential workloads.
 
 ## Create a Kairos cluster
 
-The [`coco community bundle`](https://github.com/kairos-io/community-bundles/tree/main/coco) is supported since Kairos version `v2.0.0-alpha3` ("coco" stands for "**Co**nfidential **Co**mputing").
+The [`coco community bundle`](https://github.com/kairos-community/bundles/tree/main/coco) is supported since Kairos version `v2.0.0-alpha3` ("coco" stands for "**Co**nfidential **Co**mputing").
 
 A configuration file like the following should be used (see the `bundles` section):
 

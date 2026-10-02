@@ -11,7 +11,7 @@ Whether you need to add custom logic, install extra packages, or make other modi
 A bundle runs once and can read the cloud config. If you need files on every boot instead, or a reaction to lifecycle events, see [Choosing how to extend Kairos](/docs/advanced/choosing-how-to-extend/) for a comparison with Dockerfiles, system extensions and providers.
 :::
 
-Bundles are container images containing only files (and not full OS) that can be used to install new software or extend the cloud-init syntax. You can find community-supported bundles in the [community-bundles](https://github.com/kairos-io/community-bundles) repository.
+Bundles are container images containing only files (and not full OS) that can be used to install new software or extend the cloud-init syntax. You can find community-supported bundles in the [community-bundles](https://github.com/kairos-community/bundles) repository.
 
 ## Consuming Bundles
 
@@ -28,7 +28,7 @@ You can read more [here](../sys-extensions).
 
 The second type of installation can be used to make changes to the installed system.
 E.g. create kubernetes resource files in `/var/lib/rancher/k3s/server/manifests/`
-like [longhorn community bundle does](https://github.com/kairos-io/community-bundles/blob/4673a2d7002a54e42f2780c30e7185bbe976eb7e/longhorn/run.sh#L5C38-L5C76).
+like [longhorn community bundle does](https://github.com/kairos-community/bundles/blob/4673a2d7002a54e42f2780c30e7185bbe976eb7e/longhorn/run.sh#L5C38-L5C76).
 
 
 To apply a bundle on the first boot (and before Kubernetes starts),
@@ -58,7 +58,7 @@ install:
 Bundles have access to the Kairos cloud-config during their installation.
 This allows the user to add new blocks of configuration to configure the bundles.
 
-For example, this is how `metalLB` [community bundle](https://github.com/kairos-io/community-bundles) can be configured:
+For example, this is how `metalLB` [community bundle](https://github.com/kairos-community/bundles) can be configured:
 
 ```yaml
 #cloud-config
@@ -201,4 +201,4 @@ example:
   enable: true
 ```
 
-See the [community-bundles repository](https://github.com/kairos-io/community-bundles) for further examples.
+See the [community-bundles repository](https://github.com/kairos-community/bundles) for further examples.
