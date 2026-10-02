@@ -18,20 +18,20 @@ CIS L1 hardening and SELinux are on kairos master and ship with the next kairos 
 
 | Base | [amd64](./image_matrix.md) | [arm64](./image_matrix.md) | [Trusted Boot (UKI)](../installation/trustedboot.mdx) | [SELinux](#selinux) | [CIS L1](../security/cis.md) | [FIPS](../examples/fips.md) | [NVIDIA GPU](#nvidia-gpu) | [System extensions](../advanced/sys-extensions.md) |
 |---|---|---|---|---|---|---|---|---|
-| Hadron | Yes | Yes | Yes | No | Yes | Yes | Driver modules through an example build | Yes |
-| Ubuntu 20.04 | Yes | Yes | Not tested | No | Yes | Needs Ubuntu Pro | Not documented | No |
-| Ubuntu 22.04 | Yes | Yes | Not tested | No | Yes | Needs Ubuntu Pro | Not documented | No |
-| Ubuntu 24.04 | Yes | Yes | Yes | No | Yes | Needs Ubuntu Pro | Not documented | Yes |
-| Ubuntu 25.10 | Yes | Yes | Yes | No | Yes | Needs Ubuntu Pro | Not documented | Yes |
-| Ubuntu 26.04 | Yes | Yes | Yes | No | Yes | Needs Ubuntu Pro | Not documented | Yes |
-| Debian 12 | Yes | Yes | Not tested | No | Yes | Not tested | Not documented | No |
-| Debian 13 | Yes | Yes | Not tested | No | Yes | Not tested | Not documented | Yes |
-| Fedora 41 | Yes | Not tested | Yes | Yes | Yes | Yes | Not documented | Yes |
-| Fedora 42, 43 | Yes | Yes | Not tested | Yes | Yes | Not tested | Not documented | Yes |
-| Rocky, AlmaLinux, Oracle Linux, CentOS Stream 9 | Yes | Yes | Not tested | Yes | Yes | Not tested | Not documented | No |
-| Rocky, AlmaLinux, Oracle Linux, CentOS Stream 10 | Yes | Yes | Not tested | Yes | Yes | Not tested | Not documented | Yes |
-| openSUSE Leap 16.0 | Yes | Yes | Not tested | Yes | Yes | Not tested | Not documented | Yes |
-| Alpine 3.21, 3.23 | Yes | Yes | Not tested | No | Yes | Not tested | Not documented | No |
+| Hadron | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | ⚠️ Driver modules through an example build | ✅ |
+| Ubuntu 20.04 | ✅ | ✅ | 🧪 | ❌ | ✅ | ⚠️ Needs Ubuntu Pro | ❓ | ❌ |
+| Ubuntu 22.04 | ✅ | ✅ | 🧪 | ❌ | ✅ | ⚠️ Needs Ubuntu Pro | ❓ | ❌ |
+| Ubuntu 24.04 | ✅ | ✅ | ✅ | ❌ | ✅ | ⚠️ Needs Ubuntu Pro | ❓ | ✅ |
+| Ubuntu 25.10 | ✅ | ✅ | ✅ | ❌ | ✅ | ⚠️ Needs Ubuntu Pro | ❓ | ✅ |
+| Ubuntu 26.04 | ✅ | ✅ | ✅ | ❌ | ✅ | ⚠️ Needs Ubuntu Pro | ❓ | ✅ |
+| Debian 12 | ✅ | ✅ | 🧪 | ❌ | ✅ | 🧪 | ❓ | ❌ |
+| Debian 13 | ✅ | ✅ | 🧪 | ❌ | ✅ | 🧪 | ❓ | ✅ |
+| Fedora 41 | ✅ | 🧪 | ✅ | ✅ | ✅ | ✅ | ❓ | ✅ |
+| Fedora 42, 43 | ✅ | ✅ | 🧪 | ✅ | ✅ | 🧪 | ❓ | ✅ |
+| Rocky, AlmaLinux, Oracle Linux, CentOS Stream 9 | ✅ | ✅ | 🧪 | ✅ | ✅ | 🧪 | ❓ | ❌ |
+| Rocky, AlmaLinux, Oracle Linux, CentOS Stream 10 | ✅ | ✅ | 🧪 | ✅ | ✅ | 🧪 | ❓ | ✅ |
+| openSUSE Leap 16.0 | ✅ | ✅ | 🧪 | ✅ | ✅ | 🧪 | ❓ | ✅ |
+| Alpine 3.21, 3.23 | ✅ | ✅ | 🧪 | ❌ | ✅ | 🧪 | ❓ | ❌ |
 
 ## Boards
 
@@ -39,21 +39,22 @@ All boards are arm64 only. Each column links to the board's install page.
 
 | Base | [Raspberry Pi 3](../installation/edge-devices/raspberry.md) | [Raspberry Pi 4](../installation/edge-devices/raspberry.md) | [Jetson AGX Orin](../installation/edge-devices/nvidia_agx_orin.md) | [Jetson Orin NX](../installation/edge-devices/nvidia_orin_nx.md) | [Jetson AGX Thor](../installation/edge-devices/nvidia_agx_thor.md) | [DGX Spark](../installation/edge-devices/nvidia_dgx_spark.md) |
 |---|---|---|---|---|---|---|
-| Hadron | Yes | Yes | No | No | Yes | No |
-| Ubuntu 20.04 | Yes | Yes | No | No | No | No |
-| Ubuntu 22.04 | Yes | Yes | Yes | Yes | No | No |
-| Ubuntu 24.04 | Not documented | Not documented | No | No | Yes | Yes |
-| openSUSE Leap 15.6, Tumbleweed | Yes | Yes | No | No | No | No |
-| Alpine 3.19 | Yes | Yes | No | No | No | No |
+| Hadron | ✅ | ✅ | ❌ | ❌ | ✅ | ❌ |
+| Ubuntu 20.04 | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Ubuntu 22.04 | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
+| Ubuntu 24.04 | ❓ | ❓ | ❌ | ❌ | ✅ | ✅ |
+| openSUSE Leap 15.6, Tumbleweed | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Alpine 3.19 | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
 
 Raspberry Pi 5 is not supported. The `kairos-init --model` values are `rpi3`, `rpi4`, `nvidia-jetson-agx-orin`, `nvidia-jetson-orin-nx`, `nvidia-jetson-thor` and `nvidia-dgx-spark`; see [Jetson images](../installation/edge-devices/nvidia-jetson-images.md) for the JetPack release each Jetson board needs.
 
 ## Key
 
-- **Yes**: supported and built or tested in CI, or documented on the linked page.
-- **No**: not supported, or not documented for that base.
-- **Not tested**: `kairos-init` does not block it, but CI does not build or test that combination.
-- **Not documented**: no code, CI job or docs page covers it.
+- ✅ **Yes**: supported and built or tested in CI, or documented on the linked page.
+- ❌ **No**: not supported, or not documented for that base.
+- ⚠️ **With conditions**: works, with the condition written in the cell.
+- 🧪 **Not tested**: `kairos-init` does not block it, but CI does not build or test that combination.
+- ❓ **Not documented**: no code, CI job or docs page covers it.
 
 ### SELinux
 
