@@ -20,7 +20,6 @@ By default Kairos will display a QR code after booting the ISO to install the ma
 
 
 The QR Code is a base64 encoded string which is an [`edgevpn`](https://github.com/mudler/edgevpn) token.
-For example, you can scan the following QR Code from the video [Introduction to Kairos - timestamp 4:16](https://youtu.be/WzKf6WrL3nE?t=256).
 
 The base64 encoded string from the QR Code looks like this:
 
