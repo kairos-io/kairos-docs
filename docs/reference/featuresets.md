@@ -18,20 +18,20 @@ CIS L1 hardening and SELinux are on kairos master and ship with the next kairos 
 
 | Base | [Trusted Boot (UKI)](../installation/trustedboot.mdx) | [SELinux](#selinux) | [CIS L1](../security/cis.md) | [FIPS](../examples/fips.md) | [System extensions](../advanced/sys-extensions.md) | [Arches](./image_matrix.md) |
 |---|---|---|---|---|---|---|
-| Hadron | ✅ | ❌ | ✅ | ✅ | ✅ | amd64, arm64 |
-| Ubuntu 20.04 | 🧪 | ❌ | ✅ | ⚠️[^ubuntu-pro] | ❌ | amd64, arm64 |
-| Ubuntu 22.04 | 🧪 | ❌ | ✅ | ⚠️[^ubuntu-pro] | ❌ | amd64, arm64 |
-| Ubuntu 24.04 | ✅ | ❌ | ✅ | ⚠️[^ubuntu-pro] | ✅ | amd64, arm64 |
-| Ubuntu 25.10 | ✅ | ❌ | ✅ | ⚠️[^ubuntu-pro] | ✅ | amd64, arm64 |
-| Ubuntu 26.04 | ✅ | ❌ | ✅ | ⚠️[^ubuntu-pro] | ✅ | amd64, arm64 |
-| Debian 12 | 🧪 | ❌ | ✅ | 🧪 | ❌ | amd64, arm64 |
-| Debian 13 | 🧪 | ❌ | ✅ | 🧪 | ✅ | amd64, arm64 |
-| Fedora 41 | ✅ | ✅ | ✅ | ✅ | ✅ | amd64[^fedora-arm64] |
-| Fedora 42, 43 | 🧪 | ✅ | ✅ | 🧪 | ✅ | amd64, arm64 |
-| Rocky, AlmaLinux, Oracle Linux, CentOS Stream 9 | 🧪 | ✅ | ✅ | 🧪 | ❌ | amd64, arm64 |
-| Rocky, AlmaLinux, Oracle Linux, CentOS Stream 10 | 🧪 | ✅ | ✅ | 🧪 | ✅ | amd64, arm64 |
-| openSUSE Leap 16.0 | 🧪 | ✅ | ✅ | 🧪 | ✅ | amd64, arm64 |
-| Alpine 3.21, 3.23 | 🧪 | ❌ | ✅ | 🧪 | ❌ | amd64, arm64 |
+| Hadron | ✅ | ❌ | ✅ | ✅ | ✅ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
+| Ubuntu 20.04 | 🧪 | ❌ | ✅ | ⚠️[^ubuntu-pro] | ❌ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
+| Ubuntu 22.04 | 🧪 | ❌ | ✅ | ⚠️[^ubuntu-pro] | ❌ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
+| Ubuntu 24.04 | ✅ | ❌ | ✅ | ⚠️[^ubuntu-pro] | ✅ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
+| Ubuntu 25.10 | ✅ | ❌ | ✅ | ⚠️[^ubuntu-pro] | ✅ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
+| Ubuntu 26.04 | ✅ | ❌ | ✅ | ⚠️[^ubuntu-pro] | ✅ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
+| Debian 12 | 🧪 | ❌ | ✅ | 🧪 | ❌ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
+| Debian 13 | 🧪 | ❌ | ✅ | 🧪 | ✅ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
+| Fedora 41 | ✅ | ✅ | ✅ | ✅ | ✅ | ![amd64](/img/arch/amd64.svg)[^fedora-arm64] |
+| Fedora 42, 43 | 🧪 | ✅ | ✅ | 🧪 | ✅ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
+| Rocky, AlmaLinux, Oracle Linux, CentOS Stream 9 | 🧪 | ✅ | ✅ | 🧪 | ❌ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
+| Rocky, AlmaLinux, Oracle Linux, CentOS Stream 10 | 🧪 | ✅ | ✅ | 🧪 | ✅ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
+| openSUSE Leap 16.0 | 🧪 | ✅ | ✅ | 🧪 | ✅ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
+| Alpine 3.21, 3.23 | 🧪 | ❌ | ✅ | 🧪 | ❌ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
 
 ## Boards
 
