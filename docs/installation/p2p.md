@@ -341,3 +341,43 @@ kairosctl get-kubeconfig > kubeconfig
 Note that you must run kairos bridge in a separate window as act like `kubectl proxy` and access the Kubernetes cluster VPN. Keep the kairos bridge command running to operate the cluster.
 
 :::
+
+## Troubleshooting
+
+### Low-MTU links: the p2p mesh needs at least 1308 bytes
+
+The p2p mesh dials peers over both QUIC and TCP. QUIC has a hard lower bound
+on the path MTU, and Kairos cannot configure it away.
+
+On an IPv4 path, QUIC stops working when the link MTU drops below **1308
+bytes**. On IPv6 the bound is **1328 bytes**. It is a cliff, not a slow
+degradation: the handshake sends the same oversized packet until it times out.
+
+Below the bound the mesh does not fail. It keeps working over TCP alone, and
+nothing in the logs says that QUIC is gone. Clusters on a tunnel, a VPN or an
+MTU-clamped virtual network can therefore run for months on one transport
+without knowing it, and lose the mesh entirely the moment that transport is
+also blocked.
+
+A mesh on a link at or above 1500 bytes is unaffected. If your link is lower,
+raise the path MTU to 1308 or more (1328 for IPv6) where you can.
+
+:::info Why Kairos cannot lower it
+
+QUIC pads its first handshake packet to a fixed size and never retries with a
+smaller one. The QUIC library allows that size to be lowered to the protocol
+floor of 1200 bytes, but `go-libp2p` does not expose the setting, so the
+default stands for every libp2p application. Nothing in the Kairos cloud
+config, in `provider-kairos` or in `edgevpn` can reach it. Lifting the bound
+needs a change in `go-libp2p` itself.
+
+:::
+
+:::warning `EDGEVPNPACKETMTU` is not a workaround
+
+`EDGEVPNPACKETMTU` sizes the buffer `edgevpn` reads a frame from the tun
+device into. It does not change the size of the packets put on the link, so
+setting it has no effect on a low-MTU path. `EDGEVPNMTU` sets the MTU of the
+`edgevpn0` tun interface and does not change it either.
+
+:::
