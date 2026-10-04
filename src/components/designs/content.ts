@@ -180,6 +180,14 @@ export const events: EventItem[] = [
     url: 'https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/features-add-ons/project-engagement/#project-pavilion-kiosk-directory',
   },
   {
+    dateISO: '2026-10-19',
+    dateLabel: 'Oct 19, 2026',
+    location: 'Edinburgh, UK',
+    title: 'What Should a Cloud-Native OS Look Like? Rethinking the Foundation of Modern Platforms',
+    conference: 'KCD UK',
+    url: 'https://sessionize.com/kcd-uk-edinburgh-2026/',
+  },
+  {
     dateISO: '2026-09-22',
     dateLabel: 'Sep 22, 2026',
     location: 'Online',
