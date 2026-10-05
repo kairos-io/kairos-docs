@@ -14,7 +14,7 @@ Kairos supports Raspberry Pi model 3 and 4 with 64bit architecture.
 Model 5 is currently not supported because of how we use U-boot to boot the device. There's currently some work from the people from SUSE, see https://github.com/openSUSE/u-boot/pull/29 for more information.
 :::
 :::warning Tested distributions
-Commands in this page are written for Hadron, but if adapted they should work on these other distributions: openSUSE Leap-15.6, openSUSE Tumbleweed, Ubuntu 20.04, Ubuntu 22.04, and Alpine 3.19.
+Commands in this page are written for Hadron, but if adapted they should work on these other distributions: openSUSE Leap-15.6, openSUSE Tumbleweed, Ubuntu 20.04, Ubuntu 22.04, Ubuntu 24.04 (with `linux-raspi` 6.8.0-1028 or newer), and Alpine 3.19.
 :::
 If you are not familiar with the process, it is suggested to follow the [quickstart](/quickstart/) first to see how Kairos works.
 
