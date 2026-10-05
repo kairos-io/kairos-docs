@@ -123,7 +123,7 @@ docker run -ti --rm -v $PWD/build:/result -v $PWD/keys/:/keys -v $PWD/config.yam
   --cloud-config /config.yaml $CONTAINER_IMAGE
 ```
 
-`install.selinux` in the install-time cloud-config has no effect on a UKI system. To change the mode, build a new signed UKI and upgrade to it.
+`install.selinux` in the install-time cloud-config has no effect on a UKI system, which is why the [configuration reference](../reference/configuration.md) lists it as GRUB-only. Under UKI the same block is read only by `build-uki`, and the mode is baked into the signed cmdline. To change the mode, build a new signed UKI and upgrade to it.
 
 Known gaps with UKI, both still open:
 
