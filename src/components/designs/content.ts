@@ -185,7 +185,7 @@ export const events: EventItem[] = [
     location: 'Milan, Italy',
     title: 'Your GPU node is a snowflake: shipping AI infrastructure as a versioned artifact',
     conference: 'Codemotion Milan',
-    url: 'https://conferences.codemotion.com/milan/',
+    url: 'https://conferences.codemotion.com/milan/agenda/',
   },
   {
     dateISO: '2026-10-20',
