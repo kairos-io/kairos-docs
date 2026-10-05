@@ -45,12 +45,25 @@ install:
 
 The installer logs a warning if `mode` is set while `enabled` is `false`, and if `mode` has an unknown value.
 
-There is no `selinux` block under `upgrade` or `reset`. The setting is written once at install time to `/oem/grubenv` as `selinux_enabled` and `selinux_mode`. It survives upgrades and resets, because neither touches the OEM partition. A reset with `reset-oem: true` formats OEM and removes the setting, so the system boots with SELinux off afterwards.
+There is no `selinux` block under `upgrade` or `reset`. The setting is written once at install time as `selinux_enabled` and `selinux_mode` in a GRUB environment file:
+
+- `/oem/grubenv` by default.
+- `grubenv` at the root of the STATE partition if `COS_OEM` is in `install.encrypted_partitions`, because GRUB cannot read an encrypted OEM. On the running system this is `/run/initramfs/cos-state/grubenv`.
+
+The setting survives upgrades and resets, because neither rewrites that file. A reset with `reset-oem: true` formats OEM, so on a default install it removes the setting and the system boots with SELinux off afterwards.
 
 To change the mode on an installed GRUB system, edit the GRUB environment and reboot:
 
 ```bash
 grub2-editenv /oem/grubenv set selinux_enabled=true selinux_mode=enforcing
+```
+
+With `COS_OEM` encrypted, edit the STATE copy instead. STATE is mounted read-only, so remount it first:
+
+```bash
+mount -o remount,rw /run/initramfs/cos-state
+grub2-editenv /run/initramfs/cos-state/grubenv set selinux_enabled=true selinux_mode=enforcing
+mount -o remount,ro /run/initramfs/cos-state
 ```
 
 Do not edit `/etc/selinux/config`. Kairos rewrites its `SELINUX=` line on every boot to match the kernel cmdline, so a manual edit is lost on the next boot.
@@ -127,6 +140,7 @@ Check the current mode and the cmdline:
 getenforce
 cat /proc/cmdline
 grub2-editenv /oem/grubenv list   # GRUB systems only
+grub2-editenv /run/initramfs/cos-state/grubenv list   # GRUB, with COS_OEM encrypted
 ```
 
 Check that the relabel unit ran:
