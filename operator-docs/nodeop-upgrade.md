@@ -301,6 +301,8 @@ The result of the above process is that each upgrade Job finishes successfully, 
 
 Every time Linux starts, it picks a new random **boot ID**. Kubernetes shows it on each Node (`status.nodeInfo.bootID`). If the boot ID changed, the machine rebooted. The operator uses this to confirm the reboot after an upgrade.
 
+The same flow applies to any [NodeOp](nodeop.md) with `rebootOnSuccess: true`. In that case, the upgrade Job below is the NodeOp's main Job.
+
 For each node:
 
 1. The operator starts a **reboot Pod** on the node and tells it the name of the upgrade Job it is about to create.
