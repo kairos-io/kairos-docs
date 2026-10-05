@@ -16,22 +16,22 @@ CIS L1 hardening and SELinux are on kairos master and ship with the next kairos 
 
 ## By base distribution
 
-| Base | [Trusted Boot (UKI)](../installation/trustedboot.mdx) | [SELinux](../security/selinux.md) | [CIS L1](../security/cis.md) | [FIPS](../examples/fips.md) | [System extensions](../advanced/sys-extensions.md) | [Arches](./image_matrix.md) |
-|---|---|---|---|---|---|---|
-| Hadron | ✅ | ❌ | ✅ | ✅ | ✅ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
-| Ubuntu 20.04 | 🧪 | ❌ | ✅ | ⚠️[^ubuntu-pro] | ❌ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
-| Ubuntu 22.04 | 🧪 | ❌ | ✅ | ⚠️[^ubuntu-pro] | ❌ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
-| Ubuntu 24.04 | ✅ | ❌ | ✅ | ⚠️[^ubuntu-pro] | ✅ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
-| Ubuntu 25.10 | ✅ | ❌ | ✅ | ⚠️[^ubuntu-pro] | ✅ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
-| Ubuntu 26.04 | ✅ | ❌ | ✅ | ⚠️[^ubuntu-pro] | ✅ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
-| Debian 12 | 🧪 | ❌ | ✅ | 🧪 | ❌ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
-| Debian 13 | 🧪 | ❌ | ✅ | 🧪 | ✅ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
-| Fedora 41 | ✅ | ✅ | ✅ | ✅ | ✅ | ![amd64](/img/arch/amd64.svg)[^fedora-arm64] |
-| Fedora 42, 43 | 🧪 | ✅ | ✅ | 🧪 | ✅ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
-| Rocky, AlmaLinux, Oracle Linux, CentOS Stream 9 | 🧪 | ✅ | ✅ | 🧪 | ❌ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
-| Rocky, AlmaLinux, Oracle Linux, CentOS Stream 10 | 🧪 | ✅ | ✅ | 🧪 | ✅ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
-| openSUSE Leap 16.0 | 🧪 | ✅ | ✅ | 🧪 | ✅ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
-| Alpine 3.21, 3.23 | ❌ | ❌ | ✅ | 🧪 | ❌ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
+| Base | [Trusted Boot (UKI)](../installation/trustedboot.mdx) | [SELinux](../security/selinux.md) | [CIS L1](../security/cis.md) | [FIPS](../examples/fips.md) | [System extensions](../advanced/sys-extensions.md) |
+|---|---|---|---|---|---|
+| Hadron | ✅ | ❌ | ✅ | ✅ | ✅ |
+| Ubuntu 20.04 | 🧪 | ❌ | ✅ | ⚠️[^ubuntu-pro] | ❌ |
+| Ubuntu 22.04 | 🧪 | ❌ | ✅ | ⚠️[^ubuntu-pro] | ❌ |
+| Ubuntu 24.04 | ✅ | ❌ | ✅ | ⚠️[^ubuntu-pro] | ✅ |
+| Ubuntu 25.10 | ✅ | ❌ | ✅ | ⚠️[^ubuntu-pro] | ✅ |
+| Ubuntu 26.04 | ✅ | ❌ | ✅ | ⚠️[^ubuntu-pro] | ✅ |
+| Debian 12 | 🧪 | ❌ | ✅ | 🧪 | ❌ |
+| Debian 13 | 🧪 | ❌ | ✅ | 🧪 | ✅ |
+| Fedora 41 | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Fedora 42, 43 | 🧪 | ✅ | ✅ | 🧪 | ✅ |
+| Rocky, AlmaLinux, Oracle Linux, CentOS Stream 9 | 🧪 | ✅ | ✅ | 🧪 | ❌ |
+| Rocky, AlmaLinux, Oracle Linux, CentOS Stream 10 | 🧪 | ✅ | ✅ | 🧪 | ✅ |
+| openSUSE Leap 16.0 | 🧪 | ✅ | ✅ | 🧪 | ✅ |
+| Alpine 3.21, 3.23 | ❌ | ❌ | ✅ | 🧪 | ❌ |
 
 ## Boards
 
@@ -54,5 +54,4 @@ All boards are arm64 only. Each column links to the board's install page.
 - 🧪 **Not tested**: supported by `kairos-init`, but CI does not build or test that combination.
 
 [^ubuntu-pro]: FIPS on Ubuntu needs an Ubuntu Pro subscription and extra packages, so `kairos-init --fips` refuses Ubuntu. Build it from the [Ubuntu FIPS example](https://github.com/kairos-io/kairos/blob/master/examples/builds/ubuntu-fips/Dockerfile) instead.
-[^fedora-arm64]: arm64 is not built or tested in CI for Fedora 41.
 [^ubuntu-rpi]: Ubuntu releases newer than 22.04 do not work on Raspberry Pi. Ubuntu turned off `CONFIG_EFI` in its `linux-raspi` kernel, and Kairos boots the Pi through U-Boot and GRUB, which needs an EFI-capable kernel. Ubuntu closed the request to turn it back on, see [kairos-io/kairos#2249](https://github.com/kairos-io/kairos/issues/2249) and [Launchpad bug 2053147](https://bugs.launchpad.net/ubuntu/+source/linux-raspi/+bug/2053147). Use Ubuntu 22.04 or another base on Raspberry Pi.
