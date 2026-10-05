@@ -28,6 +28,52 @@ description: Discover Kairos in action through videos, presentation slides, and 
 <YouTube id="P8voTbQGmP8" title="How we build and maintain Kairos" />
 
 
+### Kairos Quickstart
+
+Also in the [Quickstart](/quickstart/).
+
+<YouTube id="HDArpKdUl58" title="Kairos Quickstart" />
+
+### Debugging a Raspberry Pi that won't boot
+
+A real Kairos boot failure on a Raspberry Pi, traced to a kernel mismatch in the package maps. Also in the [Raspberry Pi installation guide](/docs/installation/raspberry).
+
+<YouTube id="_6qjNNAzVcU" title="Debugging a Raspberry Pi that won't boot" />
+
+### What Image-Based Systems Taught Us About Linux Distributions
+
+Also in the [immutable architecture page](/docs/architecture/immutable).
+
+<YouTube id="Y4ciLByxduA" title="What Image-Based Systems Taught Us About Linux Distributions" />
+
+### Immutable OS on RISC-V
+
+Kairos and Hadron running on RISC-V, as an early proof of concept in emulation.
+
+<YouTube id="AnR2i1MMUVY" title="Immutable OS on RISC-V" />
+
+### Enhancing CI for External Contributions
+
+Also in the [development notes](/docs/development/notes).
+
+<YouTube id="_IS7R0DdM3w" title="Enhancing CI for External Contributions" />
+
+### Kairos Conversations
+
+Interviews with Kairos maintainers.
+
+#### Why Immutable Linux Makes Fleet Management Easier
+
+Also in the [meta-distribution page](/docs/architecture/meta).
+
+<YouTube id="dWvA1s2etFM" title="Why Immutable Linux Makes Fleet Management Easier" />
+
+#### We Made Everything Public (Even Our Meetings)
+
+Dimitris Karakasilis on running an open source project in the open.
+
+<YouTube id="X4EyXYTwZp4" title="We Made Everything Public (Even Our Meetings)" />
+
 ### CNCF TAG-Runtime Meeting 09-14-2023 (Kairos) 
 
 Starts at `9:23`:
