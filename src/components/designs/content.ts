@@ -180,6 +180,14 @@ export const events: EventItem[] = [
     url: 'https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/features-add-ons/project-engagement/#project-pavilion-kiosk-directory',
   },
   {
+    dateISO: '2026-10-28',
+    dateLabel: 'Oct 28, 2026',
+    location: 'Milan, Italy',
+    title: 'Your GPU node is a snowflake: shipping AI infrastructure as a versioned artifact',
+    conference: 'Codemotion Milan',
+    url: 'https://conferences.codemotion.com/milan/agenda/',
+  },
+  {
     dateISO: '2026-10-20',
     dateLabel: 'Oct 20, 2026',
     location: 'Edinburgh, UK',
