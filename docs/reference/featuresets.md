@@ -8,7 +8,7 @@ description: One table per base distribution showing which Kairos feature sets i
 
 This page answers "what does this base give me" at a glance: pick a base distribution and read across. Every column links to the page with the details. For image naming and how the tested matrix is built, see the [Image support matrix](./image_matrix.md).
 
-The rows are the bases Kairos builds and tests in CI on master. Kubernetes (k3s and k0s, through `provider-kairos`) does not depend on the base, see [Choosing a Kubernetes distribution](../examples/choosing-kubernetes-distribution.md).
+The rows are the bases Kairos builds and tests in CI on master, plus openSUSE Leap 15.5 and 15.6, which CI no longer builds. Kubernetes (k3s and k0s, through `provider-kairos`) does not depend on the base, see [Choosing a Kubernetes distribution](../examples/choosing-kubernetes-distribution.md).
 
 :::note Release status
 CIS L1 hardening and SELinux are on kairos master and ship with the next kairos release after v4.3.0. Images built with v4.3.0 have neither.
@@ -31,6 +31,7 @@ CIS L1 hardening and SELinux are on kairos master and ship with the next kairos 
 | Rocky, AlmaLinux, Oracle Linux, CentOS Stream 9 | 🧪 | ✅ | ✅ | 🧪 | ❌ |
 | Rocky, AlmaLinux, Oracle Linux, CentOS Stream 10 | 🧪 | ✅ | ✅ | 🧪 | ✅ |
 | openSUSE Leap 16.0 | 🧪 | ✅ | ✅ | 🧪 | ✅ |
+| openSUSE Leap 15.5, 15.6[^leap15] | 🧪 | 🧪 | ⚠️[^leap15-cis] | 🧪 | ❌ |
 | Alpine 3.21, 3.23 | ❌ | ❌ | ✅ | 🧪 | ❌ |
 
 ## Boards
@@ -53,4 +54,6 @@ All boards are arm64 only. Each column links to the board's install page.
 - ⚠️ **With conditions**: works, with the condition in the footnote.
 - 🧪 **Not tested**: supported by `kairos-init`, but CI does not build or test that combination.
 
-[^ubuntu-pro]: FIPS on Ubuntu needs an Ubuntu Pro subscription and extra packages, so `kairos-init --fips` refuses Ubuntu. Build it from the [Ubuntu FIPS example](https://github.com/kairos-io/kairos/blob/master/examples/builds/ubuntu-fips/Dockerfile) instead.
+[^ubuntu-pro]: FIPS on Ubuntu needs an Ubuntu Pro subscription and extra packages, so `kairos-init --fips` refuses Ubuntu. Build it from the Ubuntu FIPS example for [20.04](https://github.com/kairos-io/kairos/tree/master/examples/builds/ubuntu-20.04-fips), [22.04](https://github.com/kairos-io/kairos/tree/master/examples/builds/ubuntu-22.04-fips) or [24.04](https://github.com/kairos-io/kairos/tree/master/examples/builds/ubuntu-24.04-fips) instead. There is no example for 25.10 or 26.04 yet.
+[^leap15]: Leap 15.5 and 15.6 are end of life upstream (December 2024 and April 2026), so CI only builds Leap 16.0. `kairos-init` still detects and builds them. Their systemd (249 and 254) is too old for system extensions.
+[^leap15-cis]: On Leap 15.5 and 15.6, `pam-config` does not know the `pwquality` module, so the CIS password quality rule is skipped and `pam_cracklib` stays in place.
