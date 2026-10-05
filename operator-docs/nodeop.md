@@ -169,7 +169,7 @@ Assuming `cordon: true` and a node whose cordon this NodeOp actually owns:
 | Outcome of the operation | `rebootOnSuccess` | When the node is uncordoned |
 |---|---|---|
 | Completed successfully | `false` | As soon as the Job reaches `Completed`. |
-| Completed successfully | `true` | After the reboot completes and the node comes back online. |
+| Completed successfully | `true` | After the node comes back online with a new boot ID, which confirms the reboot. See [How the Reboot Works](nodeop-upgrade.md#how-the-reboot-works). |
 | Failed | any | Only if `uncordonOnFailure: true`. Otherwise the node stays cordoned so you can inspect it. Failed operations never trigger a reboot, so the uncordon happens as soon as the failure is observed. |
 
 Set `uncordonOnFailure: true` to have the operator uncordon a node whose operation failed, returning it to a schedulable state automatically. The same ownership rule applies: only cordons this NodeOp set are removed.
@@ -191,7 +191,7 @@ The script-to-controller contract is a single signal:
 | Preflight outcome | Result |
 |---|---|
 | Container exit 0, `/dev/termination-log` **non-empty** | **Skip this node.** NodeStatus = `Completed`, `JobName` empty, `Message = "Skipped by preflight: <your text>"`. No cordon, no drain, no main Job. |
-| Container exit 0, `/dev/termination-log` **empty** | **Proceed.** The controller runs the normal cordon → drain → main Job → reboot flow exactly as if `preflight` weren't set. |
+| Container exit 0, `/dev/termination-log` **empty** | **Proceed.** The controller runs the normal flow exactly as if `preflight` weren't set: cordon → drain → main Job, or, with `rebootOnSuccess: true`, reboot Pod → cordon → drain → main Job → reboot. See [How the Reboot Works](nodeop-upgrade.md#how-the-reboot-works). |
 | Pod ends in `Failed` (non-zero exits exhausted retries, or `activeDeadlineSeconds` expired) | **Fail this node.** NodeStatus = `Failed` with the reason. `spec.stopOnFailure` applies as it would for a Job failure. |
 
 So writing a preflight script means: "compute whatever you need, `echo` a one-line *reason* to `/dev/termination-log` if you want to skip this node, exit 0 otherwise." Real failures (non-zero exits, timeouts) intentionally don't get conflated with "I decided to skip" — if your preflight is broken, the controller surfaces it rather than silently skipping.
@@ -313,7 +313,7 @@ spec:
 - It starts a minimal D-Bus and udisksd instance (needed by fwupd on Alpine).
 - The EFI System Partition (`/boot/efi`) is mounted, enabling capsule staging if firmware allows it. This could be skipped as the udisksd would mount it eventually, but it can be really slow to do so.
 - The script refreshes LVFS metadata, finds updatable firmware, and installs any pending update (for instance, the UEFI dbx capsule).
-- After completion, the node is cordoned, updated, and rebooted by the operator once the Job succeeds.
+- Because `rebootOnSuccess` is `true`, the operator first starts a reboot Pod on the node. Once it is ready, the node is cordoned and drained, the Job runs, and the reboot Pod reboots the node once the Job succeeds. See [How the Reboot Works](nodeop-upgrade.md#how-the-reboot-works).
 
 ## Resource specification
 
