@@ -42,7 +42,7 @@ All boards are arm64 only. Each column links to the board's install page.
 | Hadron | ✅ | ✅ | ❌ | ❌ | ✅ | ❌ |
 | Ubuntu 20.04 | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
 | Ubuntu 22.04 | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
-| Ubuntu 24.04 | 🧪[^ubuntu-rpi] | 🧪[^ubuntu-rpi] | ❌ | ❌ | ✅ | ✅ |
+| Ubuntu 24.04 | 🧪 | 🧪 | ❌ | ❌ | ✅ | ✅ |
 | openSUSE Leap 15.6, Tumbleweed | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
 | Alpine 3.19 | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
 
@@ -54,4 +54,3 @@ All boards are arm64 only. Each column links to the board's install page.
 - 🧪 **Not tested**: supported by `kairos-init`, but CI does not build or test that combination.
 
 [^ubuntu-pro]: FIPS on Ubuntu needs an Ubuntu Pro subscription and extra packages, so `kairos-init --fips` refuses Ubuntu. Build it from the [Ubuntu FIPS example](https://github.com/kairos-io/kairos/blob/master/examples/builds/ubuntu-fips/Dockerfile) instead.
-[^ubuntu-rpi]: Ubuntu 24.04 needs `linux-raspi` 6.8.0-1028 or newer. Kairos boots the Pi through U-Boot and GRUB, which needs an EFI-capable kernel. Ubuntu turned `CONFIG_EFI` off in `linux-raspi` 6.5 and turned it back on in that release, see [Launchpad bug 2053147](https://bugs.launchpad.net/ubuntu/+source/linux-raspi/+bug/2053147) and [kairos-io/kairos#2249](https://github.com/kairos-io/kairos/issues/2249). Older 24.04 kernels do not boot.
