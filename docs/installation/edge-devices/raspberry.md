@@ -81,3 +81,9 @@ $ sudo umount /tmp/oem
 ```
 
 You can push additional `cloud config` files. For a full reference check out the [docs](/docs/reference/configuration) and also [configuration after-installation](/docs/advanced/after-install)
+
+## Troubleshooting a Pi that does not boot
+
+If the Pi does not boot after an install or an upgrade, this video walks through a real case. It covers an initramfs error caused by a kernel mismatch, and how to find the cause by inspecting the raw image and the container image. For more tools, see [Troubleshooting](/docs/reference/troubleshooting).
+
+<YouTube id="_6qjNNAzVcU" title="Debugging a Raspberry Pi that won't boot" />
