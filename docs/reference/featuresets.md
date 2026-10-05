@@ -31,7 +31,7 @@ CIS L1 hardening and SELinux are on kairos master and ship with the next kairos 
 | Rocky, AlmaLinux, Oracle Linux, CentOS Stream 9 | 🧪 | ✅ | ✅ | 🧪 | ❌ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
 | Rocky, AlmaLinux, Oracle Linux, CentOS Stream 10 | 🧪 | ✅ | ✅ | 🧪 | ✅ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
 | openSUSE Leap 16.0 | 🧪 | ✅ | ✅ | 🧪 | ✅ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
-| Alpine 3.21, 3.23 | 🧪 | ❌ | ✅ | 🧪 | ❌ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
+| Alpine 3.21, 3.23 | ❌ | ❌ | ✅ | 🧪 | ❌ | ![amd64](/img/arch/amd64.svg) ![arm64](/img/arch/arm64.svg) |
 
 ## Boards
 
