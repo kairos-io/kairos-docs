@@ -29,7 +29,7 @@ AGX Orin / Orin NX.
 <TabItem value="hadron" label="Hadron" default>
 
 
-Build your Thor base image using the reference file at the [Hadron repo](https://raw.githubusercontent.com/kairos-io/hadron/refs/heads/main/examples/add-packages/Dockerfile.thor)
+Build your Thor base image using the reference file at the [Hadron repo](https://raw.githubusercontent.com/kairos-io/hadron/refs/heads/main/examples/add-packages/Dockerfile.Thor)
 
 This dockerfile builds an image that includes:
 - A build-from-scratch Tegra-compatible kernel
@@ -39,7 +39,7 @@ This dockerfile builds an image that includes:
 For part of the NVIDIA userspace stack, source code is not available. For those components, we extract and use upstream NVIDIA packages directly. This provides firmware and userspace dependencies such as CUDA libraries, NVIDIA container libraries, and NVIDIA container binaries.
 
 ```bash
-curl -L https://raw.githubusercontent.com/kairos-io/hadron/refs/heads/main/examples/add-packages/Dockerfile.thor -o Dockerfile.Thor
+curl -L https://raw.githubusercontent.com/kairos-io/hadron/refs/heads/main/examples/add-packages/Dockerfile.Thor -o Dockerfile.Thor
 docker build -f Dockerfile.Thor -t quay.io/myrepo/nvidia:v1.0.0 .
 ```
 
