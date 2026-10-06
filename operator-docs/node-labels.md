@@ -50,11 +50,20 @@ reads `/proc/cmdline` and reports which image the node booted:
 | `passive` | The passive image, which is the previous active image after an upgrade. |
 | `recovery` | The recovery image. |
 | `livecd` | Live media, an ISO or a netboot, so there is no installed system in use. |
-| `unknown` | Something the labeler could not classify. |
+| `unknown` | The command line carries none of the tokens above. |
 
 A node showing `passive` has fallen back, so it is running the image it ran
 before its last upgrade. A node showing `recovery` or `livecd` is not running
 an installed system, and an upgrade targeted at it does not do what you mean.
+
+**On a Trusted Boot node the value is always `unknown`.** The labeler reads the
+kernel command line, and a UKI node carries no boot state token there: the
+agent copies one UKI artifact into the `active`, `passive` and `recovery`
+roles, so all of them boot with the same embedded command line. The role the
+node actually booted is recorded by systemd-boot in an EFI variable, which the
+labeler does not read. So a selector on `kairos.io/boot-state` matches no
+Trusted Boot node at all, whichever image it booted. Tracked in
+[kairos-io/kairos#5206](https://github.com/kairos-io/kairos/issues/5206).
 
 ## Annotations
 
@@ -64,12 +73,17 @@ annotation.
 
 | Annotation | Source key | Example value |
 |---|---|---|
-| `kairos.io/name` | `KAIROS_NAME` | `debian` |
-| `kairos.io/id-like` | `KAIROS_ID_LIKE` | `debian` |
+| `kairos.io/name` | `KAIROS_NAME` | `kairos-standard-ubuntu-24.04` |
+| `kairos.io/id-like` | `KAIROS_ID_LIKE` | `kairos-standard-ubuntu-24.04` |
 | `kairos.io/version` | `KAIROS_VERSION` | `v3.5.2` |
 | `kairos.io/init-version` | `KAIROS_INIT_VERSION` | `v0.5.17` |
 | `kairos.io/bug-report-url` | `KAIROS_BUG_REPORT_URL` | `https://github.com/kairos-io/kairos/issues` |
 | `kairos.io/home-url` | `KAIROS_HOME_URL` | `https://github.com/kairos-io/kairos` |
+
+`kairos.io/name` and `kairos.io/id-like` carry the same string, because
+kairos-init writes `kairos-<variant>-<flavor>-<flavor-release>` into both
+`KAIROS_NAME` and `KAIROS_ID_LIKE`. Neither of them names the base
+distribution, so read `kairos.io/flavor` and `kairos.io/variant` for that.
 
 ## Three behaviours to know before you write a selector
 
@@ -122,6 +136,9 @@ nodeSelector:
     kairos.io/managed: "true"
     kairos.io/boot-state: "active"
 ```
+
+This one also skips every Trusted Boot node, for the reason given under
+[Boot state](#boot-state).
 
 Every node that runs a Kubernetes distribution, whichever one it is:
 
