@@ -322,11 +322,14 @@ On an IPv4 path, QUIC stops working when the link MTU drops below **1308
 bytes**. On IPv6 the bound is **1328 bytes**. It is a cliff, not a slow
 degradation: the handshake sends the same oversized packet until it times out.
 
-Below the bound the mesh does not fail. It keeps working over TCP alone, and
-nothing in the logs says that QUIC is gone. Clusters on a tunnel, a VPN or an
-MTU-clamped virtual network can therefore run for months on one transport
-without knowing it, and lose the mesh entirely the moment that transport is
-also blocked.
+Just under the bound the mesh still comes up: QUIC is gone, TCP carries it, and
+nothing in the logs says so. A cluster on a tunnel, a VPN or an MTU-clamped
+virtual network can therefore run for a long time on one transport without
+knowing it, and lose the mesh the moment that transport is also blocked.
+
+Lower still, it stops coming up at all. On a 1300-byte link the mesh converged
+in 4 seconds; on a 1200-byte link it never converged, over TCP alone either.
+Do not read the 1308-byte bound as the point where the mesh merely degrades.
 
 A mesh on a link at or above 1500 bytes is unaffected. If your link is lower,
 raise the path MTU to 1308 or more (1328 for IPv6) where you can.
