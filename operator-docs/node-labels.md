@@ -10,7 +10,7 @@ node it reads `/etc/kairos-release` and `/proc/cmdline` and writes the result
 as node labels and node annotations, all under the `kairos.io/` prefix.
 
 These are the labels you select on in the `nodeSelector` of a
-[NodeOp](nodeop) or a [NodeOpUpgrade](nodeop-upgrade). Read them from a
+[NodeOp](../nodeop/) or a [NodeOpUpgrade](../nodeop-upgrade/). Read them from a
 running cluster with:
 
 ```bash

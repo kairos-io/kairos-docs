@@ -44,7 +44,7 @@ If you use **kubectl apply** with a manifest that only sets `generateName` and o
 ## Basic Example
 
 Here's a simple example of a NodeOp resource. The `nodeSelector` below matches
-every Kairos node. See [Node labels and annotations](node-labels) for the other
+every Kairos node. See [Node labels and annotations](../node-labels/) for the other
 labels the operator writes, such as the architecture, the variant and the boot
 state, and how to select on them.
 

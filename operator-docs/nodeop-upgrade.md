@@ -95,7 +95,7 @@ The following is an example of a "canary upgrade", which upgrades Kairos nodes o
 
 The `nodeSelector` matches every Kairos node. To upgrade a subset, select on
 the other labels the operator writes, such as the architecture or the boot
-state. See [Node labels and annotations](node-labels).
+state. See [Node labels and annotations](../node-labels/).
 
 :::warning Legacy flavor example
 The image references below show a valid tag format, but these non-Hadron flavor repositories are not actively updated by the Kairos release pipeline anymore. Build and publish your own upgrade image with [BYOI](/docs/reference/byoi/) and [Kairos Factory](/docs/reference/kairos-factory/).
