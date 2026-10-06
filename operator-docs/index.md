@@ -26,4 +26,5 @@ The operator provides three custom resources:
    - Need to **upgrade** your Kairos nodes? See [NodeOpUpgrade](nodeop-upgrade)
    - Need to **run operations** on nodes (firmware updates, config changes, resets)? See [NodeOp](nodeop)
    - Need to **build OS images** (ISOs, cloud images, netboot)? See [OSArtifact](osartifact)
-3. If you use private container registries, see [Private Registries](private-registries)
+3. To target a subset of your nodes, see [Node labels and annotations](node-labels), which lists what the operator writes on every Kairos node
+4. If you use private container registries, see [Private Registries](private-registries)
