@@ -39,13 +39,13 @@ Other than the `/usr/local` path, Kairos will also bind mount the following path
 /etc/runlevels
 /etc/ssh
 /etc/ssl/certs
+/etc/ssl/private
 /etc/sysconfig
 /etc/systemd
 /etc/zfs
 /home
 /opt
 /root
-/usr/libexec
 /var/cores
 /var/lib/ca-certificates
 /var/lib/cni
@@ -54,6 +54,7 @@ Other than the `/usr/local` path, Kairos will also bind mount the following path
 /var/lib/dbus
 /var/lib/etcd
 /var/lib/extensions
+/var/lib/confexts
 /var/lib/k0s
 /var/lib/kubelet
 /var/lib/longhorn
@@ -81,6 +82,57 @@ You can add additional paths to the persistent partition by using the [bind_moun
 
 :::
 
+
+## How a persistent path is kept
+
+A path in that list is not bind mounted straight from the image. On every boot,
+before the bind mount is made, immucore copies the path out of the image into a
+directory of its own under `/usr/local/.state`, and then binds that directory
+over the path. The directory is named after the path, with each `/` replaced by
+`-` and `.bind` appended, so `/etc/systemd` is backed by
+`/usr/local/.state/etc-systemd.bind`.
+
+The copy is an `rsync -aquAX` from the image to the persistent copy. Three
+properties of it decide what an image can put under one of these paths:
+
+- **It runs on every boot**, not only on the first boot and not only after an
+  upgrade.
+- **`-u` (`--update`) keeps the newer file.** A file the persistent copy already
+  has is replaced only if the image's copy has a newer modification time. `-a`
+  preserves modification times from the image, so a file that the image changed
+  but gave an older or equal timestamp is not applied. A build that clamps
+  timestamps with `SOURCE_DATE_EPOCH`, or a downgrade to an older image, gives
+  exactly that.
+- **There is no `--delete`.** A file that a new image no longer ships stays in
+  the persistent copy, and keeps being bind mounted over the path, for the life
+  of the machine.
+
+### What belongs under a persistent path
+
+Only machine-owned state. The state a machine writes while it runs, such as an
+SSH host key, a container runtime's data directory or a log, is what the list is
+for, and the three properties above are all correct for it.
+
+Content that the image owns is a different matter. If an image ships a file
+under one of these paths, then on an upgrade a change to that file may not be
+applied, because the persistent copy is the same age or newer, and a removal of
+that file is never applied. The node goes on using the old file, and the two
+images' content mixes in the persistent copy.
+
+That is why `/usr/libexec` was taken off the default list: it is image content,
+and persisting it merged one boot slot's binaries into the other and broke
+rollback. See [kairos#4304](https://github.com/kairos-io/kairos/issues/4304).
+
+:::warning
+
+Several paths still on the list can also carry content an image ships, for
+example `/etc/systemd`, `/etc/modprobe.d`, `/etc/sysconfig`, `/etc/ssl/certs`,
+`/etc/init.d` and `/opt`. If your image writes to one of these, an upgrade
+cannot reliably take that file back. Keep anything the image owns and expects to
+replace outside the persistent paths, and put anything that has to be writable
+at runtime under `/usr/local`.
+
+:::
 
 ## Benefits of using an Immutable System
 
