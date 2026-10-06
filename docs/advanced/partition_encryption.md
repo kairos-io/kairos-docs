@@ -341,6 +341,15 @@ Notes:
 - Partitions the running boot depends on cannot be encrypted this way: the OEM partition (the policy itself is read from it), the state and recovery partitions (they hold the system that is booting) and the EFI partition. Listing one of them halts the boot with a message saying so. Encrypt OEM at install time if you need it encrypted.
 - Trusted Boot (UKI) images always encrypt during installation, so this flow does not apply to them.
 
+:::warning Secrets in the OEM partition are not encrypted
+Encrypting on first boot covers the partitions listed in `install.encrypted_partitions`, normally `COS_PERSISTENT`. The OEM partition stays in plain text, because the policy is read from it before anything is unlocked. Anything stored there is unencrypted on the node's disk, including:
+
+- the cloud-config files in the template, such as the policy and the installer's `90_custom.yaml`;
+- the user data each node receives when it boots. On every boot, Kairos saves the data it pulls from a datasource (a NoCloud ISO, VMware guestinfo, or a cloud provider's metadata service) to `/oem/95_userdata` on the OEM partition.
+
+If that data carries secrets, such as a Kubernetes join token or registry credentials, this encryption does not protect them. Prefer short-lived tokens, or fetch secrets at boot from an authenticated source instead of passing them in user data.
+:::
+
 ## Verifying the KMS
 
 The examples above reach the KMS over plain `http`. On that path the node sends
