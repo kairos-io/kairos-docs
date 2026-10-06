@@ -85,6 +85,25 @@ node left running on the fallback slot will return to the upgraded slot at its
 next reboot.
 :::
 
+:::warning Encrypted OEM partition
+On a GRUB installation whose `COS_OEM` partition is encrypted, the selection is
+not reliable, and a failure to write it is not reported: the command still
+prints `Default boot entry set to fallback` and exits 0. GRUB cannot read the
+OEM partition before decryption, so the agent writes `next_entry` to the STATE
+partition instead, and it ignores any error from that write.
+
+Check the entry actually took effect before rebooting:
+
+```bash
+$ grub2-editenv /run/initramfs/cos-state/grubenv list
+next_entry=fallback
+```
+
+If `next_entry` is absent, pick the fallback entry from the GRUB menu at boot
+instead. See
+[kairos-io/kairos#5273](https://github.com/kairos-io/kairos/issues/5273).
+:::
+
 To stay on the previous version, downgrade with a normal upgrade to that version
 rather than relying on the fallback selection.
 
