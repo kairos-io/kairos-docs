@@ -73,7 +73,8 @@ you are on Trusted Boot and cannot modify `/usr`. See
 Extensions can also be listed under `install.extensions` in the cloud config, so
 that an install places them on the node without a manual
 `kairos-agent sysext install` step. The mechanism, and every limitation on this
-page, is the same.
+page, is the same. To publish your own extensions and install them by name, see
+[Running your own extensions catalog](/docs/advanced/extensions-catalog/).
 :::
 
 ## Bundles

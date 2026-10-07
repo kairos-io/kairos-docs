@@ -278,6 +278,10 @@ kairos-agent sysext install <URI>
 > - `oci:` support is **alpha-stage** and may change.
 > - When using `oci:`, the disk image must be **embedded inside the OCI image layer**.
 
+`install` also takes a bare name, which it looks up in an extensions catalog.
+To build, publish and use your own catalog, see
+[Running your own extensions catalog](/docs/advanced/extensions-catalog/).
+
 ---
 
 ### ✅ `enable`

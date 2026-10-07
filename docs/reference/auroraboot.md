@@ -485,6 +485,24 @@ iso:
 When using `build-uki`, the `--overlay-iso` flag is only supported when building ISO artifacts (`-t iso`).
 :::
 
+#### `--extension` and `--extensions-catalog` - Add system extensions by name
+
+Adds system extensions to the artifact by name, resolved against an extensions catalog. AuroraBoot pulls the image for the architecture of the build and places it at the root of the ISO, so you do not need to download the `.raw` files and pass them with `--overlay-iso`. Both flags are repeatable and are available on the `build-iso` and `build-uki` subcommands. `web` takes `--extensions-catalog` to offer catalogs in the UI. Requires AuroraBoot v0.28.0 or newer.
+
+- `--extension`: a catalog name, optionally with `@version`, or `file://<path>` for a `.raw` image on the build host.
+- `--extensions-catalog`: a catalog URL or file. Catalogs are searched in order. Without this flag, AuroraBoot reads the public `hadron-layers` catalog.
+
+```bash
+docker run -v "$PWD"/build:/tmp/auroraboot \
+             --rm -ti quay.io/kairos/auroraboot:v0.28.0 \
+             build-iso --output /tmp/auroraboot \
+             --extensions-catalog https://extensions.example.com/releases.json \
+             --extension hello \
+             $IMAGE
+```
+
+To build and publish your own catalog, see [Running your own extensions catalog](/docs/advanced/extensions-catalog/).
+
 #### `--overlay-rootfs` - Add files to the OS rootfs
 
 Adds the contents of a directory into the OS rootfs. The directory structure is preserved: for example, if your overlay directory contains `usr/local/bin/my-tool`, it will appear at `/usr/local/bin/my-tool` in the final system. These files are included in the squashfs image inside the ISO and **become part of the installed OS**, persisting after installation.
