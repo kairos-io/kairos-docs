@@ -26,6 +26,8 @@ RUN --mount=type=bind,from=quay.io/kairos/kairos-init:{{< KairosInitVersion >}},
 
 ## k0s
 
+To run k0s with the CIS hardening settings, see [CIS and k0s](/docs/security/cis/#cis-k0s).
+
 ```dockerfile
 FROM ubuntu:24.04
 

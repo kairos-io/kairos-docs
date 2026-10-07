@@ -154,6 +154,80 @@ Adjust the PSA exemptions and the audit policy to your cluster, and add the othe
 
 - The kubelet logs `mkdir /usr/libexec/kubernetes: read-only file system` because `/usr` is immutable on Kairos. It comes from the volume plugin prober and is harmless.
 
+### CIS and k0s {#cis-k0s}
+
+k0s passes most of the benchmark out of the box. Follow the [k0s CIS benchmark guide](https://docs.k0sproject.io/stable/cis_benchmark/) for the checks it leaves to you, and put the settings in your cloud-config. All of it is runtime configuration, so nothing needs to change in the image.
+
+Set the [kernel parameters](#kernel-parameters) listed under k3s too, because k0s does not set `--protect-kernel-defaults` itself and the kubelet refuses to start with it unless they are in place. If they are missing, the `k0scontroller` service keeps restarting the kubelet and the journal shows the same `invalid kernel flag` error.
+
+The provider passes `k0s.args` to `k0s controller` and does not generate `/etc/k0s/k0s.yaml` for you, so write the ClusterConfig from your cloud-config and point `--config` at it:
+
+```yaml
+#cloud-config
+
+stages:
+  initramfs:
+    - name: "k0s CIS kernel parameters"
+      files:
+        - path: /etc/sysctl.d/90-kubelet.conf
+          permissions: 0644
+          content: |
+            vm.panic_on_oom=0
+            vm.overcommit_memory=1
+            kernel.panic=10
+            kernel.panic_on_oops=1
+    - name: "k0s CIS audit policy, encryption and ClusterConfig"
+      files:
+        - path: /etc/k0s/k0s.yaml
+          permissions: 0644
+          content: |
+            apiVersion: k0s.k0sproject.io/v1beta1
+            kind: ClusterConfig
+            metadata:
+              name: k0s
+            spec:
+              api:
+                extraArgs:
+                  audit-log-path: /var/lib/k0s/audit/audit.log
+                  audit-log-maxage: "30"
+                  audit-log-maxbackup: "10"
+                  audit-log-maxsize: "100"
+                  audit-policy-file: /etc/k0s/audit-policy.yaml
+                  encryption-provider-config: /etc/k0s/encryption.yaml
+        - path: /etc/k0s/audit-policy.yaml
+          permissions: 0644
+          content: |
+            apiVersion: audit.k8s.io/v1
+            kind: Policy
+            rules:
+            - level: Metadata
+        - path: /etc/k0s/encryption.yaml
+          permissions: 0600
+          content: |
+            apiVersion: apiserver.config.k8s.io/v1
+            kind: EncryptionConfiguration
+            resources:
+              - resources:
+                  - secrets
+                providers:
+                  - aescbc:
+                      keys:
+                        - name: key1
+                          secret: <base64-encoded 32 byte key>
+                  - identity: {}
+
+k0s:
+  enabled: true
+  args:
+    - --config /etc/k0s/k0s.yaml
+    - --single
+    - --kubelet-extra-args="--protect-kernel-defaults=true"
+```
+
+Generate the encryption key with `head -c 32 /dev/urandom | base64`. Drop `--single` on multi-node clusters, where the workers get the kubelet flag through their own `k0s.args` or a worker profile.
+
+The `EventRateLimit` and `AlwaysPullImages` admission plugins from the same guide go in `enable-admission-plugins` under `spec.api.extraArgs`, with `admission-control-config-file` pointing at the `EventRateLimit` configuration.
+
 ---
 
 ## CIS Distribution Independent Linux L1 {#linux}
