@@ -12,6 +12,8 @@ At the moment, the official `provider-kairos` supports these two distributions (
 
 ## k3s
 
+To run k3s with the CIS hardening settings, see [CIS and k3s](/docs/security/cis/#cis-k3s).
+
 ```dockerfile
 FROM ubuntu:24.04
 
