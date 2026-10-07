@@ -22,7 +22,7 @@ CIS's own benchmark PDF text is not reproduced here. Sourcing details, caveats, 
 
 ### Overview
 
-Kairos is an OS image builder and does not include a Kubernetes control plane. It installs k3s or k0s from those projects' own installers and applies no Kairos-owned CIS-specific flags. The Kubernetes benchmark is therefore operator territory: hardening is configured where the operator configures the distribution, following k3s's or k0s's own CIS hardening guide.
+Kairos is an OS image builder and does not include a Kubernetes control plane. It installs k3s or k0s from those projects' own installers and applies no Kairos-owned CIS-specific flags. The Kubernetes benchmark is therefore operator territory: hardening is configured where the operator configures the distribution, following k3s's or k0s's own CIS hardening guide. For k3s, see [CIS and k3s](#cis-k3s).
 
 Kairos itself does not set `protect-kernel-defaults`, `tls-cipher-suites`, `anonymous-auth`, `audit-log`, `secrets-encryption`, or other CIS-relevant flags. Every flag-shaped control is reachable only through the operator's `k3s.args` or `k0s.args` configuration, which Kairos appends verbatim without modification.
 
@@ -61,6 +61,172 @@ The following 16 controls are not applicable because their target artifacts do n
 - **Reason**: k3s and k0s run the kubelet in-process from the server/agent supervisor; there is no standalone kubelet systemd unit or drop-in file to inspect.
 
 Open controls addressing Kubernetes configuration are trackable under [kairos-io/kairos#4628](https://github.com/kairos-io/kairos/issues/4628).
+
+### CIS and k3s {#cis-k3s}
+
+Kairos ships k3s but does not configure its hardening. Follow the [k3s CIS hardening guide](https://docs.k3s.io/security/hardening-guide) and put its settings in your cloud-config: the host kernel parameters, the policy files and the k3s flags. All of it is runtime configuration, so nothing needs to change in the image.
+
+#### Kernel parameters
+
+With `protect-kernel-defaults=true` the kubelet refuses to start unless these are set. Kairos does not set them, and its own sysctl files (`/etc/sysctl.d/99-kairos-cis.conf`, and `60-hadron-hardening.conf` on Hadron) do not touch them, so set them in your cloud-config:
+
+| Parameter | Value |
+|---|---|
+| `vm.panic_on_oom` | `0` |
+| `vm.overcommit_memory` | `1` |
+| `kernel.panic` | `10` |
+| `kernel.panic_on_oops` | `1` |
+
+If they are missing, k3s keeps restarting and the journal shows:
+
+```
+Failed to start ContainerManager" err="[invalid kernel flag: vm/overcommit_memory, expected value: 1, actual value: 0, invalid kernel flag: kernel/panic, expected value: 10, actual value: 5, invalid kernel flag: kernel/panic_on_oops, expected value: 1, actual value: 0]"
+```
+
+#### Example cloud-config
+
+The kernel parameters, a restricted Pod Security Admission config, an audit policy, and the k3s flags from the hardening guide:
+
+```yaml
+#cloud-config
+
+stages:
+  initramfs:
+    - name: "k3s CIS kernel parameters"
+      files:
+        - path: /etc/sysctl.d/90-kubelet.conf
+          permissions: 0644
+          content: |
+            vm.panic_on_oom=0
+            vm.overcommit_memory=1
+            kernel.panic=10
+            kernel.panic_on_oops=1
+    - name: "k3s CIS PSA and audit policy"
+      files:
+        - path: /var/lib/rancher/k3s/server/psa.yaml
+          permissions: 0600
+          content: |
+            apiVersion: apiserver.config.k8s.io/v1
+            kind: AdmissionConfiguration
+            plugins:
+            - name: PodSecurity
+              configuration:
+                apiVersion: pod-security.admission.config.k8s.io/v1beta1
+                kind: PodSecurityConfiguration
+                defaults:
+                  enforce: "restricted"
+                  enforce-version: "latest"
+                  audit: "restricted"
+                  audit-version: "latest"
+                  warn: "restricted"
+                  warn-version: "latest"
+                exemptions:
+                  usernames: []
+                  runtimeClasses: []
+                  namespaces: [kube-system]
+        - path: /var/lib/rancher/k3s/server/audit.yaml
+          permissions: 0600
+          content: |
+            apiVersion: audit.k8s.io/v1
+            kind: Policy
+            rules:
+            - level: Metadata
+
+k3s:
+  enabled: true
+  args:
+    - --protect-kernel-defaults=true
+    - --secrets-encryption=true
+    - --kube-apiserver-arg=admission-control-config-file=/var/lib/rancher/k3s/server/psa.yaml
+    - --kube-apiserver-arg=audit-log-path=/var/lib/rancher/k3s/server/logs/audit.log
+    - --kube-apiserver-arg=audit-policy-file=/var/lib/rancher/k3s/server/audit.yaml
+    - --kube-apiserver-arg=audit-log-maxage=30
+    - --kube-apiserver-arg=audit-log-maxbackup=10
+    - --kube-apiserver-arg=audit-log-maxsize=100
+    - --kube-apiserver-arg=service-account-extend-token-expiration=false
+    - --kube-controller-manager-arg=terminated-pod-gc-threshold=100
+    - --kubelet-arg=streaming-connection-idle-timeout=5m
+```
+
+Adjust the PSA exemptions and the audit policy to your cluster, and add the other items from the hardening guide that apply to you, such as the `etcd` user on multi-server setups.
+
+#### Known limitations
+
+- The kubelet logs `mkdir /usr/libexec/kubernetes: read-only file system` because `/usr` is immutable on Kairos. It comes from the volume plugin prober and is harmless.
+
+### CIS and k0s {#cis-k0s}
+
+k0s passes most of the benchmark out of the box. Follow the [k0s CIS benchmark guide](https://docs.k0sproject.io/stable/cis_benchmark/) for the checks it leaves to you, and put the settings in your cloud-config. All of it is runtime configuration, so nothing needs to change in the image.
+
+Set the [kernel parameters](#kernel-parameters) listed under k3s too, because k0s does not set `--protect-kernel-defaults` itself and the kubelet refuses to start with it unless they are in place. If they are missing, the `k0scontroller` service keeps restarting the kubelet and the journal shows the same `invalid kernel flag` error.
+
+The provider passes `k0s.args` to `k0s controller` and does not generate `/etc/k0s/k0s.yaml` for you, so write the ClusterConfig from your cloud-config and point `--config` at it:
+
+```yaml
+#cloud-config
+
+stages:
+  initramfs:
+    - name: "k0s CIS kernel parameters"
+      files:
+        - path: /etc/sysctl.d/90-kubelet.conf
+          permissions: 0644
+          content: |
+            vm.panic_on_oom=0
+            vm.overcommit_memory=1
+            kernel.panic=10
+            kernel.panic_on_oops=1
+    - name: "k0s CIS audit policy, encryption and ClusterConfig"
+      files:
+        - path: /etc/k0s/k0s.yaml
+          permissions: 0644
+          content: |
+            apiVersion: k0s.k0sproject.io/v1beta1
+            kind: ClusterConfig
+            metadata:
+              name: k0s
+            spec:
+              api:
+                extraArgs:
+                  audit-log-path: /var/lib/k0s/audit/audit.log
+                  audit-log-maxage: "30"
+                  audit-log-maxbackup: "10"
+                  audit-log-maxsize: "100"
+                  audit-policy-file: /etc/k0s/audit-policy.yaml
+                  encryption-provider-config: /etc/k0s/encryption.yaml
+        - path: /etc/k0s/audit-policy.yaml
+          permissions: 0644
+          content: |
+            apiVersion: audit.k8s.io/v1
+            kind: Policy
+            rules:
+            - level: Metadata
+        - path: /etc/k0s/encryption.yaml
+          permissions: 0600
+          content: |
+            apiVersion: apiserver.config.k8s.io/v1
+            kind: EncryptionConfiguration
+            resources:
+              - resources:
+                  - secrets
+                providers:
+                  - aescbc:
+                      keys:
+                        - name: key1
+                          secret: <base64-encoded 32 byte key>
+                  - identity: {}
+
+k0s:
+  enabled: true
+  args:
+    - --config /etc/k0s/k0s.yaml
+    - --single
+    - --kubelet-extra-args="--protect-kernel-defaults=true"
+```
+
+Generate the encryption key with `head -c 32 /dev/urandom | base64`. Drop `--single` on multi-node clusters, where the workers get the kubelet flag through their own `k0s.args` or a worker profile.
+
+The `EventRateLimit` and `AlwaysPullImages` admission plugins from the same guide go in `enable-admission-plugins` under `spec.api.extraArgs`, with `admission-control-config-file` pointing at the `EventRateLimit` configuration.
 
 ---
 
