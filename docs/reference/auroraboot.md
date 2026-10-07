@@ -10,6 +10,8 @@ import TabItem from '@theme/TabItem';
 
 :::info Note
 This is the reference documentation for AuroraBoot. For a complete guide on creating custom cloud images, including how to use AuroraBoot in the context of a full workflow, see [Creating Custom Cloud Images](/docs/advanced/creating_custom_cloud_images/).
+
+This page covers the one-shot CLI. To keep AuroraBoot running and manage nodes from a browser after they are installed, see the [fleet server](/docs/reference/auroraboot-fleet-server/).
 :::
 **AuroraBoot** is a tool designed to make the process of bootstrapping Kairos machines quick, simple and efficient. It is specifically designed for the Kairos operating system and provides a comprehensive solution for downloading required artifacts and provisioning a machine, both from network or manually via flashing to USB stick.
 
