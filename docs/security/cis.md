@@ -22,7 +22,7 @@ CIS's own benchmark PDF text is not reproduced here. Sourcing details, caveats, 
 
 ### Overview
 
-Kairos is an OS image builder and does not include a Kubernetes control plane. It installs k3s or k0s from those projects' own installers and applies no Kairos-owned CIS-specific flags. The Kubernetes benchmark is therefore operator territory: hardening is configured where the operator configures the distribution, following k3s's or k0s's own CIS hardening guide. For a working k3s example, see [CIS and k3s](#cis-k3s).
+Kairos is an OS image builder and does not include a Kubernetes control plane. It installs k3s or k0s from those projects' own installers and applies no Kairos-owned CIS-specific flags. The Kubernetes benchmark is therefore operator territory: hardening is configured where the operator configures the distribution, following k3s's or k0s's own CIS hardening guide. For k3s, see [CIS and k3s](#cis-k3s).
 
 Kairos itself does not set `protect-kernel-defaults`, `tls-cipher-suites`, `anonymous-auth`, `audit-log`, `secrets-encryption`, or other CIS-relevant flags. Every flag-shaped control is reachable only through the operator's `k3s.args` or `k0s.args` configuration, which Kairos appends verbatim without modification.
 
@@ -64,24 +64,18 @@ Open controls addressing Kubernetes configuration are trackable under [kairos-io
 
 ### CIS and k3s {#cis-k3s}
 
-Kairos does not harden k3s for you, and it does not need to get out of the way either: a standard k3s image runs k3s with the hardening-guide flags once the host sysctls the kubelet checks are in place. This was verified on a Kairos standard k3s image (k3s v1.36.5+k3s1) booted in QEMU: the node came up `Ready`, the system pods ran, and `audit.log` was written to the persistent `/var/lib/rancher` mount.
-
-Follow the [k3s hardening guide](https://docs.k3s.io/security/hardening-guide). It uses explicit flags; there is no `--profile=cis` switch in current k3s, and on k3s v1.36 passing it makes k3s exit with `flag provided but not defined: -profile`. The guide also states that k3s does not modify the host OS, so the host settings below are yours to provide.
-
-Everything here is runtime configuration, so it goes in your cloud-config. Nothing needs to be baked into the image.
+Kairos ships k3s but does not configure its hardening. Follow the [k3s CIS hardening guide](https://docs.k3s.io/security/hardening-guide) and put its settings in your cloud-config: the host kernel parameters, the policy files and the k3s flags. All of it is runtime configuration, so nothing needs to change in the image.
 
 #### Kernel parameters
 
-With `protect-kernel-defaults=true` the kubelet refuses to start unless these are set:
+With `protect-kernel-defaults=true` the kubelet refuses to start unless these are set. Kairos does not set them, and its own sysctl files (`/etc/sysctl.d/99-kairos-cis.conf`, and `60-hadron-hardening.conf` on Hadron) do not touch them, so set them in your cloud-config:
 
-| Parameter | Value | Who sets it |
-|---|---|---|
-| `vm.panic_on_oom` | `0` | You, in cloud-config (this is also the kernel default) |
-| `vm.overcommit_memory` | `1` | You, in cloud-config |
-| `kernel.panic` | `10` | You, in cloud-config |
-| `kernel.panic_on_oops` | `1` | You, in cloud-config |
-
-Kairos does not set any of these. The sysctl files that ship with the OS (`/etc/sysctl.d/99-kairos-cis.conf` from kairos-init and, on Hadron, `60-hadron-hardening.conf`) cover networking, ASLR and `fs.suid_dumpable`, and do not conflict with them.
+| Parameter | Value |
+|---|---|
+| `vm.panic_on_oom` | `0` |
+| `vm.overcommit_memory` | `1` |
+| `kernel.panic` | `10` |
+| `kernel.panic_on_oops` | `1` |
 
 If they are missing, k3s keeps restarting and the journal shows:
 
@@ -91,22 +85,14 @@ Failed to start ContainerManager" err="[invalid kernel flag: vm/overcommit_memor
 
 #### Example cloud-config
 
+The kernel parameters, a restricted Pod Security Admission config, an audit policy, and the k3s flags from the hardening guide:
+
 ```yaml
 #cloud-config
 
-install:
-  auto: true
-  reboot: true
-  device: auto
-
-users:
-  - name: kairos
-    passwd: kairos
-    groups: [admin]
-
 stages:
   initramfs:
-    - name: "k3s CIS host prerequisites (kubelet sysctls)"
+    - name: "k3s CIS kernel parameters"
       files:
         - path: /etc/sysctl.d/90-kubelet.conf
           permissions: 0644
@@ -162,12 +148,11 @@ k3s:
     - --kubelet-arg=streaming-connection-idle-timeout=5m
 ```
 
-Adjust the PSA exemptions and the audit policy to your cluster, and add the remaining items from the hardening guide that apply to you (for example the `etcd` user on multi-server setups).
+Adjust the PSA exemptions and the audit policy to your cluster, and add the other items from the hardening guide that apply to you, such as the `etcd` user on multi-server setups.
 
 #### Known limitations
 
-- The kubelet logs `mkdir /usr/libexec/kubernetes: read-only file system` because `/usr` is immutable. It is the volume plugin prober, it is harmless, and there is nothing to work around.
-- No OS change was needed for k3s CIS hardening. If you find a parameter that cannot be set at runtime, please open an issue on [kairos-io/kairos](https://github.com/kairos-io/kairos/issues/4627).
+- The kubelet logs `mkdir /usr/libexec/kubernetes: read-only file system` because `/usr` is immutable on Kairos. It comes from the volume plugin prober and is harmless.
 
 ---
 
