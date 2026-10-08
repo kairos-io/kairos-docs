@@ -18,9 +18,9 @@ To validate the whole chain you need:
 
 1. `sha256sum` which is usually installed by default on most linux distributions.
 2. `cosign` v2.0.0 or later to verify the signatures of the sha256 file. You can install cosign via their [installation docs](https://docs.sigstore.dev/cosign/installation/)
-3. sha256 and bundle files that you want to verify
+3. sha256 and signature bundle (`.sigstore.json`) files that you want to verify
     - <ImageLink variant="standard" suffix=".iso.sha256" />
-    - <ImageLink variant="standard" suffix=".iso.sha256.bundle" />
+    - <ImageLink variant="standard" suffix=".iso.sha256.sigstore.json" />
 
 In this example we will use the <KairosVersion /> version and <FlavorCode /> flavor and <FlavorReleaseCode /> flavor release.
 
@@ -28,14 +28,14 @@ First we check that we have all needed files:
 
 ```bash
 $ ls
-{{< Image variant="core" suffix=".iso" >}}         {{< Image variant="core" suffix=".iso.sha256.bundle" >}}
+{{< Image variant="core" suffix=".iso" >}}         {{< Image variant="core" suffix=".iso.sha256.sigstore.json" >}}
 {{< Image variant="core" suffix=".iso.sha256" >}}
 ```
 
 Then we verify that the sha256 checksums haven't been tampered with (substitute $VERSION with the exact Kairos version you are verifying as the certificate identity is the release job that signs it):
 
 ```bash
-$ cosign verify-blob --bundle {{< Image variant="core" suffix=".iso.sha256.bundle" >}} --certificate-identity https://github.com/kairos-io/kairos/.github/workflows/reusable-factory.yaml@refs/tags/$VERSION --certificate-oidc-issuer https://token.actions.githubusercontent.com {{< Image variant="core" suffix=".iso.sha256" >}}
+$ cosign verify-blob --bundle {{< Image variant="core" suffix=".iso.sha256.sigstore.json" >}} --certificate-identity https://github.com/kairos-io/kairos/.github/workflows/reusable-factory.yaml@refs/tags/$VERSION --certificate-oidc-issuer https://token.actions.githubusercontent.com {{< Image variant="core" suffix=".iso.sha256" >}}
 Verified OK
 ```
 
@@ -44,7 +44,7 @@ Once we see that `Verified OK` we can be sure that the file hasn't been tampered
 For an example of a failure validation see below:
 
 ```bash
-$ cosign verify-blob --bundle {{< Image variant="core" suffix=".iso.sha256.bundle" >}} --certificate-identity https://github.com/kairos-io/kairos/.github/workflows/reusable-factory.yaml@refs/tags/$VERSION --certificate-oidc-issuer https://token.actions.githubusercontent.com {{< Image variant="core" suffix=".iso.sha256.modified" >}}
+$ cosign verify-blob --bundle {{< Image variant="core" suffix=".iso.sha256.sigstore.json" >}} --certificate-identity https://github.com/kairos-io/kairos/.github/workflows/reusable-factory.yaml@refs/tags/$VERSION --certificate-oidc-issuer https://token.actions.githubusercontent.com {{< Image variant="core" suffix=".iso.sha256.modified" >}}
 Error: verifying blob [{{< Image variant="core" suffix=".iso.sha256.modified" >}}]: invalid signature when validating ASN.1 encoded signature
 main.go:62: error during command execution: verifying blob [{{< Image variant="core" suffix=".iso.sha256.modified" >}}]: invalid signature when validating ASN.1 encoded signature
 ```
@@ -57,3 +57,13 @@ $ sha256sum -c {{< Image variant="core" suffix=".iso.sha256" >}}
 ```
 
 Once we reached this point, we can be sure that from the ISO hasn't been tampered with since it was created by our release workflow.
+
+## Binary archives
+
+The binary archives attached to a release (`kairos`, `kairos-init`, `kairos-installer`, `kcrypt-challenger` and `provider-kairos`) are covered by a single `checksums.txt`, signed the same way. Download `checksums.txt`, `checksums.txt.sigstore.json` and the archives you need from the [release page](https://github.com/kairos-io/kairos/releases), then verify the checksums file and the archives:
+
+```bash
+$ cosign verify-blob --bundle checksums.txt.sigstore.json --certificate-identity https://github.com/kairos-io/kairos/.github/workflows/_upload-release.yaml@refs/tags/$VERSION --certificate-oidc-issuer https://token.actions.githubusercontent.com checksums.txt
+Verified OK
+$ sha256sum -c --ignore-missing checksums.txt
+```
