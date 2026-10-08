@@ -345,7 +345,7 @@ Notes:
 Encrypting on first boot covers the partitions listed in `install.encrypted_partitions`, normally `COS_PERSISTENT`. The OEM partition stays in plain text, because the policy is read from it before anything is unlocked. Anything stored there is unencrypted on the node's disk, including:
 
 - the cloud-config files in the template, such as the policy and the installer's `90_custom.yaml`;
-- the user data each node receives when it boots. On every boot, Kairos saves the data it pulls from a datasource (a NoCloud ISO, VMware guestinfo, or a cloud provider's metadata service) to `/oem/95_userdata` on the OEM partition.
+- the user data each node receives. On its first boot, Kairos saves the data it pulls from a datasource (a NoCloud ISO, VMware guestinfo, or a cloud provider's metadata service) to `/oem/95_userdata` on the OEM partition, where it stays.
 
 If that data carries secrets, such as a Kubernetes join token or registry credentials, this encryption does not protect them. Prefer short-lived tokens, or fetch secrets at boot from an authenticated source instead of passing them in user data.
 :::
