@@ -7,10 +7,10 @@ sidebar_position: 1
 Kairos configuration mechanism for partitions is based on the [cloud-config](/docs/reference/configuration) file 
 given during installation to override the default values set by the installer.
 
-We allow certain flexibility in the sizes and filesystems used for the default install and allow to create extra partitions as well.
+We allow certain flexibility in the sizes used for the default install, and allow to create extra partitions as well.
 
-For example, the following cloud-config will make the `oem` partition have a size of 512Mb and an `ext4` filesystem, 
-recovery with a size of 10000Mb and a `ext4` filesystem, while leaving the rest of the partitions to their default sizes and filesystems. 
+For example, the following cloud-config will make the `oem` partition have a size of 512Mb and
+recovery a size of 10000Mb, while leaving the rest of the partitions to their default sizes.
 
 ```yaml
 #cloud-config
@@ -21,13 +21,20 @@ install:
   partitions:
     oem:
       size: 512
-      fs: ext4
     recovery:
       size: 10000
-      fs: ext4
 ```
 
 The partitions that can be configured are: `oem`, `recovery`, `state` and `persistent`.
+
+`size` is the only key you can set on them. The name, the filesystem label and the filesystem
+are fixed: Kairos finds each of these partitions at `/dev/disk/by-label/COS_*` from the
+initramfs, and the initramfs only carries the drivers for the filesystems the installer
+creates. Setting `name`, `label` or `fs` to anything else makes the install fail with an error
+that names the value the installer uses instead. Making the filesystem configurable is tracked
+in [kairos#2159](https://github.com/kairos-io/kairos/issues/2159).
+
+The `fs` key is honored on extra partitions, which Kairos does not mount itself. See below.
 
 And the following config will leave the default partitions as is, but create 2 new extra partitions with the given sizes, filesystems and labels:
 
