@@ -4,6 +4,7 @@ import {
   buildGoogleImageName,
   buildKairosImageName,
   buildKairosOciImageName,
+  buildKairosOciImageTag,
 } from './kairos-image-name.ts';
 
 test('buildKairosImageName builds standard ISO filename with k3s segment', () => {
@@ -102,5 +103,51 @@ test('buildGoogleImageName never adds a k3s segment', () => {
   assert.equal(
     buildGoogleImageName({hadronFlavorRelease: 'v0.4.0', kairosVersion: 'v4.1.2'}),
     'kairos-hadron-v0-4-0-core-amd64-generic-v4-1-2',
+  );
+});
+
+test('buildKairosOciImageTag returns the tag half of the OCI reference', () => {
+  // A system-upgrade-controller Plan splits the reference in two: the
+  // repository goes in upgrade.image, the tag in spec.version.
+  const params = {
+    flavorRelease: '24.04',
+    variant: 'standard',
+    kairosVersion: 'v4.2.0',
+    k3sVersion: 'v1.36.3+k3s1',
+  };
+  assert.equal(
+    buildKairosOciImageTag(params),
+    '24.04-standard-amd64-generic-v4.2.0-k3s-v1.36.3-k3s1',
+  );
+  assert.equal(
+    buildKairosOciImageName({...params, registryURL: 'quay.io/kairos', flavor: 'ubuntu'}),
+    `quay.io/kairos/ubuntu:${buildKairosOciImageTag(params)}`,
+  );
+});
+
+test('buildKairosOciImageTag drops the k3s segment outside the standard variant', () => {
+  assert.equal(
+    buildKairosOciImageTag({
+      flavorRelease: '24.04',
+      variant: 'core',
+      kairosVersion: 'v4.2.0',
+      k3sVersion: 'v1.36.3+k3s1',
+    }),
+    '24.04-core-amd64-generic-v4.2.0',
+  );
+});
+
+test('buildKairosOciImageTag honours arch, model and suffix', () => {
+  assert.equal(
+    buildKairosOciImageTag({
+      flavorRelease: '24.04',
+      variant: 'core',
+      arch: 'arm64',
+      model: 'rpi4',
+      suffix: 'uki',
+      kairosVersion: 'v4.2.0',
+      k3sVersion: 'v1.36.3+k3s1',
+    }),
+    '24.04-core-arm64-rpi4-v4.2.0-uki',
   );
 });
