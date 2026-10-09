@@ -7,7 +7,13 @@ type MarkdownNode = {
 
 type MarkdownTree = MarkdownNode;
 
-const SUPPORTED_SHORTCODE_PATTERN = /(\{\{<\s*(Image\b[^>]*|OCI\b[^>]*|FlavorCode|FlavorReleaseCode|RegistryURL|KairosVersion|K3sVersion|K3sVersionOCI|ProviderVersion|KairosInitVersion|AuroraBootVersion|OperatorVersion|OperatorChartVersion|GoogleImage|OCITag)\s*>\}\}|<\s*ProviderVersion\s*\/>)/;
+// Every name is argument-tolerant. Written per alternative, as this list used
+// to be, a name added without the `[^>]*` silently stops matching the moment
+// someone passes it an attribute: OCITag was spelled bare, so the reset pages
+// that call it with a variant fell out of the match. Longer names come first
+// where one prefixes another, so the alternation picks the whole name.
+const SUPPORTED_SHORTCODE_PATTERN =
+  /(\{\{<\s*(Image|OCITag|OCI|FlavorCode|FlavorReleaseCode|RegistryURL|KairosVersion|K3sVersionOCI|K3sVersion|ProviderVersion|KairosInitVersion|AuroraBootVersion|OperatorVersion|OperatorChartVersion|GoogleImage)\b[^>]*\s*>\}\}|<\s*ProviderVersion\s*\/>)/;
 
 function visitAndTransform(node: MarkdownNode): void {
   if (!node.children || node.children.length === 0) {
@@ -31,6 +37,32 @@ function visitAndTransform(node: MarkdownNode): void {
             name: 'language',
             value: child.lang ?? 'text',
           },
+          {
+            type: 'mdxJsxAttribute',
+            name: 'template',
+            value: child.value,
+          },
+        ],
+        children: [],
+      } as unknown as MarkdownNode;
+      continue;
+    }
+
+    // Inline code carries the same shortcodes as a fenced block: prose that
+    // names an image or a version writes it as `quay.io/kairos/kairos-init:{{<
+    // KairosInitVersion >}}` in the middle of a sentence. Without this branch
+    // the shortcode reaches the page verbatim and a reader who copies the
+    // command gets an invalid reference. An inline node is phrasing content,
+    // so it becomes a text element, not a flow one.
+    if (
+      child.type === 'inlineCode' &&
+      typeof child.value === 'string' &&
+      SUPPORTED_SHORTCODE_PATTERN.test(child.value)
+    ) {
+      node.children[i] = {
+        type: 'mdxJsxTextElement',
+        name: 'ShortcodeInlineCode',
+        attributes: [
           {
             type: 'mdxJsxAttribute',
             name: 'template',
