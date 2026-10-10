@@ -1,0 +1,26 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+"config:recommended"
+  ],
+  "schedule": [
+    "after 11pm every weekday",
+    "before 7am every weekday",
+    "every weekend"
+  ],
+  "timezone": "Europe/Brussels",
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^Earthfile$/"],
+      "matchStrings": ["#\s*renovate:\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\sARG\s+.+_VERSION=\"?(?<currentValue>.*?)\"?\s"],
+      "versioningTemplate": "{{#if versioning}}{{versioning}}{{else}}semver{{/if}}"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^docusaurus.config.ts$/"],
+      "matchStrings": ["//\s*renovate:\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\s+[A-Za-z_][A-Za-z0-9_]*:\s*'(?<currentValue>[^']+)'"],
+      "versioningTemplate": "{{#if versioning}}{{versioning}}{{else}}semver{{/if}}"
+    }
+  ]
+}

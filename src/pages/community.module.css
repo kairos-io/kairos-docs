@@ -1,0 +1,93 @@
+.hero {
+  background: linear-gradient(180deg, #03153A 0%, #041b4a 100%);
+  color: #fff;
+  padding: 3.25rem 1.5rem;
+  text-align: center;
+}
+
+.heroInner {
+  margin: 0 auto;
+  max-width: 960px;
+}
+
+.heroTitle {
+  margin: 0 0 1rem;
+  font-size: clamp(1.9rem, 3.2vw, 2.6rem);
+  line-height: 1.2;
+}
+
+.heroText {
+  margin: 0 auto;
+  max-width: 980px;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.94);
+}
+
+.linkBoxSection {
+  background: var(--ifm-background-color);
+  color: #1b1b1d;
+  padding: 2.25rem 1.5rem 2.75rem;
+}
+
+.linkBoxGrid {
+  margin: 0 auto;
+  max-width: 1100px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+}
+
+.column h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.6rem;
+}
+
+.columnIntro {
+  margin: 0 0 0.9rem;
+  line-height: 1.6;
+  color: #4f555d;
+}
+
+.linkList {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.linkList li {
+  margin: 0.45rem 0;
+  line-height: 1.6;
+}
+
+.linkList a {
+  font-weight: 600;
+}
+
+.linkIcon {
+  display: inline-block;
+  width: 1.2em;
+  text-align: center;
+}
+
+.contributeLine {
+  margin-top: 1rem;
+  line-height: 1.6;
+  color: #4f555d;
+}
+
+[data-theme='dark'] .linkBoxSection {
+  background: var(--ifm-background-surface-color);
+  color: var(--ifm-font-color-base);
+}
+
+[data-theme='dark'] .columnIntro,
+[data-theme='dark'] .contributeLine {
+  color: var(--ifm-color-emphasis-700);
+}
+
+@media (max-width: 900px) {
+  .linkBoxGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}

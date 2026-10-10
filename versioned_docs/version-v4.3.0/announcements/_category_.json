@@ -1,0 +1,10 @@
+{
+  "label": "Announcements",
+  "position": 11,
+  "link": {
+    "type": "doc",
+    "id": "Announcements/_index"
+  },
+  "collapsible": true,
+  "collapsed": true
+}

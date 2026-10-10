@@ -1,0 +1,571 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import {themes as prismThemes} from 'prism-react-renderer';
+import type {Config} from '@docusaurus/types';
+import type * as Preset from '@docusaurus/preset-classic';
+import remarkShortcodeCode from './plugins/remark-shortcode-code';
+
+// This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
+
+const isNetlifyProduction = process.env.CONTEXT === 'production';
+const netlifyDeployRef =
+  process.env.BRANCH || process.env.HEAD || process.env.REVIEW_ID || 'unknown';
+const branchDeployLogMessage = `Netlify branch deploy: ${netlifyDeployRef}`;
+
+type ParsedVersion = {
+  raw: string;
+  major: number;
+  minor: number;
+  patch: number;
+};
+
+function parseVersionTag(version: string): ParsedVersion {
+  const match = version.match(/^v(\d+)\.(\d+)\.(\d+)$/);
+  if (!match) {
+    throw new Error(`Invalid version in versions.json: ${version}`);
+  }
+
+  return {
+    raw: version,
+    major: Number.parseInt(match[1], 10),
+    minor: Number.parseInt(match[2], 10),
+    patch: Number.parseInt(match[3], 10),
+  };
+}
+
+function compareParsedVersions(a: ParsedVersion, b: ParsedVersion): number {
+  if (a.major !== b.major) {
+    return a.major - b.major;
+  }
+  if (a.minor !== b.minor) {
+    return a.minor - b.minor;
+  }
+  return a.patch - b.patch;
+}
+
+const versionsJsonPath = path.join(__dirname, 'versions.json');
+const versionsFromJson = fs.existsSync(versionsJsonPath)
+  ? (JSON.parse(fs.readFileSync(versionsJsonPath, 'utf8')) as string[])
+  : [];
+
+if (versionsFromJson.length === 0) {
+  throw new Error('versions.json is empty or missing; cannot determine latest docs version');
+}
+
+const latestVersion = versionsFromJson
+  .map(parseVersionTag)
+  .sort(compareParsedVersions)
+  .at(-1)?.raw;
+
+if (!latestVersion) {
+  throw new Error('Unable to determine latest version from versions.json');
+}
+
+const v360FlavorOptions = [
+  {family: 'alpine', flavor: 'alpine', flavorRelease: '3.21', label: 'Alpine 3.21'},
+  {family: 'debian', flavor: 'debian', flavorRelease: '12', label: 'Debian 12'},
+  {family: 'rhel', flavor: 'fedora', flavorRelease: '40', label: 'Fedora 40'},
+  {family: 'opensuse', flavor: 'opensuse', flavorRelease: 'leap-15.6', label: 'openSUSE Leap-15.6'},
+  {family: 'rhel', flavor: 'rocky', flavorRelease: '9.6', label: 'Rocky 9.6'},
+  {family: 'ubuntu', flavor: 'ubuntu', flavorRelease: '25.10', label: 'Ubuntu 25.10'},
+  {family: 'ubuntu', flavor: 'ubuntu', flavorRelease: '24.04', label: 'Ubuntu 24.04'},
+  {family: 'ubuntu', flavor: 'ubuntu', flavorRelease: '22.04', label: 'Ubuntu 22.04'},
+  {family: 'ubuntu', flavor: 'ubuntu', flavorRelease: '20.04', label: 'Ubuntu 20.04'},
+] as const;
+
+const v372FlavorOptions = [
+  {family: 'alpine', flavor: 'alpine', flavorRelease: '3.21', label: 'Alpine 3.21'},
+  {family: 'debian', flavor: 'debian', flavorRelease: '13', label: 'Debian 13'},
+  {family: 'rhel', flavor: 'fedora', flavorRelease: '40', label: 'Fedora 40'},
+  {family: 'opensuse', flavor: 'opensuse', flavorRelease: 'leap-15.6', label: 'openSUSE Leap-15.6'},
+  {family: 'rhel', flavor: 'rocky', flavorRelease: '9.7', label: 'Rocky 9.7'},
+  {family: 'ubuntu', flavor: 'ubuntu', flavorRelease: '25.10', label: 'Ubuntu 25.10'},
+  {family: 'ubuntu', flavor: 'ubuntu', flavorRelease: '24.04', label: 'Ubuntu 24.04'},
+  {family: 'ubuntu', flavor: 'ubuntu', flavorRelease: '22.04', label: 'Ubuntu 22.04'},
+  {family: 'ubuntu', flavor: 'ubuntu', flavorRelease: '20.04', label: 'Ubuntu 20.04'},
+  {family: 'hadron', flavor: 'hadron', flavorRelease: '0.0.1', label: 'Hadron 0.0.1'},
+] as const;
+
+const hadronFlavorOptionsV403 = [
+  {family: 'hadron', flavor: 'hadron', flavorRelease: 'v0.0.4', label: 'Hadron v0.0.4'},
+] as const;
+
+const hadronFlavorOptionsV410 = [
+  {family: 'hadron', flavor: 'hadron', flavorRelease: 'v0.2.0', label: 'Hadron v0.2.0'},
+] as const;
+
+const hadronFlavorOptionsV411 = [
+  {family: 'hadron', flavor: 'hadron', flavorRelease: 'v0.3.0', label: 'Hadron v0.3.0'},
+] as const;
+
+const hadronFlavorOptionsV412 = [
+  {family: 'hadron', flavor: 'hadron', flavorRelease: 'v0.4.0', label: 'Hadron v0.4.0'},
+] as const;
+
+const hadronFlavorOptionsV420 = [
+  {family: 'hadron', flavor: 'hadron', flavorRelease: 'v0.5.1', label: 'Hadron v0.5.1'},
+] as const;
+
+const hadronFlavorOptionsV430 = [
+  {family: 'hadron', flavor: 'hadron', flavorRelease: 'v0.5.1', label: 'Hadron v0.5.1'},
+] as const;
+
+const docsVersionCustomFields = {
+  'v4.3.0': {
+    registryURL: 'quay.io/kairos',
+    hadronFlavorRelease: 'v0.5.1',
+    k3sVersion: 'v1.36.4+k3s1',
+    k0sVersion: 'v1.36.4+k0s.0',
+    flavorOptions: hadronFlavorOptionsV430,
+    providerVersion: 'v2.16.4',
+    auroraBootVersion: 'v0.27.0',
+    kairosInitVersion: 'v0.17.3',
+  },
+  'v4.2.0': {
+    registryURL: 'quay.io/kairos',
+    hadronFlavorRelease: 'v0.5.1',
+    k3sVersion: 'v1.36.3+k3s1',
+    k0sVersion: 'v1.36.3+k0s.2',
+    flavorOptions: hadronFlavorOptionsV420,
+    providerVersion: 'v2.16.4',
+    auroraBootVersion: 'v0.26.2',
+    kairosInitVersion: 'v0.17.2',
+  },
+  'v4.1.2': {
+    registryURL: 'quay.io/kairos',
+    hadronFlavorRelease: 'v0.4.0',
+    k3sVersion: 'v1.36.1+k3s1',
+    k0sVersion: 'v1.36.1+k0s.0',
+    flavorOptions: hadronFlavorOptionsV412,
+    providerVersion: 'v2.16.1',
+    auroraBootVersion: 'v0.26.2',
+    kairosInitVersion: 'v0.14.6',
+  },
+} as const;
+
+const versionedDocsFolderPath = path.join(__dirname, 'versioned_docs');
+const versionedDocsFolders = fs.existsSync(versionedDocsFolderPath)
+  ? fs
+      .readdirSync(versionedDocsFolderPath, {withFileTypes: true})
+      .filter((entry) => entry.isDirectory() && entry.name.startsWith('version-'))
+      .map((entry) => entry.name.replace(/^version-/, ''))
+      .sort()
+  : [];
+
+const customFieldVersions = Object.keys(docsVersionCustomFields).sort();
+const missingCustomFieldVersions = versionedDocsFolders.filter(
+  (version) => !(version in docsVersionCustomFields),
+);
+const extraCustomFieldVersions = customFieldVersions.filter(
+  (version) => !versionedDocsFolders.includes(version),
+);
+
+if (missingCustomFieldVersions.length > 0 || extraCustomFieldVersions.length > 0) {
+  const errors = [];
+  if (missingCustomFieldVersions.length > 0) {
+    errors.push(`missing docsVersionCustomFields entries: ${missingCustomFieldVersions.join(', ')}`);
+  }
+  if (extraCustomFieldVersions.length > 0) {
+    errors.push(`docsVersionCustomFields without versioned_docs folder: ${extraCustomFieldVersions.join(', ')}`);
+  }
+  throw new Error(
+    `docsVersionCustomFields mismatch (${errors.join(' | ')})`,
+  );
+}
+
+const latestVersionCustomFields = docsVersionCustomFields[latestVersion as keyof typeof docsVersionCustomFields];
+if (!latestVersionCustomFields) {
+  throw new Error(`latestVersion ${latestVersion} is missing in docsVersionCustomFields`);
+}
+for (const version of customFieldVersions) {
+  if (!docsVersionCustomFields[version as keyof typeof docsVersionCustomFields].k3sVersion) {
+    throw new Error(`docsVersionCustomFields[${version}] is missing k3sVersion`);
+  }
+  if (!docsVersionCustomFields[version as keyof typeof docsVersionCustomFields].k0sVersion) {
+    throw new Error(`docsVersionCustomFields[${version}] is missing k0sVersion`);
+  }
+  if (Number(docsVersionCustomFields[version as keyof typeof docsVersionCustomFields].flavorOptions.length) === 0) {
+    throw new Error(`docsVersionCustomFields[${version}] is missing flavorOptions`);
+  }
+}
+if (!latestVersionCustomFields.k3sVersion) {
+  throw new Error(`latestVersion ${latestVersion} is missing k3sVersion in docsVersionCustomFields`);
+}
+if (!latestVersionCustomFields.k0sVersion) {
+  throw new Error(`latestVersion ${latestVersion} is missing k0sVersion in docsVersionCustomFields`);
+}
+
+// Operator docs versioning (separate lifecycle from Kairos OS docs)
+const operatorVersionsJsonPath = path.join(__dirname, 'operator-docs_versions.json');
+const operatorVersionsFromJson = fs.existsSync(operatorVersionsJsonPath)
+  ? (JSON.parse(fs.readFileSync(operatorVersionsJsonPath, 'utf8')) as string[])
+  : [];
+const latestOperatorVersion =
+  operatorVersionsFromJson.length > 0
+    ? operatorVersionsFromJson.map(parseVersionTag).sort(compareParsedVersions).at(-1)?.raw
+    : null;
+
+const config: Config = {
+  title: 'Kairos',
+  tagline: 'Transform your Linux system and preferred Kubernetes distribution into a secure bootable image for your edge devices',
+  favicon: 'img/logo.svg',
+
+  // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
+  future: {
+    v4: {
+      removeLegacyPostBuildHeadAttribute: true,
+      useCssCascadeLayers: true,
+      siteStorageNamespacing: true,
+      fasterByDefault: true,
+      mdx1CompatDisabledByDefault: false, // Keep MDX v1 compat for HTML comments, heading IDs, etc.
+    },
+  },
+
+  // Set the production url of your site here
+  url: 'https://kairos.io',
+  // Set the /<baseUrl>/ pathname under which your site is served
+  // For GitHub pages deployment, it is often '/<projectName>/'
+  baseUrl: '/',
+  trailingSlash: true,
+  scripts: [],
+  headTags: [
+    ...(!isNetlifyProduction
+      ? [
+          {
+            tagName: 'script',
+            attributes: {},
+            innerHTML: `console.log(${JSON.stringify(branchDeployLogMessage)});`,
+          },
+        ]
+      : []),
+  ],
+
+  // GitHub pages deployment config.
+  // If you aren't using GitHub pages, you don't need these.
+  // organizationName: 'jasperdekeuk', // Usually your GitHub org/user name.
+  // projectName: 'kairos-docs', // Usually your repo name.
+
+  onBrokenLinks: 'throw',
+  markdown: {
+    mermaid: true,
+    hooks: {
+      onBrokenMarkdownLinks: 'throw',
+    },
+  },
+  themes: ['@docusaurus/theme-mermaid'],
+
+  // Even if you don't use internationalization, you can use this field to set
+  // useful metadata like html lang. For example, if your site is Chinese, you
+  // may want to replace "en" with "zh-Hans".
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en'],
+  },
+
+  customFields: {
+    registryURL: 'quay.io/kairos',
+    hadronFlavorRelease: latestVersionCustomFields.hadronFlavorRelease,
+    kairosVersion: latestVersion,
+    k3sVersion: latestVersionCustomFields.k3sVersion,
+    k0sVersion: latestVersionCustomFields.k0sVersion,
+    flavorOptions: latestVersionCustomFields.flavorOptions,
+    providerVersion: latestVersionCustomFields.providerVersion,
+    latestVersion,
+    latestOperatorVersion: latestOperatorVersion ?? null,
+    auroraBootVersion: latestVersionCustomFields.auroraBootVersion,
+    kairosInitVersion: latestVersionCustomFields.kairosInitVersion,
+    docsVersionCustomFields: {
+      ...docsVersionCustomFields,
+    },
+  },
+
+  presets: [
+    [
+      'classic',
+      {
+        docs: {
+          sidebarPath: './sidebars.ts',
+          remarkPlugins: [remarkShortcodeCode],
+          // Uncomment after migration to re-enable "Edit this page" links.
+          editUrl: 'https://github.com/kairos-io/kairos-docs/tree/main/',
+          // Show last update time and author
+          showLastUpdateTime: true,
+          showLastUpdateAuthor: true,
+          // Enable versioning
+          lastVersion: latestVersion,
+          versions: {
+            current: {
+              label: 'Next 🚧',
+              path: '',
+              banner: 'unreleased',
+            },
+            [latestVersion]: {
+              label: latestVersion,
+              path: latestVersion,
+              banner: 'none',
+            },
+          },
+        },
+        blog: {
+          showReadingTime: true,
+          blogSidebarTitle: 'All posts',
+          blogSidebarCount: 'ALL',
+          feedOptions: {
+            type: ['rss', 'atom'],
+            xslt: true,
+          },
+          // Uncomment after migration to re-enable "Edit this page" links.
+          // editUrl:
+          //   'https://github.com/kairos-io/kairos/tree/main/packages/create-kairos/templates/shared/',
+          // Useful options to enforce blogging best practices
+          onInlineTags: 'warn',
+          onInlineAuthors: 'warn',
+          onUntruncatedBlogPosts: 'warn',
+        },
+        theme: {
+          customCss: './src/css/custom.css',
+        },
+      } satisfies Preset.Options,
+    ],
+  ],
+
+  plugins: [
+    './plugins/hugo-mdx-preprocess-plugin.cjs',
+    './plugins/llms-txt-plugin.cjs',
+    [
+      '@cmfcmf/docusaurus-search-local',
+      {
+        indexDocs: true,
+        indexBlog: true,
+        indexPages: true,
+        language: 'en',
+      },
+    ],
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'quickstart',
+        path: 'quickstart',
+        routeBasePath: 'quickstart',
+        sidebarPath: './sidebarsQuickstart.ts',
+        remarkPlugins: [remarkShortcodeCode],
+        // Uncomment after migration to re-enable "Edit this page" links.
+        // editUrl:
+        //   'https://github.com/kairos-io/kairos-docs/tree/main/',
+        showLastUpdateTime: true,
+        showLastUpdateAuthor: true,
+      },
+    ],
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'operator-docs',
+        path: 'operator-docs',
+        routeBasePath: 'operator-docs',
+        sidebarPath: './sidebarsOperator.ts',
+        remarkPlugins: [remarkShortcodeCode],
+        editUrl: 'https://github.com/kairos-io/kairos-docs/tree/main/',
+        showLastUpdateTime: true,
+        showLastUpdateAuthor: true,
+        // The released version owns /operator-docs/, because that is what every
+        // entry point links to: the "Operator" sidebar item, the footer, the
+        // /docs/operator* redirects in netlify.toml and the in-page links under
+        // docs/. Giving the route base to `current` sent all of them to the
+        // development docs (kairos-io/kairos#4860).
+        ...(latestOperatorVersion && {
+          lastVersion: latestOperatorVersion,
+          versions: {
+            current: {
+              label: 'Next 🚧',
+              path: 'next',
+              banner: 'unreleased',
+            },
+            [latestOperatorVersion]: {
+              label: latestOperatorVersion,
+              path: '',
+              banner: 'none',
+            },
+          },
+        }),
+      },
+    ],
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'hadron-docs',
+        path: 'hadron-docs',
+        routeBasePath: 'hadron-docs',
+        sidebarPath: './sidebarsHadron.ts',
+        remarkPlugins: [remarkShortcodeCode],
+        editUrl: 'https://github.com/kairos-io/kairos-docs/tree/main/',
+        showLastUpdateTime: true,
+        showLastUpdateAuthor: true,
+      },
+    ],
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'provider-kubernetes-docs',
+        path: 'provider-kubernetes-docs',
+        routeBasePath: 'provider-kubernetes-docs',
+        sidebarPath: './sidebarsProviderKubernetes.ts',
+        remarkPlugins: [remarkShortcodeCode],
+        editUrl: 'https://github.com/kairos-io/kairos-docs/tree/main/',
+        showLastUpdateTime: true,
+        showLastUpdateAuthor: true,
+      },
+    ],
+  ],
+
+  themeConfig: {
+    // Replace with your project's social card
+    image: 'img/Kairos_800x419.png',
+    announcementBar: {
+      id: 'hadron-linux-out',
+      content: '<a href="https://github.com/kairos-io/kairos/releases/tag/v4.3.0">Kairos v4.3.0</a> is out! 🚀',
+      backgroundColor: '#1baaff',
+      textColor: '#000000',
+      isCloseable: true,
+    },
+    colorMode: {
+      respectPrefersColorScheme: true,
+    },
+    navbar: {
+      title: 'Kairos',
+      logo: {
+        alt: 'Kairos Logo',
+        src: 'img/logo.svg',
+      },
+      items: [
+        {
+          to: '/quickstart',
+          position: 'left',
+          label: 'Quick Start',
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'tutorialSidebar',
+          position: 'left',
+          label: 'Docs',
+        },
+        {to: '/blog', label: 'Blog', position: 'left'},
+        {
+          label: 'Community',
+          position: 'left',
+          to: '/community/',
+        },
+        {
+          type: 'custom-conditionalVersionDropdown',
+          position: 'right',
+          routeBasePath: 'docs',
+          label: 'Kairos',
+          dropdownActiveClassDisabled: true,
+        },
+        {
+          type: 'custom-conditionalVersionDropdown',
+          position: 'right',
+          routeBasePath: 'operator-docs',
+          label: 'Operator',
+          docsPluginId: 'operator-docs',
+          dropdownActiveClassDisabled: true,
+        },
+        {
+          type: 'custom-flavorSelector',
+          position: 'right',
+        },
+        {
+          type: 'search',
+          position: 'right',
+        },
+        {
+          type: 'custom-githubStars',
+          position: 'right',
+        },
+      ],
+    },
+    footer: {
+      style: 'dark',
+      links: [
+        {
+          title: 'Documentation',
+          items: [
+            {
+              label: 'Quick Start',
+              to: '/quickstart',
+            },
+            {
+              label: 'Installation',
+              to: '/docs/installation',
+            },
+            {
+              label: 'Architecture',
+              to: '/docs/architecture',
+            },
+            {
+              label: 'Examples',
+              to: '/docs/examples',
+            },
+            {
+              label: 'Operator Docs',
+              to: '/operator-docs/',
+            },
+            {
+              label: 'Kubernetes Provider Docs',
+              to: '/provider-kubernetes-docs/',
+            },
+          ],
+        },
+        {
+          title: 'Community',
+          items: [
+            {
+              label: 'Slack',
+              href: 'https://slack.cncf.io/#kairos',
+            },
+            {
+              label: 'GitHub Discussions',
+              href: 'https://github.com/kairos-io/kairos/discussions',
+            },
+            {
+              label: 'LinkedIn',
+              href: 'https://www.linkedin.com/company/kairos-oss/',
+            },
+            {
+              label: 'X (Twitter)',
+              href: 'https://x.com/Kairos_OSS',
+            },
+          ],
+        },
+        {
+          title: 'More',
+          items: [
+            {
+              label: 'Blog',
+              to: '/blog',
+            },
+            {
+              label: 'Adopters',
+              to: '/adopters',
+            },
+            {
+              label: 'GitHub',
+              href: 'https://github.com/kairos-io/kairos',
+            },
+            {
+              label: 'Commercial Support',
+              href: 'https://www.spectrocloud.com/solutions/kairos-support',
+            },
+          ],
+        },
+      ],
+      copyright: `<span class="footer-kairos-wrap"><img src="/index/footer-logo.png" class="footer-kairos-logo" width="167" height="29" alt="Kairos Logo" /></span><span class="footer-supported-by-wrap">Project supported by <a class="footer-supported-by-link" href="https://spectrocloud.com" target="_blank" rel="noopener noreferrer"><img src="/img/spectrocloud-dark.svg" class="footer-supported-by-logo" width="192" height="51" alt="Spectro Cloud logo" /></a></span><span class="footer-copyright-text">Copyright © ${new Date().getFullYear()} Kairos a Series of LF Projects, LLC</span><div class="footer-subfooter">For web site terms of use, trademark policy and other project policies please see <a href="https://lfprojects.org/policies/" target="_blank" rel="noopener noreferrer">lfprojects.org/policies</a>.</div>`,
+    },
+    prism: {
+      theme: prismThemes.github,
+      darkTheme: prismThemes.dracula,
+      additionalLanguages: ['docker', 'bash'],
+    },
+  } satisfies Preset.ThemeConfig,
+};
+
+export default config;
