@@ -199,7 +199,7 @@ Kernel configuration. It sets `/proc/sys/<key>` accordingly, similarly to `sysct
 stages:
   boot:
     - name: "Setup exception trace"
-      systctl:
+      sysctl:
         debug.exception-trace: "0"
 ```
 

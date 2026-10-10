@@ -840,7 +840,7 @@ stages:
        - nvidia
        environment:
          FOO: "bar"
-       systctl:
+       sysctl:
          debug.exception-trace: "0"
        hostname: "foo"
        systemctl:
