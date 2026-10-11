@@ -535,7 +535,7 @@ docker run --rm -ti --net host \
 
 To pass-by a cloud-config via pipes, set `--cloud-config -`, for example:
 
-```yaml
+```bash
 cat <<EOF | docker run --rm -i --net host quay.io/kairos/auroraboot \
                     --cloud-config - \
                     --set "container_image={{< OCI variant="standard" >}}"

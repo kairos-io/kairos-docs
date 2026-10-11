@@ -232,7 +232,7 @@ stages:
       users:
         bastion:
           passwd: "strongpassword"
-          homedir: "/home/foo
+          homedir: "/home/foo"
 ```
 
 ### `authorized_keys`
