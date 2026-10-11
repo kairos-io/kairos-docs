@@ -17,7 +17,8 @@ under the amt section. To see all configuration options see the [openamt reposit
 
 install:
   bundles:
-    - run://quay.io/kairos/community-bundles:openamt_latest
+    - targets:
+        - run://quay.io/kairos/community-bundles:openamt_latest
 amt:
   server_address: wss://mps.contoso.com/activate
   profile: myprofile
