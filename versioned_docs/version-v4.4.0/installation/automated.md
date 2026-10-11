@@ -19,13 +19,15 @@ install:
   device: "/dev/sda"
   # Reboot after installation
   reboot: true
-  # Power off after installation
-  poweroff: true
+  # Power off after installation. Mutually exclusive with reboot: set one or
+  # the other, never both
+  poweroff: false
   # Set to true to enable automated installations
   auto: true
   # A list of bundles
   bundles:
-    -  quay.io/kairos/packages:k9s-utils-0.26.7
+    - targets:
+        - container://quay.io/kairos/packages:k9s-utils-0.26.7
 ```
 
 This block allows you to specify the device on which to install Kairos, whether to reboot or power off after installation, and which bundles to include.
