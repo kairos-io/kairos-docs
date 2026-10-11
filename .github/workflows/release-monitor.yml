@@ -42,19 +42,26 @@ jobs:
           git config --global user.email "release-bot@kairos.io"
 
       - name: Run release automation
-        run: |
-          ARGS="--verbose"
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            if [ -n "${{ github.event.inputs.version }}" ]; then
-              ARGS="$ARGS --version ${{ github.event.inputs.version }}"
-            fi
-            if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
-              ARGS="$ARGS --dry-run"
-            fi
-          fi
-          ./scripts/release-automation.sh "$ARGS"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Taken through the environment rather than interpolated into the
+          # shell, so the value is a plain string to bash whatever it holds.
+          INPUT_VERSION: ${{ github.event.inputs.version }}
+          INPUT_DRY_RUN: ${{ github.event.inputs.dry_run }}
+        run: |
+          # An array, because release-automation.sh reads one flag per
+          # argument: a single string holding every flag arrives as one
+          # argument and the script rejects it as an unknown option.
+          args=(--verbose)
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            if [ -n "$INPUT_VERSION" ]; then
+              args+=(--version "$INPUT_VERSION")
+            fi
+            if [ "$INPUT_DRY_RUN" = "true" ]; then
+              args+=(--dry-run)
+            fi
+          fi
+          ./scripts/release-automation.sh "${args[@]}"
 
       - name: Notify on failure
         if: failure()

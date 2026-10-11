@@ -405,7 +405,7 @@ commit_push_and_open_pr() {
 ## Summary
 - Added Docusaurus docs version for $version (if missing)
 - Enforced retention policy: latest patch of the last 3 major.minor lines
-- Synced \\`docsVersionCustomFields\\` and updated announcement banner
+- Synced \`docsVersionCustomFields\` and updated announcement banner
 
 ## Details
 - Kept versions: $kept_csv
