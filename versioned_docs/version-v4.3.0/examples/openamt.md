@@ -12,6 +12,14 @@ The registration will only run during installation. Devices with Kairos already 
 To configure this bundle, it must be referenced in the install bundles section.  Additional configuration can be included
 under the amt section. To see all configuration options see the [openamt repository](https://github.com/kairos-io/openamt).
 
+:::warning Build the bundle first
+`quay.io/kairos/community-bundles:openamt_latest` is not published. The bundle source is in
+[kairos-community/bundles](https://github.com/kairos-community/bundles/tree/main/openamt), but
+the publish workflow there does not build it, so the reference below cannot be pulled as is.
+Build the bundle, push it to a registry you control and name that image instead. See
+[Create bundles](/docs/advanced/bundles#create-bundles).
+:::
+
 ```yaml
 #cloud-config
 
