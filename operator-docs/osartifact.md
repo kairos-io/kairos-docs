@@ -1013,7 +1013,7 @@ If nginx is in another namespace, set `NGINX_URL` to `http://kairos-operator-ngi
 
 Besides the final artifacts, the builder Pod writes two kinds of intermediate data: Buildah's image storage while it builds the Stage 1 image, and the unpacked root filesystem that the Stage 2 builders read. By default Buildah writes to its container's writable layer and the root filesystem goes to an `emptyDir`, so both count against the node's ephemeral storage. A large image can exhaust it and get the Pod evicted.
 
-Two fields move this data to a volume from `spec.volumes`:
+Two fields move this data to a volume from `spec.volumes`. The volume must be writable, for example a PVC, a generic ephemeral volume or a `hostPath`. Validation only checks that the name exists in `spec.volumes`, so it accepts a read-only source such as a Secret or a ConfigMap, and the build then fails when it writes to that volume.
 
 - **`spec.image.storageVolume`**: mounted at `/var/lib/containers` in the `buildah-build` container, with subPath `containers`. Only used when building; ignored when `spec.image.ref` is set.
 - **`spec.artifacts.rootfsVolume`**: replaces the default `rootfs` emptyDir. Every container that reads or writes the root filesystem mounts it at `/rootfs`, with subPath `rootfs`.
@@ -1045,7 +1045,7 @@ spec:
                 storage: 50Gi
 ```
 
-To set CPU and memory for the containers that use this storage, see the `buildah` and `imageExtractor` fields in [Resource specification](#resource-specification).
+To set CPU, memory or `ephemeral-storage` for the containers that use this storage, see the `buildah` and `imageExtractor` fields in [Resource specification](#resource-specification). If you leave the scratch data on the node, an `ephemeral-storage` request on those two fields makes the scheduler place the builder Pod on a node with enough free disk.
 
 ---
 
@@ -1056,9 +1056,9 @@ To set CPU and memory for the containers that use this storage, see the `buildah
 - **Scoped bindings**:
   - **Stage 1**: `spec.image.ociSpec.buildContextVolume` — volume name for the OCI build context at `/workspace` (Buildah). Only used when building from an OCI spec.
   - **Stage 1**: `spec.image.caCertificatesVolume` — volume name for custom CA certificates mounted at `/etc/ssl/buildah/certs` (Buildah). Only used when building.
-  - **Stage 1**: `spec.image.storageVolume`: volume name for Buildah image storage, mounted at `/var/lib/containers` with subPath `containers`. Only used when building. See [Scratch storage](#scratch-storage).
+  - **Stage 1**: `spec.image.storageVolume`: volume name for Buildah image storage, mounted at `/var/lib/containers` with subPath `containers`. Must be writable. Only used when building. See [Scratch storage](#scratch-storage).
   - **Stage 2**: `spec.artifacts.volume` — volume name (from `spec.volumes`) used for **build outputs** mounted at `/artifacts` in the builder pod and exporter jobs. When set, the operator does not create the default `<artifact-name>-artifacts` PVC. Must differ from `spec.artifacts.rootfsVolume` and, when building, from `spec.image.storageVolume`.
-  - **Stage 2**: `spec.artifacts.rootfsVolume`: volume name for the unpacked root filesystem, mounted at `/rootfs` with subPath `rootfs`. When unset, the builder Pod uses an `emptyDir`. See [Scratch storage](#scratch-storage).
+  - **Stage 2**: `spec.artifacts.rootfsVolume`: volume name for the unpacked root filesystem, mounted at `/rootfs` with subPath `rootfs`. Must be writable. When unset, the builder Pod uses an `emptyDir`. See [Scratch storage](#scratch-storage).
   - **Stage 2**: `spec.artifacts.overlayISOVolume`, `spec.artifacts.overlayRootfsVolume` — volume names for AuroraBoot overlay-iso and overlay-rootfs.
   - **UKI**: `spec.artifacts.uki.keysVolume` — volume name for the directory containing UKI signing keys.
 
@@ -1166,8 +1166,8 @@ The `spec.resources` field accepts the following optional sub-fields:
 | `gceImage` | GCE image builder container | CPU/memory limits for GCE image generation |
 | `netboot` | Netboot builder container | CPU/memory limits for netboot artifact generation |
 | `uki` | UKI builder containers | CPU/memory limits for UKI (Secure Boot) artifact generation |
-| `buildah` | Buildah build container (`buildah-build`) | CPU/memory limits for the Stage 1 image build. Only used when building |
-| `imageExtractor` | Image extractor container (`image-extractor`) | CPU/memory limits for unpacking the built image into the root filesystem. Only used when building |
+| `buildah` | Buildah build container (`buildah-build`) | CPU, memory and `ephemeral-storage` requests/limits for the Stage 1 image build. Only used when building |
+| `imageExtractor` | Image extractor container (`image-extractor`) | CPU, memory and `ephemeral-storage` requests/limits for unpacking the built image into the root filesystem. Only used when building |
 | `pod` | Builder Pod | Pod-level resource requests/limits; applies to all containers in the pod |
 
 ### Per-kind resources
