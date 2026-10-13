@@ -1015,10 +1015,10 @@ Besides the final artifacts, the builder Pod writes two kinds of intermediate da
 
 Two fields move this data to a volume from `spec.volumes`. The volume must be writable, for example a PVC, a generic ephemeral volume or a `hostPath`. Validation only checks that the name exists in `spec.volumes`, so it accepts a read-only source such as a Secret or a ConfigMap, and the build then fails when it writes to that volume.
 
-- **`spec.image.storageVolume`**: mounted at `/var/lib/containers` in the `buildah-build` container, with subPath `containers`. Only used when building; ignored when `spec.image.ref` is set.
-- **`spec.artifacts.rootfsVolume`**: replaces the default `rootfs` emptyDir. Every container that reads or writes the root filesystem mounts it at `/rootfs`, with subPath `rootfs`.
+- **`spec.image.storageVolume`**: Buildah's image storage is kept in a `containers` directory on this volume, which the `buildah-build` container sees at `/var/lib/containers`. Only used when building; ignored when `spec.image.ref` is set.
+- **`spec.artifacts.rootfsVolume`**: replaces the default `rootfs` emptyDir. The root filesystem is stored in a `rootfs` directory on this volume, which every container that reads or writes the root filesystem sees at `/rootfs`.
 
-The operator always applies these subPaths, so on the volume itself Buildah storage is in `containers/` and the root filesystem is in `rootfs/`, whether the two fields name the same volume or different ones. Both fields can point to the same volume. `spec.artifacts.volume` must name a different volume: the API rejects a spec where the artifacts volume also holds the root filesystem or, when building, Buildah storage.
+The operator always uses these directories, whether the two fields name the same volume or different ones, so both fields can point to the same volume without overwriting each other's data. `spec.artifacts.volume` must name a different volume: the API rejects a spec where the artifacts volume also holds the root filesystem or, when building, Buildah storage.
 
 The following example uses one [generic ephemeral volume](https://kubernetes.io/docs/concepts/storage/ephemeral-volumes/#generic-ephemeral-volumes) for both. Kubernetes creates a PVC named `<pod-name>-scratch` when the builder Pod starts and deletes it together with the Pod:
 
@@ -1056,9 +1056,9 @@ To set CPU, memory or `ephemeral-storage` for the containers that use this stora
 - **Scoped bindings**:
   - **Stage 1**: `spec.image.ociSpec.buildContextVolume` — volume name for the OCI build context at `/workspace` (Buildah). Only used when building from an OCI spec.
   - **Stage 1**: `spec.image.caCertificatesVolume` — volume name for custom CA certificates mounted at `/etc/ssl/buildah/certs` (Buildah). Only used when building.
-  - **Stage 1**: `spec.image.storageVolume`: volume name for Buildah image storage, mounted at `/var/lib/containers` with subPath `containers`. Must be writable. Only used when building. See [Scratch storage](#scratch-storage).
+  - **Stage 1**: `spec.image.storageVolume`: volume name for Buildah image storage. The data is stored in a `containers` directory on the volume, which the Buildah container sees at `/var/lib/containers`. Must be writable. Only used when building. See [Scratch storage](#scratch-storage).
   - **Stage 2**: `spec.artifacts.volume` — volume name (from `spec.volumes`) used for **build outputs** mounted at `/artifacts` in the builder pod and exporter jobs. When set, the operator does not create the default `<artifact-name>-artifacts` PVC. Must differ from `spec.artifacts.rootfsVolume` and, when building, from `spec.image.storageVolume`.
-  - **Stage 2**: `spec.artifacts.rootfsVolume`: volume name for the unpacked root filesystem, mounted at `/rootfs` with subPath `rootfs`. Must be writable. When unset, the builder Pod uses an `emptyDir`. See [Scratch storage](#scratch-storage).
+  - **Stage 2**: `spec.artifacts.rootfsVolume`: volume name for the unpacked root filesystem. The root filesystem is stored in a `rootfs` directory on the volume, which the build containers see at `/rootfs`. Must be writable. When unset, the builder Pod uses an `emptyDir`. See [Scratch storage](#scratch-storage).
   - **Stage 2**: `spec.artifacts.overlayISOVolume`, `spec.artifacts.overlayRootfsVolume` — volume names for AuroraBoot overlay-iso and overlay-rootfs.
   - **UKI**: `spec.artifacts.uki.keysVolume` — volume name for the directory containing UKI signing keys.
 
