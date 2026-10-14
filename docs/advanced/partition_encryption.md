@@ -72,7 +72,7 @@ kcrypt:
 
 ## What is not encrypted
 
-Every scenario on this page, whether the partitions are encrypted during installation or on first boot, covers only the partitions listed in `install.encrypted_partitions`, normally `COS_PERSISTENT`. The OEM partition, mounted at `/oem`, stays in plain text, and it is where Kairos keeps a node's configuration:
+Outside Trusted Boot, every scenario on this page, whether the partitions are encrypted during installation or on first boot, covers only the partitions listed in `install.encrypted_partitions`, normally `COS_PERSISTENT`. The OEM partition, mounted at `/oem`, stays in plain text, and it is where Kairos keeps a node's configuration:
 
 - the cloud config given at install time, which the installer writes to `/oem/90_custom.yaml`;
 - the user data pulled from a datasource (a NoCloud ISO, VMware guestinfo, or a cloud provider's metadata service), which Kairos saves to `/oem/95_userdata` on the first boot that finds it, and keeps there.
@@ -81,7 +81,7 @@ Every scenario on this page, whether the partitions are encrypted during install
 If either file carries secrets, such as a Kubernetes join token or registry credentials, encrypting `COS_PERSISTENT` does not protect them: they are readable by anyone with the disk. Prefer tokens that expire once the node has joined, for example one created with `k3s token create --ttl 1h`. Cloud config files you place under `/usr/local/cloud-config` live on `COS_PERSISTENT` and are protected when it is encrypted (see [Notes](#notes)).
 :::
 
-Listing `COS_OEM` in `install.encrypted_partitions` encrypts it during installation, but outside Trusted Boot that is only partly supported today: not everything the boot assessment and next-boot selection write to OEM is handled when OEM is encrypted, so do not rely on it in production. Trusted Boot images encrypt OEM as part of their standard installation and do not have this limit.
+Listing `COS_OEM` in `install.encrypted_partitions` encrypts it during installation, but outside Trusted Boot that is only partly supported today: not everything the boot assessment and next-boot selection write to OEM is handled when OEM is encrypted, so do not rely on it in production. Trusted Boot images encrypt both OEM and persistent by default, with the passphrase in the local TPM, and do not have this limit. An encrypted OEM together with a remote KMS on Trusted Boot has not been verified yet.
 
 ## Requirements
 
