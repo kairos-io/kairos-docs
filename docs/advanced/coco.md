@@ -31,7 +31,7 @@ Kairos no longer ships prebuilt Ubuntu images, so build your own with the kernel
 
 [Hadron](https://github.com/kairos-io/hadron) is musl-only. Since Kata 4.0.0, the Kata host binaries the CoCo chart installs (`containerd-shim-kata-v2`, `kata-runtime`, `kata-monitor`) are built statically ([kata-containers#13243](https://github.com/kata-containers/kata-containers/pull/13243)), so they run on Hadron. The nydus-snapshotter the chart installs for guest image pulls is still the glibc build, so `nydus-for-kata-tee.service` fails with `203/EXEC` and pods never get a sandbox.
 
-Pick one of the two setups below. The examples use chart `0.23.0` (Kata 4.2.0) on k3s. Set `k8sDistribution` to match your distribution.
+Pick one of the two setups below. The examples use chart `0.23.0` (Kata 4.2.0). Add any values your Kubernetes distribution needs from the upstream installation guide.
 
 <Tabs>
 <TabItem value="guest-pull" label="Guest pull without nydus (recommended)" default>
@@ -42,7 +42,6 @@ Save this values file. It deploys only the `qemu-snp` runtime, skips the nydus s
 
 ```yaml title="coco-hadron-snp.yaml"
 kata-as-coco-runtime:
-  k8sDistribution: k3s
   snapshotter:
     setup: []
   shims:
@@ -123,8 +122,7 @@ stages:
 
 ```bash
 helm install coco oci://ghcr.io/confidential-containers/charts/confidential-containers \
-  --version 0.23.0 -n coco-system --create-namespace \
-  --set kata-as-coco-runtime.k8sDistribution=k3s --wait
+  --version 0.23.0 -n coco-system --create-namespace --wait
 ```
 
 **4. Swap in the static nydus binaries.** Use the static build of the nydus version that the chart's Kata release pins (`v0.15.15` for chart `0.23.0`). The static tarball is published for amd64 only.
