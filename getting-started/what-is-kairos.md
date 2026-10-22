@@ -87,7 +87,7 @@ You can find us at:
 
 Project Office Hours is an opportunity for attendees to meet the maintainers of the project, learn more about the project, ask questions, learn about new features and upcoming updates.
 
-Office hours are happening weekly on Monday - 15:30 – 16:00pm UTC. [Meeting link](https://meet.jit.si/kairos-community-meetings-362341)
+Office hours are happening weekly. The day, the time and the joining link are on the [Kairos community events calendar](https://zoom-lfx.platform.linuxfoundation.org/meetings/kairos?view=week), which is the current schedule.
 
 ## Alternatives
 
