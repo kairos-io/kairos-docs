@@ -5,30 +5,25 @@ sidebar_position: 7
 date: 2022-11-13
 ---
 
-The Kairos recovery mode can be used to recover a damaged system or to regain access remotely (with assistance) to a machine which has been lost access to. The recovery mode is accessible only from the GRUB menu, from both the LiveCD, and an installed system.
+Kairos remote recovery hands the console to `kairos-agent recovery`, which prints a network token as a QR code and waits for `kairosctl bridge` to connect over it. Use it to regain access, with assistance, to a machine you have lost access to.
 
+Remote recovery runs from the live media only. An installed system keeps its own local `recovery` GRUB entry, which boots the recovery image on the machine itself and needs no second machine to drive it. That entry is unaffected by this page.
 
-:::note Note
+:::note
 
-On installed system, there are two recovery modes available during boot. Below describes only how the Kairos remote recovery works. It can be used to reset the A/B partitions (with the user/pass used during setup) and perform any other operation without remote access.
+Remote recovery used to be a GRUB entry of its own, `kairos (remote recovery mode)`, on the live media and in `/etc/kairos/branding/grubmenu.cfg` on installed systems. Both entries are gone. The interactive installer's welcome page offers the same handover, so the boot menu no longer carries a second route to it.
 
 :::
 
+## Start remote recovery
 
-## Boot into recovery mode
+Boot the Kairos ISO and select `kairos (interactive install)` from the boot menu.
 
-Kairos recovery mode can be accessed either via ISO or from an installed system.
+On the installer's welcome page, press `r`.
 
-A GRUB menu will be displayed:
-![Screenshot from 2022-04-28 17-48-06](https://user-images.githubusercontent.com/2420543/165800177-3e4cccd8-f67c-43a2-bd88-329478539400.png)
+The option appears only when the handover could actually work, which needs two things on the media: `kairos-agent`, and a provider to answer the pairing challenge. A core image with no provider does not offer it, the same way it does not offer the `a` pairing install.
 
-Select the last entry `kairos (remote recovery mode)` and press enter.
-
-At this point the boot process starts, and you should be welcomed by the Kairos screen:
-
-![Screenshot from 2022-04-28 17-48-32](https://user-images.githubusercontent.com/2420543/165800182-9aa29c90-09e9-4c53-b3c7-c8ced262e3ac.png)
-
-After few seconds, the recovery process starts, and right after a QR code will be printed out of the screen along with a password which can be used later to SSH into the machine:
+After a few seconds a QR code is printed along with a password you can use later to SSH into the machine:
 
 ![Screenshot from 2022-04-28 17-48-43](https://user-images.githubusercontent.com/2420543/165800187-4d2fe04e-c501-4ad8-a29f-32a0110eaa72.png)
 
