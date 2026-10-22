@@ -34,6 +34,8 @@ Other than the `/usr/local` path, Kairos will also bind mount the following path
 /etc/k0s
 /etc/kubernetes
 /etc/modprobe.d
+/etc/pki/ca-trust/source/anchors
+/etc/pki/trust/anchors
 /etc/pwx
 /etc/rancher
 /etc/runlevels
@@ -67,10 +69,15 @@ Other than the `/usr/local` path, Kairos will also bind mount the following path
 /var/log
 ```
 
-Some specific distros have additional paths, for example:
+Ubuntu and Debian are the only family with extra paths of their own: `/snap`,
+`/var/snap` and `/var/lib/snapd`.
 
-- For Ubuntu/Debian, `/snap`, `/var/snap` and `/var/lib/snapd`
-- For Red Hat/Fedora/Rockylinux/Almalinux `/usr/share/pki/trust` and `/usr/share/pki/trust/anchors` 
+The Red Hat and SUSE families used to get `/usr/share/pki/trust` and
+`/usr/share/pki/trust/anchors` here. Those were dropped in
+[kairos#4747](https://github.com/kairos-io/kairos/issues/4747), because only
+SUSE ships that directory and on SUSE it is the distro CA bundle, which is
+image content. An operator CA now goes to `/etc/pki/ca-trust/source/anchors` or
+`/etc/pki/trust/anchors`, which are on the default list above for every distro.
 
 
 For the most up-to-date list of paths, please refer to the [default rootfs configuration](https://github.com/kairos-io/kairos/blob/master/kairos-init/pkg/bundled/cloudconfigs/00_rootfs.yaml) and the [extra bind mounts configuration](https://github.com/kairos-io/kairos/blob/master/kairos-init/pkg/bundled/cloudconfigs/01_extra_binds.yaml) files.
