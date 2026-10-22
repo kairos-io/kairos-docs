@@ -9,7 +9,12 @@ slug: /installation/ovhcloud
 
 This page describes how to install Kairos on an [OVHcloud](https://www.ovhcloud.com/) dedicated server. OVHcloud does not offer Kairos as an OS template. Instead, you build a Kairos raw disk image with [AuroraBoot](/docs/reference/auroraboot/), publish it at an HTTPS URL, and install it with the OVHcloud **Bring Your Own Image** (BYOI) feature.
 
-The procedure on this page was tested with Kairos on [Hadron](/hadron-docs/) and k3s, on an OVHcloud server with an Intel DH67BL board.
+The procedure on this page was tested with Kairos on [Hadron](/hadron-docs/) and k3s, on a cluster of OVHcloud servers of two models:
+
+| Board | CPU | Boot mode | NIC |
+|---|---|---|---|
+| Intel DH67BL | Xeon E3-1245 v2 | Legacy BIOS | Intel 82579V (`e1000e`) |
+| Supermicro X10SRi-F | Xeon E5-1630 v4 | UEFI, Secure Boot off | Intel I350 (`igb`) |
 
 ## Prerequisites
 
@@ -30,6 +35,8 @@ ls /sys/firmware/efi
 
 - If the directory exists, the server boots in UEFI mode. Build an EFI image.
 - If the directory does not exist, the server boots in legacy BIOS mode. Build a BIOS image.
+
+Do this for each server model. Servers in the same OVHcloud account can boot in different modes. In the tested cluster, the older servers boot in legacy BIOS mode and the newer ones in UEFI mode. If you have servers of both kinds, build two images from the same Kairos image: one with `disk.bios=true` and one with `disk.efi=true`.
 
 While you are logged in, also record:
 
@@ -56,7 +63,7 @@ docker build -t kairos-ovh:latest .
 ```
 
 :::tip NIC firmware
-Hadron ships almost no firmware. Many server NICs keep their firmware on the card and work without it. For example, the Intel 82579V (`e1000e`) on the tested server needs no firmware file. Other NICs need firmware from the OS, for example the Intel E810 (`ice`). To add firmware, see [Adding Linux firmware to Hadron](/hadron-docs/linux-firmware/). Add the firmware to the Hadron base image, before `kairos-init` runs, so that the initramfs includes it too.
+Hadron ships almost no firmware. Many server NICs keep their firmware on the card and work without it. For example, the Intel 82579V (`e1000e`) and the Intel I350 (`igb`) on the tested servers need no firmware file. Other NICs need firmware from the OS, for example the Intel E810 (`ice`). To add firmware, see [Adding Linux firmware to Hadron](/hadron-docs/linux-firmware/). Add the firmware to the Hadron base image, before `kairos-init` runs, so that the initramfs includes it too.
 :::
 
 ## Step 3: Write the cloud-config
@@ -153,7 +160,7 @@ After OVHcloud writes the image, the server reboots into Kairos. The first boot 
 3. Kairos resets itself and reboots into the active system.
 4. The persistent partition grows to fill the rest of the disk.
 
-On the tested server, these steps took about 4 minutes. During recovery mode you can already log in over SSH.
+On the tested servers, these steps took about 4 minutes after OVHcloud rebooted the server. During recovery mode you can already log in over SSH.
 
 When the server is up, log in and look at the system:
 
@@ -164,8 +171,53 @@ sudo k3s kubectl get nodes
 sudo journalctl --list-boots
 ```
 
+## Add worker nodes
+
+A k3s cluster on OVHcloud servers sends pod traffic between nodes over the public network. To encrypt that traffic, run flannel with the WireGuard backend. On the server node, add the flag to the k3s arguments:
+
+```yaml
+k3s:
+  enabled: true
+  args:
+    - --flannel-backend=wireguard-native
+```
+
+Flannel then sends the pod traffic between nodes through WireGuard tunnels on UDP port 51820. The traffic from the agents to the API server uses TLS already. The Hadron kernel includes the `wireguard` module.
+
+On a worker node, enable `k3s-agent` and give it the URL of the server and the join token. The token is in `/var/lib/rancher/k3s/server/node-token` on the server node:
+
+```yaml
+k3s-agent:
+  enabled: true
+  env:
+    K3S_URL: https://<server-ip>:6443
+    K3S_TOKEN: <token>
+```
+
+The token gives access to the cluster. Do not put it in an image that you host at a public URL. Put it on the node after the install instead, for example in `/oem/95_join.yaml` over SSH, and reboot.
+
+The k3s provider configures `k3s-agent` only once, on the first boot of the active system. After that it writes `/usr/local/.kairos/deployed` and does not run again. A worker that started without `K3S_URL` therefore ignores a join file that you add later. To let the worker image accept the join file on a later boot, add a stage that removes the marker while the agent has no server URL:
+
+```yaml
+stages:
+  boot.before:
+    - name: "Retry the k3s-agent setup until it has a server URL"
+      if: '! grep -q "K3S_URL" /etc/sysconfig/k3s-agent 2>/dev/null'
+      commands:
+        - rm -f /usr/local/.kairos/deployed
+```
+
+After the reboot, check on the server node that the worker is `Ready` and uses WireGuard:
+
+```bash
+sudo k3s kubectl get nodes -o wide
+sudo k3s kubectl get node <worker> -o jsonpath='{.metadata.annotations.flannel\.alpha\.coreos\.com/backend-type}'
+```
+
+The second command prints `wireguard`.
+
 ## Troubleshooting
 
-- **The server does not come back after the install.** Look at the boot mode again (Step 1). An EFI image on a BIOS server, or a BIOS image on a UEFI server, does not boot.
+- **The server does not come back after the install.** Look at the boot mode again (Step 1). An EFI image on a BIOS server, or a BIOS image on a UEFI server, does not boot. The server then also does not answer ping.
 - **The server answers ping but SSH does not open.** Kairos possibly started, but the network failed later in the boot. If the server has a remote console, log in there with the console password and run `ip addr` and `journalctl -b -p err`.
 - **IPv6 is not configured.** OVHcloud assigns IPv6 statically. Add the address and the gateway that OVHcloud gives you to the network configuration of the node.
