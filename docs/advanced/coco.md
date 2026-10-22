@@ -38,39 +38,53 @@ Pick one of the two setups below. The examples use chart `0.23.0` (Kata 4.2.0). 
 
 Kata can pull images inside the guest without nydus-snapshotter, using its force guest-pull mode (marked experimental upstream). There is then no snapshotter to install and nothing on the host to patch.
 
-Save this values file. It deploys only the `qemu-snp` runtime, skips the nydus setup and turns on force guest-pull:
+Save this values file. It skips the nydus setup and moves every shim the chart wires to nydus over to force guest-pull. All the TEE shims stay enabled:
 
-```yaml title="coco-hadron-snp.yaml"
+```yaml title="coco-hadron.yaml"
 kata-as-coco-runtime:
   snapshotter:
     setup: []
   shims:
-    disableAll: true
     qemu-snp:
-      enabled: true
       containerd:
         snapshotter: null
         forceGuestPull: true
     qemu-tdx:
-      enabled: false
+      containerd:
+        snapshotter: null
+        forceGuestPull: true
     qemu-coco-dev:
-      enabled: false
+      containerd:
+        snapshotter: null
+        forceGuestPull: true
     qemu-coco-dev-runtime-rs:
-      enabled: false
+      containerd:
+        snapshotter: null
+        forceGuestPull: true
     qemu-nvidia-gpu-snp:
-      enabled: false
+      containerd:
+        snapshotter: null
+        forceGuestPull: true
+    qemu-nvidia-gpu-snp-runtime-rs:
+      containerd:
+        snapshotter: null
+        forceGuestPull: true
     qemu-nvidia-gpu-tdx:
-      enabled: false
+      containerd:
+        snapshotter: null
+        forceGuestPull: true
+    qemu-nvidia-gpu-tdx-runtime-rs:
+      containerd:
+        snapshotter: null
+        forceGuestPull: true
 ```
-
-The other TEE shims are turned off because the chart wires them to nydus by default. To use one of them as well, set `enabled: true` and give it the same `containerd` block as `qemu-snp`.
 
 Install the chart and check that the runtime class exists:
 
 ```bash
 helm install coco oci://ghcr.io/confidential-containers/charts/confidential-containers \
   --version 0.23.0 -n coco-system --create-namespace \
-  -f coco-hadron-snp.yaml --wait
+  -f coco-hadron.yaml --wait
 kubectl -n coco-system rollout status ds/kata-as-coco-runtime
 kubectl get runtimeclass kata-qemu-snp
 ```
