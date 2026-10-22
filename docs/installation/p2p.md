@@ -313,7 +313,7 @@ Note that you must run kairos bridge in a separate window as act like `kubectl p
 
 ## Troubleshooting
 
-### Low-MTU links: the p2p mesh needs at least 1308 bytes
+### Low-MTU links: QUIC needs at least 1308 bytes
 
 The p2p mesh dials peers over both QUIC and TCP. QUIC has a hard lower bound
 on the path MTU, and Kairos cannot configure it away.
@@ -328,20 +328,25 @@ virtual network can therefore run for a long time on one transport without
 knowing it, and lose the mesh the moment that transport is also blocked.
 
 Lower still, it stops coming up at all. On a 1300-byte link the mesh converged
-in 4 seconds; on a 1200-byte link it never converged, over TCP alone either.
-Do not read the 1308-byte bound as the point where the mesh merely degrades.
+in 4 seconds; on a 1200-byte link it never converged, not even over TCP alone,
+for a reason not yet known. The point where the mesh stops forming lies
+somewhere between 1200 and 1300 bytes; it has not been pinned down.
 
-A mesh on a link at or above 1500 bytes is unaffected. If your link is lower,
-raise the path MTU to 1308 or more (1328 for IPv6) where you can.
+A mesh on a link at or above 1500 bytes is unaffected. A link at 1308 bytes or
+more (1328 for IPv6) clears the QUIC bound; below that, raise the path MTU
+where you can. A cluster that fails to form on a link above the bound, such as
+the 1450-byte case in
+[kairos-io/kairos#2358](https://github.com/kairos-io/kairos/issues/2358), has a
+different cause that this section does not cover.
 
 :::info Why Kairos cannot lower it
 
 QUIC pads its first handshake packet to a fixed size and never retries with a
 smaller one. The QUIC library allows that size to be lowered to the protocol
-floor of 1200 bytes, but `go-libp2p` does not expose the setting, so the
-default stands for every libp2p application. Nothing in the Kairos cloud
-config, in `provider-kairos` or in `edgevpn` can reach it. Lifting the bound
-needs a change in `go-libp2p` itself.
+floor of 1200 bytes of UDP payload (a 1228-byte IPv4 link), but `go-libp2p`
+does not expose the setting, so the default stands for every libp2p
+application. Nothing in the Kairos cloud config, in `provider-kairos` or in
+`edgevpn` can reach it. Lifting the bound needs a change in `go-libp2p` itself.
 
 :::
 
