@@ -237,7 +237,7 @@ Kairos applies the Linux controls at image build time, in the `cisHardening` ste
 To build an image without them, skip the step:
 
 ```bash
-kairos-init --skip-steps cisHardening ...
+kairos-init --skip-step cisHardening ...
 ```
 
 :::note Release status
