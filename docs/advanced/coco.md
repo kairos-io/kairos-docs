@@ -4,33 +4,173 @@ sidebar_label: "Confidential Computing"
 sidebar_position: 9
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
-:::info Confidential Containers on Kairos (non-Hadron)
+[Confidential Containers](https://confidentialcontainers.org/) (CoCo) runs on Kairos the same way it runs on any Kubernetes distribution. Follow the [upstream installation guide](https://confidentialcontainers.org/docs/getting-started/installation/), then opt workloads in by selecting the appropriate [runtime class](https://confidentialcontainers.org/docs/getting-started/workload/). This page covers what is specific to Kairos: the host settings SEV-SNP needs, and the changes needed on Hadron.
 
-Kairos works with [Confidential Containers](https://confidentialcontainers.org/) on AMD SEV-SNP hardware today, using non-Hadron Kairos flavors (Ubuntu and other glibc-based bases).
+## Host requirements
 
-As long as the necessary virtualization and memory-encryption options are enabled on your hardware (e.g. SEV / SEV-SNP / SNP Memory Coverage in BIOS on AMD platforms, or the equivalent TDX settings on Intel), the upstream Confidential Containers project can be installed on a Kairos cluster the same way it is on any Kubernetes distribution (see the [upstream installation guide](https://confidentialcontainers.org/docs/getting-started/installation/)), and workloads then opt in by selecting the appropriate [runtime class](https://confidentialcontainers.org/docs/getting-started/workload/).
+Enable the virtualization and memory-encryption options in the firmware: SEV, SEV-SNP and SNP memory coverage on AMD, or the equivalent TDX settings on Intel.
 
-Because Kairos no longer ships prebuilt Ubuntu images by default, you'll want to build your own Kairos image with the kernel command-line flags and any vendor packages (Intel TDX/SGX attestation libraries, container image decryption tooling, etc.) that your scenario needs. See:
+On AMD, also check the **Minimum SEV non-ES ASID** setting (called **SEV-ES ASID Space Limit** on some boards). Only the ASIDs below that value can be used by SEV-ES and SEV-SNP guests, so a value of `1` leaves none and the kernel keeps SNP disabled. Set it to the number of SEV-ES/SNP guests you plan to run plus one. After a reboot, the kernel should report SNP as enabled:
+
+```bash
+dmesg | grep kvm_amd                          # SEV-SNP enabled
+cat /sys/module/kvm_amd/parameters/sev_snp    # Y
+```
+
+## Ubuntu and other glibc-based images
+
+Kairos no longer ships prebuilt Ubuntu images, so build your own with the kernel command-line flags and vendor packages (Intel TDX/SGX attestation libraries, container image decryption tooling, etc.) your scenario needs. The upstream install then works unchanged. See:
 
 - [Bring Your Own Image (BYOI)](/docs/reference/byoi/): the recommended path for Ubuntu and other non-Hadron bases.
 - [The Kairos Factory](/docs/reference/kairos-factory/): how to turn a customized base image into a Kairos-ready artifact.
 
-:::
+## Hadron
+
+[Hadron](https://github.com/kairos-io/hadron) is musl-only. Since Kata 4.0.0, the Kata host binaries the CoCo chart installs (`containerd-shim-kata-v2`, `kata-runtime`, `kata-monitor`) are built statically ([kata-containers#13243](https://github.com/kata-containers/kata-containers/pull/13243)), so they run on Hadron. The nydus-snapshotter the chart installs for guest image pulls is still the glibc build, so `nydus-for-kata-tee.service` fails with `203/EXEC` and pods never get a sandbox.
+
+Pick one of the two setups below. The examples use chart `0.23.0` (Kata 4.2.0) on k3s. Set `k8sDistribution` to match your distribution.
+
+<Tabs>
+<TabItem value="guest-pull" label="Guest pull without nydus (recommended)" default>
+
+Kata can pull images inside the guest without nydus-snapshotter, using its force guest-pull mode (marked experimental upstream). There is then no snapshotter to install and nothing on the host to patch.
+
+Save this values file. It deploys only the `qemu-snp` runtime, skips the nydus setup and turns on force guest-pull:
+
+```yaml title="coco-hadron-snp.yaml"
+kata-as-coco-runtime:
+  k8sDistribution: k3s
+  snapshotter:
+    setup: []
+  shims:
+    disableAll: true
+    qemu-snp:
+      enabled: true
+      containerd:
+        snapshotter: null
+        forceGuestPull: true
+    qemu-tdx:
+      enabled: false
+    qemu-coco-dev:
+      enabled: false
+    qemu-coco-dev-runtime-rs:
+      enabled: false
+    qemu-nvidia-gpu-snp:
+      enabled: false
+    qemu-nvidia-gpu-tdx:
+      enabled: false
+```
+
+The other TEE shims are turned off because the chart wires them to nydus by default. To use one of them as well, set `enabled: true` and give it the same `containerd` block as `qemu-snp`.
+
+Install the chart and check that the runtime class exists:
+
+```bash
+helm install coco oci://ghcr.io/confidential-containers/charts/confidential-containers \
+  --version 0.23.0 -n coco-system --create-namespace \
+  -f coco-hadron-snp.yaml --wait
+kubectl -n coco-system rollout status ds/kata-as-coco-runtime
+kubectl get runtimeclass kata-qemu-snp
+```
+
+</TabItem>
+<TabItem value="nydus" label="Keep nydus-snapshotter">
+
+Use this only if you need nydus-snapshotter itself. It takes three changes on the host, and the binary swap in step 4 has to be repeated whenever kata-deploy reinstalls its files.
+
+**1. Persist the snapshotter state.** nydus keeps its snapshots under `/var/lib/nydus-for-kata-tee`. On Kairos that path sits on the overlay root, and the kernel refuses to use an overlay as the upper directory of another overlay (`mount overlayfs by syscall: invalid argument`). Bind-mount it from the persistent partition at install time:
+
+```yaml
+#cloud-config
+install:
+  bind_mounts:
+    - /var/lib/nydus-for-kata-tee
+```
+
+On a node that is already installed, see [Adding persistent paths after install](/docs/examples/extra_persistent_paths_after_install).
+
+**2. Provide `mount.fuse`.** nydus hands containerd mounts of type `fuse.nydus-overlayfs`. containerd runs those through the `mount.fuse` helper, which in turn calls `nydus-overlayfs`. Hadron does not ship the FUSE userspace tools. No FUSE is actually involved, so a small stand-in is enough. This cloud-config writes it on every boot:
+
+```yaml
+#cloud-config
+stages:
+  boot:
+    - name: "mount.fuse stand-in for nydus-overlayfs"
+      files:
+        - path: /usr/local/sbin/mount.fuse
+          permissions: 0755
+          owner: 0
+          group: 0
+          content: |
+            #!/bin/sh
+            # containerd calls: mount.fuse <source> <target> -o a -o b ... -t <helper>
+            helper= opts= pos=
+            while [ $# -gt 0 ]; do
+              case "$1" in
+                -t) helper=$2; shift 2 ;;
+                -o) opts=${opts:+$opts,}$2; shift 2 ;;
+                *)  pos="$pos $1"; shift ;;
+              esac
+            done
+            [ -n "$helper" ] || { echo "mount.fuse: missing -t" >&2; exit 1; }
+            exec "$helper" $pos ${opts:+-o "$opts"}
+```
+
+**3. Install the chart** with its defaults:
+
+```bash
+helm install coco oci://ghcr.io/confidential-containers/charts/confidential-containers \
+  --version 0.23.0 -n coco-system --create-namespace \
+  --set kata-as-coco-runtime.k8sDistribution=k3s --wait
+```
+
+**4. Swap in the static nydus binaries.** Use the static build of the nydus version that the chart's Kata release pins (`v0.15.15` for chart `0.23.0`). The static tarball is published for amd64 only.
+
+```bash
+V=v0.15.15
+curl -fLO "https://github.com/containerd/nydus-snapshotter/releases/download/${V}/nydus-snapshotter-${V}-linux-static.tar.gz"
+tar xzf "nydus-snapshotter-${V}-linux-static.tar.gz"
+install -m 0755 bin/containerd-nydus-grpc bin/nydus-overlayfs /opt/kata/nydus-for-kata-tee/
+systemctl restart nydus-for-kata-tee.service
+```
+
+The `kata-as-coco-runtime` pod copies its files back into `/opt/kata` every time it starts, which brings the glibc binary back. Repeat this step after that pod restarts or the chart is upgraded.
+
+</TabItem>
+</Tabs>
+
+### Run a test workload
+
+```yaml title="snp-test.yaml"
+apiVersion: v1
+kind: Pod
+metadata:
+  name: snp-test
+spec:
+  runtimeClassName: kata-qemu-snp
+  restartPolicy: Never
+  containers:
+  - name: test
+    image: busybox:1.36
+    command: ["sh", "-c", "dmesg | grep -iE 'sev|snp|memory encryption'; uname -r; sleep 3600"]
+```
+
+```bash
+kubectl apply -f snp-test.yaml
+kubectl logs snp-test
+```
+
+The logs come from the guest kernel and should include `Memory Encryption Features active: AMD SEV SEV-ES SEV-SNP`.
 
 
-:::warning Hadron is not yet supported
-
-[Hadron](https://github.com/kairos-io/hadron) is musl-only, and the Kata Containers host binaries shipped by the Confidential Containers operator (`kata-runtime`, `kata-monitor`, `containerd-shim-kata-v2`, `containerd-nydus-grpc`) are still dynamically linked against glibc, so they fail to `execve` on a Hadron node and the pod sandbox never comes up.
-
-Upstream Kata has added an opt-in static build ([kata-containers#13243](https://github.com/kata-containers/kata-containers/pull/13243)), and Kata 4.0.0 additionally ships a static-pie Rust shim (`runtime-rs`), but no released Kata payload yet builds the full host-binary set statically. This page will be updated once such a release is available so the standard Confidential Containers install works on Hadron unchanged.
-
-:::
-
+## Legacy enclave-cc integration
 
 :::warning Warning
 
-The remainder of this page describes an earlier, experimental integration based on [`enclave-cc`](https://github.com/confidential-containers/enclave-cc) and the `coco` community bundle. It is kept for historical reference and does not reflect the current recommended approach described above.
+The rest of this page describes an earlier, experimental integration based on [`enclave-cc`](https://github.com/confidential-containers/enclave-cc) and the `coco` community bundle. It is kept for historical reference and does not reflect the current recommended approach described above.
 
 :::
 
@@ -42,7 +182,7 @@ This makes it useful for sensitive data such as financial information, health re
 One important aspect of Confidential Computing is the ability to encrypt data even in-memory. This document describes how to setup Kairos to use [`enclave-cc`](https://github.com/confidential-containers/enclave-cc)
 in order to run confidential workloads.
 
-## Create a Kairos cluster
+### Create a Kairos cluster
 
 The [`coco community bundle`](https://github.com/kairos-community/bundles/tree/main/coco) is supported since Kairos version `v2.0.0-alpha3` ("coco" stands for "**Co**nfidential **Co**mputing").
 
@@ -74,7 +214,7 @@ users:
 The bundle is making some changes on the host's filesystem (installs a customized containerd binary among other things) and a restart of the node is needed in order for the changes to be applied fully.
 When this file appears, reboot the node: `/etc/containerd/.sentinel`.
 
-## Additional steps
+### Additional steps
 
 - [Label our node](https://github.com/confidential-containers/documentation/blob/main/quickstart.md#prerequisites):
 
@@ -118,7 +258,7 @@ When this file appears, reboot the node: `/etc/containerd/.sentinel`.
 
   Get a shell to it and run the verification commands (You will need to install `ssh` in the Pod first).
 
-## Known limitations
+### Known limitations
 
 The above solution has some known limitations that might be addressed in future releases of Kairos. Namely:
 
