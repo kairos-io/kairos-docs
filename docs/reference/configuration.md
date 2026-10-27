@@ -150,6 +150,13 @@ install:
   # (Hadron, Ubuntu 22.04+, Debian 12+, RHEL 9+, Alpine 3.17+) is covered.
   ssh_hardening: false
 
+  # SELinux on the installed system, RHEL and SUSE families only. GRUB only:
+  # on Trusted Boot the mode is set when the UKI is built.
+  # mode is permissive (default) or enforcing. See /security/selinux
+  selinux:
+    enabled: false
+    mode: permissive
+
   # Creates these dirs in the rootfs during installation. As the rootfs is RO from boot, sometimes we find that we
   # some applications want to write to non-standard paths like /data
   # If that dir is not already in the rootfs it makes it difficult to create that path on an RO system
@@ -477,7 +484,13 @@ INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.after'
 ### Validate Your Cloud Config
 
 :::tip Note
-Validation of configuration is available on Kairos [v1.6.0-rc1](https://github.com/kairos-io/kairos/releases/tag/v1.6.0-rc1) and later. If you're interested in the validation rules or want to build a tool based on it, you can access them online via `https://kairos.io/RELEASE/cloud-config.json` e.g. [v1.6.0 cloud-config.json](https://kairos.io/v1.6.0/cloud-config.json)
+If you want the validation rules themselves, or want to build a tool on them, print the schema from the release you run:
+
+```bash
+kairos-agent print-schema
+```
+
+This writes the JSON Schema that `kairos validate` enforces on that exact release, so the rules you read always match the node you read them from. The schema is generated from [`sdk/schema`](https://github.com/kairos-io/kairos/tree/master/sdk/schema) in the Kairos repository.
 
 :::
 You have two options to validate your Cloud Config, one is with the Kairos command line, and the other with the Web UI.
@@ -862,7 +875,7 @@ stages:
        - nvidia
        environment:
          FOO: "bar"
-       systctl:
+       sysctl:
          debug.exception-trace: "0"
        hostname: "foo"
        systemctl:

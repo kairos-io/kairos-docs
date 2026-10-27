@@ -56,3 +56,9 @@ Optional/External:
 - [AuroraBoot](https://github.com/kairos-io/AuroraBoot) is the Kairos Node bootstrapper. It also builds the bootable artifacts (ISO, raw disk, netboot) from container images, a job the archived `osbuilder` used to do.
 
 For an architecture-focused overview of providers and how they integrate with kairos-agent, see [Providers](/docs/architecture/providers).
+
+## Learn more
+
+In this interview, Kairos creator Ettore Di Giacinto explains why he started the project, and talks about immutable operating systems, OCI-based upgrades and Hadron.
+
+<YouTube id="dWvA1s2etFM" title="Why Immutable Linux Makes Fleet Management Easier" />

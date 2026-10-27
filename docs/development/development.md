@@ -112,3 +112,9 @@ e2e-tests:
 
 kind-e2e-tests: ginkgo kind-setup install undeploy deploy e2e-tests
 ```
+
+## CI for external contributions
+
+This short video explains the recent changes to how CI runs on pull requests from external contributors in the Kairos repository.
+
+<YouTube id="_IS7R0DdM3w" title="Enhancing CI for External Contributions" />

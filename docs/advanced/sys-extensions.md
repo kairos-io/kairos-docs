@@ -5,8 +5,8 @@ sidebar_position: 3
 ---
 
 :::warning Warning
-This feature is in preview state and only available in Kairos v3.4.x releases and alphas.
-Please check the section "Known issues" at the bottom for more information.
+System extensions have caveats around naming, signing and read-only merging.
+Please check the section "Known issues" at the bottom before you build or ship one.
 :::
 :::tip Are system extensions the right mechanism?
 Extensions require systemd, and they contribute files rather than run code. See [Choosing how to extend Kairos](/docs/advanced/choosing-how-to-extend/) for a comparison with Dockerfiles, bundles and providers, and for what to use on an image that runs OpenRC.
