@@ -110,6 +110,28 @@ the `kairos-agent` to perform a manual installation. E.g.:
 kairos-agent install-bundle run://quay.io/kairos/community-bundles:cert-manager_latest
 ```
 
+To install from an image tarball on disk instead of pulling from a registry, add
+`--local-file` and give the target an absolute path:
+
+```
+kairos-agent install-bundle --local-file container:///home/kairos/mybundle.tar
+kairos-agent install-bundle --local-file run:///home/kairos/mybundle.tar
+```
+
+Note the three slashes. `://` separates the scheme from the reference, and the
+absolute path that follows brings its own leading `/`.
+
+`--local-file` is read only by `container://`, `docker://` and `run://` targets.
+A `package://` target installs a luet package from `--repository`, so it never
+reads a local tarball, and `--repository` is not read by any of the other
+schemes.
+
+:::warning Flags must come before the target
+`kairos-agent` stops reading flags at the first argument. Putting `--local-file`
+after the target makes it an extra argument, and the command fails with
+`bundle name required`.
+:::
+
 ## Bundle types
 
 Bundles can carry also binaries that can be overlayed in the rootfs while [building images](/operator-docs/osartifact/).
