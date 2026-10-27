@@ -690,7 +690,7 @@ For example, to override the GRUB config file:
 ```bash
 mkdir -p data/boot/grub2
 # You can replace this step with your own grub config. This GRUB configuration is the boot menu of the ISO
-wget https://raw.githubusercontent.com/kairos-io/packages/main/packages/livecd/grub2/config/grub_live_bios.cfg -O data/boot/grub2/grub.cfg
+wget https://raw.githubusercontent.com/kairos-io/AuroraBoot/{{< AuroraBootVersion >}}/pkg/constants/grub_live_bios.cfg -O data/boot/grub2/grub.cfg
 
 docker run -v "$PWD"/cloud-config.yaml:/cloud-config.yaml \
              -v "$PWD"/data:/tmp/data \
@@ -703,6 +703,18 @@ docker run -v "$PWD"/cloud-config.yaml:/cloud-config.yaml \
              --set "state_dir=/tmp/auroraboot" \
              --set "iso.overlay_iso=/tmp/data"
 ```
+
+:::warning Your file replaces the whole menu
+AuroraBoot renders its own `grub.cfg` from a template that carries build-time
+placeholders. A `grub.cfg` supplied in the overlay replaces that template
+completely, so the live console, the extended live cmdline and the
+architecture-dependent `nomodeset` no longer reach the menu, whether you set
+them with `--live-console` and `--extend-live-cmdline` or with the
+`iso.live_console` and `iso.extend-live-cmdline` keys. Put what you need
+directly in your own file. Start from the template linked above rather than
+from an older copy, or the ISO can boot the unattended install entry instead
+of the interactive installer.
+:::
 
 ### Prepare ISO for Airgap installations
 
