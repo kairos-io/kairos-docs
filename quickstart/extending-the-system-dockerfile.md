@@ -14,7 +14,7 @@ By the end of this quickstart, you will be able to:
 :::
 
 Now that you've launched your [first Kubernetes cluster on Hadron](/quickstart/), you might want to extend the system.
-Kairos supports multiple approaches for this—Dockerfiles, systemd system extensions, and bundles. There isn’t a single “best” option: each has trade-offs, and the right choice depends on your needs. In this quickstart, we’ll extend the system using a Dockerfile.
+Kairos supports multiple approaches for this: Dockerfiles, systemd system extensions, bundles, and providers. There isn’t a single “best” option: each acts at a different moment in the life of a node, and [Choosing how to extend Kairos](/docs/advanced/choosing-how-to-extend/) compares them side by side so you can pick one. In this quickstart, we’ll extend the system using a Dockerfile.
 
 ## Prerequisites
 
@@ -38,12 +38,10 @@ Hadron by itself is not immutable. To get the full Kairos experience—immutabil
 Create a `Dockerfile` with the following content:
 
 ```dockerfile
-FROM quay.io/kairos/kairos-init:v0.6.8 AS kairos-init
-
 FROM ghcr.io/kairos-io/hadron:v0.0.1-beta2 AS base
 ARG VERSION
 
-RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init \
+RUN --mount=type=bind,from=quay.io/kairos/kairos-init:{{< KairosInitVersion >}},src=/kairos-init,dst=/kairos-init \
     eval /kairos-init -l debug -s install --model generic --provider k3s --version \"${VERSION}\" && \
     eval /kairos-init -l debug -s init --model generic --provider k3s --version \"${VERSION}\"
 ```
@@ -84,8 +82,6 @@ In this example we use the Hadron `hadron-toolchain` image as a build stage. It 
 :::
 
 ```dockerfile
-FROM quay.io/kairos/kairos-init:v0.6.4 AS kairos-init
-
 FROM ghcr.io/kairos-io/hadron-toolchain:v0.0.1-beta1 AS bottom
 RUN curl -L -o bottom.tar.gz https://github.com/ClementTsang/bottom/releases/download/0.11.4/bottom_x86_64-unknown-linux-musl.tar.gz
 RUN tar xvzf bottom.tar.gz
@@ -93,7 +89,7 @@ RUN tar xvzf bottom.tar.gz
 FROM ghcr.io/kairos-io/hadron:v0.0.1-beta1 AS base
 ARG VERSION
 
-RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init \
+RUN --mount=type=bind,from=quay.io/kairos/kairos-init:{{< KairosInitVersion >}},src=/kairos-init,dst=/kairos-init \
     eval /kairos-init -l debug -s install --provider k3s --version \"${VERSION}\" && \
     eval /kairos-init -l debug -s init --provider k3s --version \"${VERSION}\"
 
@@ -121,6 +117,10 @@ Congratulations—you’ve successfully extended a Hadron image.
 ## What's Next?
 
 ### Other ways to extend the system
+
+<a class="btn btn-lg btn-outline-primary me-3 mb-4" href="/docs/advanced/choosing-how-to-extend/">
+    Compare all four mechanisms
+</a>
 
 <a class="btn btn-lg btn-outline-primary me-3 mb-4" href="/docs/advanced/sys-extensions/">
     Extend with systemd extensions

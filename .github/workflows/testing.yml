@@ -47,3 +47,6 @@ jobs:
 
       - name: Run component tests
         run: npm run test:components
+
+      - name: Run plugin tests
+        run: npm run test:plugins

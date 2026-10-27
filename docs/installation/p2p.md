@@ -279,6 +279,37 @@ kairos generate-token
 </TabItem>
 </Tabs>
 
+### Rotate the network token
+
+To replace the token on a running node without reinstalling, use `kairos provider rotate-token`. It rewrites `p2p.network_token` in every config file that already carries one, regenerates the `edgevpn` service configuration against the merged config, and can restart the service in place.
+
+```bash
+kairos provider rotate-token [--config-dir DIR ...] [--api URL] \
+    [--root-dir DIR] [--restart] NEW_TOKEN
+```
+
+The new token can be passed as a positional argument, as `--token`, or via the `TOKEN` environment variable. A positional argument wins over the others.
+
+The most common form on a live node is:
+
+```bash
+sudo kairos provider rotate-token --restart "$NEW_TOKEN"
+```
+
+Without `--restart` the new token is written to disk and picked up on the next `edgevpn` start. With `--restart`, the running service is reloaded so peers converge on the new network immediately.
+
+Flags:
+
+| Flag | Default | Purpose |
+| --- | --- | --- |
+| `--config-dir` | `/etc/kairos`, `/oem` | Directories to scan for config files that hold a `p2p.network_token`. Read-only overlays like `/run/initramfs/live` and the baked-in `/system/oem` are left out so the write always lands somewhere the node itself owns. Repeatable. |
+| `--token` | none | New token, when not given as a positional argument. |
+| `--api` | edgevpn's default socket | Edgevpn API endpoint used to regenerate the service config. Accepts a TCP URL (`http://127.0.0.1:8080`) or a unix socket path with the `unix://` prefix. Also set by `EDGEVPN_API`. |
+| `--root-dir` | `/` | Root directory the edgevpn service files are written under. Matches the location `SetupVPN` uses at boot. |
+| `--restart` | off | Restart the edgevpn service after writing the new config so the running node picks up the change without a reboot. |
+
+Rotate on every node that shares the network. Nodes still holding the old token cannot rendezvous with nodes that already rotated.
+
 ## Join new nodes
 
 To add new nodes to the network, follow the same process as before and use the same configuration file for all machines. Unless you have specified roles for each node, no further changes to the configuration are necessary. The machines will automatically connect to each other, whether they are on a local or remote network.

@@ -16,7 +16,7 @@ Kairos uses Docker as its primary build system, allowing you to build Kairos ima
 Starting with the v4.3 release Kairos is a single monorepo. The main Kairos build process is managed by [`kairos-init/`](https://github.com/kairos-io/kairos/tree/master/kairos-init), a tool that transforms a typical (non-immutable) OS image into a Kairos image. Its building blocks -- [`immucore/`](https://github.com/kairos-io/kairos/tree/master/immucore), [`agent/`](https://github.com/kairos-io/kairos/tree/master/agent), the [`sdk/`](https://github.com/kairos-io/kairos/tree/master/sdk), [`kcrypt/`](https://github.com/kairos-io/kairos/tree/master/kcrypt), and the [`installer/`](https://github.com/kairos-io/kairos/tree/master/installer) TUI -- all live alongside it. The first four ship as a single multi-call `kairos` binary; the installer ships as its own binary at `/system/installer/kairos-installer`. See the [monorepo README](https://github.com/kairos-io/kairos#repository-layout) for the full layout.
 
 - [The Kairos repository](https://github.com/kairos-io/kairos) - the monorepo. Contains every device-runtime component (`immucore/`, `agent/`, `kcrypt/`, `sdk/`, `kairos-init/`, `installer/`), the build definitions for releasing Kairos artifacts, and the qemu/e2e test suite.
-- [The provider-kairos repository](https://github.com/kairos-io/provider-kairos) contains the official Kairos provider component used to bring up Kubernetes clusters with `k3s` or `k0s`.
+- [`provider/`](https://github.com/kairos-io/kairos/tree/master/provider) is the official Kairos provider component used to bring up Kubernetes clusters with `k3s` or `k0s`. It moved into the monorepo with the rest; the `provider-kairos` repository is archived.
 
 ## Build Kairos
 
@@ -112,3 +112,9 @@ e2e-tests:
 
 kind-e2e-tests: ginkgo kind-setup install undeploy deploy e2e-tests
 ```
+
+## CI for external contributions
+
+This short video explains the recent changes to how CI runs on pull requests from external contributors in the Kairos repository.
+
+<YouTube id="_IS7R0DdM3w" title="Enhancing CI for External Contributions" />

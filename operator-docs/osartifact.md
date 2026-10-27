@@ -114,6 +114,7 @@ You can also set **`spec.imagePullSecrets`** (a list of Secret names) if you nee
 5. **Push the built image to a registry?** → When building, set `spec.image.push: true` and `spec.image.imageCredentialsSecretRef` (and optionally `spec.image.buildImage` for registry/repository/tag).
 6. **Build behind a proxy or use a custom CA for the registry?** → When building, set `spec.image.buildEnv` (e.g. `HTTP_PROXY`, `HTTPS_PROXY`, `NO_PROXY`) and/or `spec.image.caCertificatesVolume` (volume with CA certs). See [Build environment and CA certificates](#build-environment-and-ca-certificates).
 7. **Pulling an image (a pre-built `spec.image.ref`, an `ociSpec`/`buildOptions` base image, or a `spec.artifacts.bundles` entry) from, or pushing the built image to, a registry that is either plain HTTP or HTTPS with a self-signed/untrusted certificate?** → Set `spec.image.pullInsecureRegistry: true` and/or `spec.image.pushInsecureRegistry: true`. See [Insecure registries](../private-registries/#insecure-registries).
+8. **Build needs more disk than the node's ephemeral storage provides?** → Set `spec.image.storageVolume` and/or `spec.artifacts.rootfsVolume` to a volume from `spec.volumes`. See [Scratch storage](#scratch-storage).
 
 ---
 
@@ -891,7 +892,7 @@ If you used **generateName**, get the actual name from **`kubectl get osartifact
 
 - **Exporters**: Configure `spec.exporters` to run jobs that copy, upload, or process the built artifacts (e.g. upload to nginx or S3). Each exporter is a Job template; the artifacts volume is mounted at `/artifacts` (read-only for exporter containers).
 - **Default (operator PVC)**: If **`spec.artifacts.volume`** is unset, the controller creates a PersistentVolumeClaim per OSArtifact. The PVC lives in the **same namespace** as the OSArtifact, is named **`<artifact-name>-artifacts`**, and is labeled **`build.kairos.io/artifact=<artifact-name>`**. Other pods in that namespace can mount it by name or by selecting that label. Optional **`spec.volume`** (PersistentVolumeClaimSpec) customizes size and access modes for that PVC.
-- **Custom artifacts volume (`spec.artifacts.volume`)**: Set this field to the **`name` of a volume listed in `spec.volumes`**. The operator then **does not** create the `<artifact-name>-artifacts` PVC. Instead, it uses that volume’s **`VolumeSource`** for all Stage 2 outputs: the builder pod and exporter jobs mount it at **`/artifacts`** (same layout as with the default PVC). Use this when you want artifacts on storage you control—e.g. a **PVC you created yourself**, **`hostPath`** on a bare-metal node, or **NFS**. The name must exist in **`spec.volumes`**; the API rejects references to undefined volumes. Choose a volume name that is **not** reserved (`artifacts`, `rootfs`, `config`, `ocispec`, `cloudconfig`); a common pattern is `host-artifacts` or `my-artifacts`.
+- **Custom artifacts volume (`spec.artifacts.volume`)**: Set this field to the **`name` of a volume listed in `spec.volumes`**. The operator then **does not** create the `<artifact-name>-artifacts` PVC. Instead, it uses that volume’s **`VolumeSource`** for all Stage 2 outputs: the builder pod and exporter jobs mount it at **`/artifacts`** (same layout as with the default PVC). Use this when you want artifacts on storage you control—e.g. a **PVC you created yourself**, **`hostPath`** on a bare-metal node, or **NFS**. The name must exist in **`spec.volumes`**; the API rejects references to undefined volumes. Choose a volume name that is **not** reserved (`artifacts`, `rootfs`, `config`, `ocispec`, `cloudconfig`); a common pattern is `host-artifacts` or `my-artifacts`. It must also differ from `spec.artifacts.rootfsVolume` and, when building, from `spec.image.storageVolume` (see [Scratch storage](#scratch-storage)).
 
 ### Custom volume example (user PVC or hostPath)
 
@@ -1008,6 +1009,46 @@ If nginx is in another namespace, set `NGINX_URL` to `http://kairos-operator-ngi
 
 ---
 
+## Scratch storage
+
+Besides the final artifacts, the builder Pod writes two kinds of intermediate data: Buildah's image storage while it builds the Stage 1 image, and the unpacked root filesystem that the Stage 2 builders read. By default Buildah writes to its container's writable layer and the root filesystem goes to an `emptyDir`, so both count against the node's ephemeral storage. A large image can exhaust it and get the Pod evicted.
+
+Two fields move this data to a volume from `spec.volumes`. The volume must be writable, for example a PVC, a generic ephemeral volume or a `hostPath`. Validation only checks that the name exists in `spec.volumes`, so it accepts a read-only source such as a Secret or a ConfigMap, and the build then fails when it writes to that volume.
+
+- **`spec.image.storageVolume`**: Buildah's image storage is kept in a `containers` directory on this volume, which the `buildah-build` container sees at `/var/lib/containers`. Only used when building; ignored when `spec.image.ref` is set.
+- **`spec.artifacts.rootfsVolume`**: replaces the default `rootfs` emptyDir. The root filesystem is stored in a `rootfs` directory on this volume, which every container that reads or writes the root filesystem sees at `/rootfs`.
+
+The operator always uses these directories, whether the two fields name the same volume or different ones, so both fields can point to the same volume without overwriting each other's data. `spec.artifacts.volume` must name a different volume: the API rejects a spec where the artifacts volume also holds the root filesystem or, when building, Buildah storage.
+
+The following example uses one [generic ephemeral volume](https://kubernetes.io/docs/concepts/storage/ephemeral-volumes/#generic-ephemeral-volumes) for both. Kubernetes creates a PVC named `<pod-name>-scratch` when the builder Pod starts and deletes it together with the Pod:
+
+```yaml
+spec:
+  image:
+    buildOptions:
+      version: v3.6.0
+      baseImage: ubuntu:24.04
+      model: generic
+    storageVolume: scratch
+  artifacts:
+    arch: amd64
+    iso: true
+    rootfsVolume: scratch
+  volumes:
+    - name: scratch
+      ephemeral:
+        volumeClaimTemplate:
+          spec:
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 50Gi
+```
+
+To set CPU, memory or `ephemeral-storage` for the containers that use this storage, see the `buildah` and `imageExtractor` fields in [Resource specification](#resource-specification). If you leave the scratch data on the node, an `ephemeral-storage` request on those two fields makes the scheduler place the builder Pod on a node with enough free disk.
+
+---
+
 ## Volume and importer reference
 
 - **spec.volumes**: Standard Kubernetes volumes (emptyDir, ConfigMap, Secret, PVC, etc.) available to importers and to the build/artifact stages via the scoped bindings below.
@@ -1015,7 +1056,9 @@ If nginx is in another namespace, set `NGINX_URL` to `http://kairos-operator-ngi
 - **Scoped bindings**:
   - **Stage 1**: `spec.image.ociSpec.buildContextVolume` — volume name for the OCI build context at `/workspace` (Buildah). Only used when building from an OCI spec.
   - **Stage 1**: `spec.image.caCertificatesVolume` — volume name for custom CA certificates mounted at `/etc/ssl/buildah/certs` (Buildah). Only used when building.
-  - **Stage 2**: `spec.artifacts.volume` — volume name (from `spec.volumes`) used for **build outputs** mounted at `/artifacts` in the builder pod and exporter jobs. When set, the operator does not create the default `<artifact-name>-artifacts` PVC.
+  - **Stage 1**: `spec.image.storageVolume`: volume name for Buildah image storage. The data is stored in a `containers` directory on the volume, which the Buildah container sees at `/var/lib/containers`. Must be writable. Only used when building. See [Scratch storage](#scratch-storage).
+  - **Stage 2**: `spec.artifacts.volume` — volume name (from `spec.volumes`) used for **build outputs** mounted at `/artifacts` in the builder pod and exporter jobs. When set, the operator does not create the default `<artifact-name>-artifacts` PVC. Must differ from `spec.artifacts.rootfsVolume` and, when building, from `spec.image.storageVolume`.
+  - **Stage 2**: `spec.artifacts.rootfsVolume`: volume name for the unpacked root filesystem. The root filesystem is stored in a `rootfs` directory on the volume, which the build containers see at `/rootfs`. Must be writable. When unset, the builder Pod uses an `emptyDir`. See [Scratch storage](#scratch-storage).
   - **Stage 2**: `spec.artifacts.overlayISOVolume`, `spec.artifacts.overlayRootfsVolume` — volume names for AuroraBoot overlay-iso and overlay-rootfs.
   - **UKI**: `spec.artifacts.uki.keysVolume` — volume name for the directory containing UKI signing keys.
 
@@ -1123,6 +1166,8 @@ The `spec.resources` field accepts the following optional sub-fields:
 | `gceImage` | GCE image builder container | CPU/memory limits for GCE image generation |
 | `netboot` | Netboot builder container | CPU/memory limits for netboot artifact generation |
 | `uki` | UKI builder containers | CPU/memory limits for UKI (Secure Boot) artifact generation |
+| `buildah` | Buildah build container (`buildah-build`) | CPU, memory and `ephemeral-storage` requests/limits for the Stage 1 image build. Only used when building |
+| `imageExtractor` | Image extractor container (`image-extractor`) | CPU, memory and `ephemeral-storage` requests/limits for unpacking the built image into the root filesystem. Only used when building |
 | `pod` | Builder Pod | Pod-level resource requests/limits; applies to all containers in the pod |
 
 ### Per-kind resources

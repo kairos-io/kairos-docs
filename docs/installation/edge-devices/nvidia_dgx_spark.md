@@ -21,11 +21,9 @@ system, not a Jetson/L4T device. Build its Kairos image with the
 Create this `Dockerfile`:
 
 ```Dockerfile
-FROM quay.io/kairos/kairos-init:{{< KairosInitVersion >}} AS kairos-init
-
 FROM ubuntu:24.04
 ARG VERSION=1.0.0
-RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init \
+RUN --mount=type=bind,from=quay.io/kairos/kairos-init:{{< KairosInitVersion >}},src=/kairos-init,dst=/kairos-init \
     /kairos-init --version "${VERSION}" --model nvidia-dgx-spark
 ```
 

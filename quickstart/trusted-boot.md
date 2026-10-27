@@ -81,12 +81,10 @@ Now that you know [how to build an image](/quickstart/extending-the-system-docke
 Start by creating a Dockefile with the following content:
 
 ```dockerfile
-FROM quay.io/kairos/kairos-init:v0.6.8 AS kairos-init
-
 FROM ghcr.io/kairos-io/hadron-trusted:v0.0.1-beta2 AS base
 ARG VERSION
 
-RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init \
+RUN --mount=type=bind,from=quay.io/kairos/kairos-init:{{< KairosInitVersion >}},src=/kairos-init,dst=/kairos-init \
     eval /kairos-init -l debug -s install --trusted true --provider k3s --version \"${VERSION}\" && \
     eval /kairos-init -l debug -s init --trusted true --provider k3s --version \"${VERSION}\"
 ```

@@ -12,11 +12,10 @@ The key point is simple: run `kairos-init` **without** `--provider` and `--provi
 
 ```dockerfile
 FROM ubuntu:24.04
-FROM quay.io/kairos/kairos-init:{{< KairosInitVersion >}} AS kairos-init
 
 ARG VERSION=v1.0.0
 
-RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init \
+RUN --mount=type=bind,from=quay.io/kairos/kairos-init:{{< KairosInitVersion >}},src=/kairos-init,dst=/kairos-init \
   /kairos-init -l debug -s install --version "${VERSION}" && \
   /kairos-init -l debug -s init --version "${VERSION}"
 ```

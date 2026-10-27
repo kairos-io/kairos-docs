@@ -43,6 +43,10 @@ That will generate an artifact based on the Kairos image with the keylime-agent 
 
 Then you need at a minimum the follow configuration in your cloud config:
 
+:::warning Trusted Boot uses a different cmdline mechanism
+`install.grub_options` is read on GRUB installations only. On [Trusted Boot](/docs/installation/trustedboot/) the cmdline belongs to the signed EFI artifact, so the IMA parameters below are discarded and no IMA policy is applied. Build the artifact with them instead, see [Additional efi entries](/docs/installation/trustedboot/#additional-efi-entries).
+:::
+
 ```yaml
 #cloud-config
 

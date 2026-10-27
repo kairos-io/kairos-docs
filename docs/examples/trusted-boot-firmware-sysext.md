@@ -42,14 +42,11 @@ For more info on Kairos sysexts, see the [sysext documentation](/docs/advanced/s
 Create `Dockerfile.kairos-ubuntu-slim` that “Kairosifies” Ubuntu and strips firmware from the rootfs:
 
 ```dockerfile
-# Stage with kairos-init
-FROM quay.io/kairos/kairos-init:v0.5.19 AS kairos-init
-
 # Your Ubuntu base
 FROM ubuntu:24.04
 
 # Run kairos-init to turn this into a Kairos-ready base
-RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init \
+RUN --mount=type=bind,from=quay.io/kairos/kairos-init:{{< KairosInitVersion >}},src=/kairos-init,dst=/kairos-init \
     /kairos-init -l debug -t true --version 1.0.0 && /kairos-init validate -t true
 
 # Ensure the base rootfs contains NO firmware

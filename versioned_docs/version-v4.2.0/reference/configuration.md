@@ -449,7 +449,13 @@ INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.after'
 ### Validate Your Cloud Config
 
 :::tip Note
-Validation of configuration is available on Kairos [v1.6.0-rc1](https://github.com/kairos-io/kairos/releases/tag/v1.6.0-rc1) and later. If you're interested in the validation rules or want to build a tool based on it, you can access them online via `https://kairos.io/RELEASE/cloud-config.json` e.g. [v1.6.0 cloud-config.json](https://kairos.io/v1.6.0/cloud-config.json)
+If you want the validation rules themselves, or want to build a tool on them, print the schema from the release you run:
+
+```bash
+kairos-agent print-schema
+```
+
+This writes the JSON Schema that `kairos validate` enforces on that exact release, so the rules you read always match the node you read them from.
 
 :::
 You have two options to validate your Cloud Config, one is with the Kairos command line, and the other with the Web UI.
@@ -518,6 +524,12 @@ This will set the hostname for each machine based on the first 4 characters of t
 
 The `install.grub_options` field in the Kairos configuration file allows you to set key/value pairs for GRUB options that will be set in the GRUB environment after installation.
 
+:::warning GRUB installations only
+This field applies to GRUB installations. It has no effect on [Trusted Boot](/docs/installation/trustedboot/), where the cmdline is part of the signed EFI artifact and the GRUB environment is never read. Every key in the table below is discarded on such a system, and the installer does not report it.
+
+To set cmdline parameters on Trusted Boot, put them in the artifact at build time. See [Additional efi entries](/docs/installation/trustedboot/#additional-efi-entries) for the `auroraboot build-uki` flags that do this.
+:::
+
 Here's an example of how you can use this field to set the `panic=0` boot argument:
 
 ```yaml
@@ -557,6 +569,8 @@ If you want to change the GRUB options after installation, you can do so by sett
 ```bash
 grub2-editenv /oem/grubenv set extra_cmdline="rd.neednet=1"
 ```
+
+This recipe writes the same GRUB environment, so it is also GRUB only. A Trusted Boot system does not read `/oem/grubenv`, and changing the cmdline there requires a new signed artifact and an upgrade.
 
 As a final note, just a reminder that during GRUB menu selection, you can press `e` to edit the cmdline for that boot only, which is useful for testing purposes. That allows to test extra cmdline parameters during a single boot before making them permanent.
 
@@ -826,7 +840,7 @@ stages:
        - nvidia
        environment:
          FOO: "bar"
-       systctl:
+       sysctl:
          debug.exception-trace: "0"
        hostname: "foo"
        systemctl:

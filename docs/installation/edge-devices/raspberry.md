@@ -14,7 +14,7 @@ Kairos supports Raspberry Pi model 3 and 4 with 64bit architecture.
 Model 5 is currently not supported because of how we use U-boot to boot the device. There's currently some work from the people from SUSE, see https://github.com/openSUSE/u-boot/pull/29 for more information.
 :::
 :::warning Tested distributions
-Commands in this page are written for Hadron, but if adapted they should work on these other distributions: openSUSE Leap-15.6, openSUSE Tumbleweed, Ubuntu 20.04, Ubuntu 22.04, and Alpine 3.19.
+Commands in this page are written for Hadron, but if adapted they should work on these other distributions: openSUSE Leap-15.6, openSUSE Tumbleweed, Ubuntu 20.04, Ubuntu 22.04, Ubuntu 24.04, and Alpine 3.19.
 :::
 If you are not familiar with the process, it is suggested to follow the [quickstart](/quickstart/) first to see how Kairos works.
 
@@ -81,3 +81,9 @@ $ sudo umount /tmp/oem
 ```
 
 You can push additional `cloud config` files. For a full reference check out the [docs](/docs/reference/configuration) and also [configuration after-installation](/docs/advanced/after-install)
+
+## Troubleshooting a Pi that does not boot
+
+If the Pi does not boot after an install or an upgrade, this video walks through a real case. It covers an initramfs error caused by a kernel mismatch, and how to find the cause by inspecting the raw image and the container image. For more tools, see [Troubleshooting](/docs/reference/troubleshooting).
+
+<YouTube id="_6qjNNAzVcU" title="Debugging a Raspberry Pi that won't boot" />
