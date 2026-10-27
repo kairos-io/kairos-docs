@@ -174,7 +174,7 @@ total 778M
 $ IMAGE=<scheme://host[:port]/path[:tag]>
 $ mkdir -p files-iso/boot/grub2
 # You can replace this step with your own grub config. This GRUB configuration is the boot menu of the ISO
-$ wget https://raw.githubusercontent.com/kairos-io/packages/main/packages/livecd/grub2/config/grub_live_bios.cfg -O files-iso/boot/grub2/grub.cfg
+$ wget https://raw.githubusercontent.com/kairos-io/AuroraBoot/{{< AuroraBootVersion >}}/pkg/constants/grub_live_bios.cfg -O files-iso/boot/grub2/grub.cfg
 
 # Copy the config file
 $ cp -rfv cloud-config.yaml files-iso/cloud-config.yaml
@@ -188,6 +188,18 @@ $ docker run -v $PWD:/cOS -v /var/run/docker.sock:/var/run/docker.sock -i --rm q
 ```
 </TabItem>
 </Tabs>
+
+:::warning Your file replaces the whole menu
+AuroraBoot renders its own `grub.cfg` from a template that carries build-time
+placeholders. A `grub.cfg` supplied in the overlay replaces that template
+completely, so the live console, the extended live cmdline and the
+architecture-dependent `nomodeset` no longer reach the menu, whether you set
+them with `--live-console` and `--extend-live-cmdline` or with the
+`iso.live_console` and `iso.extend-live-cmdline` keys. Put what you need
+directly in your own file. Start from the template linked above rather than
+from an older copy, or the ISO can boot the unattended install entry instead
+of the interactive installer.
+:::
 
 :::tip Cloud config
 In the case of Auroraboot, make sure that the cloud config that you are mounting in the container (`-v $PWD/cloud-config.yaml:/cloud-config.yaml`) exists. Otherwise docker will create an empty directory to mount it on the container without any warnings and you will end up with an empty cloud config.

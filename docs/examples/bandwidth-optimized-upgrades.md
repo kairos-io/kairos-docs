@@ -280,6 +280,13 @@ spec:
 
 Provider-kubeadm enables Kairos to use kubeadm for Kubernetes cluster management. With Spegel integration, you can achieve bandwidth-optimized upgrades by leveraging distributed image caching across your kubeadm-managed cluster.
 
+:::warning Superseded provider
+`provider-kubeadm` is archived and no longer accepts changes, so the examples
+it hosts are frozen at their last commit. Kubeadm support continues in
+[provider-kubernetes](https://github.com/kairos-io/provider-kubernetes). This
+section is kept for existing `provider-kubeadm` deployments.
+:::
+
 :::warning Prerequisites
 To use provider-kubeadm with Spegel, you need:
 - A custom Kairos image built with provider-kubeadm ([build instructions](https://github.com/kairos-io/provider-kubeadm#building-custom-image))
@@ -288,7 +295,7 @@ To use provider-kubeadm with Spegel, you need:
 :::
 ### Configuration Examples
 
-For complete, up-to-date configuration examples, refer to the [provider-kubeadm repository](https://github.com/kairos-io/provider-kubeadm) where you'll find two example configurations at the root. The examples include:
+The [provider-kubeadm repository](https://github.com/kairos-io/provider-kubeadm) holds two example configurations at its root. They are frozen at the archived state of that repository rather than kept current. The examples include:
 
 - Master node configuration with containerd setup for Spegel
 - Worker node configuration with proper registry mirroring
@@ -364,12 +371,13 @@ If you need to verify that spegel is working, you can also check the upstream Sp
 - **Containerd Configuration**: The containerd setup is critical for Spegel functionality with provider-kubeadm
 - **Network Policies**: Ensure Spegel can communicate between nodes (typically requires port 5001)
 
-For the most current examples and detailed configurations, always refer to the [provider-kubeadm repository](https://github.com/kairos-io/provider-kubeadm) which contains tested configurations updated for the latest versions.
+For the configurations this section is based on, see the [provider-kubeadm repository](https://github.com/kairos-io/provider-kubeadm). It is archived, so they are no longer updated for newer Kubernetes versions.
 
 # Related Documentation
 
 - [K3s Stages](/docs/examples/k3s-stages/) - Running stages with k3s
 - [Multi-node Setup](/docs/examples/multi-node/) - Setting up multi-node clusters
 - [P2P Examples](/docs/examples/single-node-p2p/) - P2P coordination examples
-- [Provider-kubeadm Repository](https://github.com/kairos-io/provider-kubeadm) - Complete examples and build instructions
+- [Provider-kubernetes Repository](https://github.com/kairos-io/provider-kubernetes) - The maintained kubeadm provider
+- [Provider-kubeadm Repository](https://github.com/kairos-io/provider-kubeadm) - Archived, the examples and build instructions this section is based on
 - [Spegel Documentation](https://spegel.dev) - Official Spegel distributed registry documentation 
