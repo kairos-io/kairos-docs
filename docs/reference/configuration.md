@@ -150,6 +150,13 @@ install:
   # (Hadron, Ubuntu 22.04+, Debian 12+, RHEL 9+, Alpine 3.17+) is covered.
   ssh_hardening: false
 
+  # SELinux on the installed system, RHEL and SUSE families only. GRUB only:
+  # on Trusted Boot the mode is set when the UKI is built.
+  # mode is permissive (default) or enforcing. See /security/selinux
+  selinux:
+    enabled: false
+    mode: permissive
+
   # Creates these dirs in the rootfs during installation. As the rootfs is RO from boot, sometimes we find that we
   # some applications want to write to non-standard paths like /data
   # If that dir is not already in the rootfs it makes it difficult to create that path on an RO system
@@ -337,7 +344,7 @@ p2p:
  auto:
    # Enables Automatic node configuration (self-coordination)
    # for role assignment
-   enable: true
+   enabled: true
    # HA enables automatic HA roles assignment.
    # A master cluster init is always required,
    # Any additional master_node is configured as part of the
@@ -345,7 +352,7 @@ p2p:
    # If auto is disabled, HA has no effect.
    ha:
      # Enables HA control-plane
-     enable: true
+     enabled: true
      # Number of HA additional master nodes.
      # A master node is always required for creating the cluster and is implied.
      # The setting below adds 2 additional master nodes, for a total of 3.
@@ -361,7 +368,7 @@ kubevip:
   # Specify a manifest URL for KubeVIP. Empty uses default
   manifest_url: ""
   # Enables KubeVIP
-  enable: true
+  enabled: true
   # Specifies a KubeVIP Interface
   interface: "ens18"
 
@@ -477,7 +484,13 @@ INFO[2023-05-17T11:32:09+02:00] Done executing stage 'initramfs.after'
 ### Validate Your Cloud Config
 
 :::tip Note
-Validation of configuration is available on Kairos [v1.6.0-rc1](https://github.com/kairos-io/kairos/releases/tag/v1.6.0-rc1) and later. If you're interested in the validation rules or want to build a tool based on it, you can access them online via `https://kairos.io/RELEASE/cloud-config.json` e.g. [v1.6.0 cloud-config.json](https://kairos.io/v1.6.0/cloud-config.json)
+If you want the validation rules themselves, or want to build a tool on them, print the schema from the release you run:
+
+```bash
+kairos-agent print-schema
+```
+
+This writes the JSON Schema that `kairos validate` enforces on that exact release, so the rules you read always match the node you read them from. The schema is generated from [`sdk/schema`](https://github.com/kairos-io/kairos/tree/master/sdk/schema) in the Kairos repository.
 
 :::
 You have two options to validate your Cloud Config, one is with the Kairos command line, and the other with the Web UI.
@@ -546,6 +559,12 @@ This will set the hostname for each machine based on the first 4 characters of t
 
 The `install.grub_options` field in the Kairos configuration file allows you to set key/value pairs for GRUB options that will be set in the GRUB environment after installation.
 
+:::warning GRUB installations only
+This field applies to GRUB installations. It has no effect on [Trusted Boot](/docs/installation/trustedboot/), where the cmdline is part of the signed EFI artifact and the GRUB environment is never read. Every key in the table below is discarded on such a system, and the installer does not report it.
+
+To set cmdline parameters on Trusted Boot, put them in the artifact at build time. See [Additional efi entries](/docs/installation/trustedboot/#additional-efi-entries) for the `auroraboot build-uki` flags that do this.
+:::
+
 Here's an example of how you can use this field to set the `panic=0` boot argument:
 
 ```yaml
@@ -585,6 +604,8 @@ If you want to change the GRUB options after installation, you can do so by sett
 ```bash
 grub2-editenv /oem/grubenv set extra_cmdline="rd.neednet=1"
 ```
+
+This recipe writes the same GRUB environment, so it is also GRUB only. A Trusted Boot system does not read `/oem/grubenv`, and changing the cmdline there requires a new signed artifact and an upgrade.
 
 As a final note, just a reminder that during GRUB menu selection, you can press `e` to edit the cmdline for that boot only, which is useful for testing purposes. That allows to test extra cmdline parameters during a single boot before making them permanent.
 
@@ -791,9 +812,9 @@ stages:
 <TabItem value="kubevip" label="kubevip">
 | Key                     | Description      |
 |-------------------------|--------------------------|
-|`kubevip.enable`         | Enables kubevip. Accepted: `true`, `false`.  |
+|`kubevip.enabled`         | Enables kubevip. Accepted: `true`, `false`.  |
 |`kubevip.eip`            | VIP address to use |
-|`kubevip.manifest_url`   | Download and use the manifest from that url. You can see the default used otherwise [here](https://github.com/kairos-io/provider-kairos/blob/main/internal/assets/static/kube_vip_rbac.yaml)|
+|`kubevip.manifest_url`   | Download and use the manifest from that url. You can see the default used otherwise [here](https://github.com/kairos-io/kairos/blob/master/provider/internal/assets/static/kube_vip_rbac.yaml)|
 |`kubevip.interface`      | Interface to use for the Kubevip EIP to attach to |
 |`kubevip.static_pod`     | Use a pod deployment for Kubevip instead of a daemonset. Accepted: `true`, `false` |
 |`kubevip.version`        | Set the specific Kubevip version to use |
@@ -854,7 +875,7 @@ stages:
        - nvidia
        environment:
          FOO: "bar"
-       systctl:
+       sysctl:
          debug.exception-trace: "0"
        hostname: "foo"
        systemctl:

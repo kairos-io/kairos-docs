@@ -13,6 +13,11 @@
       "type": "link",
       "label": "Hadron",
       "href": "/hadron-docs/"
+    },
+    {
+      "type": "link",
+      "label": "Kubernetes Provider",
+      "href": "/provider-kubernetes-docs/"
     }
   ]
 }

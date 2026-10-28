@@ -49,22 +49,18 @@ The Dockerfile is the standard Kairos Factory shape — only `--model` changes p
 ### AGX Orin (Ubuntu 22.04)
 
 ```Dockerfile
-FROM quay.io/kairos/kairos-init:{{< KairosInitVersion >}} AS kairos-init
-
 FROM ubuntu:22.04
 ARG VERSION=1.0.0
-RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init \
+RUN --mount=type=bind,from=quay.io/kairos/kairos-init:{{< KairosInitVersion >}},src=/kairos-init,dst=/kairos-init \
     /kairos-init --version "${VERSION}" --model nvidia-jetson-agx-orin
 ```
 
 ### Orin NX (Ubuntu 22.04)
 
 ```Dockerfile
-FROM quay.io/kairos/kairos-init:{{< KairosInitVersion >}} AS kairos-init
-
 FROM ubuntu:22.04
 ARG VERSION=1.0.0
-RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init \
+RUN --mount=type=bind,from=quay.io/kairos/kairos-init:{{< KairosInitVersion >}},src=/kairos-init,dst=/kairos-init \
     /kairos-init --version "${VERSION}" --model nvidia-jetson-orin-nx
 ```
 
@@ -75,11 +71,9 @@ Hadron is a musl-based from-scratch base that requires a pre-build step (see the
 details). The `--model` flag is the same.
 
 ```Dockerfile
-FROM quay.io/kairos/kairos-init:{{< KairosInitVersion >}} AS kairos-init
-
 FROM ubuntu:24.04
 ARG VERSION=1.0.0
-RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init \
+RUN --mount=type=bind,from=quay.io/kairos/kairos-init:{{< KairosInitVersion >}},src=/kairos-init,dst=/kairos-init \
     /kairos-init --version "${VERSION}" --model nvidia-jetson-thor
 ```
 
@@ -140,14 +134,14 @@ Everything the Kairos Factory supports composes with `--model`. To bundle a Kube
 provider, pass it the same way as for a generic image:
 
 ```Dockerfile
-RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init \
+RUN --mount=type=bind,from=quay.io/kairos/kairos-init:{{< KairosInitVersion >}},src=/kairos-init,dst=/kairos-init \
     /kairos-init --version "${VERSION}" \
       --model nvidia-jetson-agx-orin \
       --provider k3s \
       --provider-k3s-version v1.35.1+k3s1
 ```
 
-`--fips`, `--trusted-boot`, `--skip-step` and stage extensions (`-x`) all work identically.
+`--fips`, `--trusted`, `--skip-step` and stage extensions (`-x`) all work identically.
 See [The Kairos Factory](/docs/reference/kairos-factory/) for the full flag reference.
 
 ## Turn the OCI image into installable artifacts

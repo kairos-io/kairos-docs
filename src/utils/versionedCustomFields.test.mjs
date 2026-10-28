@@ -29,6 +29,14 @@ test('getOperatorVersionFromPath returns null for the current (unversioned) oper
   assert.equal(getOperatorVersionFromPath('/operator-docs/installation'), null);
 });
 
+// /operator-docs/ serves the released version and /operator-docs/next/ the
+// development one, so neither carries a version segment and both fall back to
+// customFields.latestOperatorVersion.
+test('getOperatorVersionFromPath returns null for the development operator-docs path', () => {
+  assert.equal(getOperatorVersionFromPath('/operator-docs/next/'), null);
+  assert.equal(getOperatorVersionFromPath('/operator-docs/next/installation'), null);
+});
+
 test('getOperatorVersionFromPath returns null for non-operator paths', () => {
   assert.equal(getOperatorVersionFromPath('/'), null);
   assert.equal(getOperatorVersionFromPath('/docs/v4.2.0/'), null);

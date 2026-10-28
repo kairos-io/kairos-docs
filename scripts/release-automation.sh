@@ -204,7 +204,9 @@ sync_build_files_from_main() {
         src/pages/index.tsx \
         src/components/adopters/ \
         src/components/designs/content.ts \
-        static/img/adopters/
+        static/img/adopters/ \
+        provider-kubernetes-docs/ \
+        sidebarsProviderKubernetes.ts
     npm ci
     log "INFO" "Build files synced and dependencies installed"
 }

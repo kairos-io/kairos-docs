@@ -70,6 +70,19 @@ kcrypt:
 | `kcrypt.c_index` | Custom Index for the RSA Key pair |
 | `kcrypt.tpm_device` | Custom TPM device |
 
+## What is not encrypted
+
+Outside Trusted Boot, every scenario on this page, whether the partitions are encrypted during installation or on first boot, covers only the partitions listed in `install.encrypted_partitions`, normally `COS_PERSISTENT`. The OEM partition, mounted at `/oem`, stays in plain text, and it is where Kairos keeps a node's configuration:
+
+- the cloud config given at install time, which the installer writes to `/oem/90_custom.yaml`;
+- the user data pulled from a datasource (a NoCloud ISO, VMware guestinfo, or a cloud provider's metadata service), which Kairos saves to `/oem/95_userdata` on the first boot that finds it, and keeps there.
+
+:::warning Secrets in the OEM partition are not protected
+If either file carries secrets, such as a Kubernetes join token or registry credentials, encrypting `COS_PERSISTENT` does not protect them: they are readable by anyone with the disk. Prefer tokens that expire once the node has joined, for example one created with `k3s token create --ttl 1h`. Cloud config files you place under `/usr/local/cloud-config` live on `COS_PERSISTENT` and are protected when it is encrypted (see [Notes](#notes)).
+:::
+
+Listing `COS_OEM` in `install.encrypted_partitions` encrypts it during installation, but outside Trusted Boot that is only partly supported today: not everything the boot assessment and next-boot selection write to OEM is handled when OEM is encrypted, so do not rely on it in production. Trusted Boot images encrypt both OEM and persistent by default, with the passphrase in the local TPM, and do not have this limit. An encrypted OEM together with a remote KMS on Trusted Boot has not been verified yet.
+
 ## Requirements
 
 The host machine must have a TPM chip version 2.0 or higher to use encryption with Kairos. A list of TPM chips/HW can be found [in the list of certified products](https://trustedcomputinggroup.org/membership/certification/tpm-certified-products/), however, any modern machine has a TPM 2.0 chip.
@@ -202,6 +215,10 @@ This command will register the node on the KMS.
 
 A node can use the following during deployment, specifying the address of the challenger server:
 
+:::warning Trusted Boot uses a different cmdline mechanism
+`install.grub_options` is read on GRUB installations only. On [Trusted Boot](/docs/installation/trustedboot/) the cmdline is part of the signed EFI artifact, so `rd.neednet=1` set this way is discarded, the initramfs comes up without networking, and the node cannot reach the challenger server. Build the artifact with the parameter instead, as described in [Additional efi entries](/docs/installation/trustedboot/#additional-efi-entries).
+:::
+
 ``` yaml
 #cloud-config
 
@@ -267,6 +284,10 @@ EOF
 
 The node doesn't need any specific configuration beside the kcrypt challenger, so for instance:
 
+:::warning Trusted Boot uses a different cmdline mechanism
+As in the scenario above, `install.grub_options` does not apply on [Trusted Boot](/docs/installation/trustedboot/). Put `rd.neednet=1` in the signed artifact at build time, see [Additional efi entries](/docs/installation/trustedboot/#additional-efi-entries).
+:::
+
 ```yaml
 #cloud-config
 
@@ -294,6 +315,45 @@ users:
   # Replace with your github user and un-comment the line below:
   # - github:mudler
 ```
+
+## Encrypting on first boot (templates and cloud images)
+
+The scenarios above encrypt partitions during installation, which requires a TPM to be present at install time. A node can instead encrypt its partitions on the first boot: the image carries only the encryption policy, and the LUKS material is created on each machine against that machine's own TPM.
+
+This is aimed at golden images and templates. A typical flow on a virtualization platform looks like this:
+
+1. Install Kairos once in a VM, without a TPM attached and without `encrypted_partitions` in the install config. Power the VM off and mark it as a template.
+2. Add the encryption policy below to the template's OEM partition, for example as `/oem/91_encrypt_on_boot.yaml`. The policy is plain configuration and contains no key material, so the template stays safe to copy, snapshot and export.
+3. For each new node, clone the template, attach a fresh virtual TPM and boot.
+
+On the first boot of each clone, Kairos notices that partitions configured for encryption are still plaintext, encrypts them against the clone's own TPM before they are mounted, unlocks them and continues booting. Every later boot detects the partitions are already encrypted and does nothing.
+
+```yaml
+#cloud-config
+
+install:
+  # Same key the install time scenarios use.
+  encrypted_partitions:
+  - COS_PERSISTENT
+
+kcrypt:
+  # Explicit opt-in for encrypting on boot. Defaults to false.
+  encrypt_on_boot: true
+```
+
+Without a KMS configured the passphrase is stored in the local TPM, as in offline mode. The online scenarios apply too: add the usual `kcrypt.challenger` block to the policy and the passphrase is managed by the KMS instead.
+
+:::warning
+Encrypting a partition destroys the data on it. The boot time step only runs when `kcrypt.encrypt_on_boot` is explicitly set to `true`, but enabling it on an existing node whose listed partitions hold plaintext data will destroy that data on the next boot. In the template flow this is what you want, since a fresh template holds nothing of value in its persistent partition.
+:::
+
+There is no plaintext fallback. If the configuration says a partition must be encrypted and the machine cannot do it, for example because no TPM is attached or the KMS cannot be reached, the boot halts with a message describing the problem, and the partition is left untouched. The same applies when the configuration itself cannot be read on boot: since the node might have opted in, the boot stops rather than continue with a policy it cannot see.
+
+Notes:
+
+- Partitions the running boot depends on cannot be encrypted this way: the OEM partition (the policy itself is read from it), the state and recovery partitions (they hold the system that is booting) and the EFI partition. Listing one of them halts the boot with a message saying so.
+- As in every other scenario, the OEM partition stays in plain text, including the user data each clone receives on its first boot. See [What is not encrypted](#what-is-not-encrypted).
+- Trusted Boot (UKI) images always encrypt during installation, so this flow does not apply to them.
 
 ## Verifying the KMS
 
@@ -346,7 +406,8 @@ the client's broadcast message.
 A server is needed that runs in the same network as the Kairos node and responds
 with the IP address and port where the KMS is reachable.
 There may be tools that can be configured for the job, but we also provide a little
-utility that does exactly that: https://github.com/kairos-io/simple-mdns-server/
+utility that does exactly that: https://github.com/kairos-io/simple-mdns-server/ (archived, but its
+releases are still downloadable and the tool still works).
 
 The process to deploy the KMS is similar to the [Online mode](#online-mode).
 An example on how to test this feature locally, can be found [in this document](https://github.com/kairos-io/kairos/blob/master/kcrypt/mdns-notes.md).

@@ -199,7 +199,7 @@ Kernel configuration. It sets `/proc/sys/<key>` accordingly, similarly to `sysct
 stages:
   boot:
     - name: "Setup exception trace"
-      systctl:
+      sysctl:
         debug.exception-trace: "0"
 ```
 
@@ -208,19 +208,19 @@ stages:
 A map of users and user info to set. Passwords can also be encrypted.
 
 The `users` parameter adds or modifies the specified list of users. Each user is an object which consists of the following fields. Each field is optional and of type string unless otherwise noted.
-In case the user already exists, only the `password` and `ssh-authorized-keys` are evaluated. The rest of the fields are ignored.
+In case the user already exists, only the `passwd` and `ssh_authorized_keys` are evaluated. The rest of the fields are ignored.
 
 - **name**: Required. Login name of user
 - **gecos**: GECOS comment of user
 - **passwd**: Hash of the password to use for this user. Unencrypted strings are supported too.
 - **homedir**: User's home directory. Defaults to /home/*name*
-- **no-create-home**: Boolean. Skip home directory creation.
-- **primary-group**: Default group for the user. Defaults to a new group created named after the user.
+- **no_create_home**: Boolean. Skip home directory creation.
+- **primary_group**: Default group for the user. Defaults to a new group created named after the user.
 - **groups**: Add user to these additional groups. Kairos creates an `admin` group by default which is also added to the sudoers file. Add a user to the `admin` group if you want them to have `sudo` access.
-- **no-user-group**: Boolean. Skip default group creation.
-- **ssh-authorized-keys**: List of public SSH keys to authorize for this user
+- **no_user_group**: Boolean. Skip default group creation.
+- **ssh_authorized_keys**: List of public SSH keys to authorize for this user
 - **system**: Create the user as a system user. No home directory will be created.
-- **no-log-init**: Boolean. Skip initialization of lastlog and faillog databases.
+- **no_log_init**: Boolean. Skip initialization of lastlog and faillog databases.
 - **shell**: User's login shell.
 
 ```yaml

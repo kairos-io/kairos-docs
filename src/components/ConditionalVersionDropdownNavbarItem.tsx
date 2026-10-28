@@ -1,6 +1,7 @@
 import React from 'react';
 import {useLocation} from '@docusaurus/router';
 import DocsVersionDropdownNavbarItem from '@theme/NavbarItem/DocsVersionDropdownNavbarItem';
+import type {LinkLikeNavbarItemProps} from '@theme/NavbarItem';
 import clsx from 'clsx';
 
 type ConditionalVersionDropdownNavbarItemProps = {
@@ -13,9 +14,9 @@ type ConditionalVersionDropdownNavbarItemProps = {
   dropdownActiveClassDisabled?: boolean;
   className?: string;
   position?: 'left' | 'right';
-  items?: unknown[];
-  dropdownItemsBefore?: unknown[];
-  dropdownItemsAfter?: unknown[];
+  items?: LinkLikeNavbarItemProps[];
+  dropdownItemsBefore?: LinkLikeNavbarItemProps[];
+  dropdownItemsAfter?: LinkLikeNavbarItemProps[];
 };
 
 export default function ConditionalVersionDropdownNavbarItem({

@@ -172,6 +172,30 @@ export const pressItems: PressItem[] = [
 
 export const events: EventItem[] = [
   {
+    dateISO: '2026-11-10',
+    dateLabel: 'Nov 10, 2026',
+    location: 'Salt Lake City, US',
+    title: 'Project Pavilion Kiosk - Booth P-15B (10:30-14:30)',
+    conference: 'KubeCon NA',
+    url: 'https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/features-add-ons/project-engagement/#project-pavilion-kiosk-directory',
+  },
+  {
+    dateISO: '2026-10-28',
+    dateLabel: 'Oct 28, 2026',
+    location: 'Milan, Italy',
+    title: 'Your GPU node is a snowflake: shipping AI infrastructure as a versioned artifact',
+    conference: 'Codemotion Milan',
+    url: 'https://conferences.codemotion.com/milan/agenda/',
+  },
+  {
+    dateISO: '2026-10-20',
+    dateLabel: 'Oct 20, 2026',
+    location: 'Edinburgh, UK',
+    title: 'What Should a Cloud-Native OS Look Like? Rethinking the Foundation of Modern Platforms',
+    conference: 'KCD UK',
+    url: 'https://ckranz.github.io/kcduk/',
+  },
+  {
     dateISO: '2026-09-22',
     dateLabel: 'Sep 22, 2026',
     location: 'Online',

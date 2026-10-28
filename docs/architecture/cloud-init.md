@@ -62,6 +62,7 @@ Below there is a detailed list of the stages available that can be used in the c
 |----------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | _rootfs_                   | This is the earliest stage, running before switching root, just right after the root is mounted in /sysroot and before applying the immutable rootfs configuration. This stage is executed over initrd root, no chroot is applied.                                                  |
 | _initramfs_                | This is still an early stage, running before switching root. Here you can apply radical changes to the booting setup of Kairos. Despite this is executed before switching root this execution runs chrooted into the target root after the immutable rootfs is set up and ready. |
+| _mount-failure_            | This stage runs in the initramfs when a custom mount or a persistent state bind did not mount, before immucore decides whether to stop the boot. It is the hook for defining a recovery. See [Mount failures](/docs/reference/troubleshooting#mount-failures).                     |
 | _boot_                     | This stage is executed after initramfs has switched root, during the systemd bootup process.                                                                                                                                                                                        |
 | _fs_                       | This stage is executed when fs is mounted and is guaranteed to have access to the state and persistent partitions ( `COS_STATE`  and  `COS_PERSISTENT` respectively).                                                                                                               |
 | _network_                  | This stage is executed when network is available                                                                                                                                                                                                                                    |
@@ -92,6 +93,8 @@ In case you're using a standard image, with the Kairos provider, then these othe
 | _provider-kairos.bootstrap.before.<role>_ | The provider fires this stage before starting Kubernetes bootstrap. |
 | _provider-kairos.bootstrap.after.<role>_  | The provider fires this stage after Kubernetes bootstrap completes. |
 
+`<role>` is the role the node was given in the cluster: `master`, `master/clusterinit` (the first control plane node), `master/ha` (additional control plane nodes in an HA setup) or `worker`. For example, `provider-kairos.bootstrap.after.worker` runs only on workers.
+
 These are lifecycle hooks. They are tied to provider bootstrap flow and are not a generic replacement for every post-boot or post-upgrade action.
 
 For broader provider architecture context, see [Providers](/docs/architecture/providers/).
@@ -100,7 +103,7 @@ For broader provider architecture context, see [Providers](/docs/architecture/pr
 ### System stages with after and before substages
 The system run stages that are not part of an action (install,upgrade,reset) all have sub-stages so users can override or modify system behaviour.
 
-This applies to `rootfs`, `initramfs`, `boot`, `fs`, `reconcile` and `network` stages. All of those stages will also run a suffixed `after` and `before` substage that users can hook into to change different setting before the main stage is run.
+This applies to `rootfs`, `initramfs`, `mount-failure`, `boot`, `fs`, `reconcile` and `network` stages. All of those stages will also run a suffixed `after` and `before` substage that users can hook into to change different setting before the main stage is run.
 
 As those stages are run as part of the system os during different phases and some default configs are shipped with a Kairos system, we add those stages on the fly so they are easily overridable or reverted if one would not want something that ships with KAiros.
 

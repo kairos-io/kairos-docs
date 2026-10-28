@@ -18,7 +18,6 @@ Enki has been deprecated in favor of [AuroraBoot](https://github.com/kairos-io/a
 
 :::warning Known Issues
 
-- RPi EFI booting no longer supported on kernels shipped with Ubuntu 24.04+ [#2249](https://github.com/kairos-io/kairos/issues/2249)
 - RPi Alpine is a bit slow to sync the date on boot
 
 :::

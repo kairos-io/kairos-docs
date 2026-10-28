@@ -29,7 +29,7 @@ AGX Orin / Orin NX.
 <TabItem value="hadron" label="Hadron" default>
 
 
-Build your Thor base image using the reference file at the [Hadron repo](https://raw.githubusercontent.com/kairos-io/hadron/refs/heads/main/examples/add-packages/Dockerfile.thor)
+Build your Thor base image using the reference file at the [Hadron repo](https://raw.githubusercontent.com/kairos-io/hadron/refs/heads/main/examples/add-packages/Dockerfile.Thor)
 
 This dockerfile builds an image that includes:
 - A build-from-scratch Tegra-compatible kernel
@@ -39,7 +39,7 @@ This dockerfile builds an image that includes:
 For part of the NVIDIA userspace stack, source code is not available. For those components, we extract and use upstream NVIDIA packages directly. This provides firmware and userspace dependencies such as CUDA libraries, NVIDIA container libraries, and NVIDIA container binaries.
 
 ```bash
-curl -L https://raw.githubusercontent.com/kairos-io/hadron/refs/heads/main/examples/add-packages/Dockerfile.thor -o Dockerfile.Thor
+curl -L https://raw.githubusercontent.com/kairos-io/hadron/refs/heads/main/examples/add-packages/Dockerfile.Thor -o Dockerfile.Thor
 docker build -f Dockerfile.Thor -t quay.io/myrepo/nvidia:v1.0.0 .
 ```
 
@@ -49,11 +49,9 @@ docker build -f Dockerfile.Thor -t quay.io/myrepo/nvidia:v1.0.0 .
 Now pass it through `kairos-init` with the Thor model as mentioned in the [Kairos factory](../../reference/kairos-factory.mdx) docs. The key requirement is to specify `--model nvidia-jetson-thor`:
 
 ```Dockerfile
-FROM quay.io/kairos/kairos-init:{{< KairosInitVersion >}} AS kairos-init
-
 FROM quay.io/myrepo/nvidia:v1.0.0
 ARG VERSION=1.0.0
-RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init /kairos-init --version "${VERSION}" --model nvidia-jetson-thor
+RUN --mount=type=bind,from=quay.io/kairos/kairos-init:{{< KairosInitVersion >}},src=/kairos-init,dst=/kairos-init /kairos-init --version "${VERSION}" --model nvidia-jetson-thor
 ```
 
 </TabItem>
@@ -69,11 +67,9 @@ Now pass it through `kairos-init` with the Thor model as mentioned in the [Kairo
 
 
 ```Dockerfile
-FROM quay.io/kairos/kairos-init:{{< KairosInitVersion >}} AS kairos-init
-
 FROM ubuntu:24.04
 ARG VERSION=1.0.0
-RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init /kairos-init --version "${VERSION}" --model nvidia-jetson-thor
+RUN --mount=type=bind,from=quay.io/kairos/kairos-init:{{< KairosInitVersion >}},src=/kairos-init,dst=/kairos-init /kairos-init --version "${VERSION}" --model nvidia-jetson-thor
 ```
 
 

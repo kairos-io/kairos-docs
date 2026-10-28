@@ -110,7 +110,21 @@ const hadronFlavorOptionsV430 = [
   {family: 'hadron', flavor: 'hadron', flavorRelease: 'v0.5.1', label: 'Hadron v0.5.1'},
 ] as const;
 
+const hadronFlavorOptionsV440 = [
+  {family: 'hadron', flavor: 'hadron', flavorRelease: 'v0.6.3', label: 'Hadron v0.6.3'},
+] as const;
+
 const docsVersionCustomFields = {
+  'v4.4.0': {
+    registryURL: 'quay.io/kairos',
+    hadronFlavorRelease: 'v0.6.3',
+    k3sVersion: 'v1.37.1+k3s1',
+    k0sVersion: 'v1.36.4+k0s.1',
+    flavorOptions: hadronFlavorOptionsV440,
+    providerVersion: 'v2.16.4',
+    auroraBootVersion: 'v0.28.0',
+    kairosInitVersion: 'v0.17.3',
+  },
   'v4.3.0': {
     registryURL: 'quay.io/kairos',
     hadronFlavorRelease: 'v0.5.1',
@@ -130,16 +144,6 @@ const docsVersionCustomFields = {
     providerVersion: 'v2.16.4',
     auroraBootVersion: 'v0.26.2',
     kairosInitVersion: 'v0.17.2',
-  },
-  'v4.1.2': {
-    registryURL: 'quay.io/kairos',
-    hadronFlavorRelease: 'v0.4.0',
-    k3sVersion: 'v1.36.1+k3s1',
-    k0sVersion: 'v1.36.1+k0s.0',
-    flavorOptions: hadronFlavorOptionsV412,
-    providerVersion: 'v2.16.1',
-    auroraBootVersion: 'v0.26.2',
-    kairosInitVersion: 'v0.14.6',
   },
 } as const;
 
@@ -247,10 +251,12 @@ const config: Config = {
 
   onBrokenLinks: 'throw',
   markdown: {
+    mermaid: true,
     hooks: {
       onBrokenMarkdownLinks: 'throw',
     },
   },
+  themes: ['@docusaurus/theme-mermaid'],
 
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
@@ -365,17 +371,22 @@ const config: Config = {
         editUrl: 'https://github.com/kairos-io/kairos-docs/tree/main/',
         showLastUpdateTime: true,
         showLastUpdateAuthor: true,
+        // The released version owns /operator-docs/, because that is what every
+        // entry point links to: the "Operator" sidebar item, the footer, the
+        // /docs/operator* redirects in netlify.toml and the in-page links under
+        // docs/. Giving the route base to `current` sent all of them to the
+        // development docs (kairos-io/kairos#4860).
         ...(latestOperatorVersion && {
           lastVersion: latestOperatorVersion,
           versions: {
             current: {
               label: 'Next 🚧',
-              path: '',
+              path: 'next',
               banner: 'unreleased',
             },
             [latestOperatorVersion]: {
               label: latestOperatorVersion,
-              path: latestOperatorVersion,
+              path: '',
               banner: 'none',
             },
           },
@@ -395,6 +406,19 @@ const config: Config = {
         showLastUpdateAuthor: true,
       },
     ],
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'provider-kubernetes-docs',
+        path: 'provider-kubernetes-docs',
+        routeBasePath: 'provider-kubernetes-docs',
+        sidebarPath: './sidebarsProviderKubernetes.ts',
+        remarkPlugins: [remarkShortcodeCode],
+        editUrl: 'https://github.com/kairos-io/kairos-docs/tree/main/',
+        showLastUpdateTime: true,
+        showLastUpdateAuthor: true,
+      },
+    ],
   ],
 
   themeConfig: {
@@ -402,7 +426,7 @@ const config: Config = {
     image: 'img/Kairos_800x419.png',
     announcementBar: {
       id: 'hadron-linux-out',
-      content: '<a href="https://github.com/kairos-io/kairos/releases/tag/v4.3.0">Kairos v4.3.0</a> is out! 🚀',
+      content: '<a href="https://github.com/kairos-io/kairos/releases/tag/v4.4.0">Kairos v4.4.0</a> is out! 🚀',
       backgroundColor: '#1baaff',
       textColor: '#000000',
       isCloseable: true,
@@ -488,6 +512,10 @@ const config: Config = {
             {
               label: 'Operator Docs',
               to: '/operator-docs/',
+            },
+            {
+              label: 'Kubernetes Provider Docs',
+              to: '/provider-kubernetes-docs/',
             },
           ],
         },

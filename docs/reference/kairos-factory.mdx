@@ -40,11 +40,9 @@ See the [docker multi-platform docs](https://docs.docker.com/build/building/mult
 Create a single Dockerfile:
 
 ```Dockerfile
-FROM quay.io/kairos/kairos-init:{{< KairosInitVersion  >}} AS kairos-init
-
 FROM ubuntu:24.04
 ARG VERSION=1.0.0
-RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init /kairos-init --version "${VERSION}"
+RUN --mount=type=bind,from=quay.io/kairos/kairos-init:{{< KairosInitVersion  >}},src=/kairos-init,dst=/kairos-init /kairos-init --version "${VERSION}"
 ```
 
 The only required argument for kairos-init is the version, which will be set under the `/etc/kairos-release` values to track the artifacts version so you can upgrade to those and track changes.
@@ -52,18 +50,12 @@ The only required argument for kairos-init is the version, which will be set und
 Then you can just build it like any other Dockerfile ever:
 ```bash
 $ docker build -t ubuntu-kairos:24.04 .
-[+] Building 69.9s (10/10) FINISHED                                                      docker:default
  => [internal] load build definition from Dockerfile                                               0.0s
  => => transferring dockerfile: 240B                                                               0.0s
  => [internal] load metadata for docker.io/library/ubuntu:24.04                                    0.0s
- => [internal] load metadata for quay.io/kairos/kairos-init:v0.5.0                                 0.4s
  => [internal] load .dockerignore                                                                  0.0s
  => => transferring context: 2B                                                                    0.0s
- => CACHED [kairos-init 1/1] FROM quay.io/kairos/kairos-init:v0.5.0@sha256:8d6a0000b6dfcf905eceeb  0.0s
- => [stage-1 1/4] FROM docker.io/library/ubuntu:24.04                                              0.0s
- => CACHED [stage-1 2/4] COPY --from=kairos-init /kairos-init /kairos-init                         0.0s
- => [stage-1 3/4] RUN /kairos-init --version "1.0.0"                                              66.7s
- => [stage-1 4/4] RUN rm /kairos-init                                                              0.1s
+...
  => exporting to image                                                                             2.6s 
  => => exporting layers                                                                            2.6s 
  => => writing image sha256:78d8ba90a19bfa472438f207002a0ba2178917ab4c5190c3b2146f1964bac6dc       0.0s 
@@ -100,7 +92,7 @@ config.yaml  kairos.iso  kairos.iso.sha256  netboot  temp-rootfs
 ```
 
 :::warning Bind mount the binary instead of copying?
-As you will see over the examples, we do not copy the kairos-init binary into the image, but rather we bind mount it from the kairos-init image. This is in order to save space due to how docker works with layers and caching. If you want to copy the binary instead, you can use the `COPY --from=kairos-init /kairos-init /kairos-init` command instead of the `RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init /kairos-init` command, the output will be the same but the end image will be a bit larger.
+As you will see over the examples, we do not copy the kairos-init binary into the image, but rather we bind mount it from the kairos-init image. This is in order to save space due to how docker works with layers and caching. If you want to copy the binary instead, you can use the `COPY --from=quay.io/kairos/kairos-init:{{< KairosInitVersion  >}} /kairos-init /kairos-init` command instead of the `RUN --mount=type=bind,from=quay.io/kairos/kairos-init:{{< KairosInitVersion  >}},src=/kairos-init,dst=/kairos-init /kairos-init` command, the output will be the same but the end image will be a bit larger.
 :::
 ## Why the Version Matters
 
@@ -185,7 +177,7 @@ on that hardware without extra work in your Dockerfile.
 | `rpi4`                       | Raspberry Pi 4                                                     | [RaspberryPi](/docs/installation/raspberry/) |
 | `nvidia-jetson-agx-orin`     | NVIDIA Jetson AGX Orin (L4T r36.x)                                 | [NVIDIA Jetson (build image)](/docs/installation/nvidia-jetson-images/) |
 | `nvidia-jetson-orin-nx`      | NVIDIA Jetson Orin NX (L4T r36.x)                                  | [NVIDIA Jetson (build image)](/docs/installation/nvidia-jetson-images/) |
-| `nvidia-jetson-thor`         | NVIDIA Jetson AGX Thor / T264 (L4T r38.x)                          | [NVIDIA Jetson (build image)](/docs/installation/nvidia-jetson-images/) |
+| `nvidia-jetson-thor`         | NVIDIA Jetson AGX Thor / T264 (L4T r39.x)                          | [NVIDIA Jetson (build image)](/docs/installation/nvidia-jetson-images/) |
 | `nvidia-dgx-spark`           | NVIDIA DGX Spark / GB10 (ARM64 UEFI/SBSA)                          | [NVIDIA DGX Spark](/docs/installation/nvidia_dgx_spark/) |
 
 The Jetson build guide covers all three NVIDIA models in one place; per-board flashing and
@@ -237,10 +229,8 @@ Run `kairos-init steps-info` to see the available steps and their descriptions. 
 This is an example output of the stages and steps available. We recommend you run `kairos-init steps-info` to see the updated list of steps and stages available, as this is subject to change:
 
 ```dockerfile
-FROM quay.io/kairos/kairos-init:{{< KairosInitVersion  >}} AS kairos-init
-
 FROM ubuntu:24.04
-RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init /kairos-init steps-info
+RUN --mount=type=bind,from=quay.io/kairos/kairos-init:{{< KairosInitVersion  >}},src=/kairos-init,dst=/kairos-init /kairos-init steps-info
 ```
 
 ```bash
@@ -349,11 +339,9 @@ dnf remove epel-release
 Before running `kairos-init`, you need to register the system with the subscription manager and attach a subscription to it. You can do this by modifying the Dockerfile to register the system before running `kairos-init`:
 
 ```Dockerfile
-FROM quay.io/kairos/kairos-init:{{< KairosInitVersion  >}} AS kairos-init
-
 FROM redhat/ubi9
 RUN subscription-manager register --username <your-username> --password <your-password>
-RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init /kairos-init
+RUN --mount=type=bind,from=quay.io/kairos/kairos-init:{{< KairosInitVersion  >}},src=/kairos-init,dst=/kairos-init /kairos-init
 ```
 
 
@@ -384,33 +372,22 @@ $ docker build --platform=linux/arm64 -t ubuntu-rpi:22.04 --build-arg MODEL=rpi4
 ### Add a specific kernel to ubuntu 24.04 (amd64 platform)
 
 ```Dockerfile
-FROM quay.io/kairos/kairos-init:{{< KairosInitVersion  >}} AS kairos-init
-
 FROM ubuntu:24.04
-RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init /kairos-init -l debug -s install --version "v0.0.1" --skip-step installKernel
+RUN --mount=type=bind,from=quay.io/kairos/kairos-init:{{< KairosInitVersion  >}},src=/kairos-init,dst=/kairos-init /kairos-init -l debug -s install --version "v0.0.1" --skip-step installKernel
 # Install Smaller virtual kernel, useful for testing things in VMS
 RUN apt-get install -y linux-image-virtual
 # Run the init phase as normal, it will find the new kernel and link it + generate initrd
-RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init /kairos-init -l debug -s init --version "v0.0.1"
+RUN --mount=type=bind,from=quay.io/kairos/kairos-init:{{< KairosInitVersion  >}},src=/kairos-init,dst=/kairos-init /kairos-init -l debug -s init --version "v0.0.1"
 ```
 
 ```bash
 $ docker build -t ubuntu-kairos-virtual:24.04 .
-[+] Building 106.1s (13/13) FINISHED                                                     docker:default
  => [internal] load build definition from Dockerfile                                               0.0s
  => => transferring dockerfile: 629B                                                               0.0s
  => [internal] load metadata for docker.io/library/ubuntu:24.04                                    0.0s
- => [internal] load metadata for quay.io/kairos/kairos-init:v0.5.0                                 0.2s
  => [internal] load .dockerignore                                                                  0.0s
  => => transferring context: 2B                                                                    0.0s
- => CACHED [kairos-init 1/1] FROM quay.io/kairos/kairos-init:v0.5.0@sha256:8d6a0000b6dfcf905eceeb  0.0s
- => [stage-1 1/7] FROM docker.io/library/ubuntu:24.04                                              0.0s
- => CACHED [stage-1 2/7] COPY --from=kairos-init /kairos-init /kairos-init                         0.0s
- => [stage-1 3/7] RUN /kairos-init -l debug -s install --version "v0.0.1"                         74.8s
- => [stage-1 4/7] RUN apt-get remove -y linux-base linux-image-generic-hwe-24.04 && apt-get autor  2.3s 
- => [stage-1 5/7] RUN apt-get install -y linux-image-virtual                                       8.3s 
- => [stage-1 6/7] RUN /kairos-init -l debug -s init --version "v0.0.1"                            17.9s 
- => [stage-1 7/7] RUN rm /kairos-init                                                              0.1s 
+...
  => exporting to image                                                                             2.6s 
  => => exporting layers                                                                            2.6s 
  => => writing image sha256:94a792dad87629860094820860d68e8d0587bd758d537835d9c5ae7c476af71c       0.0s 
@@ -468,7 +445,16 @@ $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
 
 ## GitHub Actions Integration
 
-For users who prefer to automate their Kairos image builds using GitHub Actions, the [Kairos Factory Action](https://github.com/kairos-io/kairos-factory-action) provides a reusable workflow that simplifies the build process.
+For users who prefer to automate their Kairos image builds using GitHub Actions, Kairos ships [`reusable-factory.yaml`](https://github.com/kairos-io/kairos/blob/master/.github/workflows/reusable-factory.yaml), a reusable workflow that simplifies the build process.
+
+It used to live in `kairos-io/kairos-factory-action`. That repository was archived on 2026-08-26 and the workflow moved into the `kairos-io/kairos` monorepo, so the `uses:` lines below name the monorepo. If your workflows still call the old repository, rewrite them:
+
+```bash
+find .github/workflows -type f \( -name '*.yaml' -o -name '*.yml' \) -exec sed -i \
+  's|kairos-io/kairos-factory-action/\.github/workflows/|kairos-io/kairos/.github/workflows/|g' {} +
+```
+
+The inputs did not change, so that rewrite plus a ref is the whole migration. The old repository still resolves, but it takes no new commits, and Renovate stops proposing bumps for a `uses:` line that points at an archived repository.
 
 ### What is the Kairos Factory Action?
 
@@ -488,7 +474,7 @@ The Kairos Factory Action is a GitHub Actions reusable workflow that automates t
 ```yaml
 jobs:
   build:
-    uses: kairos-io/kairos-factory-action/.github/workflows/reusable-factory.yaml@main
+    uses: kairos-io/kairos/.github/workflows/reusable-factory.yaml@v4.3.0
     with:
       version: "v1.0.0"
       base_image: "ubuntu:24.04"
@@ -499,6 +485,15 @@ jobs:
 ```
 
 This example builds a Kairos image based on Ubuntu 24.04 with K3s, generates an ISO artifact, and provides a rich build summary with artifact links.
+
+### Choosing a ref
+
+The examples pin at `v4.3.0`, the first Kairos release that carries the workflow. Every subsequent release tags it again, so a tag pin follows the Kairos release cadence. Two other refs are valid:
+
+- `@<sha>` pins at one commit and is the pattern Kairos itself uses for third-party actions. Renovate keeps it current.
+- `@master` always runs the newest version, at the cost of reproducible builds.
+
+Nothing older than `v4.3.0` has the file, so do not pin at `v4.2.0` or earlier.
 
 ### Key Features
 
@@ -515,7 +510,7 @@ If your base image lives on a registry served over plain HTTP, or one that prese
 ```yaml
 jobs:
   build:
-    uses: kairos-io/kairos-factory-action/.github/workflows/reusable-factory.yaml@main
+    uses: kairos-io/kairos/.github/workflows/reusable-factory.yaml@v4.3.0
     with:
       version: "v1.0.0"
       base_image: "my-registry.internal:5000/myorg/ubuntu:24.04"
@@ -530,7 +525,7 @@ This input affects only the pulling of images while building the artifacts; ther
 Disabling TLS verification removes protection against man-in-the-middle attacks. Use it only in controlled environments, not against public registries.
 :::
 
-For complete documentation, configuration options, and advanced examples, visit the [Kairos Factory Action repository](https://github.com/kairos-io/kairos-factory-action).
+Every input is documented in the `workflow_call` block at the top of [`reusable-factory.yaml`](https://github.com/kairos-io/kairos/blob/master/.github/workflows/reusable-factory.yaml), which is the authoritative list.
 
 ## Web UI
 
