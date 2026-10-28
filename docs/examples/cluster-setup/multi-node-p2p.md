@@ -37,8 +37,8 @@ p2p:
  disable_dht: true #Enabled by default
 
  # network_token is the shared secret used by the nodes to co-ordinate with p2p.
- # Setting a network token implies auto.enable = true.
- # To disable, just set auto.enable = false
+ # Setting a network token implies auto.enabled = true.
+ # To disable, just set auto.enabled = false
  network_token: ""
 
 ```

@@ -45,8 +45,8 @@ p2p:
  disable_dht: true #Enabled by default
 
  # network_token is the shared secret used by the nodes to co-ordinate with p2p.
- # Setting a network token implies auto.enable = true.
- # To disable, just set auto.enable = false
+ # Setting a network token implies auto.enabled = true.
+ # To disable, just set auto.enabled = false
  network_token: ""
 
 ```
@@ -61,7 +61,7 @@ One important note is that this example requires the YAML format when editing th
 
 The above cloud-config configures the hostname, creates a new user `kairos`, and sets the `role` to `master`. Additionally, it disables DHT (distributed hash table) to make the VPN functional only within the local network and use *mDNS* for discovery. If you wish to make the VPN work across different networks, you can set `disable_dht` to `false` or unset it.
 
-The `network_token` field is a shared secret used by the nodes to coordinate with P2P. Setting a network token implies `auto.enable`. If you wish to disable it, simply set `auto.enable` to false. To generate a network token, see [documentation](/docs/installation/p2p#network_token).
+The `network_token` field is a shared secret used by the nodes to coordinate with P2P. Setting a network token implies `auto.enabled`. If you wish to disable it, simply set `auto.enabled` to false. To generate a network token, see [documentation](/docs/installation/p2p#network_token).
 
 Keep in mind that, this example is a minimal configuration, and you can add more options depending on your needs. The above configuration can be used as a starting point and can be customized further.
 

@@ -22,7 +22,7 @@ This example is for learning purposes. In production environments, it's recommen
 :::
 
 
-To enable automatic HA rollout, enable the `p2p.auto.ha.enable` option in your cloud-config, and set up a number of `master_nodes`. The number of `master_nodes` is the number of additional masters in addition to the initial HA role. There will always be a minimum of 1 master, which is already taken into account. For example, setting up `master_nodes` to two will result in a total of 3 master nodes in your cluster.
+To enable automatic HA rollout, enable the `p2p.auto.ha.enabled` option in your cloud-config, and set up a number of `master_nodes`. The number of `master_nodes` is the number of additional masters in addition to the initial HA role. There will always be a minimum of 1 master, which is already taken into account. For example, setting up `master_nodes` to two will result in a total of 3 master nodes in your cluster.
 
 To make this process even easier, Kairos automatically configures each node in the cluster from a unique cloud-config. This way, you don't have to manually configure each node, but provide instead a config file for all of the machines during [Installation](/docs/installation/).
 
@@ -42,15 +42,15 @@ p2p:
  disable_dht: true #Enabled by default
 
  # network_token is the shared secret used by the nodes to co-ordinate with p2p.
- # Setting a network token implies auto.enable = true.
- # To disable, just set auto.enable = false
+ # Setting a network token implies auto.enabled = true.
+ # To disable, just set auto.enabled = false
  network_token: ""
 
  # Automatic cluster deployment configuration
  auto:
    # Enables Automatic node configuration (self-coordination)
    # for role assignment
-   enable: true
+   enabled: true
    # HA enables automatic HA roles assignment.
    # A master cluster init is always required,
    # Any additional master_node is configured as part of the 
@@ -58,7 +58,7 @@ p2p:
    # If auto is disabled, HA has no effect.
    ha:
      # Enables HA control-plane
-     enable: true
+     enabled: true
      # Number of HA additional master nodes.
      # A master node is always required for creating the cluster and is implied.
      # The setting below adds 2 additional master nodes, for a total of 3.
