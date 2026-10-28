@@ -8,7 +8,7 @@ Kairos replaces the operating system on every upgrade, so your data has to live 
 
 The patterns below were tested in virtual machines. In each one the data survived an A/B upgrade and a rollback to the passive image.
 
-The rule for all of them: keep data on the `persistent` partition, on its own partition, or on its own disk. Never keep it under `/usr` or `/etc`.
+The rule for all of them: keep data on the `persistent` partition, on its own partition, or on its own disk. Never keep it on a path that is not persistent, such as most of `/usr` or `/etc`. `/usr/local` and the paths Kairos binds are persistent.
 
 ## A dedicated partition
 
@@ -25,14 +25,14 @@ install:
       fs: ext4
       label: DBDATA
 stages:
-  boot.after:
+  initramfs:
     - name: mount the database partition
       commands:
         - mkdir -p /var/lib/mydb
         - mountpoint -q /var/lib/mydb || mount LABEL=DBDATA /var/lib/mydb
 ```
 
-The `persistent` partition takes the rest of the disk. Only one partition can fill the disk, so if the extra partition must fill it, give `persistent` a fixed size. The `mountpoint -q` check makes the stage safe to run on every boot. To encrypt the partition, see [Partition encryption](/docs/advanced/partition_encryption/).
+The `persistent` partition takes the rest of the disk. Only one partition can fill the disk, so if the extra partition must fill it (`size: 0`), give `persistent` a fixed size. The `initramfs` stage runs before services start, so a database service never sees an unmounted directory. The `mountpoint -q` check makes the stage safe to run more than once. To encrypt the partition, see [Partition encryption](/docs/advanced/partition_encryption/).
 
 ## ZFS on Hadron
 
@@ -42,22 +42,22 @@ The [hadron-layers](https://github.com/kairos-io/hadron-layers) project publishe
 FROM ghcr.io/kairos-io/hadron-layers/zfs:2.4.4 AS zfs
 FROM quay.io/kairos/hadron:v0.5.3-core-amd64-generic-v4.4.0-rc2
 COPY --from=zfs / /
-RUN depmod -a "$(ls /usr/lib/modules | head -1)" && \
+RUN for k in /usr/lib/modules/*; do depmod -a "$(basename "$k")"; done && \
     systemctl enable zfs.target zfs-import.target zfs-import-cache.service \
       zfs-import-scan.service zfs-mount.service
 ```
 
 Things to know:
 
-- The layer must match the kernel of the Hadron release you build on.
-- The layer ships the unit files and a preset, but nothing applies the preset. Without the `systemctl enable` line, the pool is not imported at boot.
+- The layer must match the kernel of the Hadron release you build on. Use the layer tag and the Hadron tag that belong together; the versions above are the ones tested.
+- The layer ships the unit files and a preset, but the preset is not applied. Without the `systemctl enable` line, the pool is not imported at boot.
 - The root file system is read-only. Mount the pool under a writable path such as `/usr/local/...`, or use `mountpoint=none`.
 - Create the pool once, for example `zpool create -m /usr/local/zfsdata data /dev/vdb`. `/etc/zfs` is persistent, so the pool cache survives upgrades.
-- Other flavors do not ship a ZFS kernel module today.
+- Only Hadron was tested here.
 
 ## Kubernetes storage drivers
 
-`/var/lib/longhorn` and `/var/lib/rook` are persistent paths by default, so they need no extra mount. The images carry `iscsiadm`, `iscsid` and the `iscsi_tcp`, `dm_crypt` and `nvme_tcp` kernel modules. Load the modules and start `iscsid` at boot:
+`/var/lib/longhorn` and `/var/lib/rook` are persistent paths by default, so they need no extra mount. The Hadron k0s image used for the test carries `iscsiadm`, `iscsid` and the `iscsi_tcp`, `dm_crypt` and `nvme_tcp` kernel modules, and Kairos enables `iscsid` by default. Load the modules and make sure `iscsid` runs at boot:
 
 ```yaml
 stages:
