@@ -206,7 +206,7 @@ spec:
 
 ## Manual reset
 
-It is possible to trigger the reset manually by logging into the recovery from the boot menu and running `kairos reset` from the console.
+It is possible to trigger the reset manually by logging into the recovery from the boot menu and running `kairos-agent reset` from the console.
 
 ### Cleaning up state directories
 
