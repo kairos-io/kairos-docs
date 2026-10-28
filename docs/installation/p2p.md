@@ -36,12 +36,12 @@ p2p:
  auto:
    ha:
      # Enables HA control-plane
-     enable: true
+     enabled: true
      # number of HA master node (beside the one used for init) for the control-plane
      master_nodes: 2
  # network_token is the shared secret used by the nodes to co-ordinate with p2p.
- # Setting a network token implies auto.enable = true.
- # To disable, just set auto.enable = false
+ # Setting a network token implies auto.enabled = true.
+ # To disable, just set auto.enabled = false
  network_token: "YOUR_TOKEN_GOES_HERE"
 
 
@@ -105,7 +105,7 @@ kubevip:
   # Specify a manifest URL for KubeVIP. Empty uses default
   manifest_url: ""
   # Enables KubeVIP
-  enable: true
+  enabled: true
   # Specifies a KubeVIP Interface
   interface: "ens18"
 
@@ -123,7 +123,7 @@ p2p:
  auto:
    # Enables Automatic node configuration (self-coordination)
    # for role assignment
-   enable: true
+   enabled: true
    # HA enables automatic HA roles assignment.
    # A master cluster init is always required,
    # Any additional master_node is configured as part of the 
@@ -131,7 +131,7 @@ p2p:
    # If auto is disabled, HA has no effect.
    ha:
      # Enables HA control-plane
-     enable: true
+     enabled: true
      # Number of HA additional master nodes.
      # A master node is always required for creating the cluster and is implied.
      # The setting below adds 2 additional master nodes, for a total of 3.
@@ -156,9 +156,9 @@ In the YAML configuration example, there are several important keywords that con
 | `p2p.vpn.use` | Enables the use of the VPN for routing Kubernetes traffic of the cluster |
 | `p2p.vpn.env` | Configures the environment variables used to start for the VPN |
 | `p2p.vpn.auto` | Configures the automatic deployment of the cluster |
-| `p2p.auto.enable` | Enables automatic node configuration for role assignment |
+| `p2p.auto.enabled` | Enables automatic node configuration for role assignment |
 | `p2p.auto.ha` | Configures the high availability settings for the cluster |
-| `p2p.auto.ha.enable` | Enables the high availability settings |
+| `p2p.auto.ha.enabled` | Enables the high availability settings |
 | `p2p.auto.ha.master_nodes` | The number of additional HA master nodes expected in the cluster. |
 | `p2p.auto.ha.external_db` | The external database used for high availability |
 
@@ -216,7 +216,7 @@ kubevip:
   # Specify a manifest URL for KubeVIP. Empty uses default
   manifest_url: ""
   # Enables KubeVIP
-  enable: true
+  enabled: true
   # Specifies a KubeVIP Interface
   interface: "ens18"
 ```
@@ -227,7 +227,7 @@ kubevip:
 | `kubevip` | Block to configure KubeVIP for the cluster |
 | `kubevip.eip` | The Elastic IP used for KubeVIP. Specifying one automatically enables KubeVIP. Choose a free IP that is not in a DHCP range of your network.  |
 | `kubevip.manifest_url` | The URL for the KubeVIP manifest |
-| `kubevip.enable` | Enables KubeVIP for the cluster |
+| `kubevip.enabled` | Enables KubeVIP for the cluster |
 | `kubevip.interface` | The interface used for KubeVIP |
 
 A full example, with KubeVIP and HA:

@@ -344,7 +344,7 @@ p2p:
  auto:
    # Enables Automatic node configuration (self-coordination)
    # for role assignment
-   enable: true
+   enabled: true
    # HA enables automatic HA roles assignment.
    # A master cluster init is always required,
    # Any additional master_node is configured as part of the
@@ -352,7 +352,7 @@ p2p:
    # If auto is disabled, HA has no effect.
    ha:
      # Enables HA control-plane
-     enable: true
+     enabled: true
      # Number of HA additional master nodes.
      # A master node is always required for creating the cluster and is implied.
      # The setting below adds 2 additional master nodes, for a total of 3.
@@ -368,7 +368,7 @@ kubevip:
   # Specify a manifest URL for KubeVIP. Empty uses default
   manifest_url: ""
   # Enables KubeVIP
-  enable: true
+  enabled: true
   # Specifies a KubeVIP Interface
   interface: "ens18"
 
@@ -812,7 +812,7 @@ stages:
 <TabItem value="kubevip" label="kubevip">
 | Key                     | Description      |
 |-------------------------|--------------------------|
-|`kubevip.enable`         | Enables kubevip. Accepted: `true`, `false`.  |
+|`kubevip.enabled`         | Enables kubevip. Accepted: `true`, `false`.  |
 |`kubevip.eip`            | VIP address to use |
 |`kubevip.manifest_url`   | Download and use the manifest from that url. You can see the default used otherwise [here](https://github.com/kairos-io/kairos/blob/master/provider/internal/assets/static/kube_vip_rbac.yaml)|
 |`kubevip.interface`      | Interface to use for the Kubevip EIP to attach to |
