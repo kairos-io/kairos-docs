@@ -4,7 +4,7 @@ sidebar_label: "Bundles"
 description: This section describe examples on how to use a Kairos bundle to deploy MetalLB on top of K3s
 ---
 
-Welcome to the guide on setting up MetalLB on a Kairos cluster with K3s! This tutorial will walk you through the steps of using a Kairos [bundle](/docs/advanced/bundles) to automatically configure MetalLB on your local network with an IP range of `192.168.1.10-192.168.1.20`. Check out the [MetalLB](/docs/examples/metallb) example to configure it without a [bundle](/docs/advanced/bundles).
+Welcome to the guide on setting up MetalLB on a Kairos cluster with K3s! This tutorial will walk you through the steps of using a Kairos [bundle](/docs/advanced/bundles) to automatically configure MetalLB on your local network with an IP range of `192.168.1.10-192.168.1.20`. Check out the [MetalLB](/docs/integrations/metallb) example to configure it without a [bundle](/docs/advanced/bundles).
 
 For those unfamiliar with [MetalLB](https://metallb.universe.tf/), it is an open-source load balancer implementation for bare metal Kubernetes clusters that utilizes standard routing protocols. When used with K3s on Kairos, it provides load balancing capabilities and helps manage IP addresses within a cluster. 
 
