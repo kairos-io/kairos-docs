@@ -32,8 +32,8 @@ Where:
 - `<variant>`: `core` or `standard`
 - `<arch>`: `amd64` or `arm64`
 - `<device>`: either the specific device name, e.g. `rpi4` or `generic` for generic images
-- `<version>`: the version of Kairos e.g. `v1.0.0` for Core, and can also include the K3S version e.g. `v1.0.0-k3s1` for Standard
-- `<extension>`: `iso`, `squashfs`, `ipxe`
+- `<version>`: the version of Kairos e.g. `v1.0.0` for Core, and can also include the K3S or K0s version e.g. `v1.0.0-k3sv1.28.2+k3s1` or `v1.0.0-k0sv1.28.2+k0s.0` for Standard
+- `<extension>`: `iso`
 
 ### K3S Version Policy
 
@@ -51,49 +51,9 @@ Keep in mind that:
 - <code>kairos-ubuntu-23.04-core-amd64-generic-<KairosVersion /></code>
 - <code>kairos-ubuntu-23.04-standard-arm64-rpi4-<KairosVersion />-k3sv1.28.2+k3s1.iso</code>
 
-## Kernel and RAM Disk Images
+## Checksums and signatures
 
-Kernel and RAM Disk images are stored in GitHub Releases and follow a similar convention to images, but they have no extension:
-
-```
-kairos-<flavor>-<flavor_release>-<variant>-<arch>-<device>-<version>-<type>
-```
-
-Where:
-
-- `<type>`: `kernel` or `initrd`
-
-### Examples
-
-- <code>kairos-ubuntu-23.04-core-amd64-generic-<KairosVersion />-kernel</code>
-- <code>kairos-ubuntu-23.04-standard-arm64-rpi4-<KairosVersion />-k3sv1.28.2+k3s1-initrd</code>
-
-## iPXE Images
-
-For iPXE we deliver three types of artifacts. The first one is the iPXE script, with the ipxe extension, and the other two are iPXE bootable images, with the iso and img extensions.
-
-### Examples
-
-- <code>kairos-ubuntu-23.04-core-amd64-generic-<KairosVersion />.ipxe</code>
-- <code>kairos-ubuntu-23.04-core-amd64-generic-<KairosVersion />-ipxe.iso</code>
-- <code>kairos-ubuntu-23.04-core-amd64-generic-<KairosVersion />-ipxe-usb.img</code>
-
-## Reports
-
-Reports are also stored in GitHub Releases and follow a similar convention to images, but they include the name of the report:
-
-```
-kairos-<flavor>-<flavor_release>-<variant>-<arch>-<device>-<version>-<report>.<extension>
-```
-
-Where:
-
-- `<report>`: `trivy`, `sbom`, `grype`, etc
-
-### Examples
-
-- <code>kairos-alpine-3.18-core-arm64-generic-<KairosVersion />-trivy.sarif</code>
-- <code>kairos-alpine-3.18-core-arm64-generic-<KairosVersion />-grype.json</code>
+Each ISO comes with a `<image name>.iso.sha256` checksum and a Sigstore bundle for that checksum, `<image name>.iso.sha256.sigstore.json`. The binary archives are listed in `checksums.txt`, which is signed the same way (`checksums.txt.sigstore.json`).
 
 ## Container Images
 
@@ -130,19 +90,20 @@ quay.io/kairos/<flavor>:<flavor_release>-<variant>-<arch>-<device>-<version>-img
 ## Binaries
 
 ```
-<name>-<version>-<os>-<arch>.<extension>
+<name>-<version>-<os>-<arch>[-fips].<extension>
 ```
 
 Where:
 
-- `<name>`: the name of the binary e.g. `kairosctl`, `kairos-agent`, `provider-kairos`, etc
+- `<name>`: the name of the binary e.g. `kairos`, `kairos-init`, `kairos-installer`, `provider-kairos`, `kcrypt-challenger`
 - `<version>`: the version of the binary e.g. `v1.0.0`
-- `<os>`: `Linux`, `Windows`, `Darwin`, etc
-- `<arch>`: `amd64`, `arm64`, `386`, etc
-- `<extension>`: `tar.gz`, `zip`, etc
+- `<os>`: `linux`
+- `<arch>`: `amd64`, `arm64` or `riscv64`
+- `-fips`: present on the FIPS builds, which exist for `amd64` and `arm64` only
+- `<extension>`: `tar.gz`
 
 ### Examples
 
-- kairosctl-v2.3.0-Linux-386.tar.gz
-- provider-kairos-2.3.0-Windows-amd64.tar.gz
-- kairos-agent-v2.1.10-Linux-arm64.tar.gz
+- kairos-v4.4.0-linux-amd64.tar.gz
+- provider-kairos-v4.4.0-linux-arm64.tar.gz
+- kairos-installer-v4.4.0-linux-amd64-fips.tar.gz
