@@ -93,6 +93,8 @@ In case you're using a standard image, with the Kairos provider, then these othe
 | _provider-kairos.bootstrap.before.<role>_ | The provider fires this stage before starting Kubernetes bootstrap. |
 | _provider-kairos.bootstrap.after.<role>_  | The provider fires this stage after Kubernetes bootstrap completes. |
 
+`<role>` is the role the node was given in the cluster: `master`, `master/clusterinit` (the first control plane node), `master/ha` (additional control plane nodes in an HA setup) or `worker`. For example, `provider-kairos.bootstrap.after.worker` runs only on workers.
+
 These are lifecycle hooks. They are tied to provider bootstrap flow and are not a generic replacement for every post-boot or post-upgrade action.
 
 For broader provider architecture context, see [Providers](/docs/architecture/providers/).
