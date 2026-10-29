@@ -2,10 +2,12 @@ import {
   buildGoogleImageName,
   buildKairosImageName,
   buildKairosOciImageName,
+  buildKairosOciImageTag,
 } from './kairos-image-name.ts';
 
 const IMAGE_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*Image\s+([^>]*?)\s*>\}\}/g;
 const OCI_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*OCI\s+([^>]*?)\s*>\}\}/g;
+const OCI_TAG_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*OCITag\s+([^>]*?)\s*>\}\}/g;
 const FLAVOR_CODE_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*FlavorCode\s*>\}\}/g;
 const FLAVOR_RELEASE_CODE_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*FlavorReleaseCode\s*>\}\}/g;
 const REGISTRY_URL_SHORTCODE_GLOBAL_PATTERN = /\{\{<\s*RegistryURL\s*>\}\}/g;
@@ -87,6 +89,21 @@ export function renderTemplate(input: RenderTemplateInput): string {
     .replace(FLAVOR_AT_PATTERN, flavor)
     .replace(FLAVOR_RELEASE_CODE_SHORTCODE_GLOBAL_PATTERN, flavorRelease)
     .replace(FLAVOR_CODE_SHORTCODE_GLOBAL_PATTERN, flavor)
+    .replace(OCI_TAG_SHORTCODE_GLOBAL_PATTERN, (_full, rawAttrs) => {
+      const attrs = parseAttributes(rawAttrs);
+      if (!attrs.variant) {
+        return _full;
+      }
+      return buildKairosOciImageTag({
+        flavorRelease,
+        variant: attrs.variant,
+        arch: attrs.arch ?? 'amd64',
+        model: attrs.model ?? 'generic',
+        suffix: attrs.suffix,
+        kairosVersion: attrs.kairosVersion ?? defaultKairosVersion,
+        k3sVersion: attrs.k3sVersion ?? defaultK3sVersion,
+      });
+    })
     .replace(OCI_SHORTCODE_GLOBAL_PATTERN, (_full, rawAttrs) => {
       const attrs = parseAttributes(rawAttrs);
       if (!attrs.variant) {
