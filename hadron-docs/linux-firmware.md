@@ -41,7 +41,10 @@ target).
 For every target you get:
 
 - An OCI image: `ghcr.io/kairos-io/hadron-firmware/linux-firmware-<target>:<version>`.
-  Inside the image the files live under `/usr/local/lib/firmware/...`.
+  Inside the image the files live under `/usr/lib/firmware/...`, the directory where the kernel
+  looks for firmware. Releases before
+  [hadron-firmware#31](https://github.com/kairos-io/hadron-firmware/pull/31) used
+  `/usr/local/lib/firmware/...`, which the kernel does not search.
 - A sysext file attached to the release: `linux-firmware-<target>_<version>.sysext.raw`.
 
 For example, the `amdgpu` firmware for release `20260622` is published as:
@@ -61,7 +64,7 @@ This is the same pattern used by the Hadron
 build a derived image `FROM` your Hadron base and `COPY` the firmware layer in.
 
 Because the firmware images are `FROM scratch` images that already place files at
-`/usr/local/lib/firmware/...`, you just copy their whole root (`/`) into your image root (`/`):
+`/usr/lib/firmware/...`, you copy their whole root (`/`) into your image root (`/`):
 
 ```dockerfile
 # Start from the Hadron image you already use.
@@ -106,6 +109,58 @@ Only the resulting `my-registry.example.com/my-kairos:latest` image (or the medi
 with AuroraBoot) can be used to install or upgrade a node. Refer to the
 [Kairos Factory documentation](/docs/reference/kairos-factory/) for the full set of `kairos-init`
 flags and AuroraBoot invocations.
+
+### Firmware that the initramfs needs
+
+Some drivers load from the initramfs, before the root filesystem is mounted. On Hadron this
+includes the Intel, Broadcom and Mellanox NIC drivers. A driver that starts without its firmware
+can stay in a reduced mode. For example, the Intel E810 (`ice`) driver starts in "safe mode"
+without its DDP package.
+
+`kairos-init` builds the initramfs from the files in the image. Thus, copy the firmware into the
+Hadron base **before** `kairos-init` runs, as in the example above. If you add the firmware on top
+of an image that `kairos-init` already processed, the firmware is in the root filesystem but not in
+the initramfs.
+
+To see which firmware files the initramfs contains, run `lsinitrd` on the built image:
+
+```bash
+docker run --rm --entrypoint sh my-registry.example.com/my-kairos:latest \
+  -c 'lsinitrd /boot/initrd | grep firmware/'
+```
+
+This example adds the firmware for common server hardware: Intel NICs, QAT and GPUs, Broadcom
+and Realtek NICs, and AMD microcode. It uses one named stage per firmware image, so that one
+`ARG` sets the firmware version:
+
+```dockerfile
+ARG HADRON_TAG=main
+ARG FIRMWARE_VERSION=20260916
+FROM ghcr.io/kairos-io/hadron-firmware/linux-firmware-intel-ice:${FIRMWARE_VERSION} AS fw-intel-ice
+FROM ghcr.io/kairos-io/hadron-firmware/linux-firmware-intel-generic:${FIRMWARE_VERSION} AS fw-intel-generic
+FROM ghcr.io/kairos-io/hadron-firmware/linux-firmware-intel-qat:${FIRMWARE_VERSION} AS fw-intel-qat
+FROM ghcr.io/kairos-io/hadron-firmware/linux-firmware-i915:${FIRMWARE_VERSION} AS fw-i915
+FROM ghcr.io/kairos-io/hadron-firmware/linux-firmware-xe:${FIRMWARE_VERSION} AS fw-xe
+FROM ghcr.io/kairos-io/hadron-firmware/linux-firmware-bnx2:${FIRMWARE_VERSION} AS fw-bnx2
+FROM ghcr.io/kairos-io/hadron-firmware/linux-firmware-bnx2x:${FIRMWARE_VERSION} AS fw-bnx2x
+FROM ghcr.io/kairos-io/hadron-firmware/linux-firmware-tigon:${FIRMWARE_VERSION} AS fw-tigon
+FROM ghcr.io/kairos-io/hadron-firmware/linux-firmware-rtl_nic:${FIRMWARE_VERSION} AS fw-rtl_nic
+FROM ghcr.io/kairos-io/hadron-firmware/linux-firmware-amd-ucode:${FIRMWARE_VERSION} AS fw-amd-ucode
+
+FROM ghcr.io/kairos-io/hadron:${HADRON_TAG}
+COPY --from=fw-intel-ice / /
+COPY --from=fw-intel-generic / /
+COPY --from=fw-intel-qat / /
+COPY --from=fw-i915 / /
+COPY --from=fw-xe / /
+COPY --from=fw-bnx2 / /
+COPY --from=fw-bnx2x / /
+COPY --from=fw-tigon / /
+COPY --from=fw-rtl_nic / /
+COPY --from=fw-amd-ucode / /
+```
+
+Use the result as the base image for `kairos-init`. These firmware targets add about 30 MB.
 
 Tips:
 
