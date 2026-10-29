@@ -27,6 +27,22 @@ jobs:
       - name: Validate release artifacts
         run: npm run validate:release-artifacts
 
+  validate-cli-flags:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Validate documented kairos-init flags
+        run: npm run validate:cli-flags
+
   test-scripts:
     runs-on: ubuntu-latest
     steps:
