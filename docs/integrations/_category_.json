@@ -2,10 +2,8 @@
   "label": "Integrations",
   "position": 9,
   "link": {
-    "type": "generated-index",
-    "slug": "/integrations",
-    "title": "Integrations",
-    "description": "Notes on running third-party projects on Kairos. Each page links to the upstream guide and covers only what changes on Kairos."
+    "type": "doc",
+    "id": "integrations/index"
   },
   "collapsible": true,
   "collapsed": true

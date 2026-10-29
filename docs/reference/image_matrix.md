@@ -128,4 +128,4 @@ cosign verify-attestation \
         --certificate-oidc-issuer "https://token.actions.githubusercontent.com"
 ```
 
-To see how to verify image attestation during upgrades with `kyverno`, see the [documentation page](https://kairos.io/docs/upgrade/kubernetes/#verify-images-attestation-during-upgrades).
+To see how to verify image attestation during upgrades with `kyverno`, see the [documentation page](https://kairos.io/docs/integrations/kyverno/).
