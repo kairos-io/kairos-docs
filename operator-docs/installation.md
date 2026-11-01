@@ -39,13 +39,14 @@ helm install kairos-operator \
 | `buildahImage` | *(built-in)* | Override `buildah` image — useful for air-gapped environments |
 | `sentinelImage` | *(built-in)* | Image for the reboot sentinel container (NodeOp `rebootOnSuccess` flow). Only needs `sh` + `tee`; defaults to `NodeOp.spec.image`, then `busybox:latest`. Override for air-gapped environments. |
 | `nodeops.defaultImage` | `busybox:latest` | Fallback image for NodeOp Jobs |
+| `admissionPolicy.enabled` | `true` | Install the VAP policies. Requires Kubernetes 1.30 or newer, disable it on older clusters. |
 | `tolerations` | control-plane + etcd | Scheduling tolerations for the operator Deployment |
 
 ```bash
 helm install kairos-operator kairos-operator/kairos-operator \
   --namespace kairos-operator --create-namespace \
   --set leaderElect=false \
-  --set toolImage=my-registry.example.com/auroraboot:v0.24.0 \
+  --set toolImage=my-registry.example.com/auroraboot:v0.29.0 \
   --set sentinelImage=my-registry.example.com/busybox:latest
 ```
 
