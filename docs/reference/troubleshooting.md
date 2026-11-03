@@ -79,6 +79,31 @@ seconds so boot assessment records a failed boot. On non-systemd systems,
 immucore prints the message and the boot fails without the timed reboot. Check
 `/run/immucore/` for the full immucore logs on the next boot.
 
+## Mount failures
+
+A custom mount (`rd.cos.mount=`, `rd.immucore.mount=`, `VOLUMES`) or a persistent state bind that does not mount stops the boot. Immucore prints the `IMMUCORE BOOT FAILED` banner with the step that broke, the kernel cmdline and the log directory, and persists the same text to `/run/immucore/boot_failure.log`.
+
+This is deliberate. A node that comes up with some of its persistent paths bound and some of them not writes the unbound ones to the ephemeral overlay and loses them on the next reboot, and before Kairos v4.3 nothing reported it.
+
+Two knobs change what happens:
+
+- `rd.immucore.ignoremountfailure` in the kernel cmdline boots anyway, which is the older behaviour. The paths that did not mount are ephemeral for that boot.
+- The `mount-failure` cloud config stage runs before the decision either way, so a distribution or an operator can define their own recovery: remount by hand, call home, write a sentinel, or take the console. It gets `IMMUCORE_MOUNT_FAILURE_STEP` (`custom-mount` or `mount-bind`) and `IMMUCORE_MOUNT_FAILURE` (the error) in its environment.
+
+A hook that repairs the mount still has to be paired with `rd.immucore.ignoremountfailure`, because the stage runs before the decision and does not change it.
+
+```yaml
+name: "Recover from a mount failure"
+stages:
+   mount-failure:
+     - name: "Report what broke"
+       commands:
+       - |
+          echo "step=${IMMUCORE_MOUNT_FAILURE_STEP} error=${IMMUCORE_MOUNT_FAILURE}" > /run/immucore/my-recovery.log
+```
+
+Under Trusted Boot the cmdline is measured, so `rd.immucore.ignoremountfailure` has to be set when the UKI is built and signed. The `mount-failure` stage needs no cmdline change and works there as it does on a GRUB boot.
+
 ## Disable immutability
 
 It is possible to disable immutability by adding `rd.cos.debugrw` to the kernel boot commands.

@@ -72,7 +72,7 @@ export function useFlavor(): FlavorContextValue {
 
     const storedKey = parseStoredSelection(window.localStorage.getItem(storageKey));
     const nextSelection =
-      (storedKey && flavorOptions.find((option) => optionKey(option) === storedKey)) ?? flavorOptions[0];
+      (storedKey ? flavorOptions.find((option) => optionKey(option) === storedKey) : undefined) ?? flavorOptions[0];
 
     if (optionKey(context.selection) !== optionKey(nextSelection)) {
       context.setSelection(nextSelection);

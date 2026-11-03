@@ -70,6 +70,19 @@ kcrypt:
 | `kcrypt.c_index` | Custom Index for the RSA Key pair |
 | `kcrypt.tpm_device` | Custom TPM device |
 
+## What is not encrypted
+
+Outside Trusted Boot, every scenario on this page, whether the partitions are encrypted during installation or on first boot, covers only the partitions listed in `install.encrypted_partitions`, normally `COS_PERSISTENT`. The OEM partition, mounted at `/oem`, stays in plain text, and it is where Kairos keeps a node's configuration:
+
+- the cloud config given at install time, which the installer writes to `/oem/90_custom.yaml`;
+- the user data pulled from a datasource (a NoCloud ISO, VMware guestinfo, or a cloud provider's metadata service), which Kairos saves to `/oem/95_userdata` on the first boot that finds it, and keeps there.
+
+:::warning Secrets in the OEM partition are not protected
+If either file carries secrets, such as a Kubernetes join token or registry credentials, encrypting `COS_PERSISTENT` does not protect them: they are readable by anyone with the disk. Prefer tokens that expire once the node has joined, for example one created with `k3s token create --ttl 1h`. Cloud config files you place under `/usr/local/cloud-config` live on `COS_PERSISTENT` and are protected when it is encrypted (see [Notes](#notes)).
+:::
+
+Listing `COS_OEM` in `install.encrypted_partitions` encrypts it during installation, but outside Trusted Boot that is only partly supported today: not everything the boot assessment and next-boot selection write to OEM is handled when OEM is encrypted, so do not rely on it in production. Trusted Boot images encrypt both OEM and persistent by default, with the passphrase in the local TPM, and do not have this limit. An encrypted OEM together with a remote KMS on Trusted Boot has not been verified yet.
+
 ## Requirements
 
 The host machine must have a TPM chip version 2.0 or higher to use encryption with Kairos. A list of TPM chips/HW can be found [in the list of certified products](https://trustedcomputinggroup.org/membership/certification/tpm-certified-products/), however, any modern machine has a TPM 2.0 chip.
@@ -338,7 +351,8 @@ There is no plaintext fallback. If the configuration says a partition must be en
 
 Notes:
 
-- Partitions the running boot depends on cannot be encrypted this way: the OEM partition (the policy itself is read from it), the state and recovery partitions (they hold the system that is booting) and the EFI partition. Listing one of them halts the boot with a message saying so. Encrypt OEM at install time if you need it encrypted.
+- Partitions the running boot depends on cannot be encrypted this way: the OEM partition (the policy itself is read from it), the state and recovery partitions (they hold the system that is booting) and the EFI partition. Listing one of them halts the boot with a message saying so.
+- As in every other scenario, the OEM partition stays in plain text, including the user data each clone receives on its first boot. See [What is not encrypted](#what-is-not-encrypted).
 - Trusted Boot (UKI) images always encrypt during installation, so this flow does not apply to them.
 
 ## Verifying the KMS
