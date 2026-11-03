@@ -250,8 +250,8 @@ Manage extensions using `kairos-agent sysext|confext` commands.
 Use `sysext` for system extensions and `confext` for config extensions. The commands are the same for both, just replace `sysext` with `confext` in the examples below.
 
 
-> 📝 **Tip:** For enable, disable and remove commands, the extension name supports **regex matching**. You don’t need to type the full filename.
-> For example, to match `k3sv1.32.1.k3s0.sysext.raw`, you can simply use `k3s`.
+> 📝 **Tip:** For enable, disable and remove commands, give the full file name or the part of it before any dot. Regular expressions and other partial names are not matched.
+> For example, `k3sv1.32.1.k3s0.sysext.raw` is matched by `k3sv1.32.1.k3s0.sysext.raw`, `k3sv1.32.1.k3s0`, `k3sv1.32.1` or `k3sv1`, but not by `k3s`.
 
 
 ## Subcommands
@@ -359,13 +359,13 @@ kairos-agent sysext list --recovery
 kairos-agent sysext install https://example.org/extensions/k3sv1.32.1.raw
 
 # Enable for the active profile and activate it live
-kairos-agent sysext enable --active --now k3s
+kairos-agent sysext enable --active --now k3sv1.32.1
 
 # See what’s currently enabled for active
 kairos-agent sysext list --active
 
 # Fully remove it and clean up live state
-kairos-agent sysext remove --now k3s
+kairos-agent sysext remove --now k3sv1.32.1
 ```
 
 ---
