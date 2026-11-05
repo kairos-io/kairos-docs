@@ -8,18 +8,7 @@ description: Deploy and remove the Kairos operator on your Kubernetes cluster
 
 ## Helm (recommended)
 
-The operator publishes a Helm chart on each release via GitHub Pages and the GHCR OCI registry.
-
-### From the Helm repository
-
-```bash
-helm repo add kairos-operator https://kairos-io.github.io/kairos-operator/charts
-helm repo update
-helm install kairos-operator kairos-operator/kairos-operator \
-  --namespace kairos-operator --create-namespace
-```
-
-### From the OCI registry
+The operator publishes a Helm chart on each release to the GHCR OCI registry.
 
 ```bash
 helm install kairos-operator \
@@ -42,7 +31,9 @@ helm install kairos-operator \
 | `tolerations` | control-plane + etcd | Scheduling tolerations for the operator Deployment |
 
 ```bash
-helm install kairos-operator kairos-operator/kairos-operator \
+helm install kairos-operator \
+  oci://ghcr.io/kairos-io/helm-charts/kairos-operator \
+  --version {{< OperatorChartVersion >}} \
   --namespace kairos-operator --create-namespace \
   --set leaderElect=false \
   --set toolImage=my-registry.example.com/auroraboot:v0.24.0 \
@@ -52,8 +43,9 @@ helm install kairos-operator kairos-operator/kairos-operator \
 ### Upgrading
 
 ```bash
-helm repo update
-helm upgrade kairos-operator kairos-operator/kairos-operator \
+helm upgrade kairos-operator \
+  oci://ghcr.io/kairos-io/helm-charts/kairos-operator \
+  --version {{< OperatorChartVersion >}} \
   --namespace kairos-operator --reuse-values
 ```
 
