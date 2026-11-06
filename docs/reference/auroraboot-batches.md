@@ -4,7 +4,7 @@ sidebar_label: "AuroraBoot batches"
 description: How AuroraBoot runs a command on many nodes in rolling batches.
 ---
 
-When you send a command from AuroraBoot to a group, to the nodes that match a label, or to several nodes picked on the Nodes page, AuroraBoot runs it as a batch. It starts the command on a few nodes at a time, waits for each node to finish before starting the next one, and stops at the first failure. Each batch keeps a record of what happened on every node, so you can see later why it stopped.
+When you send a command from AuroraBoot to a group, to the nodes that match a label, or to several nodes picked on the Nodes page, AuroraBoot runs it as a batch. By default a batch sends the command to every online node at once, so stopping at the first failure can only cancel the nodes that have not received it yet. To roll a command out gradually, set the number of nodes at a time. AuroraBoot then starts that many nodes, starts the next one each time a node finishes, and by default starts no more after the first failure. With one node at a time, a bad artifact reaches only the first node it fails on. Each batch keeps a record of what happened on every node, so you can see later why it stopped.
 
 This page describes batches in AuroraBoot releases after v0.29.0. It assumes AuroraBoot is running as a server (`auroraboot web`, or the Docker Compose setup from the AuroraBoot repository) and that your nodes are registered with it.
 
@@ -39,7 +39,7 @@ AuroraBoot does not wait for reboots it did not start. If an `exec` script reboo
 
 AuroraBoot does not wait for a node that is offline when the batch reaches it. It starts the next online node instead and tries the offline one again each time a slot frees up. When only offline nodes are left to start and no other node is still running, they are marked `skipped`. A skipped node is not a failure and does not stop the batch.
 
-A node that received its command but then goes offline, or sends no heartbeat for two minutes, is marked `timed_out` once the batch timeout has passed since it started. A node that keeps sending heartbeats while it runs a long `exec` keeps its place until it reports or until you stop the batch.
+A node that received its command but then goes offline, or sends no heartbeat for two minutes, is marked `timed_out` once the batch timeout has passed since it started. A node that keeps sending heartbeats while it runs a long `exec` keeps its place until it reports. Stopping the batch does not release it, because the node already has its command.
 
 ## Node states
 
@@ -58,7 +58,9 @@ Each node in a batch is in one of these states:
 
 The last five are final. A final state does not change, even if the node does something later. For example, a node that timed out and comes back an hour later stays `timed_out` in the batch. When that node is the one that stopped the batch, the banner on the batch page notes when it came back.
 
-A batch is `running` until every node is in a final state. It then ends as `completed` when no node failed, as `failed` when nodes failed with stop on failure turned off, or as `stopped` when a failure or a person stopped it.
+A batch that nobody stops stays `running` until every node is in a final state. It then ends as `completed` when no node failed, or as `failed` when nodes failed with stop on failure turned off.
+
+A batch becomes `stopped` at the moment a failure or a person stops it, even while nodes that already had their command are still `running` or `rebooting`. Those nodes settle later and the phase stays `stopped`. The batch's finish time (`finishedAt` in the API) is set only when every node is in a final state, so check that field, not the phase, to know whether all work on the nodes is over.
 
 ## Following, stopping and repeating a batch
 
@@ -68,7 +70,7 @@ The batch page shows the command and its arguments, the settings, the number of 
 
 **Stop batch** stops a running batch. It works like a stop on failure: nodes that have not received their command are canceled, and nodes already running it finish.
 
-A stopped batch cannot be resumed. When a batch finishes with nodes that are not `done`, the batch page offers **Start a new batch for the N remaining nodes**. This opens the command dialog with the same command, arguments and settings, and lets you leave out nodes, such as the one that failed.
+A stopped batch cannot be resumed. When a batch is no longer running and has nodes that ended `failed`, `timed_out`, `skipped` or `canceled`, the batch page offers **Start a new batch for the N remaining nodes**. This opens the command dialog with the same command, arguments and settings, and lets you leave out nodes, such as the one that failed.
 
 A node can take part in only one batch at a time. While a node is waiting, running or rebooting in a batch, AuroraBoot rejects a new batch that includes it, and it rejects an `upgrade`, `reset` or `reboot` sent to that node on its own. This holds for a stopped batch too, until the nodes that were already running finish.
 
