@@ -91,6 +91,37 @@ curl -sSL https://auroraboot.example.com/api/v1/install-agent \
 
 `AURORABOOT_GROUP` is optional and puts the node straight into a group.
 
+### Artifact download retries
+
+When a node upgrades to an artifact built by AuroraBoot
+(`source: artifact:<id>`), the agent downloads the image from the server and
+retries failures that may pass on a later attempt. Two keys in the `phonehome`
+section of the node cloud-config control this:
+
+| Key | Default | Meaning |
+|---|---|---|
+| `artifact_download_retries` | `3` | Attempts after the first one. `0` or a negative value uses the default, so retries cannot be turned off. |
+| `artifact_download_retry_interval` | `5s` | Wait before the first retry. It doubles after each retry, up to `1m`. A larger value is lowered to `1m`. It needs a unit: `10s`, not `10`. |
+
+```yaml
+#cloud-config
+phonehome:
+  artifact_download_retries: 6
+  artifact_download_retry_interval: 10s
+```
+
+- The agent retries when it cannot reach the server, on a `5xx` response, and
+  when the connection breaks during the download. A `4xx` response, such as
+  `404` for a deleted artifact or `401` for a rejected node key, fails at once.
+- With the defaults the node makes 4 attempts and waits 5, 10 and 20 seconds,
+  about 35 seconds in total.
+- With the example above it waits 10, 20, 40, 60, 60 and 60 seconds, about four
+  minutes. That is a reasonable setting when AuroraBoot can restart during a
+  rollout.
+- The phone-home service reads these keys when it starts. On a running node, a
+  change under `/oem` takes effect after
+  `systemctl restart kairos-agent-phonehome` or a reboot.
+
 ### Rate limits
 
 The endpoints a node drives, which are registration, heartbeat and command
@@ -165,7 +196,7 @@ Send a command to one node, to a group, or to a selection:
 curl -X POST https://auroraboot.example.com/api/v1/nodes/<nodeID>/commands \
   -H "Authorization: Bearer $ADMIN_PASSWORD" \
   -H "Content-Type: application/json" \
-  -d '{"command":"upgrade","args":{"version":"v3.5.0"}}'
+  -d '{"command":"upgrade","args":{"source":"oci:quay.io/kairos/<image>:<tag>"}}'
 
 # a whole group
 curl -X POST https://auroraboot.example.com/api/v1/groups/<groupID>/commands \
@@ -179,6 +210,15 @@ curl -X POST https://auroraboot.example.com/api/v1/nodes/commands \
   -H "Content-Type: application/json" \
   -d '{"selector":{"labels":{"role":"worker"}},"command":"reboot"}'
 ```
+
+`upgrade` requires a `source` argument. Use `oci:<image>:<tag>` for a container
+image, or `artifact:<artifactID>` for an artifact built by this server.
+
+The group and selection endpoints start a **rolling batch** rather than sending
+the command to every node at once. They accept `concurrency`, `stopOnFailure`
+(on by default) and `rebootTimeoutSeconds` next to the command, return the batch
+record instead of a list of commands, and answer `409` when a selected node is
+already in a running batch.
 
 ## Security
 
