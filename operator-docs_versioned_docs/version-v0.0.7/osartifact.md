@@ -250,7 +250,7 @@ metadata:
 spec:
   imageName: "{{< OCI variant="core" >}}"
   azureImage: true
-  ...
+  # ...
 ```
 
 Will generate a compressed disk `hello-kairos-azure.vhd` ready to be used in Azure.
@@ -288,7 +288,7 @@ metadata:
 spec:
   imageName: "{{< OCI variant="core" >}}"
   gceImage: true
-  ...
+  # ...
 ```
 
 Will generate a compressed disk `hello-kairos.gce.raw.tar.gz` ready to be used in GCE.
