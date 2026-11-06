@@ -1,12 +1,12 @@
 ---
 title: "AuroraBoot batches"
 sidebar_label: "AuroraBoot batches"
-description: How AuroraBoot runs a command on many nodes in rolling batches, and how nodes retry artifact downloads.
+description: How AuroraBoot runs a command on many nodes in rolling batches.
 ---
 
 When you send a command from AuroraBoot to a group, to the nodes that match a label, or to several nodes picked on the Nodes page, AuroraBoot runs it as a batch. It starts the command on a few nodes at a time, waits for each node to finish before starting the next one, and stops at the first failure. Each batch keeps a record of what happened on every node, so you can see later why it stopped.
 
-This page describes batches in AuroraBoot releases after v0.29.0, and the artifact download retries of the agent on the nodes. It assumes AuroraBoot is running as a server (`auroraboot web`, or the Docker Compose setup from the AuroraBoot repository) and that your nodes are registered with it.
+This page describes batches in AuroraBoot releases after v0.29.0. It assumes AuroraBoot is running as a server (`auroraboot web`, or the Docker Compose setup from the AuroraBoot repository) and that your nodes are registered with it.
 
 ## Rollout settings
 
@@ -122,38 +122,22 @@ The Go client in `github.com/kairos-io/AuroraBoot/pkg/client` has the same calls
 - `GET /api/v1/commands/batches/{batchID}` is gone. Use `GET /api/v1/batches/{id}`.
 - Batches created before the upgrade are not shown.
 
-## Artifact download retries on the node
+## Recommended settings
 
-When a node upgrades to an artifact built by AuroraBoot (an upgrade source of `artifact:<id>`), the agent on the node downloads the image from AuroraBoot. If the download fails for a reason that may pass, the agent tries again before it reports a failure:
+### Artifact downloads in a batch
 
-- It retries when it cannot reach AuroraBoot, when AuroraBoot answers with a `5xx` status, and when the connection breaks during the download.
-- It does not retry a `4xx` status, such as `404` for an artifact that was deleted or `401` for a rejected node key. Those fail at once.
-- The wait between attempts starts at the configured interval and doubles after each attempt, up to one minute.
+When a node upgrades to an artifact built by AuroraBoot, the agent on the node downloads the image from AuroraBoot. If AuroraBoot cannot be reached or answers with a server error, the agent retries a few times before it reports a failure. With the defaults it gives up after about 35 seconds. A download that still fails fails the command, and with stop on failure that stops the batch.
 
-With the defaults, the agent makes 4 attempts and waits 5, 10 and 20 seconds between them, so it gives up after about 35 seconds of waiting.
-
-Set the retries in the `phonehome` section of the node's cloud-config:
+If AuroraBoot can restart while a batch runs, let the nodes wait longer than a restart. Set the retries in the `phonehome` section of the node's cloud-config, for example in the cloud-config of the artifact:
 
 ```yaml
 #cloud-config
 phonehome:
-  # Other phonehome settings, such as url and registration_token, stay as they are.
   artifact_download_retries: 6
   artifact_download_retry_interval: 10s
 ```
 
-| Key | Default | Meaning |
-|---|---|---|
-| `artifact_download_retries` | `3` | Attempts after the first one. `0` or a negative value uses the default, so retries cannot be turned off. |
-| `artifact_download_retry_interval` | `5s` | Wait before the first retry. It doubles after each retry, up to `1m`. A larger value is lowered to `1m`. Write it with a unit, such as `10s` or `1m`. |
-
-The example above waits 10, 20, 40, 60, 60 and 60 seconds, about four minutes in total.
-
-You can put these keys in the cloud-config of an artifact when you build it in AuroraBoot, or in a file under `/oem` on a running node. The phone-home service reads them when it starts, so on a running node restart it with `systemctl restart kairos-agent-phonehome` or reboot the node.
-
-A download that fails after its last attempt fails the command. In a batch with stop on failure, that stops the batch.
-
-## Recommended settings
+The wait doubles after each retry, up to one minute, so this example waits about four minutes in total.
 
 ### Local Docker Compose
 
@@ -169,4 +153,4 @@ In a local setup, one machine runs AuroraBoot and serves the image to every node
 - Upgrade one node at a time with a new artifact, so a bad image stops at the first node. After it has worked on a few nodes, use larger batches for the rest of the fleet.
 - Keep stop on failure on for `upgrade`, `reset` and `reboot`. Turn it off only for commands where some failures are expected and should not hold back the rest, such as an `exec` that collects diagnostics.
 - Set the come-back timeout longer than your slowest node takes to reboot and boot the new image. Bare metal machines with a long firmware start may need 20 or 30 minutes instead of 10.
-- If AuroraBoot can restart during a rollout, for example during a rolling update in Kubernetes, raise the download retries so the total wait is longer than a restart. The example in the previous section waits about four minutes.
+- If AuroraBoot can restart during a rollout, for example during a rolling update in Kubernetes, raise the download retries as shown above, so the total wait is longer than a restart.
