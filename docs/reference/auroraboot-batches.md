@@ -1,6 +1,7 @@
 ---
 title: "AuroraBoot batches"
 sidebar_label: "AuroraBoot batches"
+sidebar_position: 1.5
 description: How AuroraBoot runs a command on many nodes in rolling batches.
 ---
 
