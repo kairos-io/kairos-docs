@@ -95,6 +95,29 @@ The Kairos encryption design involves three components to manage partitions encr
 - [kcrypt-discovery-challenger](https://github.com/kairos-io/kairos/tree/master/kcrypt/discovery) runs on the machine, it is called by `kcrypt` and uses the TPM chip to retrieve the passphrase as described below.
 - [kcrypt-challenger](https://github.com/kairos-io/kairos/tree/master/kcrypt/challenger) is the KMS (Key Management Server) component, deployed in Kubernetes, which manages secrets and partitions of the nodes.
 
+### Which method a node uses
+
+You do not select the encryption method directly. Kairos picks one of three, at install time and again at every unlock, from the configuration and from the boot mode:
+
+| Method | Selected when | Where the passphrase lives | Also needs |
+| --- | --- | --- | --- |
+| Remote KMS | `kcrypt.challenger.challenger_server` is set, or `kcrypt.challenger.mdns` is `true` | On the KMS, in a `SealedVolume` for the node | The KMS reachable from the initramfs, so the node needs networking there |
+| TPM with PCR policy | [Trusted Boot](/docs/installation/trustedboot/), and no KMS configured | In the LUKS header, sealed to a signed PCR policy | systemd 252 or higher, and a TPM 2.0 device at `/dev/tpmrm0` |
+| Local TPM NV passphrase | Every other case | In a non-volatile index of the local TPM | A TPM 2.0 device at `/dev/tpmrm0` |
+
+The KMS wins over the TPM policy. A Trusted Boot node that names a challenger server uses the remote KMS, not the local PCR policy.
+
+### Relation to `systemd-cryptenroll`
+
+Kairos does use `systemd-cryptenroll`. On Trusted Boot it is what enrolls the TPM2 signed-PCR policy into the LUKS header, and Kairos then wipes the password slot so that passphrase cannot open the partition again. Unlock on that path runs `systemd-cryptsetup attach` with `tpm2-device=auto`.
+
+kcrypt is the layer above it that chooses the method, and it covers the two cases `systemd-cryptenroll` alone does not:
+
+- **Network-bound unsealing.** The passphrase can come from a KMS that holds a `SealedVolume` for the node, so a disk taken out of the machine stays closed even if the TPM comes with it.
+- **Images without systemd.** The local TPM NV method reads the passphrase from the TPM and opens the LUKS container directly, so it needs no systemd on the node.
+
+If you want measured boot on a single machine and nothing more, the TPM with PCR policy method is `systemd-cryptenroll`, reached through the same configuration as the other two.
+
 ## Offline mode
 
 This scenario covers encryption of data at rest without any third party or KMS server. The keys used to encrypt the partitions are stored in the TPM chip.
