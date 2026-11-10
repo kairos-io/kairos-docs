@@ -125,7 +125,28 @@ stages:
 
 ## rotate-token
 
-Creates a new token and pushes it to the running network, so the nodes switch to it without a reinstall. Takes the same flags as `generate-token`.
+Switches a node to a new network token without a reinstall. Run it on every node of the network: it changes only the machine it runs on, and does not create the token. Generate the new token first with `generate-token`, then pass it as the argument (or with `--token`, or the `TOKEN` environment variable).
+
+The command rewrites `p2p.network_token` in every config file that already has one under `/etc/kairos` and `/oem` (override with `--config-dir`, which can be repeated), and regenerates the edgevpn service configuration from the merged config. Add `--restart` to restart the edgevpn service so the new token takes effect right away.
+
+```bash
+NEW_TOKEN=$(./provider-kairos generate-token)
+# then, on each node:
+kairos provider rotate-token --restart "$NEW_TOKEN"
+```
+
+```
+USAGE:
+   rotate-token [--config-dir DIR ...] [--api URL] [--root-dir DIR] [--restart] NEW_TOKEN
+
+OPTIONS:
+   --config-dir value [ --config-dir value ]  Directory to scan for config files. May be repeated. (default: "/etc/kairos", "/oem")
+   --token value                              New network token. Overridden by a positional argument. [$TOKEN]
+   --root-dir value                           Root directory the edgevpn service files are written under. (default: "/")
+   --restart                                  Restart the edgevpn service after writing the new config. (default: false)
+   --api value                                Edgevpn API endpoint. (default: "http://127.0.0.1:8080") [$EDGEVPN_API]
+   --network-id value                         Kubernetes Network Deployment ID (default: "kairos") [$EDGEVPN_NETWORK_ID]
+```
 
 ## register
 
