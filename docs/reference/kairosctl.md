@@ -50,6 +50,7 @@ COMMANDS:
    role                 Set or list node roles
    create-config, c     Creates a pristine config file
    generate-token, g    Creates a new token
+   rotate-token         Rewrites the network token in the node's config and reconfigures edgevpn
    validate             Validates a cloud config file
    version
    help, h              Shows a list of commands or help for one command
