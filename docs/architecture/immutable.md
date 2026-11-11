@@ -105,10 +105,11 @@ properties of it decide what an image can put under one of these paths:
 - **It runs on every boot**, not only on the first boot and not only after an
   upgrade.
 - **`-u` (`--update`) keeps the newer file.** A file the persistent copy already
-  has is replaced only if the image's copy has a newer modification time. `-a`
-  preserves modification times from the image, so a file that the image changed
-  but gave an older or equal timestamp is not applied. A build that clamps
-  timestamps with `SOURCE_DATE_EPOCH`, or a downgrade to an older image, gives
+  has is replaced only if the persistent copy is not newer than the image's
+  copy. `-a` preserves modification times from the image, so two kinds of change
+  are not applied: a file the machine changed at runtime, and an image file whose
+  modification time is older than the stored one. A downgrade to an older image,
+  or a build that pins `SOURCE_DATE_EPOCH` to a fixed or older value, gives
   exactly that.
 - **There is no `--delete`.** A file that a new image no longer ships stays in
   the persistent copy, and keeps being bind mounted over the path, for the life
