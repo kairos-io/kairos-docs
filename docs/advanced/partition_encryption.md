@@ -101,7 +101,7 @@ You do not select the encryption method directly. Kairos picks one of three, at 
 
 | Method | Selected when | Where the passphrase lives | Also needs |
 | --- | --- | --- | --- |
-| Remote KMS | `kcrypt.challenger.challenger_server` is set, or `kcrypt.challenger.mdns` is `true` | On the KMS, in a `SealedVolume` for the node | The KMS reachable from the initramfs, so the node needs networking there |
+| Remote KMS | `kcrypt.challenger.challenger_server` is set, or `kcrypt.challenger.mdns` is `true` | On the KMS, in a Kubernetes Secret referenced by the node's `SealedVolume` | The KMS reachable from the initramfs, so the node needs networking there |
 | TPM with PCR policy | [Trusted Boot](/docs/installation/trustedboot/), and no KMS configured | In the LUKS header, sealed to a signed PCR policy | systemd 252 or higher, and a TPM 2.0 device at `/dev/tpmrm0` |
 | Local TPM NV passphrase | Every other case | In a non-volatile index of the local TPM | A TPM 2.0 device at `/dev/tpmrm0` |
 
@@ -113,7 +113,7 @@ Kairos does use `systemd-cryptenroll`. On Trusted Boot it is what enrolls the TP
 
 kcrypt is the layer above it that chooses the method, and it covers the two cases `systemd-cryptenroll` alone does not:
 
-- **Network-bound unsealing.** The passphrase can come from a KMS that holds a `SealedVolume` for the node, so a disk taken out of the machine stays closed even if the TPM comes with it.
+- **Network-bound unsealing.** The passphrase can come from a KMS that holds a `SealedVolume` for the node, so the disk only opens while the KMS is reachable and still serves that TPM. Taking the disk away from that network, or marking the `SealedVolume` as `quarantined`, keeps it closed even if the TPM comes with it.
 - **Images without systemd.** The local TPM NV method reads the passphrase from the TPM and opens the LUKS container directly, so it needs no systemd on the node.
 
 If you want measured boot on a single machine and nothing more, the TPM with PCR policy method is `systemd-cryptenroll`, reached through the same configuration as the other two.
