@@ -125,14 +125,14 @@ stages:
 
 ## rotate-token
 
-Switches a node to a new network token without a reinstall. Run it on every node of the network: it changes only the machine it runs on, and does not create the token. Generate the new token first with `generate-token`, then pass it as the argument (or with `--token`, or the `TOKEN` environment variable).
+Switches a node to a new network token without a reinstall. Run it as root on every node of the network: it changes only the machine it runs on, and does not create the token. Generate the new token first with `generate-token`, then pass it as the argument (or with `--token`, or the `TOKEN` environment variable).
 
 The command rewrites `p2p.network_token` in every config file that already has one under `/etc/kairos` and `/oem` (override with `--config-dir`, which can be repeated), and regenerates the edgevpn service configuration from the merged config. Add `--restart` to restart the edgevpn service so the new token takes effect right away.
 
 ```bash
 NEW_TOKEN=$(./provider-kairos generate-token)
-# then, on each node:
-kairos provider rotate-token --restart "$NEW_TOKEN"
+# then, on each node (as root, since it writes /etc/kairos, /oem and /etc/systemd):
+sudo kairos provider rotate-token --restart "$NEW_TOKEN"
 ```
 
 ```
