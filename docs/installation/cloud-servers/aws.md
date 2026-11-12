@@ -17,12 +17,25 @@ If you want to build a custom image, you can follow the instructions in the [OSA
 
 ## Find the AMI
 
+Kairos publishes its AMI in these regions:
+
+- `eu-central-1` (Frankfurt)
+- `eu-west-1` (Ireland)
+- `eu-west-2` (London)
+- `us-east-1` (N. Virginia)
+- `us-east-2` (Ohio)
+- `us-west-2` (Oregon)
+- `ap-south-1` (Mumbai)
+- `ap-south-2` (Hyderabad)
+
+An AMI is visible only in the region it was published in. In any other region the search below finds nothing. To use Kairos there, copy the AMI to your own account in that region with `aws ec2 copy-image`, or build your own image.
+
 1. Login to your AWS account.
 1. Go to the EC2 dashboard -> Images -> AMIs.
 1. If you are looking for the Kairos AMI, make sure you are searching among "Public images". Then search for "kairos"
    in the search bar.
 1. If you are looking for an AMI you created, make sure you are searching among "Owned by me". Then search for your AMI.
-1. Select the AMI you want to use (e.g. `kairos-ubuntu-24.04-standard-amd64-generic-v3.3.0-k3sv1.32.0-k3s1.raw`).
+1. Select the AMI you want to use (e.g. `kairos-hadron-v0.6.3-core-amd64-generic-v4.5.0.raw`).
 1. From the top menu, click on `Launch instance from AMI`.
 
 ## Verify the AMI
