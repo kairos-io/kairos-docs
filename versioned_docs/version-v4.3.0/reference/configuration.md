@@ -562,10 +562,12 @@ There are two `grub_options` keys, and they are read at different points:
 | `install.grub_options` | the installer | during the installation |
 | `grub_options` (top level) | the agent | on the first boot of the installed system |
 
-Both set key/value pairs in the GRUB environment, both accept the keys in the table below, and both write the same `grubenv`. Use `install.grub_options` unless you need the values written after the installation has finished. Only `install.grub_options` also carries the SELinux variables and, when the OEM partition is encrypted, the kcrypt challenger settings.
+Both set key/value pairs in the GRUB environment and both accept the keys in the table below. Use `install.grub_options` unless you need the values written after the installation has finished. Only `install.grub_options` also carries the kcrypt challenger settings when the OEM partition is encrypted.
+
+When the OEM partition is encrypted, use `install.grub_options`. The installer then writes the GRUB environment to the STATE partition, but the top-level `grub_options` is always written to `/oem/grubenv`, which GRUB cannot read before the partition is unlocked, so those values never take effect.
 
 :::warning GRUB installations only
-Both keys apply to GRUB installations. They have no effect on [Trusted Boot](/docs/installation/trustedboot/), where the cmdline is part of the signed EFI artifact and the GRUB environment is never read. Every key in the table below is discarded on such a system, and the log does not tell you so.
+Both keys apply to GRUB installations. They have no effect on [Trusted Boot](/docs/installation/trustedboot/), where the cmdline is part of the signed EFI artifact and the GRUB environment is never read. Every key in the table below is discarded on such a system. For `install.grub_options` the installer logs an info line `Skipping GrubPostInstallOptions hook in uki mode`. The top-level `grub_options` is not skipped: the first boot still writes the values to `/oem/grubenv`, which a Trusted Boot system never reads, and the log does not say that they had no effect.
 
 To set cmdline parameters on Trusted Boot, put them in the artifact at build time. See [Additional efi entries](/docs/installation/trustedboot/#additional-efi-entries) for the `auroraboot build-uki` flags that do this.
 :::

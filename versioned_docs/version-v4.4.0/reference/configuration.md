@@ -572,7 +572,7 @@ There are two `grub_options` keys, and they are read at different points:
 Both set key/value pairs in the GRUB environment, both accept the keys in the table below, and both write the same `grubenv`. Use `install.grub_options` unless you need the values written after the installation has finished. Only `install.grub_options` also carries the SELinux variables and, when the OEM partition is encrypted, the kcrypt challenger settings.
 
 :::warning GRUB installations only
-Both keys apply to GRUB installations. They have no effect on [Trusted Boot](/docs/installation/trustedboot/), where the cmdline is part of the signed EFI artifact and the GRUB environment is never read. Every key in the table below is discarded on such a system, and the log does not tell you so.
+Both keys apply to GRUB installations. They have no effect on [Trusted Boot](/docs/installation/trustedboot/), where the cmdline is part of the signed EFI artifact and the GRUB environment is never read. Every key in the table below is discarded on such a system. The agent logs the skip: an info line `Skipping GrubPostInstallOptions hook in uki mode` for `install.grub_options`, and a warning `Skipping GrubFirstBootOptions hook in uki mode` for `grub_options`.
 
 To set cmdline parameters on Trusted Boot, put them in the artifact at build time. See [Additional efi entries](/docs/installation/trustedboot/#additional-efi-entries) for the `auroraboot build-uki` flags that do this.
 :::
