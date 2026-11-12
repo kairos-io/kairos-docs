@@ -7,11 +7,11 @@ date: 2022-11-13
 
 Kairos remote recovery hands the console to `kairos-agent recovery`, which prints a network token as a QR code and waits for `kairosctl bridge` to connect over it. Use it to regain access, with assistance, to a machine you have lost access to.
 
-Remote recovery runs from the live media only. An installed system keeps its own local `recovery` GRUB entry, which boots the recovery image on the machine itself and needs no second machine to drive it. That entry is unaffected by this page.
+Remote recovery runs from the live media only. An installed system keeps its own local `recovery` GRUB entry, which boots the recovery image on the machine itself and needs no second machine to drive it. From there you can reset the A/B partitions with `kairos-agent reset`, logging in with the user and password set during setup, and run other operations on the machine itself. That entry is unaffected by this page.
 
 :::note
 
-Remote recovery used to be a GRUB entry of its own, `kairos (remote recovery mode)`, on the live media and in `/etc/kairos/branding/grubmenu.cfg` on installed systems. Both entries are gone. The interactive installer's welcome page offers the same handover, so the boot menu no longer carries a second route to it.
+Remote recovery used to be a GRUB entry of its own, `kairos (remote recovery mode)`, on the live media and in `/etc/kairos/branding/grubmenu.cfg` on installed systems. Current images no longer ship either entry. A system installed from older media may still show `kairos (remote recovery mode)` in its boot menu, because that menu comes from the copy of `grubmenu.cfg` kept on the state partition. The interactive installer's welcome page offers the same handover, so the boot menu no longer carries a second route to it.
 
 :::
 
