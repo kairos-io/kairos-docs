@@ -17,7 +17,8 @@
     "test:scripts": "node --test scripts/*.test.mjs",
     "test:components": "node --test 'src/**/*.test.mjs'",
     "test:plugins": "node --test 'plugins/*.test.mjs'",
-    "test": "npm run test:scripts && npm run test:components && npm run test:plugins"
+    "test": "npm run test:scripts && npm run test:components && npm run test:plugins",
+    "validate:doc-yaml": "node scripts/validate-doc-yaml.mjs"
   },
   "dependencies": {
     "@cmfcmf/docusaurus-search-local": "^2.0.1",
@@ -35,6 +36,7 @@
     "@docusaurus/module-type-aliases": "3.10.2",
     "@docusaurus/tsconfig": "3.10.2",
     "@docusaurus/types": "3.10.2",
+    "js-yaml": "^4.1.0",
     "typescript": "~7.0.0"
   },
   "browserslist": {
