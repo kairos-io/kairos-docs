@@ -23,9 +23,7 @@ export function buildKairosImageName({
   return `kairos-${flavor}-${flavorRelease}-${variant}-${arch}-${model}-${kairosVersion}${k3sSegment}${suffix}`;
 }
 
-export type KairosOciImageNameParams = {
-  registryURL: string;
-  flavor: string;
+export type KairosOciImageTagParams = {
   flavorRelease: string;
   variant: string;
   arch?: string;
@@ -35,9 +33,19 @@ export type KairosOciImageNameParams = {
   k3sVersion: string;
 };
 
-export function buildKairosOciImageName({
-  registryURL,
-  flavor,
+export type KairosOciImageNameParams = KairosOciImageTagParams & {
+  registryURL: string;
+  flavor: string;
+};
+
+/**
+ * Build the tag half of a published Kairos OCI image reference.
+ *
+ * Some pages need the tag on its own, not the whole reference: a
+ * system-upgrade-controller Plan takes the repository in `upgrade.image` and
+ * the tag in `spec.version`.
+ */
+export function buildKairosOciImageTag({
   flavorRelease,
   variant,
   arch = 'amd64',
@@ -45,16 +53,21 @@ export function buildKairosOciImageName({
   suffix = '',
   kairosVersion,
   k3sVersion,
-}: KairosOciImageNameParams): string {
+}: KairosOciImageTagParams): string {
   const normalizedK3sVersion = String(k3sVersion).replaceAll('+', '-');
   const variantValue = String(variant).trim();
   const suffixValue = String(suffix).trim();
   const k3sSegment = variantValue === 'standard' ? `-k3s-${normalizedK3sVersion}` : '';
   const suffixSegment = suffixValue ? `-${suffixValue}` : '';
-  return (
-    `${registryURL}/${flavor}:` +
-    `${flavorRelease}-${variantValue}-${arch}-${model}-${kairosVersion}${k3sSegment}${suffixSegment}`
-  );
+  return `${flavorRelease}-${variantValue}-${arch}-${model}-${kairosVersion}${k3sSegment}${suffixSegment}`;
+}
+
+export function buildKairosOciImageName({
+  registryURL,
+  flavor,
+  ...tagParams
+}: KairosOciImageNameParams): string {
+  return `${registryURL}/${flavor}:${buildKairosOciImageTag(tagParams)}`;
 }
 
 export type GoogleImageNameParams = {
