@@ -55,6 +55,30 @@ else
 fi
 echo ""
 
+echo "Test 3b: AuroraBoot version follows the Kairos release"
+echo "----------------------------------------------------------"
+# The functions below replace the network calls, so this test needs no access.
+(
+  _curl_github() {
+    case "$1" in
+      */releases/tags/v9.0.0) echo '{"assets":[{"name":"kairos-init-v9.0.0.tar.gz"},{"name":"auroraboot_9.0.0_linux_amd64.tar.gz"}]}' ;;
+      */releases/tags/v4.0.0) echo '{"assets":[{"name":"kairos-init-v4.0.0.tar.gz"}]}' ;;
+      */kairos-io/AuroraBoot/releases/latest) echo '{"tag_name":"v0.31.0"}' ;;
+      *) return 1 ;;
+    esac
+  }
+  failed=0
+  check() { # description, expected, actual
+    if [ "$2" = "$3" ]; then echo "✓ $1: $3"; else echo "✗ $1: expected $2, got $3"; failed=1; fi
+  }
+  check "release that ships AuroraBoot" "v9.0.0" "$(get_auroraboot_version v9.0.0)"
+  check "release cut before the move" "v0.31.0" "$(get_auroraboot_version v4.0.0)"
+  check "no Kairos version" "v0.31.0" "$(get_auroraboot_version "")"
+  if get_auroraboot_version v8.8.8 >/dev/null 2>&1; then echo "✗ unreachable release lookup accepted"; failed=1; else echo "✓ unreachable release lookup fails"; fi
+  exit $failed
+) || echo "✗ AuroraBoot version selection failed"
+echo ""
+
 echo "Test 4: Retention source (latest patch per major.minor)"
 echo "--------------------------------------------------------"
 if releases=$(fetch_latest_releases); then
