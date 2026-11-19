@@ -41,7 +41,7 @@ helm install ab auroraboot/deploy/helm/auroraboot \
 
 Replace `auroraboot.example.com` with the hostname your users will type in the browser. DNS for that name must resolve to your ingress controller's external address (a LoadBalancer IP, MetalLB VIP, or a node port), not to the cluster API server IP.
 
-A checkout of the repository deploys the AuroraBoot image built from the `master` branch (`quay.io/kairos/auroraboot:master`). Add `--set image.tag=<version>` to run a release instead.
+A checkout of the repository deploys the AuroraBoot image built from the `master` branch (`ghcr.io/kairos-io/kairos/auroraboot:master`). To run a release from the checkout instead, add `--set image.repository=quay.io/kairos/auroraboot --set image.tag=<version>`.
 
 Each Kairos release also publishes the chart, with the Kairos version as the chart version and the same version for the image, so the OCI artifact needs no image tag:
 
