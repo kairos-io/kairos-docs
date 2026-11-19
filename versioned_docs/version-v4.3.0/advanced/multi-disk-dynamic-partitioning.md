@@ -97,7 +97,7 @@ RUN chmod +x /usr/local/bin/pick-disk.sh
 A minimal example Dockerfile:
 
 ```dockerfile
-ARG BASE_IMAGE=ghcr.io/kairos-io/kairos-core-hadron:latest
+ARG BASE_IMAGE=ghcr.io/kairos-io/hadron:latest
 ARG KAIROS_INIT=v0.8.4
 
 FROM quay.io/kairos/kairos-init:${KAIROS_INIT} AS kairos-init
