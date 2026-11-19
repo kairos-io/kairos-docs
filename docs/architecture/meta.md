@@ -53,7 +53,7 @@ Optional/External:
 - [nohang](https://github.com/hakavlad/nohang) A sophisticated low memory handler for Linux.
 - [entangle](https://github.com/kairos-io/entangle) a CRD to interconnect Kubernetes clusters
 - [entangle-proxy](https://github.com/kairos-io/entangle-proxy) a CRD to control interconnected clusters
-- [AuroraBoot](https://github.com/kairos-io/AuroraBoot) is the Kairos Node bootstrapper. It also builds the bootable artifacts (ISO, raw disk, netboot) from container images, a job the archived `osbuilder` used to do.
+- [AuroraBoot](https://github.com/kairos-io/kairos/tree/master/auroraboot) is the Kairos Node bootstrapper. It also builds the bootable artifacts (ISO, raw disk, netboot) from container images, a job the archived `osbuilder` used to do.
 
 For an architecture-focused overview of providers and how they integrate with kairos-agent, see [Providers](/docs/architecture/providers).
 

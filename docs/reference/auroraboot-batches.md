@@ -116,7 +116,7 @@ To follow and stop batches:
 | `GET /api/v1/batches/{id}` | Returns one batch with a row per node. |
 | `POST /api/v1/batches/{id}/stop` | Stops a running batch. |
 
-The Go client in `github.com/kairos-io/AuroraBoot/pkg/client` has the same calls. AuroraBoot serves the full API reference at `/api/v1/openapi.yaml` and `/api/v1/openapi.json`.
+The Go client in `github.com/kairos-io/kairos/auroraboot/pkg/client` has the same calls. AuroraBoot serves the full API reference at `/api/v1/openapi.yaml` and `/api/v1/openapi.json`.
 
 ### Changes for API clients of v0.29.0 and earlier
 

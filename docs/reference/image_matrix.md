@@ -100,12 +100,11 @@ If you need to further customize images, including changes to the base image, pa
 
 Our changelog is published as part of the release process and contains all the changes, highlights, and release notes that are relevant to the release. We strongly recommend checking the changelog for each release before upgrading or building a customized version of Kairos.
 
-Since v4.3 every device-runtime component ships from the Kairos monorepo, so the Kairos changelog covers `immucore`, the `agent`, the `sdk`, `kcrypt`, `kairos-init` and the `provider` as well. AuroraBoot is released on its own. Below are the two release pages that carry a changelog.
+Since v4.3 every device-runtime component ships from the Kairos monorepo, so the Kairos changelog covers `immucore`, the `agent`, the `sdk`, `kcrypt`, `kairos-init`, the `provider` and AuroraBoot as well. AuroraBoot is released with Kairos under the same version number.
 
 | **Project**                                  	                                | **Release page**                                       	 |
 |-------------------------------------------------------------------------------|----------------------------------------------------------|
 | **Kairos core and standard (k3s and k0s support)**                          	 | https://github.com/kairos-io/kairos/releases      	      |
-| **AuroraBoot**                                                                | https://github.com/kairos-io/AuroraBoot/releases         |
 
 ## Service Billing Of Materials (SBOM)
 

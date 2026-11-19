@@ -58,7 +58,7 @@ In the case of config extensions, nothing is changed since they are mounted unde
 <Tabs>
 <TabItem value="auroraboot" label="With Auroraboot">
 
-You can also build a system/config extension from a docker image directly by using [auroraboot](https://github.com/kairos-io/AuroraBoot) and using a dockerfile to isolate the artifacts you want converted into a system extension.
+You can also build a system/config extension from a docker image directly by using [auroraboot](https://github.com/kairos-io/kairos/tree/master/auroraboot) and using a dockerfile to isolate the artifacts you want converted into a system extension.
 
 Notice that when converting a docker image into a system extension, the last layer is the only one converted (The last command in a given Dockerfile) so have that in mind. This is useful for packages that ONLY install things in /usr or manual installation under /usr.
 

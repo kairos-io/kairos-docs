@@ -100,7 +100,7 @@ docker run --rm -ti -v "$PWD"/cloud-config.yaml:/cloud-config.yaml -v ${PWD}:/tm
 
 This will build the ISO and put the generated artifacts in the current dir under the `${PWD}/iso` dir.
 
-For netboot, we recommend that you run the AuroraBoot binary directly by grabbing it from the [releases page](https://github.com/kairos-io/AuroraBoot/releases).
+For netboot, we recommend that you run the AuroraBoot binary directly by grabbing it from the [releases page](https://github.com/kairos-io/kairos/releases), where the `auroraboot_<version>_linux_<arch>.tar.gz` archives of each Kairos release are attached.
 This requires just one dependency that you can install via [brew](https://brew.sh/) with `brew install xorriso`
 
 ## Windows
@@ -110,7 +110,7 @@ Netboot in windows is not supported, only iso creation via the docker image.
 
 ## Overview
 
-To run AuroraBoot, simply use `docker` or the container engine of your choice (such as `podman`, ...). AuroraBoot images are published in [quay](https://quay.io/repository/kairos/auroraboot) and the source code is available [in GitHub](https://github.com/kairos-io/AuroraBoot).
+To run AuroraBoot, simply use `docker` or the container engine of your choice (such as `podman`, ...). AuroraBoot images are published in [quay](https://quay.io/repository/kairos/auroraboot) and the source code is available [in GitHub](https://github.com/kairos-io/kairos/tree/master/auroraboot).
 
 The basic usage of AuroraBoot involves passing it several parameters that define the installation environment, such as the version of Kairos you want to install, the cloud config you want to use, and other customizations you may need. You can pass these parameters either as command-line arguments, or as a full YAML configuration file.
 
@@ -690,7 +690,7 @@ For example, to override the GRUB config file:
 ```bash
 mkdir -p data/boot/grub2
 # You can replace this step with your own grub config. This GRUB configuration is the boot menu of the ISO
-wget https://raw.githubusercontent.com/kairos-io/AuroraBoot/{{< AuroraBootVersion >}}/pkg/constants/grub_live_bios.cfg -O data/boot/grub2/grub.cfg
+wget https://raw.githubusercontent.com/kairos-io/kairos/{{< KairosVersion >}}/auroraboot/pkg/constants/grub_live_bios.cfg -O data/boot/grub2/grub.cfg
 
 docker run -v "$PWD"/cloud-config.yaml:/cloud-config.yaml \
              -v "$PWD"/data:/tmp/data \

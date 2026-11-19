@@ -84,7 +84,7 @@ rootfs with extra firmware. A raw Hadron image cannot be used to upgrade a runni
 directly. You first have to "kairosify" it (add the Kairos framework, init system integration,
 etc.) with [`kairos-init`](https://github.com/kairos-io/kairos-init), and then either push the
 resulting image to upgrade to, or turn it into installable media (ISO, raw disk, etc.) with
-[AuroraBoot](https://github.com/kairos-io/AuroraBoot).
+[AuroraBoot](https://github.com/kairos-io/kairos/tree/master/auroraboot).
 :::
 
 For example, run `kairos-init` as a build stage on top of the image above so the final image is a
@@ -170,7 +170,7 @@ machines. This is the same signing flow described in
 
 The [`firmware.sh`](https://github.com/kairos-io/hadron-firmware/blob/main/firmware.sh) script in
 the `hadron-firmware` repository supports this: it builds the firmware images locally and then
-produces signed sysexts via [AuroraBoot](https://github.com/kairos-io/AuroraBoot). This requires
+produces signed sysexts via [AuroraBoot](https://github.com/kairos-io/kairos/tree/master/auroraboot). This requires
 docker and access to the docker socket.
 
 ```bash
