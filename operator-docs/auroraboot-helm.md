@@ -28,20 +28,22 @@ Upload traffic between the operator's exporter pods and AuroraBoot is routed ove
 
 ## Install
 
-The chart lives in the [AuroraBoot repository](https://github.com/kairos-io/AuroraBoot) under `deploy/helm/auroraboot`. Point Helm at either the local path (for development) or the published OCI artifact (for releases).
+The chart lives in the [Kairos repository](https://github.com/kairos-io/kairos) under `auroraboot/deploy/helm/auroraboot`. Point Helm at either the local path (for development) or the published OCI artifact (for releases).
 
 ```bash
-git clone https://github.com/kairos-io/AuroraBoot.git
-cd AuroraBoot
+git clone https://github.com/kairos-io/kairos.git
+cd kairos
 
-helm install ab deploy/helm/auroraboot \
+helm install ab auroraboot/deploy/helm/auroraboot \
   -n kairos-operator --create-namespace \
   --set host=auroraboot.example.com
 ```
 
 Replace `auroraboot.example.com` with the hostname your users will type in the browser. DNS for that name must resolve to your ingress controller's external address (a LoadBalancer IP, MetalLB VIP, or a node port), not to the cluster API server IP.
 
-Once released, the same command works against the OCI-published chart:
+A checkout of the repository deploys the AuroraBoot image built from the `master` branch (`quay.io/kairos/auroraboot:master`). Add `--set image.tag=<version>` to run a release instead.
+
+Each Kairos release also publishes the chart, with the Kairos version as the chart version and the same version for the image, so the OCI artifact needs no image tag:
 
 ```bash
 helm install ab oci://ghcr.io/kairos-io/charts/auroraboot \
@@ -74,7 +76,7 @@ The chart's `values.yaml` documents every knob. The ones most commonly touched:
 If you have cert-manager installed, the chart can provision a certificate for you:
 
 ```bash
-helm install ab deploy/helm/auroraboot \
+helm install ab auroraboot/deploy/helm/auroraboot \
   -n kairos-operator --create-namespace \
   --set host=auroraboot.example.com \
   --set ingress.tls.enabled=true \
@@ -94,7 +96,7 @@ If you already have a TLS `Secret` in the release namespace, reference it direct
 For a quick smoke test, disable the ingress and use `port-forward`:
 
 ```bash
-helm install ab deploy/helm/auroraboot \
+helm install ab auroraboot/deploy/helm/auroraboot \
   -n kairos-operator --create-namespace \
   --set host=localhost \
   --set ingress.enabled=false
@@ -138,7 +140,7 @@ kubectl wait -n ingress-nginx --for=condition=ready pod \
 
 kubectl apply -k https://github.com/kairos-io/kairos-operator/config/default
 
-helm install ab deploy/helm/auroraboot \
+helm install ab auroraboot/deploy/helm/auroraboot \
   -n kairos-operator --create-namespace \
   --set host=auroraboot.local \
   --set ingress.className=nginx
@@ -153,7 +155,7 @@ Add `127.0.0.1 auroraboot.local` to `/etc/hosts` and browse to `http://auroraboo
 make build-docker                    # produces auroraboot:local
 kind load docker-image auroraboot:local --name kairos
 
-helm upgrade ab deploy/helm/auroraboot -n kairos-operator \
+helm upgrade ab auroraboot/deploy/helm/auroraboot -n kairos-operator \
   --reuse-values \
   --set image.repository=auroraboot \
   --set image.tag=local
@@ -175,7 +177,7 @@ kubectl -n kairos-operator get secret ab-auroraboot-registration \
 Rotate it:
 
 ```bash
-helm upgrade ab deploy/helm/auroraboot -n kairos-operator \
+helm upgrade ab auroraboot/deploy/helm/auroraboot -n kairos-operator \
   --reuse-values \
   --set registrationToken.value="$(openssl rand -hex 32)"
 ```
@@ -187,13 +189,13 @@ You can also rotate via the AuroraBoot settings API at runtime; the resolver on 
 ## Upgrading
 
 ```bash
-helm upgrade ab deploy/helm/auroraboot -n kairos-operator --reuse-values
+helm upgrade ab auroraboot/deploy/helm/auroraboot -n kairos-operator --reuse-values
 ```
 
 `--reuse-values` preserves everything you set at install time so you only need to pass the values you want to change. When bumping the AuroraBoot version, override `image.tag`:
 
 ```bash
-helm upgrade ab deploy/helm/auroraboot -n kairos-operator \
+helm upgrade ab auroraboot/deploy/helm/auroraboot -n kairos-operator \
   --reuse-values --set image.tag=<new-version>
 ```
 

@@ -107,7 +107,7 @@ You can also set **`spec.imagePullSecrets`** (a list of Secret names) if you nee
 
 ### Choosing how to build (decision tree)
 
-1. **Already have a Kairos image?** → Set `spec.image.ref` to the image reference. No build; Stage 2 uses that image. Use this when you build the Kairos image through other means (e.g. using [AuroraBoot](https://github.com/kairos-io/AuroraBoot) directly) or when consuming the upstream released Kairos images.
+1. **Already have a Kairos image?** → Set `spec.image.ref` to the image reference. No build; Stage 2 uses that image. Use this when you build the Kairos image through other means (e.g. using [AuroraBoot](https://github.com/kairos-io/kairos/tree/master/auroraboot) directly) or when consuming the upstream released Kairos images.
 2. **Build with options only (no custom OCI spec)?** → Set `spec.image.buildOptions` (e.g. `version`, `baseImage`, `model`, `kubernetesDistro`). The operator uses its default OCI build definition and injects `kairos-init`. Version is required. Use this method when you want to define the base image and some parameters but you don't need any additional control.
 3. **Full control (your OCI spec including FROM and kairos-init)?** → Set `spec.image.ociSpec.ref` to a Secret holding your OCI build definition. The operator does not modify it. Use this method when you want full control, for example when you want to perform some action between the kairos-init installation and init stages.
 4. **Your OCI spec fragment + operator adds base image and kairos-init?** → Set both `spec.image.ociSpec` (template, no `FROM`) and `spec.image.buildOptions`. The operator injects `FROM buildOptions.baseImage` at the top and the kairos-init block at the bottom. Use this method when you want to add steps to the used ociSpec (e.g. install or remove packages, enable services etc) but you don't need to intercept the "kairosification" steps.
@@ -526,7 +526,7 @@ In this example:
 
 ### Overlay volumes (scoped under artifacts)
 
-To inject files into the ISO or the OS rootfs, use **volumes** and **importers**, then reference the volume names under `spec.artifacts`. The operator passes these to [AuroraBoot](https://github.com/kairos-io/AuroraBoot) when building the ISO:
+To inject files into the ISO or the OS rootfs, use **volumes** and **importers**, then reference the volume names under `spec.artifacts`. The operator passes these to [AuroraBoot](https://github.com/kairos-io/kairos/tree/master/auroraboot) when building the ISO:
 
 - **overlayISOVolume**: Volume name for `--overlay-iso` (files appear at `/run/initramfs/live` during live boot).
 - **overlayRootfsVolume**: Volume name for `--overlay-rootfs` (files are merged into the OS rootfs/squashfs).

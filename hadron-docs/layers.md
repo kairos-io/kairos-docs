@@ -63,7 +63,7 @@ The image produced above is **not** a bootable/upgradeable Kairos image yet — 
 rootfs with extra software. To turn it into a proper Kairos image you must "kairosify" it with
 [`kairos-init`](https://github.com/kairos-io/kairos-init), then either push the resulting image
 to upgrade to, or turn it into installable media (ISO, raw disk, etc.) with
-[AuroraBoot](https://github.com/kairos-io/AuroraBoot). See the
+[AuroraBoot](https://github.com/kairos-io/kairos/tree/master/auroraboot). See the
 [Adding Linux firmware](linux-firmware.md#option-1-bundle-firmware-into-your-hadron-image-oci-images)
 page and the [Kairos Factory documentation](/docs/reference/kairos-factory/) for the full flow.
 :::

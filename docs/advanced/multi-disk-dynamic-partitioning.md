@@ -110,7 +110,7 @@ COPY pick-disk.sh /usr/local/bin/pick-disk.sh
 RUN chmod +x /usr/local/bin/pick-disk.sh
 ```
 
-Then build the image and generate an ISO with [AuroraBoot](https://github.com/kairos-io/AuroraBoot):
+Then build the image and generate an ISO with [AuroraBoot](https://github.com/kairos-io/kairos/tree/master/auroraboot):
 
 ```bash
 docker build -t my-kairos-multidisk .
