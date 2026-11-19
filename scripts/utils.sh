@@ -148,6 +148,35 @@ get_latest_auroraboot_version() {
     echo "$tag_name"
 }
 
+# Function to pick the AuroraBoot version a Kairos release is documented with
+# AuroraBoot is released with Kairos under the same version, so a release that
+# carries auroraboot_* archives uses its own version. A release cut before
+# AuroraBoot moved into the Kairos repository has none and uses the last
+# standalone AuroraBoot release.
+# Arguments:
+#   $1: kairos_version (e.g., v4.6.0)
+# Returns: AuroraBoot version tag
+get_auroraboot_version() {
+    local kairos_version="${1:-}"
+    if [ -z "$kairos_version" ]; then
+        get_latest_auroraboot_version
+        return
+    fi
+
+    local api_url="https://api.github.com/repos/kairos-io/kairos/releases/tags/$kairos_version"
+    local response
+    if ! response=$(_curl_github "$api_url"); then
+        echo "Error: Failed to fetch release $kairos_version from GitHub API" >&2
+        return 1
+    fi
+
+    if echo "$response" | jq -e '[.assets[]?.name | select(startswith("auroraboot_"))] | length > 0' >/dev/null; then
+        echo "$kairos_version"
+    else
+        get_latest_auroraboot_version
+    fi
+}
+
 # Function to extract Hadron version from GitHub release artifacts
 # Arguments:
 #   $1: kairos_version (e.g., v4.0.3)
@@ -241,9 +270,9 @@ get_component_versions() {
     local immucore_version=$(echo "$response" | grep -E '^IMMUCORE_VERSION\s*:?=' | sed 's/.*:=\s*//' | tr -d '\r\n')
     local provider_version=$(echo "$response" | grep -E '^PROVIDER_KAIROS_VERSION\s*:?=' | sed 's/.*:=\s*//' | tr -d '\r\n')
     
-    # Get latest AuroraBoot version from its own releases
+    # AuroraBoot is released with Kairos
     local auroraboot_version
-    auroraboot_version=$(get_latest_auroraboot_version)
+    auroraboot_version=$(get_auroraboot_version "$kairos_version")
     if [ $? -ne 0 ]; then
         echo "Error: Failed to get AuroraBoot version" >&2
         return 1
