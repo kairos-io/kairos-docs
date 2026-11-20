@@ -97,7 +97,7 @@ The Kairos encryption design involves three components to manage partitions encr
 
 ### Which method a node uses
 
-You do not select the encryption method directly. Kairos picks one of three, at install time and again at every unlock, from the configuration and from the boot mode:
+Kairos has four encryption methods. You choose one of them yourself with `kcrypt.method: passphrase`: the partitions are encrypted with the passphrase read from `kcrypt.passphrase_file` at install time, and the passphrase is asked for on the console at every boot. It needs no TPM or KMS, and it wins over every other setting, including a configured challenger server. Without that setting, Kairos picks one of the other three, at install time and again at every unlock, from the configuration and from the boot mode:
 
 | Method | Selected when | Where the passphrase lives | Also needs |
 | --- | --- | --- | --- |
