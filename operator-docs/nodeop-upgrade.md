@@ -141,7 +141,7 @@ Only 4 fields is all it takes to safely upgrade the whole cluster.
 | `force` | `bool` | `false` | When true, run the upgrade on every targeted node regardless of whether it is already at `spec.image`. Disables the preflight skip — see [Skipping no-op upgrades](#skipping-no-op-upgrades). |
 | `debug` | `bool` | `false` | Run `kairos-agent` with the global `--debug` flag for verbose upgrade output. See [Debugging upgrades](#debugging-upgrades). |
 | `uncordonOnFailure` | `bool` | `false` | Uncordon a node if its upgrade fails, instead of leaving it unschedulable. Passed through to the underlying NodeOp. See [Recovering nodes after a failed upgrade](#recovering-nodes-after-a-failed-upgrade) and [How cordoning works](../nodeop/#how-cordoning-works) for the full lifecycle. |
-| `excludePaths` | `[]string` | (none) | Additional host paths preserved during the upgrade, passed to `kairos-agent upgrade` as `--exclude-path`. The operator always excludes `/etc/hostname` and `/etc/hosts` on top of these. Requires kairos-agent v3.6.0+ in `spec.image`. See [Preserving host paths from the upgrade](#preserving-host-paths-from-the-upgrade). |
+| `excludePaths` | `[]string` | (none) | Paths of `spec.image` to leave out of the new system, passed to `kairos-agent upgrade` as `--exclude-path`. Requires kairos-agent v3.6.0+ in `spec.image`. See [Which files the upgrade installs](#which-files-the-upgrade-installs). |
 | `resources` | `ResourceRequirements` | (none) | Resource requests/limits for the main `nodeop` container of the generated NodeOp. See [Resource specification](#resource-specification). |
 | `preflightResources` | `ResourceRequirements` | (built-in) | Resource requests/limits for the preflight Pod of the generated NodeOp. See [Resource specification](#resource-specification). |
 | `rebootResources` | `ResourceRequirements` | (built-in) | Resource requests/limits for the reboot Pod of the generated NodeOp. See [Resource specification](#resource-specification). |
@@ -185,8 +185,7 @@ spec:
   # Uncordon a node if its upgrade fails (defaults to false)
   uncordonOnFailure: false
 
-  # Extra host paths to preserve during the upgrade, on top of the
-  # always-excluded /etc/hostname and /etc/hosts. Requires
+  # Paths of spec.image to leave out of the new system. Requires
   # kairos-agent v3.6.0+ in spec.image.
   excludePaths:
     - /var/lib/mystuff
@@ -232,13 +231,29 @@ It won't fire when:
 
 Set `spec.force: true` to disable the preflight entirely. The controller creates the NodeOp without `spec.preflight`, so every targeted node goes straight through cordon → drain → upgrade Job → reboot, regardless of what version is already installed. Use this when you want to re-run an upgrade with the same image but different flags, or to recover from a previous run that ended in a weird state.
 
-## Preserving host paths from the upgrade
+## Which files the upgrade installs
 
-A NodeOpUpgrade runs `kairos-agent upgrade --source dir:/`, which rsyncs the upgrade Pod's rootfs onto the host. Kubernetes injects a Pod-specific `/etc/hostname` and `/etc/hosts` into every Pod, so without protection the upgrade would copy those Pod-scoped files over the node's real ones and the node would fail to rejoin the cluster after reboot.
+A NodeOpUpgrade runs `kairos-agent` in a Pod that uses `spec.image`, and `kairos-agent` builds the node's new system image from that Pod's root filesystem. Kubernetes mounts Pod-specific copies of `/etc/resolv.conf`, `/etc/hosts` and `/etc/hostname` into every Pod. They hold the cluster DNS settings and the Pod's own name and IP, and they must not end up on the node.
 
-The operator therefore always passes `--exclude-path /etc/hostname` and `--exclude-path /etc/hosts` to `kairos-agent upgrade`. Those two are not configurable through the CRD.
-You cannot remove or override these exclusions via the CRD (they are always enforced).
-Use `spec.excludePaths` to preserve additional host paths:
+The upgrade script therefore copies from a plain bind mount of the Pod's root, which shows the image's own files without anything Kubernetes mounted on top.
+
+When the image does not ship one of the three files, the container runtime creates an empty file at that path so it has something to mount the Pod's copy onto, and the bind mount shows that empty file. The script leaves any of the three that is missing, or is an empty regular file, out of the new system with `--exclude-path`. A symlink is always copied as is, whatever its target holds inside the Pod. This matters for `/etc/resolv.conf` on images that ship none and rely on systemd to create the `/etc/resolv.conf` symlink at boot, which it only does when nothing is at that path.
+
+For an image without `/etc/resolv.conf`, the generated script looks like this:
+
+```
+UPGRADE_ROOTFS=$(mktemp -d)
+mount --bind / "${UPGRADE_ROOTFS}"
+# adds --exclude-path for each of /etc/resolv.conf, /etc/hosts and
+# /etc/hostname that is missing or an empty regular file under ${UPGRADE_ROOTFS}
+kairos-agent upgrade --source "dir:${UPGRADE_ROOTFS}" --exclude-path /etc/resolv.conf
+```
+
+The node gets the same `/etc/resolv.conf`, `/etc/hosts` and `/etc/hostname` that a fresh install of `spec.image` would have. On Kairos images, the boot stages then set the hostname and hosts file from your cloud-config, or from the defaults if it sets nothing.
+
+### Leaving paths out of the new system
+
+Use `spec.excludePaths` to leave paths of `spec.image` out of the new system:
 
 ```yaml
 spec:
@@ -248,19 +263,19 @@ spec:
     - /opt/keep
 ```
 
-The listed paths are appended after the always-excluded pair, so the generated upgrade command looks like:
+Each path is passed to `kairos-agent upgrade` as `--exclude-path`:
 
 ```
-kairos-agent upgrade --source dir:/ --exclude-path '/etc/hostname' --exclude-path '/etc/hosts' --exclude-path '/var/lib/mystuff' --exclude-path '/opt/keep'
+kairos-agent upgrade --source "dir:${UPGRADE_ROOTFS}" --exclude-path '/var/lib/mystuff' --exclude-path '/opt/keep'
 ```
+
+They come after any exclusions the script adds for `/etc/resolv.conf`, `/etc/hosts` and `/etc/hostname`.
+
+`kairos-agent` builds the new system image from scratch, so an excluded path is missing from the new system. The node's current copy of that path is not carried over. To keep data across upgrades, store it on a persistent path such as `/usr/local` or one of the paths Kairos bind-mounts from the persistent partition.
 
 ### Requirements
 
-`--exclude-path` was added in kairos-agent v3.6.0. Older versions of `kairos-agent` do not recognize the flag and the upgrade Job will fail with `unknown flag: --exclude-path`. This only affects users who pin `spec.image` to a pre-v3.6.0 Kairos release. The `kairos-agent` that runs during the upgrade is the one shipped in `spec.image`, not the one on the current node, so upgrading a very old node to a v3.6.0 or newer image works fine.
-
-### Overwriting /etc/hostname on purpose
-
-If you actually want the upgrade to replace the node's `/etc/hostname` (for example, to correct a hostname that no longer matches the Kubernetes Node name), you cannot do it through `NodeOpUpgrade`. Author a manual [NodeOp](../nodeop/) that runs `kairos-agent upgrade --source oci:<your-image>` instead. Using an OCI source pulls the image freshly rather than rsyncing the running Pod's rootfs, so no Kubernetes-injected files are involved.
+`--exclude-path` was added in kairos-agent v3.6.0. Older versions of `kairos-agent` do not recognize the flag and the upgrade Job will fail with `unknown flag: --exclude-path`. The flag is used when `spec.excludePaths` is set, and also when `spec.image` has no `/etc/resolv.conf`, `/etc/hosts` or `/etc/hostname`, or ships one of them as an empty regular file. In practice this only affects users who pin `spec.image` to a pre-v3.6.0 Kairos release. The `kairos-agent` that runs during the upgrade is the one shipped in `spec.image`, not the one on the current node, so upgrading a very old node to a v3.6.0 or newer image works fine.
 
 ## Debugging upgrades
 
