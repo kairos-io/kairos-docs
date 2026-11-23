@@ -31,7 +31,7 @@ The version number comes from the titles of the changes merged since the previou
 | Any other change, such as `fix`, `docs` or `ci` | Patch | `v4.3.0` to `v4.3.1` |
 | A breaking change (`!` after the type, or a `BREAKING CHANGE:` footer) | Major | `v4.3.0` to `v5.0.0` |
 
-A breaking change is never released automatically. The weekly run stops and a maintainer starts the release by hand.
+A breaking change is not picked up by the weekly run. A maintainer starts that release by hand, and it is approved like any other release.
 
 ## Hadron
 
