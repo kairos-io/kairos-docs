@@ -249,6 +249,22 @@ get_hadron_version_from_release() {
     echo "$extracted_version"
 }
 
+# Function to tell whether a Kairos release ships the agent, immucore and the
+# Kairos provider itself. Since they moved into the Kairos repository they are
+# released under the Kairos version and the release carries a provider-kairos
+# archive. An earlier release pins them in the kairos-init Makefile instead.
+# Arguments:
+#   $1: kairos_version (e.g., v4.6.0)
+# Returns: 0 if the release ships them, 1 if not or if the release is unknown
+release_ships_core_components() {
+    local kairos_version="${1:-}"
+    [ -n "$kairos_version" ] || return 1
+
+    local response
+    response=$(_curl_github "https://api.github.com/repos/kairos-io/kairos/releases/tags/$kairos_version") || return 1
+    echo "$response" | jq -e '[.assets[]?.name | select(startswith("provider-kairos-"))] | length > 0' >/dev/null
+}
+
 # Function to fetch subcomponent versions from kairos-init Makefile and kairos release
 # Arguments:
 #   $1: kairos_init_version (e.g., v0.5.20)
@@ -257,19 +273,26 @@ get_hadron_version_from_release() {
 get_component_versions() {
     local kairos_init_version="$1"
     local kairos_version="${2:-}"
-    local makefile_url="https://raw.githubusercontent.com/kairos-io/kairos-init/refs/tags/$kairos_init_version/Makefile"
-    local response
-    
-    if ! response=$(_curl_raw "$makefile_url"); then
-        echo "Error: Failed to fetch Makefile for kairos-init version $kairos_init_version" >&2
-        return 1
+    local agent_version immucore_version provider_version
+
+    if release_ships_core_components "$kairos_version"; then
+        agent_version="$kairos_version"
+        immucore_version="$kairos_version"
+        provider_version="$kairos_version"
+    else
+        local makefile_url="https://raw.githubusercontent.com/kairos-io/kairos-init/refs/tags/$kairos_init_version/Makefile"
+        local response
+        if ! response=$(_curl_raw "$makefile_url"); then
+            echo "Error: Failed to fetch Makefile for kairos-init version $kairos_init_version" >&2
+            return 1
+        fi
+
+        # Extract version variables from Makefile
+        agent_version=$(echo "$response" | grep -E '^AGENT_VERSION\s*:?=' | sed 's/.*:=\s*//' | tr -d '\r\n')
+        immucore_version=$(echo "$response" | grep -E '^IMMUCORE_VERSION\s*:?=' | sed 's/.*:=\s*//' | tr -d '\r\n')
+        provider_version=$(echo "$response" | grep -E '^PROVIDER_KAIROS_VERSION\s*:?=' | sed 's/.*:=\s*//' | tr -d '\r\n')
     fi
-    
-    # Extract version variables from Makefile
-    local agent_version=$(echo "$response" | grep -E '^AGENT_VERSION\s*:?=' | sed 's/.*:=\s*//' | tr -d '\r\n')
-    local immucore_version=$(echo "$response" | grep -E '^IMMUCORE_VERSION\s*:?=' | sed 's/.*:=\s*//' | tr -d '\r\n')
-    local provider_version=$(echo "$response" | grep -E '^PROVIDER_KAIROS_VERSION\s*:?=' | sed 's/.*:=\s*//' | tr -d '\r\n')
-    
+
     # AuroraBoot is released with Kairos
     local auroraboot_version
     auroraboot_version=$(get_auroraboot_version "$kairos_version")

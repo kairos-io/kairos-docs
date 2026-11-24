@@ -79,6 +79,41 @@ echo "----------------------------------------------------------"
 ) || echo "✗ AuroraBoot version selection failed"
 echo ""
 
+echo "Test 3c: agent, immucore and provider versions"
+echo "---------------------------------------------------"
+# The functions below replace the network calls, so this test needs no access.
+(
+  _curl_github() {
+    case "$1" in
+      */releases/tags/v9.0.0) echo '{"assets":[{"name":"provider-kairos-v9.0.0-linux-amd64.tar.gz"},{"name":"auroraboot_9.0.0_linux_amd64.tar.gz"},{"name":"kairos-hadron-v0.6.3-core-amd64-generic-v9.0.0-k3sv1.35.0+k3s1.iso"},{"name":"kairos-hadron-v0.6.3-core-amd64-generic-v9.0.0-k0sv1.35.0+k0s.0.iso"}]}' ;;
+      */releases/tags/v4.0.0) echo '{"assets":[{"name":"kairos-hadron-v0.0.4-core-amd64-generic-v4.0.0-k3sv1.34.0+k3s1.iso"}]}' ;;
+      */kairos-io/AuroraBoot/releases/latest) echo '{"tag_name":"v0.31.0"}' ;;
+      *) return 1 ;;
+    esac
+  }
+  _curl_raw() {
+    case "$1" in
+      */kairos-init/refs/tags/v0.9.9/Makefile) printf 'AGENT_VERSION := v2.1.0\nIMMUCORE_VERSION := v0.5.0\nPROVIDER_KAIROS_VERSION := v1.2.3\n' ;;
+      *) return 22 ;;
+    esac
+  }
+  failed=0
+  check() { # description, expected, actual
+    if [ "$2" = "$3" ]; then echo "✓ $1: $3"; else echo "✗ $1: expected $2, got $3"; failed=1; fi
+  }
+  shipped=$(get_component_versions "v9.9.9" "v9.0.0")
+  check "release that ships the components: agent" "v9.0.0" "$(echo "$shipped" | jq -r .agent_version)"
+  check "release that ships the components: immucore" "v9.0.0" "$(echo "$shipped" | jq -r .immucore_version)"
+  check "release that ships the components: provider" "v9.0.0" "$(echo "$shipped" | jq -r .provider_version)"
+  legacy=$(get_component_versions "v0.9.9" "v4.0.0")
+  check "release cut before the move: agent" "v2.1.0" "$(echo "$legacy" | jq -r .agent_version)"
+  check "release cut before the move: immucore" "v0.5.0" "$(echo "$legacy" | jq -r .immucore_version)"
+  check "release cut before the move: provider" "v1.2.3" "$(echo "$legacy" | jq -r .provider_version)"
+  if get_component_versions "v8.8.8" "v4.0.0" >/dev/null 2>&1; then echo "✗ missing Makefile accepted"; failed=1; else echo "✓ missing Makefile fails for a release cut before the move"; fi
+  exit $failed
+) || echo "✗ component version selection failed"
+echo ""
+
 echo "Test 4: Retention source (latest patch per major.minor)"
 echo "--------------------------------------------------------"
 if releases=$(fetch_latest_releases); then
