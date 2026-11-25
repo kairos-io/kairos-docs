@@ -71,7 +71,7 @@ A distribution of a family that is not in the table needs more work. `kairos-ini
 
 ## Check your distribution
 
-`kairos-init check` reads a system and says if it can become a Kairos system. It is part of [`kairos-init`](https://github.com/kairos-io/kairos/tree/master/kairos-init), the tool that converts a base image, so the check and the conversion use the same rules. It changes nothing, it needs no network, and it does not have to run as root. `kairos-init` runs the same check before it converts an image, and stops with the lines that failed.
+`kairos-init check` reads a system and says if it can become a Kairos system. It is part of [`kairos-init`](https://github.com/kairos-io/kairos/tree/master/kairos-init), the tool that converts a base image, so the check and the conversion use the same rules. It changes nothing, it needs no network, and it does not have to run as root. `kairos-init` runs the same check before it converts an image, and stops with the lines that failed. Pass `--skip-check` to the conversion to go on anyway.
 
 Kairos does not convert a running machine. It converts a container image. Get the `kairos-init` binary from its image, then run the check in the container image you want to use as the base, because an image often differs from an installed machine:
 
@@ -88,14 +88,14 @@ Each line is one requirement. These are some of the lines for Kali Linux:
 
 ```text
   pass  family: debian, as a derivative of debian (ID_LIKE=debian)
-  fail  packages: yip cannot tell the package manager from ID=kali, kairos-init stops with "unknown package manager"
+  fail  packages: yip cannot tell the package manager from ID=kali, kairos-init stops with "unknown package manager" (unknown package manager)
   fail  build steps: no kairos-init stage matches PRETTY_NAME=Kali GNU/Linux Rolling, so it builds no initramfs and does not enable the network and ssh services
 ```
 
 | Line | Meaning |
 |---|---|
 | `pass` | The requirement is met, or the package list of the family covers it. The check does not look in the package repositories, so only a build proves that the packages exist. |
-| `warn` | Kairos works without it, but a feature or a boot mode is not available. |
+| `warn` | Something is not available, such as a feature or a boot mode, or the check cannot be sure. |
 | `fail` | The system cannot become a Kairos system as it is. |
 
 The command exits with 1 when there is at least one `fail`, and with 2 when you use it wrongly, so you can also run it in your own build pipeline. These flags change what it checks:
@@ -107,9 +107,11 @@ The command exits with 1 when there is at least one `fail`, and with 2 when you 
 | `--root <dir>` | You want to check an unpacked root filesystem. Add `--arch <arch>` if it is for another architecture. |
 | `--quiet` | You only want the `warn` and `fail` lines. |
 
-The conversion options `--stage`, `--skip-step`, `--model` and `--stage-extensions` also work with `check`, so you can see what the conversion will see.
+The conversion options `--stage`, `--skip-step`, `--model`, `--stage-extensions` and `-t` also work with `check`, so you can see what the conversion will see. With `--stage-extensions`, a missing tool or kernel package is a `warn`, because an extension may bring it.
 
-The Kairos continuous integration runs `kairos-init check` before and after the conversion on the same base images, and fails when the two disagree.
+The check does not cover FIPS, and it does not check the package lists of a board model. With `--root`, it does not read the systemd version.
+
+The Kairos continuous integration runs `kairos-init check` on the base images of the flavor build matrix before it converts them. For the generic model, it also runs `kairos-init check --converted` after the conversion.
 
 ## Requirements
 
