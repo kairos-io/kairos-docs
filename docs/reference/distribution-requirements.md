@@ -43,7 +43,7 @@ Kairos groups distributions into families. Distributions of one family mostly sh
 
 The examples are not a support list. The base images that the project tests `kairos-init` on are in the [flavor build matrix](https://github.com/kairos-io/kairos/blob/master/.github/workflows/_build-flavors.yaml).
 
-A family says which packages and steps apply. It does not mean that every boot mode works. For example, Alpine has no shim, and the agent does not look in the directory where CentOS Stream keeps its shim and GRUB, so an install on a UEFI machine fails on both. The script below prints a `warn` for that.
+A family says which packages and steps apply. It does not mean that every boot mode works. For example, Alpine has no shim, and the agent does not look in the directory where CentOS Stream keeps its shim and GRUB, so an install on a UEFI machine fails on both. The check below prints a `warn` for that.
 
 ### Derivatives
 
@@ -71,25 +71,18 @@ A distribution of a family that is not in the table needs more work. `kairos-ini
 
 ## Check your distribution
 
-The [`check-base-image.sh`](https://github.com/kairos-io/kairos/blob/master/scripts/check-base-image.sh) script reads a system and says if it can become a Kairos system. It changes nothing, it needs no network, and it does not have to run as root.
+`kairos-init check` reads a system and says if it can become a Kairos system. It is part of [`kairos-init`](https://github.com/kairos-io/kairos/tree/master/kairos-init), the tool that converts a base image, so the check and the conversion use the same rules. It changes nothing, it needs no network, and it does not have to run as root. `kairos-init` runs the same check before it converts an image, and stops with the lines that failed.
 
-Download it:
-
-```bash
-curl -fsSLO https://raw.githubusercontent.com/kairos-io/kairos/master/scripts/check-base-image.sh
-```
-
-Kairos does not convert a running machine. It converts a container image. Run the script on a machine with your distribution to get a first answer:
+Kairos does not convert a running machine. It converts a container image. Get the `kairos-init` binary from its image, then run the check in the container image you want to use as the base, because an image often differs from an installed machine:
 
 ```bash
-sh check-base-image.sh
+docker create --name kairos-init-copy quay.io/kairos/kairos-init:{{< KairosInitVersion >}}
+docker cp kairos-init-copy:/kairos-init ./kairos-init
+docker rm kairos-init-copy
+docker run --rm -v "$PWD/kairos-init:/kairos-init:ro" ubuntu:24.04 /kairos-init check
 ```
 
-Then run it in the container image you want to use as the base, because an image often differs from an installed machine:
-
-```bash
-docker run --rm --entrypoint sh -v "$PWD/check-base-image.sh:/check.sh:ro" ubuntu:24.04 /check.sh
-```
+To check a running machine, copy the binary to it and run `./kairos-init check`.
 
 Each line is one requirement. These are some of the lines for Kali Linux:
 
@@ -101,11 +94,11 @@ Each line is one requirement. These are some of the lines for Kali Linux:
 
 | Line | Meaning |
 |---|---|
-| `pass` | The requirement is met, or the package list of the family covers it. The script does not look in the package repositories, so only a build proves that the packages exist. |
+| `pass` | The requirement is met, or the package list of the family covers it. The check does not look in the package repositories, so only a build proves that the packages exist. |
 | `warn` | Kairos works without it, but a feature or a boot mode is not available. |
 | `fail` | The system cannot become a Kairos system as it is. |
 
-The script exits with a status other than zero when there is at least one `fail`, so you can also run it in your own build pipeline. These flags change what it checks:
+The command exits with 1 when there is at least one `fail`, and with 2 when you use it wrongly, so you can also run it in your own build pipeline. These flags change what it checks:
 
 | Flag | Use it when |
 |---|---|
@@ -114,11 +107,13 @@ The script exits with a status other than zero when there is at least one `fail`
 | `--root <dir>` | You want to check an unpacked root filesystem. Add `--arch <arch>` if it is for another architecture. |
 | `--quiet` | You only want the `warn` and `fail` lines. |
 
-The Kairos continuous integration runs the script next to `kairos-init` on the same base images, and fails when the two disagree.
+The conversion options `--stage`, `--skip-step`, `--model` and `--stage-extensions` also work with `check`, so you can see what the conversion will see.
+
+The Kairos continuous integration runs `kairos-init check` before and after the conversion on the same base images, and fails when the two disagree.
 
 ## Requirements
 
-The script reports a missing **Required** item as `fail` and a missing **Optional** item as `warn`. Items that only one boot mode needs, such as UEFI, are also a `warn`.
+The check reports a missing **Required** item as `fail` and a missing **Optional** item as `warn`. Items that only one boot mode needs, such as UEFI, are also a `warn`.
 
 When `kairos-init` has a package list for your family, you do not have to install these yourself. The list is here so that you can tell whether your distribution has them.
 
@@ -130,7 +125,7 @@ When `kairos-init` has a package list for your family, you do not have to instal
 | The package manager of the family | Required | `apt-get`, `dnf`, `zypper` or `apk`. `microdnf` alone is not enough. Hadron has none. |
 | systemd or OpenRC | Required | One of them. With both installed, the tools cannot choose. |
 | systemd 252 or newer, with `systemd-cryptenroll` and `systemd-cryptsetup` | Optional, required for [Trusted Boot](/docs/installation/trustedboot/) | Also needed for encryption bound to TPM measurements. |
-| A layout where `/usr` is image content | Required | `/usr` is read-only. `/etc`, `/var` and `/srv` are writable, but changes there are lost on reboot, except in [the paths that Kairos keeps](/docs/architecture/immutable/). `/home`, `/opt`, `/root` and `/usr/local` are kept. The script does not check this. |
+| A layout where `/usr` is image content | Required | `/usr` is read-only. `/etc`, `/var` and `/srv` are writable, but changes there are lost on reboot, except in [the paths that Kairos keeps](/docs/architecture/immutable/). `/home`, `/opt`, `/root` and `/usr/local` are kept. The check does not look at this. |
 
 ### Kernel
 
