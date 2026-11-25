@@ -27,7 +27,8 @@ connect with has to be able to read the image.
 ssh://[user@]host[:port][/path]
 ```
 
-Without a user, the `user` of the `ssh-source` block is used, and without that the user running the agent.
+Without a user, the `user` of the `ssh-source` block is used, and without that the user running the agent. A port other than 22 goes in the
+URI, `ssh://root@10.0.0.5:2222`, or in your `ssh` configuration.
 
 | Path | Image copied |
 |---|---|
@@ -45,8 +46,10 @@ The URI cannot carry a password. Authentication is by key, `ssh` never asks for 
 
 On the other node:
 
-- An SSH server that accepts the key, for an account that can read the image files. On Kairos the state partition files are
-  readable by root, so this is usually `root` with a key in its `authorized_keys`.
+- An SSH server that accepts the key, for an account that can read the image files. This is usually `root` with a key in
+  its `authorized_keys`. The image files written by an upgrade are created with mode 0600, so only root can read them. To
+  use another account, make the files readable for it yourself, for example with a `chmod` in an `after-upgrade` stage of
+  the serving node.
 - `cat`, `tail`, `stat` and `sha256sum`, which coreutils and busybox both have. Nothing else, no Kairos component.
 
 On the node that upgrades: the `ssh` client. To pin host keys by fingerprint it also needs `ssh-keyscan` and `ssh-keygen`.
@@ -92,8 +95,29 @@ those are trusted. Without them the `known_hosts` of the user running the agent 
 Then upgrade as usual. `kairos-agent upgrade --dry-run` connects to the other node and reports the size of the image it
 would copy, without transferring it.
 
-The same works for an installation, with `install.system.source`, and for a reset, with `reset.system.source`, run from
-the recovery system with the network up. An unreachable node or a failed copy fails the action, as it does for any source.
+## Install and reset
+
+`kairos-agent upgrade`, `manual-install`, `interactive-install` and the pairing `install` take `--source`. `kairos-agent reset`
+has no `--source` flag, and an install started on its own from a cloud config has none either. For those, set the source in the cloud
+config, `install.system.source` and `reset.system.source`, with the same `ssh-source` block.
+
+```yaml
+#cloud-config
+install:
+  system:
+    source: ssh://10.0.0.5
+ssh-source:
+  user: upgrader
+  identity-file: /oem/ssh/fleet_upgrade
+  known-hosts-file: /oem/ssh/known_hosts
+```
+
+A reset runs from the recovery system with the network up. An unreachable node or a failed copy fails the action, as it
+does for any source.
+
+For an install, the agent reads the source and the `ssh-source` block, and connects to measure the image, before any
+stage of the install runs. The key files and the network must already be there at that point, a `before-install` stage
+is too late. Have the key files on the install medium and the network up before the install starts.
 
 ## Integrity
 
