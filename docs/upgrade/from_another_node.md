@@ -47,9 +47,9 @@ The URI cannot carry a password. Authentication is by key, `ssh` never asks for 
 On the other node:
 
 - An SSH server that accepts the key, for an account that can read the image files. This is usually `root` with a key in
-  its `authorized_keys`. The image files written by an upgrade are created with mode 0600, so only root can read them. To
-  use another account, make the files readable for it yourself, for example with a `chmod` in an `after-upgrade` stage of
-  the serving node.
+  its `authorized_keys`. Images written by an install or a reset are mode 0644, but images written by an upgrade are 0600, so
+  only root can read those. To use another account on a node that was upgraded, make the files readable for it yourself, for
+  example with a `chmod` in an `after-upgrade` stage of that node.
 - `cat`, `tail`, `stat` and `sha256sum`, which coreutils and busybox both have. Nothing else, no Kairos component.
 
 On the node that upgrades: the `ssh` client. To pin host keys by fingerprint it also needs `ssh-keyscan` and `ssh-keygen`.
@@ -92,8 +92,10 @@ upgrade:
 The host key is always checked and an unknown host is refused. With `known-hosts-file` or `host-key-fingerprints` set, only
 those are trusted. Without them the `known_hosts` of the user running the agent apply.
 
-Then upgrade as usual. `kairos-agent upgrade --dry-run` connects to the other node and reports the size of the image it
-would copy, without transferring it.
+Then upgrade as usual. `kairos-agent upgrade --dry-run` connects to the other node, checks its host key and reads the size
+of its image to size the transition image, then prints a summary with a `Serving node` line and changes nothing: no image is
+hashed or copied. The `Image size` in the summary is the size of the image the upgrade would create, which is at least the
+default image size, not the size of the remote image.
 
 ## Install and reset
 
@@ -115,9 +117,9 @@ ssh-source:
 A reset runs from the recovery system with the network up. An unreachable node or a failed copy fails the action, as it
 does for any source.
 
-For an install, the agent reads the source and the `ssh-source` block, and connects to measure the image, before any
-stage of the install runs. The key files and the network must already be there at that point, a `before-install` stage
-is too late. Have the key files on the install medium and the network up before the install starts.
+For an install, the agent reads the source and the `ssh-source` block, and connects to measure the image, when it builds
+the install, before the stages of the install run. The key files and the network have to exist before the install starts. If
+they do not, the install fails or hangs at the ssh step, so have the key files on the install medium and the network up first.
 
 ## Integrity
 
