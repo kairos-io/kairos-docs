@@ -108,6 +108,70 @@ Under Trusted Boot the cmdline is measured, so `rd.immucore.ignoremountfailure` 
 
 It is possible to disable immutability by adding `rd.cos.debugrw` to the kernel boot commands.
 
+Booting with `rd.cos.debugrw` mounts the state partition read-write, so the OS images can change. Immucore removes the image checksum files (see below) when you do, and they are written again on the next upgrade or reset.
+
+## Check OS images for corruption at boot
+
+Kairos can record a sha256 checksum for each OS image and check it before the image is mounted, to catch disk corruption and half written images. It is off by default and needs two switches: one to write the checksums, one to check them at boot.
+
+### Write the checksums
+
+Set `image-checksum.create` and `kairos-agent` writes `active.img.sha256`, `passive.img.sha256` and `recovery.img.sha256` next to the images, in the `cOS` directory of the `COS_STATE` and `COS_RECOVERY` partitions, every time it installs, upgrades or resets. The files use the `sha256sum` format, so you can check an image by hand:
+
+```bash
+cd /run/initramfs/cos-state/cOS && sha256sum -c active.img.sha256
+```
+
+With `create` off, no checksum files are written and stale ones are removed.
+
+### Check them at boot
+
+`image-checksum.verify` tells immucore what to do before it mounts an image:
+
+| Value | Behavior |
+|-------|----------|
+| `none` (default) | The image is not checked and not read. |
+| `warn` | The image is checked. Every problem is logged and the boot continues. |
+| `fail` | The image is checked. On a problem the image is not mounted and the boot stops on a failure screen that shows the image, the stored sha256 and the sha256 computed from the image. |
+
+Hashing a multi-GB image adds to the boot time, mostly on slow disks such as SD cards, which is why the default is `none`.
+
+An image with no checksum file (installed by an older agent, or written with `create` off) is skipped, and so is one that an older agent replaced without updating the checksum. Both are logged, and neither stops the boot. To count them as a problem, set `image-checksum.require`. A checksum file that cannot be read, or an image that does not match its checksum, is always a problem.
+
+### Configure it
+
+```yaml
+#cloud-config
+image-checksum:
+  create: true
+  verify: warn
+  require: false
+```
+
+Every key can also be set on the kernel cmdline in dot notation, and the cmdline wins over the cloud config:
+
+| Config key | Kernel cmdline |
+|------------|----------------|
+| `image-checksum.create` | `image-checksum.create=true` or `=false` |
+| `image-checksum.verify` | `image-checksum.verify=none\|warn\|fail` |
+| `image-checksum.require` | `image-checksum.require=true` or `=false` |
+
+`create` is read by `kairos-agent` when it runs. `verify` and `require` are read by immucore very early in the boot, before the cloud config is available, so `kairos-agent` copies them to an `image-checksum.conf` file next to the images each time it installs, upgrades or resets. A change to the cloud config reaches the boot with the next upgrade or reset, while a cmdline value applies at once. To try `fail` or to get past a failure, edit the boot entry in the boot menu (press `e`) and add `image-checksum.verify=warn` or `image-checksum.verify=none`.
+
+The result is in the immucore logs under `/run/immucore/`.
+
+### Check the images by hand
+
+`kairos-agent verify-images` checks the active, passive and recovery images of the running system against their checksum files and prints the stored (expected) and computed (actual) sha256 of each. It only reads, so it is safe to run at any time. It exits with an error when an image does not match, or when it has no usable checksum and `image-checksum.require` is on. Use `--dir` to check another directory.
+
+```bash
+sudo kairos-agent verify-images
+```
+
+### Limits
+
+This protects against disk corruption and partial writes. It is not a security feature: the checksum is stored next to the image, so someone with write access to the partition can change both. For that, use [Trusted Boot](/docs/installation/trustedboot/). Trusted Boot images are not checked, as they do not use these image files.
+
 ## See also
 
 - [Dracut debug docs](https://fedoraproject.org/wiki/How_to_debug_Dracut_problems)
