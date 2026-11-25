@@ -143,9 +143,22 @@ With `create` off (the default), no checksum files are written, and the old chec
 | `warn` | The image is checked. Every problem is logged and the boot continues. |
 | `fail` | The image is checked. On a problem the image is not mounted and the boot stops on a failure screen that shows the image, the stored sha256 and the sha256 computed from the image. |
 
-Only the image being booted is checked: booting active checks `active.img`, booting passive checks `passive.img`, booting recovery checks `recovery.img`. Hashing a multi-GB image adds to the boot time, mostly on slow disks such as SD cards, which is why the default is `none`.
+Only the image being booted is checked: booting active checks `active.img`, booting passive checks `passive.img`, booting recovery checks `recovery.img`. Hashing a multi-GB image adds to the boot time, mostly on slow disks such as SD cards, which is why the default is `none`. The time is capped by a budget, see [Time budget](#time-budget).
 
 An image with no checksum file (installed by an older agent, or written with `create` off) is skipped, and so is one that an older agent replaced without updating the checksum. Both are logged, and neither stops the boot. To count them as a problem, set `image-checksum.require`. When checking is on, a checksum file that cannot be read, or an image that does not match its checksum, is always a problem.
+
+### Time budget
+
+The time immucore needs is about the image size divided by the read speed of the disk: seconds on NVMe or SSD, tens of seconds for a large image on a hard disk, minutes for a multi-GB image on an SD card. The boot has a hard limit on how long it waits for the root device: dracut gives up after `rd.retry` seconds (180 by default) and the node reboots, over and over when the kernel command line has `rd.emergency=reboot`. A check that is too slow must not cause that, so it has a time budget, `image-checksum.verify-timeout`, in seconds:
+
+- The default is 60. `0` means no limit.
+- When the budget runs out, immucore stops hashing, logs a warning with the image, the bytes it read and the time it spent, and boots the image without the check. This is the same in `warn` and `fail`: a check that was skipped never stops the boot.
+- The exception is `fail` together with `require: true`. That combination means "never boot an image that was not verified", so a check skipped for lack of time stops the boot on the failure screen, like a missing checksum does.
+- A skipped check says nothing about the image. To verify an image on a slow disk, raise the budget and `rd.retry` together, so that the budget plus the rest of the boot stays under `rd.retry`, or run `kairos-agent verify-images` once the system is up. It has no time limit.
+
+`kairos-agent verify-images` is not affected by the budget.
+
+If you set `verify-timeout` to `0` or to more than about two minutes, add a larger `rd.retry` to the kernel command line as well, for example with `kairos-agent grubedit set extra_active_cmdline=rd.retry=900`.
 
 ### Configure it
 
@@ -155,6 +168,7 @@ image-checksum:
   create: true
   verify: warn
   require: false
+  verify-timeout: 60
 ```
 
 Every key can also be set on the kernel cmdline in dot notation, and the cmdline wins over the cloud config:
@@ -164,10 +178,11 @@ Every key can also be set on the kernel cmdline in dot notation, and the cmdline
 | `image-checksum.create` | `image-checksum.create=true` or `=false` |
 | `image-checksum.verify` | `image-checksum.verify=none\|warn\|fail` |
 | `image-checksum.require` | `image-checksum.require=true` or `=false` |
+| `image-checksum.verify-timeout` | `image-checksum.verify-timeout=<seconds>`, `0` for no limit |
 
 `create` is read by `kairos-agent` when it runs, from the cloud config and from the kernel cmdline of the running system.
 
-`verify` and `require` are read by immucore very early in the boot, before the cloud config is available. So immucore looks at the kernel cmdline first, and then at an `image-checksum.conf` file that `kairos-agent` keeps next to the images. A cmdline value applies at once. A change to the cloud config only reaches the boot the next time `kairos-agent` writes that file:
+`verify`, `require` and `verify-timeout` are read by immucore very early in the boot, before the cloud config is available. So immucore looks at the kernel cmdline first, and then at an `image-checksum.conf` file that `kairos-agent` keeps next to the images. A cmdline value applies at once. A change to the cloud config only reaches the boot the next time `kairos-agent` writes that file:
 
 - On `COS_STATE` (used to boot active and passive) it is written by install, upgrade and reset.
 - On `COS_RECOVERY` (used to boot recovery) it is written by install and `upgrade --recovery`.
