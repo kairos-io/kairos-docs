@@ -27,7 +27,7 @@ connect with has to be able to read the image.
 ssh://[user@]host[:port][/path]
 ```
 
-Without a user, the `user` of the `ssh-source` block is used, and without that the user running the agent. A port other than 22 goes in the
+Without a user, the `user` of the `ssh-source` block is used, and without that the default of `ssh`, which is the user running the agent unless your `ssh` configuration says otherwise. A port other than 22 goes in the
 URI, `ssh://root@10.0.0.5:2222`, or in your `ssh` configuration.
 
 | Path | Image copied |
@@ -84,7 +84,7 @@ upgrade:
 
 | Key | |
 |---|---|
-| `user` | Account to connect with when the source names none. Defaults to the user running the agent. |
+| `user` | Account to connect with when the source names none. Without it, the default of `ssh`: the user running the agent, unless your `ssh` configuration sets a `User`. |
 | `identity-file` | Path to the private key of this node. Used alone, `ssh` does not try other keys. |
 | `known-hosts-file` | A `known_hosts` file with the host key of the other node. |
 | `host-key-fingerprints` | List of accepted host key fingerprints, `SHA256:...`. Print one on the other node with `ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub`. |
