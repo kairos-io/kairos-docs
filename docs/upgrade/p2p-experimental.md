@@ -13,9 +13,10 @@ isolated, trusted networks only. Do not enable it on networks you do not control
 
 In a closed network (no registry, no internet) every node can pull its image from a single place,
 which then becomes the bottleneck. With the experimental `p2p://` image source, nodes offer their
-`active`, `passive` and `recovery` images to each other, and a node that installs, upgrades or resets
-downloads from several peers at once. A node that is still downloading already shares the parts it has,
-so the load spreads over the nodes, and a peer that goes away mid-download is replaced by another one.
+`active` and `passive` images to each other (and the `recovery` image, when you run the seeder by hand, see
+[Seeding](#seeding)). A node that installs, upgrades or resets downloads from several peers at once, so
+the load spreads over every node that already has the image, and a peer that goes away mid-download is
+replaced by another one. A node only starts sharing an image once it has downloaded and verified all of it.
 
 It only uses plain HTTP. There is no tracker, no DHT and no extra service.
 
@@ -42,8 +43,10 @@ line:
 sudo kairos agent upgrade --experimental-p2p --source 'p2p://10.0.0.2,10.0.0.3/active?pin=<pin>'
 ```
 
-Nothing runs until you opt in, with `p2p-source.experimental: true` in the cloud config, the
-`--experimental-p2p` flag of `upgrade`, or `KAIROS_P2P_EXPERIMENTAL=1`. The recovery image can only be
+Nothing runs until you opt in, with `p2p-source.experimental: true` in the cloud config, or
+`KAIROS_P2P_EXPERIMENTAL=1`. `upgrade` also has the `--experimental-p2p` flag, and `p2p seed` and
+`p2p fetch` have `--experimental`. `manual-install` and `reset` have no such flag: set
+`p2p-source.experimental: true` in the cloud config. The recovery image can only be
 used for the recovery system, and the active and passive images only for the system. Trusted boot (UKI)
 does not support it.
 
@@ -93,11 +96,13 @@ peer it is supposed to check proves nothing.
 - **Limits**: images larger than `max-image-size` (16 GiB by default) are refused, and so is a download that does
   not fit in the free space (before anything is written).
 - **Resume**: the download goes into the image file with a small state file next to it (both only readable by
-  root), so a rerun continues where the previous one stopped. Chunks found on disk are verified again before they
-  are trusted. A failed download that cannot be resumed is removed.
+  root), so a rerun continues where an interrupted download stopped. Chunks found on disk are verified again before
+  they are trusted. A failed download that cannot be resumed is removed. A download that finished is not
+  resumed: running `p2p fetch` again for the same output downloads the image again.
 - **Sharing**: a node that installed or upgraded offers its images to the others through the seeding service
-  (`p2p-source.enabled: true`), which picks up the new image on its own. `kairos agent p2p fetch --linger` offers
-  the image it just fetched for a while. A node that is still downloading serves nothing: chunks that were only
+  (`p2p-source.enabled: true`), which picks up the new image on its own. `kairos agent p2p fetch --linger <duration>`
+  offers the image it just fetched for a while. It listens on a random port, and lets in only the peer it
+  fetched from, unless you pass `--port 42069 --allow-cidr <subnet>` so the other nodes can find it. A node that is still downloading serves nothing: chunks that were only
   checked against a manifest a peer supplied are never handed on.
 - **Allowlist**: peers must be in the allowed networks, for incoming and outgoing connections. When you do not
   set one, the allowlist is the addresses of the peers you listed (which must be on a private network), or the
@@ -137,7 +142,8 @@ why `?pin=` is the recommended form. Treat the pin like an image digest: whoever
 cloud config decides what your nodes run.
 
 A source **without** any pin is refused, before any partition is touched, because then any host on the network
-could serve an image that runs as root. `p2p-source.insecure: true` (or `--p2p-insecure`) switches that off, with
+could serve an image that runs as root. `p2p-source.insecure: true` in the cloud config (`--p2p-insecure` on
+`upgrade`, `--insecure` on `p2p fetch`) switches that off, with
 a loud warning in the log. Do not use it anywhere you would not give every host of the network root on the node.
 
 What is **not** protected:
@@ -175,6 +181,12 @@ p2p-source:
   disable-announce: false  # announce with mDNS
 ```
 
+The unit serves the `active` and `passive` images only. The recovery partition is not mounted while the
+system runs, and the unit has no privileges to mount it, so `/recovery/manifest` is not served and a
+`p2p://.../recovery` source finds no peer. To offer the recovery image, mount the partition read only yourself
+and run the seeder by hand: `kairos agent p2p seed --experimental --recovery-dir <mount point>` (the
+directory holding `cOS/recovery.img`).
+
 The unit is sandboxed (no new privileges, read-only file system except its manifest cache, no capabilities,
 restricted system calls and address families, memory and descriptor limits). The seeder serves at most 128
 connections, 8 per address, 4 image streams per address, 32 streams in total, and cuts a client that stops
@@ -194,3 +206,4 @@ The same options exist as flags of `kairos agent p2p seed` (`--bind`, `--port`, 
 - The nodes of a swarm only share chunks if their images are byte identical.
 - Several network interfaces: set `p2p-source.bind`, the agent does not guess.
 - There is no download side rate limit.
+- The image a p2p download writes is only readable by root (mode 0600).
