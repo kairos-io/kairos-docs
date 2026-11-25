@@ -108,7 +108,7 @@ Under Trusted Boot the cmdline is measured, so `rd.immucore.ignoremountfailure` 
 
 It is possible to disable immutability by adding `rd.cos.debugrw` to the kernel boot commands.
 
-Booting with `rd.cos.debugrw` mounts the state partition read-write, so the OS images can change. Immucore removes the image checksum files (see below) when you do, and they are written again on the next upgrade or reset.
+Booting with `rd.cos.debugrw` mounts the state partition read-write, so the OS images can change. Immucore removes the checksum file of the image it boots when you do, because the image can change. A new one is written the next time `kairos-agent` writes that image, if `image-checksum.create` is on.
 
 ## Check OS images for corruption at boot
 
@@ -116,13 +116,22 @@ Kairos can record a sha256 checksum for each OS image and check it before the im
 
 ### Write the checksums
 
-Set `image-checksum.create` and `kairos-agent` writes `active.img.sha256`, `passive.img.sha256` and `recovery.img.sha256` next to the images, in the `cOS` directory of the `COS_STATE` and `COS_RECOVERY` partitions, every time it installs, upgrades or resets. The files use the `sha256sum` format, so you can check an image by hand:
+With `image-checksum.create` on, `kairos-agent` writes a `.sha256` file next to each image it writes, in the `cOS` directory of the partition that holds the image:
+
+| Action | Checksums written |
+|--------|-------------------|
+| install | `active.img.sha256` and `passive.img.sha256` on `COS_STATE`, `recovery.img.sha256` on `COS_RECOVERY` |
+| upgrade | `active.img.sha256` for the new image, and `passive.img.sha256` for the previous active image that became passive (when you upgrade from active; passive is left alone when you upgrade from passive) |
+| `upgrade --recovery` | `recovery.img.sha256` |
+| reset | `active.img.sha256` and `passive.img.sha256` |
+
+The files use the `sha256sum` format, so you can check an image by hand:
 
 ```bash
 cd /run/initramfs/cos-state/cOS && sha256sum -c active.img.sha256
 ```
 
-With `create` off, no checksum files are written and stale ones are removed.
+With `create` off (the default), no checksum files are written, and the old checksum of an image the agent replaces is removed, so it never describes a different image.
 
 ### Check them at boot
 
@@ -134,9 +143,9 @@ With `create` off, no checksum files are written and stale ones are removed.
 | `warn` | The image is checked. Every problem is logged and the boot continues. |
 | `fail` | The image is checked. On a problem the image is not mounted and the boot stops on a failure screen that shows the image, the stored sha256 and the sha256 computed from the image. |
 
-Hashing a multi-GB image adds to the boot time, mostly on slow disks such as SD cards, which is why the default is `none`.
+Only the image being booted is checked: booting active checks `active.img`, booting passive checks `passive.img`, booting recovery checks `recovery.img`. Hashing a multi-GB image adds to the boot time, mostly on slow disks such as SD cards, which is why the default is `none`.
 
-An image with no checksum file (installed by an older agent, or written with `create` off) is skipped, and so is one that an older agent replaced without updating the checksum. Both are logged, and neither stops the boot. To count them as a problem, set `image-checksum.require`. A checksum file that cannot be read, or an image that does not match its checksum, is always a problem.
+An image with no checksum file (installed by an older agent, or written with `create` off) is skipped, and so is one that an older agent replaced without updating the checksum. Both are logged, and neither stops the boot. To count them as a problem, set `image-checksum.require`. When checking is on, a checksum file that cannot be read, or an image that does not match its checksum, is always a problem.
 
 ### Configure it
 
@@ -156,13 +165,22 @@ Every key can also be set on the kernel cmdline in dot notation, and the cmdline
 | `image-checksum.verify` | `image-checksum.verify=none\|warn\|fail` |
 | `image-checksum.require` | `image-checksum.require=true` or `=false` |
 
-`create` is read by `kairos-agent` when it runs. `verify` and `require` are read by immucore very early in the boot, before the cloud config is available, so `kairos-agent` copies them to an `image-checksum.conf` file next to the images each time it installs, upgrades or resets. A change to the cloud config reaches the boot with the next upgrade or reset, while a cmdline value applies at once. To try `fail` or to get past a failure, edit the boot entry in the boot menu (press `e`) and add `image-checksum.verify=warn` or `image-checksum.verify=none`.
+`create` is read by `kairos-agent` when it runs, from the cloud config and from the kernel cmdline of the running system.
+
+`verify` and `require` are read by immucore very early in the boot, before the cloud config is available. So immucore looks at the kernel cmdline first, and then at an `image-checksum.conf` file that `kairos-agent` keeps next to the images. A cmdline value applies at once. A change to the cloud config only reaches the boot the next time `kairos-agent` writes that file:
+
+- On `COS_STATE` (used to boot active and passive) it is written by install, upgrade and reset.
+- On `COS_RECOVERY` (used to boot recovery) it is written by install and `upgrade --recovery`.
+
+The file mirrors the configuration of that last run, kernel cmdline values included. If `image-checksum.verify=fail` was on the cmdline when you ran an upgrade, `fail` is stored and stays in effect after the cmdline value is gone. Setting `verify` to `none` and `require` to `false` removes the file at the next run.
+
+To try `fail` or to get past a failure, edit the boot entry in the boot menu (press `e`) and add `image-checksum.verify=warn` or `image-checksum.verify=none`.
 
 The result is in the immucore logs under `/run/immucore/`.
 
 ### Check the images by hand
 
-`kairos-agent verify-images` checks the active, passive and recovery images of the running system against their checksum files and prints the stored (expected) and computed (actual) sha256 of each. It only reads, so it is safe to run at any time. It exits with an error when an image does not match, or when it has no usable checksum and `image-checksum.require` is on. Use `--dir` to check another directory.
+`kairos-agent verify-images` checks the active, passive and recovery images against their checksum files and prints the stored (expected) and computed (actual) sha256 of each. By default it looks at the `COS_STATE` partition of the running system, and at `COS_RECOVERY` when it is mounted. It only reads, so it is safe to run at any time. It checks every image it finds, not only the booted one, whatever `image-checksum.verify` says. It exits with an error when an image does not match, when a checksum file or an image cannot be read, or when an image has no usable checksum and `image-checksum.require` is on. It reads `image-checksum.require` from the cloud config and the kernel cmdline. Use `--dir` to check another directory.
 
 ```bash
 sudo kairos-agent verify-images
@@ -170,7 +188,7 @@ sudo kairos-agent verify-images
 
 ### Limits
 
-This protects against disk corruption and partial writes. It is not a security feature: the checksum is stored next to the image, so someone with write access to the partition can change both. For that, use [Trusted Boot](/docs/installation/trustedboot/). Trusted Boot images are not checked, as they do not use these image files.
+This protects against disk corruption and partial writes. It is not a security feature: the checksum is stored next to the image, so someone with write access to the partition can change both. For that, use [Trusted Boot](/docs/installation/trustedboot/). Trusted Boot (UKI) systems and systemd-boot installs are not covered, as they do not boot from these image files, and neither is a squashfs recovery image.
 
 ## See also
 
