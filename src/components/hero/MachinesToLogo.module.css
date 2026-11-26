@@ -1,6 +1,6 @@
 /*
- * Without animation these rules draw the finished logo. All motion lives in the
- * prefers-reduced-motion query at the end.
+ * Without animation these rules draw the finished logo. Motion is only switched
+ * on inside the prefers-reduced-motion query below.
  */
 .stage {
   position: relative;
@@ -75,13 +75,13 @@
     animation: appear 0.8s linear 4.2s both;
   }
 
+  /* travel starts where bob ends, and replaces it. */
   .mover {
     animation:
       bob 1s ease-in-out both,
       travel 1.7s cubic-bezier(0.65, 0, 0.35, 1) var(--delay) forwards;
   }
 
-  /* travel starts where bob ends, and replaces it. */
   .cube {
     animation: cube-in 1.7s linear var(--delay) both;
   }

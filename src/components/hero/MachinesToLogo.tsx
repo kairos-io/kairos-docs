@@ -131,7 +131,7 @@ const MACHINES: Machine[] = [
 ];
 
 const LABEL =
-  'Kairos logo. A GPU card, an edge board, a virtual machine, a server, a laptop and a Raspberry Pi come together to form it. One lifecycle.';
+  'Kairos logo. One lifecycle for GPU cards, edge boards, virtual machines, servers, laptops and the Raspberry Pi.';
 
 /** Holds the animation at its first frame until the stage is on screen. */
 function usePlayWhenVisible() {
@@ -139,7 +139,8 @@ function usePlayWhenVisible() {
 
   useEffect(() => {
     const stage = ref.current;
-    if (!stage || stage.getBoundingClientRect().top + stage.offsetHeight / 2 < window.innerHeight) {
+    // Browsers without getAnimations let the CSS play as soon as the page loads.
+    if (!stage?.getAnimations || stage.getBoundingClientRect().top + stage.offsetHeight / 2 < window.innerHeight) {
       return undefined;
     }
     const animations = stage.getAnimations({subtree: true});
@@ -149,7 +150,8 @@ function usePlayWhenVisible() {
     });
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        // isIntersecting is already true when a single pixel shows.
+        if (entry.intersectionRatio >= 0.5) {
           observer.disconnect();
           animations.forEach((animation) => animation.play());
         }
