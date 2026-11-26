@@ -90,8 +90,8 @@ bootefi $kernel_addr_r
 Write the riscv64 ISO to a USB stick with `dd`. With the updated U-Boot, boot it with
 `usb start; load usb 0:2 $kernel_addr_r EFI/BOOT/BOOTRISCV64.EFI; bootefi $kernel_addr_r`. Partition 2 is `EFI_LIVE`.
 
-The live system logs in as root on the serial console. The interactive installer runs on `tty1` (HDMI), and the web installer
-listens on port 8080. On a headless board, install from the serial or SSH shell:
+The live system logs in as root on the serial console. With the stock kernel the HDMI output stays blank (see [Known issues](#known-issues)),
+so use the serial console. The web installer listens on port 8080. Install from the serial or SSH shell:
 
 ```bash
 kairos-agent manual-install --device /dev/nvme0n1 cloud-config.yaml
@@ -140,6 +140,10 @@ Starting from `ubuntu:24.04`, copy the `kairos-init` binary into the build (inst
 ## Known issues
 
 - The kernel console defaults to 9600 baud (`console=ttyS0` without a speed in the GRUB config).
-- The live installer UI only shows on `tty1`.
+- HDMI shows no signal with the stock kernel. Mainline Linux has no JH7110 display driver (DC8200 and INNO HDMI), so the live installer UI
+  on `tty1` is not visible on a monitor. Use the serial console or SSH. The display series is not merged upstream. With mainline v7.4-rc1 plus
+  the [Opvolger/linux-drm-jh7110](https://github.com/Opvolger/linux-drm-jh7110) patches (0001 to 0024) and its device tree loaded from the
+  GRUB command line, `/dev/dri/card0` and `/dev/fb0` exist, `HDMI-A-1` is `connected` and the console shows on the monitor. Kairos images
+  do not ship that kernel.
 - After a hard lockup, the NVMe can stay unavailable (`CSTS=0x0`) across warm reboots. A cold power cycle brings it back.
 - If a node's IP changes, k3s fails with `failed to find interface with specified node ip` until the stale Node object is deleted.
