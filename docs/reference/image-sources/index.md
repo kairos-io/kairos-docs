@@ -15,8 +15,8 @@ Install, upgrade and reset all deploy a system image from a source. A source is 
 | `ocifile` | Path to a local file        | An image archive already on the machine, such as the output of [`docker save`](https://docs.docker.com/reference/cli/docker/image/save/). Docker and OCI layout archives both work. |
 | `dir`     | Path to a local directory   | An already extracted root filesystem. `/mnt`, `/proc`, `/sys`, `/dev`, `/tmp`, `/host` and `/run` are not copied.                                                              |
 | `file`    | Path to a single local file | A prebuilt filesystem image, copied as is. This is a low level type and is not the format `docker save` produces.                                                               |
-| `ssh`     | `ssh://[user@]host[:port][/path]` | The system image of another Kairos node, copied over SSH. See [Upgrading from another node over SSH](/docs/upgrade/from_another_node).                                         |
-| `p2p`     | `p2p://[peer[,peer]/]image?pin=<pin>` | Experimental. The system image of other Kairos nodes, downloaded from several of them at once. See [P2P upgrades](/docs/upgrade/p2p-experimental).                         |
+| `ssh`     | `ssh://[user@]host[:port][/path]` | The system image of another Kairos node, copied over SSH. See [the ssh page](/docs/reference/image-sources/ssh).                                         |
+| `p2p`     | `p2p://[peer[,peer]/]image?pin=<pin>` | Experimental. The system image of other Kairos nodes, downloaded from several of them at once. See [the p2p page](/docs/reference/image-sources/p2p).                         |
 
 In a cloud config, an image reference without a type (`quay.io/kairos/hadron:latest`) and a `docker:` prefix are both read as `oci`. The `--source` flag does not accept either of those: it needs one of the type prefixes above.
 
