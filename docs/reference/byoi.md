@@ -52,7 +52,7 @@ Start here: [Kairos Operator](/operator-docs/)
 
 ## Suggested workflow
 
-1. Select your base distribution and release.
+1. Select your base distribution and release, and [check it](/docs/reference/distribution-requirements/).
 2. Build core/standard image with Kairos Factory tooling.
 3. Publish to your own registry/release assets.
 4. Use that image reference for installs, resets, and upgrades.
