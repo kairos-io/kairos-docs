@@ -818,8 +818,54 @@ spec:
 ```
 
 :::info Note
-The cloud image boots into recovery mode on first boot and partitions the disk. Your cloud-config can contain users and other config; see [configuration reference](/docs/reference/configuration/).
+By default the cloud image boots into recovery mode on first boot, partitions the disk and resets into active mode. Your cloud-config can contain users and other config; see [configuration reference](/docs/reference/configuration/).
 :::
+
+### Booting directly into active
+
+:::warning Experimental
+These options are set through annotations while their design settles, see [kairos-io/kairos#5544](https://github.com/kairos-io/kairos/issues/5544). They may change or be promoted to `spec` fields in a future release.
+:::
+
+Set the `build.kairos.io/disk.boot_active: "true"` annotation to build the `COS_STATE` partition (with `active.img` and the GRUB configuration) at build time, so the image boots straight into active mode, with no recovery boot and reset reboot. On first boot only `COS_PERSISTENT` is created, sized to the rest of the disk. This applies to `cloudImage`, `azureImage` and `gceImage`, and requires at least one of them.
+
+```yaml
+apiVersion: build.kairos.io/v1alpha2
+kind: OSArtifact
+metadata:
+  name: my-cloud-image
+  annotations:
+    build.kairos.io/disk.boot_active: "true"
+spec:
+  artifacts:
+    cloudImage: true
+```
+
+The annotations map to the AuroraBoot `disk.*` options of the same name (see the [AuroraBoot reference](/docs/reference/auroraboot/)):
+
+| Annotation | Values | Description |
+|---|---|---|
+| `build.kairos.io/disk.boot_active` | `true`, `false` | Pre-build `COS_STATE` so the image boots straight into active. |
+| `build.kairos.io/disk.state_slots` | `1`, `2`, `3` | Size `COS_STATE` for `1` (active only, no in-place upgrade), `2` (upgrade, no rollback) or `3` (default: upgrade and rollback, also ships `passive.img`) system images. Requires `disk.boot_active`. |
+| `build.kairos.io/disk.no_recovery` | `true`, `false` | Skip the `COS_RECOVERY` partition, so `kairos-agent reset` and the recovery boot entry are unavailable. Requires `disk.boot_active` and `disk.state_slots: "1"`. Meant for nodes that are replaced instead of upgraded, for example Cluster API machines. |
+
+Invalid values, unknown `build.kairos.io/disk.*` keys and invalid combinations are rejected by `kubectl apply` through a `ValidatingAdmissionPolicy` that the operator chart installs (Kubernetes 1.30 or newer, toggle with `admissionPolicy.enabled`). Without the policy, the operator still stops the build before the builder pod is created and logs the error.
+
+For example, a minimal single-image disk for nodes that are replaced rather than upgraded:
+
+```yaml
+metadata:
+  annotations:
+    build.kairos.io/disk.boot_active: "true"
+    build.kairos.io/disk.state_slots: "1"
+    build.kairos.io/disk.no_recovery: "true"
+```
+
+Trade-offs compared to the default:
+
+- The image is larger because it also carries the `COS_STATE` partition, by default sized for three system images plus filesystem overhead (about 12.5G instead of 4.8G for a 2.3G system image). Lower `disk.state_slots` to shrink it.
+- `before-reset` and `after-reset` cloud-config stages never run.
+- With `disk.no_recovery`, the node differs from a standard install: no reset and no recovery boot entry.
 
 ### Using the raw image (QEMU, AWS, OpenStack)
 
