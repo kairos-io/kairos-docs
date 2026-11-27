@@ -1,9 +1,9 @@
 ---
-title: "Peer-to-peer image distribution (experimental)"
-sidebar_label: "P2P upgrades (experimental)"
-sidebar_position: 9
+title: "Image source: p2p (experimental)"
+sidebar_label: "p2p (experimental)"
+sidebar_position: 3
 date: 2026-11-25
-description: Experimental, opt-in image sharing between the nodes of an isolated network
+description: Experimental, opt-in image source that installs, upgrades or resets a node from several peers of an isolated network
 ---
 
 :::danger Experimental
