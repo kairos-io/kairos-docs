@@ -60,6 +60,16 @@ headers = {X-From = "Netlify"}
 signed = "API_SIGNATURE_TOKEN"
 
 [[redirects]]
+from = "/docs/upgrade/p2p-experimental"
+to = "/docs/reference/image-sources/p2p/"
+status = 301
+
+[[redirects]]
+from = "/docs/upgrade/p2p-experimental/"
+to = "/docs/reference/image-sources/p2p/"
+status = 301
+
+[[redirects]]
 from = "/docs/upgrade/from_another_node"
 to = "/docs/reference/image-sources/ssh/"
 status = 301

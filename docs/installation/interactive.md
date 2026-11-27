@@ -19,7 +19,7 @@ When loading any Kairos ISOs, a GRUB menu, like the following will be displayed.
 
 ## Manually
 
-The interactive installer can be also started manually with `kairos-agent interactive-install` from the LiveCD.
+The interactive installer can be also started manually with `kairos-agent interactive-install` from the LiveCD. To install another image than the one on the ISO, pass `--source`, for example `kairos-agent interactive-install --source oci:{{< OCI variant="standard" >}}`. See [Image sources](/docs/reference/image-sources) for the types it takes.
 
 ## Customization
 

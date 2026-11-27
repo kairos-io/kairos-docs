@@ -23,7 +23,7 @@ By following the steps below you will _reset_ entirely a node and the persistent
 :::
 The reset action can be accessed via the Boot menu, remotely, triggered via Kubernetes or manually. In each scenario the machine will reboot into reset mode, perform the cleanup, and reboot automatically afterwards.
 
-A reset restores the image kept in the recovery partition. To reset to a different image, set `reset.system.source` in the cloud config, see [Image sources](/docs/reference/image-sources).
+A reset restores the image kept in the recovery partition. To reset to a different image, see [Reset to a different image](#reset-to-a-different-image).
 
 ## From the boot menu
 
@@ -205,6 +205,20 @@ spec:
 </Tabs>
 
 
+
+## Reset to a different image
+
+Set `reset.system.source` in the cloud config of the node, for example in a file in `/oem`, before the reset starts:
+
+```yaml
+#cloud-config
+
+reset:
+  system:
+    source: "oci:{{< OCI variant="standard" >}}"
+```
+
+The source can be any of the types on the [Image sources](/docs/reference/image-sources) page, which has an example for each. There is no `--source` flag for `kairos-agent reset`.
 
 ## Manual reset
 

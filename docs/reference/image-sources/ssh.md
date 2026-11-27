@@ -14,6 +14,8 @@ the registry. It works wherever an image source does: upgrade, install and reset
 sudo kairos-agent upgrade --source ssh://root@10.0.0.5
 ```
 
+This is one of the [image sources](/docs/reference/image-sources), which lists the other types and where each can be set.
+
 The node that upgrades runs the `ssh` client of the system, so your SSH configuration, agent, `known_hosts` and options like
 `ProxyJump` apply. It checks the host key of the other node, finds the image the other node booted from, copies it and
 verifies its sha256 before it deploys it. A connection that drops is resumed where it stopped.
