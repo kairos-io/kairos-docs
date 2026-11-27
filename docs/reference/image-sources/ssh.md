@@ -1,14 +1,14 @@
 ---
-title: "Upgrading from another node over SSH"
-sidebar_label: "From another node (SSH)"
-sidebar_position: 6
+title: "Image source: ssh"
+sidebar_label: "ssh"
+sidebar_position: 2
 date: 2026-11-25
-description: Upgrade or install a node from the system image of another Kairos node, without a registry or file copies
+description: Install, upgrade or reset a node from the system image of another Kairos node over SSH, without a registry or file copies
 ---
 
 In an air-gapped network there is often no registry and no way to hand a file to every machine. Upgrade one node
 any way you like, then let the others take the image from it. The source is an `ssh://` URI, the other node is
-the registry.
+the registry. It works wherever an image source does: upgrade, install and reset.
 
 ```bash
 sudo kairos-agent upgrade --source ssh://root@10.0.0.5
