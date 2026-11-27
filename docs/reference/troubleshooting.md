@@ -108,6 +108,103 @@ Under Trusted Boot the cmdline is measured, so `rd.immucore.ignoremountfailure` 
 
 It is possible to disable immutability by adding `rd.cos.debugrw` to the kernel boot commands.
 
+Booting with `rd.cos.debugrw` mounts the state partition read-write, so the OS images can change. Immucore removes the checksum file of the image it boots when you do, because the image can change. A new one is written the next time `kairos-agent` writes that image, if `image-checksum.create` is on.
+
+## Check OS images for corruption at boot
+
+Kairos can record a sha256 checksum for each OS image and check it before the image is mounted, to catch disk corruption and half written images. It is off by default and needs two switches: one to write the checksums, one to check them at boot.
+
+### Write the checksums
+
+With `image-checksum.create` on, `kairos-agent` writes a `.sha256` file next to each image it writes, in the `cOS` directory of the partition that holds the image:
+
+| Action | Checksums written |
+|--------|-------------------|
+| install | `active.img.sha256` and `passive.img.sha256` on `COS_STATE`, `recovery.img.sha256` on `COS_RECOVERY` |
+| upgrade | `active.img.sha256` for the new image, and `passive.img.sha256` for the previous active image that became passive (when you upgrade from active; passive is left alone when you upgrade from passive) |
+| `upgrade --recovery` | `recovery.img.sha256` |
+| reset | `active.img.sha256` and `passive.img.sha256` |
+
+The files use the `sha256sum` format, so you can check an image by hand:
+
+```bash
+cd /run/initramfs/cos-state/cOS && sha256sum -c active.img.sha256
+```
+
+With `create` off (the default), no checksum files are written, and the old checksum of an image the agent replaces is removed, so it never describes a different image.
+
+### Check them at boot
+
+`image-checksum.verify` tells immucore what to do before it mounts an image:
+
+| Value | Behavior |
+|-------|----------|
+| `none` (default) | The image is not checked and not read. |
+| `warn` | The image is checked. Every problem is logged and the boot continues. |
+| `fail` | The image is checked. On a problem the image is not mounted and the boot stops on a failure screen that shows the image, the stored sha256 and the sha256 computed from the image. |
+
+Only the image being booted is checked: booting active checks `active.img`, booting passive checks `passive.img`, booting recovery checks `recovery.img`. Hashing a multi-GB image adds to the boot time, mostly on slow disks such as SD cards, which is why the default is `none`. The time is capped by a budget, see [Time budget](#time-budget).
+
+An image with no checksum file (installed by an older agent, or written with `create` off) is skipped, and so is one that an older agent replaced without updating the checksum. Both are logged, and neither stops the boot. To count them as a problem, set `image-checksum.require`. When checking is on, a checksum file that cannot be read, or an image that does not match its checksum, is always a problem.
+
+### Time budget
+
+The time immucore needs is about the image size divided by the read speed of the disk: seconds on NVMe or SSD, tens of seconds for a large image on a hard disk, minutes for a multi-GB image on an SD card. The boot has a hard limit on how long it waits for the root device: dracut gives up after `rd.retry` seconds (180 by default) and the node reboots, over and over when the kernel command line has `rd.emergency=reboot`. A check that is too slow must not cause that, so it has a time budget, `image-checksum.verify-timeout`, in seconds:
+
+- The default is 60. `0` means no limit.
+- When the budget runs out, immucore stops hashing, logs a warning with the image, the bytes it read and the time it spent, and boots the image without the check. This is the same in `warn` and `fail`: a check that was skipped never stops the boot.
+- The exception is `fail` together with `require: true`. That combination means "never boot an image that was not verified", so a check skipped for lack of time stops the boot on the failure screen, like a missing checksum does.
+- A skipped check says nothing about the image. To verify an image on a slow disk, raise the budget and `rd.retry` together, so that the budget plus the rest of the boot stays under `rd.retry`, or run `kairos-agent verify-images` once the system is up. It has no time limit.
+
+`kairos-agent verify-images` is not affected by the budget.
+
+If you set `verify-timeout` to `0` or to more than about two minutes, add a larger `rd.retry` to the kernel command line as well, for example with `kairos-agent grubedit set extra_active_cmdline=rd.retry=900`.
+
+### Configure it
+
+```yaml
+#cloud-config
+image-checksum:
+  create: true
+  verify: warn
+  require: false
+  verify-timeout: 60
+```
+
+Every key can also be set on the kernel cmdline in dot notation, and the cmdline wins over the cloud config:
+
+| Config key | Kernel cmdline |
+|------------|----------------|
+| `image-checksum.create` | `image-checksum.create=true` or `=false` |
+| `image-checksum.verify` | `image-checksum.verify=none\|warn\|fail` |
+| `image-checksum.require` | `image-checksum.require=true` or `=false` |
+| `image-checksum.verify-timeout` | `image-checksum.verify-timeout=<seconds>`, `0` for no limit |
+
+`create` is read by `kairos-agent` when it runs, from the cloud config and from the kernel cmdline of the running system.
+
+`verify`, `require` and `verify-timeout` are read by immucore very early in the boot, before the cloud config is available. So immucore looks at the kernel cmdline first, and then at an `image-checksum.conf` file that `kairos-agent` keeps next to the images. A cmdline value applies at once. A change to the cloud config only reaches the boot the next time `kairos-agent` writes that file:
+
+- On `COS_STATE` (used to boot active and passive) it is written by install, upgrade and reset.
+- On `COS_RECOVERY` (used to boot recovery) it is written by install and `upgrade --recovery`.
+
+The file mirrors the configuration of that last run, kernel cmdline values included. If `image-checksum.verify=fail` was on the cmdline when you ran an upgrade, `fail` is stored and stays in effect after the cmdline value is gone. Setting `verify` to `none` and `require` to `false` removes the file at the next run.
+
+To try `fail` or to get past a failure, edit the boot entry in the boot menu (press `e`) and add `image-checksum.verify=warn` or `image-checksum.verify=none`.
+
+The result is in the immucore logs under `/run/immucore/`.
+
+### Check the images by hand
+
+`kairos-agent verify-images` checks the active, passive and recovery images against their checksum files and prints the stored (expected) and computed (actual) sha256 of each. By default it looks at the `COS_STATE` partition of the running system, and at `COS_RECOVERY` when it is mounted. It only reads, so it is safe to run at any time. It checks every image it finds, not only the booted one, whatever `image-checksum.verify` says. It exits with an error when an image does not match, when a checksum file or an image cannot be read, or when an image has no usable checksum and `image-checksum.require` is on. It reads `image-checksum.require` from the cloud config and the kernel cmdline. Use `--dir` to check another directory.
+
+```bash
+sudo kairos-agent verify-images
+```
+
+### Limits
+
+This protects against disk corruption and partial writes. It is not a security feature: the checksum is stored next to the image, so someone with write access to the partition can change both. For that, use [Trusted Boot](/docs/installation/trustedboot/). Trusted Boot (UKI) systems and systemd-boot installs are not covered, as they do not boot from these image files, and neither is a squashfs recovery image.
+
 ## See also
 
 - [Dracut debug docs](https://fedoraproject.org/wiki/How_to_debug_Dracut_problems)
