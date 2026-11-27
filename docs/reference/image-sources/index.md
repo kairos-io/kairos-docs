@@ -5,7 +5,10 @@ sidebar_position: 10
 description: The image source types install, upgrade and reset accept, where to set them, and where they do not apply.
 ---
 
-Install, upgrade and reset all deploy a system image from a source. A source is written as `type:address`, for example `oci:quay.io/kairos/hadron:latest`, and the same types work everywhere a source is accepted.
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+Install, upgrade and reset all deploy a system image from a source. A source is written as `type:address`, for example `oci:repo/image:tag`, and the same types work everywhere a source is accepted.
 
 ## Source types
 
@@ -51,21 +54,230 @@ An install can also set the source of the passive and recovery images with `inst
 
 A reset without a source restores the image kept in the recovery partition.
 
-For example, to install from an image archive copied to the machine:
+A reset formats the persistent partition before it reads the image. A local source for a reset (`ocifile`, `dir` or `file`) must therefore not live on it: mount a disk in the recovery system, or use another type.
+
+## Examples
+
+One tab per source type, with the command line for each action and the cloud config that does the same. The cloud config blocks are independent of each other, keep the ones you need. `<pin>` is explained on [the p2p page](/docs/reference/image-sources/p2p).
+
+<Tabs groupId="image-source">
+<TabItem value="oci" label="oci" default>
 
 ```bash
-kairos-agent manual-install --device /dev/sda --source ocifile:/data/kairos.tar /data/cloud-config.yaml
-```
+# Upgrade the active system
+sudo kairos-agent upgrade --source oci:{{< OCI variant="standard" >}}
 
-Or to reset to a different image from the cloud config:
+# Upgrade the recovery system
+sudo kairos-agent upgrade --recovery --source oci:{{< OCI variant="standard" >}}
+
+# Install from the live system, which erases the device: manual, interactive and pairing (QR code)
+sudo kairos-agent manual-install --device auto --source oci:{{< OCI variant="standard" >}} cloud-config.yaml
+sudo kairos-agent interactive-install --source oci:{{< OCI variant="standard" >}}
+sudo kairos-agent install --source oci:{{< OCI variant="standard" >}}
+```
 
 ```yaml
 #cloud-config
 
+install:
+  system:
+    source: "oci:{{< OCI variant="standard" >}}"
+
+upgrade:
+  system:
+    source: "oci:{{< OCI variant="standard" >}}"
+  recovery-system:
+    source: "oci:{{< OCI variant="standard" >}}"
+
 reset:
   system:
-    source: "oci:quay.io/kairos/hadron:latest"
+    source: "oci:{{< OCI variant="standard" >}}"
 ```
+
+For a registry that needs credentials or a certificate, see [Private registry auth](/docs/advanced/private_registry_auth).
+
+</TabItem>
+<TabItem value="ocifile" label="ocifile">
+
+```bash
+# On a machine with registry access, then copy the file to the node
+docker save {{< OCI variant="standard" >}} -o kairos.tar
+
+# Upgrade the active system
+sudo kairos-agent upgrade --source ocifile:/data/kairos.tar
+
+# Upgrade the recovery system
+sudo kairos-agent upgrade --recovery --source ocifile:/data/kairos.tar
+
+# Install from the live system, which erases the device: manual, interactive and pairing (QR code)
+sudo kairos-agent manual-install --device auto --source ocifile:/data/kairos.tar cloud-config.yaml
+sudo kairos-agent interactive-install --source ocifile:/data/kairos.tar
+sudo kairos-agent install --source ocifile:/data/kairos.tar
+```
+
+```yaml
+#cloud-config
+
+install:
+  system:
+    source: "ocifile:/data/kairos.tar"
+
+upgrade:
+  system:
+    source: "ocifile:/data/kairos.tar"
+  recovery-system:
+    source: "ocifile:/data/kairos.tar"
+
+reset:
+  system:
+    source: "ocifile:/mnt/kairos.tar"   # a disk mounted in the recovery system, not the persistent partition
+```
+
+</TabItem>
+<TabItem value="dir" label="dir">
+
+`dir:/` uses the root of the system the command runs in, which is how a [takeover install](/docs/installation/takeover) works.
+
+```bash
+# Upgrade the active system
+sudo kairos-agent upgrade --source dir:/data/rootfs
+
+# Upgrade the recovery system
+sudo kairos-agent upgrade --recovery --source dir:/data/rootfs
+
+# Install from the live system, which erases the device: manual, interactive and pairing (QR code)
+sudo kairos-agent manual-install --device auto --source dir:/data/rootfs cloud-config.yaml
+sudo kairos-agent interactive-install --source dir:/data/rootfs
+sudo kairos-agent install --source dir:/data/rootfs
+```
+
+```yaml
+#cloud-config
+
+install:
+  system:
+    source: "dir:/data/rootfs"
+
+upgrade:
+  system:
+    source: "dir:/data/rootfs"
+  recovery-system:
+    source: "dir:/data/rootfs"
+
+reset:
+  system:
+    source: "dir:/mnt/rootfs"   # a disk mounted in the recovery system, not the persistent partition
+```
+
+</TabItem>
+<TabItem value="file" label="file">
+
+The file is a filesystem image of the system, copied as is. It is not an archive from `docker save`, use `ocifile` for that.
+
+```bash
+# Upgrade the active system
+sudo kairos-agent upgrade --source file:/data/active.img
+
+# Install from the live system, which erases the device: manual, interactive and pairing (QR code)
+sudo kairos-agent manual-install --device auto --source file:/data/active.img cloud-config.yaml
+sudo kairos-agent interactive-install --source file:/data/active.img
+sudo kairos-agent install --source file:/data/active.img
+```
+
+```yaml
+#cloud-config
+
+install:
+  system:
+    source: "file:/data/active.img"
+
+upgrade:
+  system:
+    source: "file:/data/active.img"
+
+reset:
+  system:
+    source: "file:/mnt/active.img"   # a disk mounted in the recovery system, not the persistent partition
+```
+
+</TabItem>
+<TabItem value="ssh" label="ssh">
+
+The source is another Kairos node. Authentication, the host key check and the limits are on [the ssh page](/docs/reference/image-sources/ssh). A recovery system cannot be upgraded from an ssh source.
+
+```bash
+# Upgrade the active system
+sudo kairos-agent upgrade --source ssh://root@10.0.0.5
+
+# Install from the live system, which erases the device: manual, interactive and pairing (QR code)
+sudo kairos-agent manual-install --device auto --source ssh://root@10.0.0.5 cloud-config.yaml
+sudo kairos-agent interactive-install --source ssh://root@10.0.0.5
+sudo kairos-agent install --source ssh://root@10.0.0.5
+```
+
+```yaml
+#cloud-config
+
+# The files must exist before the action starts. For an install, put them on the
+# install medium and point these paths at them.
+ssh-source:
+  identity-file: /oem/ssh/fleet_upgrade
+  known-hosts-file: /oem/ssh/known_hosts
+
+install:
+  system:
+    source: "ssh://root@10.0.0.5"
+
+upgrade:
+  system:
+    source: "ssh://root@10.0.0.5"
+
+reset:
+  system:
+    source: "ssh://root@10.0.0.5"
+```
+
+</TabItem>
+<TabItem value="p2p" label="p2p (experimental)">
+
+Experimental, and the source needs a pin. The page about [the p2p source](/docs/reference/image-sources/p2p) explains how to get one and what the opt-in does. Quote the source in a shell, it has a `?` in it. Only `upgrade` has an `--experimental-p2p` flag, the other commands read `p2p-source.experimental` from the cloud config.
+
+```bash
+# Upgrade the active system
+sudo kairos-agent upgrade --experimental-p2p --source 'p2p://10.0.0.2,10.0.0.3/active?pin=<pin>'
+
+# Upgrade the recovery system, from the recovery image of a node
+sudo kairos-agent upgrade --experimental-p2p --recovery --source 'p2p://10.0.0.2/recovery?pin=<pin>'
+
+# Install from the live system, which erases the device. The cloud config has p2p-source.experimental
+sudo kairos-agent manual-install --device auto --source 'p2p://10.0.0.2,10.0.0.3/active?pin=<pin>' cloud-config.yaml
+sudo kairos-agent interactive-install --source 'p2p://10.0.0.2,10.0.0.3/active?pin=<pin>'
+sudo kairos-agent install --source 'p2p://10.0.0.2,10.0.0.3/active?pin=<pin>'
+```
+
+```yaml
+#cloud-config
+
+p2p-source:
+  experimental: true
+
+install:
+  system:
+    source: "p2p://10.0.0.2,10.0.0.3/active?pin=<pin>"
+
+upgrade:
+  system:
+    source: "p2p://10.0.0.2,10.0.0.3/active?pin=<pin>"
+  recovery-system:
+    source: "p2p://10.0.0.2/recovery?pin=<pin>"
+
+reset:
+  system:
+    source: "p2p://10.0.0.2,10.0.0.3/active?pin=<pin>"
+```
+
+</TabItem>
+</Tabs>
 
 ## Trusted boot
 
