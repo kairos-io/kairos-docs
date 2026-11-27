@@ -46,7 +46,8 @@ sudo kairos agent upgrade --experimental-p2p --source 'p2p://10.0.0.2,10.0.0.3/a
 Nothing runs until you opt in, with `p2p-source.experimental: true` in the cloud config, or
 `KAIROS_P2P_EXPERIMENTAL=1`. `upgrade` also has the `--experimental-p2p` flag, and `p2p seed` and
 `p2p fetch` have `--experimental`. `manual-install` and `reset` have no such flag: set
-`p2p-source.experimental: true` in the cloud config. The recovery image can only be
+`p2p-source.experimental: true` in the cloud config. The `p2p-source` block is only read at the root of the
+cloud config, not inside `install`, `upgrade` or `reset`. The recovery image can only be
 used for the recovery system, and the active and passive images only for the system. Trusted boot (UKI)
 does not support it.
 
@@ -104,6 +105,7 @@ peer it is supposed to check proves nothing.
   offers the image it just fetched for a while. It listens on a random port, and lets in only the peer it
   fetched from, unless you pass `--port 42069 --allow-cidr <subnet>` so the other nodes can find it. A node that is still downloading serves nothing: chunks that were only
   checked against a manifest a peer supplied are never handed on.
+- **Checksums**: with `image-checksum.create` on, the node writes the `.sha256` file for the image it deployed, hashed again once the image is final, and `image-checksum.verify` checks it at boot, like for any other source.
 - **Allowlist**: peers must be in the allowed networks, for incoming and outgoing connections. When you do not
   set one, the allowlist is the addresses of the peers you listed (which must be on a private network), or the
   local subnet when peers are discovered.
