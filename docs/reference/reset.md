@@ -23,6 +23,8 @@ By following the steps below you will _reset_ entirely a node and the persistent
 :::
 The reset action can be accessed via the Boot menu, remotely, triggered via Kubernetes or manually. In each scenario the machine will reboot into reset mode, perform the cleanup, and reboot automatically afterwards.
 
+A reset restores the image kept in the recovery partition. To reset to a different image, set `reset.system.source` in the cloud config, see [Image sources](/docs/reference/image-sources).
+
 ## From the boot menu
 
 It is possible to reset the state of a node by either booting into the "Reset" mode into the boot menu, which automatically will reset the node:
