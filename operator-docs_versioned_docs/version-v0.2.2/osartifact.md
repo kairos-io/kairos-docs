@@ -481,7 +481,7 @@ By default, all artifacts use the OSArtifact resource's `metadata.name` as the b
 | `spec.nameOverride.azureImage` | string | Override the Azure VHD filename (without `.vhd` extension). |
 | `spec.nameOverride.gceImage` | string | Override the GCE archive filename (without `.gce.tar.gz` extension). |
 | `spec.nameOverride.netboot` | string | Override the netboot artifact filename. |
-| `spec.nameOverride.uki` | string | Override the UKI signed artifact base filename. The actual output appends a `-uki` suffix (e.g. `<nameOverride.uki>-uki.iso`). |
+| `spec.nameOverride.uki` | string | Override the UKI signed artifact base filename. The name is used as given: the `-uki` suffix is added only when this field is not set. |
 
 Each name must be 1–253 characters long and can contain only lowercase letters, numbers, and hyphens `-`. It must start and end with a letter or number. If a specific name is not set, the artifact uses the resource's `metadata.name`.
 
@@ -615,7 +615,7 @@ spec:
       keysVolume: uki-keys
 ```
 
-UKI outputs use distinct names (e.g. `<artifact-name>-uki.iso`) so they do not collide with unsigned artifacts.
+By default, UKI outputs get a `-uki` suffix (e.g. `<artifact-name>-uki.iso`) so they do not collide with the unsigned artifacts. Setting `spec.nameOverride.uki` replaces the whole basename and drops that suffix, so give it a name no other enabled artifact uses. The operator rejects only the collision it can be sure of: `nameOverride.uki` equal to `nameOverride.iso` while `uki.iso` and `iso` or `netboot` are all enabled.
 
 ---
 
