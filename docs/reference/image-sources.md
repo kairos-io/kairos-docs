@@ -15,10 +15,26 @@ Install, upgrade and reset all deploy a system image from a source. A source is 
 | `ocifile` | Path to a local file        | An image archive already on the machine, such as the output of [`docker save`](https://docs.docker.com/reference/cli/docker/image/save/). Docker and OCI layout archives both work. |
 | `dir`     | Path to a local directory   | An already extracted root filesystem. `/mnt`, `/proc`, `/sys`, `/dev`, `/tmp`, `/host` and `/run` are not copied.                                                              |
 | `file`    | Path to a single local file | A prebuilt filesystem image, copied as is. This is a low level type and is not the format `docker save` produces.                                                               |
+| `ssh`     | `ssh://[user@]host[:port][/path]` | The system image of another Kairos node, copied over SSH. See [Upgrading from another node over SSH](/docs/upgrade/from_another_node).                                         |
+| `p2p`     | `p2p://[peer[,peer]/]image?pin=<pin>` | Experimental. The system image of other Kairos nodes, downloaded from several of them at once. See [P2P upgrades](/docs/upgrade/p2p-experimental).                         |
 
-In a cloud config, an image reference without a type (`quay.io/kairos/hadron:latest`) and a `docker:` prefix are both read as `oci`. The `--source` flag does not accept either of those: it needs one of the four prefixes above.
+In a cloud config, an image reference without a type (`quay.io/kairos/hadron:latest`) and a `docker:` prefix are both read as `oci`. The `--source` flag does not accept either of those: it needs one of the type prefixes above.
 
 Signature verification with cosign only runs for `oci` sources.
+
+### Sources from another node
+
+`ssh` and `p2p` take the image from other Kairos nodes instead of a registry or a file. Both work wherever [the table below](#where-a-source-can-be-set) lists a source, with these differences:
+
+| | `ssh` | `p2p` |
+| --- | --- | --- |
+| Config block | `ssh-source`, at the root of the cloud config or inside `install`, `upgrade` or `reset` (the block of the action wins, key by key) | `p2p-source`, at the root of the cloud config only |
+| Must be switched on | No | Yes, `p2p-source.experimental: true` (`--experimental-p2p` on `upgrade`) |
+| Authentication | Your `ssh` configuration, or `identity-file`, `known-hosts-file` and `host-key-fingerprints` of the block | The source needs `?pin=<pin>` (or `?sha256=<hash>`), or `p2p-source.insecure: true` to go without |
+| Recovery upgrade | Not supported, only the active system | `upgrade.recovery-system.source` takes `p2p://.../recovery`, the active and passive images only go to the system |
+| Trusted boot (UKI) | Not supported | Not supported |
+
+`kairos-agent reset` has no `--source` flag for them: set `reset.system.source`, with the `ssh-source` or `p2p-source` block next to it. `--source` on the other commands takes `ssh://` and `p2p://` like any other type.
 
 ## Where a source can be set
 
