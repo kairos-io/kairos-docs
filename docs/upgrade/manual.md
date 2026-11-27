@@ -36,7 +36,7 @@ To specify an image, use the `--source` flag:
 sudo kairos-agent upgrade --source <type>:<address>
 ```
 
-The `type` selects where the artifact comes from and how it is consumed by `kairos-agent`. Four types are supported:
+The `type` selects where the artifact comes from and how it is consumed by `kairos-agent`. Four types are supported. The same types work for install and reset, see [Image sources](/docs/reference/image-sources) for where each can be set:
 
 | Type      | Address                          | Expected artifact                                                                                                                                                              |
 | --------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
