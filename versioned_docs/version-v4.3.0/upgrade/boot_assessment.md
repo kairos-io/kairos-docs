@@ -45,7 +45,9 @@ a non-bootable system. This section describes those measure and how they work.
   of Kairos (the one before the upgrade).
 
 - "Trusted boot" installations:
-  While [a similar solution exists](https://systemd.io/AUTOMATIC_BOOT_ASSESSMENT/) in systemd to automatically reboot to a fallback entry, it's not yet implemented in Kairos. You can monitor [the tracking issue](https://github.com/kairos-io/kairos/issues/2864) for updates.
+  Kairos uses [systemd's automatic boot assessment](https://systemd.io/AUTOMATIC_BOOT_ASSESSMENT/). Each boot entry gets a limited number of tries (3 by default).
+  If an entry keeps failing to boot, systemd-boot runs out of its tries and boots the passive (fallback) entry, then recovery.
+  See [Enabling Automatic Boot Assessment with Trusted Boot](/docs/examples/boot_assessment_trusted_boot) for the details and for how to make your own services count.
 
 ## Validating the image signatures (Trusted boot installations)
 
