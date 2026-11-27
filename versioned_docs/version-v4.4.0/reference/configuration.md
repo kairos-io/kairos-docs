@@ -288,8 +288,8 @@ verify: <bool>                    # Verify images (used with cosign)
 cosign-key: <string>              # Public key path or URL for cosign verification
 arch: <string>                    # Target architecture (e.g. amd64, arm64)
 squash-no-compression: <bool>     # Disable squashfs compression when building images
-bind-pcrs: <[]string>             # TPM PCR indices to bind kcrypt to
-bind-public-pcrs: <[]string>      # Expected PCR values for kcrypt binding (public)
+bind-pcrs: <[]string>             # Trusted Boot only. PCRs to bind disk decryption to directly (systemd-cryptenroll --tpm2-pcrs). Default: empty
+bind-public-pcrs: <[]string>      # Trusted Boot only. PCRs bound through the signed policy (systemd-cryptenroll --tpm2-public-key-pcrs). Default: ["11"]
 
 
 k3s:
