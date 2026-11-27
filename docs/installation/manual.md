@@ -58,3 +58,13 @@ sudo kairos-agent manual-install --device "auto" cloud-config.yaml
 ```
 
 This will configure the node as a single-node Kubernetes cluster and set the default password and SSH keys as specified in the configuration file.
+
+## Install from another source
+
+The install deploys the image on the install medium. To install another image, pass `--source`, or set `install.system.source` in the cloud config:
+
+```bash
+sudo kairos-agent manual-install --device "auto" --source oci:{{< OCI variant="standard" >}} cloud-config.yaml
+```
+
+The source can also be an image archive, a directory, or another Kairos node. See [Image sources](/docs/reference/image-sources) for every type and an example for each.

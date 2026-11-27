@@ -172,13 +172,15 @@ install:
   # size in MiB
   system:
     size: 4096
-    # Use a different source for the installation of active system
+    # Use a different source for the installation of active system.
+    # oci:, ocifile:, dir:, file:, ssh:// or p2p://, see /docs/reference/image-sources
     source: "oci:.."
   passive:
     size: 4096
   recovery-system:
     size: 5000
     # Use a different source for the installation of recovery system
+    # (p2p://.../recovery for a p2p source)
     source: "oci:.."
   # note: This can also be set with dot notation like the following examples for a more condensed view:
   # system.size: 4096
@@ -277,6 +279,24 @@ upgrade:
   extra-dirs-rootfs:
     - /data
     - /src
+
+# How to authenticate to the node an ssh:// source points to, for install, upgrade and reset.
+# An ssh-source block inside install, upgrade or reset overrides these keys for that action.
+# See /docs/reference/image-sources/ssh
+ssh-source:
+  user: upgrader
+  identity-file: /oem/ssh/fleet_upgrade
+  known-hosts-file: /oem/ssh/known_hosts
+  host-key-fingerprints:
+    - SHA256:...
+
+# EXPERIMENTAL. Opt in to p2p:// image sources, and share this node's images with its peers.
+# Only read at the root of the cloud config. See /docs/reference/image-sources/p2p
+p2p-source:
+  experimental: true
+  enabled: false           # run the seeding service
+  insecure: false          # DANGEROUS: allow a p2p:// source without a pin
+  # more keys: bind, port, allow, upload-limit, max-peers, max-image-size, timeout, disable-announce
 
 # Various other fields that can be set.
 # They govern image verification, boot behavior, and TPM/krypt binding.

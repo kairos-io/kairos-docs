@@ -66,6 +66,8 @@ kairosctl register --reboot --device /dev/sda --config cloud-config.yaml
 - The `--device` flag determines the specific drive where Kairos will be installed. Replace `/dev/sda` with your drive. Any existing data will be overwritten, so please be cautious.
 - The `--config` flag is used to specify the config file used by the installation process.
 
+The node installs the image of the ISO it booted from. To install another one, set `install.system.source` in that config file, see [Image sources](/docs/reference/image-sources).
+
 
 :::note Note
 

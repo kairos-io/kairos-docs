@@ -36,14 +36,7 @@ To specify an image, use the `--source` flag:
 sudo kairos-agent upgrade --source <type>:<address>
 ```
 
-The `type` selects where the artifact comes from and how it is consumed by `kairos-agent`. Four types are supported. The same types work for install and reset, see [Image sources](/docs/reference/image-sources) for where each can be set:
-
-| Type      | Address                          | Expected artifact                                                                                                                                                              |
-| --------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `oci`     | `repo/image:tag`                 | An OCI image pulled from a container registry. If the tag is omitted, `:latest` is assumed.                                                                                    |
-| `ocifile` | Path to a local tarball          | An OCI or Docker image archive already on the node, for example the output of `docker save`.                                                                                   |
-| `dir`     | Path to a local directory        | An already extracted root filesystem. Its contents are copied into the target slot, excluding runtime mounts like `/proc`, `/sys`, `/dev`, `/run`, `/tmp`, `/mnt` and `/host`. |
-| `file`    | Path to a single local file      | A prebuilt filesystem image (for example a `.img` blob) copied byte for byte into the target slot. This is the low level path and is not the format produced by `docker save`. |
+The `type` selects where the image comes from. `oci`, `ocifile`, `dir`, `file`, `ssh` and `p2p` are supported, and the same types work for install and reset. [Image sources](/docs/reference/image-sources) describes each one, where it can be set, and has an example for every source and action.
 
 For example, to upgrade to the latest available stable release from the default Kairos registry:
 
@@ -66,6 +59,12 @@ To upgrade from an already extracted root filesystem on the node:
 sudo kairos-agent upgrade --source dir:/tmp/extracted-rootfs
 ```
 
+To upgrade from another Kairos node, without a registry or a file copy, see [the ssh source](/docs/reference/image-sources/ssh) and [the experimental p2p source](/docs/reference/image-sources/p2p):
+
+```bash
+sudo kairos-agent upgrade --source ssh://root@10.0.0.5
+```
+
 Once you have tested the new system and are happy with it, you can upgrade the recovery system.
 
 ## Upgrading the recovery system
@@ -80,6 +79,8 @@ To make this process less error prone, the upgrade command provides an extra fla
 ```bash
 sudo kairos-agent upgrade --recovery --source oci:{{< OCI variant="standard" >}}
 ```
+
+A recovery system cannot be upgraded from an `ssh` source. A `p2p` source needs the `recovery` image of a node, `p2p://.../recovery`, see [Image sources](/docs/reference/image-sources#where-a-source-can-be-set).
 
 ## What about the passive system?
 

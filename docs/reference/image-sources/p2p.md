@@ -20,6 +20,8 @@ replaced by another one. A node only starts sharing an image once it has downloa
 
 It only uses plain HTTP. There is no tracker, no DHT and no extra service.
 
+This is one of the [image sources](/docs/reference/image-sources), which lists the other types and where each can be set.
+
 :::note Not the p2p network
 This has nothing to do with the `p2p:` block of the Kairos p2p network. The settings live in
 `p2p-source:`.
@@ -40,7 +42,7 @@ It works wherever an image source does: `install.system.source`, `upgrade.system
 line:
 
 ```bash
-sudo kairos agent upgrade --experimental-p2p --source 'p2p://10.0.0.2,10.0.0.3/active?pin=<pin>'
+sudo kairos-agent upgrade --experimental-p2p --source 'p2p://10.0.0.2,10.0.0.3/active?pin=<pin>'
 ```
 
 Nothing runs until you opt in, with `p2p-source.experimental: true` in the cloud config, or
@@ -56,14 +58,14 @@ does not support it.
 There are no keys to manage. The node that has the new image tells you the source to use:
 
 1. Update (or install) one node the usual way, for example from your registry.
-2. Run `kairos agent p2p seed` on it (or enable the service, see below). It prints one source per image it
+2. Run `kairos-agent p2p seed` on it (or enable the service, see below). It prints one source per image it
    serves, pin included:
    ```
    p2p://10.0.0.2/active?pin=7c1e5f6a0f3d3c3a4f1b9d0b6a2e8c47d3f5a9b1c6e2d8f04a7b3c9e1d5f2a68
    ```
    The pin is the hash of the image's manifest (its size, chunk size and the hash of every chunk and of the
    whole image). You do not have to understand it, copy the line.
-   `kairos agent p2p pin` prints the same for one image, without starting anything.
+   `kairos-agent p2p pin` prints the same for one image, without starting anything.
 3. Put that source in the other nodes' command or cloud config, for a fleet in the cloud config:
    ```yaml
    #cloud-config
@@ -101,7 +103,7 @@ peer it is supposed to check proves nothing.
   they are trusted. A failed download that cannot be resumed is removed. A download that finished is not
   resumed: running `p2p fetch` again for the same output downloads the image again.
 - **Sharing**: a node that installed or upgraded offers its images to the others through the seeding service
-  (`p2p-source.enabled: true`), which picks up the new image on its own. `kairos agent p2p fetch --linger <duration>`
+  (`p2p-source.enabled: true`), which picks up the new image on its own. `kairos-agent p2p fetch --linger <duration>`
   offers the image it just fetched for a while. It listens on a random port, and lets in only the peer it
   fetched from, unless you pass `--port 42069 --allow-cidr <subnet>` so the other nodes can find it. A node that is still downloading serves nothing: chunks that were only
   checked against a manifest a peer supplied are never handed on.
@@ -117,7 +119,7 @@ before the reboot, and the image becomes the system. **Whoever controls the byte
 node.**
 
 **The pin is the one thing that protects you.** A source has one of three forms, and which one to use is
-easy: use the one `kairos agent p2p seed` prints.
+easy: use the one `kairos-agent p2p seed` prints.
 
 | form | what it pins | use it |
 |---|---|---|
@@ -164,7 +166,7 @@ What is **not** protected:
 ## Seeding
 
 Seeding is **off by default**. Enable it in the cloud config. The agent then installs and starts a
-systemd unit running `kairos agent p2p seed`:
+systemd unit running `kairos-agent p2p seed`:
 
 ```yaml
 #cloud-config
@@ -186,7 +188,7 @@ p2p-source:
 The unit serves the `active` and `passive` images only. The recovery partition is not mounted while the
 system runs, and the unit has no privileges to mount it, so `/recovery/manifest` is not served and a
 `p2p://.../recovery` source finds no peer. To offer the recovery image, mount the partition read only yourself
-and run the seeder by hand: `kairos agent p2p seed --experimental --recovery-dir <mount point>` (the
+and run the seeder by hand: `kairos-agent p2p seed --experimental --recovery-dir <mount point>` (the
 directory holding `cOS/recovery.img`).
 
 The unit is sandboxed (no new privileges, read-only file system except its manifest cache, no capabilities,
@@ -199,7 +201,7 @@ is dropped at once and served again once it has been stable for a poll interval,
 never served. Computed manifests are cached by size, modification time and inode, so a restart does not
 rehash multi-GB images.
 
-The same options exist as flags of `kairos agent p2p seed` (`--bind`, `--port`, `--allow-cidr`,
+The same options exist as flags of `kairos-agent p2p seed` (`--bind`, `--port`, `--allow-cidr`,
 `--upload-limit`, `--max-peers`, `--no-announce`) and flags win over the cloud config.
 
 ## Limits
