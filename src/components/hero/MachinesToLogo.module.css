@@ -1,0 +1,197 @@
+/*
+ * Without animation these rules draw the finished logo. Motion is only switched
+ * on inside the prefers-reduced-motion query below.
+ */
+.stage {
+  position: relative;
+  width: min(460px, 100%);
+  aspect-ratio: 355 / 256;
+  margin: 0 auto;
+  container-type: inline-size;
+}
+
+/* 132 of 256 units high, starting 62 units down. */
+.logo {
+  position: absolute;
+  top: 24.21875%;
+  left: 0;
+  width: 100%;
+  height: auto;
+}
+
+/* The split falls in the gap between the cubes and the letters. */
+.mark {
+  clip-path: inset(0 57.5% 0 0);
+}
+
+.word {
+  clip-path: inset(0 0 0 42.5%);
+}
+
+.machines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.name {
+  fill: #a8bbe0;
+  font-size: 11px;
+  opacity: 0;
+}
+
+/* The hero paragraph rules also match here, so this selector has to outweigh them. */
+.stage p.tagline {
+  position: absolute;
+  top: 80%;
+  left: 0;
+  right: 0;
+  margin: 0;
+  font-family: Sora, 'Public Sans', sans-serif;
+  font-size: 7cqi;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  color: #fff;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* The drawn cubes give way to the logo file once the last one has landed. */
+  .machines {
+    animation: leave 0.2s linear 3.6s both;
+  }
+
+  .mark {
+    animation: appear 0.3s linear 3.3s both;
+  }
+
+  .word {
+    animation: slide-in 0.9s linear 3.1s both;
+  }
+
+  .stage p.tagline {
+    animation: appear 0.8s linear 4.2s both;
+  }
+
+  /* travel starts where bob ends, and replaces it. */
+  .mover {
+    animation:
+      bob 1s ease-in-out both,
+      travel 1.7s cubic-bezier(0.65, 0, 0.35, 1) var(--delay) forwards;
+  }
+
+  .cube {
+    animation: cube-in 1.7s linear var(--delay) both;
+  }
+
+  .icon {
+    transform-origin: 0 0;
+    animation: icon-out 1.7s linear var(--delay) both;
+  }
+
+  .name {
+    animation: name-out 1.7s linear var(--delay) both;
+  }
+}
+
+@keyframes bob {
+  0% {
+    transform: translate(var(--from-x), var(--from-y)) scale(1.08);
+  }
+
+  35% {
+    transform: translate(var(--from-x), calc(var(--from-y) - 3px)) scale(1.08);
+  }
+
+  70% {
+    transform: translate(var(--from-x), calc(var(--from-y) + 2px)) scale(1.08);
+  }
+
+  100% {
+    transform: translate(var(--from-x), var(--from-y)) scale(1.08);
+  }
+}
+
+@keyframes travel {
+  from {
+    transform: translate(var(--from-x), var(--from-y)) scale(1.08);
+  }
+
+  to {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+@keyframes cube-in {
+  0%,
+  42% {
+    opacity: 0;
+  }
+
+  60%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes icon-out {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  44% {
+    opacity: 1;
+  }
+
+  60%,
+  100% {
+    opacity: 0;
+    transform: scale(0.45);
+  }
+}
+
+@keyframes name-out {
+  0% {
+    opacity: 1;
+  }
+
+  40%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes leave {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-4%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

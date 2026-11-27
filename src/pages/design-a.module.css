@@ -27,16 +27,6 @@
   align-items: center;
 }
 
-.heroLogoWrap {
-  display: flex;
-  justify-content: center;
-}
-
-.heroLogo {
-  width: min(460px, 100%);
-  height: auto;
-}
-
 .kicker {
   margin: 0;
   text-transform: uppercase;
@@ -892,10 +882,6 @@
   .socialProofDivider {
     width: 100%;
     height: 1px;
-  }
-
-  .heroLogoWrap {
-    display: none;
   }
 
   .quickStartCta {

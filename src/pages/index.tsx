@@ -16,6 +16,7 @@ import {
 } from '../components/designs/content';
 import {AdoptersHomeSection} from '../components/adopters/AdoptersHomeSection';
 import ImageConfigBuilder from '../components/builder/ImageConfigBuilder';
+import MachinesToLogo from '../components/hero/MachinesToLogo';
 import styles from './design-a.module.css';
 
 export default function DesignThreePage(): ReactNode {
@@ -117,9 +118,7 @@ export default function DesignThreePage(): ReactNode {
                 <Heading as="h1">{heroHeadline}</Heading>
                 <p>{heroDescription}</p>
               </div>
-              <div className={styles.heroLogoWrap}>
-                <img src={useBaseUrl('/img/kairos-horizontal-dark.svg')} alt="Kairos" className={styles.heroLogo} />
-              </div>
+              <MachinesToLogo />
             </div>
           </div>
         </section>
