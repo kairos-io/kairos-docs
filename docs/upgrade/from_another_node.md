@@ -47,8 +47,8 @@ The URI cannot carry a password. Authentication is by key, `ssh` never asks for 
 On the other node:
 
 - An SSH server that accepts the key, for an account that can read the image files. This is usually `root` with a key in
-  its `authorized_keys`. Images written by an install or a reset are mode 0644, but images written by an upgrade are 0600, so
-  only root can read those. To use another account on a node that was upgraded, make the files readable for it yourself, for
+  its `authorized_keys`. Images an install or a reset takes from a registry are mode 0644, but images written by an upgrade, or copied
+  from another node, are 0600, so only root can read those. To use another account on a node that was upgraded, make the files readable for it yourself, for
   example with a `chmod` in an `after-upgrade` stage of that node.
 - `cat`, `tail`, `stat` and `sha256sum`, which coreutils and busybox both have. Nothing else, no Kairos component.
 
@@ -126,6 +126,8 @@ they do not, the install fails or hangs at the ssh step, so have the key files o
 The other node is asked for the sha256 of the image, and the copy is refused if what arrived does not hash to it.
 The other node computes it with `sha256sum`, which reads the whole image before the copy starts. This detects a broken transfer or a changed file. It does not
 tell you that the other node runs an image you want.
+
+With `image-checksum.create` on, the node also writes the `.sha256` file for the image it deployed, hashed again once the image is final, and `image-checksum.verify` checks it at boot, like for any other source.
 
 ## Limits
 
